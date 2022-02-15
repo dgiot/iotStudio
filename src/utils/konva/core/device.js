@@ -7,14 +7,14 @@ import canvas from '@/utils/konva/core/canvas'
  * @description 组态物模型公共函数
  * @type {{create(*, *, *): Text, on(*)}}
  */
-const topoLable = {
-  evidence(args) {
+const device = {
+  device(args) {
     const params = {
-      busTopicKey: dgiotBus.topicKey('dgiot_evidence', 'dgiotEvidence'),
+      busTopicKey: dgiotBus.topicKey('dgiot_device', 'dgiotdevice'),
       msg: {
-        type: 'bind_evidence',
+        type: 'bind_device',
         id: args.getAttr('id'),
-        evidenceList: args.getAttr('evidenceList'),
+        deviceList: args.getAttr('deviceList'),
         node: args,
       },
     }
@@ -100,7 +100,7 @@ const topoLable = {
       attrs: {
         hidden: thing.hidden,
         id: `${thing.productid}_${uuid(4)}`,
-        name: 'thing',
+        name: 'device',
         x: Axis.x,
         y: Axis.y,
         draggable: true,
@@ -116,7 +116,7 @@ const topoLable = {
         {
           attrs: {
             id: `${thing.productid}_${topoId}`,
-            text: 'dgiot',
+            text: 'dgiot_device',
             // fontSize: 50,
             lineHeight: 1.2,
             padding: 10,
@@ -130,15 +130,15 @@ const topoLable = {
     console.log(topoThing)
     // return topoLable
     var simpleLabel = new Konva.Label({
-      name: 'thing',
+      name: 'device',
       opacity: 0.75,
       x: Axis.x,
       y: Axis.y,
       draggable: true,
-      id: thing.productid + '_text' + topoId,
+      id: thing.productid + '_device' + topoId,
       attrs: {
-        id: thing.productid + '_text' + topoId,
-        name: 'thing',
+        id: thing.productid + '_device' + topoId,
+        name: 'device',
         x: Axis.x,
         y: Axis.y,
       },
@@ -154,8 +154,8 @@ const topoLable = {
     simpleLabel.add(
       new Konva.Text({
         hidden: thing.hidden ? thing.hidden : false,
-        id: thing.productid + '_' + uuid(5) + '_text',
-        text: 'dgiot_text' + topoId,
+        id: thing.productid + '_' + uuid(5) + '_device',
+        text: 'dgiot_device' + topoId,
         fontSize: 24,
         lineHeight: 1.2,
         padding: 10,
@@ -166,10 +166,10 @@ const topoLable = {
     console.log(simpleLabel)
     return simpleLabel
   },
-  createdEvidence(args) {
+  createddevice(args) {
     console.info(
       'src/utils/konva/core/topoLable.js',
-      'createdEvidence',
+      'createddevice',
       args.path,
       args
     )
@@ -178,12 +178,12 @@ const topoLable = {
       y: 600 + canvas.randomXy(40, 10),
     }
     // https://konvajs.org/api/Konva.Path.html#Path__anchor
-    const evidencePath = new Konva.Path({
-      name: 'evidence',
-      id: `${args.path.productid}_evidence_${canvas.randomXy(40, 10)}_${
+    const devicePath = new Konva.Path({
+      name: 'device',
+      id: `${args.path.productid}_device_${canvas.randomXy(40, 10)}_${
         args.path.icon
       }`,
-      evidenceList: [],
+      deviceList: [],
       icon: args.path.icon,
       type: args.path.type,
       x: Axis.x,
@@ -200,8 +200,8 @@ const topoLable = {
         y: 2,
       },
     })
-    if (args.path.type === 'delete') window.deletePath = evidencePath
-    return evidencePath
+    if (args.path.type === 'delete') window.deletePath = devicePath
+    return devicePath
   },
   /**
    * @description 绑定组态
@@ -221,4 +221,4 @@ const topoLable = {
   upTopo() {},
 }
 
-export default topoLable
+export default device

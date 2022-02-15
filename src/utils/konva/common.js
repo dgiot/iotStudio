@@ -1,4 +1,6 @@
 import topoLable from './core/topoLable'
+import amis from './core/amis'
+import device from './core/device'
 import topoVideo from './core/topoVideo'
 import topoBg from './core/topoBg'
 import topoImage from './core/topoImage'
@@ -6,8 +8,16 @@ import topoStage from '@/utils/konva/core/topoStage'
 import canvas from '@/utils/konva/core/canvas'
 import topoPath from '@/utils/konva/core/topoPath'
 
-function createThing(thing, saleInfo, randomXy) {
-  return topoLable.create(thing, saleInfo, randomXy)
+function createThing(thing, saleInfo, randomXy, args) {
+  return topoLable.create(thing, saleInfo, randomXy, args)
+}
+
+function createHistory(thing, saleInfo, randomXy, args) {
+  return device.create(thing, saleInfo, randomXy, args)
+}
+
+function createAmis(thing, saleInfo, randomXy, args) {
+  return amis.create(thing, saleInfo, randomXy, args)
 }
 
 /**
@@ -23,7 +33,12 @@ function thingEVent(type, event, node) {
     if (type == 'thing') {
       return topoLable.on(node)
     }
-
+    if (type == 'amis') {
+      return amis.on(node)
+    }
+    if (type == 'device') {
+      return device.on(node)
+    }
     if (type == 'video') {
       return topoVideo.on({
         node,
@@ -61,6 +76,11 @@ function addNodeEvent(args) {
    * click, dblclick, mouseover, tap, dbltap, touchstart etc
    */
   if (type) {
+    console.info(
+      'groupCollapsed',
+      type,
+      ['thing', 'amis', 'device'].indexOf(type)
+    )
     switch (type) {
       case 'handleChildren': // 公共图元处理函数
         return topoStage.handleChildren(args)
@@ -69,9 +89,18 @@ function addNodeEvent(args) {
         return topoLable.createdEvidence(args)
         break
       case 'createThing': // 创建物模型
-        return createThing(thing, saleInfo, randomXy)
+        return createThing(thing, saleInfo, randomXy, args)
+        break
+      case 'createHistory': // 历史数据按钮
+        return createHistory(thing, saleInfo, randomXy, args)
+        break
+      case 'createAmis': // 关联amis
+        return createAmis(thing, saleInfo, randomXy, args)
         break
       case 'thing': // 物模型图元处理
+        return thingEVent(type, event, node)
+        break
+      case 'amis': // 物模型图元处理
         return thingEVent(type, event, node)
         break
       case 'evidence': // 取证类型图元处理

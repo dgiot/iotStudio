@@ -14,6 +14,7 @@ canvas.info = info
  */
 const topoStage = {
   handleChildren(args) {
+    console.log(args, 'args')
     const { layer } = canvas
     info['handleArray'] = args
     const { stage } = args
@@ -38,7 +39,11 @@ const topoStage = {
     })
     stage.find('Label').forEach((node) => {
       info['Label'] = stage.find('Label')
-      if (node.getAttr('name') == 'thing') {
+      console.log(
+        "['thing', 'amis', 'device'].indexOf(node.getAttr('name')) ",
+        ['thing', 'amis', 'device'].indexOf(node.getAttr('name'))
+      )
+      if (['thing', 'amis', 'device'].indexOf(node.getAttr('name')) != -1) {
         const nodeTags = node.getChildren()
         nodeTags.forEach((tag) => {
           info['tag'].push(tag)
@@ -60,12 +65,12 @@ const topoStage = {
             canvas.contextmenu = e.target
             console.log('contextmenu', e.target)
           })
-          tag.on('click', (e) => {
-            console.log(e)
-            canvas.clickItem = e.target
-            canvas.contextmenu = e.target
-            console.log('tag click', e.target.attrs)
-          })
+          // tag.on('click', (e) => {
+          //   console.log(e)
+          //   canvas.clickItem = e.target
+          //   canvas.contextmenu = e.target
+          //   console.log('tag click', e.target.attrs)
+          // })
           if (event) {
             info.tagevent.push({
               tag: tag,
@@ -102,7 +107,9 @@ const topoStage = {
       node.on('click', (e) => {
         canvas.contextmenu = {}
         canvas.clickItem = e.target
-        console.log('click', e.target.attrs)
+        // console.log('click', e.target.attrs)
+        dgiotBus.$emit('nodeInfo', node)
+        // 单击时，这里根据node bind 的控件类型，去展示对应的控件信息
       })
       node.on('mouseover', function (e) {
         document.body.style.cursor = 'pointer'
@@ -114,8 +121,8 @@ const topoStage = {
     stage.find('Path').forEach((node) => {
       info['Path'] = stage.find('Path')
       if (
-        node.getAttr('name') == 'evidence' ||
-        node.getAttr('name') == 'thing'
+        ['evidence', 'thing', 'amis', 'device'].indexOf(node.getAttr('name')) !=
+        -1
       ) {
         if (
           location.href.includes('preview') ||

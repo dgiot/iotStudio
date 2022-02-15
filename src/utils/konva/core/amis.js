@@ -7,14 +7,14 @@ import canvas from '@/utils/konva/core/canvas'
  * @description 组态物模型公共函数
  * @type {{create(*, *, *): Text, on(*)}}
  */
-const topoLable = {
-  evidence(args) {
+const amis = {
+  amis(args) {
     const params = {
-      busTopicKey: dgiotBus.topicKey('dgiot_evidence', 'dgiotEvidence'),
+      busTopicKey: dgiotBus.topicKey('dgiot_amis', 'dgiotamis'),
       msg: {
-        type: 'bind_evidence',
+        type: 'bind_amis',
         id: args.getAttr('id'),
-        evidenceList: args.getAttr('evidenceList'),
+        amisList: args.getAttr('amisList'),
         node: args,
       },
     }
@@ -35,15 +35,15 @@ const topoLable = {
       })
     }
     const msg = {
-      type: 'bind_topo',
+      type: 'bind_amis',
       id: id,
       text: args.findOne('Text').getAttr('text'),
     }
     const params = {
-      busTopicKey: dgiotBus.topicKey('dgiot_thing', 'dgiotThing'),
+      busTopicKey: dgiotBus.topicKey('dgiot_amis', 'dgiotamis'),
       msg: msg,
     }
-    console.log(params, 'bind_topo')
+    console.log(params, 'bind_amis')
     // console.log(
     //   params,
     //   Vue.prototype.$baseEventBus.$emit(params.busTopicKey, params.msg)
@@ -100,7 +100,7 @@ const topoLable = {
       attrs: {
         hidden: thing.hidden,
         id: `${thing.productid}_${uuid(4)}`,
-        name: 'thing',
+        name: 'amis',
         x: Axis.x,
         y: Axis.y,
         draggable: true,
@@ -116,11 +116,11 @@ const topoLable = {
         {
           attrs: {
             id: `${thing.productid}_${topoId}`,
-            text: 'dgiot',
+            text: 'dgiot_amis',
             // fontSize: 50,
             lineHeight: 1.2,
             padding: 10,
-            fill: 'green',
+            fill: '#ccc',
           },
           className: 'Text',
         },
@@ -130,22 +130,22 @@ const topoLable = {
     console.log(topoThing)
     // return topoLable
     var simpleLabel = new Konva.Label({
-      name: 'thing',
+      name: 'amis',
       opacity: 0.75,
       x: Axis.x,
       y: Axis.y,
       draggable: true,
-      id: thing.productid + '_text' + topoId,
+      id: thing.productid + '_amis' + topoId,
       attrs: {
-        id: thing.productid + '_text' + topoId,
-        name: 'thing',
+        id: thing.productid + '_amis' + topoId,
+        name: 'amis',
         x: Axis.x,
         y: Axis.y,
       },
     })
     simpleLabel.add(
       new Konva.Tag({
-        fill: 'green',
+        fill: '#ccc',
         attrs: {
           name: 'dblclick',
         },
@@ -154,8 +154,8 @@ const topoLable = {
     simpleLabel.add(
       new Konva.Text({
         hidden: thing.hidden ? thing.hidden : false,
-        id: thing.productid + '_' + uuid(5) + '_text',
-        text: 'dgiot_text' + topoId,
+        id: thing.productid + '_' + uuid(5) + '_amis',
+        text: 'dgiot_amis' + topoId,
         fontSize: 24,
         lineHeight: 1.2,
         padding: 10,
@@ -166,10 +166,10 @@ const topoLable = {
     console.log(simpleLabel)
     return simpleLabel
   },
-  createdEvidence(args) {
+  createdamis(args) {
     console.info(
       'src/utils/konva/core/topoLable.js',
-      'createdEvidence',
+      'createdamis',
       args.path,
       args
     )
@@ -178,12 +178,12 @@ const topoLable = {
       y: 600 + canvas.randomXy(40, 10),
     }
     // https://konvajs.org/api/Konva.Path.html#Path__anchor
-    const evidencePath = new Konva.Path({
-      name: 'evidence',
-      id: `${args.path.productid}_evidence_${canvas.randomXy(40, 10)}_${
+    const amisPath = new Konva.Path({
+      name: 'amis',
+      id: `${args.path.productid}_amis_${canvas.randomXy(40, 10)}_${
         args.path.icon
       }`,
-      evidenceList: [],
+      amisList: [],
       icon: args.path.icon,
       type: args.path.type,
       x: Axis.x,
@@ -200,8 +200,8 @@ const topoLable = {
         y: 2,
       },
     })
-    if (args.path.type === 'delete') window.deletePath = evidencePath
-    return evidencePath
+    if (args.path.type === 'delete') window.deletePath = amisPath
+    return amisPath
   },
   /**
    * @description 绑定组态
@@ -221,4 +221,4 @@ const topoLable = {
   upTopo() {},
 }
 
-export default topoLable
+export default amis

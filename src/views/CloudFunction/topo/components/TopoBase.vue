@@ -28,6 +28,8 @@
       class="topoBase"
       :class="{ 'topoBase-fullscreen': isDevice }"
       @contextmenu="showMenu"
+      @mousemove="handleMouseenter"
+      @mouseup="handleMouseDown"
     >
       <vue-context-menu
         :context-menu-data="contextMenuData"
@@ -47,7 +49,6 @@
 
 <script>
   // eslint-disable
-
   import { mapActions, mapGetters, mapMutations } from 'vuex'
 
   var width = window.innerWidth
@@ -70,6 +71,11 @@
     components: {},
     data() {
       return {
+        nodeAttr: {
+          description: {},
+          visible: false,
+        },
+        dgiotDragEvent: false,
         contextMenuData: {
           menuName: 'demo',
           //菜单显示的位置
@@ -139,15 +145,50 @@
       },
     },
     watch: {},
-    mounted() {},
+    mounted() {
+      this.nodeAttr.visible = false
+      this.$dgiotBus.$off('nodeInfo')
+      this.$dgiotBus.$on('nodeInfo', (args) => {
+        console.log(args, 'nodeInfo')
+        this.nodeAttr.visible = true
+        this.nodeAttr.description = args
+      })
+      this.dgiotDragEvent = false
+      this.$dgiotBus.$off('dgiotDragStart')
+      this.$dgiotBus.$on('dgiotDragStart', (args) => {
+        console.log(args, 'args')
+        if (args) this.dgiotDragEvent = true
+      })
+    },
     methods: {
       ...mapMutations({
         contextMenu: 'topo/contextMenu',
+        createThing: 'topo/createThing',
       }),
       ...mapActions({
         setKonva: 'topo/Sale',
         initKonva: 'topo/initKonva',
       }),
+      handleMouseDown(e) {
+        if (this.dgiotDragEvent) {
+          console.info('handleMouseDown', e)
+          this.createThing({
+            productid: this.$route.query.productid,
+            hidden: false,
+            x: e.offsetX,
+            y: e.offsetY,
+          })
+          // 防止重复点击
+          this.dgiotDragEvent = false
+        }
+      },
+      handleMouseenter(e) {
+        if (this.dgiotDragEvent) {
+          // console.error('handleMouseEnter', e)
+          // 防止重复点击
+          // this.dgiotDragEvent = false
+        }
+      },
       showMenu() {
         event.preventDefault()
         var x = event.clientX

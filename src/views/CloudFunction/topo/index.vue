@@ -10,7 +10,7 @@
         v-show="!isDevice"
         class="konva-container-header hidden-xs-only"
       >
-        <topo-header :noTools="Boolean($route.query.noTools)" />
+        <topo-header :noTools="Boolean($route.query.noTools)"/>
       </el-header>
 
       <el-main class="konva-container-main">
@@ -86,6 +86,7 @@
   import { putProduct, queryProduct } from '@/api/Product'
   import { putView, getView } from '@/api/View'
   import { isBase64 } from '@/utils'
+
   export default {
     components: {
       ...requiremodule(require.context('./components', true, /\.vue$/)),
@@ -206,6 +207,36 @@
         setTreeFlag: 'settings/setTreeFlag',
         createdEvidence: 'topo/createdEvidence',
       }),
+      handleDrop(e) {
+        console.log(e, 'handleDrop')
+        e.preventDefault()
+        e.stopPropagation()
+        const index = e.dataTransfer.getData('index')
+        const rectInfo = this.editor.getBoundingClientRect()
+        if (index) {
+          const component = deepCopy(componentList[index])
+          component.style.top = e.clientY - rectInfo.y
+          component.style.left = e.clientX - rectInfo.x
+          component.id = generateID()
+          this.$store.commit('addComponent', { component })
+          this.$store.commit('recordSnapshot')
+        }
+      },
+
+      handleDragOver(e) {
+        console.log(e, 'handleDragOver')
+        e.preventDefault()
+        e.dataTransfer.dropEffect = 'copy'
+      },
+      handleMouseDown(e) {
+        console.log(e, 'handleMouseDown')
+        e.preventDefault()
+        e.dataTransfer.dropEffect = 'copy'
+      },
+      deselectCurComponent(e) {
+        console.log(e, 'deselectCurComponent')
+        e.preventDefault()
+      },
       nextPage(type) {
         let query = JSON.parse(JSON.stringify(this.$route.query))
         const list = JSON.parse(this.$route.query.list)

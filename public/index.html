@@ -72,22 +72,6 @@
       action: 'aplus.setMetaInfo',
       arguments: ['appKey', '61cc0914e014255fcbcf694d'],
     })
-    /************************以下内容为可选配置内容****************************/
-    //sdk提供手动pv发送机制，启用手动pv(即关闭自动pv)，需设置aplus-waiting=MAN;
-    //注意：由于单页面路由改变时不会刷新页面，无法自动发送pv，所以对于单页应用，强烈建议您关闭自动PV, 手动控制PV事件
-    aplus_queue.push({
-      action: 'aplus.setMetaInfo',
-      arguments: ['aplus-waiting', 'MAN'],
-    })
-    //是否开启调试模式
-    aplus_queue.push({
-      action: 'aplus.setMetaInfo',
-      arguments: ['DEBUG', true],
-    })
-    aplus_queue.push({
-      action: 'aplus.sendPV',
-      arguments: [{is_auto: false}, {userData: 'dgiot'}],
-    })
   </script>
 </head>
 <body>

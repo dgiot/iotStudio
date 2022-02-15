@@ -10,6 +10,7 @@
       />
     </div>
     <Thing />
+    <Amis />
     <div v-show="isDirver" style="margin: 0 auto; text-align: center">
       <Evidence />
     </div>
@@ -22,9 +23,15 @@
       </a-collapse-panel>
       <a-collapse-panel
         key="2"
-        :header="$translateTitle('product.physicalmodel')"
+        :header="$translateTitle('product.button control')"
       >
+        <!--          <div data-text="物模型" @dragstart="handleDragStart">-->
+        <!--            <el-button draggable="true" size="mini">-->
+        <!--              {{ $translateTitle('topo.text button') }}-->
+        <!--            </el-button>-->
+        <!--          </div>-->
         <el-button
+          draggable="true"
           size="mini"
           type="primary"
           @click.native="
@@ -34,10 +41,41 @@
             })
           "
         >
-          {{ $translateTitle('topo.Add text content') }}
+          {{ $translateTitle('product.physicalmodel') }}
+        </el-button>
+        <el-divider />
+        <el-button
+          draggable="true"
+          size="mini"
+          type="primary"
+          @click.native="
+            createAmis({
+              productid: $route.query.productid,
+              hidden: false,
+            })
+          "
+        >
+          低代码
+        </el-button>
+        <el-divider />
+        <el-button
+          draggable="true"
+          size="mini"
+          type="primary"
+          @click.native="
+            createHistory({
+              productid: $route.query.productid,
+              hidden: false,
+            })
+          "
+        >
+          历史数据
         </el-button>
       </a-collapse-panel>
-      <a-collapse-panel key="3" :header="$translateTitle('topo.evidence')">
+      <a-collapse-panel
+        key="3"
+        :header="$translateTitle('topo.evidence control')"
+      >
         <!--        <el-button-->
         <!--          size="mini"-->
         <!--          type="primary"-->
@@ -108,6 +146,7 @@
   import { mapMutations } from 'vuex'
   import getSvgPath from '@/utils/konva/getSvgPath'
   import Thing from '@/views/CloudFunction/topo/components/Thing'
+  import Amis from '@/views/CloudFunction/topo/components/Amis'
   // import TopoThing from '@/views/topo/components/TopoThing'
   import Background from '@/views/CloudFunction/topo/components/Background'
   import Evidence from '@/views/CloudFunction/topo/components/TopoEvidence'
@@ -133,6 +172,7 @@
     name: 'TopoTabs',
     components: {
       Thing,
+      Amis,
       Background,
       Evidence,
     },
@@ -175,10 +215,6 @@
     computed: {},
     created() {
       // this.fetchData()
-      // this.$dgiotBus.$off(location.hash)
-      // this.$dgiotBus.$on(location.hash, (args) => {
-      //   console.log(args, 'args')
-      // })
     },
     mounted() {},
     beforeCreate() {}, //生命周期 - 创建之前
@@ -189,6 +225,10 @@
     destroyed() {}, //生命周期 - 销毁完成
     activated() {},
     methods: {
+      handleDragStart(e) {
+        e.dataTransfer.setData('index', e.target)
+        this.$dgiotBus.$emit('dgiotDragStart', e)
+      },
       coordinate(e) {
         const _coordinate = {
           x: e.pageX,
@@ -236,6 +276,8 @@
         setFlag: 'konva/setFlag',
         setDrawParams: 'konva/setDrawParams',
         createThing: 'topo/createThing',
+        createAmis: 'topo/createAmis',
+        createHistory: 'topo/createHistory',
         setKonvaBg: 'topo/setKonvaBg',
       }),
       // mousedown(item) {

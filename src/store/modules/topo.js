@@ -226,7 +226,7 @@ const mutations = {
     })
     addNodeEvent(args)
   },
-  createThing(state, thing) {
+  createThing(state, thing, x, y) {
     const simpleText = addNodeEvent({
       type: 'createThing',
       thing,
@@ -244,6 +244,52 @@ const mutations = {
       stage: canvas.stage,
       layer: canvas.layer,
       args: canvas.handlerArgs,
+      x,
+      y,
+    })
+  },
+  createHistory(state, thing, x, y) {
+    const simpleText = addNodeEvent({
+      type: 'createHistory',
+      thing,
+      saleInfo: {
+        scaleX: 100 * 0.01,
+        scaleY: 100 * 0.01,
+      },
+      randomXy,
+    })
+    canvas.layer.add(simpleText)
+    // canvas.layer.batchDraw()
+    // canvas.stage.batchDraw()
+    addNodeEvent({
+      type: 'handleChildren',
+      stage: canvas.stage,
+      layer: canvas.layer,
+      args: canvas.handlerArgs,
+      x,
+      y,
+    })
+  },
+  createAmis(state, thing, x, y) {
+    const simpleText = addNodeEvent({
+      type: 'createAmis',
+      thing,
+      saleInfo: {
+        scaleX: 100 * 0.01,
+        scaleY: 100 * 0.01,
+      },
+      randomXy,
+    })
+    canvas.layer.add(simpleText)
+    // canvas.layer.batchDraw()
+    // canvas.stage.batchDraw()
+    addNodeEvent({
+      type: 'handleChildren',
+      stage: canvas.stage,
+      layer: canvas.layer,
+      args: canvas.handlerArgs,
+      x,
+      y,
     })
   },
   removeNode(state, args) {
@@ -300,6 +346,12 @@ const actions = {
   },
   createThing({ commit }, args) {
     commit('createThing', args)
+  },
+  createAmis({ commit }, args) {
+    commit('createAmis', args)
+  },
+  createHistory({ commit }, args) {
+    commit('createHistory', args)
   },
   initKonva({ commit }, args) {
     commit('initKonva', args)

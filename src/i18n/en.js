@@ -640,7 +640,7 @@ export default {
       online: 'Online',
       offline: 'Offline',
       selectgateway: 'Please select the networking mode',
-      physicalmodel: 'Physical model',
+      physicalmodel: 'thing model',
       contentparsing: 'Content parsing',
       physicalaccess: 'Physical access',
       physicaltorage: 'Physical storage',
