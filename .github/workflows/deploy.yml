@@ -78,6 +78,20 @@ jobs:
           project: './dist'
           login: ${{ secrets.surge_login }}
           token: ${{ secrets.surge_token }}
+      - name: ref sha 🚀
+        run: |
+         echo '${{ github.ref }} ...  ${{ github.sha }}'
+      - name: Upload surge service and generate preview URL 🚀
+        id: deploy
+        run: |
+          export GITHUB_SHA=${{ github.sha }}
+          export GITHUB_SHA_SUB=${GITHUB_SHA: 0: 7 }
+          export DEPLOY_DOMAIN=https://dgiot-dashboard-$GITHUB_SHA_SUB.surge.sh
+          npx surge --project ./dist --domain $DEPLOY_DOMAIN --token ${{ secrets.surge_token }}
+          echo the preview URL is $DEPLOY_DOMAIN
+          echo "::set-output name=url::$DEPLOY_DOMAIN"
+        if: ${{ success() }}
+      - run: echo "🚀 This job's status is ${{ job.status }}."
 #      - name: Deploy to vercel 🚀
 #        uses: amondnet/vercel-action@v20
 #        with:

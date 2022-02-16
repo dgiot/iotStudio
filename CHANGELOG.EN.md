@@ -1,4 +1,4 @@
-## 4.4.8 (2022-02-15)
+## 4.4.8 (2022-02-16)
 
 
 ### Bug Fixes
@@ -15,6 +15,7 @@
 * **lowcode:** types add datav ([bf8b026](https://github.com/dgiot/dgiot-dashboard/commit/bf8b026088b80c760a05c1e10360c31deb4493d5))
 * pnpm ([db37de3](https://github.com/dgiot/dgiot-dashboard/commit/db37de39b3b74b19e0e357084767b2befb99eaf2))
 * **src/views/devicecloud/manage/component/profile/profiledescriptions.vue:** dgiotCodes ([0707f8b](https://github.com/dgiot/dgiot-dashboard/commit/0707f8b841bba1b7885ff7c2a03b6a9bdb270806))
+* **topo:** bind amis lowcode ([488c484](https://github.com/dgiot/dgiot-dashboard/commit/488c4843821cdfde300da44661e965e659f421b5))
 * **topo:** topo draggable ([553ea2a](https://github.com/dgiot/dgiot-dashboard/commit/553ea2a16c097fcb2fb668d2600622566b8acd49))
 
 
