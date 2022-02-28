@@ -7,7 +7,7 @@
 @import './loading/gauge.css';
 @import './loading/inner-circles.css';
 
-$base-loading: '.vab-loading-type';
+$base-loading: '.dgiot-loading-type';
 
 #{$base-loading}1 {
   display: flex;
@@ -18,7 +18,7 @@ $base-loading: '.vab-loading-type';
   border-top-color: $base-color-blue;
   border-bottom-color: $base-color-blue;
   border-radius: 50%;
-  animation: vabLoading1-0 0.8s linear infinite;
+  animation: dgiotLoading1-0 0.8s linear infinite;
 }
 
 #{$base-loading}1::before {
@@ -29,16 +29,16 @@ $base-loading: '.vab-loading-type';
   content: '';
   border: 3px solid $base-color-blue;
   border-radius: 50%;
-  animation: vabLoading1 0.5s alternate ease-in infinite;
+  animation: dgiotLoading1 0.5s alternate ease-in infinite;
 }
 
-@keyframes vabLoading1-0 {
+@keyframes dgiotLoading1-0 {
   to {
     transform: rotate(360deg);
   }
 }
 
-@keyframes vabLoading1 {
+@keyframes dgiotLoading1 {
   from {
     transform: scale(0.5);
   }
@@ -53,7 +53,7 @@ $base-loading: '.vab-loading-type';
   height: 20px;
   margin-top: -40px;
   margin-left: -10px;
-  animation: vabLoading2 1s linear reverse infinite;
+  animation: dgiotLoading2 1s linear reverse infinite;
 }
 
 #{$base-loading}2::before {
@@ -63,7 +63,7 @@ $base-loading: '.vab-loading-type';
   margin-top: -17px;
   margin-left: -18px;
   content: '';
-  animation: vabLoading2 0.4s linear infinite;
+  animation: dgiotLoading2 0.4s linear infinite;
 }
 
 #{$base-loading}2::after {
@@ -73,7 +73,7 @@ $base-loading: '.vab-loading-type';
   margin-top: -3px;
   margin-left: -4px;
   content: '';
-  animation: vabLoading2 0.4s linear infinite;
+  animation: dgiotLoading2 0.4s linear infinite;
 }
 
 #{$base-loading}2::before,
@@ -88,7 +88,7 @@ $base-loading: '.vab-loading-type';
   border-radius: 50%;
 }
 
-@keyframes vabLoading2 {
+@keyframes dgiotLoading2 {
   to {
     transform: rotate(360deg);
   }
@@ -103,10 +103,10 @@ $base-loading: '.vab-loading-type';
   border-top-color: $base-color-blue;
   border-bottom-color: $base-color-blue;
   border-radius: 50%;
-  animation: vabLoading3 2s ease infinite;
+  animation: dgiotLoading3 2s ease infinite;
 }
 
-@keyframes vabLoading3 {
+@keyframes dgiotLoading3 {
   50% {
     border-width: 8px;
     transform: rotate(360deg) scale(0.4, 0.33);
@@ -127,7 +127,7 @@ $base-loading: '.vab-loading-type';
   border-bottom-color: $base-color-blue;
   border-left-color: $base-color-blue;
   border-radius: 50%;
-  animation: vabLoading4 1s linear infinite normal;
+  animation: dgiotLoading4 1s linear infinite normal;
 }
 
 #{$base-loading}4::after {
@@ -142,7 +142,7 @@ $base-loading: '.vab-loading-type';
   border-radius: 50%;
 }
 
-@keyframes vabLoading4 {
+@keyframes dgiotLoading4 {
   0% {
     opacity: 0.2;
     transform: rotate(0deg);
@@ -168,10 +168,10 @@ $base-loading: '.vab-loading-type';
   border-right: solid 1.5em transparent;
   border-left: solid 1.5em transparent;
   border-radius: 100%;
-  animation: vabLoading5 1s linear infinite;
+  animation: dgiotLoading5 1s linear infinite;
 }
 
-@keyframes vabLoading5 {
+@keyframes dgiotLoading5 {
   0% {
     transform: rotate(0deg);
   }
@@ -200,7 +200,7 @@ $base-loading: '.vab-loading-type';
   height: 20px;
   content: '';
   background: rgba(0, 0, 0, 0);
-  animation: vabLoading6 0.5s infinite alternate;
+  animation: dgiotLoading6 0.5s infinite alternate;
 }
 
 #{$base-loading}6::before {
@@ -212,7 +212,7 @@ $base-loading: '.vab-loading-type';
   animation-delay: 0.15s;
 }
 
-@keyframes vabLoading6 {
+@keyframes dgiotLoading6 {
   0% {
     box-shadow: 0 0 0 rgba(0, 0, 0, 0);
     transform: scale(1) translateY(0) rotateX(0deg);
@@ -235,10 +235,10 @@ $base-loading: '.vab-loading-type';
   border-right-color: rgba($base-color-blue, 0.2);
   border-bottom-color: rgba($base-color-blue, 0.2);
   border-radius: 100%;
-  animation: vabLoading7 infinite 0.75s linear;
+  animation: dgiotLoading7 infinite 0.75s linear;
 }
 
-@keyframes vabLoading7 {
+@keyframes dgiotLoading7 {
   0% {
     transform: rotate(0);
   }
@@ -271,10 +271,10 @@ $base-loading: '.vab-loading-type';
   background-color: $base-color-white;
   border-radius: 50%;
   box-shadow: 30px 0 0 0 $base-color-white;
-  animation: vabLoading8 2s ease-in-out infinite alternate;
+  animation: dgiotLoading8 2s ease-in-out infinite alternate;
 }
 
-@keyframes vabLoading8 {
+@keyframes dgiotLoading8 {
   0% {
     left: 9px;
   }
@@ -292,7 +292,7 @@ $base-loading: '.vab-loading-type';
   height: 20px;
   margin: 0 auto 15px auto;
   border: 1px $base-color-blue solid;
-  animation: vabLoading9 5s linear infinite;
+  animation: dgiotLoading9 5s linear infinite;
 }
 
 #{$base-loading}9::after {
@@ -303,10 +303,10 @@ $base-loading: '.vab-loading-type';
   height: 4px;
   content: '';
   background-color: $base-color-blue;
-  animation: vabLoading9_check 1s ease-in-out infinite;
+  animation: dgiotLoading9_check 1s ease-in-out infinite;
 }
 
-@keyframes vabLoading9_check {
+@keyframes dgiotLoading9_check {
   25% {
     top: -8px;
     left: 22px;
@@ -328,7 +328,7 @@ $base-loading: '.vab-loading-type';
   }
 }
 
-@keyframes vabLoading9 {
+@keyframes dgiotLoading9 {
   0% {
     box-shadow: inset 0 0 0 0 rgba($base-color-blue, 0.5);
     opacity: 0.5;

@@ -30,9 +30,9 @@
         :config="_tableParser"
         pure
       />
-      <vab-empty v-else />
+      <dgiot-empty v-else />
     </div>
-    <vab-empty v-else />
+    <dgiot-empty v-else />
   </div>
 </template>
 <script>

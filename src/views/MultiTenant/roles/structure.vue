@@ -149,13 +149,13 @@
         <div class="tabContent">
           <el-row :gutter="24">
             <el-col :span="24">
-              <vab-query-form v-show="currentDepartment.depname">
-                <vab-query-form-top-panel>
+              <dgiot-query-form v-show="currentDepartment.depname">
+                <dgiot-query-form-top-panel>
                   <el-button @click.native="addItemUser(currentDepartment)">
                     {{ $translateTitle('user.newusers') }}
                   </el-button>
-                </vab-query-form-top-panel>
-              </vab-query-form>
+                </dgiot-query-form-top-panel>
+              </dgiot-query-form>
               <div class="elTable">
                 <el-table
                   v-loading="pictLoading"
@@ -880,7 +880,7 @@
                   'user.Role information updated successfully'
                 ),
                 'success',
-                'vab-hey-message-success'
+                'dgiot-hey-message-success'
               )
               // this.fetchData()
             }
@@ -970,7 +970,7 @@
           this.$baseMessage(
             this.$translateTitle('alert.Data request error') + `${error}`,
             'error',
-            'vab-hey-message-error'
+            'dgiot-hey-message-error'
           )
         }
       },

@@ -15,13 +15,13 @@
       top="1vh"
       width="90%"
     >
-<!--      <VabParser-->
-<!--        :dict="parserDict"-->
-<!--        :form-config="formConfig"-->
-<!--        :parserindex="editIndex"-->
-<!--        :productid="productid"-->
-<!--        @ParserSave="saveParse"-->
-<!--      />-->
+      <!--      <DgiotParser-->
+      <!--        :dict="parserDict"-->
+      <!--        :form-config="formConfig"-->
+      <!--        :parserindex="editIndex"-->
+      <!--        :productid="productid"-->
+      <!--        @ParserSave="saveParse"-->
+      <!--      />-->
     </el-dialog>
     <el-dialog :append-to-body="true" :visible.sync="parserView">
       <f-render v-model="formConfig" :config="formConfig" pure />
@@ -89,7 +89,7 @@
         </el-table-column>
       </el-table>
     </el-dialog>
-    <vab-input
+    <dgiot-input
       ref="uploadFinish"
       :params="inputParams"
       @fileInfo="fileInfo"
@@ -241,7 +241,7 @@
               :underline="false"
               size="mini"
               type="success"
-              @click="editorProduct(row)"
+              @click="editorProduct(row.objectId)"
             >
               {{ $translateTitle('concentrator.edit') }}
             </el-button>
@@ -525,8 +525,8 @@
           <div>
             <el-row :gutter="20">
               <el-col :span="24">
-                <vab-query-form>
-                  <vab-query-form-top-panel>
+                <dgiot-query-form>
+                  <dgiot-query-form-top-panel>
                     <el-form
                       :inline="true"
                       label-width="100px"
@@ -568,8 +568,8 @@
                         />
                       </el-form-item>
                     </el-form>
-                  </vab-query-form-top-panel>
-                </vab-query-form>
+                  </dgiot-query-form-top-panel>
+                </dgiot-query-form>
               </el-col>
             </el-row>
             <el-table
@@ -620,7 +620,7 @@
                 </template>
               </el-table-column>
             </el-table>
-            <vab-Pagination
+            <dgiot-Pagination
               v-show="queryForm.total > 0"
               :limit.sync="queryForm.pageSize"
               :page.sync="queryForm.pageNo"
@@ -660,15 +660,15 @@
                 <el-input v-model="dictTempForm.name" autocomplete="off" />
               </el-form-item>
             </el-col>
-            <el-col :span="8">
-              <el-form-item
-                :label-width="formLabelWidth"
-                label="字典模板类型"
-                prop="cType"
-              >
-                <el-input v-model="dictTempForm.cType" autocomplete="off" />
-              </el-form-item>
-            </el-col>
+            <!--            <el-col :span="8">-->
+            <!--              <el-form-item-->
+            <!--                :label-width="formLabelWidth"-->
+            <!--                label="字典模板类型"-->
+            <!--                prop="cType"-->
+            <!--              >-->
+            <!--                <el-input v-model="dictTempForm.cType" autocomplete="off" />-->
+            <!--              </el-form-item>-->
+            <!--            </el-col>-->
             <el-col :span="8">
               <el-form-item
                 :label-width="formLabelWidth"
@@ -700,7 +700,6 @@
 
                 <el-table
                   :data="dictTempForm.params"
-                  :height="height"
                   style="width: 100%; text-align: center"
                 >
                   <el-table-column label="序号" prop="order" />
@@ -728,7 +727,7 @@
                         size="mini"
                         title="删除"
                         type="danger"
-                        @click.native="delRow($index, dictTempForm.params)"
+                        @click.native="delRow($index, row)"
                       >
                         删除
                       </el-button>
@@ -737,21 +736,13 @@
                         size="mini"
                         title="编辑"
                         type="info"
-                        @click.native="editRow($index, dictTempForm.params)"
+                        @click.native="editRow($index, row)"
                       >
                         编辑
                       </el-button>
                     </template>
                   </el-table-column>
                 </el-table>
-              </el-tab-pane>
-              <el-tab-pane label="Json" name="Json">
-                <vab-json-editor
-                  v-model="dictTempForm.params"
-                  :mode="'code'"
-                  lang="zh"
-                  @has-error="onError"
-                />
               </el-tab-pane>
             </el-tabs>
           </el-form-item>
@@ -892,8 +883,7 @@
                     v-for="(item, index) in [
                       'normal',
                       'modbus',
-                      'mingcheng',
-                      'xinchuangwei',
+                      'GW376',
                       'hex',
                     ]"
                     :key="index"
@@ -937,7 +927,6 @@
           <el-table
             v-show="tempparams.protocol == 'modbus'"
             :data="dataList"
-            :height="height"
             border
             size="small"
             style="width: 100%"
@@ -1022,7 +1011,66 @@
               </template>
             </el-table-column>
           </el-table>
-          <el-row v-show="tempparams.protocol != 'modbus'" :gutter="24">
+          <el-table
+            v-show="tempparams.protocol == 'GW376'"
+            :data="dataList"
+            border
+            size="small"
+            style="width: 100%"
+          >
+            <el-table-column
+              align="center"
+              label="应用层功能码"
+              min-width="120"
+            >
+              <!--关键代码-->
+              <template #default="{ row }">
+                <el-input v-model="tempparams.afn" />
+                <span v-show="false">{{ row }}</span>
+              </template>
+            </el-table-column>
+            <el-table-column align="center" label="信息点" min-width="120">
+              <!--关键代码-->
+              <template #default="{ row }">
+                <el-input v-model="tempparams.da" />
+                <span v-show="false">{{ row }}</span>
+              </template>
+            </el-table-column>
+            <el-table-column align="center" label="信息类" min-width="120">
+              <!--关键代码-->
+              <template #default="{ row }">
+                <el-input v-model="tempparams.dt" />
+                <span v-show="false">{{ row.slaveid }}</span>
+              </template>
+            </el-table-column>
+            <el-table-column align="center" label="字节类型" min-width="120">
+              <!--关键代码-->
+              <template #default="{ row }">
+                <el-select v-model="tempparams.byteType" placeholder="请选择">
+                  <el-option
+                    v-for="item in ['little', 'bytes', 'bit']"
+                    :key="item"
+                    :label="item"
+                    :value="item"
+                  />
+                </el-select>
+                <span v-show="false">{{ row.slaveid }}</span>
+              </template>
+            </el-table-column>
+            <el-table-column align="center" label="字节长度" min-width="120">
+              <!--关键代码-->
+              <template #default="{ row }">
+                <el-input v-model="tempparams.bytes" />
+                <span v-show="false">{{ row.slaveid }}</span>
+              </template>
+            </el-table-column>
+          </el-table>
+          <el-row
+            v-show="
+              tempparams.protocol != 'modbus' && tempparams.protocol != 'GW376'
+            "
+            :gutter="24"
+          >
             <el-col :span="12">
               <el-form-item label="数据地址">
                 <el-input v-model="tempparams.address" placeholder="数据地址" />
@@ -1289,7 +1337,7 @@
         </div>
       </el-dialog>
     </div>
-<!--    <VabRender v-show="false" :config="config" :loading="true" />-->
+    <!--    <DgiotRender v-show="false" :config="config" :loading="true" />-->
   </div>
 </template>
 <!--eslint-disable-->
@@ -1299,7 +1347,12 @@
   import { uuid } from '@/utils'
   import { queryChannel } from '@/api/Channel/index'
   import { mapGetters } from 'vuex'
-  import { delProduct, getProduct, putProduct } from '@/api/Product'
+  import {
+    delProduct,
+    getProduct,
+    putProduct,
+    postProduct,
+  } from '@/api/Product'
   import { getAllunit } from '@/api/Dict/index'
   import { queryDevice } from '@/api/Device/index'
   import { getServer } from '@/api/Role/index'
@@ -1396,6 +1449,7 @@
           registersnumber: '',
           default: 0,
           required: false,
+          isshow: false,
           readonly: true,
           specs: [
             {
@@ -1407,6 +1461,9 @@
           unit: '',
           inactivevalue: '',
           activevalue: '',
+          da: '',
+          dt: '',
+          afn: '',
         },
         elactiveName: 'Table',
         elactiveName1: 'Table1',
@@ -1784,11 +1841,11 @@
         rows.splice(index, 1)
         // this.onJsonSave("dictTempForm");
       },
-      editRow(row, index, params) {
+      editRow(index, params) {
         this.editIndexId = index
         this.title_dict_edit_dialog = '修改字典数据'
         this.edit_dict_temp_dialog = true
-        this.tempparams = row
+        this.tempparams = params
       },
       closeDict() {
         this.edit_dict_temp_dialog = !this.edit_dict_temp_dialog
@@ -1818,9 +1875,15 @@
         const { updatedAt } = await putProduct(editDictId, params)
         if (updatedAt != undefined) {
           this.dictVisible = false
-          this.$message('字典数据更新成功')
+          this.$message({
+            type: 'success',
+            message: '字典数据更新成功',
+          })
         } else {
-          this.$message('字典数据更新失败')
+          this.$message({
+            type: 'error',
+            message: '字典数据更新失败',
+          })
         }
       },
       submitFormTempDict() {
@@ -1828,10 +1891,16 @@
         this.edit_dict_temp_dialog = false
         if (this.editIndexId != undefined) {
           this.dictTempForm.params[this.editIndexId] = this.tempparams
-          this.$message('编辑成功')
+          this.$message({
+            type: 'success',
+            message: '编辑成功',
+          })
         } else {
           this.dictTempForm.params.push(this.tempparams)
-          this.$message('新增成功')
+          this.$message({
+            type: 'success',
+            message: '新增成功',
+          })
         }
       },
       opendialog(name) {
@@ -1863,6 +1932,7 @@
           registersnumber: '',
           default: 0,
           required: false,
+          isshow: false,
           readonly: true,
           specs: [
             {
@@ -1966,11 +2036,13 @@
           if (start == 0) this.start = 0
 
           var category = []
+          // 优化下查询条件,新增忽略字段
           const parsms = {
             count: 'objectId',
             order: '-updatedAt',
             limit: this.length,
             skip: this.start,
+            excludeKeys: 'channel,children,config,thing,decoder',
             include: 'category,producttemplet',
             where: {
               name: this.formInline.productname.length
@@ -2003,7 +2075,7 @@
           this.$baseMessage(
             this.$translateTitle('alert.Data request error') + `${error}`,
             'error',
-            'vab-hey-message-error'
+            'dgiot-hey-message-error'
           )
         }
       },
@@ -2115,9 +2187,13 @@
           const res = await putProduct(this.parserFromId, {
             config: type + 2 > 0 ? this.parserTableList : list,
           })
-          this.$message.success(
-            this.$translateTitle('user.Save the template successfully')
-          )
+          this.$message({
+            showClose: true,
+            message: this.$translateTitle(
+              'user.Save the template successfully'
+            ),
+            type: 'success',
+          })
           this.dialogVisible = false
           this.parserTable = false
         } catch (e) {
@@ -2144,8 +2220,10 @@
         rows.splice(index, 1)
       },
       async editorDict(ObjectId) {
+        const loading = this.$baseColorfullLoading()
         this.getAllunit()
         const row = await getProduct(ObjectId)
+        loading.close()
         const { config = { basedate: {} } } = row
         this.productInfo = row
         dgiotlog.log(' this.parserDict', this.parserDict)
@@ -2189,7 +2267,11 @@
         dgiotlog.log(this.dictTempForm, 'config')
         this.dictVisible = true
       },
-      editorProduct(row) {
+      async editorProduct(editorProductid) {
+        const loading = this.$baseColorfullLoading()
+        const row = await getProduct(editorProductid)
+        this.form = row
+        loading.close()
         this.product = row
         this.imageUrl = ''
         this.moduleTitle = this.$translateTitle('product.editproduct')
@@ -2340,6 +2422,7 @@
               console.log('editProduct', initparams)
               delete initparams.category
               delete initparams.producttemplet
+              delete initparams.thing // 修改产品时 不修改物模型
               this.editProduct(initparams)
             }
           } else {
@@ -2354,7 +2437,13 @@
           const res = await ImportParse('Product', parseFile)
           loading.close()
           dgiotlog.log('eresresrror', res)
-          this.$message.success(``)
+          this.$message({
+            showClose: true,
+            message: this.$translateTitle(
+              'user.Save the template successfully'
+            ),
+            type: 'success',
+          })
         } catch (error) {
           loading.close()
           dgiotlog.log('error', error)
@@ -2363,13 +2452,15 @@
         this.$dgiotBus.$emit('reload-router-view')
       },
       async createProduct(params) {
-        const res = await this.$create_object('Product', params)
+        const res = await postProduct(params)
+        dgiotlogger.info('postProduct：', res)
         if (res.objectId) {
           this.initQuery('产品创建成功', 'success')
         } else {
           this.$message({
             type: 'error',
-            message: res.error,
+            message: res.error || res,
+            showClose: true,
           })
         }
       },

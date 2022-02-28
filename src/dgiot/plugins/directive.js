@@ -3,7 +3,7 @@
  * @Date: 2021-03-17 11:39:20
  * @LastEditTime: 2021-03-17 11:39:59
  * @LastEditors: h7ml
- * @FilePath: \dgiot-dashboard\src\vab\plugins\directive.js
+ * @FilePath: \dgiot-dashboard\src\dgiot\plugins\directive.js
  * @Description:
  */
 import { hasAccess } from '@/utils/data/hasAccess'

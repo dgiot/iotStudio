@@ -2,7 +2,7 @@
 <template>
   <div class="icon-selector-popper">
     <div class="dialog">
-      <vab-input
+      <dgiot-input
         ref="uploadFinish"
         :params="inputParams"
         @fileInfo="fileInfo"
@@ -58,19 +58,19 @@
           低代码
         </el-button>
         <el-divider />
-        <el-button
-          draggable="true"
-          size="mini"
-          type="primary"
-          @click.native="
-            createHistory({
-              productid: $route.query.productid,
-              hidden: false,
-            })
-          "
-        >
-          历史数据
-        </el-button>
+        <!--        <el-button-->
+        <!--          draggable="true"-->
+        <!--          size="mini"-->
+        <!--          type="primary"-->
+        <!--          @click.native="-->
+        <!--            createHistory({-->
+        <!--              productid: $route.query.productid,-->
+        <!--              hidden: false,-->
+        <!--            })-->
+        <!--          "-->
+        <!--        >-->
+        <!--          历史数据-->
+        <!--        </el-button>-->
       </a-collapse-panel>
       <a-collapse-panel
         key="3"
@@ -99,7 +99,7 @@
       <!--                    v-svg-drag="{ callback: coordinate }"-->
       <!--                    @mousedown="moveSvg(item)"-->
       <!--                  >-->
-      <!--                    <VabIconfont-->
+      <!--                    <DgiotIconfont-->
       <!--                      :name="item.font_class"-->
       <!--                      :title="item.name"-->
       <!--                      type="svg"-->
@@ -111,8 +111,8 @@
       <!--            <el-collapse-item name="image" title="图标">-->
       <!--              <el-row :gutter="20">-->
       <!--                <el-col :span="24">-->
-      <!--                  <vab-query-form>-->
-      <!--                    <vab-query-form-top-panel>-->
+      <!--                  <dgiot-query-form>-->
+      <!--                    <dgiot-query-form-top-panel>-->
       <!--                      <el-form-->
       <!--                        :inline="true"-->
       <!--                        label-width="0"-->
@@ -129,8 +129,8 @@
       <!--                          </el-input>-->
       <!--                        </el-form-item>-->
       <!--                      </el-form>-->
-      <!--                    </vab-query-form-top-panel>-->
-      <!--                  </vab-query-form>-->
+      <!--                    </dgiot-query-form-top-panel>-->
+      <!--                  </dgiot-query-form>-->
       <!--                </el-col>-->
       <!--              </el-row>-->
       <!--            </el-collapse-item>-->
@@ -315,7 +315,7 @@
             _this.$translateTitle('图片加载完成,可双击画图区域填充'),
             'success',
             false,
-            'vab-hey-message-success'
+            'dgiot-hey-message-success'
           )
         }
         _this.setFlag('image')

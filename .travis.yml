@@ -16,7 +16,7 @@ before_install:
   - pnpm lint:fix
   - pnpm lint:style
 install:
-  - pnpm i --frozen-lockfile
+  - pnpm install
 scripts:
   - pnpm build
 deploy:

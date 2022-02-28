@@ -84,7 +84,7 @@
         <el-form ref="dataform" label-width="100px" :model="dataform">
           <el-form-item :label="$translateTitle('task.data')" prop="data">
             <div style="height: 30vh; overflow: auto">
-              <vab-monaco-plus
+              <dgiot-monaco-plus
                 ref="monacoCode"
                 :codes="dataform.data"
                 :lang="'json'"
@@ -402,10 +402,18 @@
           if (valid) {
             if (this.editIndexId != undefined) {
               this.dataform.params[this.editIndexId] = this.param
-              this.$message.success('编辑成功')
+              this.$message({
+                showClose: true,
+                message: '编辑成功',
+                type: 'success',
+              })
             } else {
               this.dataform.params.push(this.param)
-              this.$message.success('新增成功')
+              this.$message({
+                showClose: true,
+                message: '新增成功',
+                type: 'success',
+              })
             }
             this.saveDict()
             this.edit_param_dialog = false

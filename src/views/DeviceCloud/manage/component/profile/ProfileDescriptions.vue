@@ -2,7 +2,7 @@
   <div :key="productId">
     <a-tabs default-active-key="物模型" type="card" @change="handletabs">
       <a-tab-pane key="物模型" :disabled="!productId" tab="物模型">
-        <vab-query-form-left-panel>
+        <dgiot-query-form-left-panel>
           <el-button
             :disabled="!productId"
             size="small"
@@ -20,7 +20,7 @@
           >
             {{ $translateTitle('product.newobjectmodel') }}
           </el-button>
-        </vab-query-form-left-panel>
+        </dgiot-query-form-left-panel>
         <el-table
           :key="tableType"
           v-loading="tableLoading"
@@ -251,7 +251,7 @@
               </el-button>
             </el-form-item>
           </el-form>
-          <vab-monaco-plus
+          <dgiot-monaco-plus
             ref="dgiotCodes"
             :codes="ace_editor"
             :lang="'proto'"
@@ -499,14 +499,15 @@
             }
             if (this.decodeType == 'post') {
               const res = await postDict(params)
-              this.$message.success(
-                `${this.$translateTitle('user.Save the template successfully')}`
-              )
+              this.$message({
+                showClose: true,
+                message: `${this.$translateTitle(
+                  'user.Save the template successfully'
+                )}`,
+                type: 'success',
+              })
             } else {
               const { msg } = await putDict(this.decoderInfo.objectId, params)
-              this.$message.success(
-                `${this.$translateTitle('user.Save the template successfully')}`
-              )
             }
           })
         })
@@ -544,7 +545,7 @@
         this.$baseMessage(
           this.$translateTitle('alert.Data request successfully'),
           'success',
-          'vab-hey-message-success'
+          'dgiot-hey-message-success'
         )
         this.amisFlag = false
       },

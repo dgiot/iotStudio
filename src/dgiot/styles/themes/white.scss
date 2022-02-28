@@ -2,7 +2,7 @@
  * @description 碰触纯白主题
  */
 
-body.vab-theme-white {
+body.dgiot-theme-white {
   $base-menu-background: #fff;
   $base-color-blue: #1890ff;
   $base-color-blue-light: mix($base-color-white, $base-color-blue, 90%);
@@ -114,10 +114,10 @@ body.vab-theme-white {
     }
   }
 
-  .vab-layout-vertical,
-  .vab-layout-horizontal,
-  .vab-layout-comprehensive,
-  .vab-layout-common {
+  .dgiot-layout-vertical,
+  .dgiot-layout-horizontal,
+  .dgiot-layout-comprehensive,
+  .dgiot-layout-common {
     .el-menu {
       @include container;
 
@@ -130,7 +130,7 @@ body.vab-theme-white {
       }
     }
 
-    .vab-side-bar,
+    .dgiot-side-bar,
     .comprehensive-bar-container {
       @include container;
       box-shadow: 0 1px 4px rgba(0, 21, 41, 0.08) !important;
@@ -141,7 +141,7 @@ body.vab-theme-white {
     }
   }
 
-  .vab-header {
+  .dgiot-header {
     @include container;
 
     .right-panel {
@@ -159,7 +159,7 @@ body.vab-theme-white {
       }
     }
 
-    .vab-main {
+    .dgiot-main {
       @include container;
 
       .ri-notification-line {

@@ -87,7 +87,7 @@
                   {{ $translateTitle('登录') }}
                 </div>
               </router-link>
-              <vab-language
+              <dgiot-language
                 style="
                   float: right;
                   margin-top: 20px;
@@ -222,7 +222,12 @@
         this.$refs['registerForm'].validate(async (valid) => {
           if (valid) {
             const { msg } = await register(this.form)
-            this.$baseMessage(msg, 'success', false, 'vab-hey-message-success')
+            this.$baseMessage(
+              msg,
+              'success',
+              false,
+              'dgiot-hey-message-success'
+            )
           }
         })
       },

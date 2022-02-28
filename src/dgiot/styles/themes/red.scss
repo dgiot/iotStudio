@@ -2,7 +2,7 @@
  * @description 绿荫草场主题
  */
 
-.vab-theme-red {
+.dgiot-theme-red {
   $base-menu-background: #20222a;
 
   $base-color-blue: #f34d37;
@@ -44,7 +44,7 @@
     }
   }
 
-  .vab-column-bar-container.el-scrollbar {
+  .dgiot-column-bar-container.el-scrollbar {
     .el-tabs {
       .el-tabs__nav-wrap.is-left {
         @include container;
@@ -74,34 +74,34 @@
     }
   }
 
-  .vab-column-bar-container-card.el-scrollbar {
+  .dgiot-column-bar-container-card.el-scrollbar {
     .el-tabs {
       .el-tabs__item.is-active {
         background: transparent !important;
 
-        .vab-column-grid {
+        .dgiot-column-grid {
           background: $base-color-blue !important;
         }
       }
     }
   }
 
-  .vab-column-bar-container-arrow.el-scrollbar {
+  .dgiot-column-bar-container-arrow.el-scrollbar {
     .el-tabs {
       .el-tabs__item.is-active {
         background: transparent !important;
 
-        .vab-column-grid {
+        .dgiot-column-grid {
           background: transparent !important;
         }
       }
     }
   }
 
-  .vab-layout-vertical,
-  .vab-layout-horizontal,
-  .vab-layout-comprehensive,
-  .vab-layout-float {
+  .dgiot-layout-vertical,
+  .dgiot-layout-horizontal,
+  .dgiot-layout-comprehensive,
+  .dgiot-layout-float {
     .el-menu {
       @include container;
 
@@ -114,7 +114,7 @@
       }
     }
 
-    .vab-side-bar,
+    .dgiot-side-bar,
     .comprehensive-bar-container {
       @include container;
 
@@ -124,7 +124,7 @@
     }
   }
 
-  .vab-layout-float {
+  .dgiot-layout-float {
     .el-scrollbar__view .el-menu--collapse.el-menu li.el-submenu.is-active {
       .el-submenu__title {
         background-color: transparent !important;
@@ -136,7 +136,7 @@
     }
   }
 
-  .vab-layout-common {
+  .dgiot-layout-common {
     .el-menu {
       @include container-common;
 
@@ -149,7 +149,7 @@
       }
     }
 
-    .vab-side-bar {
+    .dgiot-side-bar {
       @include container-common;
 
       .el-menu-item {
@@ -158,10 +158,10 @@
     }
   }
 
-  .vab-header {
+  .dgiot-header {
     @include container;
 
-    .vab-main {
+    .dgiot-main {
       @include container;
 
       .right-panel {
@@ -181,11 +181,11 @@
     }
   }
 
-  .vab-tabs {
+  .dgiot-tabs {
     &-more {
       &-active,
       &:hover {
-        .vab-tabs-more-icon {
+        .dgiot-tabs-more-icon {
           .box:before,
           .box:after {
             background: $base-color-blue !important;
@@ -194,7 +194,7 @@
       }
     }
 
-    .vab-tabs-content-card {
+    .dgiot-tabs-content-card {
       .el-tabs__header {
         .el-tabs__item {
           &.is-active {
@@ -210,7 +210,7 @@
       }
     }
 
-    .vab-tabs-content-smart {
+    .dgiot-tabs-content-smart {
       .el-tabs__header {
         .el-tabs__item {
           &.is-active {
@@ -228,7 +228,7 @@
       }
     }
 
-    .vab-tabs-content-smooth {
+    .dgiot-tabs-content-smooth {
       .el-tabs__header {
         .el-tabs__item {
           &.is-active {
@@ -249,7 +249,7 @@
     }
   }
 
-  .vab-nav {
+  .dgiot-nav {
     .el-tabs__item.is-active,
     .el-tabs__item:hover {
       color: $base-color-blue !important;

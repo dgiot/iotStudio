@@ -98,7 +98,7 @@
                 {{ $translateTitle('home.registered') }}
               </div>
             </router-link>
-            <vab-language
+            <dgiot-language
               style="float: right; margin-top: 20px; cursor: pointer"
             />
           </span>
@@ -304,7 +304,7 @@
           this.$baseMessage(
             this.$translateTitle('alert.Data request error') + `${error}`,
             'error',
-            'vab-hey-message-error'
+            'dgiot-hey-message-error'
           )
         }
       },
@@ -329,7 +329,7 @@
           this.$baseMessage(
             this.$translateTitle('alert.Data request error') + `${error}`,
             'error',
-            'vab-hey-message-error'
+            'dgiot-hey-message-error'
           )
         }
       },
@@ -364,7 +364,7 @@
           this.$baseMessage(
             this.$translateTitle('alert.Data request error') + `${error}`,
             'error',
-            'vab-hey-message-error'
+            'dgiot-hey-message-error'
           )
         }
       },
@@ -484,7 +484,7 @@
           this.$baseMessage(
             this.$translateTitle('alert.Data request error') + `${error}`,
             'error',
-            'vab-hey-message-error'
+            'dgiot-hey-message-error'
           )
         }
       },

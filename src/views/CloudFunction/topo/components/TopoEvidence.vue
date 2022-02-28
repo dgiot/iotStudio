@@ -32,7 +32,7 @@
           <br />
           对应数据 {{ evidence.evidenceList }}
           <div v-if="evidence.node.attrs.icon === 'timeline'">
-            <vabChart
+            <dgiotChart
               ref="charts"
               :after-config="afterConfig"
               :data="chartData"

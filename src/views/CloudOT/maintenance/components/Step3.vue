@@ -171,6 +171,15 @@
               h4: '已结单',
               p: `${this.username} 已结束这条工单`,
             })
+            this.$dgiotBus.$emit(
+              `MqttPublish`,
+              '/workOrderCompletion/up',
+              JSON.stringify({
+                id: objectId,
+              }),
+              0,
+              false
+            )
             const params = {
               status: 3,
               info: info,

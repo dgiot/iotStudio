@@ -51,7 +51,7 @@
       </el-form-item>
       <el-form-item :label="$translateTitle('task.data')" prop="data">
         <div style="height: 30vh; overflow: auto">
-          <vab-monaco-plus
+          <dgiot-monaco-plus
             ref="monacoCode"
             :codes="codes"
             :lang="'json'"
@@ -139,6 +139,13 @@
               this.$message.success(
                 `${this.$translateTitle('user.Save the template successfully')}`
               )
+              this.$message({
+                showClose: true,
+                message: `${this.$translateTitle(
+                  'user.Save the template successfully'
+                )}`,
+                type: 'success',
+              })
             } else {
               const { msg } = await putDict(this.dictId, params)
               this.$message.success(

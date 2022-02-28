@@ -81,10 +81,11 @@
           console.log('amisEnv', amisEnv)
           console.groupEnd()
         }
-        if (this.types.includes(type)) this.designLowCode(type, objectId, data)
-        else {
-          this.$message.error('暂不支持该类型低代码设计')
-        }
+        this.designLowCode(type, objectId, data)
+        // if (this.types.includes(type)) this.designLowCode(type, objectId, data)
+        // else {
+        //   this.$message.error('暂不支持该类型低代码设计')
+        // }
       })
     },
     beforeCreate() {}, //生命周期 - 创建之前

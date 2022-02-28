@@ -7,7 +7,12 @@
     </div>
     <div class="block" style="margin-top: 10px">
       <el-table
-        :data="tableData.slice((start - 1) * length, start * length)"
+        :data="
+          tableData.filter(
+            (data) =>
+              !search || data.app.toLowerCase().includes(search.toLowerCase())
+          )
+        "
         :height="height"
         style="width: 100%; text-align: center"
       >
@@ -35,12 +40,11 @@
           :label="$translateTitle('developer.operation')"
         >
           <!-- eslint-disable-next-line -->
-          <template slot="header">
+          <template slot="header" slot-scope="scope">
             <el-input
               v-model="search"
               :placeholder="$translateTitle('plugins.enterappsearch')"
               size="mini"
-              @change="changevalue"
             />
           </template>
           <template #default="{ row }">
@@ -94,6 +98,7 @@
         </el-table-column>
       </el-table>
     </div>
+    <!--    fix https://gitee.com/dgiiot/dgiot/issues/I4TRSB-->
     <div class="block">
       <el-pagination
         background
@@ -101,7 +106,15 @@
         :page-size="length"
         :page-sizes="[10, 25, 50, 100]"
         style="margin-top: 30px"
-        :total="total"
+        :total="
+          search.length
+            ? tableData.filter(
+                (data) =>
+                  !search ||
+                  data.app.toLowerCase().includes(search.toLowerCase())
+              ).length
+            : total
+        "
         @current-change="handleCurrentChange"
         @size-change="handleSizeChange"
       />
@@ -226,16 +239,6 @@
       },
       handleClose() {
         this.dialogVisible = false
-      },
-      changevalue() {
-        if (this.search == '') {
-          this.tableData = table
-        }
-        this.tableData = this.tableData.filter(
-          (data) =>
-            !this.search ||
-            data.app.toLowerCase().includes(this.search.toLowerCase())
-        )
       },
       changedialog() {
         if (this.searchvalue == '') {

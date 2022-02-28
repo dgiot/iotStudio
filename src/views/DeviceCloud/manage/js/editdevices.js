@@ -484,7 +484,7 @@ export default {
         this.$baseMessage(
           this.$translateTitle('alert.Data request error') + `${error}`,
           'error',
-          'vab-hey-message-error'
+          'dgiot-hey-message-error'
         )
       }
     },
@@ -548,7 +548,7 @@ export default {
         this.$baseMessage(
           this.$translateTitle('alert.Data request successfully'),
           'success',
-          'vab-hey-message-success'
+          'dgiot-hey-message-success'
         )
         loading.close()
         this.mapLabel = mapLabel
@@ -562,7 +562,7 @@ export default {
         this.$baseMessage(
           this.$translateTitle('alert.Data request error') + `${error}`,
           'error',
-          'vab-hey-message-error'
+          'dgiot-hey-message-error'
         )
       }
     },

@@ -2,7 +2,6 @@ import lowcodeDesign from '@/views/CloudFunction/lowcode/components/index'
 import { queryDevice, delDevice, putDevice } from '@/api/Device'
 import { postHead } from '@/api/Opc'
 import { postreport } from '@/api/Report'
-import VabDraggable from 'vuedraggable'
 import { mapGetters } from 'vuex'
 import { queryProduct } from '@/api/Product'
 import { queryView } from '@/api/View'
@@ -28,7 +27,6 @@ export default {
     },
   },
   components: {
-    VabDraggable,
     lowcodeDesign,
   },
   data() {
@@ -282,7 +280,7 @@ export default {
         this.$baseMessage(
           this.$translateTitle('alert.Data request error') + `${error}`,
           'error',
-          'vab-hey-message-error'
+          'dgiot-hey-message-error'
         )
       }
     },
@@ -377,7 +375,7 @@ export default {
         this.$baseMessage(
           this.$translateTitle('alert.Data request error') + `${error}`,
           'error',
-          'vab-hey-message-error'
+          'dgiot-hey-message-error'
         )
       }
     },
@@ -401,7 +399,7 @@ export default {
         this.$baseMessage(
           this.$translateTitle('alert.Data request error') + `${error}`,
           'error',
-          'vab-hey-message-error'
+          'dgiot-hey-message-error'
         )
       }
     },
@@ -481,7 +479,7 @@ export default {
         this.$baseMessage(
           this.$translateTitle('alert.Data request successfully'),
           'success',
-          'vab-hey-message-success'
+          'dgiot-hey-message-success'
         )
         loading.close()
       } catch (error) {
@@ -489,7 +487,7 @@ export default {
         this.$baseMessage(
           this.$translateTitle('alert.Data request error') + `${error}`,
           'error',
-          'vab-hey-message-error'
+          'dgiot-hey-message-error'
         )
       }
     },
@@ -519,7 +517,7 @@ export default {
         this.$baseMessage(
           this.$translateTitle('alert.Data request error') + `${error}`,
           'error',
-          'vab-hey-message-error'
+          'dgiot-hey-message-error'
         )
       }
     },
@@ -554,7 +552,7 @@ export default {
             this.$baseMessage(
               this.$translateTitle('alert.Data request error') + `${error}`,
               'error',
-              'vab-hey-message-error'
+              'dgiot-hey-message-error'
             )
           }
         }
@@ -594,7 +592,7 @@ export default {
             _this.$baseMessage(
               this.$translateTitle('alert.Data request error') + `${error}`,
               'error',
-              'vab-hey-message-error'
+              'dgiot-hey-message-error'
             )
           }
         }
@@ -620,7 +618,7 @@ export default {
         this.$baseMessage(
           this.$translateTitle('alert.Data request error') + `${error}`,
           'error',
-          'vab-hey-message-error'
+          'dgiot-hey-message-error'
         )
       }
     },
@@ -648,7 +646,7 @@ export default {
         this.$baseMessage(
           this.$translateTitle('alert.Data request error') + `${error}`,
           'error',
-          'vab-hey-message-error'
+          'dgiot-hey-message-error'
         )
       }
     },
@@ -675,7 +673,7 @@ export default {
           this.$baseMessage(
             this.$translateTitle('alert.Data request successfully'),
             'success',
-            'vab-hey-message-success'
+            'dgiot-hey-message-success'
           )
           setTimeout(() => {
             const params = {
@@ -691,7 +689,7 @@ export default {
               'https://view.officeapps.live.com/op/view.aspx?src=' + fileUrl
           }, 1200)
         } else {
-          this.$baseMessage(`${msg}`, 'error', 'vab-hey-message-error')
+          this.$baseMessage(`${msg}`, 'error', 'dgiot-hey-message-error')
         }
         loading.close()
       } catch (error) {
@@ -699,7 +697,7 @@ export default {
         this.$baseMessage(
           this.$translateTitle('alert.Data request error') + `${error}`,
           'error',
-          'vab-hey-message-error'
+          'dgiot-hey-message-error'
         )
       }
     },
@@ -730,7 +728,7 @@ export default {
         this.$baseMessage(
           this.$translateTitle('user.successfully deleted'),
           'success',
-          'vab-hey-message-success'
+          'dgiot-hey-message-success'
         )
         loading.close()
         this.fetchData()
@@ -739,7 +737,7 @@ export default {
         this.$baseMessage(
           this.$translateTitle('user.error deleted') + `${error}`,
           'error',
-          'vab-hey-message-error'
+          'dgiot-hey-message-error'
         )
       }
     },
@@ -834,7 +832,7 @@ export default {
         _this.$baseMessage(
           _this.$translateTitle('alert.Data request error') + `${error}`,
           'error',
-          'vab-hey-message-error'
+          'dgiot-hey-message-error'
         )
       }
     },
@@ -891,7 +889,7 @@ export default {
         this.$baseMessage(
           this.$translateTitle('alert.Data request error') + `${error}`,
           'error',
-          'vab-hey-message-error'
+          'dgiot-hey-message-error'
         )
       }
     },
@@ -993,7 +991,7 @@ export default {
         _this.$baseMessage(
           _this.$translateTitle('alert.Data request error') + `${error}`,
           'error',
-          'vab-hey-message-error'
+          'dgiot-hey-message-error'
         )
       }
       _this.subRealtimedata(params)
@@ -1025,7 +1023,7 @@ export default {
         this.$baseMessage(
           this.$translateTitle('alert.Data request successfully'),
           'success',
-          'vab-hey-message-success'
+          'dgiot-hey-message-success'
         )
         loading.close()
       } catch (error) {
@@ -1033,7 +1031,7 @@ export default {
         this.$baseMessage(
           this.$translateTitle('alert.Data request error') + `${error}`,
           'error',
-          'vab-hey-message-error'
+          'dgiot-hey-message-error'
         )
       }
     },
@@ -1074,7 +1072,7 @@ export default {
           this.$baseMessage(
             this.$translateTitle('alert.Data request error') + `${error}`,
             'error',
-            'vab-hey-message-error'
+            'dgiot-hey-message-error'
           )
         }
       } catch (error) {
@@ -1082,7 +1080,7 @@ export default {
         this.$baseMessage(
           this.$translateTitle('alert.Data request error') + `${error}`,
           'error',
-          'vab-hey-message-error'
+          'dgiot-hey-message-error'
         )
       }
     },

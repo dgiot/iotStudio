@@ -21,10 +21,10 @@
         <!--        <websocket :topic="topic" />-->
       </el-drawer>
     </div>
-    <vab-input ref="uploadFinish" @fileInfo="fileInfo" />
+    <dgiot-input ref="uploadFinish" @fileInfo="fileInfo" />
     <div class="topo-header-top">
-      <vab-query-form class="topo-header-top-query">
-        <vab-query-form-left-panel class="topo-header-top-query-left-panel">
+      <dgiot-query-form class="topo-header-top-query">
+        <dgiot-query-form-left-panel class="topo-header-top-query-left-panel">
           <a-dropdown
             v-show="!noTools"
             class="topo-header-top-query-left-panel-dropdown"
@@ -85,8 +85,8 @@
           <!--            size="medium"-->
           <!--            @change="setColor"-->
           <!--          />-->
-        </vab-query-form-left-panel>
-        <vab-query-form-right-panel>
+        </dgiot-query-form-left-panel>
+        <dgiot-query-form-right-panel>
           <!--          <dgiot-icon-->
           <!--            style="cursor: pointer"-->
           <!--            :icon="-->
@@ -103,10 +103,10 @@
           <!--          >-->
           <!--            组态数据-->
           <!--          </el-button>-->
-        </vab-query-form-right-panel>
-      </vab-query-form>
+        </dgiot-query-form-right-panel>
+      </dgiot-query-form>
       <el-drawer append-to-body :visible.sync="drawerTopo" :with-header="false">
-        <vab-monaco-plus
+        <dgiot-monaco-plus
           v-if="drawerTopo"
           ref="monacoCodeTopo"
           :codes="codes"

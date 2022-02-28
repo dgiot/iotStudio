@@ -12,8 +12,8 @@
             style="box-sizing: border-box; padding: 10px; background: #ffffff"
           >
             <!-- 导出 -->
-            <vab-query-form>
-              <vab-query-form-left-panel :disabled="!productName.length">
+            <dgiot-query-form>
+              <dgiot-query-form-left-panel :disabled="!productName.length">
                 <div class="addtopic">
                   <el-button
                     size="small"
@@ -30,15 +30,15 @@
                     {{ $translateTitle('product.Set as template') }}
                   </el-button>
                 </div>
-              </vab-query-form-left-panel>
-              <vab-query-form-right-panel>
-                <vab-help
+              </dgiot-query-form-left-panel>
+              <dgiot-query-form-right-panel>
+                <dgiot-help
                   src="https://tech.iotn2n.com/w/docs/details?id=6"
                   title="产品下的所有设备都会继承该产品的 Topic 类"
                   trigger="click"
                 />
-              </vab-query-form-right-panel>
-            </vab-query-form>
+              </dgiot-query-form-right-panel>
+            </dgiot-query-form>
             <div>
               <el-descriptions
                 v-loading="productName == ''"
@@ -182,39 +182,37 @@
                     <el-link
                       type="success"
                       @click.native="
-                        feateditorParser1(productInfo, 'parser', true)
+                        feateditorAmis(amisproductInfo, 'parser', true)
                       "
                     >
                       {{ $translateTitle('product.parser') }}
                     </el-link>
                   </template>
                   <el-link
-                    :type="
-                      productInfo.config.parser.length ? 'success' : 'default'
-                    "
+                    :type="amisproductInfo.length ? 'success' : 'default'"
                     @click.native="
-                      feateditorParser1(productInfo, 'parser', false)
+                      feateditorAmis(amisproductInfo, 'parser', false)
                     "
                   >
-                    {{ productInfo.config.parser.length || 0 }}
+                    {{ amisproductInfo.length || 0 }}
                   </el-link>
                 </el-descriptions-item>
-                <el-descriptions-item>
-                  <template slot="label">
-                    <el-link
-                      type="success"
-                      @click="feateditorParser1(productInfo, 'profile', true)"
-                    >
-                      {{ $translateTitle('product.profile') }}
-                    </el-link>
-                  </template>
-                  <el-link
-                    type="primary"
-                    @click="feateditorParser1(productInfo, 'profile', false)"
-                  >
-                    {{ productInfo.config.profile.length || 0 }}
-                  </el-link>
-                </el-descriptions-item>
+                <!--                <el-descriptions-item>-->
+                <!--                  <template slot="label">-->
+                <!--                    <el-link-->
+                <!--                      type="success"-->
+                <!--                      @click="feateditorParser1(productInfo, 'profile', true)"-->
+                <!--                    >-->
+                <!--                      {{ $translateTitle('product.profile') }}-->
+                <!--                    </el-link>-->
+                <!--                  </template>-->
+                <!--                  <el-link-->
+                <!--                    type="primary"-->
+                <!--                    @click="feateditorParser1(productInfo, 'profile', false)"-->
+                <!--                  >-->
+                <!--                    {{ productInfo.config.profile.length || 0 }}-->
+                <!--                  </el-link>-->
+                <!--                </el-descriptions-item>-->
                 <!--                <el-descriptions-item>-->
                 <!--                  <template slot="label">-->
                 <!--                    {{ $translateTitle("product.decoder") }}-->
@@ -235,8 +233,8 @@
           <div
             style="box-sizing: border-box; padding: 10px; background: #ffffff"
           >
-            <vab-query-form>
-              <vab-query-form-left-panel>
+            <dgiot-query-form>
+              <dgiot-query-form-left-panel>
                 <div class="addtopic">
                   <el-button
                     size="small"
@@ -246,15 +244,15 @@
                     {{ $translateTitle('product.customtopicclass') }}
                   </el-button>
                 </div>
-              </vab-query-form-left-panel>
-              <vab-query-form-right-panel>
-                <vab-help
+              </dgiot-query-form-left-panel>
+              <dgiot-query-form-right-panel>
+                <dgiot-help
                   src="https://tech.iotn2n.com/w/docs/details?id=6"
                   title="产品下的所有设备都会继承该产品的 Topic 类"
                   trigger="click"
                 />
-              </vab-query-form-right-panel>
-            </vab-query-form>
+              </dgiot-query-form-right-panel>
+            </dgiot-query-form>
             <el-table
               :data="
                 topicData.slice(
@@ -341,7 +339,7 @@
               </el-table-column>
               <template #empty>
                 <el-image
-                  class="vab-data-empty"
+                  class="dgiot-data-empty"
                   :src="
                     require('../../../../public/assets/images/platform/assets/empty_images/data_empty.png')
                   "
@@ -477,13 +475,13 @@
           <div>
             <el-row :gutter="24">
               <el-col :lg="4" :md="5" :sm="6" :xl="3" :xs="24">
-                <vab-query-form class="query-form">
-                  <vab-query-form-top-panel>
+                <dgiot-query-form class="query-form">
+                  <dgiot-query-form-top-panel>
                     <el-button type="primary" @click.native="addMachine">
                       添加类型
                     </el-button>
-                  </vab-query-form-top-panel>
-                </vab-query-form>
+                  </dgiot-query-form-top-panel>
+                </dgiot-query-form>
                 <el-table
                   border
                   :data="FromMachine"
@@ -511,7 +509,7 @@
                   />
                   <template #empty>
                     <el-image
-                      class="vab-data-empty"
+                      class="dgiot-data-empty"
                       :src="
                         require('../../../../public/assets/images/platform/assets/empty_images/data_empty.png')
                       "
@@ -520,8 +518,8 @@
                 </el-table>
               </el-col>
               <el-col :lg="20" :md="19" :sm="18" :xl="21" :xs="24">
-                <vab-query-form class="query-form">
-                  <vab-query-form-right-panel style="width: 100%">
+                <dgiot-query-form class="query-form">
+                  <dgiot-query-form-right-panel style="width: 100%">
                     <div class="stripe-panel">
                       <el-button
                         size="small"
@@ -560,9 +558,10 @@
                         {{ $translateTitle('product.newstandardattribute') }}
                       </el-button>
                     </div>
-                  </vab-query-form-right-panel>
-                </vab-query-form>
+                  </dgiot-query-form-right-panel>
+                </dgiot-query-form>
                 <el-table
+                  key="upKey"
                   border
                   :data="
                     wmxData.slice(
@@ -623,7 +622,7 @@
                         </el-table-column>
                         <template #empty>
                           <el-image
-                            class="vab-data-empty"
+                            class="dgiot-data-empty"
                             :src="
                               require('../../../../public/assets/images/platform/assets/empty_images/data_empty.png')
                             "
@@ -765,7 +764,7 @@
                   </el-table-column>
                   <template #empty>
                     <el-image
-                      class="vab-data-empty"
+                      class="dgiot-data-empty"
                       :src="
                         require('../../../../public/assets/images/platform/assets/empty_images/data_empty.png')
                       "
@@ -854,7 +853,7 @@
                   </el-table-column>
                   <template #empty>
                     <el-image
-                      class="vab-data-empty"
+                      class="dgiot-data-empty"
                       :src="
                         require('../../../../public/assets/images/platform/assets/empty_images/data_empty.png')
                       "
@@ -894,12 +893,14 @@
             :append-to-body="true"
             :before-close="wmxhandleClose"
             :close-on-click-modal="false"
+            fullscreen
             :title="wmxSituation + '自定义属性'"
-            top="5vh"
+            top="0vh"
             :visible.sync="wmxdialogVisible"
-            width="60%"
+            width="100%"
           >
             <dgiot-wmx
+              :key="upKey"
               ref="sizeForm"
               :size-form1="sizeForm"
               @addDas="addDas"
@@ -1346,7 +1347,7 @@
               </el-table-column>
               <template #empty>
                 <el-image
-                  class="vab-data-empty"
+                  class="dgiot-data-empty"
                   :src="
                     require('../../../../public/assets/images/platform/assets/empty_images/data_empty.png')
                   "
@@ -1429,7 +1430,7 @@
               </el-table-column>
               <template #empty>
                 <el-image
-                  class="vab-data-empty"
+                  class="dgiot-data-empty"
                   :src="
                     require('../../../../public/assets/images/platform/assets/empty_images/data_empty.png')
                   "
@@ -1482,8 +1483,8 @@
           :label="$translateTitle('product.physicalaccess')"
           name="fiveth"
         >
-          <vab-query-form>
-            <vab-query-form-left-panel>
+          <dgiot-query-form>
+            <dgiot-query-form-left-panel>
               <div
                 class="productchannel"
                 style="padding: 10px; text-align: right"
@@ -1496,15 +1497,15 @@
                   {{ $translateTitle('developer.createchannel') }}
                 </el-button>
               </div>
-            </vab-query-form-left-panel>
-            <vab-query-form-right-panel>
-              <vab-help
+            </dgiot-query-form-left-panel>
+            <dgiot-query-form-right-panel>
+              <dgiot-help
                 src="https://tech.iotn2n.com/w/docs/details?id=6"
                 title="产品下的所有设备都会继承该产品的 Topic 类"
                 trigger="click"
               />
-            </vab-query-form-right-panel>
-          </vab-query-form>
+            </dgiot-query-form-right-panel>
+          </dgiot-query-form>
           <div>
             <el-table
               :data="channelData"
@@ -1585,7 +1586,7 @@
               </el-table-column>
               <template #empty>
                 <el-image
-                  class="vab-data-empty"
+                  class="dgiot-data-empty"
                   :src="
                     require('../../../../public/assets/images/platform/assets/empty_images/data_empty.png')
                   "
@@ -1614,8 +1615,8 @@
           :label="$translateTitle('product.materialstorage')"
           name="seven"
         >
-          <vab-query-form>
-            <vab-query-form-left-panel>
+          <dgiot-query-form>
+            <dgiot-query-form-left-panel>
               <div
                 class="productchannel"
                 style="padding: 10px; text-align: right"
@@ -1661,15 +1662,15 @@
                   {{ $translateTitle('developer.createchannel') }}
                 </el-button>
               </div>
-            </vab-query-form-left-panel>
-            <vab-query-form-right-panel>
-              <vab-help
+            </dgiot-query-form-left-panel>
+            <dgiot-query-form-right-panel>
+              <dgiot-help
                 src="https://tech.iotn2n.com/w/docs/details?id=6"
                 title="产品下的所有设备都会继承该产品的 Topic 类"
                 trigger="manual"
               />
-            </vab-query-form-right-panel>
-          </vab-query-form>
+            </dgiot-query-form-right-panel>
+          </dgiot-query-form>
 
           <div>
             <el-table
@@ -1753,7 +1754,7 @@
               </el-table-column>
               <template #empty>
                 <el-image
-                  class="vab-data-empty"
+                  class="dgiot-data-empty"
                   :src="
                     require('../../../../public/assets/images/platform/assets/empty_images/data_empty.png')
                   "
@@ -1951,7 +1952,7 @@
           </el-table-column>
           <template #empty>
             <el-image
-              class="vab-data-empty"
+              class="dgiot-data-empty"
               :src="
                 require('../../../../public/assets/images/platform/assets/empty_images/data_empty.png')
               "

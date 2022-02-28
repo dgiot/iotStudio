@@ -2,10 +2,10 @@
   <div
     ref="custom-table"
     class="custom-table-container"
-    :class="{ 'vab-fullscreen': isFullscreen }"
+    :class="{ 'dgiot-fullscreen': isFullscreen }"
   >
-    <vab-query-form>
-      <vab-query-form-left-panel>
+    <dgiot-query-form>
+      <dgiot-query-form-left-panel>
         <el-form
           ref="form"
           :inline="true"
@@ -41,8 +41,8 @@
             </el-button>
           </el-form-item>
         </el-form>
-      </vab-query-form-left-panel>
-      <vab-query-form-right-panel>
+      </dgiot-query-form-left-panel>
+      <dgiot-query-form-right-panel>
         <div class="stripe-panel">
           <el-checkbox v-model="stripe">斑马纹</el-checkbox>
         </div>
@@ -78,7 +78,7 @@
         </el-popover>
         <el-popover popper-class="custom-table-checkbox" trigger="hover">
           <el-checkbox-group v-model="checkList">
-            <vab-draggable :list="columns" v-bind="dragOptions">
+            <vue-draggable :list="columns" v-bind="dragOptions">
               <div v-for="(item, index) in columns" :key="item + index">
                 <dgiot-icon icon="drag-drop-line" />
                 <el-checkbox
@@ -88,7 +88,7 @@
                   {{ item.label }}
                 </el-checkbox>
               </div>
-            </vab-draggable>
+            </vue-draggable>
           </el-checkbox-group>
           <template #reference>
             <el-button
@@ -100,8 +100,8 @@
             </el-button>
           </template>
         </el-popover>
-      </vab-query-form-right-panel>
-    </vab-query-form>
+      </dgiot-query-form-right-panel>
+    </dgiot-query-form>
 
     <el-table
       ref="tableSort"
@@ -155,7 +155,7 @@
       </el-table-column>
       <template #empty>
         <el-image
-          class="vab-data-empty"
+          class="dgiot-data-empty"
           :src="
             require('../../../../public/assets/images/platform/assets/empty_images/data_empty.png')
           "
@@ -178,14 +178,12 @@
 <script>
   import { doDelete, getList } from '@/api/Mock/table'
   import TableEdit from '@/views/DeviceCloud/empty/tableEdit'
-  import VabDraggable from 'vuedraggable'
 
   export default {
     // eslint-disable-next-line
     name: 'Empty',
     components: {
       TableEdit,
-      VabDraggable,
     },
     data() {
       return {
@@ -291,7 +289,7 @@
         if (row.id) {
           this.$baseConfirm('你确定要删除当前项吗', null, async () => {
             const { msg } = await doDelete({ ids: row.id })
-            this.$baseMessage(msg, 'success', 'vab-hey-message-success')
+            this.$baseMessage(msg, 'success', 'dgiot-hey-message-success')
             await this.fetchData()
           })
         } else {
@@ -299,11 +297,15 @@
             const ids = this.selectRows.map((item) => item.id).join()
             this.$baseConfirm('你确定要删除选中项吗', null, async () => {
               const { msg } = await doDelete({ ids: ids })
-              this.$baseMessage(msg, 'success', 'vab-hey-message-success')
+              this.$baseMessage(msg, 'success', 'dgiot-hey-message-success')
               await this.fetchData()
             })
           } else {
-            this.$baseMessage('未选中任何行', 'error', 'vab-hey-message-error')
+            this.$baseMessage(
+              '未选中任何行',
+              'error',
+              'dgiot-hey-message-error'
+            )
           }
         }
       },

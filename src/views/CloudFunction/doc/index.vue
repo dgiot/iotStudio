@@ -4,8 +4,8 @@
       <doc-dialog ref="DocDialog" />
     </div>
     <div class="dgiot-doc-header">
-      <vab-query-form>
-        <vab-query-form-left-panel>
+      <dgiot-query-form>
+        <dgiot-query-form-left-panel>
           <el-form
             ref="form"
             :inline="true"
@@ -38,8 +38,8 @@
               </el-button>
             </el-form-item>
           </el-form>
-        </vab-query-form-left-panel>
-      </vab-query-form>
+        </dgiot-query-form-left-panel>
+      </dgiot-query-form>
     </div>
     <div class="dgiot-doc-center">
       <a-row class="dgiot-doc-center-row" :gutter="24">
@@ -63,7 +63,7 @@
           >
             <el-image slot="cover" :alt="item.ico" :src="item.ico">
               <div slot="error" class="block image-slot">
-                <vab-empty height="100px" width="100" />
+                <dgiot-empty height="100px" width="100" />
               </div>
             </el-image>
             <!--            eslint-disable-next-line-->
@@ -152,7 +152,7 @@
             this.$baseMessage(
               this.$translateTitle('Maintenance.successfully deleted'),
               'success',
-              'vab-hey-message-success'
+              'dgiot-hey-message-success'
             )
             setTimeout(() => {
               this.queryDoc()
@@ -184,7 +184,7 @@
           this.$baseMessage(
             this.$translateTitle('alert.Data request error') + `${error}`,
             'error',
-            'vab-hey-message-error'
+            'dgiot-hey-message-error'
           )
         }
       },

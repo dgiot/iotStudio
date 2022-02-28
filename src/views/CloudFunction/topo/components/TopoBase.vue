@@ -71,10 +71,6 @@
     components: {},
     data() {
       return {
-        nodeAttr: {
-          description: {},
-          visible: false,
-        },
         dgiotDragEvent: false,
         contextMenuData: {
           menuName: 'demo',
@@ -146,13 +142,6 @@
     },
     watch: {},
     mounted() {
-      this.nodeAttr.visible = false
-      this.$dgiotBus.$off('nodeInfo')
-      this.$dgiotBus.$on('nodeInfo', (args) => {
-        console.log(args, 'nodeInfo')
-        this.nodeAttr.visible = true
-        this.nodeAttr.description = args
-      })
       this.dgiotDragEvent = false
       this.$dgiotBus.$off('dgiotDragStart')
       this.$dgiotBus.$on('dgiotDragStart', (args) => {

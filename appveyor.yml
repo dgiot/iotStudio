@@ -8,7 +8,7 @@ install:
   - curl -L https://unpkg.com/@pnpm/self-installer | node
   - pnpm config set registry https://registry.npmmirror.com
   - pnpm config get registry
-  - pnpm i --frozen-lockfile
+  - pnpm install
 test_script:
   - pnpm build
 build: off

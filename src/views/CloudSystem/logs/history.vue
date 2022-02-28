@@ -1,7 +1,10 @@
 <template>
-  <div class="logs logs-container" :class="{ 'vab-fullscreen': isFullscreen }">
-    <vab-query-form>
-      <vab-query-form-top-panel>
+  <div
+    class="logs logs-container"
+    :class="{ 'dgiot-fullscreen': isFullscreen }"
+  >
+    <dgiot-query-form>
+      <dgiot-query-form-top-panel>
         <el-form
           ref="form"
           :inline="true"
@@ -61,8 +64,8 @@
               </span>
               <span v-else>{{ $translateTitle('Maintenance.merge') }}</span>
               <dgiot-icon
-                class="vab-dropdown"
-                :class="{ 'vab-dropdown-active': fold }"
+                class="dgiot-dropdown"
+                :class="{ 'dgiot-dropdown-active': fold }"
                 icon="arrow-up-s-line"
               />
             </el-button>
@@ -110,8 +113,8 @@
             </el-popover>
           </el-form-item>
         </el-form>
-      </vab-query-form-top-panel>
-    </vab-query-form>
+      </dgiot-query-form-top-panel>
+    </dgiot-query-form>
     <el-table
       :key="finallyColumns.length + momentKey"
       ref="dragTable"
@@ -165,10 +168,10 @@
       <!--        fixed="right"-->
       <!--      />-->
       <template #empty>
-        <vab-empty />
+        <dgiot-empty />
       </template>
     </el-table>
-    <vab-Pagination
+    <dgiot-Pagination
       v-show="queryForm.total > 0"
       :limit.sync="queryForm.pageSize"
       :page.sync="queryForm.pageNo"
@@ -385,7 +388,7 @@
           this.$baseMessage(
             this.$translateTitle('alert.Data request successfully'),
             'success',
-            'vab-hey-message-success'
+            'dgiot-hey-message-success'
           )
           loading.close()
         } catch (error) {
@@ -394,7 +397,7 @@
           this.$baseMessage(
             this.$translateTitle('alert.Data request error') + `${error}`,
             'error',
-            'vab-hey-message-error'
+            'dgiot-hey-message-error'
           )
         }
         this.momentKey = moment(new Date()).valueOf()

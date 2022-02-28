@@ -21,7 +21,7 @@ const topoLable = {
     Vue.prototype.$baseEventBus.$emit(params.busTopicKey, params.msg)
   },
   on(args) {
-    console.error(args, 'args')
+    console.log(args, 'args')
     //  const msg =  {
     //    type: 'bind_topo',
     //    id: args.getAttr('id'),
@@ -63,7 +63,10 @@ const topoLable = {
       canvas.clickItem = {}
       // canvas.layer.batchDraw()
       // canvas.stage.batchDraw()
-      // if(args.handler === 'remove') contextNode.destroy()
+      if (args.handler === 'remove') {
+        if (args.contextmenu.args) args.contextmenu.args.destroy()
+        if (args.contextmenu) args.contextmenu.destroy()
+      }
     } else {
       console.log(args)
     }

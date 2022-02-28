@@ -45,13 +45,13 @@
 
     <el-tabs v-model="activeName" class="normal-tabs" type="card">
       <el-tab-pane :label="$translateTitle('clients.basicInfo')" name="basic">
-        <vab-clients-basic :record="basicRecord" />
+        <dgiot-clients-basic :record="basicRecord" />
       </el-tab-pane>
       <el-tab-pane
         :label="$translateTitle('clients.subsInfo')"
         name="subscription"
       >
-        <vab-clients-subscriptions
+        <dgiot-clients-subscriptions
           :client-id="clientId"
           :mountpoint="mountpoint"
           :reload="loadSubscription"
@@ -112,9 +112,11 @@
           .then(() => {
             this.$httpDelete(`/clients/${encodeURIComponent(this.clientId)}`)
               .then(() => {
-                this.$message.success(
-                  this.$translateTitle('oper.disconnectSuccess')
-                )
+                this.$message({
+                  showClose: true,
+                  message: this.$translateTitle('oper.disconnectSuccess'),
+                  type: 'success',
+                })
                 this.$set(this.basicRecord, 'connected', false)
                 setTimeout(() => {
                   this.$router.push({ path: '/clients' })

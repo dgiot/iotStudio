@@ -1,7 +1,7 @@
 <template>
   <div :key="queryForm.key" class="comprehensive-table-container">
-    <vab-query-form>
-      <vab-query-form-top-panel>
+    <dgiot-query-form>
+      <dgiot-query-form-top-panel>
         <el-form
           ref="form"
           :inline="true"
@@ -33,8 +33,8 @@
             />
           </el-form-item>
         </el-form>
-      </vab-query-form-top-panel>
-    </vab-query-form>
+      </dgiot-query-form-top-panel>
+    </dgiot-query-form>
 
     <el-table ref="tableSort" v-loading="listLoading" border :data="list">
       <el-table-column
@@ -52,6 +52,7 @@
         label="objectId"
         prop="objectId"
         show-overflow-tooltip
+        width="auto"
       />
       <el-table-column
         v-show="!queryForm.hiddenRow.includes('title')"
@@ -59,6 +60,7 @@
         :label="$translateTitle('product.title')"
         prop="title"
         show-overflow-tooltip
+        width="auto"
       />
       <el-table-column
         v-show="!queryForm.hiddenRow.includes('class')"
@@ -66,18 +68,21 @@
         :label="$translateTitle('product.Table Name')"
         prop="class"
         show-overflow-tooltip
+        width="auto"
       />
       <el-table-column
         align="center"
         label="key"
         prop="key"
         show-overflow-tooltip
+        width="auto"
       />
       <el-table-column
         align="center"
         :label="$translateTitle('rule.Type')"
         prop="type"
         show-overflow-tooltip
+        width="auto"
       />
       <el-table-column
         v-show="!queryForm.hiddenRow.includes('createdAt')"
@@ -85,15 +90,22 @@
         :label="$translateTitle('application.createtime')"
         prop="createdAt"
         show-overflow-tooltip
-        width="140"
+        width="auto"
       />
       <el-table-column
         align="center"
         :label="$translateTitle('node.operation')"
         show-overflow-tooltip
-        width="130"
+        width="auto"
       >
         <template #default="{ row }">
+          <el-button
+            v-show="queryForm.showRow"
+            type="text"
+            @click="handleNotification(row)"
+          >
+            关联
+          </el-button>
           <el-button type="text" @click="handleLowCode(row.objectId)">
             {{ $translateTitle('application.preview') }}
           </el-button>
@@ -107,7 +119,7 @@
         </template>
       </el-table-column>
     </el-table>
-    <vab-parser-pagination
+    <dgiot-parser-pagination
       :pagination="paginations"
       :query-payload="queryPayload"
       @pagination="fetchData"
@@ -246,6 +258,49 @@
       this.fetchData()
     },
     mounted() {
+      if (this.$route.query.type == 'amis') {
+        const { key, type, _class } = this.$route.query
+        this.queryForm.key = key
+        this.queryForm.type = type
+        this.queryForm.class = _class
+        this.queryForm.data = {
+          type: 'page',
+          initApi: {
+            url: 'iotapi/classes/Device/parse_objectid',
+            method: 'get',
+            adaptor:
+              'return {\r\n  "status":0,\r\n  "msg":"",\r\n  "data":response.data.profile\r\n  }',
+            headers: {
+              store: 'localStorage',
+              dgiotReplace: 'parse_objectid',
+            },
+            dataType: 'json',
+          },
+          body: [
+            {
+              type: 'form',
+              api: {
+                method: 'put',
+                url: 'iotapi/classes/Device/parse_objectid',
+                headers: {
+                  store: 'localStorage',
+                  dgiotReplace: 'parse_objectid',
+                },
+                dataType: 'json',
+                requestAdaptor:
+                  'return {\r\n    ...api,\r\n    data: {\r\n        profile:{ ...api.data}\r\n    }\r\n}',
+              },
+              body: [
+                {
+                  type: 'input-text',
+                  label: '设备名称',
+                  name: 'name',
+                },
+              ],
+            },
+          ],
+        }
+      }
       this.$dgiotBus.$off('saveLowCode')
       this.$dgiotBus.$on('saveLowCode', (params) => {
         this.saveLowCode(params.id, params.data)
@@ -256,6 +311,9 @@
         set_amisJson: 'amis/set_amisJson',
         setTreeFlag: 'settings/setTreeFlag',
       }),
+      async handleNotification(rows) {
+        await this.$baseEventBus.$emit('showNotificationSettings', rows)
+      },
       handleAdd() {
         this.$refs['edit'].type = 'add'
         this.$refs['edit'].showEdit(this.queryForm)
@@ -295,7 +353,7 @@
             this.$baseMessage(
               this.$translateTitle('successfully deleted'),
               'success',
-              'vab-hey-message-success'
+              'dgiot-hey-message-success'
             )
             this.fetchData()
           }

@@ -358,7 +358,7 @@
                       <el-button
                         size="mini"
                         type="primary"
-                        @click="makeSure(scope, $index)"
+                        @click="makeSure(row, $index)"
                       >
                         {{ $translateTitle('developer.determine') }}
                       </el-button>
@@ -432,7 +432,7 @@
                 <el-button
                   size="mini"
                   type="primary"
-                  @click="updatebatch(row.row.objectId)"
+                  @click="updatebatch(row, row.objectId)"
                 >
                   编辑
                 </el-button>
@@ -446,7 +446,7 @@
                 <el-button
                   size="mini"
                   type="success"
-                  @click="selectbatch(row.row.objectId)"
+                  @click="selectbatch(row, row.objectId)"
                 >
                   选择
                 </el-button>
@@ -587,6 +587,7 @@
               <el-input
                 v-model="pcformInline.pcname"
                 :placeholder="$translateTitle('equipment.batchname')"
+                width="100%"
               />
             </el-form-item>
             <el-form-item
@@ -596,6 +597,7 @@
               <el-date-picker
                 v-model="pcformInline.createdtime"
                 type="datetime"
+                width="100%"
               />
             </el-form-item>
             <el-form-item>
@@ -649,7 +651,7 @@
                 <el-button
                   size="mini"
                   type="primary"
-                  @click="updatebatch(row.row.objectId)"
+                  @click="updatebatch(row, row.objectId)"
                 >
                   {{ $translateTitle('developer.edit') }}
                 </el-button>
@@ -663,7 +665,7 @@
                 <el-button
                   size="mini"
                   type="success"
-                  @click="selectbatch(row.row.objectId)"
+                  @click="selectbatch(row, row.objectId)"
                 >
                   选择
                 </el-button>
@@ -1374,15 +1376,13 @@
         }
       },
       /* el-popover点击关闭*/
-      makeSure(scope, $index) {
+      makeSure(row, $index) {
         // 可以在这里执行删除数据的回调操作.......删除操作.....
         this.$deleteDevice(row.objectId).then((response) => {
           if (!response.error) {
             this.initQuery('删除成功', 'success')
-            scope._self.$refs[`popover-${$index}`].doClose()
             this.getDevices()
           } else {
-            scope._self.$refs[`popover-${$index}`].doClose()
             this.initQuery('删除失败', 'error')
           }
         })

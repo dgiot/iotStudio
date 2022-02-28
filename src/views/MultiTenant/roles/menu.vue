@@ -2,8 +2,8 @@
   <div class="menu dgiot-container">
     <el-row>
       <el-col :lg="24" :md="24" :sm="2244" :xl="24" :xs="24">
-        <vab-query-form>
-          <vab-query-form-top-panel :span="12">
+        <dgiot-query-form>
+          <dgiot-query-form-top-panel :span="12">
             <div class="search">
               <el-button
                 icon="el-icon-s-tools"
@@ -51,8 +51,8 @@
               />
               <!-- <el-button type="primary" icon="el-icon-plus" @click="dialogVisible=true">新增一级菜单</el-button> -->
             </div>
-          </vab-query-form-top-panel>
-        </vab-query-form>
+          </dgiot-query-form-top-panel>
+        </dgiot-query-form>
         <el-table
           v-if="refreshTable"
           v-loading="listLoading"
@@ -218,7 +218,7 @@
           </el-table-column>
           <template #empty>
             <el-image
-              class="vab-data-empty"
+              class="dgiot-data-empty"
               :src="
                 require('../../../../public/assets/images/platform/assets/empty_images/data_empty.png')
               "
@@ -463,10 +463,10 @@
             const res = await ImportParse('Menu', this.file)
             loading.close()
             dgiotlog.log('eresresrror', res)
-            this.$message.success(``)
             this.$message({
               type: 'success',
               message: '菜单导入成功',
+              showClose: true,
             })
             setTimeout(() => {
               this.file = ''
@@ -555,7 +555,7 @@
       //   if (row.path) {
       //     this.$baseConfirm('你确定要删除当前项吗', null, async () => {
       //       const { msg } = await doDelete({ paths: row.path })
-      //       this.$baseMessage(msg, 'success', false, 'vab-hey-message-success')
+      //       this.$baseMessage(msg, 'success', false, 'dgiot-hey-message-success')
       //       await this.fetchData()
       //     })
       //   }

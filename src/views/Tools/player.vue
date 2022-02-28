@@ -32,16 +32,16 @@
         <!--          </el-col>-->
         <!--        </el-row>-->
         <el-card class="player_card" shadow="hover">
-          <!--          <vab-player-->
-          <!--            ref="vabPlayer"-->
+          <!--          <dgiot-player-->
+          <!--            ref="dgiotPlayer"-->
           <!--            :autoplay="mp4Play"-->
           <!--            :source="flvsrc"-->
           <!--            :type="type"-->
           <!--            :width="width"-->
           <!--            :height="height"-->
           <!--          />-->
-          <vab-aliplayer
-            ref="vabPlayer"
+          <dgiot-aliplayer
+            ref="dgiotPlayer"
             :autoplay="mp4Play"
             :height="height"
             :playsource="flvsrc"
@@ -113,7 +113,7 @@
         // }, 1500)
       },
       Play() {
-        this.$refs.vabPlayer.createVideo()
+        this.$refs.dgiotPlayer.createVideo()
       },
     },
   }

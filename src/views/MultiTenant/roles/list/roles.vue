@@ -4,8 +4,8 @@
       <el-col :span="13" :xs="8">
         <div class="rightTable">
           <div class="search">
-            <vab-query-form v-show="currentDepartment.depname">
-              <vab-query-form-top-panel>
+            <dgiot-query-form v-show="currentDepartment.depname">
+              <dgiot-query-form-top-panel>
                 <el-form :inline="true" label-width="100px" :model="queryForm">
                   <el-form-item :label="$translateTitle('user.rolename')">
                     <el-input
@@ -51,8 +51,8 @@
                     </el-button>
                   </el-form-item>
                 </el-form>
-              </vab-query-form-top-panel>
-            </vab-query-form>
+              </dgiot-query-form-top-panel>
+            </dgiot-query-form>
           </div>
           <div class="tableroles" style="margin-top: 20px">
             <el-table
@@ -664,10 +664,11 @@
       async delConfirm(objectId) {
         let res = await delRole(objectId)
         if (res) {
-          this.$message.success(
-            `${this.$translateTitle('user.successfully deleted')}`
-          )
-
+          this.$message({
+            showClose: true,
+            message: `${this.$translateTitle('user.successfully deleted')}`,
+            type: 'success',
+          })
           this.getRolesList()
           this.$dgiotBus.$emit('asyncTreeData')
           this.getMenu()
@@ -792,8 +793,10 @@
         if (start == 0) {
           this.start = 0
         }
-
-        let where = {}
+        // fix https://gitee.com/dgiiot/dgiot/issues/I4TRI7
+        let where = {
+          name: this.search ? { $regex: this.search } : { $ne: null },
+        }
 
         if (dataR && dataR.name != 'admin') {
           where.objectId = dataR.objectId
@@ -976,11 +979,13 @@
           })
             .then((res) => {
               if (res) {
-                this.$message.success(
-                  `${this.$translateTitle(
+                this.$message({
+                  showClose: true,
+                  message: `${this.$translateTitle(
                     'user.Role information updated successfully'
-                  )}`
-                )
+                  )}`,
+                  type: 'success',
+                })
               } else {
                 this.$message.error(
                   `${this.$translateTitle(
@@ -1008,9 +1013,13 @@
       async exportRoletemp(row) {
         const res = await saveRoletemp(row.name)
         if (res) {
-          this.$message.success(
-            `${this.$translateTitle('user.Save the template successfully')}`
-          )
+          this.$message({
+            showClose: true,
+            message: `${this.$translateTitle(
+              'user.Save the template successfully'
+            )}`,
+            type: 'success',
+          })
         }
       },
       updaterole() {
@@ -1019,10 +1028,11 @@
           desc: this.form.desc,
         }
         this.$update_object(this.editroleid, params).then((res) => {
-          this.$message.success(
-            `${this.$translateTitle('user.update completed')}`
-          )
-
+          this.$message({
+            showClose: true,
+            message: `${this.$translateTitle('user.update completed')}`,
+            type: 'success',
+          })
           this.roleEdit = false
           this.getRolesList()
         })
@@ -1054,22 +1064,22 @@
           '添加子节点'
         )
       },
-      renderContent(h, { node, data, store }) {
-        return (
-          <span class="custom-tree-node">
-            <span>{node.label}</span>
-            <span>
-              <el-button
-                size="mini"
-                type="text"
-                on-click={() => this.appendChildTree(data)}
-              >
-                <i class="el-icon-plus" />
-              </el-button>
-            </span>
-          </span>
-        )
-      },
+      // renderContent(h, { node, data, store }) {
+      //   return (
+      //     <span class="custom-tree-node">
+      //       <span>{node.label}</span>
+      //       <span>
+      //         <el-button
+      //           size="mini"
+      //           type="text"
+      //           on-click={() => this.appendChildTree(data)}
+      //         >
+      //           <i class="el-icon-plus" />
+      //         </el-button>
+      //       </span>
+      //     </span>
+      //   )
+      // },
       // 显示弹窗
       setDialogRole(data) {
         this.deptData = data

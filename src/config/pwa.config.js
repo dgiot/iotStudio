@@ -1,9 +1,4 @@
-/**
- * @description pwa配置
- * @document https://cli.vuejs.org/core-plugins/pwa.html
- */
 module.exports = {
-  // 是否启用pwa功能
   isPwa: false,
   pwaConfig: {
     workboxOptions: {

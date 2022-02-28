@@ -13,7 +13,7 @@
       <el-row :gutter="10">
         <el-col :span="12">
           <el-divider>历史数据</el-divider>
-          <vab-chart
+          <dgiot-chart
             ref="charts"
             :after-config="afterConfig"
             :data="chartData"
@@ -61,7 +61,7 @@
                 >
                   <div slot="error" class="image-slot">
                     <el-image
-                      class="vab-data-empty"
+                      class="dgiot-data-empty"
                       :src="
                         require('../../../../public/assets/images/platform/assets/empty_images/data_empty.png')
                       "
@@ -99,7 +99,7 @@
                 </el-button-group>
               </div>
 
-              <vab-chart
+              <dgiot-chart
                 ref="charts"
                 :after-config="afterConfig"
                 :data="chartData.child[index]"
@@ -117,7 +117,7 @@
             </el-card>
           </el-col>
           <el-col v-show="!chartData.child" :span="24">
-            <vab-empty />
+            <dgiot-empty />
           </el-col>
         </el-row>
       </div>
@@ -267,7 +267,7 @@
           this.$baseMessage(
             this.$translateTitle('alert.Data request error') + `${error}`,
             'error',
-            'vab-hey-message-error'
+            'dgiot-hey-message-error'
           )
         }
       },
@@ -301,7 +301,7 @@
           this.$baseMessage(
             this.$translateTitle('alert.Data request error') + `${error}`,
             'error',
-            'vab-hey-message-error'
+            'dgiot-hey-message-error'
           )
         }
       },
@@ -339,7 +339,7 @@
           this.$baseMessage(
             this.$translateTitle('alert.Data request successfully'),
             'success',
-            'vab-hey-message-success'
+            'dgiot-hey-message-success'
           )
           loading.close()
           this.chartData = chartData
@@ -350,7 +350,7 @@
           this.$baseMessage(
             this.$translateTitle('alert.Data request error') + `${error}`,
             'error',
-            'vab-hey-message-error'
+            'dgiot-hey-message-error'
           )
         }
       },

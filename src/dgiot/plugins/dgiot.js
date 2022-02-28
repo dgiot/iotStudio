@@ -9,7 +9,7 @@ const token = store.getters['user/token']
 const language = store.getters['settings/language']
 
 // dgiotlog.info(`language in s ${language}`, i18n)
-const loadingText = i18n.t(`vabI18n.${'developer.Data is loading'}`)
+const loadingText = i18n.t(`dgiotI18n.${'developer.Data is loading'}`)
 /**
  * @description 全局token
  */
@@ -34,7 +34,7 @@ Vue.prototype.$baseLoading = (index, text) => {
     loading = Loading.service({
       lock: true,
       text: text || loadingText,
-      spinner: 'vab-loading-type' + index,
+      spinner: 'dgiot-loading-type' + index,
       background: 'hsla(0,0%,100%,0.8)',
     })
   }
@@ -192,8 +192,36 @@ Vue.prototype.$baseTableHeight = (formType) => {
   }
   return height
 }
+const dgiotBus = new Vue({
+  methods: {
+    /**
+     *
+     * @param event
+     * @param args
+     */
+    emit(event, ...args) {
+      this.$emit(event, ...args)
+    },
+    /**
+     *
+     * @param event
+     * @param callback
+     */
+    on(event, callback) {
+      this.$on(event, callback)
+    },
+    /**
+     *
+     * @param event
+     * @param callback
+     */
+    off(event, callback) {
+      this.$off(event, callback)
+    },
+  },
+})
 
 /**
  * @description 全局事件总线
  */
-Vue.prototype.$baseEventBus = new Vue()
+Vue.prototype.$baseEventBus = dgiotBus

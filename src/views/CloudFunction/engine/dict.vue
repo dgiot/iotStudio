@@ -455,7 +455,7 @@
                 </el-table>
               </el-tab-pane>
               <el-tab-pane label="Json" name="Json">
-                <vab-json-editor
+                <dgiot-json-editor
                   v-model="dictTempForm.params"
                   lang="zh"
                   :mode="'code'"
@@ -1637,7 +1637,8 @@
           parsms.where['objectId'] = this.queryid
         }
         if (this.search_dict) {
-          parsms.where['data.name'] = this.search_dict
+          // fix https://gitee.com/dgiiot/dgiot/issues/I4TRIB
+          parsms.where['data.name'] = { $regex: this.search_dict }
         }
         const { results, count } = await queryDict(parsms)
         this.total1 = count

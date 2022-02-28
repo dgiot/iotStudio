@@ -14,6 +14,7 @@ import {
   del_object,
   get_object,
   update_object,
+  query_object,
 } from '@/api/Parse'
 
 export async function queryNotification(params) {
@@ -22,6 +23,7 @@ export async function queryNotification(params) {
     method: 'get',
     params: params,
   })
+  // return query_object('Notification', params)
 }
 
 export async function getNotification(ObjectId) {

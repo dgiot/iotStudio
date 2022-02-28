@@ -1,7 +1,7 @@
 <template>
   <div class="system-log-container">
-    <vab-query-form>
-      <vab-query-form-top-panel>
+    <dgiot-query-form>
+      <dgiot-query-form-top-panel>
         <el-form
           :inline="true"
           label-width="60px"
@@ -35,8 +35,8 @@
             </el-button>
           </el-form-item>
         </el-form>
-      </vab-query-form-top-panel>
-    </vab-query-form>
+      </dgiot-query-form-top-panel>
+    </dgiot-query-form>
 
     <el-table v-loading="listLoading" :data="list">
       <el-table-column
@@ -60,11 +60,11 @@
       >
         <template #default="{ row }">
           <span v-if="row.executeResult === '登录成功'">
-            <span class="vab-dot vab-dot-success"><span></span></span>
+            <span class="dgiot-dot dgiot-dot-success"><span></span></span>
             {{ row.executeResult }}
           </span>
           <span v-else>
-            <span class="vab-dot vab-dot-error"><span></span></span>
+            <span class="dgiot-dot dgiot-dot-error"><span></span></span>
             {{ row.executeResult }}
           </span>
         </template>

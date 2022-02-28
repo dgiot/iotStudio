@@ -1,10 +1,10 @@
 <!--eslint-disable-->
 <template>
   <div
-    :class="{ 'vab-fullscreen': isFullscreen, 'konva-fullscreen': isDevice }"
+    :class="{ 'dgiot-fullscreen': isFullscreen, 'konva-fullscreen': isDevice }"
     class="konva"
   >
-    <!--    <vab-xterm />-->
+    <!--    <dgiot-xterm />-->
     <el-container class="konva-container">
       <el-header
         v-show="!isDevice"
@@ -273,6 +273,7 @@
             // ),
             data: this.viewInfo.data,
           })
+          this.$message.success(this.$translateTitle('user.update completed'))
           console.error('this.viewInfo.data', this.viewInfo.data)
         } catch (e) {
           console.log(e)

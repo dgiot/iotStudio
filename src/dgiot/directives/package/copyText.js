@@ -14,7 +14,7 @@ const copyText = {
           Vue.prototype.$translateTitle('alert.Copy error') + `${el.$value}`,
           'error',
           false,
-          'vab-hey-message-error'
+          'dgiot-hey-message-error'
         )
         return
       }
@@ -44,7 +44,7 @@ const copyText = {
             `${el.$value}`,
           'success',
           false,
-          'vab-hey-message-success'
+          'dgiot-hey-message-success'
         )
       }
       el.removeChild(textarea)

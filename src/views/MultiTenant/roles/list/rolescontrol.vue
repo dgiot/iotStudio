@@ -86,7 +86,7 @@
         </template>
       </el-table-column>
     </el-table>
-    <vab-Pagination
+    <dgiot-Pagination
       v-show="count"
       :limit.sync="queryForm.pageSize"
       :page.sync="queryForm.pageNo"

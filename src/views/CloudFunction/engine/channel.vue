@@ -22,22 +22,22 @@
           }}
         </el-button>
       </div>
-      <vab-amis
+      <dgiot-amis
         v-show="isPreview"
         :key="channelid"
         :schema="renderSchema"
         :show-help="false"
       />
-      <vab-amis-editor
+      <dgiot-amis-editor
         v-show="!isPreview"
-        ref="vabAmis"
+        ref="dgiotAmis"
         :amis-key="channelid"
         :theme="'antd'"
         :value="amisJson"
         @onChange="onChange"
       />
     </el-drawer>
-    <vab-input ref="uploadFinish" @fileInfo="fileInfo" />
+    <dgiot-input ref="uploadFinish" @fileInfo="fileInfo" />
     <div class="firsttable">
       <el-form
         class="demo-form-inline"
@@ -575,8 +575,8 @@
       :visible.sync="channelDialog"
       width="50%"
     >
-      <vab-query-form>
-        <vab-query-form-left-panel :span="12">
+      <dgiot-query-form>
+        <dgiot-query-form-left-panel :span="12">
           <el-button
             :disabled="!selectedData.length"
             type="danger"
@@ -584,8 +584,8 @@
           >
             {{ $translateTitle('Maintenance.batch deletion') }}
           </el-button>
-        </vab-query-form-left-panel>
-      </vab-query-form>
+        </dgiot-query-form-left-panel>
+      </dgiot-query-form>
 
       <el-table
         :data="channelInfo"
@@ -662,14 +662,14 @@
   import { resourceTypes } from '@/api/Rules'
   import { mapGetters } from 'vuex'
   import defaultLogo from '../../../../public/assets/images/logo/logo.png'
-  import VabInput from '@/dgiot/components/VabInput/input'
+  import DgiotInput from '@/dgiot/components/DgiotInput/input'
   import { putView } from '@/api/View'
 
   var subdialog
 
   export default {
     components: {
-      VabInput,
+      DgiotInput,
       ...requiremodule(require.context('./components', true, /\.vue$/)),
     },
     // inject: ['reload'],
@@ -827,13 +827,13 @@
         try {
           const loading = this.$baseColorfullLoading()
           const payload = {
-            data: this.$refs['vabAmis'].getSchema(),
+            data: this.$refs['dgiotAmis'].getSchema(),
           }
           const res = await putChannel(this.channelid, payload)
           this.$baseMessage(
             this.$translateTitle('user.update completed'),
             'success',
-            'vab-hey-message-success'
+            'dgiot-hey-message-success'
           )
           loading.close()
         } catch (error) {
@@ -841,7 +841,7 @@
           this.$baseMessage(
             this.$translateTitle('alert.Data request error') + `${error}`,
             'error',
-            'vab-hey-message-error'
+            'dgiot-hey-message-error'
           )
         }
       },
@@ -850,11 +850,11 @@
         this.renderSchema = data
         this.amisFlag = true
         console.log(this.renderSchema, e)
-        this.$refs['vabAmis'].setSchema(data)
+        this.$refs['dgiotAmis'].setSchema(data)
         this.channelid = channelid
       },
       async onChange(e) {
-        this.$refs['vabAmis'].setSchema(e)
+        this.$refs['dgiotAmis'].setSchema(e)
         this.renderSchema = e
         this.amisJson = e
         console.log(this.renderSchema, e)
@@ -903,7 +903,7 @@
           this.$baseMessage(
             this.$translateTitle('alert.Data request successfully'),
             'success',
-            'vab-hey-message-success'
+            'dgiot-hey-message-success'
           )
           loading.close()
         } catch (error) {
@@ -911,7 +911,7 @@
           this.$baseMessage(
             this.$translateTitle('alert.Data request error') + `${error}`,
             'error',
-            'vab-hey-message-error'
+            'dgiot-hey-message-error'
           )
         }
       },
@@ -948,7 +948,7 @@
           this.$baseMessage(
             this.$translateTitle('alert.Data request error') + `${error}`,
             'error',
-            'vab-hey-message-error'
+            'dgiot-hey-message-error'
           )
         }
       },
@@ -1114,11 +1114,14 @@
           const { updatedAt } = await subupadte(objectId, action)
           console.log(updatedAt)
           if (updatedAt) {
-            this.$message.success(
-              this.$translateTitle(`developer.${action}`) +
+            this.$message({
+              showClose: true,
+              message:
+                this.$translateTitle(`developer.${action}`) +
                 '' +
-                this.$translateTitle('node.success')
-            )
+                this.$translateTitle('node.success'),
+              type: 'success',
+            })
             this.Get_Re_Channel(this.start)
           }
 

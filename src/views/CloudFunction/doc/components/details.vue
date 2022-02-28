@@ -46,7 +46,7 @@
       </a-col>
       <a-col :span="20">
         <div class="text">
-          <vab-vditor ref="vditor" :value="productDetail.data" />
+          <dgiot-vditor ref="vditor" :value="productDetail.data" />
         </div>
       </a-col>
     </a-row>
@@ -168,7 +168,7 @@
             this.$baseMessage(
               this.$translateTitle('Maintenance.successfully deleted'),
               'success',
-              'vab-hey-message-success'
+              'dgiot-hey-message-success'
             )
             setTimeout(() => {
               loading.close()
@@ -211,7 +211,7 @@
           this.$baseMessage(
             this.$translateTitle('alert.Data request successfully'),
             'success',
-            'vab-hey-message-success'
+            'dgiot-hey-message-success'
           )
           loading.close()
         } catch (error) {
@@ -219,7 +219,7 @@
           this.$baseMessage(
             this.$translateTitle('alert.Data request error') + `${error}`,
             'error',
-            'vab-hey-message-error'
+            'dgiot-hey-message-error'
           )
         }
       },
@@ -246,7 +246,7 @@
           this.$baseMessage(
             this.$translateTitle('alert.Data request error') + `${error}`,
             'error',
-            'vab-hey-message-error'
+            'dgiot-hey-message-error'
           )
         }
       },
@@ -363,7 +363,7 @@
           this.$baseMessage(
             this.$translateTitle('alert.Data request successfully'),
             'success',
-            'vab-hey-message-success'
+            'dgiot-hey-message-success'
           )
           loading.close()
         } catch (error) {
@@ -371,7 +371,7 @@
           this.$baseMessage(
             this.$translateTitle('alert.Data request error') + `${error}`,
             'error',
-            'vab-hey-message-error'
+            'dgiot-hey-message-error'
           )
         }
       },

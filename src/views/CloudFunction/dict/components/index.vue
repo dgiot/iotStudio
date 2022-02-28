@@ -59,10 +59,12 @@
       this.$dgiotBus.$on('dictDesign', (params) => {
         const typePayload = ['dict', 'word', 'rule', 'datav']
         const { type, data, objectId } = params
-        if (typePayload.includes(type)) this.designDict(type, objectId, data)
-        else {
-          this.$message.error('暂不支持该类型低代码设计')
-        }
+        // if (typePayload.includes(type))
+        //   this.designDict(type, objectId, data)
+        // else {
+        //   this.$message.error('暂不支持该类型低代码设计')
+        // }
+        this.designDict(type, objectId, data)
       })
     },
     beforeCreate() {}, //生命周期 - 创建之前

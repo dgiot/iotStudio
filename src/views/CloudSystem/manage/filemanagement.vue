@@ -1,7 +1,7 @@
 <template>
   <div class="resourcechannel resourcechannel-container">
     <div class="firsttable">
-      <vab-input
+      <dgiot-input
         ref="uploadFinish"
         :params="inputParams"
         @fileInfo="fileInfo"

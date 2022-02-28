@@ -1,6 +1,6 @@
 <template>
   <div class="createResourcechannel">
-    <vab-input ref="uploadFinish" @fileInfo="fileInfo" />
+    <dgiot-input ref="uploadFinish" @fileInfo="fileInfo" />
 
     <el-form
       ref="addchannel"
@@ -245,7 +245,7 @@
             <!--              type="textarea"-->
             <!--            />-->
             <div style="height: 30vh; overflow: auto">
-              <vab-monaco-plus
+              <dgiot-monaco-plus
                 ref="monacoCode"
                 :codes="addchannel.codes"
                 :lang="'json'"
@@ -421,7 +421,7 @@
           object[key].showname = key
           arr.push(object[key])
         }
-        return arr.sort(this.arrSort)
+        return arr
       },
       removeauto(val) {
         this.active = 2

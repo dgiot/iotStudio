@@ -378,7 +378,11 @@
           //   this.toggleClass('leftrow')
           //   break
           case 'search':
-            this.$message.success('开发中')
+            this.$message({
+              showClose: true,
+              message: '开发中',
+              type: 'success'
+            });
             break
         }
       },
@@ -408,7 +412,11 @@
           let res = await putProduct(this.productid, params)
           console.log(res)
           if (res) {
-            this.$message.success(this.$translateTitle('组态背景更新成功'))
+            this.$message({
+              showClose: true,
+              message:  this.$translateTitle('组态背景更新成功'),
+              type: 'success'
+            });
           }
         } else {
           this.$message.error(this.$translateTitle('非图片类型'))
@@ -437,7 +445,11 @@
           .then((res) => {
             console.log(res, '产品组态更新成功')
             // this.handleCloseSub()
-            this.$message.success(this.$translateTitle('产品组态更新成功'))
+            this.$message({
+              showClose: true,
+              message:  this.$translateTitle('产品组态更新成功'),
+              type: 'success'
+            });
           })
           .catch((e) => {
             this.$message.error(this.$translateTitle(`${e.error}`))

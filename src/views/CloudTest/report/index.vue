@@ -11,7 +11,7 @@
   <div
     ref="custom-table"
     class="custom-table-container"
-    :class="{ 'vab-fullscreen': isFullscreen }"
+    :class="{ 'dgiot-fullscreen': isFullscreen }"
   >
     <div>
       <el-dialog append-to-body :visible.sync="activePopShow">
@@ -93,8 +93,8 @@
           <div>
             <el-row :gutter="20">
               <el-col :span="24">
-                <vab-query-form>
-                  <vab-query-form-top-panel>
+                <dgiot-query-form>
+                  <dgiot-query-form-top-panel>
                     <el-form
                       :inline="true"
                       label-width="100px"
@@ -136,8 +136,8 @@
                         />
                       </el-form-item>
                     </el-form>
-                  </vab-query-form-top-panel>
-                </vab-query-form>
+                  </dgiot-query-form-top-panel>
+                </dgiot-query-form>
               </el-col>
             </el-row>
             <el-table
@@ -185,7 +185,7 @@
           </div>
         </el-drawer>
       </el-dialog>
-      <vab-dialog :show.sync="tempPopShow">
+      <dgiot-dialog :show.sync="tempPopShow">
         <h3 slot="title">
           {{ $translateTitle('cloudTest.report template') }}
         </h3>
@@ -243,7 +243,7 @@
             </el-table-column>
             <template #empty>
               <el-image
-                class="vab-data-empty"
+                class="dgiot-data-empty"
                 :src="
                   require('../../../../public/assets/images/platform/assets/empty_images/data_empty.png')
                 "
@@ -251,10 +251,10 @@
             </template>
           </el-table>
         </div>
-      </vab-dialog>
+      </dgiot-dialog>
     </div>
-    <vab-query-form>
-      <vab-query-form-left-panel>
+    <dgiot-query-form>
+      <dgiot-query-form-left-panel>
         <el-form
           ref="form"
           :inline="true"
@@ -284,8 +284,8 @@
             </el-button>
           </el-form-item>
         </el-form>
-      </vab-query-form-left-panel>
-    </vab-query-form>
+      </dgiot-query-form-left-panel>
+    </dgiot-query-form>
     <el-table
       ref="tableSort"
       v-loading="listLoading"
@@ -338,14 +338,14 @@
       </el-table-column>
       <template #empty>
         <el-image
-          class="vab-data-empty"
+          class="dgiot-data-empty"
           :src="
             require('../../../../public/assets/images/platform/assets/empty_images/data_empty.png')
           "
         />
       </template>
     </el-table>
-    <vab-parser-pagination
+    <dgiot-parser-pagination
       ref="paginations"
       :pagination="paginations"
       :query-payload="queryPayload"

@@ -21,7 +21,7 @@ const device = {
     Vue.prototype.$baseEventBus.$emit(params.busTopicKey, params.msg)
   },
   on(args) {
-    console.error(args, 'args')
+    console.log(args, 'args')
     //  const msg =  {
     //    type: 'bind_topo',
     //    id: args.getAttr('id'),

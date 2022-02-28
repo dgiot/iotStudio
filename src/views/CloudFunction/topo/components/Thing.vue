@@ -11,11 +11,11 @@
   <div class="thing">
     <el-dialog
       append-to-body
+      fullscreen
       :title="$translateTitle('topo.topo') + $translateTitle('topo.thing')"
-      top="5vh"
       :visible.sync="thingDialog"
     >
-      <wmxdetail
+      <dgiot-wmx
         ref="sizeForm"
         :size-form1="sizeForm"
         @addDas="addDas"
@@ -39,7 +39,7 @@
 
   export default {
     name: 'Thing',
-    components: { wmxdetail },
+    components: { 'dgiot-wmx': wmxdetail },
     data() {
       return {
         thingType: 'post',
@@ -65,7 +65,7 @@
       if (this.$route.query.viewid) this.view(this.$route.query.viewid)
       this.$dgiotBus.$off('busUpdata')
       this.$dgiotBus.$on('busUpdata', () => {
-        this.updataTopo()
+        // this.updataTopo()
       })
       this.$dgiotBus.$off('thingType')
       this.$dgiotBus.$on('thingType', (type) => {
@@ -106,6 +106,7 @@
       wmxhandleClose() {
         this.wmxdialogVisible = false
         this.setSizeForm({})
+        this.$refs['sizeForm'].resource.disabled = false
         this.$dgiotBus.$emit('refresh', this.$route)
       },
       updataForm(from) {
@@ -215,30 +216,42 @@
       },
       async updataTopo() {
         const loading = this.$baseLoading()
-        try {
-          localStorage.setItem('konvaStale', canvas.stage.toJSON())
-          const params = {
-            config: _.merge(this.productconfig, {
+        localStorage.setItem('konvaStale', canvas.stage.toJSON())
+        const res = await putView(this.$route.query.viewid, {
+          data: _.merge(
+            {
               konva: { Stage: JSON.parse(canvas.stage.toJSON()) },
-            }),
-          }
-          this.$message.success(this.$translateTitle('user.update completed'))
-          const res =
-            this.$route.query.type == 'Evidence'
-              ? await putView(this.$route.query.viewid, {
-                  data: _.merge(
-                    {
-                      konva: { Stage: JSON.parse(canvas.stage.toJSON()) },
-                    },
-                    this.viewInfo
-                  ),
-                })
-              : await putProduct(this.$route.query.productid, params)
-          loading.close()
-        } catch (e) {
-          loading.close()
-          console.log(e)
-        }
+            },
+            this.viewInfo
+          ),
+        })
+        loading.close()
+        this.$message.success(this.$translateTitle('user.update completed'))
+        // const loading = this.$baseLoading()
+        // try {
+        //   localStorage.setItem('konvaStale', canvas.stage.toJSON())
+        //   const params = {
+        //     config: _.merge(this.productconfig, {
+        //       konva: { Stage: JSON.parse(canvas.stage.toJSON()) },
+        //     }),
+        //   }
+        //   this.$message.success(this.$translateTitle('user.update completed'))
+        //   const res =
+        //     this.$route.query.type == 'Evidence'
+        //       ? await putView(this.$route.query.viewid, {
+        //           data: _.merge(
+        //             {
+        //               konva: { Stage: JSON.parse(canvas.stage.toJSON()) },
+        //             },
+        //             this.viewInfo
+        //           ),
+        //         })
+        //       : await putProduct(this.$route.query.productid, params)
+        //   loading.close()
+        // } catch (e) {
+        //   loading.close()
+        //   console.log(e)
+        // }
       },
       async bindTopo(args) {
         const loading = this.$baseLoading()
@@ -267,7 +280,7 @@
               message || error,
               'error',
               false,
-              'vab-hey-message-error'
+              'dgiot-hey-message-error'
             )
             loading.close()
             return
@@ -695,7 +708,52 @@
               }
             }
             obj.nobound = []
+            obj.protocol = konvathing.dataForm.protocol
             this.setSizeForm(obj)
+            this.$nextTick(async () => {
+              await this.$refs['sizeForm'].queryResource()
+              // 保证子组件已经挂载完成）
+              // if (this.$refs['sizeForm'])
+              this.$refs['sizeForm'].resource.value =
+                konvathing.dataForm.protocol
+              this.$refs['sizeForm'].resource.disabled = konvathing.dataForm
+                .protocol.length
+                ? true
+                : false
+              // this.$refs['sizeForm'].changeResource(this.$refs['sizeForm'].resource.value)
+
+              this.$refs['sizeForm'].resource.arrlist = konvathing.dataSource
+              this.$nextTick(() => {
+                this.$refs['sizeForm'].resource.data.forEach(
+                  (resource, index) => {
+                    // resource[index].arr = []
+                    // resource[index].obj = {}
+                    if (
+                      this.$refs['sizeForm'].resource.value === resource.cType
+                    ) {
+                      console.info(resource, 'success cType')
+                      console.info(konvathing.dataSource, 'rowData.dataSource')
+                      for (var o in konvathing.dataSource) {
+                        for (var j in resource.obj) {
+                          if (o === j)
+                            resource.obj[o] = konvathing.dataSource[j]
+                        }
+                      }
+                      console.info(resource.obj, 'set resource.obj')
+                      this.$refs['sizeForm'].resource.addchannel = resource.obj
+                    }
+                    this.$refs['sizeForm'].resource.changeData =
+                      konvathing.dataSource
+                    this.$refs['sizeForm'].resource.changeData =
+                      konvathing.dataSource
+                    if (resource.cType == konvathing.dataForm.protocol) {
+                      console.log(resource, 'success')
+                    }
+                  }
+                )
+              })
+              console.log('refs sizeForm', this.$refs['sizeForm']) // 子组件的实例
+            })
           } else {
             this.reset(nobound)
             this.wmxData = []
@@ -768,14 +826,3 @@
     }, //如果页面有keep-alive缓存功能，这个函数会触发
   }
 </script>
-<style lang="scss" scoped>
-  .Thing-container {
-    width: 100%;
-    height: 100%;
-
-    &-container {
-      width: 100%;
-      height: 100%;
-    }
-  }
-</style>

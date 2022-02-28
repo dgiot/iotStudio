@@ -106,7 +106,7 @@
           @current-change="handleCurrentChange"
           @size-change="handleSizeChange"
         />
-        <vab-parser-pagination
+        <dgiot-parser-pagination
           :key="engineData.length + 'forensics'"
           ref="forensics"
           :pagination="paginations"
@@ -116,15 +116,15 @@
         />
       </div>
     </div>
-    <!--    <vab-parser />-->
+    <!--    <dgiot-parser />-->
   </div>
 </template>
 <script>
   import { getRule, getRuleDetail, put_rule_id, ruleDelete } from '@/api/Rules'
-  // import VabParser from '@/vab/components/VabParser'
+  // import DgiotParser from '@/dgiot/components/DgiotParser'
 
   export default {
-    // components: { VabParser },
+    // components: { DgiotParser },
     data() {
       return {
         paginations: { layout: 'total, sizes, prev, pager, next, jumper' },
@@ -188,7 +188,7 @@
           this.$baseMessage(
             this.$translateTitle('alert.Data request successfully'),
             'success',
-            'vab-hey-message-success'
+            'dgiot-hey-message-success'
           )
           loading.close()
         } catch (error) {
@@ -196,7 +196,7 @@
           this.$baseMessage(
             this.$translateTitle('alert.Data request error') + `${error}`,
             'error',
-            'vab-hey-message-error'
+            'dgiot-hey-message-error'
           )
         }
       },

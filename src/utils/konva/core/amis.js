@@ -21,7 +21,7 @@ const amis = {
     Vue.prototype.$baseEventBus.$emit(params.busTopicKey, params.msg)
   },
   on(args) {
-    console.error(args, 'args')
+    console.log(args, 'args')
     //  const msg =  {
     //    type: 'bind_topo',
     //    id: args.getAttr('id'),
@@ -38,6 +38,7 @@ const amis = {
       type: 'bind_amis',
       id: id,
       text: args.findOne('Text').getAttr('text'),
+      node: args,
     }
     const params = {
       busTopicKey: dgiotBus.topicKey('dgiot_amis', 'dgiotamis'),
@@ -63,7 +64,7 @@ const amis = {
       canvas.clickItem = {}
       // canvas.layer.batchDraw()
       // canvas.stage.batchDraw()
-      // if(args.handler === 'remove') contextNode.destroy()
+      if (args.handler === 'remove') contextNode.destroy()
     } else {
       console.log(args)
     }

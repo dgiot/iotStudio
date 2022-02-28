@@ -68,7 +68,7 @@
           </el-table-column>
           <el-table-column :label="$translateTitle('product.classification')">
             <template #default="{ row }">
-              <span>{{ row.category.name }}</span>
+              <span>{{ row.category ? row.category.name : '' }}</span>
             </template>
           </el-table-column>
           <el-table-column
@@ -974,7 +974,7 @@
           },
         }
         const { results } = await queryProduct(params)
-        // dgiotlog.log("results", results)
+        dgiotlogger.log('results', results)
         this.groupData = results
         this.total = this.groupData.length
         // dgiotlog.log(this.groupData)

@@ -252,10 +252,18 @@
           if (valid) {
             if (this.editIndexId != undefined) {
               this.data.params[this.editIndexId] = this.param
-              this.$message.success('编辑成功')
+              this.$message({
+                showClose: true,
+                message: '编辑成功',
+                type: 'success',
+              })
             } else {
               this.data.params.push(this.param)
-              this.$message.success('新增成功')
+              this.$message({
+                showClose: true,
+                message: '新增成功',
+                type: 'success',
+              })
             }
             console.log('this.data', this.data)
             this.saveDict()

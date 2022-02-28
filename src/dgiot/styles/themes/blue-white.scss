@@ -2,7 +2,7 @@
  * @description 蓝-白
  */
 
-body.vab-theme-blue-white {
+body.dgiot-theme-blue-white {
   $base-menu-background: #fff;
   $base-color-blue: #1890ff;
   $base-color-blue-light: mix($base-color-white, $base-color-blue, 90%);
@@ -57,7 +57,7 @@ body.vab-theme-blue-white {
     }
   }
 
-  .vab-column-bar-container {
+  .dgiot-column-bar-container {
     .el-tabs {
       @include container-column;
 
@@ -96,7 +96,7 @@ body.vab-theme-blue-white {
           &.is-active {
             background: transparent !important;
 
-            .vab-column-grid {
+            .dgiot-column-grid {
               background: $base-color-blue !important;
             }
           }
@@ -111,7 +111,7 @@ body.vab-theme-blue-white {
             color: $base-color-black !important;
             background: transparent !important;
 
-            .vab-column-grid {
+            .dgiot-column-grid {
               background: transparent !important;
             }
           }
@@ -120,11 +120,11 @@ body.vab-theme-blue-white {
     }
   }
 
-  .vab-layout-vertical,
-  .vab-layout-horizontal,
-  .vab-layout-comprehensive,
-  .vab-layout-common,
-  .vab-layout-float {
+  .dgiot-layout-vertical,
+  .dgiot-layout-horizontal,
+  .dgiot-layout-comprehensive,
+  .dgiot-layout-common,
+  .dgiot-layout-float {
     .el-menu {
       @include container;
 
@@ -137,7 +137,7 @@ body.vab-theme-blue-white {
       }
     }
 
-    .vab-side-bar,
+    .dgiot-side-bar,
     .comprehensive-bar-container {
       @include container;
       box-shadow: 0 1px 4px rgba(0, 21, 41, 0.08) !important;
@@ -148,7 +148,7 @@ body.vab-theme-blue-white {
     }
   }
 
-  .vab-layout-float {
+  .dgiot-layout-float {
     .el-scrollbar__view .el-menu--collapse.el-menu li.el-submenu.is-active {
       .el-submenu__title {
         background-color: transparent !important;
@@ -161,7 +161,7 @@ body.vab-theme-blue-white {
     }
   }
 
-  .vab-header {
+  .dgiot-header {
     @include container;
 
     .right-panel {
@@ -179,7 +179,7 @@ body.vab-theme-blue-white {
       }
     }
 
-    .vab-main {
+    .dgiot-main {
       @include container;
 
       .ri-notification-line {
@@ -203,11 +203,11 @@ body.vab-theme-blue-white {
     }
   }
 
-  .vab-tabs {
+  .dgiot-tabs {
     &-more {
       &-active,
       &:hover {
-        .vab-tabs-more-icon {
+        .dgiot-tabs-more-icon {
           .box:before,
           .box:after {
             background: $base-color-blue !important;
@@ -216,7 +216,7 @@ body.vab-theme-blue-white {
       }
     }
 
-    .vab-tabs-content-card {
+    .dgiot-tabs-content-card {
       .el-tabs__header {
         .el-tabs__item {
           &.is-active {
@@ -232,7 +232,7 @@ body.vab-theme-blue-white {
       }
     }
 
-    .vab-tabs-content-smart {
+    .dgiot-tabs-content-smart {
       .el-tabs__header {
         .el-tabs__item {
           &.is-active {
@@ -250,7 +250,7 @@ body.vab-theme-blue-white {
       }
     }
 
-    .vab-tabs-content-smooth {
+    .dgiot-tabs-content-smooth {
       .el-tabs__header {
         .el-tabs__item {
           &.is-active {

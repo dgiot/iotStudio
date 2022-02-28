@@ -276,7 +276,11 @@
       handleModLoad() {
         this.$httpPut('/modules/emqx_mod_topic_metrics/load')
           .then(() => {
-            this.$message.success(this.$t('oper.enableSuccess'))
+            this.$message({
+              showClose: true,
+              message: this.$translateTitle('oper.enableSuccess'),
+              type: 'success',
+            })
             this.loadData()
             this.modClosed = false
           })

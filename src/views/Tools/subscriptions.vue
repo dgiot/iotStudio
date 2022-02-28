@@ -71,7 +71,7 @@
           <el-input v-model="record.topic" placeholder="Topic" />
         </el-form-item>
         <el-form-item label="QoS" prop="qos">
-          <vab-emq-select
+          <dgiot-emq-select
             v-model="record.qos"
             class="el-select--public"
             :field="{ list: [0, 1, 2] }"

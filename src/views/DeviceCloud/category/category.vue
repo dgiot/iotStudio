@@ -2,10 +2,10 @@
   <div
     ref="custom-table"
     class="custom-table-container"
-    :class="{ 'vab-fullscreen': isFullscreen }"
+    :class="{ 'dgiot-fullscreen': isFullscreen }"
   >
-    <vab-query-form>
-      <vab-query-form-left-panel>
+    <dgiot-query-form>
+      <dgiot-query-form-left-panel>
         <el-form
           ref="form"
           :inline="true"
@@ -34,8 +34,8 @@
             </el-button>
           </el-form-item>
         </el-form>
-      </vab-query-form-left-panel>
-    </vab-query-form>
+      </dgiot-query-form-left-panel>
+    </dgiot-query-form>
 
     <el-table
       ref="tableSort"
@@ -95,7 +95,7 @@
       </el-table-column>
       <template #empty>
         <el-image
-          class="vab-data-empty"
+          class="dgiot-data-empty"
           :src="
             require('../../../../public/assets/images/platform/assets/empty_images/data_empty.png')
           "
@@ -193,14 +193,14 @@
               this.$baseMessage(
                 this.$translateTitle('user.successfully deleted'),
                 'success',
-                'vab-hey-message-success'
+                'dgiot-hey-message-success'
               )
               await this.fetchData()
             } else {
               this.$baseMessage(
                 this.$translateTitle('user.error deleted') + res,
                 'error',
-                'vab-hey-message-error'
+                'dgiot-hey-message-error'
               )
             }
           }

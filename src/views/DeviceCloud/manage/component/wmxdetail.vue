@@ -1,13 +1,14 @@
 <!-- 物模型详情组件 -->
 <template>
   <div class="wmxheader">
-    <vab-input
+    <dgiot-input
       ref="uploadFinish"
       :params="inputParams"
       @fileInfo="fileInfo"
       @files="files"
     />
     <el-form
+      :key="upKey"
       ref="sizeForm"
       label-position="left"
       label-width="150px"
@@ -25,7 +26,17 @@
               {{ $translateTitle('task.datastorage') }}
             </template>
             <el-row :gutter="24">
-              <el-col :span="12">
+              <el-col :span="8">
+                <el-form-item label="图标" prop="precision">
+                  <el-avatar
+                    :key="sizeForm.ico"
+                    :size="50"
+                    :src="$FileServe + sizeForm.ico"
+                    @click.native="uploadCkick('userinfo.avatar')"
+                  />
+                </el-form-item>
+              </el-col>
+              <el-col :span="8">
                 <el-form-item
                   :label="$translateTitle('product.devicetype')"
                   prop="devicetype"
@@ -33,9 +44,7 @@
                   <el-input v-model="sizeForm.devicetype" />
                 </el-form-item>
               </el-col>
-            </el-row>
-            <el-row :gutter="24">
-              <el-col :span="12">
+              <el-col :span="8">
                 <el-form-item
                   :label="$translateTitle('product.functionname')"
                   prop="name"
@@ -43,6 +52,8 @@
                   <el-select
                     v-if="sizeForm.nobound && sizeForm.nobound.length > 0"
                     v-model="sizeForm.name"
+                    allow-create
+                    default-first-option
                     filterable
                     placeholder="请选择"
                     style="width: 100%"
@@ -60,7 +71,7 @@
                 </el-form-item>
               </el-col>
 
-              <el-col :span="12">
+              <el-col :span="8">
                 <el-form-item
                   :label="$translateTitle('product.identifier')"
                   prop="identifier"
@@ -72,9 +83,7 @@
                 </el-form-item>
                 <!--type-->
               </el-col>
-            </el-row>
-            <el-row :gutter="24">
-              <el-col :span="12">
+              <el-col :span="8">
                 <!-- 数据类型 -->
                 <el-form-item
                   :label="$translateTitle('product.datatype')"
@@ -107,9 +116,11 @@
                   </el-select>
                 </el-form-item>
               </el-col>
+            </el-row>
+            <el-row :gutter="24">
               <el-col
                 v-if="sizeForm.type == 'float' || sizeForm.type == 'double'"
-                :span="12"
+                :span="8"
               >
                 <el-form-item label="小数位数" prop="precision">
                   <el-select v-model="sizeForm.precision" style="width: 100%">
@@ -122,17 +133,7 @@
                   </el-select>
                 </el-form-item>
               </el-col>
-              <el-col :span="12">
-                <el-form-item label="图标" prop="precision">
-                  <el-avatar
-                    :key="sizeForm.ico"
-                    :size="100"
-                    :src="$FileServe + sizeForm.ico"
-                    @click.native="uploadCkick('userinfo.avatar')"
-                  />
-                </el-form-item>
-              </el-col>
-              <el-col :span="12">
+              <el-col :span="8">
                 <el-form-item
                   :label="$translateTitle('product.readandwritetype')"
                   prop="isread"
@@ -142,18 +143,16 @@
                     size="medium"
                     style="width: 100%"
                   >
-                    <el-radio label="rw">
-                      {{ $translateTitle('product.write') }}
-                    </el-radio>
                     <el-radio label="r">
                       {{ $translateTitle('product.read') }}
+                    </el-radio>
+                    <el-radio label="rw">
+                      {{ $translateTitle('product.write') }}
                     </el-radio>
                   </el-radio-group>
                 </el-form-item>
               </el-col>
-            </el-row>
-            <el-row :gutter="24">
-              <el-col :span="12">
+              <el-col :span="8">
                 <el-form-item
                   :label="$translateTitle('product.isstorage')"
                   prop="isshow"
@@ -172,17 +171,7 @@
                   </el-radio-group>
                 </el-form-item>
               </el-col>
-            </el-row>
-            <el-row
-              v-if="
-                sizeForm.type == 'int' ||
-                sizeForm.type == 'long' ||
-                sizeForm.type == 'float' ||
-                sizeForm.type == 'double'
-              "
-              :gutter="24"
-            >
-              <el-col :span="12">
+              <el-col :span="8">
                 <!-- <el-form-item
                   prop="startnumber"
                   label="取值范围(最小值)"
@@ -198,6 +187,16 @@
                   />
                 </el-form-item>
               </el-col>
+            </el-row>
+            <el-row
+              v-if="
+                sizeForm.type == 'int' ||
+                sizeForm.type == 'long' ||
+                sizeForm.type == 'float' ||
+                sizeForm.type == 'double'
+              "
+              :gutter="24"
+            >
               <el-col :span="12">
                 <!-- <el-form-item
                   prop="endnumber"
@@ -215,17 +214,7 @@
                   />
                 </el-form-item>
               </el-col>
-            </el-row>
-            <el-row
-              v-if="
-                sizeForm.type == 'int' ||
-                sizeForm.type == 'long' ||
-                sizeForm.type == 'float' ||
-                sizeForm.type == 'double'
-              "
-              :gutter="24"
-            >
-              <el-col :span="12">
+              <el-col :span="6">
                 <el-form-item label="步长" prop="step">
                   <el-input-number
                     v-model="sizeForm.step"
@@ -237,7 +226,7 @@
                   />
                 </el-form-item>
               </el-col>
-              <el-col :span="12">
+              <el-col :span="6">
                 <!-- 单位 -->
                 <el-form-item :label="$translateTitle('product.unit')">
                   <el-select
@@ -269,7 +258,7 @@
             </el-row>
             <!--BOOL数据类型添加格式-->
             <el-row v-if="sizeForm.type == 'bool'" :gutter="24">
-              <el-col :span="12">
+              <el-col :span="4">
                 <el-form-item
                   :label="$translateTitle('product.attribute')"
                   prop="truevalue"
@@ -283,7 +272,7 @@
                   />
                 </el-form-item>
               </el-col>
-              <el-col :span="12">
+              <el-col :span="4">
                 <el-form-item label="-">
                   <el-input
                     v-model="sizeForm.true"
@@ -293,7 +282,7 @@
               </el-col>
             </el-row>
             <el-row v-if="sizeForm.type == 'bool'" :gutter="24">
-              <el-col :span="12">
+              <el-col :span="4">
                 <el-form-item>
                   <el-input
                     v-model="sizeForm.falsevalue"
@@ -303,7 +292,7 @@
                   />
                 </el-form-item>
               </el-col>
-              <el-col :span="12">
+              <el-col :span="4">
                 <el-form-item label="-">
                   <el-input
                     v-model="sizeForm.false"
@@ -573,7 +562,7 @@
               </el-row>
             </template>
             <el-row :gutter="24">
-              <el-col :span="12">
+              <el-col :span="8">
                 <el-tooltip
                   effect="dark"
                   placement="right-start"
@@ -622,7 +611,7 @@
                   </el-select>
                 </el-form-item>
               </el-col>
-              <el-col :span="12">
+              <el-col :span="8">
                 <el-form-item label="采集轮次">
                   <!-- <el-input v-model="sizeForm.rate" auto-complete="off">   <template slot="append">秒</template>
                   </el-input> -->
@@ -631,7 +620,7 @@
                     allow-create
                     default-first-option
                     filterable
-                    placeholder="请选择生效轮次"
+                    placeholder="请选择生效轮次,例如:1,3,5,8;(可选可自主填写)(注意:逗号为英文逗号)"
                     size="mini"
                     style="width: 100%"
                   >
@@ -642,22 +631,21 @@
                       :value="item.value"
                     />
                   </el-select>
-                  <p
-                    style="
-                      position: absolute;
-                      top: 26px;
-                      margin: 0;
-                      font-size: 12px;
-                      color: black;
-                    "
-                  >
-                    例如:1,3,5,8;(可选可自主填写)(注意:逗号为英文逗号)
-                  </p>
+                </el-form-item>
+              </el-col>
+              <el-col :span="8">
+                <el-form-item label="采集顺序" style="width: 100%">
+                  <el-input-number
+                    v-model="sizeForm.order"
+                    label="采集顺序"
+                    :min="0"
+                    style="width: 100%"
+                  />
                 </el-form-item>
               </el-col>
             </el-row>
-            <el-row :gutter="24">
-              <el-col :span="12">
+            <el-col :gutter="24">
+              <el-col :span="8">
                 <el-tooltip
                   effect="dark"
                   placement="right-start"
@@ -720,24 +708,12 @@
                     v-model="sizeForm.collection"
                     placeholder="%s"
                     :rows="1"
-                    style="width: 95%"
+                    style="width: 90%"
                     type="textarea"
                   />
                 </el-form-item>
               </el-col>
-              <el-col :span="12">
-                <el-form-item label="采集顺序" style="width: 100%">
-                  <el-input-number
-                    v-model="sizeForm.order"
-                    label="采集顺序"
-                    :min="0"
-                    style="width: 100%"
-                  />
-                </el-form-item>
-              </el-col>
-            </el-row>
-            <el-row :gutter="24">
-              <el-col :span="24">
+              <el-col :span="8">
                 <el-tooltip effect="dark" placement="right-start">
                   <div slot="content">
                     1. 采集值: 主动向设备写数据经控制公式计算后下发 。
@@ -796,36 +772,119 @@
                     v-model="sizeForm.control"
                     placeholder="%s"
                     :rows="1"
-                    style="width: 98%"
+                    style="width: 90%"
                     type="textarea"
                   />
                 </el-form-item>
                 <!--type-->
               </el-col>
-            </el-row>
-          </el-collapse-item>
-          <el-collapse-item name="4">
-            <template slot="title">数据来源</template>
-            <el-row :gutter="24">
-              <el-col :span="12">
+              <el-col :span="8">
                 <el-form-item label="协议类型">
                   <el-select
-                    v-model="sizeForm.protocol"
+                    v-model="resource.value"
+                    :disabled="resource.disabled"
                     placeholder="请选择"
                     style="width: 100%"
+                    @change="changeResource"
                   >
                     <el-option
-                      v-for="(item, index) in [
-                        'normal',
-                        'opc',
-                        'modbus',
-                        'DLT645',
-                        'xinchuangwei',
-                        'mingcheng',
-                      ]"
+                      v-for="item in resource.data"
+                      :key="item.cType"
+                      :label="item.cType"
+                      :value="item.cType"
+                    >
+                      <span style="float: left">{{ item.title.zh }}</span>
+                      <el-link
+                        style="float: right; color: #8492a6; font-size: 13px"
+                      >
+                        协议:{{ item.app }}
+                      </el-link>
+                    </el-option>
+                  </el-select>
+                </el-form-item>
+              </el-col>
+            </el-col>
+          </el-collapse-item>
+          <el-collapse-item v-if="resource.value" :key="upKey" name="4">
+            <template slot="title">数据来源</template>
+            <el-row
+              v-for="(k, index) in resource.data"
+              :key="index"
+              :gutter="24"
+            >
+              <el-col
+                v-for="(item, index) in resource.data[index].arr"
+                v-show="resource.value == k.cType"
+                :key="resource.value + index + upKey"
+                :span="resource.data.colum ? resource.data.colum : 12"
+              >
+                <!--                {{ item }}-->
+                <!--                &#45;&#45;&#45;&#45;-->
+                <!--                {{ item.type }}-->
+                <el-form-item
+                  v-if="item.showname != 'ico'"
+                  :key="item.title.zh + upKey"
+                  :label="item.title.zh"
+                  :prop="item.showname"
+                >
+                  <el-tooltip effect="dark" placement="right-start">
+                    <div slot="content">
+                      {{ item.description.zh }}
+                    </div>
+                    <i class="el-icon-question" style="float: left" />
+                  </el-tooltip>
+                  <el-select
+                    v-if="item.allowCreate"
+                    :key="item.title.zh + upKey"
+                    v-model="resource.addchannel[item.showname]"
+                    allow-create
+                    default-first-option
+                    filterable
+                    multiple
+                    placeholder="输入后按回车确定"
+                    style="width: 98%"
+                  >
+                    <el-option
+                      v-for="(item, index) in item.dis"
                       :key="index"
                       :label="item"
                       :value="item"
+                    />
+                  </el-select>
+                  <el-input
+                    v-else-if="item.type == 'string'"
+                    :key="item.title.zh + upKey"
+                    v-model="resource.addchannel[item.showname]"
+                    style="width: 98%"
+                  />
+                  <el-input
+                    v-else-if="item.type == 'integer'"
+                    :key="item.title.zh + upKey"
+                    v-model.number="resource.addchannel[item.showname]"
+                    style="width: 98%"
+                  />
+                  <el-select
+                    v-else-if="item.type == 'boolean'"
+                    :key="item.title.zh + upKey"
+                    v-model="resource.addchannel[item.showname]"
+                    class="notauto"
+                    readonly
+                    style="width: 98%"
+                  >
+                    <el-option label="是" :value="true" />
+                    <el-option label="否" :value="false" />
+                  </el-select>
+                  <el-select
+                    v-else-if="item.type == 'enum'"
+                    :key="item.title.zh + upKey"
+                    v-model="resource.addchannel[item.showname]"
+                    style="width: 98%"
+                  >
+                    <el-option
+                      v-for="(item1, index1) in item.enum"
+                      :key="index1"
+                      :label="item.enum[index1].label"
+                      :value="item.enum[index1].value"
                     />
                   </el-select>
                 </el-form-item>
@@ -988,26 +1047,92 @@
                 </template>
               </el-table-column>
             </el-table>
-            <el-row
-              v-show="
-                sizeForm.protocol != 'modbus' && sizeForm.protocol != 'opc'
-              "
-              :gutter="24"
+            <el-table
+              v-show="sizeForm.protocol == 'modbusTcp'"
+              border
+              :data="dataList"
+              size="small"
+              style="width: 100%"
             >
-              <el-col :span="12">
-                <el-form-item label="数据地址">
-                  <el-input v-model="sizeForm.dis" placeholder="数据地址" />
-                </el-form-item>
-              </el-col>
-              <el-col :span="12">
-                <el-form-item label="数据长度">
-                  <el-input
-                    v-model.number="sizeForm.dinumber"
-                    placeholder="数据长度（字节）"
-                  />
-                </el-form-item>
-              </el-col>
-            </el-row>
+              <el-table-column
+                align="center"
+                label="单元标识符"
+                min-width="120"
+              >
+                <!--关键代码-->
+                <template #default="{ row }">
+                  <el-input v-model="sizeForm.slaveid" />
+                  <span v-show="false">{{ row }}</span>
+                </template>
+              </el-table-column>
+              <el-table-column align="center" label="功能码" min-width="120">
+                <!--关键代码-->
+                <template #default="{ row }">
+                  <el-select
+                    v-model="sizeForm.operatetype"
+                    placeholder="请选择"
+                    style="width: 100%"
+                  >
+                    <el-option
+                      v-for="item in [
+                        { value: 'readCoils', label: '0X01:读线圈寄存器' },
+                        { value: 'readInputs', label: '0X02:读离散输入寄存器' },
+                        {
+                          value: 'readHregs',
+                          label: '0X03:读保持寄存器',
+                        },
+                        {
+                          value: 'readIregs',
+                          label: '0X04:读输入寄存器',
+                        },
+                        {
+                          value: 'writeCoil',
+                          label: '0X05:写单个线圈寄存器',
+                        },
+                        {
+                          value: 'writeHreg',
+                          label: '0X06:写单个保持寄存器',
+                        },
+                        {
+                          value: 'writeCoils',
+                          label: '0X0f:写多个线圈寄存器',
+                        },
+                        {
+                          value: 'writeHregs',
+                          label: '0X10:写多个保持寄存器',
+                        },
+                      ]"
+                      :key="item.value"
+                      :label="item.label"
+                      :value="item.value"
+                    />
+                  </el-select>
+                  <span v-show="false">{{ row.slaveid }}</span>
+                </template>
+              </el-table-column>
+              <el-table-column
+                align="center"
+                label="起始地址(16进制加0X,例:0X0001,否则是十进制)"
+                min-width="120"
+              >
+                <!--关键代码-->
+                <template #default="{ row }">
+                  <el-input v-model="sizeForm.dis" />
+                  <span v-show="false">{{ row.slaveid }}</span>
+                </template>
+              </el-table-column>
+              <el-table-column
+                align="center"
+                label="寄存器数量"
+                min-width="120"
+              >
+                <!--关键代码-->
+                <template #default="{ row }">
+                  <el-input v-model="sizeForm.dinumber" />
+                  <span v-show="false">{{ row.slaveid }}</span>
+                </template>
+              </el-table-column>
+            </el-table>
           </el-collapse-item>
         </el-collapse>
       </div>
@@ -1029,7 +1154,9 @@
 
   // dgiotlog.log('dataType', mockModules)
   import { getAllunit } from '@/api/Dict/index'
+  import { getProtocol } from '@/api/Protocol/index'
   import { mapGetters, mapMutations } from 'vuex'
+  import defaultLogo from '../../../../../public/assets/images/logo/logo.png'
 
   export default {
     name: 'Wmxdetail',
@@ -1090,6 +1217,756 @@
         }
       }
       return {
+        upKey: moment.now(),
+        resource: {
+          value: 'MODBUSRTU',
+          data: [
+            {
+              app: 'dgiot_modbus',
+              cType: 'MODBUSRTU',
+              colum: 10,
+              description: {
+                zh: 'MODBUS RTU协议',
+              },
+              mod: 'modbus_rtu',
+              params: {
+                _dlinkindex: {
+                  default: 0,
+                  description: {
+                    zh: '报文序号',
+                  },
+                  order: 103,
+                  required: true,
+                  title: {
+                    zh: '报文序号',
+                  },
+                  type: 'integer',
+                  showname: '_dlinkindex',
+                },
+                address: {
+                  default: '0X00',
+                  description: {
+                    zh: '寄存器地址:(16进制加0X,例如:0X10,否在是10进制)',
+                  },
+                  order: 4,
+                  required: true,
+                  title: {
+                    zh: '寄存器地址',
+                  },
+                  type: 'string',
+                  showname: 'address',
+                },
+                data: {
+                  default: '2',
+                  description: {
+                    zh: '数据长度(字节)',
+                  },
+                  order: 5,
+                  required: true,
+                  title: {
+                    zh: '数据长度(字节)',
+                  },
+                  type: 'integer',
+                  showname: 'data',
+                },
+                ico: {
+                  default:
+                    'http://dgiot-1253666439.cos.ap-shanghai-fsi.myqcloud.com/shuwa_tech/zh/product/dgiot/channel/MQTT.png',
+                  description: {
+                    en: 'protocol ICO',
+                    zh: '协议ICO',
+                  },
+                  order: 102,
+                  required: false,
+                  title: {
+                    en: 'protocol ICO',
+                    zh: '协议ICO',
+                  },
+                  type: 'string',
+                  showname: 'ico',
+                },
+                operatetype: {
+                  default: {
+                    label: '0X01:读线圈寄存器',
+                    value: 'readCoils',
+                  },
+                  description: {
+                    zh: '寄存器状态',
+                  },
+                  enum: [
+                    {
+                      label: '0X01:读线圈寄存器',
+                      value: 'readCoils',
+                    },
+                    {
+                      label: '0X02:读离散输入寄存器',
+                      value: 'readInputs',
+                    },
+                    {
+                      label: '0X03:读保持寄存器',
+                      value: 'readHregs',
+                    },
+                    {
+                      label: '0X04:读输入寄存器',
+                      value: 'readIregs',
+                    },
+                    {
+                      label: '0X05:写单个线圈寄存器',
+                      value: 'writeCoil',
+                    },
+                    {
+                      label: '0X06:写单个保持寄存器',
+                      value: 'writeHreg',
+                    },
+                    {
+                      label: '0X0f:写多个线圈寄存器',
+                      value: 'writeCoils',
+                    },
+                    {
+                      label: '0X10:写多个保持寄存器',
+                      value: 'writeHregs',
+                    },
+                  ],
+                  order: 3,
+                  required: true,
+                  title: {
+                    zh: '寄存器状态',
+                  },
+                  type: 'enum',
+                  showname: 'operatetype',
+                },
+                originaltype: {
+                  default: 'short16_AB',
+                  description: {
+                    zh: '数据格式',
+                  },
+                  enum: [
+                    {
+                      label: '位',
+                      value: 'bit',
+                    },
+                    {
+                      label: '16位 有符号(AB)',
+                      value: 'short16_AB',
+                    },
+                    {
+                      label: '16位 有符号(BA)',
+                      value: 'short16_BA',
+                    },
+                    {
+                      label: '16位 无符号(AB)',
+                      value: 'ushort16_AB',
+                    },
+                    {
+                      label: '16位 无符号(BA)',
+                      value: 'ushort16_BA',
+                    },
+                    {
+                      label: '32位 有符号(ABCD)',
+                      value: 'long32_ABCD',
+                    },
+                    {
+                      label: '32位 有符号(CDAB)',
+                      value: 'long32_CDAB',
+                    },
+                    {
+                      label: '32位 无符号(ABCD)',
+                      value: 'ulong32_ABCD',
+                    },
+                    {
+                      label: '32位 无符号(CDAB)',
+                      value: 'ulong32_CDAB',
+                    },
+                    {
+                      label: '32位 浮点数(ABCD)',
+                      value: 'float32_ABCD',
+                    },
+                    {
+                      label: '32位 浮点数(CDAB)',
+                      value: 'float32_CDAB',
+                    },
+                  ],
+                  order: 1,
+                  required: true,
+                  title: {
+                    zh: '数据格式',
+                  },
+                  type: 'enum',
+                  showname: 'originaltype',
+                },
+                slaveid: {
+                  default: '0000',
+                  description: {
+                    zh: '从机地址(16进制加0X,例如:0X10,否在是10进制)',
+                  },
+                  order: 2,
+                  required: true,
+                  title: {
+                    zh: '从机地址',
+                  },
+                  type: 'string',
+                  showname: 'slaveid',
+                },
+              },
+              title: {
+                zh: 'MODBUS RTU协议',
+              },
+              type: 'energy',
+              vsn: [52, 46, 51, 46, 48],
+            },
+            {
+              app: 'dgiot_meter',
+              cType: 'DLT645',
+              colum: 10,
+              description: {
+                zh: 'DLT645协议',
+              },
+              mod: 'dlt645_decoder',
+              params: {
+                _dlinkindex: {
+                  default: 0,
+                  description: {
+                    zh: '报文序号',
+                  },
+                  order: 103,
+                  required: true,
+                  title: {
+                    zh: '报文序号',
+                  },
+                  type: 'integer',
+                },
+                di: {
+                  default: '0000',
+                  description: {
+                    zh: '信息标识',
+                  },
+                  order: 1,
+                  required: true,
+                  title: {
+                    zh: '信息标识',
+                  },
+                  type: 'string',
+                },
+                length: {
+                  default: 2,
+                  description: {
+                    zh: '长度',
+                  },
+                  order: 3,
+                  required: true,
+                  title: {
+                    zh: '长度',
+                  },
+                  type: 'integer',
+                },
+                type: {
+                  default: 'byte',
+                  description: {
+                    zh: '数据类型',
+                  },
+                  enum: [
+                    {
+                      label: 'byte',
+                      value: 'byte',
+                    },
+                    {
+                      label: 'little',
+                      value: 'little',
+                    },
+                    {
+                      label: 'bit',
+                      value: 'bit',
+                    },
+                  ],
+                  order: 2,
+                  required: true,
+                  title: {
+                    zh: '数据类型',
+                  },
+                  type: 'enum',
+                },
+              },
+              title: {
+                zh: 'DLT645协议',
+              },
+              type: 'energy',
+              vsn: [52, 46, 51, 46, 48],
+            },
+            {
+              app: 'dgiot_meter',
+              cType: 'DLT376',
+              colum: 10,
+              description: {
+                zh: 'DLT376协议',
+              },
+              mod: 'dlt376_decoder',
+              params: {
+                _dlinkindex: {
+                  default: 0,
+                  description: {
+                    zh: '报文序号',
+                  },
+                  order: 103,
+                  required: true,
+                  title: {
+                    zh: '报文序号',
+                  },
+                  type: 'integer',
+                },
+                afn: {
+                  default: '00',
+                  description: {
+                    zh: '功能码',
+                  },
+                  order: 1,
+                  required: true,
+                  title: {
+                    zh: '功能码',
+                  },
+                  type: 'string',
+                },
+                di: {
+                  default: '0000',
+                  description: {
+                    zh: '信息标识',
+                  },
+                  order: 2,
+                  required: true,
+                  title: {
+                    zh: '信息标识',
+                  },
+                  type: 'string',
+                },
+                length: {
+                  default: 2,
+                  description: {
+                    zh: '长度',
+                  },
+                  order: 4,
+                  required: true,
+                  title: {
+                    zh: '长度',
+                  },
+                  type: 'integer',
+                },
+                type: {
+                  default: 'byte',
+                  description: {
+                    zh: '数据类型',
+                  },
+                  enum: [
+                    {
+                      label: 'byte',
+                      value: 'byte',
+                    },
+                    {
+                      label: 'little',
+                      value: 'little',
+                    },
+                    {
+                      label: 'bit',
+                      value: 'bit',
+                    },
+                  ],
+                  order: 3,
+                  required: true,
+                  title: {
+                    zh: '数据类型',
+                  },
+                  type: 'string',
+                },
+              },
+              title: {
+                zh: 'DLT376协议',
+              },
+              type: 'energy',
+              vsn: [52, 46, 51, 46, 48],
+            },
+          ],
+          arrlist: [
+            {
+              default: 0,
+              description: {
+                zh: '报文序号',
+              },
+              order: 103,
+              required: true,
+              title: {
+                zh: '报文序号',
+              },
+              type: 'integer',
+              showname: '_dlinkindex',
+            },
+            {
+              default: '0X00',
+              description: {
+                zh: '寄存器地址:(16进制加0X,例如:0X10,否在是10进制)',
+              },
+              order: 4,
+              required: true,
+              title: {
+                zh: '寄存器地址',
+              },
+              type: 'string',
+              showname: 'address',
+            },
+            {
+              default: '2',
+              description: {
+                zh: '数据长度(字节)',
+              },
+              order: 5,
+              required: true,
+              title: {
+                zh: '数据长度(字节)',
+              },
+              type: 'integer',
+              showname: 'data',
+            },
+            {
+              default:
+                'http://dgiot-1253666439.cos.ap-shanghai-fsi.myqcloud.com/shuwa_tech/zh/product/dgiot/channel/MQTT.png',
+              description: {
+                en: 'protocol ICO',
+                zh: '协议ICO',
+              },
+              order: 102,
+              required: false,
+              title: {
+                en: 'protocol ICO',
+                zh: '协议ICO',
+              },
+              type: 'string',
+              showname: 'ico',
+            },
+            {
+              default: {
+                label: '0X01:读线圈寄存器',
+                value: 'readCoils',
+              },
+              description: {
+                zh: '寄存器状态',
+              },
+              enum: [
+                {
+                  label: '0X01:读线圈寄存器',
+                  value: 'readCoils',
+                },
+                {
+                  label: '0X02:读离散输入寄存器',
+                  value: 'readInputs',
+                },
+                {
+                  label: '0X03:读保持寄存器',
+                  value: 'readHregs',
+                },
+                {
+                  label: '0X04:读输入寄存器',
+                  value: 'readIregs',
+                },
+                {
+                  label: '0X05:写单个线圈寄存器',
+                  value: 'writeCoil',
+                },
+                {
+                  label: '0X06:写单个保持寄存器',
+                  value: 'writeHreg',
+                },
+                {
+                  label: '0X0f:写多个线圈寄存器',
+                  value: 'writeCoils',
+                },
+                {
+                  label: '0X10:写多个保持寄存器',
+                  value: 'writeHregs',
+                },
+              ],
+              order: 3,
+              required: true,
+              title: {
+                zh: '寄存器状态',
+              },
+              type: 'enum',
+              showname: 'operatetype',
+            },
+            {
+              default: 'short16_AB',
+              description: {
+                zh: '数据格式',
+              },
+              enum: [
+                {
+                  label: '位',
+                  value: 'bit',
+                },
+                {
+                  label: '16位 有符号(AB)',
+                  value: 'short16_AB',
+                },
+                {
+                  label: '16位 有符号(BA)',
+                  value: 'short16_BA',
+                },
+                {
+                  label: '16位 无符号(AB)',
+                  value: 'ushort16_AB',
+                },
+                {
+                  label: '16位 无符号(BA)',
+                  value: 'ushort16_BA',
+                },
+                {
+                  label: '32位 有符号(ABCD)',
+                  value: 'long32_ABCD',
+                },
+                {
+                  label: '32位 有符号(CDAB)',
+                  value: 'long32_CDAB',
+                },
+                {
+                  label: '32位 无符号(ABCD)',
+                  value: 'ulong32_ABCD',
+                },
+                {
+                  label: '32位 无符号(CDAB)',
+                  value: 'ulong32_CDAB',
+                },
+                {
+                  label: '32位 浮点数(ABCD)',
+                  value: 'float32_ABCD',
+                },
+                {
+                  label: '32位 浮点数(CDAB)',
+                  value: 'float32_CDAB',
+                },
+              ],
+              order: 1,
+              required: true,
+              title: {
+                zh: '数据格式',
+              },
+              type: 'enum',
+              showname: 'originaltype',
+            },
+            {
+              default: '0000',
+              description: {
+                zh: '从机地址(16进制加0X,例如:0X10,否在是10进制)',
+              },
+              order: 2,
+              required: true,
+              title: {
+                zh: '从机地址',
+              },
+              type: 'string',
+              showname: 'slaveid',
+            },
+          ],
+          addchannel: {
+            _dlinkindex: 't00',
+            address: '0X00',
+            data: '2',
+            ico: 'http://dgiot-1253666439.cos.ap-shanghai-fsi.myqcloud.com/shuwa_tech/zh/product/dgiot/channel/MQTT.png',
+            operatetype: 'readCoils',
+            originaltype: 'short16_AB',
+            slaveid: '0000',
+          },
+          disabled: false,
+          changeData: {
+            app: 'dgiot_modbus',
+            cType: 'MODBUSRTU',
+            colum: 10,
+            description: {
+              zh: 'MODBUS RTU协议',
+            },
+            mod: 'modbus_rtu',
+            params: {
+              _dlinkindex: {
+                default: 0,
+                description: {
+                  zh: '报文序号',
+                },
+                order: 103,
+                required: true,
+                title: {
+                  zh: '报文序号',
+                },
+                type: 'integer',
+                showname: '_dlinkindex',
+              },
+              address: {
+                default: '0X00',
+                description: {
+                  zh: '寄存器地址:(16进制加0X,例如:0X10,否在是10进制)',
+                },
+                order: 4,
+                required: true,
+                title: {
+                  zh: '寄存器地址',
+                },
+                type: 'string',
+                showname: 'address',
+              },
+              data: {
+                default: '2',
+                description: {
+                  zh: '数据长度(字节)',
+                },
+                order: 5,
+                required: true,
+                title: {
+                  zh: '数据长度(字节)',
+                },
+                type: 'integer',
+                showname: 'data',
+              },
+              ico: {
+                default:
+                  'http://dgiot-1253666439.cos.ap-shanghai-fsi.myqcloud.com/shuwa_tech/zh/product/dgiot/channel/MQTT.png',
+                description: {
+                  en: 'protocol ICO',
+                  zh: '协议ICO',
+                },
+                order: 102,
+                required: false,
+                title: {
+                  en: 'protocol ICO',
+                  zh: '协议ICO',
+                },
+                type: 'string',
+                showname: 'ico',
+              },
+              operatetype: {
+                default: {
+                  label: '0X01:读线圈寄存器',
+                  value: 'readCoils',
+                },
+                description: {
+                  zh: '寄存器状态',
+                },
+                enum: [
+                  {
+                    label: '0X01:读线圈寄存器',
+                    value: 'readCoils',
+                  },
+                  {
+                    label: '0X02:读离散输入寄存器',
+                    value: 'readInputs',
+                  },
+                  {
+                    label: '0X03:读保持寄存器',
+                    value: 'readHregs',
+                  },
+                  {
+                    label: '0X04:读输入寄存器',
+                    value: 'readIregs',
+                  },
+                  {
+                    label: '0X05:写单个线圈寄存器',
+                    value: 'writeCoil',
+                  },
+                  {
+                    label: '0X06:写单个保持寄存器',
+                    value: 'writeHreg',
+                  },
+                  {
+                    label: '0X0f:写多个线圈寄存器',
+                    value: 'writeCoils',
+                  },
+                  {
+                    label: '0X10:写多个保持寄存器',
+                    value: 'writeHregs',
+                  },
+                ],
+                order: 3,
+                required: true,
+                title: {
+                  zh: '寄存器状态',
+                },
+                type: 'enum',
+                showname: 'operatetype',
+              },
+              originaltype: {
+                default: 'short16_AB',
+                description: {
+                  zh: '数据格式',
+                },
+                enum: [
+                  {
+                    label: '位',
+                    value: 'bit',
+                  },
+                  {
+                    label: '16位 有符号(AB)',
+                    value: 'short16_AB',
+                  },
+                  {
+                    label: '16位 有符号(BA)',
+                    value: 'short16_BA',
+                  },
+                  {
+                    label: '16位 无符号(AB)',
+                    value: 'ushort16_AB',
+                  },
+                  {
+                    label: '16位 无符号(BA)',
+                    value: 'ushort16_BA',
+                  },
+                  {
+                    label: '32位 有符号(ABCD)',
+                    value: 'long32_ABCD',
+                  },
+                  {
+                    label: '32位 有符号(CDAB)',
+                    value: 'long32_CDAB',
+                  },
+                  {
+                    label: '32位 无符号(ABCD)',
+                    value: 'ulong32_ABCD',
+                  },
+                  {
+                    label: '32位 无符号(CDAB)',
+                    value: 'ulong32_CDAB',
+                  },
+                  {
+                    label: '32位 浮点数(ABCD)',
+                    value: 'float32_ABCD',
+                  },
+                  {
+                    label: '32位 浮点数(CDAB)',
+                    value: 'float32_CDAB',
+                  },
+                ],
+                order: 1,
+                required: true,
+                title: {
+                  zh: '数据格式',
+                },
+                type: 'enum',
+                showname: 'originaltype',
+              },
+              slaveid: {
+                default: '0000',
+                description: {
+                  zh: '从机地址(16进制加0X,例如:0X10,否在是10进制)',
+                },
+                order: 2,
+                required: true,
+                title: {
+                  zh: '从机地址',
+                },
+                type: 'string',
+                showname: 'slaveid',
+              },
+            },
+            title: {
+              zh: 'MODBUS RTU协议',
+            },
+            type: 'energy',
+            vsn: [52, 46, 51, 46, 48],
+          },
+        },
+        value: '',
         inputParams: {},
         dataList: [{}],
         dataType: mockModules.mockModules.dataType,
@@ -1266,10 +2143,23 @@
         }
       },
     },
-    watch: {},
-    mounted() {
-      // this.getAllunit()
+    watch: {
+      'resource.arrlist': {
+        deep: true,
+        immediate: true,
+        handler(e) {
+          this.upKey++
+          console.log(e, this.upKey)
+        },
+      },
     },
+    async created() {
+      /**
+       * @description 查询资源通道
+       */
+      await this.queryResource()
+    },
+    mounted() {},
     beforeCreate() {}, //生命周期 - 创建之前
     beforeMount() {}, //生命周期 - 挂载之前
     beforeUpdate() {}, //生命周期 - 更新之前
@@ -1277,6 +2167,175 @@
     beforeDestroy() {}, //生命周期 - 销毁之前
     activated() {},
     methods: {
+      // orderObject(object) {
+      //   var arr = []
+      //   for (var key in object) {
+      //     object[key].showname = key
+      //     arr.push(object[key])
+      //   }
+      //   return arr.sort(this.arrSort)
+      // },
+      async changeResource(val) {
+        console.log('changeResource', val)
+        this.resource.changeData = {}
+        // this.resource.arrlist = []
+        // this.$nextTick(async () => {
+        var obj = {}
+        var arr = []
+        await this.$refs['sizeForm'].clearValidate()
+        await this.resource.data.forEach((resource) => {
+          if (resource.cType == val) {
+            this.resource.changeData = resource
+            this.resource.arrlist = resource.arr
+            this.resource.addchannel = resource.obj
+            console.log(this.resource.arrlist)
+          }
+        })
+        await this.Protocol(this.resource.changeData)
+        //  修改子组件el-form 后 修改父组件的uPKey
+        // })
+      },
+      async Protocol() {
+        // 动态渲染表单
+        var obj = {}
+        var sizerule = {
+          applicationtText: [
+            {
+              required: true,
+              message: '请选择所属应用',
+              trigger: 'change',
+            },
+          ],
+          name: [
+            {
+              required: true,
+              message: '请输入通道名称',
+              trigger: 'blur',
+            },
+          ],
+          region: [
+            {
+              required: true,
+              message: '请选择通道类型',
+              trigger: 'change',
+            },
+          ],
+        }
+        this.upKey = moment.now()
+        // this.sizerule = sizerule
+        console.info('this.resource, this.sizerule')
+        console.log(this.resource, this.sizerule)
+        window.resource = this.resource
+        this.upKey = moment.now()
+      },
+      async queryResource() {
+        this.resource.data = (await getProtocol()) ?? [
+          {
+            app: 'dgiot_meter',
+            cType: 'DLT376',
+            colum: 10,
+            description: {
+              zh: 'DLT376协议',
+            },
+            mod: 'dlt376_decoder',
+            params: {
+              afn: {
+                default: '00',
+                description: {
+                  zh: '功能码',
+                },
+                order: 1,
+                required: true,
+                title: {
+                  zh: '功能码',
+                },
+                type: 'string',
+              },
+              di: {
+                default: '0000',
+                description: {
+                  zh: '信息标识',
+                },
+                order: 2,
+                required: true,
+                title: {
+                  zh: '信息标识',
+                },
+                type: 'string',
+              },
+              ico: {
+                default:
+                  'http://dgiot-1253666439.cos.ap-shanghai-fsi.myqcloud.com/shuwa_tech/zh/product/dgiot/channel/MQTT.png',
+                description: {
+                  en: 'protocol ICO',
+                  zh: '协议ICO',
+                },
+                order: 102,
+                required: false,
+                title: {
+                  en: 'protocol ICO',
+                  zh: '协议ICO',
+                },
+                type: 'string',
+              },
+              length: {
+                default: 'byte',
+                description: {
+                  zh: '长度',
+                },
+                enum: ['byte', 'little', 'bit'],
+                order: 4,
+                required: true,
+                title: {
+                  zh: '长度',
+                },
+                type: 'integer',
+              },
+              type: {
+                default: 'byte',
+                description: {
+                  zh: '数据类型',
+                },
+                enum: ['byte', 'little', 'bit'],
+                order: 3,
+                required: true,
+                title: {
+                  zh: '数据类型',
+                },
+                type: 'string',
+              },
+            },
+            title: {
+              zh: 'DLT376协议',
+            },
+            type: 'energy',
+            vsn: [52, 46, 51, 46, 48],
+          },
+        ]
+        this.resource.data.forEach((item, index) => {
+          this.resource.data[index].arr = []
+          this.resource.data[index].obj = {}
+          for (const key in this.resource.data[index].params) {
+            this.resource.data[index].params[key].showname = key
+            this.resource.data[index].arr.push(item.params[key])
+          }
+          this.resource.data[index].arr.map((_item) => {
+            this.resource.data[index].obj[_item.showname] = _item?.default
+              ?.value
+              ? _item.default.value
+              : _item.default
+              ? _item.default
+              : ''
+            // _item.enum
+            //   ? console.info(_item.enum, _item, 'set select')
+            //   : console.log(_item.enum, _item, 'default')
+            if (_item.enum)
+              // 设置默认值
+              dgiotlogger.info(_item.type, _item.enum, _item, 'set select')
+          })
+        })
+        console.info('this.resource.data', this.resource.data)
+      },
       // 数据类型
       changeGroup(type) {
         dgiotlog.log(type)
@@ -1312,9 +2371,8 @@
       }),
       changeThing(item) {
         let that = this
-        console.log('this.sizeFormaaa', that.$refs.sizeForm.model.name)
-        console.log('item', item)
-        that.$dgiotBus.$emit('thingType', 'put')
+        dgiotlog.log('this.sizeFormaaa', that.$refs.sizeForm.model.name)
+        dgiotlog.log('item', item)
         var obj = {}
         var daslist = []
         item.dataType.das.forEach((val) => {
@@ -1348,6 +2406,11 @@
             operatetype: that.$objGet(item, 'dataForm.operatetype'),
             originaltype: that.$objGet(item, 'dataForm.originaltype'),
             slaveid: that.$objGet(item, 'dataForm.slaveid'),
+            afn: this.$objGet(rowData, 'dataForm.afn'),
+            da: this.$objGet(rowData, 'dataForm.da'),
+            dt: this.$objGet(rowData, 'dataForm.dt'),
+            bytelen: this.$objGet(rowData, 'dataForm.bytelen'),
+            byteType: this.$objGet(rowData, 'dataForm.byteType'),
             iscount: this.$objGet(item, 'dataForm.iscount'),
             countstrategy: this.$objGet(item, 'dataForm.countstrategy'),
             countround: this.$objGet(item, 'dataForm.countround'),
@@ -1388,6 +2451,11 @@
             operatetype: that.$objGet(item, 'dataForm.operatetype'),
             originaltype: that.$objGet(item, 'dataForm.originaltype'),
             slaveid: that.$objGet(item, 'dataForm.slaveid'),
+            afn: this.$objGet(rowData, 'dataForm.afn'),
+            da: this.$objGet(rowData, 'dataForm.da'),
+            dt: this.$objGet(rowData, 'dataForm.dt'),
+            bytelen: this.$objGet(rowData, 'dataForm.bytelen'),
+            byteType: this.$objGet(rowData, 'dataForm.byteType'),
             iscount: this.$objGet(item, 'dataForm.iscount'),
             countstrategy: this.$objGet(item, 'dataForm.countstrategy'),
             countround: this.$objGet(item, 'dataForm.countround'),
@@ -1423,6 +2491,11 @@
             operatetype: that.$objGet(item, 'dataForm.operatetype'),
             originaltype: that.$objGet(item, 'dataForm.originaltype'),
             slaveid: that.$objGet(item, 'dataForm.slaveid'),
+            afn: this.$objGet(rowData, 'dataForm.afn'),
+            da: this.$objGet(rowData, 'dataForm.da'),
+            dt: this.$objGet(rowData, 'dataForm.dt'),
+            bytelen: this.$objGet(rowData, 'dataForm.bytelen'),
+            byteType: this.$objGet(rowData, 'dataForm.byteType'),
             iscount: this.$objGet(item, 'dataForm.iscount'),
             countstrategy: this.$objGet(item, 'dataForm.countstrategy'),
             countround: this.$objGet(item, 'dataForm.countround'),
@@ -1464,6 +2537,11 @@
             operatetype: that.$objGet(item, 'dataForm.operatetype'),
             originaltype: that.$objGet(item, 'dataForm.originaltype'),
             slaveid: this.$objGet(item, 'dataForm.slaveid'),
+            afn: this.$objGet(rowData, 'dataForm.afn'),
+            da: this.$objGet(rowData, 'dataForm.da'),
+            dt: this.$objGet(rowData, 'dataForm.dt'),
+            bytelen: this.$objGet(rowData, 'dataForm.bytelen'),
+            byteType: this.$objGet(rowData, 'dataForm.byteType'),
             iscount: this.$objGet(item, 'dataForm.iscount'),
             countstrategy: this.$objGet(item, 'dataForm.countstrategy'),
             countround: this.$objGet(item, 'dataForm.countround'),
@@ -1497,6 +2575,11 @@
             operatetype: that.$objGet(item, 'dataForm.operatetype'),
             originaltype: that.$objGet(item, 'dataForm.originaltype'),
             slaveid: that.$objGet(item, 'dataForm.slaveid'),
+            afn: this.$objGet(rowData, 'dataForm.afn'),
+            da: this.$objGet(rowData, 'dataForm.da'),
+            dt: this.$objGet(rowData, 'dataForm.dt'),
+            bytelen: this.$objGet(rowData, 'dataForm.bytelen'),
+            byteType: this.$objGet(rowData, 'dataForm.byteType'),
             iscount: this.$objGet(item, 'dataForm.iscount'),
             countstrategy: this.$objGet(item, 'dataForm.countstrategy'),
             countround: this.$objGet(item, 'dataForm.countround'),
@@ -1533,6 +2616,11 @@
             operatetype: that.$objGet(item, 'dataForm.operatetype'),
             originaltype: that.$objGet(item, 'dataForm.originaltype'),
             slaveid: that.$objGet(item, 'dataForm.slaveid'),
+            afn: this.$objGet(rowData, 'dataForm.afn'),
+            da: this.$objGet(rowData, 'dataForm.da'),
+            dt: this.$objGet(rowData, 'dataForm.dt'),
+            bytelen: this.$objGet(rowData, 'dataForm.bytelen'),
+            byteType: this.$objGet(rowData, 'dataForm.byteType'),
             iscount: this.$objGet(item, 'dataForm.iscount'),
             countstrategy: this.$objGet(item, 'dataForm.countstrategy'),
             countround: this.$objGet(item, 'dataForm.countround'),
@@ -1566,6 +2654,11 @@
             operatetype: that.$objGet(item, 'dataForm.operatetype'),
             originaltype: that.$objGet(item, 'dataForm.originaltype'),
             slaveid: that.$objGet(item, 'dataForm.slaveid'),
+            afn: this.$objGet(rowData, 'dataForm.afn'),
+            da: this.$objGet(rowData, 'dataForm.da'),
+            dt: this.$objGet(rowData, 'dataForm.dt'),
+            bytelen: this.$objGet(rowData, 'dataForm.bytelen'),
+            byteType: this.$objGet(rowData, 'dataForm.byteType'),
             iscount: this.$objGet(item, 'dataForm.iscount'),
             countstrategy: this.$objGet(item, 'dataForm.countstrategy'),
             countround: this.$objGet(item, 'dataForm.countround'),
@@ -1598,6 +2691,11 @@
             operatetype: that.$objGet(item, 'dataForm.operatetype'),
             originaltype: that.$objGet(item, 'dataForm.originaltype'),
             slaveid: that.$objGet(item, 'dataForm.slaveid'),
+            afn: this.$objGet(rowData, 'dataForm.afn'),
+            da: this.$objGet(rowData, 'dataForm.da'),
+            dt: this.$objGet(rowData, 'dataForm.dt'),
+            bytelen: this.$objGet(rowData, 'dataForm.bytelen'),
+            byteType: this.$objGet(rowData, 'dataForm.byteType'),
             iscount: this.$objGet(item, 'dataForm.iscount'),
             countstrategy: this.$objGet(item, 'dataForm.countstrategy'),
             countround: this.$objGet(item, 'dataForm.countround'),
@@ -1630,6 +2728,11 @@
             operatetype: that.$objGet(item, 'dataForm.operatetype'),
             originaltype: that.$objGet(item, 'dataForm.originaltype'),
             slaveid: that.$objGet(item, 'dataForm.slaveid'),
+            afn: this.$objGet(rowData, 'dataForm.afn'),
+            da: this.$objGet(rowData, 'dataForm.da'),
+            dt: this.$objGet(rowData, 'dataForm.dt'),
+            bytelen: this.$objGet(rowData, 'dataForm.bytelen'),
+            byteType: this.$objGet(rowData, 'dataForm.byteType'),
             iscount: this.$objGet(item, 'dataForm.iscount'),
             countstrategy: this.$objGet(item, 'dataForm.countstrategy'),
             countround: this.$objGet(item, 'dataForm.countround'),
@@ -1663,6 +2766,11 @@
             operatetype: that.$objGet(item, 'dataForm.operatetype'),
             originaltype: that.$objGet(item, 'dataForm.originaltype'),
             slaveid: that.$objGet(item, 'dataForm.slaveid'),
+            afn: this.$objGet(rowData, 'dataForm.afn'),
+            da: this.$objGet(rowData, 'dataForm.da'),
+            dt: this.$objGet(rowData, 'dataForm.dt'),
+            bytelen: this.$objGet(rowData, 'dataForm.bytelen'),
+            byteType: this.$objGet(rowData, 'dataForm.byteType'),
             iscount: this.$objGet(item, 'dataForm.iscount'),
             countstrategy: this.$objGet(item, 'dataForm.countstrategy'),
             countround: this.$objGet(item, 'dataForm.countround'),
@@ -1680,9 +2788,11 @@
         that.setSizeForm(obj)
       },
       wmxCurrentChange(val) {
+        console.log(this.wmxData)
         this.wmxstart = val
       },
       wmxSizeChange(val) {
+        console.log(this.wmxData)
         this.wmxstart = 1
         this.wmxPageSize = val
       },
@@ -1741,6 +2851,11 @@
                 offset: sizeForm.offset,
                 order: sizeForm.order,
                 protocol: sizeForm.protocol,
+                afn: sizeForm.afn,
+                da: sizeForm.da,
+                dt: sizeForm.dt,
+                bytelen: sizeForm.bytelen,
+                byteType: sizeForm.byteType,
                 operatetype: sizeForm.operatetype,
                 originaltype: sizeForm.originaltype,
                 slaveid: sizeForm.slaveid,
@@ -1863,11 +2978,23 @@
               Object.assign(obj, obj1)
             }
             delete obj.index
+            dgiotlog.log(this.resource.changeData, 'changeData')
+            dgiotlog.log('dynamicData', this.resource.addchannel)
+            // 新增协议类型参数
+            obj.dataForm.protocol = this.resource.value
+            // 处理动态数据源
+            console.log(this.resource)
+            Object.assign(obj, {
+              dataSource: this.resource.addchannel,
+            })
+            // 删除掉icon 属性
+            delete obj.dataForm.ico
+            dgiotlog.log('submitForm obj', obj)
+            dgiotlog.log('resource.arrlist', this.resource)
             this.$emit('submitForm', obj)
             // this.$refs[formName].resetFields()
           } else {
-            dgiotlog.log(valid)
-            dgiotlog.log('error submit!!')
+            dgiotlog.log(valid, 'error submit!!')
             return false
           }
         })

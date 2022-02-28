@@ -1,19 +1,22 @@
 /* eslint-disable */
-import { mapGetters, mapMutations } from "vuex";
-import { getDeviceCountByProduct } from "@/api/Device/index";
-import { deleteThing, postThing, putThing } from "@/api/Product/index";
-import { downBinary } from "@/api/File/index";
-import { getAllunit, getDictCount } from "@/api/Dict/index";
-import { getChannelCountByProduct, saveChanne } from "@/api/Channel/index";
-import { getRule } from "@/api/Rules";
-import { postProductTemplet } from "@/api/ProductTemplet";
-import { Compile, subupadte } from "@/api/System/index";
-import { setTimeout } from "timers";
-import { Websocket } from "@/utils/webscroket/index";
-import wmxdetail from "@/views/DeviceCloud/manage/component/wmxdetail";
-import { returnLogin } from "@/utils/utilwen";
-import profile from "@/views/DeviceCloud/manage/profile";
-
+import { mapGetters, mapMutations } from 'vuex'
+import { getDeviceCountByProduct } from '@/api/Device/index'
+import { deleteThing, postThing, putThing } from '@/api/Product/index'
+import { downBinary } from '@/api/File/index'
+import { getAllunit, getDictCount } from '@/api/Dict/index'
+import { getChannelCountByProduct, saveChanne } from '@/api/Channel/index'
+import { getRule } from '@/api/Rules'
+import { postProductTemplet } from '@/api/ProductTemplet'
+import { Compile, subupadte } from '@/api/System/index'
+import { setTimeout } from 'timers'
+import { Websocket } from '@/utils/webscroket/index'
+import wmxdetail from '@/views/DeviceCloud/manage/component/wmxdetail'
+import { returnLogin } from '@/utils/utilwen'
+import profile from '@/views/DeviceCloud/manage/profile'
+import { dgiotlog } from '../../../../utils/dgiotLog'
+import { getProtocol } from '@/api/Protocol/index'
+import { delCategory } from '../../../../api/Category'
+import { queryView } from '@/api/View'
 var editor
 var editor1
 var editor2
@@ -129,6 +132,8 @@ export default {
       }
     }
     return {
+      amisproductInfo: [],
+      upKey: moment.now(),
       codeFlag: false,
       productInfo: {
         decoder: { code: '' },
@@ -465,7 +470,7 @@ export default {
         specs: [],
         dis: '0X10',
         dinumber: 'null',
-        das:[],
+        das: [],
       },
       tableData: [],
       activeName: 'first',
@@ -640,6 +645,13 @@ export default {
       })
       // this.codeFlag = false
     },
+    feateditorAmis(config) {
+      let productInfo = this.productInfo
+      this.$baseEventBus.$emit('profileAmisDialog', {
+        config,
+        productInfo,
+      })
+    },
     ...mapMutations({
       setSizeForm: 'konva/setSizeForm',
     }),
@@ -687,8 +699,8 @@ export default {
             attributevalue: '',
           },
         ],
-        das:[],
-        daslist:[],
+        das: [],
+        daslist: [],
         rate: 1,
         offset: 0,
         order: 0,
@@ -776,7 +788,9 @@ export default {
         .then((resultes) => {
           if (resultes?.topics) {
             resultes.topics.forEach((topic) => {
-               if(topic)   topics.push(topic)
+              if (topic) {
+                topics.push(topic)
+              }
             })
             dgiotlog.log('resultes', resultes.topics)
             dgiotlog.log('topics', topics)
@@ -803,7 +817,7 @@ export default {
         this.$baseMessage(
           this.$translateTitle('alert.Data request successfully'),
           'success',
-          'vab-hey-message-success'
+          'dgiot-hey-message-success'
         )
         loading.close()
         this.$downBinary(res)
@@ -812,7 +826,7 @@ export default {
         this.$baseMessage(
           this.$translateTitle('alert.Data request error') + `${error}`,
           'error',
-          'vab-hey-message-error'
+          'dgiot-hey-message-error'
         )
       }
     },
@@ -958,13 +972,13 @@ export default {
           this.$baseMessage(
             this.$translateTitle('user.Save the template successfully'),
             'success',
-            'vab-hey-message-success'
+            'dgiot-hey-message-success'
           )
         } else {
           this.$baseMessage(
             this.$translateTitle('user.Save the template error'),
             'error',
-            'vab-hey-message-error'
+            'dgiot-hey-message-error'
           )
         }
         loading.close()
@@ -974,7 +988,7 @@ export default {
         this.$baseMessage(
           this.$translateTitle('user.Save the template error'),
           'error',
-          'vab-hey-message-error'
+          'dgiot-hey-message-error'
         )
       }
     },
@@ -1471,9 +1485,9 @@ export default {
       })
     },
     addDas() {
-        this.sizeForm.daslist.push({
-            addr: '',
-        })
+      this.sizeForm.daslist.push({
+        addr: '',
+      })
     },
     removeDas(item) {
       var index = this.sizeForm.daslist.indexOf(item)
@@ -1540,12 +1554,12 @@ export default {
     },
     createProperty() {
       this.setSizeForm(this.getFormOrginalData())
-        console.log("sizeForm", this.sizeForm)
+      console.log('sizeForm', this.sizeForm)
       this.wmxdialogVisible = true
       this.wmxSituation = '新增'
     },
     // 物模型修改submitForm
-    wmxDataFill(rowData, index) {
+    async wmxDataFill(rowData, index) {
       this.modifyIndex = index
       this.wmxdialogVisible = true
       this.wmxSituation = '编辑'
@@ -1553,7 +1567,7 @@ export default {
       var daslist = []
       rowData.dataType.das.forEach((val) => {
         daslist.push({
-          addr:val
+          addr: val,
         })
       })
       // 提交之前需要先判断类型
@@ -1585,6 +1599,11 @@ export default {
           countround: this.$objGet(rowData, 'dataForm.countround'),
           countcollection: this.$objGet(rowData, 'dataForm.countcollection'),
           slaveid: this.$objGet(rowData, 'dataForm.slaveid'),
+          afn: this.$objGet(rowData, 'dataForm.afn'),
+          da: this.$objGet(rowData, 'dataForm.da'),
+          dt: this.$objGet(rowData, 'dataForm.dt'),
+          bytelen: this.$objGet(rowData, 'dataForm.bytelen'),
+          byteType: this.$objGet(rowData, 'dataForm.byteType'),
           collection: '',
           control: '',
           strategy: '',
@@ -1621,6 +1640,11 @@ export default {
           operatetype: this.$objGet(rowData, 'dataForm.operatetype'),
           originaltype: this.$objGet(rowData, 'dataForm.originaltype'),
           slaveid: this.$objGet(rowData, 'dataForm.slaveid'),
+          afn: this.$objGet(rowData, 'dataForm.afn'),
+          da: this.$objGet(rowData, 'dataForm.da'),
+          dt: this.$objGet(rowData, 'dataForm.dt'),
+          bytelen: this.$objGet(rowData, 'dataForm.bytelen'),
+          byteType: this.$objGet(rowData, 'dataForm.byteType'),
           iscount: this.$objGet(rowData, 'dataForm.iscount'),
           countstrategy: this.$objGet(rowData, 'dataForm.countstrategy'),
           countround: this.$objGet(rowData, 'dataForm.countround'),
@@ -1658,6 +1682,11 @@ export default {
           operatetype: this.$objGet(rowData, 'dataForm.operatetype'),
           originaltype: this.$objGet(rowData, 'dataForm.originaltype'),
           slaveid: this.$objGet(rowData, 'dataForm.slaveid'),
+          afn: this.$objGet(rowData, 'dataForm.afn'),
+          da: this.$objGet(rowData, 'dataForm.da'),
+          dt: this.$objGet(rowData, 'dataForm.dt'),
+          bytelen: this.$objGet(rowData, 'dataForm.bytelen'),
+          byteType: this.$objGet(rowData, 'dataForm.byteType'),
           iscount: this.$objGet(rowData, 'dataForm.iscount'),
           countstrategy: this.$objGet(rowData, 'dataForm.countstrategy'),
           countround: this.$objGet(rowData, 'dataForm.countround'),
@@ -1703,6 +1732,11 @@ export default {
           operatetype: this.$objGet(rowData, 'dataForm.operatetype'),
           originaltype: this.$objGet(rowData, 'dataForm.originaltype'),
           slaveid: this.$objGet(rowData, 'dataForm.slaveid'),
+          afn: this.$objGet(rowData, 'dataForm.afn'),
+          da: this.$objGet(rowData, 'dataForm.da'),
+          dt: this.$objGet(rowData, 'dataForm.dt'),
+          bytelen: this.$objGet(rowData, 'dataForm.bytelen'),
+          byteType: this.$objGet(rowData, 'dataForm.byteType'),
           iscount: this.$objGet(rowData, 'dataForm.iscount'),
           countstrategy: this.$objGet(rowData, 'dataForm.countstrategy'),
           countround: this.$objGet(rowData, 'dataForm.countround'),
@@ -1740,6 +1774,11 @@ export default {
           operatetype: this.$objGet(rowData, 'dataForm.operatetype'),
           originaltype: this.$objGet(rowData, 'dataForm.originaltype'),
           slaveid: this.$objGet(rowData, 'dataForm.slaveid'),
+          afn: this.$objGet(rowData, 'dataForm.afn'),
+          da: this.$objGet(rowData, 'dataForm.da'),
+          dt: this.$objGet(rowData, 'dataForm.dt'),
+          bytelen: this.$objGet(rowData, 'dataForm.bytelen'),
+          byteType: this.$objGet(rowData, 'dataForm.byteType'),
           iscount: this.$objGet(rowData, 'dataForm.iscount'),
           countstrategy: this.$objGet(rowData, 'dataForm.countstrategy'),
           countround: this.$objGet(rowData, 'dataForm.countround'),
@@ -1781,6 +1820,11 @@ export default {
           operatetype: this.$objGet(rowData, 'dataForm.operatetype'),
           originaltype: this.$objGet(rowData, 'dataForm.originaltype'),
           slaveid: this.$objGet(rowData, 'dataForm.slaveid'),
+          afn: this.$objGet(rowData, 'dataForm.afn'),
+          da: this.$objGet(rowData, 'dataForm.da'),
+          dt: this.$objGet(rowData, 'dataForm.dt'),
+          bytelen: this.$objGet(rowData, 'dataForm.bytelen'),
+          byteType: this.$objGet(rowData, 'dataForm.byteType'),
           iscount: this.$objGet(rowData, 'dataForm.iscount'),
           countstrategy: this.$objGet(rowData, 'dataForm.countstrategy'),
           countround: this.$objGet(rowData, 'dataForm.countround'),
@@ -1819,6 +1863,11 @@ export default {
           operatetype: this.$objGet(rowData, 'dataForm.operatetype'),
           originaltype: this.$objGet(rowData, 'dataForm.originaltype'),
           slaveid: this.$objGet(rowData, 'dataForm.slaveid'),
+          afn: this.$objGet(rowData, 'dataForm.afn'),
+          da: this.$objGet(rowData, 'dataForm.da'),
+          dt: this.$objGet(rowData, 'dataForm.dt'),
+          bytelen: this.$objGet(rowData, 'dataForm.bytelen'),
+          byteType: this.$objGet(rowData, 'dataForm.byteType'),
           iscount: this.$objGet(rowData, 'dataForm.iscount'),
           countstrategy: this.$objGet(rowData, 'dataForm.countstrategy'),
           countround: this.$objGet(rowData, 'dataForm.countround'),
@@ -1856,6 +1905,11 @@ export default {
           operatetype: this.$objGet(rowData, 'dataForm.operatetype'),
           originaltype: this.$objGet(rowData, 'dataForm.originaltype'),
           slaveid: this.$objGet(rowData, 'dataForm.slaveid'),
+          afn: this.$objGet(rowData, 'dataForm.afn'),
+          da: this.$objGet(rowData, 'dataForm.da'),
+          dt: this.$objGet(rowData, 'dataForm.dt'),
+          bytelen: this.$objGet(rowData, 'dataForm.bytelen'),
+          byteType: this.$objGet(rowData, 'dataForm.byteType'),
           iscount: this.$objGet(rowData, 'dataForm.iscount'),
           countstrategy: this.$objGet(rowData, 'dataForm.countstrategy'),
           countround: this.$objGet(rowData, 'dataForm.countround'),
@@ -1868,7 +1922,48 @@ export default {
           editdatatype: true,
         }
       }
+      dgiotlog.log('editrowData', rowData)
+      // 处理动态协议类型的数据展示
+      obj.protocol = rowData.dataForm.protocol
       this.setSizeForm(obj)
+      //调用子组件的下拉事件
+      this.$nextTick(async () => {
+        await this.$refs['sizeForm'].queryResource()
+        // 保证子组件已经挂载完成）
+        // if (this.$refs['sizeForm'])
+        this.$refs['sizeForm'].resource.value = rowData.dataForm.protocol
+        this.$refs['sizeForm'].resource.disabled = rowData.dataForm.protocol
+          .length
+          ? true
+          : false
+        // this.$refs['sizeForm'].changeResource(this.$refs['sizeForm'].resource.value)
+
+        this.$refs['sizeForm'].resource.arrlist = rowData.dataSource
+        this.$nextTick(() => {
+          this.$refs['sizeForm'].resource.data.forEach((resource, index) => {
+            // resource[index].arr = []
+            // resource[index].obj = {}
+            if (this.$refs['sizeForm'].resource.value === resource.cType) {
+              console.info(resource, 'success cType')
+              console.info(rowData.dataSource, 'rowData.dataSource')
+              for (var o in rowData.dataSource) {
+                for (var j in resource.obj) {
+                  if (o === j) resource.obj[o] = rowData.dataSource[j]
+                }
+              }
+              console.info(resource.obj, 'set resource.obj')
+              this.$refs['sizeForm'].resource.addchannel = resource.obj
+            }
+            this.$refs['sizeForm'].resource.changeData = rowData.dataSource
+            this.$refs['sizeForm'].resource.changeData = rowData.dataSource
+            if (resource.cType == rowData.dataForm.protocol) {
+              console.log(resource, 'success')
+            }
+          })
+        })
+        console.log('refs sizeForm', this.$refs['sizeForm']) // 子组件的实例
+      })
+      // this.changeResource(obj.protocolType)
       // dgiotlog.log('this.sizeForm', this.sizeForm)
     },
     // 物模型结构体
@@ -2116,12 +2211,12 @@ export default {
     checkAddTest() {
       this.collectionDialogVisible = true
       // let newTabName = ++this.tabIndex + '';
-      ;(this.editableTabsValue = this.wmxData[0].identifier),
-        (this.activeIndex = this.wmxData[0].identifier),
-        (this.editableTabs = []),
-        (this.editorList = []),
-        (this.tabIndex = 1),
-        (this.ed3isShow = false)
+      this.editableTabsValue = this.wmxData[0].identifier
+      this.activeIndex = this.wmxData[0].identifier
+      this.editableTabs = []
+      this.editorList = []
+      this.tabIndex = 1
+      this.ed3isShow = false
       this.editableTabs.push({
         title: this.wmxData[0].identifier,
         name: this.wmxData[0].identifier,
@@ -2295,8 +2390,19 @@ export default {
         editor1.setValue(JSON.stringify(this.productdetail.thing, null, 4))
       }, 1)
     },
+    async query_form() {
+      const { results } = await queryView({
+        where: {
+          key: { $regex: this.$route.query.id },
+          type: { $regex: 'notification' },
+        },
+      })
+      this.amisproductInfo = results
+    },
     // 得到产品详情
     getProDetail() {
+      // 查询表单数据
+      this.query_form()
       editor = ace.edit('editor')
       editor.session.setMode('ace/mode/erlang') // 设置语言
       editor.setTheme('ace/theme/monokai') // 设置主题
@@ -2367,7 +2473,7 @@ export default {
                 properties: [],
               }
             }
-            // dgiotlog.log('=====', this.wmxData)
+            dgiotlog.log('=====', this.wmxData)
             this.wmxData = []
             this.wmxDataBk = []
             this.wmxData = this.productdetail.thing.properties.filter(
@@ -2376,7 +2482,7 @@ export default {
                 return item.name && item.dataType
               }
             )
-            this.wmxDataBk = this.wmxData
+            this.wmxDataBk = this.productdetail.thing.properties
             dgiotlog.log('=====', this.wmxData)
             // let array = []
             this.wmxDataBk.forEach((item) => {
@@ -2429,9 +2535,13 @@ export default {
           dgiotlog.log(e)
         })
     },
-    wmxhandleClose() {
-      this.wmxdialogVisible = false
+    async wmxhandleClose() {
+      this.$refs['sizeForm'].$refs['sizeForm'].resetFields()
+      this.$refs['sizeForm'].$refs['sizeForm'].clearValidate()
       this.setSizeForm(this.getFormOrginalData())
+      this.$refs['sizeForm'].resource.disabled = false
+      await this.$refs['sizeForm'].queryResource()
+      this.wmxdialogVisible = false
     },
     // 协议编辑
     protol() {
@@ -2648,14 +2758,25 @@ export default {
     },
     clickmachine(row, _event, _column) {
       if (row.name == 'ALL') {
+        this.wmxDataBk.forEach((item) => {
+          if (!item.dataType)
+            item.dataType = {
+              das: [],
+              specs: {},
+              type: 'float',
+              identification: 'function',
+            }
+        })
         this.wmxData = this.wmxDataBk
       } else {
         this.devicetype = row.name
         this.wmxData = this.wmxDataBk.filter(
-          (item) => item.devicetype == row.name
+          (item) => item.devicetype == row.name && !item.dataType.identification
         )
         this.wmxstart = 1
       }
+      this.upKey = moment.now()
+      console.log(this.wmxData, ' this.wmxData ')
     },
     handleChange(value, direction, movedKeys) {
       // dgiotlog.log(value, direction, movedKeys);
@@ -2812,35 +2933,42 @@ export default {
     },
     /* 删除物模型*/
     deletewmx(row) {
-      // this.productdetail.thing.properties.splice(
-      //   (this.wmxstart - 1) * this.wmxPageSize + index,
-      //   1
-      // )
-      const params = {
-        productid: this.productId,
-        item: row,
-      }
-      deleteThing(params).then((res) => {
-        dgiotlog.log('删除', res)
-        if (res.code == 200) {
-          this.$message({
-            type: 'success',
-            message: '删除成功',
-          })
-          this.getProDetail()
-        } else {
-          this.$message({
-            type: 'warning',
-            message: '删除失败 ' + res.msg,
-          })
+      this.$baseConfirm(
+        this.$translateTitle(
+          'Maintenance.Are you sure you want to delete the current item'
+        ),
+        this.$translateTitle('Maintenance.Delete reminder'),
+        async () => {
+          const params = {
+            productid: this.productId,
+            item: row,
+          }
+          const res = await deleteThing(params)
+          if (res.code == 200) {
+            this.$baseMessage(
+              this.$translateTitle('user.successfully deleted'),
+              'success',
+              'dgiot-hey-message-success'
+            )
+            await this.getProDetail()
+          } else
+            this.$baseMessage(
+              this.$translateTitle('user.error deleted') + res?.msg
+                ? res.msg
+                : res,
+              'error',
+              'dgiot-hey-message-error'
+            )
         }
-      })
+      )
     },
     wmxSizeChange(val) {
+      console.log(this.wmxData)
       this.wmxstart = 1
       this.wmxPageSize = val
     },
     wmxCurrentChange(val) {
+      console.log(this.wmxData)
       this.wmxstart = val
     },
     // 订阅日志按钮

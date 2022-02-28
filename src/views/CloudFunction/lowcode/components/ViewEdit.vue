@@ -27,7 +27,7 @@
       <!--        >-->
       <!--          <el-tab-pane :label="$translateTitle('product.Design')" name="first">-->
       <!--            <div style="height: 30vh; overflow: auto">-->
-      <!--              <vab-monaco-plus-->
+      <!--              <dgiot-monaco-plus-->
       <!--                ref="monacoCode"-->
       <!--                :codes="codes"-->
       <!--                :language="'json'"-->
@@ -46,7 +46,7 @@
       <!--      </el-form-item>-->
       <el-form-item :label="$translateTitle('task.data')" prop="data">
         <div style="height: 30vh; overflow: auto">
-          <vab-monaco-plus
+          <dgiot-monaco-plus
             ref="monacoCode"
             :codes="codes"
             :lang="'json'"
@@ -132,14 +132,22 @@
             }
             if (this.type == 'add') {
               const res = await postView(params)
-              this.$message.success(
-                `${this.$translateTitle('user.Save the template successfully')}`
-              )
+              this.$message({
+                showClose: true,
+                message: `${this.$translateTitle(
+                  'user.Save the template successfully'
+                )}`,
+                type: 'success',
+              })
             } else {
               const { msg } = await putView(this.viewId, params)
-              this.$message.success(
-                `${this.$translateTitle('user.Save the template successfully')}`
-              )
+              this.$message({
+                showClose: true,
+                message: `${this.$translateTitle(
+                  'user.Save the template successfully'
+                )}`,
+                type: 'success',
+              })
             }
             this.$emit('fetch-data')
             this.close()

@@ -30,10 +30,10 @@
         }}
       </el-button>
     </div>
-    <vab-amis v-show="isPreview" :schema="renderSchema" :show-help="false" />
-    <vab-amis-editor
+    <dgiot-amis v-show="isPreview" :schema="renderSchema" :show-help="false" />
+    <dgiot-amis-editor
       v-show="!isPreview"
-      ref="vabAmis"
+      ref="dgiotAmis"
       :amis-key="viewId"
       :theme="theme"
       :value="amisJson"
@@ -61,7 +61,7 @@
     },
     methods: {
       async onChange(e) {
-        this.$refs['vabAmis'].setSchema(e)
+        this.$refs['dgiotAmis'].setSchema(e)
         this.renderSchema = e
       },
       /**
@@ -100,12 +100,12 @@
             console.groupEnd()
           }
           this.amisJson = data
-          this.$refs['vabAmis'].schema = data
-          this.renderSchema = this.$refs['vabAmis'].schema
+          this.$refs['dgiotAmis'].schema = data
+          this.renderSchema = this.$refs['dgiotAmis'].schema
           this.$baseMessage(
             this.$translateTitle('alert.Data request successfully'),
             'success',
-            'vab-hey-message-success'
+            'dgiot-hey-message-success'
           )
           loading.close()
         } catch (error) {
@@ -113,7 +113,7 @@
           this.$baseMessage(
             this.$translateTitle('alert.Data request error') + `${error}`,
             'error',
-            'vab-hey-message-error'
+            'dgiot-hey-message-error'
           )
         }
       },
@@ -129,7 +129,7 @@
         try {
           const loading = this.$baseColorfullLoading()
           const payload = {
-            data: this.$refs['vabAmis'].getSchema(),
+            data: this.$refs['dgiotAmis'].getSchema(),
           }
           const res = await putView(this.$route.query.viewId, payload)
           console.groupCollapsed(
@@ -138,13 +138,13 @@
           )
           console.table({
             id: this.$route.query.viewId,
-            data: this.$refs['vabAmis'].schema,
+            data: this.$refs['dgiotAmis'].schema,
           })
           console.groupEnd()
           this.$baseMessage(
             this.$translateTitle('user.update completed'),
             'success',
-            'vab-hey-message-success'
+            'dgiot-hey-message-success'
           )
           loading.close()
         } catch (error) {
@@ -152,7 +152,7 @@
           this.$baseMessage(
             this.$translateTitle('alert.Data request error') + `${error}`,
             'error',
-            'vab-hey-message-error'
+            'dgiot-hey-message-error'
           )
         }
       },

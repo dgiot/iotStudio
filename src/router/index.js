@@ -10,8 +10,8 @@
  * @description router全局配置，如有必要可分文件抽离，其中asyncRoutes只有在intelligence模式下才会用到，pro版只支持remixIcon图标，具体配置请查看vip群文档
  */
 
-/* 多级路由不需要缓存时可放开注释直接引入 用法component:VabEmptyLayout*/
-/* import VabEmptyLayout from '@/vab/layouts/VabEmptyLayout' */
+/* 多级路由不需要缓存时可放开注释直接引入 用法component:DgiotEmptyLayout*/
+/* import DgiotEmptyLayout from '@/dgiot/layouts/DgiotEmptyLayout' */
 import { publicPath, routerMode } from '@/config'
 
 export const constantRoutes = [

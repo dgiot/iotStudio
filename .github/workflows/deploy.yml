@@ -10,28 +10,34 @@ env:
 
 jobs:
   deploy:
-    name: deploy
+    name: deploy 🚀
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [ 16.13.2 ]
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2
+      - name: Checkout 🚀
+        uses: actions/checkout@v2
+      - name: Use Node.js ${{ matrix.node-version }} 🚀
+        uses: actions/setup-node@v2
       - name: Cache pnpm modules  🚀
         uses: actions/cache@v2
         env:
           cache-name: cache-pnpm-modules
         with:
           path: ~/.pnpm-store
-          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ matrix.node-version }}-${{ hashFiles('**/package.json') }}
+          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ matrix.node-version }}-${{ hashFiles('**/pnpm-lock.yaml') }}
           restore-keys: |
             ${{ runner.os }}-build-${{ env.cache-name }}-${{ matrix.node-version }}-
-      - uses: pnpm/action-setup@v2.0.1
+      - name: Use Pnpm 🚀
+        uses: pnpm/action-setup@v2.0.1
         with:
           version: 6.3.0
           run_install: false
       - name: Pnpm script 🚀
         run: |
           pnpm config set registry https://registry.npmmirror.com
-          pnpm i --frozen-lockfile
+          pnpm install
           pnpm build
           cp -r README.md README-CN.md CHANGELOG.md LICENSE dist
       - name: Deploy to github www 🚀
@@ -40,6 +46,11 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GIT_TOKEN }}
           BRANCH: www
           FOLDER: dist
+      - name: Upload  dashboard 🚀
+        uses: actions/upload-artifact@v2
+        with:
+          name: dashboard
+          path: dist
       - name: cdn static 🚀
         run: |
           cd dist
@@ -51,6 +62,7 @@ jobs:
           tar xf dgiot_file.tar.gz
           rm -rf dgiot_dashboard.tar.gz dgiot_swagger.tar.gz dgiot_file.tar.gz
           wget http://dev.iotn2n.com/swagger.json
+          wget https://raw.githubusercontent.com/dgiot/dgiot-dashboard/251eb208615d55bfde630e26a3f957591ae09f7e/public/netlify.toml
       - name: Deploy to github gh-pages 🚀
         uses: JamesIves/github-pages-deploy-action@releases/v3
         with:
@@ -66,7 +78,7 @@ jobs:
           deploy-message: "Deploy from GitHub Actions"
           enable-pull-request-comment: false
           enable-commit-comment: true
-          netlify-config-path: './public/netlify.toml'
+          netlify-config-path: './dist/netlify.toml'
           overwrites-pull-request-comment: false
         env:
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
@@ -78,9 +90,6 @@ jobs:
           project: './dist'
           login: ${{ secrets.surge_login }}
           token: ${{ secrets.surge_token }}
-      - name: ref sha 🚀
-        run: |
-         echo '${{ github.ref }} ...  ${{ github.sha }}'
       - name: Upload surge service and generate preview URL 🚀
         id: deploy
         run: |
@@ -90,8 +99,6 @@ jobs:
           npx surge --project ./dist --domain $DEPLOY_DOMAIN --token ${{ secrets.surge_token }}
           echo the preview URL is $DEPLOY_DOMAIN
           echo "::set-output name=url::$DEPLOY_DOMAIN"
-        if: ${{ success() }}
-      - run: echo "🚀 This job's status is ${{ job.status }}."
 #      - name: Deploy to vercel 🚀
 #        uses: amondnet/vercel-action@v20
 #        with:

@@ -8,7 +8,7 @@
 * @DocumentLink:
 -->
 <template>
-  <vab-amis :key="objectId" :schema="code" :show-help="false" />
+  <dgiot-amis :key="objectId" :schema="code" :show-help="false" />
 </template>
 
 <script>

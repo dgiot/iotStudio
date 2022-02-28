@@ -74,7 +74,7 @@
     />
   </div>
   <div v-else class="empty">
-    <vab-empty />
+    <dgiot-empty />
   </div>
 </template>
 <script>

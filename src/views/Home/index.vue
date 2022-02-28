@@ -143,8 +143,8 @@
             </el-col>
           </el-row>
         </div>
-        <vab-query-form>
-          <vab-query-form-top-panel>
+        <dgiot-query-form>
+          <dgiot-query-form-top-panel>
             <el-form
               :inline="true"
               label-width="100px"
@@ -234,15 +234,15 @@
                 </el-button>
               </el-form-item>
             </el-form>
-          </vab-query-form-top-panel>
-        </vab-query-form>
+          </dgiot-query-form-top-panel>
+        </dgiot-query-form>
       </div>
       <el-card shadow="hover">
         <el-radio-group v-model="mapType" size="mini" @change="queryData()">
           <el-radio-button label="tencent">腾讯地图</el-radio-button>
           <el-radio-button label="baidu">百度地图</el-radio-button>
         </el-radio-group>
-        <vab-qq-map
+        <dgiot-qq-map
           v-show="mapType == 'tencent'"
           ref="qqmap"
           :list="list"
@@ -652,7 +652,7 @@
                         />
                       </div>
                       <div class="text item">
-                        <vab-chart
+                        <dgiot-chart
                           ref="charts"
                           :data="_ChartStatus"
                           :data-empty="!ChartStatus.rows"
@@ -1262,12 +1262,12 @@
       toggleLeftWidth(width) {
         // dgiotlog.log(width, 'width')
         if (width != '0px') {
-          $('.vab-side-bar').css({ width: '0px' })
-          $('.vab-main').css({ 'margin-left': '0px' })
+          $('.dgiot-side-bar').css({ width: '0px' })
+          $('.dgiot-main').css({ 'margin-left': '0px' })
           this.leftWidth = '0px'
         } else {
-          $('.vab-side-bar').css({ width: '200px' })
-          $('.vab-main').css({ 'margin-left': '200px' })
+          $('.dgiot-side-bar').css({ width: '200px' })
+          $('.dgiot-main').css({ 'margin-left': '200px' })
           this.leftWidth = '200px'
         }
       },

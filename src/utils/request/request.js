@@ -13,6 +13,7 @@ import {
   statusName,
   successCode,
   tokenName,
+  CODE_MESSAGE,
 } from '@/config'
 import { globalUrl } from '@/utils/utilwen'
 import store from '@/store'
@@ -40,6 +41,13 @@ const handleData = ({ config, data, status, statusText }) => {
   // 若code属于操作正常code，则status修改为200
   if (codeVerificationArray.includes(code)) code = 200
   if (errorcodeVerificationArray.includes(code)) backHome()
+  dgiotlogger.info('code：', code)
+  // fixed https://gitee.com/dgiiot/dgiot/issues/I4TVGK
+  if ([400, 401, 404, 406, 410, 500, 502, 504, 503].includes(Number(code))) {
+    console.error(code, statusText, data)
+    Vue.prototype.$baseMessage(data, 'error', true, 'dgiot-hey-message-error')
+  }
+
   switch (code) {
     case 200:
       // 业务层级错误处理，以下是假定restful有一套统一输出格式(指不管成功与否都有相应的数据格式)情况下进行处理
@@ -64,7 +72,7 @@ const handleData = ({ config, data, status, statusText }) => {
   //     ? statusText
   //     : data[messageName]
   // }`
-  // Vue.prototype.$baseMessage(message, 'error', false, 'vab-hey-message-error')
+  // Vue.prototype.$baseMessage(message, 'error', false, 'dgiot-hey-message-error')
   // return Promise.reject(message)
 }
 

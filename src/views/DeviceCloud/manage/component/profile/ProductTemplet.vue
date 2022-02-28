@@ -7,8 +7,8 @@
     width="500"
     @close="close"
   >
-    <vab-query-form v-show="false">
-      <vab-query-form-top-panel>
+    <dgiot-query-form v-show="false">
+      <dgiot-query-form-top-panel>
         <el-form
           ref="form"
           :inline="true"
@@ -46,8 +46,8 @@
             </el-button>
           </el-form-item>
         </el-form>
-      </vab-query-form-top-panel>
-    </vab-query-form>
+      </dgiot-query-form-top-panel>
+    </dgiot-query-form>
     <el-table
       border
       :cell-style="{ 'text-align': 'center' }"
@@ -81,7 +81,7 @@
         </template>
       </el-table-column>
     </el-table>
-    <vab-Pagination
+    <dgiot-Pagination
       v-show="queryForm.total > 0"
       :limit.sync="queryForm.pageSize"
       :page.sync="queryForm.pageNo"
@@ -225,9 +225,11 @@
           const res = await delProductTemplet(templateId)
           loading.close()
           dgiotlog.log(res)
-          this.$message.success(
-            this.$translateTitle('user.successfully deleted')
-          )
+          this.$message({
+            showClose: true,
+            message: this.$translateTitle('user.successfully deleted'),
+            type: 'success',
+          })
           this.Industry()
         } catch (error) {
           dgiotlog.log(error)
@@ -289,7 +291,7 @@
               mark == 'edit'
                 ? await putCategory(this.form.objectId, setparams)
                 : await postCategory(setparams)
-            this.$baseMessage(msg, 'success', 'vab-hey-message-success')
+            this.$baseMessage(msg, 'success', 'dgiot-hey-message-success')
             this.$emit('fetch-data')
             this.close()
           }

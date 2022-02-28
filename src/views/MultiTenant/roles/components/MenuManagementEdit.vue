@@ -7,7 +7,7 @@
     width="70%"
     @close="close"
   >
-    <vab-input
+    <dgiot-input
       ref="uploadFinish"
       :params="inputParams"
       @fileInfo="fileInfo"
@@ -111,7 +111,7 @@
               </el-image>
               <dgiot-icon v-else :icon="form.meta.icon" />
             </template>
-            <vab-icon-selector @handle-icon="handleIcon" />
+            <dgiot-icon-selector @handle-icon="handleIcon" />
           </el-popover>
         </el-input>
       </el-form-item>
@@ -161,7 +161,7 @@
 </template>
 
 <script>
-  import VabIconSelector from '@/dgiot/components/VabIconSelector'
+  import DgiotIconSelector from '@/dgiot/components/DgiotIconSelector'
   import { postMenu, putMenu } from '@/api/Menu'
   import menuCollapse from './menuCollapse.vue'
   import router from '@/router/router'
@@ -170,7 +170,7 @@
   export default {
     name: 'MenuManagementEdit',
     components: {
-      VabIconSelector,
+      DgiotIconSelector,
       menuCollapse,
     },
     data() {

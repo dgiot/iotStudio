@@ -31,8 +31,8 @@
         <!--        </span>-->
       </el-dialog>
     </div>
-    <vab-query-form class="query-form">
-      <vab-query-form-top-panel>
+    <dgiot-query-form class="query-form">
+      <dgiot-query-form-top-panel>
         <el-form
           :inline="true"
           label-width="auto"
@@ -104,8 +104,8 @@
             </el-button>
           </el-form-item>
         </el-form>
-      </vab-query-form-top-panel>
-    </vab-query-form>
+      </dgiot-query-form-top-panel>
+    </dgiot-query-form>
 
     <el-table
       v-loading="listLoading"
@@ -217,10 +217,10 @@
         </template>
       </el-table-column>
       <template #empty>
-        <vab-empty />
+        <dgiot-empty />
       </template>
     </el-table>
-    <VabPagination
+    <DgiotPagination
       v-show="total"
       :limit.sync="queryForm.pageSize"
       :page.sync="queryForm.pageNo"
@@ -347,7 +347,11 @@
           params['results'] = row
           const res = await exlout(params)
           this.$convertRes2Blob(res)
-          this.$message.success(this.$translateTitle('node.export success'))
+          this.$message({
+            showClose: true,
+            message: this.$translateTitle('node.export success'),
+            type: 'success',
+          })
         } catch (error) {
           dgiotlog.log(error)
           this.$message.error(

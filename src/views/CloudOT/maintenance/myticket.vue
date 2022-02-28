@@ -167,8 +167,8 @@
         </el-dialog>
       </div>
     </div>
-    <vab-query-form class="query-form">
-      <vab-query-form-top-panel>
+    <dgiot-query-form class="query-form">
+      <dgiot-query-form-top-panel>
         <el-form
           :inline="true"
           label-width="auto"
@@ -268,8 +268,8 @@
               </span>
               <span v-else>{{ $translateTitle('Maintenance.merge') }}</span>
               <dgiot-icon
-                class="vab-dropdown"
-                :class="{ 'vab-dropdown-active': fold }"
+                class="dgiot-dropdown"
+                :class="{ 'dgiot-dropdown-active': fold }"
                 icon="arrow-up-s-line"
               />
             </el-button>
@@ -304,8 +304,8 @@
             </el-button>
           </el-form-item>
         </el-form>
-      </vab-query-form-top-panel>
-    </vab-query-form>
+      </dgiot-query-form-top-panel>
+    </dgiot-query-form>
 
     <el-table
       ref="tableSort"
@@ -446,10 +446,10 @@
         </template>
       </el-table-column>
       <template #empty>
-        <vab-empty />
+        <dgiot-empty />
       </template>
     </el-table>
-    <vab-Pagination
+    <dgiot-Pagination
       v-show="total > 0"
       :limit.sync="queryForm.pageSize"
       :page.sync="queryForm.pageNo"
@@ -765,7 +765,11 @@
           params['results'] = row
           const res = await exlout(params)
           this.$convertRes2Blob(res)
-          this.$message.success(this.$translateTitle('node.export success'))
+          this.$message({
+            showClose: true,
+            message: this.$translateTitle('node.export success'),
+            type: 'success',
+          })
         } catch (error) {
           console.log(error)
           this.$message.error(
@@ -802,7 +806,7 @@
             this.$baseMessage(
               this.$translateTitle('Maintenance.successfully deleted'),
               'success',
-              'vab-hey-message-success'
+              'dgiot-hey-message-success'
             )
             setTimeout(() => {
               this.fetchData()

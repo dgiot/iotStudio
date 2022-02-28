@@ -708,6 +708,7 @@
         this.wmxdialogVisible = false
         this.Shapeconfig = {}
         this.setSizeForm({})
+        this.$refs['sizeForm'].resource.disabled = false
         this.$dgiotBus.$emit('refresh', this.$route)
       },
       updataForm(from) {

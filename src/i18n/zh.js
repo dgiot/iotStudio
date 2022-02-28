@@ -1,5 +1,5 @@
 export default {
-  vabI18n: {
+  dgiotI18n: {
     // listeners
     listeners: {
       protocol: '协议',
@@ -693,8 +693,8 @@ export default {
       parametername: '参数名称',
       addparameter: '新增参数',
       timeformat: '时间格式',
-      write: '写',
-      read: '读',
+      write: '读写',
+      read: '只读',
       storage: '存储',
       notstorage: '不存储',
       readandwritetype: '读写类型',

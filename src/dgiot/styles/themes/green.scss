@@ -2,7 +2,7 @@
  * @description 绿荫草场主题
  */
 
-.vab-theme-green {
+.dgiot-theme-green {
   $base-menu-background: #16181d;
   $base-color-blue: #009688;
   $base-color-blue-light: mix($base-color-white, $base-color-blue, 90%);
@@ -84,9 +84,9 @@
     }
   }
 
-  .vab-layout-vertical,
-  .vab-layout-horizontal,
-  .vab-layout-comprehensive {
+  .dgiot-layout-vertical,
+  .dgiot-layout-horizontal,
+  .dgiot-layout-comprehensive {
     .el-menu {
       @include container;
 
@@ -99,7 +99,7 @@
       }
     }
 
-    .vab-side-bar,
+    .dgiot-side-bar,
     .comprehensive-bar-container {
       @include container;
 
@@ -109,7 +109,7 @@
     }
   }
 
-  .vab-layout-common {
+  .dgiot-layout-common {
     .el-menu {
       @include container-common;
 
@@ -122,7 +122,7 @@
       }
     }
 
-    .vab-side-bar {
+    .dgiot-side-bar {
       @include container-common;
 
       .el-menu-item {
@@ -131,10 +131,10 @@
     }
   }
 
-  .vab-header {
+  .dgiot-header {
     @include container;
 
-    .vab-main {
+    .dgiot-main {
       @include container;
 
       .right-panel {
@@ -154,10 +154,10 @@
     }
   }
 
-  .vab-tabs {
+  .dgiot-tabs {
     &-more {
       &:hover {
-        .vab-tabs-more-icon {
+        .dgiot-tabs-more-icon {
           .box:before,
           .box:after {
             background: $base-color-blue !important;
@@ -166,7 +166,7 @@
       }
     }
 
-    .vab-tabs-content-card {
+    .dgiot-tabs-content-card {
       .el-tabs__header {
         .el-tabs__item {
           &.is-active {
@@ -182,7 +182,7 @@
       }
     }
 
-    .vab-tabs-content-smart {
+    .dgiot-tabs-content-smart {
       .el-tabs__header {
         .el-tabs__item {
           &.is-active {
@@ -200,7 +200,7 @@
       }
     }
 
-    .vab-tabs-content-smooth {
+    .dgiot-tabs-content-smooth {
       .el-tabs__header {
         .el-tabs__item {
           &.is-active {
@@ -221,7 +221,7 @@
     }
   }
 
-  .vab-nav {
+  .dgiot-nav {
     .el-tabs__item.is-active,
     .el-tabs__item:hover {
       color: $base-color-blue !important;

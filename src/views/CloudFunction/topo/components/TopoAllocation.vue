@@ -2,7 +2,7 @@
 <template>
   <div class="icon-selector-popper">
     <div class="dialog">
-      <vab-input ref="uploadFinish" @fileInfo="fileInfo" />
+      <dgiot-input ref="uploadFinish" @fileInfo="fileInfo" />
     </div>
     <el-collapse v-model="activeNames" accordion>
       <el-collapse-item name="icon" title="iconfont">
@@ -14,7 +14,7 @@
             :span="8"
           >
             <i v-svg-drag="{ callback: coordinate }" @mousedown="moveSvg(item)">
-              <VabIconfont
+              <DgiotIconfont
                 :name="item.font_class"
                 :title="item.name"
                 type="svg"
@@ -144,7 +144,7 @@
             _this.$translateTitle('图片加载完成,可双击画图区域填充'),
             'success',
             false,
-            'vab-hey-message-success'
+            'dgiot-hey-message-success'
           )
         }
         _this.setFlag('image')

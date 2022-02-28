@@ -1,7 +1,7 @@
 <template>
   <div :key="queryForm.key" class="comprehensive-table-container">
-    <vab-query-form>
-      <vab-query-form-top-panel>
+    <dgiot-query-form>
+      <dgiot-query-form-top-panel>
         <el-form
           ref="form"
           :inline="true"
@@ -62,8 +62,8 @@
             />
           </el-form-item>
         </el-form>
-      </vab-query-form-top-panel>
-    </vab-query-form>
+      </dgiot-query-form-top-panel>
+    </dgiot-query-form>
 
     <el-table ref="tableSort" v-loading="listLoading" border :data="list">
       <el-table-column
@@ -131,7 +131,7 @@
         </template>
       </el-table-column>
     </el-table>
-    <vab-parser-pagination
+    <dgiot-parser-pagination
       :pagination="paginations"
       :query-payload="queryPayload"
       @pagination="fetchData"
@@ -263,7 +263,7 @@
             this.$baseMessage(
               this.$translateTitle('successfully deleted'),
               'success',
-              'vab-hey-message-success'
+              'dgiot-hey-message-success'
             )
             this.fetchData()
           }

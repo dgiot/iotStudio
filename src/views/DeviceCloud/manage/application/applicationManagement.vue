@@ -1,6 +1,6 @@
 <template>
   <div id="application dgiot-container">
-    <vab-query-form-top-panel>
+    <dgiot-query-form-top-panel>
       <el-form ref="form" :inline="true" label-width="0">
         <el-form-item>
           <el-input
@@ -15,7 +15,7 @@
           </el-button>
         </el-form-item>
       </el-form>
-    </vab-query-form-top-panel>
+    </dgiot-query-form-top-panel>
     <el-table
       :cell-style="{ 'text-align': 'center' }"
       :data="tableData"

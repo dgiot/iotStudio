@@ -1,7 +1,10 @@
 <template>
-  <div class="logs logs-container" :class="{ 'vab-fullscreen': isFullscreen }">
-    <vab-query-form>
-      <vab-query-form-top-panel>
+  <div
+    class="logs logs-container"
+    :class="{ 'dgiot-fullscreen': isFullscreen }"
+  >
+    <dgiot-query-form>
+      <dgiot-query-form-top-panel>
         <el-form
           v-if="!$loadsh.isEmpty(queryForm)"
           ref="form"
@@ -94,15 +97,15 @@
             </el-button>
           </el-form-item>
         </el-form>
-      </vab-query-form-top-panel>
-    </vab-query-form>
+      </dgiot-query-form-top-panel>
+    </dgiot-query-form>
     <a-tabs default-active-key="editor">
       <a-tab-pane key="editor">
         <span slot="tab">
           <dgiot-icon icon="aspect-ratio-fill" />
           {{ $translateTitle('Logs.console') }}
         </span>
-        <vab-editor
+        <dgiot-editor
           :key="logMqtt.key"
           v-model="clickItem"
           :height="isFullscreen ? 1000 + 80 : 1000 + 40"
@@ -163,10 +166,10 @@
           <!--        fixed="right"-->
           <!--      />-->
           <template #empty>
-            <vab-empty />
+            <dgiot-empty />
           </template>
         </el-table>
-        <vab-Pagination
+        <dgiot-Pagination
           v-show="queryForm.total > 0"
           :limit.sync="queryForm.pageSize"
           :page.sync="queryForm.pageNo"
@@ -425,13 +428,13 @@
                 this.$baseMessage(
                   this.$translateTitle('alert.Data request successfully'),
                   'success',
-                  'vab-hey-message-success'
+                  'dgiot-hey-message-success'
                 )
               } else {
                 this.$baseMessage(
                   this.$translateTitle('alert.Data request error') + `${error}`,
                   'error',
-                  'vab-hey-message-error'
+                  'dgiot-hey-message-error'
                 )
               }
             })
@@ -440,7 +443,7 @@
               this.$baseMessage(
                 this.$translateTitle('alert.Data request error') + `${error}`,
                 'error',
-                'vab-hey-message-error'
+                'dgiot-hey-message-error'
               )
             })
 
@@ -451,7 +454,7 @@
           this.$baseMessage(
             this.$translateTitle('alert.Data request error') + `${error}`,
             'error',
-            'vab-hey-message-error'
+            'dgiot-hey-message-error'
           )
         }
         this.momentKey = moment(new Date()).valueOf()

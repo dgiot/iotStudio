@@ -65,8 +65,8 @@
         </span>
       </el-dialog>
     </div>
-    <vab-query-form class="query-form">
-      <vab-query-form-top-panel>
+    <dgiot-query-form class="query-form">
+      <dgiot-query-form-top-panel>
         <el-form
           :inline="true"
           label-width="auto"
@@ -132,8 +132,8 @@
             </el-button>
           </el-form-item>
         </el-form>
-      </vab-query-form-top-panel>
-    </vab-query-form>
+      </dgiot-query-form-top-panel>
+    </dgiot-query-form>
 
     <el-table
       v-loading="listLoading"
@@ -271,17 +271,17 @@
         </template>
       </el-table-column>
       <template #empty>
-        <vab-empty />
+        <dgiot-empty />
       </template>
     </el-table>
-    <!--    <VabPagination-->
+    <!--    <DgiotPagination-->
     <!--      v-show="total"-->
     <!--      :limit.sync="queryForm.pageSize"-->
     <!--      :page.sync="queryForm.pageNo"-->
     <!--      :total="total"-->
     <!--      @pagination="fetchData"-->
     <!--    />-->
-    <vab-parser-pagination
+    <dgiot-parser-pagination
       :key="list.length + 'forensics'"
       ref="forensics"
       :pagination="paginations"
@@ -408,6 +408,8 @@
 
     created() {},
     mounted() {
+      dgiotlogger.log(this._Product)
+      console.log(JSON.stringify(this._Product))
       this.fetchData()
     },
     methods: {
@@ -433,7 +435,7 @@
             this.$baseMessage(
               this.$translateTitle('Maintenance.successfully deleted'),
               'success',
-              'vab-hey-message-success'
+              'dgiot-hey-message-success'
             )
             setTimeout(() => {
               this.fetchData()
@@ -490,7 +492,11 @@
         try {
           const res = await putNotification(alertId, alertParams)
           dgiotlog.log(res)
-          this.$message.success('处理成功')
+          this.$message({
+            showClose: true,
+            message: '处理成功',
+            type: 'success',
+          })
         } catch (error) {
           dgiotlog.log(error)
           this.$message.error('处理失败')
@@ -557,10 +563,13 @@
       async handleDelete(objectId) {
         const res = await delNotification(objectId)
         if (res == {}) {
-          this.$message.success(
-            this.$translateTitle('Maintenance.delete') +
-              $translateTitle('message.success')
-          )
+          this.$message({
+            showClose: true,
+            message:
+              this.$translateTitle('Maintenance.delete') +
+              $translateTitle('message.success'),
+            type: 'success',
+          })
         }
         this.fetchData()
       },
@@ -591,16 +600,18 @@
           this.queryPayload.where['createdAt'] = {
             $gt: {
               __type: 'Date',
-              iso: this.queryForm.searchDate[0],
+              iso: this.queryForm.searchDate[0] + 'T08:00:00.000Z',
             },
           }
           this.queryPayload.where['updatedAt'] = {
             $lt: {
               __type: 'Date',
-              iso: this.queryForm.searchDate[1],
+              iso: this.queryForm.searchDate[1] + 'T08:00:00.000Z',
             },
           }
         }
+
+        // {"createdAt":{"$lt":{"__type":"Date","iso":"2022-02-11T02:16:18.906Z"}},"updatedAt":{"$gt":{"__type":"Date","iso":"2022-02-18T02:16:18.906Z"}}}
         const { results = [], count = 0 } = await queryNotification(
           this.queryPayload
         )

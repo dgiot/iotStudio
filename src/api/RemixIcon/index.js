@@ -2273,7 +2273,7 @@ const data = [
 ]
 // export function getIconList(params) {
 //   return request({
-//     url: 'https://vab-unicloud-3a9da9.service.tcloudbase.com/remixIcon/getList',
+//     url: 'https://dgiot-unicloud-3a9da9.service.tcloudbase.com/remixIcon/getList',
 //     method: 'get',
 //     params,
 //   })

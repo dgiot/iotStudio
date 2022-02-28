@@ -2,7 +2,7 @@
   <div
     ref="custom-table"
     class="custom-table-container"
-    :class="{ 'vab-fullscreen': isFullscreen }"
+    :class="{ 'dgiot-fullscreen': isFullscreen }"
   >
     <input
       ref="uploader"
@@ -35,7 +35,7 @@
       >
         <template #default="{ row }">
           <el-popover placement="top" trigger="hover">
-            <vab-json-editor
+            <dgiot-json-editor
               v-if="row.fields"
               v-model="row.fields"
               lang="zh"
@@ -67,7 +67,7 @@
       </el-table-column>
       <template #empty>
         <el-image
-          class="vab-data-empty"
+          class="dgiot-data-empty"
           :src="
             require('../../../../public/assets/images/platform/assets/empty_images/data_empty.png')
           "
@@ -137,7 +137,11 @@
           const res = await ImportParse(this.parseClass, this.parseFile)
           loading.close()
           dgiotlog.log('eresresrror', res)
-          this.$message.success(``)
+          this.$message({
+            showClose: true,
+            message: this.$translateTitle('user.update completed'),
+            type: 'success',
+          })
         } catch (error) {
           loading.close()
           dgiotlog.log('error', error)

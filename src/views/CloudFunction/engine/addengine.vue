@@ -310,7 +310,7 @@
                       </span>
                     </span>
 
-                    <el-select v-model="params.channel">
+                    <el-select v-model="params.channel" style="width: 100%">
                       <el-option
                         v-for="item in channellist"
                         :key="item.name"
@@ -347,7 +347,7 @@
                         </el-tooltip>
                       </span>
                     </span>
-                    <el-select v-model="params.resources">
+                    <el-select v-model="params.resources" style="width: 100%">
                       <el-option
                         v-for="item in resources"
                         :key="item.id"
@@ -380,7 +380,7 @@
                         </el-tooltip>
                       </span>
                     </span>
-                    <el-select v-model="params.target_qos">
+                    <el-select v-model="params.target_qos" style="width: 100%">
                       <el-option
                         v-for="item in params.target_qosSelect"
                         :key="item"
@@ -613,38 +613,40 @@
       }
     },
     mounted() {
-      if (this.ruleId) {
-        this.queryRule(this.ruleId)
+      if (this.$route.query.type && this.$route.query.uid) {
+        this.queryRule(
+          `rule:${this.$route.query.type}_${this.$route.query.uid}`
+        )
       }
-      this.title = this.$route.query.title
-      this.productid = this.$route.query.productid
-      editor1 = ace.edit('editor1')
-      editor1.session.setMode('ace/mode/sql') // 设置语言
-      editor1.setTheme('ace/theme/eclipse') // 设置主题
-      editor1.setOptions({
-        enableBasicAutocompletion: true,
-        enableSnippets: true,
-        enableLiveAutocompletion: true, // 设置自动提示
+      this.$nextTick(() => {
+        editor2 = ace.edit('editor2')
+        editor1 = ace.edit('editor1')
+        if (this.ruleId) {
+          this.queryRule(this.ruleId)
+        }
+        this.title = this.$route.query.title
+        this.productid = this.$route.query.productid
+        editor1.session.setMode('ace/mode/sql') // 设置语言
+        editor1.setTheme('ace/theme/eclipse') // 设置主题
+        editor1.setOptions({
+          enableBasicAutocompletion: true,
+          enableSnippets: true,
+          enableLiveAutocompletion: true, // 设置自动提示
+        })
+        editor1.setValue(this.formInline.enginesql)
+        editor2 = ace.edit('editor2')
+        editor2.session.setMode('ace/mode/json') // 设置语言
+        editor2.setTheme('ace/theme/eclipse') // 设置主题
+        editor2.setOptions({
+          enableBasicAutocompletion: true,
+          enableSnippets: true,
+          enableLiveAutocompletion: true, // 设置自动提示
+        })
+        editor2.setValue(`{"msg":"hello"}`)
+        // this.formInline.topic = "thing/" + this.$route.query.productid;
+        // this.client = this.originlist[0].columns;
+        // this.sqlexample = this.originlist[0].sql_example;
       })
-      var languageTools = ace.require('ace/ext/language_tools')
-      languageTools.addCompleter({
-        getCompletions: function (editor, session, pos, prefix, callback) {
-          callback(null, provider)
-        },
-      })
-      editor1.setValue(this.formInline.enginesql)
-      editor2 = ace.edit('editor2')
-      editor2.session.setMode('ace/mode/json') // 设置语言
-      editor2.setTheme('ace/theme/eclipse') // 设置主题
-      editor2.setOptions({
-        enableBasicAutocompletion: true,
-        enableSnippets: true,
-        enableLiveAutocompletion: true, // 设置自动提示
-      })
-      editor2.setValue(`{"msg":"hello"}`)
-      // this.formInline.topic = "thing/" + this.$route.query.productid;
-      // this.client = this.originlist[0].columns;
-      // this.sqlexample = this.originlist[0].sql_example;
     },
     methods: {
       // 规则选择
@@ -667,15 +669,35 @@
         }
       },
       async queryRule(ruleId) {
-        const { data } = await get_rule_id(ruleId)
-        console.log(data)
-        // this.formInline.username = data.ctx
-        this.actionData = data.actions
-        this.formInline.enginesql = data.rawsql
-        editor1.setValue(this.formInline.enginesql)
-        this.formInline.ruleId = data.id
-        this.formInline.remarks = data.description
-        editor1.setValue(data.rawsql)
+        try {
+          const {
+            data = {
+              id: ruleId,
+              actions: [],
+              description: '',
+              rawsql:
+                'SELECT\n' +
+                '      payload.msg as msg,\n' +
+                '      clientid,\n' +
+                "      'productid' as productid\n" +
+                '    FROM\n' +
+                '      "t/#"\n' +
+                '    WHERE\n' +
+                "      msg = 'hello'",
+            },
+          } = await get_rule_id(ruleId)
+          dgiotlogger.log(data)
+          // this.formInline.username = data.ctx
+          this.actionData = data.actions
+          this.formInline.enginesql = data.rawsql
+          editor1.setValue(this.formInline.enginesql)
+          this.formInline.ruleId = data.id
+          this.formInline.remarks = data.description
+          editor1.setValue(data.rawsql)
+        } catch (error) {
+          dgiotlogger.error(error)
+          this.formInline.ruleId = ruleId
+        }
       },
       submitForm(formName) {
         this.$refs[formName].validate((valid) => {
@@ -828,8 +850,12 @@
               for: '["t/#"]',
               rawsql: editor1.getValue(),
             }
-            if (this.uid && this.productid) {
-              params.id = `rule:${this.ruleType}_${this.productid}_${this.uid}`
+
+            if (this.$route.query.type && this.$route.query.uid) {
+              // params.id = `rule:${this.ruleType}_${this.productid}_${this.uid}`
+              // rule:Notification_start_ProductId_告警id
+              // rule:Notification_stop_ProductId_告警id
+              params.id = `rule:${this.$route.query.type}_${this.$route.query.uid}`
             }
             // const params = {
             //   rawsql:

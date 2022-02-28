@@ -31,24 +31,18 @@ const {
   isPwa,
   pwaConfig,
   isSmp,
-  ogConfig,
   CDN_URL,
-  CDN,
 } = require('./src/config')
 const { version, author } = require('./package.json')
+const { ESBuildMinifyPlugin } = require('esbuild-loader')
 const Webpack = require('webpack')
 const WebpackBar = require('webpackbar')
 const FileManagerPlugin = require('filemanager-webpack-plugin')
 const CompressionWebpackPlugin = require('compression-webpack-plugin')
 // const HardSourceWebpackPlugin = require('hard-source-webpack-plugin')
-// const MiniCssExtractPlugin = require('mini-css-extract-plugin')
-const MonacoWebpackPlugin = require('monaco-editor-webpack-plugin') // 非汉化
-// const MonacoWebpackPlugin = require('monaco-editor-esm-webpack-plugin') // 汉化版
 const SpeedMeasurePlugin = require('speed-measure-webpack-plugin')
 const { CleanWebpackPlugin } = require('clean-webpack-plugin')
-const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin')
 const smp = new SpeedMeasurePlugin()
-// const productionGzipExtensions = ['html', 'js', 'css', 'svg']
 const productionGzipExtensions =
   /\.(js|css|json|txt|html|ico|svg|ttf|woff|png|gif|woff|woff2|woff3)(\?.*)?$/i
 process.env.VUE_APP_TITLE = title
@@ -59,10 +53,8 @@ process.env.VUE_APP_Keywords = Keywords
 process.env.VUE_APP_Description = Description
 process.env.VUE_APP_URL = proxy[0].target
 process.env.proxy = proxy
-// process.env.VUE_APP_CDN_URL = proxy[1].target + CDN_URL
 process.env.VUE_APP_CDN_URL =
   process.env.NODE_ENV === 'development' ? proxy[1].target + CDN_URL : CDN_URL
-// process.env.CDN_URL = proxy[1].target + CDN_URL
 process.env.CDN_URL =
   process.env.NODE_ENV === 'development' ? proxy[1].target + CDN_URL : CDN_URL
 const staticUrl = process.env.CDN_URL
@@ -74,33 +66,8 @@ function getChainWebpack(config) {
   config.plugins.delete('prefetch')
   config.plugins.delete('preload-index')
   config.plugins.delete('prefetch-index')
-  /**
-   * @description
-   * @topo: 非汉化注释以下内容
-   */
-  // config.plugin('monaco-editor').use(MonacoWebpackPlugin, [
-  //   {
-  //     languages: ['json', 'java', 'python', 'shell', 'sql', 'text'],
-  //     // 以下为全部支持的代码语言，可根据需求添加
-  //     //   ['abap', 'apex', 'azcli', 'bat', 'cameligo', 'clojure', 'coffee', 'cpp', 'csharp', 'csp', 'css', 'dart', 'dockerfile', 'ecl', 'fsharp', 'go', 'graphql', 'handlebars', 'hcl', 'html', 'ini', 'java', 'javascript', 'json', 'julia', 'kotlin', 'less', 'lexon', 'lua', 'm3', 'markdown', 'mips', 'msdax', 'mysql', 'objective-c', 'pascal', 'pascaligo', 'perl', 'pgsql', 'php', 'postiats', 'powerquery', 'powershell', 'pug', 'python', 'r', 'razor', 'redis', 'redshift', 'restructuredtext', 'ruby', 'rust', 'sb', 'scala', 'scheme', 'scss', 'shell', 'solidity', 'sophia', 'sql', 'st', 'swift', 'systemverilog', 'tcl', 'twig', 'typescript', 'vb', 'xml', 'yaml'],
-  //     features: [
-  //       'format',
-  //       'find',
-  //       'contextmenu',
-  //       'gotoError',
-  //       'gotoLine',
-  //       'gotoSymbol',
-  //       'hover',
-  //       'documentSymbols',
-  //     ],
-  //     // 以下为全部功能模块，可根据需求添加
-  //     // ['accessibilityHelp', 'anchorSelect', 'bracketMatching', 'caretOperations', 'clipboard', 'codeAction', 'codelens', 'colorPicker', 'comment', 'contextmenu', 'coreCommands', 'cursorUndo', 'dnd', 'documentSymbols', 'find', 'folding', 'fontZoom', 'format', 'gotoError', 'gotoLine', 'gotoSymbol', 'hover', 'iPadShowKeyboard', 'inPlaceReplace', 'indentation', 'inlineHints', 'inspectTokens', 'linesOperations', 'linkedEditing', 'links', 'multicursor', 'parameterHints', 'quickCommand', 'quickHelp', 'quickOutline', 'referenceSearch', 'rename', 'smartSelect', 'snippets', 'suggest', 'toggleHighContrast', 'toggleTabFocusMode', 'transpose', 'unusualLineTerminators', 'viewportSemanticTokens', 'wordHighlighter', 'wordOperations', 'wordPartOperations']
-  //   },
-  // ])
-  // config.plugin('monaco').use(new MonacoWebpackPlugin())
   config.plugin('html').tap((args) => {
     var _staticUrl = localUrl
-    // if (useCdn || process.env.NODE_ENV !== 'development') {
     const { css, js } = _staticUrl
     _staticUrl = {
       css: [],
@@ -115,10 +82,8 @@ function getChainWebpack(config) {
       _staticUrl.js.push(
         `${staticUrl}js/${_js}?v=${process.env.VUE_APP_VERSION}&t=${dateTime}`
       )
-      // _staticUrl.js.push(`${staticUrl}css/amis/sdk/sdk.js`)
     })
     args[0].staticUrl = _staticUrl
-    args[0].ogConfig = ogConfig
     return args
   })
   config.resolve.symlinks(true)
@@ -136,7 +101,6 @@ function getChainWebpack(config) {
   config.when(process.env.NODE_ENV === 'development', (config) => {
     config.devtool('source-map')
   })
-  // https://blog.csdn.net/weixin_34294049/article/details/97278751
   config.when(process.env.NODE_ENV === 'production', (config) => {
     if (process.env.CDN_URL) {
       console.log(`当前时间${dateTime}`)
@@ -181,12 +145,10 @@ function getChainWebpack(config) {
         .end()
     }
     if (buildGzip) {
-      // https://blog.csdn.net/weixin_42164539/article/details/110389256
       config.plugin('compression').use(CompressionWebpackPlugin, [
         {
           filename: '[path][base].gz', // 一个 {Function} (asset) => asset 函数，接收原资源名（通过 asset 选项）返回新资源名
           algorithm: 'gzip', // 可以是 (buffer, cb) => cb(buffer) 或者是使用 zlib 里面的算法的 {String}
-          // test: new RegExp('\\.(' + productionGzipExtensions.join('|') + ')$'), //匹配文件名
           test: productionGzipExtensions,
           threshold: 2048, //对1K以上的数据进行压缩
           minRatio: 0.8, // 只有压缩率比这个值小的资源才会被处理
@@ -198,23 +160,25 @@ function getChainWebpack(config) {
         }),
       ])
     }
-    if (build7z) {
-      config.plugin('fileManager').use(FileManagerPlugin, [
-        {
-          events: {
-            onEnd: {
-              archive: [
-                {
-                  source: `./${outputDir}`,
-                  destination: `./${outputDir}/${abbreviation}_${dateTime}.zip`,
-                },
-              ],
-            },
-          },
-        },
-      ])
-    }
   })
+  // 使用 esbuild 编译 js 文件
+  const esrule = config.module.rule('js')
+  // 清理自带的 babel-loader
+  esrule.uses.clear()
+  esrule
+    .use('esbuild-loader')
+    .loader('esbuild-loader')
+    .options({
+      loader: 'ts', // 如果使用了 ts, 或者 vue 的 class 装饰器，则需要加上这个 option 配置， 否则会报错：ERROR: Unexpected "@"
+      target: 'es2015',
+      tsconfigRaw: require('./tsconfig.json'),
+    })
+  // 删除底层 terser, 换用 esbuild-minimize-plugin
+  config.optimization.minimizers.delete('terser')
+  // 使用 esbuild 优化 css 压缩
+  config.optimization
+    .minimizer('esbuild')
+    .use(ESBuildMinifyPlugin, [{ minify: true, css: true }])
 }
 
 const resolve = (dir) => {
@@ -287,7 +251,7 @@ const configure = {
     CodeMirror: 'codemirror',
     nprogress: 'NProgress',
     'vue-codemirror': 'vueCodemirror',
-    vuedraggable: 'vuedraggable',
+    vuedraggable: 'vueDraggable',
     'element-china-area-data': 'elementChinaAreaData',
     'vue-flv-player': 'vueFlvPlayer',
     'vue-aliplayer-v2': 'VueAliplayerV2',
@@ -298,47 +262,15 @@ const configure = {
       '*': resolve(''),
     },
   },
-  module: {
-    /**
-     * @description: 汉化 Monaco 右键菜单
-     * @doc: https://blog.csdn.net/m0_37986789/article/details/121135519
-     * @topo: 汉化放出下列注释
-     */
-    // rules: [
-    //   {
-    //     test: /\.js/,
-    //     enforce: 'pre',
-    //     include: /node_modules[\\\/]monaco-editor[\\\/]esm/,
-    //     use: MonacoWebpackPlugin.loader,
-    //   },
-    // ],
-  },
   plugins: [
     new CleanWebpackPlugin({ cleanStaleWebpackAssets: false }),
-    /**
-     * @description: 汉化 Monaco 右键菜单
-     * @doc: https://blog.csdn.net/m0_37986789/article/details/121135519
-     * @topo: 汉化放出下列注释
-     */
-    // new MonacoWebpackPlugin({
-    //   languages: ['json','java', 'python', 'shell', 'sql','text'],
-    //   filename: 'output/assets/js/monaco/[name].worker.js',
-    //   features: ['format', 'find', 'contextmenu', 'gotoError', 'gotoLine', 'gotoSymbol', 'hover' , 'documentSymbols']
-    // }),
-    // new ForkTsCheckerWebpackPlugin(),
     // new HardSourceWebpackPlugin(),
     new Webpack.ProvidePlugin(providePlugin),
     new WebpackBar({
       name: webpackBarName,
     }),
-    // new MiniCssExtractPlugin({
-    //   // 修改打包后css文件名
-    //   filename: `assets/css/[name].dgiot.css `,
-    //   chunkFilename: `assets/css/[name].dgiot.css`,
-    // }),
   ],
   output: {
-    // 输出重构  打包编译后的 文件名称  【模块名称.版本号】
     filename: `output/assets/js/[name].dgiot.js?v=${process.env.VUE_APP_VERSION}&t=${dateTime}`,
     chunkFilename: `output/assets/js/[name].dgiot.js?v=${process.env.VUE_APP_VERSION}&t=${dateTime}`,
   },
@@ -370,7 +302,7 @@ module.exports = {
   publicPath,
   assetsDir,
   outputDir,
-  lintOnSave,
+  lintOnSave: process.env.NODE_ENV !== 'production',
   transpileDependencies,
   devServer,
   pwa,

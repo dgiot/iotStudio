@@ -155,7 +155,7 @@
               :label="$translateTitle('product.Design')"
               name="design"
             >
-              <VabJsonEditor ref="jsonEdit" v-model="itemSwagger" />
+              <DgiotJsonEditor ref="jsonEdit" v-model="itemSwagger" />
             </el-tab-pane>
             <!-- <el-tab-pane label="编码" name="code"> -->
             <el-tab-pane :label="$translateTitle('product.code')" name="code">

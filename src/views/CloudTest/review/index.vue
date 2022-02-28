@@ -139,7 +139,7 @@
         <!--        </el-button>-->
         <!--      </span>-->
       </el-dialog>
-      <vab-dialog :show.sync="activePopShow">
+      <dgiot-dialog :show.sync="activePopShow">
         <h2 slot="title">
           {{ $translateTitle('cloudTest.addwordtask') }}
         </h2>
@@ -218,10 +218,10 @@
             </el-button>
           </div>
         </div>
-      </vab-dialog>
+      </dgiot-dialog>
     </div>
-    <vab-query-form>
-      <vab-query-form-left-panel>
+    <dgiot-query-form>
+      <dgiot-query-form-left-panel>
         <el-form
           ref="form"
           :inline="true"
@@ -261,8 +261,8 @@
             </el-button>
           </el-form-item>
         </el-form>
-      </vab-query-form-left-panel>
-    </vab-query-form>
+      </dgiot-query-form-left-panel>
+    </dgiot-query-form>
     <el-table
       ref="tableSort"
       v-loading="listLoading"
@@ -398,14 +398,14 @@
       </el-table-column>
       <template #empty>
         <el-image
-          class="vab-data-empty"
+          class="dgiot-data-empty"
           :src="
             require('../../../../public/assets/images/platform/assets/empty_images/data_empty.png')
           "
         />
       </template>
     </el-table>
-    <vab-parser-pagination
+    <dgiot-parser-pagination
       :key="list.examination.length + 'examination'"
       ref="examination"
       :pagination="paginations"

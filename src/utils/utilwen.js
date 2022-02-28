@@ -149,8 +149,8 @@ function timestampToTime(timestamp, full) {
 
 export function translateTitle(title) {
   let pageTitle = ''
-  if (i18n.te(`vabI18n.${title}`)) {
-    pageTitle = i18n.t(`vabI18n.${title}`)
+  if (i18n.te(`dgiotI18n.${title}`)) {
+    pageTitle = i18n.t(`dgiotI18n.${title}`)
   } else {
     pageTitle = title.substr(title.lastIndexOf('.') + 1)
   }

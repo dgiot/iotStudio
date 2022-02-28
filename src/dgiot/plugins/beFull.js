@@ -4,7 +4,7 @@
 // * @LastEditors:
 // * @LastEditTime: 2021-07-12 14:14:58
 // * @Description: https://github.com/any86/be-full
-// * @FilePath: src\vab\plugins\beFull.js
+// * @FilePath: src\dgiot\plugins\beFull.js
 //
 
 var exports = {}

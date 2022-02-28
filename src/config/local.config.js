@@ -1,17 +1,9 @@
-// * @Author: h7ml
-// * @Date: 2021-10-08 10:32:25
-// * @LastEditors: h7ml
-// * @LastEditTime: 2021-10-08 10:32:25
-// * @Description:
-// * @FilePath: src\config\local.config.js
-// * @DocumentLink: http://prod.iotn2n.com/swagger/#/
-// 系统启动时加载的文件
 let systemStatic = {
   css: [
     'normalize.css',
     'nprogress.css',
-    'material_icons.css', // 谷歌字体图标
-    'iview.css', // iview 组件库
+    'material_icons.css',
+    'iview.css',
     'antd.min.css',
     'google.css',
     'materialdesignicons.min.css',
@@ -20,13 +12,12 @@ let systemStatic = {
     'lint.css',
     'vditor.css',
     'xterm.css',
-    //  amis 相关
     'amis/lib/themes/cxd.css',
     'amis/lib/helper.css',
     'amis/lib/themes/antd.css',
   ],
   js: [
-    'vue.js', // 这里如果使用了min.js 则无法在控制台使用vue-devtools
+    'vue.js',
     'mqttws31.js',
     'vue-router.min.js',
     'vuedraggable.umd.min.js',
@@ -73,18 +64,16 @@ let systemStatic = {
     'macarons.js',
   ],
 }
-// 运行时加载的文件
 let runTimeStatic = {
   css: [
-    'material_icons.css', // 谷歌字体图标
-    'iview.css', // iview 组件库
+    'material_icons.css',
+    'iview.css',
     'antd.min.css',
     'google.css',
     'materialdesignicons.min.css',
     'style.min.css',
     'codemirror.css',
     'lint.css',
-    //  amis 相关
     'amis/lib/themes/cxd.css',
     'amis/lib/helper.css',
     'amis/lib/themes/antd.css',
@@ -98,8 +87,6 @@ let runTimeStatic = {
     'aliplayer-min.js',
   ],
 }
-if (process.env.NODE_ENV !== 'development') {
-  systemStatic.js[0] = 'vue.min.js'
-}
+if (process.env.NODE_ENV !== 'development') systemStatic.js[0] = 'vue.min.js'
 
 module.exports = { systemStatic, runTimeStatic }

@@ -121,7 +121,7 @@ const mutations = {
     localStorage.removeItem('theme')
     document.getElementsByTagName(
       'body'
-    )[0].className = `vab-theme-${state.theme.themeName}`
+    )[0].className = `dgiot-theme-${state.theme.themeName}`
   },
 }
 const actions = {

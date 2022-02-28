@@ -3,7 +3,7 @@
  * @Date: 2021-03-11 12:41:30
  * @LastEditTime: 2021-03-25 20:46:08
  * @LastEditors: h7ml
- * @FilePath: \shuwa_dashboard\src\vab\plugins\permissions.js
+ * @FilePath: \shuwa_dashboard\src\dgiot\plugins\permissions.js
  * @Description:
  */
 /**
@@ -11,7 +11,7 @@
  */
 import router from '@/router'
 import store from '@/store'
-import VabProgress from 'nprogress'
+import DgiotProgress from 'nprogress'
 // import 'nprogress/nprogress.css'
 import getPageTitle from '@/utils/vue/pageTitle'
 import { toLoginRoute } from '@/utils/router/routes'
@@ -22,7 +22,7 @@ import {
   supportVisit,
 } from '@/config'
 
-VabProgress.configure({
+DgiotProgress.configure({
   easing: 'ease',
   speed: 500,
   trickleSpeed: 200,
@@ -39,7 +39,7 @@ router.beforeEach(async (to, from, next) => {
     return false
   }
   const { showProgressBar } = store.getters['settings/theme']
-  if (showProgressBar) VabProgress.start()
+  if (showProgressBar) DgiotProgress.start()
   let hasToken = store.getters['user/token']
 
   if (!loginInterception) hasToken = true
@@ -53,7 +53,7 @@ router.beforeEach(async (to, from, next) => {
         next({
           path: '/dashboard',
         })
-        if (showProgressBar) VabProgress.done()
+        if (showProgressBar) DgiotProgress.done()
       } else {
         next()
       }
@@ -111,5 +111,5 @@ router.afterEach((to) => {
       .getDgiotlog('src/dgiot/plugins/permissions.js')
       .info('router ->', routecInfo)
   window.router = dgiot.router = routecInfo
-  if (VabProgress.status) VabProgress.done()
+  if (DgiotProgress.status) DgiotProgress.done()
 })

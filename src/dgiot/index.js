@@ -1,11 +1,9 @@
-import '@/icon'
 import DgiotIcon from '@dgiot/dgiot-icons'
 import '@dgiot/dgiot-icons/lib/dgiot-icons.css'
 import '@dgiot/dgiot-component'
 import utilwen from '@/utils/utilwen'
 import Directives from './directives/index.js'
 import VueContextMenu from 'vue-contextmenu'
-
 Vue.component('DgiotIcon', DgiotIcon)
 Vue.use(Directives)
 Vue.use(utilwen)

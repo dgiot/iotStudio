@@ -1,5 +1,0 @@
-app:
-  - redirects:
-      - from: /*
-        to: /index.html
-        assets: false

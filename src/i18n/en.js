@@ -1,5 +1,5 @@
 export default {
-  vabI18n: {
+  dgiotI18n: {
     title: {
       acquisitioncentersystem: 'Acquisition system',
       'Theme configuration saved successfully':

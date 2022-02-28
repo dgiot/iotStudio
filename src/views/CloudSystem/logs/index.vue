@@ -70,7 +70,7 @@
       </a-col>
       <a-col
         class="logs-row-table"
-        :class="{ 'vab-fullscreen': isFullscreen }"
+        :class="{ 'dgiot-fullscreen': isFullscreen }"
         :lg="18"
         :md="18"
         :sm="24"
@@ -85,7 +85,7 @@
               <dgiot-icon icon="aspect-ratio-fill" />
               {{ $translateTitle('Logs.console') }}
             </span>
-            <vab-editor
+            <dgiot-editor
               :key="key"
               v-model="clickItem"
               :height="isFullscreen ? 1000 + 80 : 1000 + 40"
@@ -101,8 +101,8 @@
               {{ $translateTitle('Logs.table') }}
             </span>
 
-            <vab-query-form>
-              <vab-query-form-left-panel>
+            <dgiot-query-form>
+              <dgiot-query-form-left-panel>
                 <el-button
                   style="margin: 0 10px 10px 10px !important"
                   type="success"
@@ -142,8 +142,8 @@
                     </el-button>
                   </template>
                 </el-popover>
-              </vab-query-form-left-panel>
-            </vab-query-form>
+              </dgiot-query-form-left-panel>
+            </dgiot-query-form>
 
             <el-table
               :key="key"
@@ -215,7 +215,7 @@
               />
               <!--              eslint-disable-next-line-->
               <template #empty class="el_table_empty">
-                <vab-empty />
+                <dgiot-empty />
               </template>
             </el-table>
             <el-pagination
@@ -365,14 +365,14 @@
           this.$baseMessage(
             this.$translateTitle('alert.Data request successfully'),
             'success',
-            'vab-hey-message-success'
+            'dgiot-hey-message-success'
           )
         } catch (error) {
           dgiotlog.log(error)
           this.$baseMessage(
             this.$translateTitle('alert.Data request error') + `${error}`,
             'error',
-            'vab-hey-message-error'
+            'dgiot-hey-message-error'
           )
         }
       },
@@ -393,7 +393,7 @@
           this.$baseMessage(
             this.$translateTitle('alert.Data request error') + `${error}`,
             'error',
-            'vab-hey-message-error'
+            'dgiot-hey-message-error'
           )
         }
         dgiotlog.log(value) // { key: "lucy", label: "Lucy (101)" }
@@ -416,7 +416,7 @@
             this.subtopic + this.$translateTitle('websocket.subscribeSuccess'),
             'success',
             false,
-            'vab-hey-message-success'
+            'dgiot-hey-message-success'
           )
           this.$baseNotify(this.subtopic, 'topic:', 'success', '', 5000)
           this.handleMqttMsg()

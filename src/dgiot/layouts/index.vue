@@ -1,16 +1,13 @@
 <template>
   <div class="vue-admin-beautiful-wrapper" :class="classObj">
     <component
-      :is="'vab-layout-' + theme.layout"
+      :is="'dgiot-layout-' + theme.layout"
       :collapse="collapse"
       :device="device"
       :fixed-header="theme.fixedHeader"
       :show-tabs="theme.showTabs"
     />
     <el-backtop target="#dgiot" />
-    <!--  主题组件放到layouts下防止主题切换，导致主题组件重新加载 -->
-    <vab-theme-drawer />
-    <vab-theme-setting />
   </div>
 </template>
 
@@ -80,11 +77,11 @@
     width: 100%;
     height: 100%;
 
-    [class*='vab-layout-'] {
+    [class*='dgiot-layout-'] {
       position: relative;
 
       ::v-deep {
-        .vab-layout-header {
+        .dgiot-layout-header {
           z-index: 99;
           box-shadow: $base-box-shadow;
         }
@@ -109,7 +106,7 @@
         width: 100%;
       }
 
-      .vab-main {
+      .dgiot-main {
         position: relative;
         width: auto;
         min-height: 100%;
@@ -129,14 +126,14 @@
     /* 手机端开始 */
     &.mobile {
       ::v-deep {
-        .vab-layout-vertical {
+        .dgiot-layout-vertical {
           z-index: 99;
 
-          .el-scrollbar.vab-side-bar.is-collapse {
+          .el-scrollbar.dgiot-side-bar.is-collapse {
             width: 0;
           }
 
-          .vab-main {
+          .dgiot-main {
             .fixed-header {
               left: 0;
               width: 100%;

@@ -72,7 +72,7 @@
         this.$refs['form'].validate(async (valid) => {
           if (valid) {
             const { msg } = await doEdit(this.form)
-            this.$baseMessage(msg, 'success', 'vab-hey-message-success')
+            this.$baseMessage(msg, 'success', 'dgiot-hey-message-success')
             this.$emit('fetch-data')
             this.close()
           }

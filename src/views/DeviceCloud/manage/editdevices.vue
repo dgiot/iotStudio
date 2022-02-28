@@ -9,7 +9,7 @@
         >
           <info :devicedetail="deviceInfo" />
           <el-card>
-            <vab-baidu-map
+            <dgiot-baidu-map
               ref="map"
               :bmLabel="bmLabel"
               :label="mapLabel"
@@ -172,7 +172,7 @@
                 :style="{ height: Device == 'desktop' ? '50px' : '240px' }"
                 class="queryHeader"
               >
-                <vab-query-form-top-panel>
+                <dgiot-query-form-top-panel>
                   <el-form
                     :inline="true"
                     :label-width="Device == 'desktop' ? '80px' : '70px'"
@@ -274,10 +274,10 @@
                       </el-button>
                     </el-form-item>
                   </el-form>
-                </vab-query-form-top-panel>
+                </dgiot-query-form-top-panel>
               </div>
               <div :key="chartKey" class="chartsmain">
-                <vabChart
+                <dgiotChart
                   ref="charts"
                   :after-config="afterConfig"
                   :data="chartData"
@@ -318,7 +318,7 @@
                         </el-button-group>
                       </div>
 
-                      <vabChart
+                      <dgiotChart
                         ref="charts"
                         :after-config="afterConfig"
                         :data="chartData.child[index]"
@@ -336,7 +336,7 @@
                     </el-card>
                   </el-col>
                   <el-col v-show="!chartData.child" :span="24">
-                    <vab-empty />
+                    <dgiot-empty />
                   </el-col>
                 </el-row>
               </div>
@@ -677,7 +677,7 @@
         </el-tab-pane>
 
         <el-tab-pane :label="$translateTitle('device.alert')" name="alert">
-          <vab-empty />
+          <dgiot-empty />
         </el-tab-pane>
       </el-tabs>
     </div>

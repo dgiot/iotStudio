@@ -117,7 +117,7 @@
               </el-table>
             </el-tab-pane>
             <el-tab-pane label="Json" name="Json">
-              <vab-json-editor
+              <dgiot-json-editor
                 v-model="dictTempForm.params"
                 lang="zh"
                 :mode="'code'"

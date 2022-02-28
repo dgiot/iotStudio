@@ -7,7 +7,7 @@
             <dgiot-icon icon="aspect-ratio-fill" />
             {{ $translateTitle('Logs.console') }}
           </span>
-          <vab-editor
+          <dgiot-editor
             :key="refreshFlag"
             lang="text"
             :max-lines="isFullscreen ? 1000 / 12 : 1000 / 12"
@@ -66,7 +66,7 @@
               </template>
             </el-table-column>
             <template #empty>
-              <a-empty class="vab-data-empty" :description="false" />
+              <a-empty class="dgiot-data-empty" :description="false" />
             </template>
           </el-table>
           <el-pagination
@@ -86,8 +86,8 @@
             {{ $translateTitle('system.Accurate log') }}
           </span>
           <el-row :gutter="24">
-            <vab-query-form>
-              <vab-query-form-top-panel>
+            <dgiot-query-form>
+              <dgiot-query-form-top-panel>
                 <el-form
                   :inline="true"
                   label-width="120px"
@@ -112,8 +112,8 @@
                     </el-select>
                   </el-form-item>
                 </el-form>
-              </vab-query-form-top-panel>
-            </vab-query-form>
+              </dgiot-query-form-top-panel>
+            </dgiot-query-form>
           </el-row>
           <el-table border :data="Device" style="width: 100%">
             <el-table-column
@@ -142,7 +142,7 @@
             </el-table-column>
             <template #empty>
               <el-image
-                class="vab-data-empty"
+                class="dgiot-data-empty"
                 :src="
                   require('../../../../../public/assets/images/platform/assets/empty_images/data_empty.png')
                 "
@@ -157,7 +157,7 @@
         :visible.sync="dialogVisible"
         width="50%"
       >
-        <vab-editor
+        <dgiot-editor
           :key="editorKey"
           lang="text"
           :max-lines="isFullscreen ? 1000 / 12 : 1000 / 12"
@@ -335,7 +335,7 @@
           this.$baseMessage(
             this.$translateTitle('alert.Data request error') + `${error}`,
             'error',
-            'vab-hey-message-error'
+            'dgiot-hey-message-error'
           )
         }
       },

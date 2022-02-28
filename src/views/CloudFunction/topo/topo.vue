@@ -1,9 +1,9 @@
 <template>
   <div
     class="konva"
-    :class="{ 'vab-fullscreen': isFullscreen, 'konva-fullscreen': isDevice }"
+    :class="{ 'dgiot-fullscreen': isFullscreen, 'konva-fullscreen': isDevice }"
   >
-    <!--    <vab-xterm />-->
+    <!--    <dgiot-xterm />-->
     <el-container class="konva-container">
       <el-header
         v-show="!isDevice"
@@ -276,7 +276,11 @@
           .then((res) => {
             // this.handleCloseSub()
             if (productid) {
-              this.$message.success(this.$translateTitle('产品组态更新成功'))
+              this.$message({
+                showClose: true,
+                message: this.$translateTitle('产品组态更新成功'),
+                type: 'success',
+              })
             }
           })
           .catch((e) => {

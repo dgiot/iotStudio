@@ -1,7 +1,6 @@
 import { delProduct, queryProduct } from '@/api/Product'
 import { queryView } from '@/api/View'
 import { postReportFile } from '@/api/Platform'
-import VabDraggable from 'vuedraggable'
 import { mapGetters } from 'vuex'
 import { post_tree } from '@/api/System/index'
 import { queryCategory } from '@/api/Category'
@@ -9,9 +8,7 @@ import { queryProductTemplet } from '@/api/ProductTemplet'
 import { queryEvidence } from '@/api/Evidence'
 export default {
   name: 'ReportIndex',
-  components: {
-    VabDraggable,
-  },
+  components: {},
   data() {
     const validateFile = (rule, value, callback) => {
       if (value === '') {
@@ -401,7 +398,7 @@ export default {
           this.$baseMessage(
             this.$translateTitle('successfully deleted'),
             'success',
-            'vab-hey-message-success'
+            'dgiot-hey-message-success'
           )
           flag == 0
             ? await this.fetchData()

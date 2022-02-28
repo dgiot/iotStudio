@@ -2,7 +2,7 @@
  * @description 海洋之心主题
  */
 
-body.vab-theme-ocean {
+body.dgiot-theme-ocean {
   $base-color-blue-active: #399efd;
   $base-color-blue: #1890ff;
   $base-color-blue-light: mix($base-color-white, $base-color-blue, 90%);
@@ -74,8 +74,8 @@ body.vab-theme-ocean {
     }
   }
 
-  .vab-layout-horizontal {
-    .vab-header {
+  .dgiot-layout-horizontal {
+    .dgiot-header {
       background: $base-color-blue !important;
     }
 
@@ -91,7 +91,7 @@ body.vab-theme-ocean {
       }
     }
 
-    .vab-side-bar,
+    .dgiot-side-bar,
     .comprehensive-bar-container {
       background: $base-color-blue !important;
 
@@ -101,10 +101,10 @@ body.vab-theme-ocean {
     }
   }
 
-  .vab-layout-vertical,
-  .vab-layout-comprehensive,
-  .vab-layout-common {
-    .vab-side-bar,
+  .dgiot-layout-vertical,
+  .dgiot-layout-comprehensive,
+  .dgiot-layout-common {
+    .dgiot-side-bar,
     .comprehensive-bar-container {
       @include container;
 
@@ -125,10 +125,10 @@ body.vab-theme-ocean {
     }
   }
 
-  .vab-header {
+  .dgiot-header {
     background-color: $base-color-blue !important;
 
-    .vab-main {
+    .dgiot-main {
       .el-menu.el-menu {
         background-color: $base-color-blue !important;
 

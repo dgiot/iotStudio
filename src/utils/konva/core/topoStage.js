@@ -63,7 +63,7 @@ const topoStage = {
           })
           node.on('contextmenu', (e) => {
             canvas.contextmenu = e.target
-            console.log('contextmenu', e.target)
+            console.log('contextmenu', e)
           })
           // tag.on('click', (e) => {
           //   console.log(e)
@@ -93,7 +93,7 @@ const topoStage = {
         node.setAttrs({
           draggable: false,
         })
-        return false
+        // return false
       }
       if (node.getAttr('hidden') === true) node.hide()
       // node.setAttrs({
@@ -102,14 +102,18 @@ const topoStage = {
       // })
       node.on('contextmenu', (e) => {
         canvas.contextmenu = e.target
+        canvas.clickItem = e.target
         console.log('contextmenu', e.target)
       })
       node.on('click', (e) => {
         canvas.contextmenu = {}
         canvas.clickItem = e.target
         // console.log('click', e.target.attrs)
-        dgiotBus.$emit('nodeInfo', node)
         // 单击时，这里根据node bind 的控件类型，去展示对应的控件信息
+      })
+      node.on('dblclick', (e) => {
+        if (node.getAttr('bind_amis') && node.getAttr('amis_id').length > 0)
+          dgiotBus.$emit('nodeInfo', node)
       })
       node.on('mouseover', function (e) {
         document.body.style.cursor = 'pointer'
@@ -120,10 +124,7 @@ const topoStage = {
     })
     stage.find('Path').forEach((node) => {
       info['Path'] = stage.find('Path')
-      if (
-        ['evidence', 'thing', 'amis', 'device'].indexOf(node.getAttr('name')) !=
-        -1
-      ) {
+      if (['evidence', 'thing', 'device'].indexOf(node.getAttr('name')) != -1) {
         if (
           location.href.includes('preview') ||
           location.href.includes('&type=device')
@@ -169,10 +170,10 @@ const topoStage = {
       //   console.log('鼠标移出星',e)
       //   layer.draw()
       // })
-      // node.on('contextmenu',e=>{
-      //   canvas.contextmenu = e.target
-      //   console.log('contextmenu',e.target)
-      // })
+      node.on('contextmenu', (e) => {
+        canvas.contextmenu = e.target
+        console.log('contextmenu', e.target)
+      })
       node.on('mouseover', function (e) {
         document.body.style.cursor = 'pointer'
       })

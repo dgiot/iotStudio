@@ -19,7 +19,7 @@
       :wrapper-closable="true"
       @close="auditDialog = false"
     >
-      <vab-query-form style="margin: 10px 20px">
+      <dgiot-query-form style="margin: 10px 20px">
         <el-form ref="form" label-width="120px" :model="task">
           <el-form-item
             v-if="taskType == 'review'"
@@ -62,7 +62,7 @@
             <!--            </el-button>-->
           </el-form-item>
         </el-form>
-      </vab-query-form>
+      </dgiot-query-form>
       <span>
         <el-table border :data="auditList" size="mini" stripe>
           <el-table-column
@@ -222,8 +222,8 @@
       @close="evidenceDialog = false"
     >
       <div>
-        <vab-query-form style="margin: 10px 20px">
-          <vab-query-form-left-panel
+        <dgiot-query-form style="margin: 10px 20px">
+          <dgiot-query-form-left-panel
             v-if="evidenceList.id"
             v-show="Number($route.query.step) == 1"
           >
@@ -235,13 +235,13 @@
             >
               上传
             </el-button>
-          </vab-query-form-left-panel>
-          <vab-query-form-right-panel style="float: right">
+          </dgiot-query-form-left-panel>
+          <dgiot-query-form-right-panel style="float: right">
             <el-button title="关闭" type="info" @click.native="clouseDraw">
               关闭
             </el-button>
-          </vab-query-form-right-panel>
-        </vab-query-form>
+          </dgiot-query-form-right-panel>
+        </dgiot-query-form>
 
         <input
           ref="uploader"

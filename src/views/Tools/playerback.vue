@@ -32,8 +32,8 @@
           </el-col>
         </el-row>
         <el-card class="player_card" shadow="hover">
-          <vab-player
-            ref="vabPlayer"
+          <dgiot-player
+            ref="dgiotPlayer"
             :autoplay="mp4Play"
             :height="height"
             :source="flvsrc"
@@ -105,7 +105,7 @@
         // }, 1500)
       },
       Play() {
-        this.$refs.vabPlayer.createVideo()
+        this.$refs.dgiotPlayer.createVideo()
       },
     },
   }

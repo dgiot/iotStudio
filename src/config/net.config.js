@@ -1,21 +1,9 @@
-/**
- * @description 导出网络配置
- **/
 const proxy = require('./developer.config').proxy
 module.exports = {
-  // 默认的接口地址，开发环境和生产环境走/mock-server
-  // 当然你也可以选择自己配置成需要的接口地址，如"https://api.xxx.com"
-  // 问号后边代表开发环境，冒号后边代表生产环境
-  // baseURL:
-  //   process.env.NODE_ENV === 'development' ? '/mock-server' : '/mock-server',
-  // 多个代理
   proxy,
   baseURL: proxy[0].path,
-  // 配后端数据的接收方式application/json;charset=UTF-8 或 application/x-www-form-urlencoded;charset=UTF-8
   contentType: 'application/json',
-  // 最长请求时间
   requestTimeout: 1000 * 1 * 30,
-  // 操作正常code，支持String、Array、int多种类型
   successCode: [
     200,
     0,
@@ -30,13 +18,9 @@ module.exports = {
     '404',
     '500',
   ],
-  // 操作失败code，支持String、Array、int多种类型
   errorCode: [401, 209, '209', '401'],
-  // 数据状态的字段名称
   statusName: 'code',
-  // 状态信息的字段名称
   messageName: 'msg',
-  // code massage
   CODE_MESSAGE: {
     200: '服务器成功返回请求数据',
     201: '新建或修改数据成功',

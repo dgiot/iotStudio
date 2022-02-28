@@ -159,8 +159,8 @@
       <!--      </div>-->
       <el-tabs v-model="activeName">
         <div class="equdevices">
-          <vab-query-form>
-            <vab-query-form-top-panel>
+          <dgiot-query-form>
+            <dgiot-query-form-top-panel>
               <el-form
                 :inline="true"
                 label-width="100px"
@@ -312,8 +312,8 @@
                   </el-button>
                 </el-form-item>
               </el-form>
-            </vab-query-form-top-panel>
-          </vab-query-form>
+            </dgiot-query-form-top-panel>
+          </dgiot-query-form>
         </div>
         <el-tab-pane :label="$translateTitle('equipment.list')" name="first">
           <div class="tabstable">
@@ -471,9 +471,9 @@
                     size="mini"
                     style="text-align: center"
                     type="warning"
-                    @click="showInfo(row)"
+                    @click="editorDevice(row)"
                   >
-                    {{ $translateTitle('product.parser') }}
+                    {{ $translateTitle('concentrator.edit') }}
                   </el-button>
                   <el-button size="mini" type="info" @click="konvaDevice(row)">
                     {{ $translateTitle('concentrator.konva') }}
@@ -488,15 +488,6 @@
                     </el-button>
 
                     <el-dropdown-menu slot="dropdown">
-                      <el-dropdown-item>
-                        <el-link
-                          size="info"
-                          type="success"
-                          @click="editorDevice(row)"
-                        >
-                          {{ $translateTitle('concentrator.edit') }}
-                        </el-link>
-                      </el-dropdown-item>
                       <el-dropdown-item>
                         <el-link
                           size="mini"
@@ -717,9 +708,9 @@
                     size="mini"
                     style="text-align: center"
                     type="warning"
-                    @click="showInfo(row)"
+                    @click="editorDevice(row)"
                   >
-                    {{ $translateTitle('product.parser') }}
+                    {{ $translateTitle('concentrator.edit') }}
                   </el-button>
                   <el-button size="mini" type="info" @click="konvaDevice(row)">
                     {{ $translateTitle('concentrator.konva') }}
@@ -734,15 +725,6 @@
                     </el-button>
 
                     <el-dropdown-menu slot="dropdown">
-                      <el-dropdown-item>
-                        <el-link
-                          size="info"
-                          type="success"
-                          @click="editorDevice(row)"
-                        >
-                          {{ $translateTitle('concentrator.edit') }}
-                        </el-link>
-                      </el-dropdown-item>
                       <el-dropdown-item>
                         <el-link
                           size="mini"
@@ -784,20 +766,31 @@
               <!--                @size-change="deviceSizeChange"-->
               <!--                @current-change="deviceCurrentChange"-->
               <!--              />-->
-              <!--              <vab-Pagination-->
+              <!--              <dgiot-Pagination-->
               <!--                v-show="devicetotal > 0"-->
               <!--                :limit.sync="queryForm.pageSize"-->
               <!--                :page.sync="queryForm.pageNo"-->
               <!--                :total="devicetotal"-->
               <!--                @pagination="getDevices"-->
               <!--              />-->
-              <vab-parser-pagination
-                :key="devicetotal.length + 'forensics'"
-                ref="devicePagination"
-                :pagination="paginations"
-                :query-payload="queryPayload"
-                @pagination="getDevices"
-                @paginationQuery="paginationQuery"
+              <!--              <dgiot-parser-pagination-->
+              <!--                :key="devicetotal.length + 'forensics'"-->
+              <!--                ref="devicePagination"-->
+              <!--                :pagination="paginations"-->
+              <!--                :query-payload="queryPayload"-->
+              <!--                @pagination="getDevices"-->
+              <!--                @paginationQuery="paginationQuery"-->
+              <!--              />-->
+              <el-pagination
+                :background="ination.background"
+                :current-page.sync="ination.currentPage"
+                :layout="ination.layout"
+                :page-size.sync="ination.pageSize"
+                :page-sizes="ination.pageSizes"
+                :total="ination.total"
+                v-bind="$attrs"
+                @current-change="handleCurrentChange"
+                @size-change="handleSizeChange"
               />
             </div>
           </div>
@@ -1326,7 +1319,6 @@
 <script>
   import deviceState from '@/components/Device/deviceState'
   import { mapGetters, mapMutations } from 'vuex'
-  import { get_object } from '@/api/Parse'
   import { batch, Batchdelete } from '@/api/Batch'
   import { Promise } from 'q'
   import { getProduct, queryProduct } from '@/api/Product/index'
@@ -1348,6 +1340,7 @@
   import { addimeidevice, putDevice, querycompanyDevice } from '@/api/Device'
   import { getToken } from '@/api/Menu'
   import { secret } from '@/config/secret.config'
+
   var pcdata
   export default {
     components: {
@@ -1403,6 +1396,61 @@
         }
       }
       return {
+        queryPayloads: {
+          where: {
+            // $lt	Less Than
+            // $lte	Less Than Or Equal To
+            // $gt	Greater Than
+            // $gte	Greater Than Or Equal To
+            // $ne	Not Equal To
+            // $in	Contained In
+            // $nin	Not Contained in
+            // $exists	A value is set for the key
+            // $select	This matches a value for a key in the result of a different query
+            // $dontSelect	Requires that a key’s value not match a value for a key in the result of a different query
+            // $all	Contains all of the given values
+            // $regex	Requires that a key’s value match a regular expression
+            // $text	Performs a full text search on indexed fields
+          },
+          // excludeKeys: '',
+          include: '',
+          order: '-updatedAt',
+          limit: 10,
+          skip: 0,
+          count: 'objectId',
+        },
+        pagination: {
+          // 每页显示个数选择器的选项设置
+          pageSizes: [5, 10, 20, 50, 100, 200, 500],
+          // 组件布局，子组件名用逗号分隔
+          layout: 'total, sizes, prev, pager, next, jumper',
+          // 是否为分页按钮添加背景色
+          background: true,
+          // 是否显示本控件
+          hidden: false,
+          // 是否使用小型分页样式
+          small: false,
+          // 每页显示条目个数，支持 .sync 修饰符
+          pageSize: 10,
+          // 总条目数
+          total: 0,
+          // 总页数，total 和 page-count 设置任意一个就可以达到显示页码的功能；如果要支持 page-sizes 的更改，则需要使用 total 属性
+          pageCount: 0,
+          // 页码按钮的数量，当总页数超过该值时会折叠 大于等于 5 且小于等于 21 的奇数
+          pagerCount: 7,
+          // 当前页数，支持 .sync 修饰符
+          currentPage: 1,
+          // 每页显示个数选择器的下拉框类名
+          popperClass: '',
+          // 替代图标显示的上一页文字
+          prevText: '',
+          // 替代图标显示的下一页文字
+          nextText: '',
+          // 是否禁用
+          disabled: false,
+          // 只有一页时是否隐藏
+          hideOnSinglePage: false,
+        },
         deviceInfo: {},
         paginations: { layout: 'total, sizes, prev, pager, next, jumper' },
         queryPayload: {
@@ -1480,7 +1528,7 @@
         leftRow: 3,
         rightRow: 21,
         popoverVisible: false,
-        vabicon: 'ancient-gate-fill',
+        dgioticon: 'ancient-gate-fill',
         Company: sessionStorage.getItem('title') || '',
         curDepartmentId: '',
         roleProps: {
@@ -1641,6 +1689,14 @@
       }
     },
     computed: {
+      query: function () {
+        // eslint-disable-next-line vue/no-reserved-keys
+        return _.merge(this.queryPayload, this.queryPayloads)
+      },
+      ination: function () {
+        // eslint-disable-next-line vue/no-reserved-keys
+        return _.merge(this.pagination, this.paginations)
+      },
       ...mapGetters({
         _tableDict: 'global/_tableDict',
         token: 'user/token',
@@ -1675,6 +1731,34 @@
       dgiotlog.log('this.aclObj', this.aclObj)
     },
     methods: {
+      /**
+       * @description 每页显示多少条
+       * @param pagesize
+       */
+      handleSizeChange(pagesize) {
+        console.log(this.$route)
+        let query = this.query
+        query.limit = pagesize
+        this.queryPayloads.limit = pagesize
+        this.queryPayload.limit = pagesize
+        this.queryForm.limit = pagesize
+        // this.$emit('paginationQuery', query)
+        // this.$emit('pagination', query)
+        this.paginationQuery(query)
+        this.getDevices(query)
+      },
+      handleCurrentChange(currentPage) {
+        console.log(this.$route.path)
+        let query = this.query
+        query.skip = (currentPage - 1) * this.ination.pageSize
+        this.queryPayloads.skip = (currentPage - 1) * this.ination.pageSize
+        this.queryPayload.skip = (currentPage - 1) * this.ination.pageSize
+        this.queryForm.skip = (currentPage - 1) * this.ination.pageSize
+        // this.$emit('paginationQuery', query)
+        // this.$emit('getDevices', query)
+        this.paginationQuery(query)
+        this.getDevices(query)
+      },
       async paginationQuery(queryPayload) {
         this.queryPayload = queryPayload
       },
@@ -1740,7 +1824,11 @@
         try {
           const res = await this.$update_object(table, deviceId, _mergeparams)
           dgiotlog.log(res)
-          this.$message.success(this.$translateTitle('user.update completed'))
+          this.$message({
+            showClose: true,
+            message: this.$translateTitle('user.update completed'),
+            type: 'success',
+          })
         } catch (error) {
           dgiotlog.log(error)
           this.$message.error(`${error}`)
@@ -1807,7 +1895,7 @@
             this.$baseMessage(
               this.$translateTitle('Maintenance.successfully deleted'),
               'success',
-              'vab-hey-message-success'
+              'dgiot-hey-message-success'
             )
             setTimeout(() => {
               this.getDevices({ start: 0 })
@@ -1937,6 +2025,7 @@
           dgiotlog.log(results)
           this.tableData = results
           this.devicetotal = count
+          this.pagination.total = count
           this.chartOnlone.rows[1]['数量'] = this.devicetotal
           dgiotlog.log('tableData', this.tableData)
         }
@@ -1953,105 +2042,105 @@
       CloseState() {
         this.stateDialog = false
       },
-      showInfo(data) {
-        this.deviceId = data.objectId
-        let _from = {
-          isArr: [],
-          obj: [],
-        }
-        let parseTbas = []
-        dgiotlog.log(data)
-        this.devicedetail = data
-        if (data.product.config.parser) {
-          parseTbas.push(...data.product.config.parser)
-        }
-        if (data.product.config.profile) {
-          parseTbas.push(...data.product.config.profile)
-        }
-        this.devicedetail = {}
-        parseTbas = parseTbas.filter((e) => {
-          return e.visible
-          // && e.field == 'Device'
-        })
-        dgiotlog.log(this.parseTbas)
-        if (this.devicedetail && parseTbas.length) {
-          // 拿到设备数据中对应的class
-          parseTbas.forEach((from) => {
-            dgiotlog.log(from.class)
-            dgiotlog.info(
-              '%c%s',
-              'color: #fff; background: #20B2AA; font-size: 16px;',
-              `原始关联${from.table}表中${from.class}字段的值为`
-            )
-            dgiotlog.info(
-              '%c%s',
-              'color: #fff; background: #20B2AA; font-size: 16px;',
-              `${JSON.stringify(from.config)}`
-            )
-            if (data[`${from.class}`]) {
-              for (let f in data[`${from.class}`]) {
-                for (let v in from.config) {
-                  if (f == v) {
-                    if (typeof from.config.formDesc[`${f}`] == 'object') {
-                      dgiotlog.log(
-                        f,
-                        v,
-                        'f ==== v object',
-                        from.config.formDesc[`${f}`].label,
-                        from.config.formDesc[`${f}`].default,
-                        'data[`${from.class}`][`${v}`] 为 ' +
-                          data[`${from.class}`][`${v}`]
-                      )
-                      _from.obj.push(f)
-                      from.config.formDesc[`${f}`]['default'] =
-                        data[`${from.class}`][`${v}`]
-                      dgiotlog.log(
-                        from.config.formDesc[`${f}`].label,
-                        data[`${from.class}`],
-                        from.config.formDesc[`${f}`].default
-                      )
-                    } else {
-                      _from.isArr.push(v)
-                      from.config[`${f}`] = data[`${from.class}`][`${v}`]
-                    }
-                  } else {
-                    for (let i in from.config.formDesc) {
-                      if (f == i) {
-                        _from.obj.push(f)
-                        from.config.formDesc[`${i}`]['default'] =
-                          data[`${from.class}`][`${f}`]
-                      }
-                    }
-                  }
-                }
-              }
-              dgiotlog.log(`对象数据${_from.obj}`)
-              dgiotlog.log(`数组数据${_from.isArr}`)
-              dgiotlog.info(
-                '%c%s',
-                'color: #fff; background: #20B2AA; font-size: 16px;',
-                `修改后${from.table}表中${from.class}字段的值为`
-              )
-              dgiotlog.info(
-                '%c%s',
-                'color: #fff; background: #20B2AA; font-size: 16px;',
-                `${JSON.stringify(from.config)}`
-              )
-            }
-          })
-          this.parseTbas = parseTbas
-          this.$nextTick(() => {
-            this.activeparseTbas = this.parseTbas[0].name
-            this.InfoDialog = true
-          })
-        } else {
-          this.$baseMessage(
-            this.$translateTitle('product.No device template configured yet'),
-            'error',
-            'vab-hey-message-error'
-          )
-        }
-      },
+      // showInfo(data) {
+      //   this.deviceId = data.objectId
+      //   let _from = {
+      //     isArr: [],
+      //     obj: [],
+      //   }
+      //   let parseTbas = []
+      //   dgiotlog.log(data)
+      //   this.devicedetail = data
+      //   if (data.product.config.parser) {
+      //     parseTbas.push(...data.product.config.parser)
+      //   }
+      //   if (data.product.config.profile) {
+      //     parseTbas.push(...data.product.config.profile)
+      //   }
+      //   this.devicedetail = {}
+      //   parseTbas = parseTbas.filter((e) => {
+      //     return e.visible
+      //     // && e.field == 'Device'
+      //   })
+      //   dgiotlog.log(this.parseTbas)
+      //   if (this.devicedetail && parseTbas.length) {
+      //     // 拿到设备数据中对应的class
+      //     parseTbas.forEach((from) => {
+      //       dgiotlog.log(from.class)
+      //       dgiotlog.info(
+      //         '%c%s',
+      //         'color: #fff; background: #20B2AA; font-size: 16px;',
+      //         `原始关联${from.table}表中${from.class}字段的值为`
+      //       )
+      //       dgiotlog.info(
+      //         '%c%s',
+      //         'color: #fff; background: #20B2AA; font-size: 16px;',
+      //         `${JSON.stringify(from.config)}`
+      //       )
+      //       if (data[`${from.class}`]) {
+      //         for (let f in data[`${from.class}`]) {
+      //           for (let v in from.config) {
+      //             if (f == v) {
+      //               if (typeof from.config.formDesc[`${f}`] == 'object') {
+      //                 dgiotlog.log(
+      //                   f,
+      //                   v,
+      //                   'f ==== v object',
+      //                   from.config.formDesc[`${f}`].label,
+      //                   from.config.formDesc[`${f}`].default,
+      //                   'data[`${from.class}`][`${v}`] 为 ' +
+      //                     data[`${from.class}`][`${v}`]
+      //                 )
+      //                 _from.obj.push(f)
+      //                 from.config.formDesc[`${f}`]['default'] =
+      //                   data[`${from.class}`][`${v}`]
+      //                 dgiotlog.log(
+      //                   from.config.formDesc[`${f}`].label,
+      //                   data[`${from.class}`],
+      //                   from.config.formDesc[`${f}`].default
+      //                 )
+      //               } else {
+      //                 _from.isArr.push(v)
+      //                 from.config[`${f}`] = data[`${from.class}`][`${v}`]
+      //               }
+      //             } else {
+      //               for (let i in from.config.formDesc) {
+      //                 if (f == i) {
+      //                   _from.obj.push(f)
+      //                   from.config.formDesc[`${i}`]['default'] =
+      //                     data[`${from.class}`][`${f}`]
+      //                 }
+      //               }
+      //             }
+      //           }
+      //         }
+      //         dgiotlog.log(`对象数据${_from.obj}`)
+      //         dgiotlog.log(`数组数据${_from.isArr}`)
+      //         dgiotlog.info(
+      //           '%c%s',
+      //           'color: #fff; background: #20B2AA; font-size: 16px;',
+      //           `修改后${from.table}表中${from.class}字段的值为`
+      //         )
+      //         dgiotlog.info(
+      //           '%c%s',
+      //           'color: #fff; background: #20B2AA; font-size: 16px;',
+      //           `${JSON.stringify(from.config)}`
+      //         )
+      //       }
+      //     })
+      //     this.parseTbas = parseTbas
+      //     this.$nextTick(() => {
+      //       this.activeparseTbas = this.parseTbas[0].name
+      //       this.InfoDialog = true
+      //     })
+      //   } else {
+      //     this.$baseMessage(
+      //       this.$translateTitle('product.No device template configured yet'),
+      //       'error',
+      //       'dgiot-hey-message-error'
+      //     )
+      //   }
+      // },
       // 显示设备位置
       showMap(location, objectId) {
         this.deviceId = objectId
@@ -2314,10 +2403,13 @@
         }
       },
       async getDevices(args = {}) {
+        // this.pagination.total = 0
         this.listLoading = true
         const loading = this.$baseColorfullLoading(3)
         this.tableData = []
-        this.queryPayload.include = 'product,name'
+        this.queryPayload.excludeKeys =
+          'channel,children,config,thing,decoder,data,basedata,content,detail'
+        this.queryPayload.include = 'product.name,name'
         this.queryPayload.where = {
           product: { $ne: null },
           name:
@@ -2372,7 +2464,8 @@
           })
           this.tableData = results
           this.devicetotal = count
-          this.$refs['devicePagination'].ination.total = count
+          // this.$refs['devicePagination'].ination.total = count
+          this.pagination.total = count
 
           // 查询在线设备
           // this.getOnlineDevices()
@@ -2983,23 +3076,30 @@
   }
 </script>
 <style lang="scss" scoped>
-  @media screen and(max-width:600px) {
+  @media screen and(max-width: 600px) {
     .multipane {
       width: 500px;
+
       .equtabs {
         width: 500px;
       }
+
       .pane {
         width: 500px;
       }
+
       .equde_wrap {
         width: 500px;
+
         .equdevices {
           width: 100%;
+
           .tabstable {
             width: 90%;
+
             .tab_wrap_1 {
               width: 500px;
+
               .operation_right {
                 width: 100px;
               }
@@ -3014,10 +3114,12 @@
     .el-tabs__content {
       .el-form {
         width: 100%;
+
         .el-row {
           display: flex;
           flex-direction: column;
           width: 100%;
+
           .el-col-12 {
             width: 80%;
           }
@@ -3025,6 +3127,7 @@
       }
     }
   }
+
   .equtabs {
     margin-top: -40px;
     //height: calc(120vh - #{$base-top-bar-height} * 4);
@@ -3162,17 +3265,17 @@
   }
 
   /* .equipment .devicecontent .el-form .el-form-item .is-required:not(.is-no-asterisk):after{
-    content: '*';
-    color: #F56C6C;
-    margin-right: 4px;
+content: '*';
+color: #F56C6C;
+margin-right: 4px;
 } */
   /* .equipment .devicecontent .el-form .el-form-item__label:before{
-    content:''
+content:''
 }
 .equipment .devicecontent .el-form .el-form-item__label:after{
-    content: '*';
-    color: #F56C6C;
-    margin-right: 4px;
+content: '*';
+color: #F56C6C;
+margin-right: 4px;
 } */
   .mailtable .cloumn {
     font-weight: bold;

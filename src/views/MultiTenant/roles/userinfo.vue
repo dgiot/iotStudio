@@ -11,7 +11,7 @@
                 :src="$FileServe + avatar"
                 @click.native="uploadCkick('userinfo.avatar')"
               />
-              <vab-input
+              <dgiot-input
                 ref="uploadFinish"
                 :params="inputParams"
                 @fileInfo="fileInfo"
@@ -328,7 +328,7 @@
                   this.$translateTitle('保存成功'),
                   'success',
                   false,
-                  'vab-hey-message-success'
+                  'dgiot-hey-message-success'
                 )
               })
               .catch((e) => {
@@ -337,7 +337,7 @@
                   this.$translateTitle('保存失败' + e),
                   'success',
                   false,
-                  'vab-hey-message-success'
+                  'dgiot-hey-message-success'
                 )
               })
             break
@@ -375,7 +375,7 @@
             this.$translateTitle('保存成功'),
             'success',
             false,
-            'vab-hey-message-success'
+            'dgiot-hey-message-success'
           )
         }
       },

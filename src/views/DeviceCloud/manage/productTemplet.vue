@@ -1,6 +1,6 @@
 <template>
   <div class="devproduct devproduct-container">
-    <vab-input ref="uploadFinish" @fileInfo="fileInfo" />
+    <dgiot-input ref="uploadFinish" @fileInfo="fileInfo" />
     <div class="prosecond">
       <el-form
         class="demo-form-inline"
@@ -303,7 +303,7 @@
         </div>
       </el-drawer>
     </div>
-    <!--    <VabRender v-show="false" :config="config" :loading="true" />-->
+    <!--    <DgiotRender v-show="false" :config="config" :loading="true" />-->
   </div>
 </template>
 <script>
@@ -862,7 +862,7 @@
           this.$baseMessage(
             this.$translateTitle('alert.Data request error') + `${error}`,
             'error',
-            'vab-hey-message-error'
+            'dgiot-hey-message-error'
           )
         }
       },
@@ -966,9 +966,13 @@
           const res = await putProduct(this.parserFromId, {
             config: type + 2 > 0 ? this.parserTableList : list,
           })
-          this.$message.success(
-            this.$translateTitle('user.Save the template successfully')
-          )
+          this.$message({
+            showClose: true,
+            message: this.$translateTitle(
+              'user.Save the template successfully'
+            ),
+            type: 'success',
+          })
           this.dialogVisible = false
           this.parserTable = false
         } catch (e) {
@@ -1150,7 +1154,13 @@
           const res = await ImportParse('Product', parseFile)
           loading.close()
           dgiotlog.log('eresresrror', res)
-          this.$message.success(``)
+          this.$message({
+            showClose: true,
+            message: this.$translateTitle(
+              'user.Save the template successfully'
+            ),
+            type: 'success',
+          })
         } catch (error) {
           loading.close()
           dgiotlog.log('error', error)

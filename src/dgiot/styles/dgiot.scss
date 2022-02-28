@@ -16,7 +16,7 @@
   }
 }
 
-.vab-layout-header,
+.dgiot-layout-header,
 [class*='-bar-container'] {
   transition: $base-transition;
 
@@ -27,7 +27,7 @@
 
 html {
   body,
-  body[class*='vab-theme-'] {
+  body[class*='dgiot-theme-'] {
     position: relative;
     box-sizing: border-box;
     height: 100vh;
@@ -45,10 +45,10 @@ html {
       overflow: auto;
       @include base-scrollbar;
 
-      .vab-main {
+      .dgiot-main {
         transition: $base-transition;
 
-        .vab-app-main {
+        .dgiot-app-main {
           width: 100%;
           padding: 0 1.5px;
           overflow: hidden;
@@ -93,8 +93,8 @@ html {
       }
     }
 
-    /* vab-dropdown下拉动画 */
-    .vab-dropdown {
+    /* dgiot-dropdown下拉动画 */
+    .dgiot-dropdown {
       transition: $base-transition;
 
       &-active {
@@ -102,8 +102,8 @@ html {
       }
     }
 
-    /* vab-fullscreen全屏 */
-    .vab-fullscreen {
+    /* dgiot-fullscreen全屏 */
+    .dgiot-fullscreen {
       position: fixed !important;
       top: 0 !important;
       left: 0 !important;
@@ -116,8 +116,8 @@ html {
       background: #fff;
     }
 
-    /* vab-dot圆点动画 */
-    .vab-dot {
+    /* dgiot-dot圆点动画 */
+    .dgiot-dot {
       position: relative;
       display: inline-block;
       width: 6px;
@@ -135,8 +135,8 @@ html {
         width: 100%;
         height: 100%;
         border-radius: 50%;
-        animation: vabDot 1.2s ease-in-out infinite;
-        @keyframes vabDot {
+        animation: dgiotDot 1.2s ease-in-out infinite;
+        @keyframes dgiotDot {
           0% {
             opacity: 0.6;
             transform: scale(0.8);
@@ -165,8 +165,8 @@ html {
       }
     }
 
-    /* vab-data-empty占位图 */
-    .vab-data-empty {
+    /* dgiot-data-empty占位图 */
+    .dgiot-data-empty {
       display: flex;
       align-items: center;
       justify-content: center;
@@ -447,9 +447,9 @@ html {
       }
     }
 
-    /* .vab-hey-message */
-    .vab-hey-message {
-      @mixin vab-hey-message {
+    /* .dgiot-hey-message */
+    .dgiot-hey-message {
+      @mixin dgiot-hey-message {
         min-width: 246px;
         padding: 15px;
         background-color: $base-color-white;
@@ -471,7 +471,7 @@ html {
       }
 
       &-info {
-        @include vab-hey-message;
+        @include dgiot-hey-message;
 
         i {
           color: $base-color-gray;
@@ -479,7 +479,7 @@ html {
       }
 
       &-success {
-        @include vab-hey-message;
+        @include dgiot-hey-message;
 
         i {
           color: $base-color-green;
@@ -487,7 +487,7 @@ html {
       }
 
       &-warning {
-        @include vab-hey-message;
+        @include dgiot-hey-message;
 
         i {
           color: $base-color-yellow;
@@ -495,7 +495,7 @@ html {
       }
 
       &-error {
-        @include vab-hey-message;
+        @include dgiot-hey-message;
 
         i {
           color: $base-color-red;

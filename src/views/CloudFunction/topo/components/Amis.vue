@@ -8,41 +8,91 @@
 * @DocumentLink:
 -->
 <template>
-  <div class="thing">
-    <el-dialog
-      append-to-body
-      title="amis列表"
-      top="5vh"
-      :visible.sync="amisLoading"
-    >
-      <el-table :data="amisDict" style="width: 100%">
-        <el-table-column
-          align="center"
-          label="名称"
-          prop="title"
-          show-overflow-tooltip
-          sortable
-          width="180"
+  <div>
+    <div v-if="nodeAttr.visible">
+      <el-dialog
+        append-to-body
+        center
+        :visible.sync="nodeAttr.visible"
+        width="80%"
+      >
+        <dgiot-amis
+          v-show="nodeAttr.visible"
+          :key="nodeAttr.description.attrs.amis_id"
+          :schema="nodeAttr.code"
+          :show-help="false"
         />
-        <el-table-column
-          align="center"
-          label="类型"
-          prop="type"
-          show-overflow-tooltip
-          sortable
-        />
-        <el-table-column align="center" label="操作" width="auto">
-          <template #default="{ row }">
-            <el-button size="mini" type="primary" @click="bind_amis(row)">
-              绑定
-            </el-button>
-            <el-button size="mini" type="info" @click="preview_amis(row)">
-              预览
-            </el-button>
+        <span slot="footer" class="dialog-footer">
+          <el-button @click="nodeAttr.visible = false">取 消</el-button>
+          <el-button type="primary" @click="nodeAttr.visible = false">
+            确 定
+          </el-button>
+        </span>
+      </el-dialog>
+    </div>
+    <div v-if="amisLoading">
+      <el-dialog append-to-body center top="5vh" :visible.sync="amisLoading">
+        <el-badge slot="title" class="item" type="primary" :value="amisCount">
+          <el-button size="small">amis列表</el-button>
+        </el-badge>
+        <el-dialog append-to-body :visible.sync="innerVisible">
+          <dgiot-amis
+            v-show="innerVisible"
+            :schema="nodeAttr.code"
+            :show-help="false"
+          />
+        </el-dialog>
+        <el-table :data="amisDict" style="width: 100%">
+          <el-table-column
+            align="center"
+            label="名称"
+            prop="title"
+            show-overflow-tooltip
+            sortable
+            width="180"
+          />
+          <el-table-column
+            align="center"
+            label="类型"
+            prop="type"
+            show-overflow-tooltip
+            sortable
+          />
+          <el-table-column align="center" label="操作" width="auto">
+            <template #default="{ row }">
+              <el-button
+                :disabled="
+                  amisNode.node.getAttr('amis_id') == row.objectId
+                    ? true
+                    : false
+                "
+                size="mini"
+                :type="
+                  amisNode.node.getAttr('amis_id') == row.objectId
+                    ? 'success'
+                    : 'primary'
+                "
+                @click="bind_amis(row)"
+              >
+                {{
+                  amisNode.node.getAttr('amis_id') == row.objectId
+                    ? '已绑'
+                    : '绑定'
+                }}
+              </el-button>
+              <el-button size="mini" type="info" @click="preview_amis(row)">
+                预览
+              </el-button>
+            </template>
+          </el-table-column>
+          <template #empty>
+            <el-empty>
+              <el-button type="primary" @click="goDesign()">前往添加</el-button>
+            </el-empty>
           </template>
-        </el-table-column>
-      </el-table>
-    </el-dialog>
+        </el-table>
+      </el-dialog>
+    </div>
   </div>
 </template>
 
@@ -56,10 +106,17 @@
     components: {},
     data() {
       return {
+        innerVisible: false,
+        nodeAttr: {
+          description: {},
+          visible: false,
+        },
+        amisCount: 0,
         amisLoading: false,
         thingType: 'post',
         productconfig: {},
         amisDict: [],
+        amisNode: {},
         thingDialog: false,
         infoData: 'Thing',
         thingArgs: {},
@@ -70,6 +127,7 @@
         daslist: [],
         toponobound: [],
         topokonvathing: {},
+        preview: false,
       }
     },
     computed: {
@@ -78,13 +136,23 @@
       }),
     },
     mounted() {
+      this.nodeAttr.visible = false
+      this.$dgiotBus.$off('nodeInfo')
+      this.$dgiotBus.$on('nodeInfo', (args) => {
+        console.log(args.attrs.amis_id, 'nodeInfo')
+        if (this.$route.query.deviceid) {
+          localStorage.setItem('parse_objectid', this.$route.query.deviceid)
+          this.quertAmis(args.attrs.amis_id)
+          this.nodeAttr.description = args
+        }
+      })
       this.$baseEventBus.$off(
         this.$dgiotBus.topicKey('dgiot_amis', 'dgiotamis')
       )
       this.$baseEventBus.$on(
         this.$dgiotBus.topicKey('dgiot_amis', 'dgiotamis'),
-        (args) => {
-          if (args?.type == 'bind_amis') this.bindAmis(args)
+        async (args) => {
+          if (args?.type == 'bind_amis') await this.bindAmis(args)
         }
       )
     },
@@ -104,29 +172,73 @@
         this.viewInfo = data
       },
       async bind_amis(args) {
-        console.log(args)
-        this.$message.success('绑定成功')
+        console.log(args.objectId, this.amisNode.node)
+        this.amisNode.node.setAttrs({
+          fill: 'red',
+          bind_amis: true,
+          amis_id: args.objectId,
+        })
+        this.amisNode.node.children[1].setAttrs({
+          text: args.title,
+          bind_amis: true,
+          amis_id: args.objectId,
+        })
+        this.amisNode.node.children[0].setAttrs({
+          fill: '#1e83d4',
+          bind_amis: true,
+          amis_id: args.objectId,
+        })
+        this.$message({
+          showClose: true,
+          message: '绑定成功',
+          type: 'success',
+        })
+        this.amisLoading = false
+        console.log(args, this.amisNode.node)
       },
       async bindAmis(args) {
         const loading = this.$baseLoading()
-        console.log(loading, args)
-        const { results: amisDict = [] } = await queryView({
+        this.amisNode = args
+        const { results: amisDict = [], count = 0 } = await queryView({
           count: 'objectId',
           order: '-updatedAt',
           excludeKeys: 'data',
-          limit: 10,
+          // limit: 10,
           skip: 0,
           where: {
+            key: this.$route.query.productid,
             type: 'amis',
           },
         })
-        console.log(amisDict)
+        console.log(amisDict, args)
         this.amisDict = amisDict
+        this.amisCount = count
+        this.nodeAttr.visible = false
         this.amisLoading = true
         loading.close()
       },
-      preview_amis(args) {
+      async preview_amis(args) {
         console.log(args)
+        await this.quertAmis(args.objectId)
+      },
+      async goDesign() {
+        this.$router.push({
+          path: '/design',
+          query: {
+            key: this.$route.query.productid,
+            _class: 'Product',
+            type: 'amis',
+            ischildren: 'false',
+          },
+        })
+      },
+      async quertAmis(amisid) {
+        const { data = {} } = await getView(amisid)
+        this.nodeAttr.code = data
+        this.innerVisible = true
+        // this.amisLoading = false
+        this.viewInfo = data
+        if (this.$route.query.deviceid) this.nodeAttr.visible = true
       },
       wmxhandleClose() {
         this.wmxdialogVisible = false
@@ -247,7 +359,11 @@
               konva: { Stage: JSON.parse(canvas.stage.toJSON()) },
             }),
           }
-          this.$message.success(this.$translateTitle('user.update completed'))
+          this.$message({
+            showClose: true,
+            message: this.$translateTitle('user.update completed'),
+            type: 'success',
+          })
           const res =
             this.$route.query.type == 'Evidence'
               ? await putView(this.$route.query.viewid, {
@@ -292,7 +408,7 @@
               message || error,
               'error',
               false,
-              'vab-hey-message-error'
+              'dgiot-hey-message-error'
             )
             loading.close()
             return
@@ -720,6 +836,7 @@
               }
             }
             obj.nobound = []
+
             this.setSizeForm(obj)
           } else {
             this.reset(nobound)
@@ -793,14 +910,3 @@
     }, //如果页面有keep-alive缓存功能，这个函数会触发
   }
 </script>
-<style lang="scss" scoped>
-  .Thing-container {
-    width: 100%;
-    height: 100%;
-
-    &-container {
-      width: 100%;
-      height: 100%;
-    }
-  }
-</style>

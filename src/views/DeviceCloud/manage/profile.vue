@@ -2,8 +2,35 @@
   <div
     ref="custom-table"
     class="devproduct devproduct-container"
-    :class="{ 'vab-fullscreen': isFullscreen }"
+    :class="{ 'dgiot-fullscreen': isFullscreen }"
   >
+    <!--选择告警类别下拉框-->
+    <el-dialog
+      :append-to-body="true"
+      center
+      title="选择告警类型"
+      :visible.sync="Notification.show"
+      width="30%"
+    >
+      <span>
+        <el-radio v-model="Notification.detail.radio" label="start">
+          告警产生
+        </el-radio>
+        <el-radio v-model="Notification.detail.radio" label="stop">
+          告警恢复
+        </el-radio>
+      </span>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="Notification.show = false">取 消</el-button>
+        <el-button
+          type="primary"
+          @click.native="createdNotification(Notification.detail)"
+        >
+          创 建
+        </el-button>
+      </span>
+    </el-dialog>
+
     <!--添加物模型弹窗-->
     <el-dialog
       :append-to-body="true"
@@ -14,7 +41,7 @@
       :visible.sync="wmxdialogVisible"
       width="60%"
     >
-      <wmxdetail
+      <dgiot-wmx
         ref="sizeForm"
         :size-form1="sizeForm"
         @addDas="addDas"
@@ -50,31 +77,18 @@
     <el-dialog
       :append-to-body="true"
       :title="formConfig.uid"
-      top="1vh"
-      :visible.sync="dialogVisible"
+      :visible.sync="amisVisible"
+      width="75%"
     >
-      <!--      <vab-parser-->
-      <!--        :dba-table="DbaTable"-->
-      <!--        :dict="parserDict"-->
-      <!--        :form-config="formConfig"-->
-      <!--        :parserindex="editIndex"-->
-      <!--        :productid="producttempId"-->
-      <!--        @ParserSave="saveParse"-->
-      <!--      />-->
-      <!--      <span slot="footer" class="dialog-footer">-->
-      <!--        <el-button @click="dialogVisible = false">取 消</el-button>-->
-      <!--        <el-button type="primary" @click.native="dialogVisible = false">-->
-      <!--          确 定-->
-      <!--        </el-button>-->
-      <!--      </span>-->
+      <dgiot-views :view-form="viewForm" />
     </el-dialog>
     <el-dialog v-drag-dialog append-to-body :visible.sync="parserView">
       <f-render v-model="formConfig" :config="formConfig" pure />
     </el-dialog>
 
     <div class="prosecond">
-      <vab-query-form>
-        <vab-query-form-top-panel>
+      <dgiot-query-form>
+        <dgiot-query-form-top-panel>
           <el-form
             class="demo-form-inline"
             :inline="true"
@@ -135,8 +149,8 @@
                 : $translateTitle('alert.full screen')
             }}
           </el-button>
-        </vab-query-form-top-panel>
-      </vab-query-form>
+        </dgiot-query-form-top-panel>
+      </dgiot-query-form>
       <el-row :gutter="24">
         <el-col :lg="4" :md="5" :sm="6" :xl="3" :xs="4">
           <ul
@@ -323,7 +337,7 @@
               </form>
               <br />
             </el-form-item>
-            <vab-input
+            <dgiot-input
               ref="uploadFinish"
               :params="inputParams"
               @fileInfo="fileInfo"
@@ -372,7 +386,7 @@
   import wmxdetail from './component/wmxdetail'
   import { setTimeout } from 'timers'
   import { post_tree } from '@/api/Logs'
-
+  import dgiotViews from '@/views/CloudFunction/lowcode'
   const context = require.context('./component/profile', true, /\.vue$/)
   let res_components = {}
   context.keys().forEach((fileName) => {
@@ -383,12 +397,19 @@
   var editor1
   export default {
     components: {
+      dgiotViews,
       ...res_components,
-      wmxdetail,
+      'dgiot-wmx': wmxdetail,
     },
     props: {},
     data() {
       return {
+        Notification: {
+          show: false,
+          detail: {},
+        },
+        amisVisible: false,
+        viewForm: {},
         tableHeight: this.$baseTableHeight(0),
         dataList: [{}],
         dictrules: {},
@@ -602,10 +623,17 @@
       },
     },
     mounted() {
-      this.$dgiotBus.$off('profileDialog')
-      this.$dgiotBus.$on(
+      this.$baseEventBus.$off('showNotificationSettings')
+      this.$baseEventBus.$on('showNotificationSettings', (rows) => {
+        console.debug(rows)
+        //  显示告警类型下拉框
+        this.Notification = { show: true, detail: rows }
+      })
+      this.$baseEventBus.$off('profileDialog')
+      this.$baseEventBus.$on(
         'profileDialog',
         ({ config, type, flag, productInfo, parserType }) => {
+          console.log(config, type, flag, productInfo, parserType)
           this.productDetail = productInfo
           this.productInfo = productInfo
           this.parserType = type
@@ -613,6 +641,56 @@
           this.editorParser(config, type, flag)
         }
       )
+      this.$baseEventBus.$off('profileAmisDialog')
+      this.$baseEventBus.$on('profileAmisDialog', ({ config, productInfo }) => {
+        this.amisVisible = true
+        this.viewForm = {
+          showRow: true,
+          class: 'Product',
+          type: 'notification',
+          key: this.$route.query.id,
+          title: '',
+          disabled: true,
+          data: {
+            type: 'page',
+            initApi: {
+              url: 'iotapi/classes/Device/parse_objectid',
+              method: 'get',
+              adaptor:
+                'return {\r\n  "status":0,\r\n  "msg":"",\r\n  "data":response.data.basedata\r\n  }',
+              headers: {
+                store: 'localStorage',
+                dgiotReplace: 'parse_objectid',
+              },
+              dataType: 'json',
+            },
+            body: [
+              {
+                type: 'form',
+                api: {
+                  method: 'put',
+                  url: 'iotapi/classes/Device/parse_objectid',
+                  headers: {
+                    store: 'localStorage',
+                    dgiotReplace: 'parse_objectid',
+                  },
+                  dataType: 'json',
+                  requestAdaptor:
+                    'return {\r\n    ...api,\r\n    data: {\r\n        basedata:{ ...api.data}\r\n    }\r\n}',
+                },
+                body: [
+                  {
+                    type: 'input-text',
+                    label: '设备名称',
+                    name: 'name',
+                  },
+                ],
+              },
+            ],
+          },
+          hiddenRow: ['class', 'key', 'createdAt'],
+        }
+      })
       const { project = '' } = this.$route.query
       this.formInline.productname = project
       this.querycategorylist()
@@ -620,6 +698,21 @@
       this.queryProduttemp({})
     },
     methods: {
+      async createdNotification(row) {
+        await console.log(row)
+        await this.$router.push({
+          path: '/rules_engine/addengine',
+          query: {
+            productid: this.$route.query.id,
+            uid: row.objectId,
+            title: '编辑',
+            type:
+              row.radio == 'start'
+                ? 'Notification_start_ProductId_'
+                : 'Notification_stop_ProductId_',
+          },
+        })
+      },
       async doUpload(event) {
         const parseFile = event.target.files[0]
         const loading = this.$baseColorfullLoading(3)
@@ -627,7 +720,13 @@
           const res = await ImportParse('Product', parseFile)
           loading.close()
           dgiotlog.log('eresresrror', res)
-          this.$message.success(``)
+          this.$message({
+            showClose: true,
+            message: this.$translateTitle(
+              'user.Save the template successfully'
+            ),
+            type: 'success',
+          })
         } catch (error) {
           loading.close()
           dgiotlog.log('error', error)
@@ -671,7 +770,7 @@
           this.$baseMessage(
             this.$translateTitle('alert.Data request successfully'),
             'success',
-            'vab-hey-message-success'
+            'dgiot-hey-message-success'
           )
           if (isLoading) loading.close()
         } catch (error) {
@@ -679,7 +778,7 @@
           this.$baseMessage(
             this.$translateTitle('alert.Data request error') + `${error}`,
             'error',
-            'vab-hey-message-error'
+            'dgiot-hey-message-error'
           )
         }
         // console.clear()
@@ -877,6 +976,7 @@
         this.saveParse(rows, -1, false)
       },
       editorParser(config, type, flag) {
+        console.log('config', config, config, type, flag)
         const { objectId, thing = {} } = this.productDetail
         var _sourceDict = []
         var _sourceModule = []
@@ -887,14 +987,6 @@
         this.parserType = type
         this.tableType = type
         this.productConfig = _.merge({ basedate: { params: {} } }, config)
-        var isArr = ['parser', 'profile', 'basedate.params']
-        if (isArr.includes(type)) {
-          dgiotlog.log('type', type)
-          this.parserTable = flag
-          this.parserTables = this.productDetail.config[`${this.tableType}`]
-          this.parserTableList = this.productDetail.config[`${this.tableType}`]
-          this.dictTableList = this.productConfig.config.basedate.params || []
-        }
         dgiotlog.log(
           'this.parserTableList',
           this.parserTableList,
@@ -936,9 +1028,13 @@
           const res = await putProduct(this.parserFromId, {
             config: this.productConfig.config,
           })
-          this.$message.success(
-            this.$translateTitle('user.Save the template successfully')
-          )
+          this.$message({
+            showClose: true,
+            message: this.$translateTitle(
+              'user.Save the template successfully'
+            ),
+            type: 'success',
+          })
           this.dialogVisible = false
           if (mark) {
             this.parserTable = false
@@ -1354,6 +1450,7 @@
         this.wmxSituation = '新增'
       },
       wmxhandleClose() {
+        this.$refs['sizeForm'].resource.disabled = false
         this.wmxdialogVisible = false
         this.setSizeForm(this.getFormOrginalData())
       },
@@ -1717,8 +1814,68 @@
             editdatatype: true,
           }
         }
+        obj.protocol = rowData.dataForm.protocol
         this.setSizeForm(obj)
-        // dgiotlog.log('this.sizeForm', this.sizeForm)
+        this.$nextTick(async () => {
+          await this.$refs['sizeForm'].queryResource()
+          // 保证子组件已经挂载完成）
+          // if (this.$refs['sizeForm'])
+          this.$refs['sizeForm'].resource.value = rowData.dataForm.protocol
+          this.$refs['sizeForm'].resource.disabled = rowData.dataForm.protocol
+            .length
+            ? true
+            : false
+          // this.$refs['sizeForm'].changeResource(this.$refs['sizeForm'].resource.value)
+
+          this.$refs['sizeForm'].resource.arrlist = rowData.dataSource
+          this.$nextTick(() => {
+            this.$refs['sizeForm'].resource.data.forEach((resource, index) => {
+              // resource[index].arr = []
+              // resource[index].obj = {}
+              if (this.$refs['sizeForm'].resource.value === resource.cType) {
+                console.info(resource, 'success cType')
+                console.info(rowData.dataSource, 'rowData.dataSource')
+                for (var o in rowData.dataSource) {
+                  for (var j in resource.obj) {
+                    if (o === j) resource.obj[o] = rowData.dataSource[j]
+                  }
+                }
+                console.info(resource.obj, 'set resource.obj')
+                this.$refs['sizeForm'].resource.addchannel = resource.obj
+              }
+              this.$refs['sizeForm'].resource.changeData = rowData.dataSource
+              if (resource.cType == rowData.dataForm.protocol) {
+                console.log(resource, 'success')
+              }
+            })
+          })
+
+          // this.$refs['sizeForm'].resource.arrlist.map((item) => {
+          //   //  这里过滤掉 showname 为ico的
+          //   obj[item.showname] = item.default.length > 0 ? item.default : ''
+          //   this.$refs['sizeForm'].resource.addchannel = obj
+          //   this.$refs['sizeForm'].resource.addchannel = rowData.dataForm
+          //   // 校验 还需处理
+          //   // if (item.required) {
+          //   //   if (item.type == 'string' || item.type == 'integer') {
+          //   //     sizerule[item.showname] = [
+          //   //       {
+          //   //         required: true,
+          //   //         trigger: 'blur',
+          //   //       },
+          //   //     ]
+          //   //   } else {
+          //   //     sizerule[item.showname] = [
+          //   //       {
+          //   //         required: true,
+          //   //         trigger: 'change',
+          //   //       },
+          //   //     ]
+          //   //   }
+          //   // }
+          // })
+          console.log('refs sizeForm', this.$refs['sizeForm']) // 子组件的实例
+        })
       },
       addDas() {
         this.sizeForm.daslist.push({

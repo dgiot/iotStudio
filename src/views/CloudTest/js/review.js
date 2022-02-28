@@ -2,7 +2,6 @@ import lowcodeDesign from '@/views/CloudFunction/lowcode/components/index'
 import evidenceStatistics from '@/views/CloudTest/review/statistics'
 import { queryDevice, delDevice, putDevice } from '@/api/Device'
 import { postreport } from '@/api/Report'
-import VabDraggable from 'vuedraggable'
 import { mapGetters } from 'vuex'
 import { queryProduct } from '@/api/Product'
 import { queryView } from '@/api/View'
@@ -13,7 +12,6 @@ const VueAliplayerV2 = window['vue-aliplayer-v2'].default
 export default {
   name: 'ReviewIndex',
   components: {
-    VabDraggable,
     lowcodeDesign,
     evidenceStatistics,
     'vue-aliplayer-v2': VueAliplayerV2,
@@ -209,7 +207,7 @@ export default {
         this.$baseMessage(
           this.$translateTitle('alert.Data request error') + `${error}`,
           'error',
-          'vab-hey-message-error'
+          'dgiot-hey-message-error'
         )
       }
     },
@@ -335,7 +333,7 @@ export default {
             this.$baseMessage(
               this.$translateTitle('alert.Data request error') + `${error}`,
               'error',
-              'vab-hey-message-error'
+              'dgiot-hey-message-error'
             )
           }
         }
@@ -372,7 +370,7 @@ export default {
             this.$baseMessage(
               this.$translateTitle('alert.Data request error') + `${error}`,
               'error',
-              'vab-hey-message-error'
+              'dgiot-hey-message-error'
             )
           }
         }
@@ -398,7 +396,7 @@ export default {
         this.$baseMessage(
           this.$translateTitle('alert.Data request error') + `${error}`,
           'error',
-          'vab-hey-message-error'
+          'dgiot-hey-message-error'
         )
       }
     },
@@ -426,7 +424,7 @@ export default {
         this.$baseMessage(
           this.$translateTitle('alert.Data request error') + `${error}`,
           'error',
-          'vab-hey-message-error'
+          'dgiot-hey-message-error'
         )
       }
     },
@@ -457,7 +455,7 @@ export default {
         this.$baseMessage(
           this.$translateTitle('alert.Data request error') + `${error}`,
           'error',
-          'vab-hey-message-error'
+          'dgiot-hey-message-error'
         )
       }
     },
@@ -494,7 +492,7 @@ export default {
         this.$baseMessage(
           this.$translateTitle('alert.Data request successfully'),
           'success',
-          'vab-hey-message-success'
+          'dgiot-hey-message-success'
         )
         loading.close()
       } catch (error) {
@@ -502,7 +500,7 @@ export default {
         this.$baseMessage(
           this.$translateTitle('alert.Data request error') + `${error}`,
           'error',
-          'vab-hey-message-error'
+          'dgiot-hey-message-error'
         )
       }
     },
@@ -529,7 +527,7 @@ export default {
           this.$baseMessage(
             this.$translateTitle('alert.Data request successfully'),
             'success',
-            'vab-hey-message-success'
+            'dgiot-hey-message-success'
           )
           setTimeout(() => {
             const params = {
@@ -546,7 +544,7 @@ export default {
             this.fetchData()
           }, 1200)
         } else {
-          this.$baseMessage(`${msg}`, 'error', 'vab-hey-message-error')
+          this.$baseMessage(`${msg}`, 'error', 'dgiot-hey-message-error')
         }
         loading.close()
       } catch (error) {
@@ -554,7 +552,7 @@ export default {
         this.$baseMessage(
           this.$translateTitle('alert.Data request error') + `${error}`,
           'error',
-          'vab-hey-message-error'
+          'dgiot-hey-message-error'
         )
       }
     },
@@ -568,7 +566,7 @@ export default {
       const { results = [] } = await queryView(params)
       console.log(results)
       if (results.length == 0)
-        this.$baseMessage('暂无配置', 'success', 'vab-hey-message-success')
+        this.$baseMessage('暂无配置', 'success', 'dgiot-hey-message-success')
       this.lowcodeId = results[0].objectId
       this.$dgiotBus.$emit('lowcodePreview', results[0])
     },
@@ -587,7 +585,7 @@ export default {
         this.$baseMessage(
           this.$translateTitle('user.successfully deleted'),
           'success',
-          'vab-hey-message-success'
+          'dgiot-hey-message-success'
         )
         loading.close()
         this.fetchData()
@@ -596,7 +594,7 @@ export default {
         this.$baseMessage(
           this.$translateTitle('user.error deleted') + `${error}`,
           'error',
-          'vab-hey-message-error'
+          'dgiot-hey-message-error'
         )
       }
     },

@@ -191,7 +191,7 @@ export default {
         this.$baseMessage(
           this.$translateTitle('alert.Data request error') + `${error}`,
           'error',
-          'vab-hey-message-error'
+          'dgiot-hey-message-error'
         )
       }
     },
@@ -215,7 +215,7 @@ export default {
         this.$baseMessage(
           this.$translateTitle('alert.Data request error') + `${error}`,
           'error',
-          'vab-hey-message-error'
+          'dgiot-hey-message-error'
         )
       }
     },
@@ -239,7 +239,7 @@ export default {
         this.$baseMessage(
           this.$translateTitle('alert.Data request successfully'),
           'success',
-          'vab-hey-message-success'
+          'dgiot-hey-message-success'
         )
         loading.close()
       } catch (error) {
@@ -247,7 +247,7 @@ export default {
         this.$baseMessage(
           this.$translateTitle('alert.Data request error') + `${error}`,
           'error',
-          'vab-hey-message-error'
+          'dgiot-hey-message-error'
         )
       }
     },
@@ -268,7 +268,7 @@ export default {
         this.$baseMessage(
           this.$translateTitle('alert.Data request successfully'),
           'success',
-          'vab-hey-message-success'
+          'dgiot-hey-message-success'
         )
         loading.close()
       } catch (error) {
@@ -276,7 +276,7 @@ export default {
         this.$baseMessage(
           this.$translateTitle('alert.Data request error') + `${error}`,
           'error',
-          'vab-hey-message-error'
+          'dgiot-hey-message-error'
         )
       }
     },
@@ -303,7 +303,7 @@ export default {
         this.$baseMessage(
           this.$translateTitle('alert.Data request successfully'),
           'success',
-          'vab-hey-message-success'
+          'dgiot-hey-message-success'
         )
         loading.close()
       } catch (error) {
@@ -311,7 +311,7 @@ export default {
         this.$baseMessage(
           this.$translateTitle('alert.Data request error') + `${error}`,
           'error',
-          'vab-hey-message-error'
+          'dgiot-hey-message-error'
         )
       }
     },
@@ -359,7 +359,7 @@ export default {
         this.$baseMessage(
           this.$translateTitle('alert.Data request successfully'),
           'success',
-          'vab-hey-message-success'
+          'dgiot-hey-message-success'
         )
         loading.close()
       } catch (error) {
@@ -367,7 +367,7 @@ export default {
         this.$baseMessage(
           this.$translateTitle('alert.Data request error') + `${error}`,
           'error',
-          'vab-hey-message-error'
+          'dgiot-hey-message-error'
         )
       }
     },
@@ -407,7 +407,7 @@ export default {
         this.$baseMessage(
           this.$translateTitle('alert.Data request successfully'),
           'success',
-          'vab-hey-message-success'
+          'dgiot-hey-message-success'
         )
         this.getNumberEvidence(this.badgePath)
         loading.close()
@@ -416,7 +416,7 @@ export default {
         this.$baseMessage(
           this.$translateTitle('alert.Data request error') + `${error}`,
           'error',
-          'vab-hey-message-error'
+          'dgiot-hey-message-error'
         )
       }
       this.queryevidences()
@@ -453,7 +453,7 @@ export default {
               'cloudTest.There is no uKey for this product, please contact the administrator'
             ),
             'error',
-            'vab-hey-message-error'
+            'dgiot-hey-message-error'
           )
         }
         loading.close()
@@ -462,7 +462,7 @@ export default {
         this.$baseMessage(
           this.$translateTitle('alert.Data request error') + `${error}`,
           'error',
-          'vab-hey-message-error'
+          'dgiot-hey-message-error'
         )
       }
     },
@@ -491,7 +491,7 @@ export default {
         this.$baseMessage(
           this.$translateTitle('alert.Data request error') + `${error}`,
           'error',
-          'vab-hey-message-error'
+          'dgiot-hey-message-error'
         )
       }
     },
@@ -537,7 +537,7 @@ export default {
         this.$baseMessage(
           this.$translateTitle('alert.Data request successfully'),
           'success',
-          'vab-hey-message-success'
+          'dgiot-hey-message-success'
         )
         loading.close()
       } catch (error) {
@@ -545,7 +545,7 @@ export default {
         this.$baseMessage(
           this.$translateTitle('alert.Data request error') + `${error}`,
           'error',
-          'vab-hey-message-error'
+          'dgiot-hey-message-error'
         )
       }
     },
@@ -577,7 +577,7 @@ export default {
         this.$baseMessage(
           this.$translateTitle('alert.Data request error') + `${error}`,
           'error',
-          'vab-hey-message-error'
+          'dgiot-hey-message-error'
         )
       }
     },
@@ -621,7 +621,7 @@ export default {
         // this.$baseMessage(
         //   this.$translateTitle('alert.Data request successfully'),
         //   'success',
-        //   'vab-hey-message-success'
+        //   'dgiot-hey-message-success'
         // )
         // loading.close()
       } catch (error) {
@@ -629,7 +629,7 @@ export default {
         this.$baseMessage(
           this.$translateTitle('alert.Data request error') + `${error}`,
           'error',
-          'vab-hey-message-error'
+          'dgiot-hey-message-error'
         )
       }
     },
@@ -661,7 +661,7 @@ export default {
         this.$baseMessage(
           this.$translateTitle('alert.Data request successfully'),
           'success',
-          'vab-hey-message-success'
+          'dgiot-hey-message-success'
         )
         loading.close()
       } catch (error) {
@@ -669,7 +669,7 @@ export default {
         this.$baseMessage(
           this.$translateTitle('alert.Data request error') + `${error}`,
           'error',
-          'vab-hey-message-error'
+          'dgiot-hey-message-error'
         )
       }
       if (this.evidence?.length) {
@@ -695,7 +695,7 @@ export default {
         this.$baseMessage(
           '当前任务证据没有被审核',
           'warning',
-          'vab-hey-message-warning'
+          'dgiot-hey-message-warning'
         )
         return false
       }
@@ -716,7 +716,7 @@ export default {
         this.$baseMessage(
           this.$translateTitle('alert.Data request successfully'),
           'success',
-          'vab-hey-message-success'
+          'dgiot-hey-message-success'
         )
         loading.close()
       } catch (error) {
@@ -724,7 +724,7 @@ export default {
         this.$baseMessage(
           this.$translateTitle('alert.Data request error') + `${error}`,
           'error',
-          'vab-hey-message-error'
+          'dgiot-hey-message-error'
         )
       }
     },
@@ -761,7 +761,7 @@ export default {
               this.$baseMessage(
                 '未提交任何证据',
                 'error',
-                'vab-hey-message-error'
+                'dgiot-hey-message-error'
               )
               return
             }
@@ -770,7 +770,7 @@ export default {
             this.$baseMessage(
               this.$translateTitle('alert.Data request error') + `${error}`,
               'error',
-              'vab-hey-message-error'
+              'dgiot-hey-message-error'
             )
           }
         }
@@ -797,7 +797,7 @@ export default {
         this.$baseMessage(
           this.$translateTitle('alert.Data request error') + `${error}`,
           'error',
-          'vab-hey-message-error'
+          'dgiot-hey-message-error'
         )
       }
     },

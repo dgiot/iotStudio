@@ -163,7 +163,7 @@
               mark == 'edit'
                 ? await putCategory(this.form.objectId, setparams)
                 : await postCategory(setparams)
-            this.$baseMessage(msg, 'success', 'vab-hey-message-success')
+            this.$baseMessage(msg, 'success', 'dgiot-hey-message-success')
             this.$emit('fetch-data')
             this.close()
           }
