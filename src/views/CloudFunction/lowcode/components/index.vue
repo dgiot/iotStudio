@@ -43,7 +43,7 @@
     data() {
       return {
         withHeader: true,
-        types: ['amis', 'amis_view', 'topo'],
+        types: ['amis', 'amis_view', 'topo', 'notification'],
         code: {},
         objectId: '',
         flag: false,

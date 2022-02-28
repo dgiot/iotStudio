@@ -24,5 +24,9 @@ module.exports = {
       path: 'baidubce',
       target: 'https://3xsw4ap8wah59.cfc-execute.bj.baidubce.com/api/amis-mock',
     },
+    {
+      path: 'amis',
+      target: 'https://aisuda.bce.baidu.com/amis/api/mock2',
+    },
   ],
 }

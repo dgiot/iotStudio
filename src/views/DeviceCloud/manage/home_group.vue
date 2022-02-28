@@ -36,6 +36,7 @@
       </el-form>
       <div class="protable">
         <el-table
+          :key="total"
           :cell-style="{ 'text-align': 'center' }"
           :data="groupData"
           :header-cell-style="{ 'text-align': 'center' }"
@@ -1123,7 +1124,6 @@
                           type: 'success',
                           message: '删除成功',
                         })
-                        row._self.$refs[`popover-${$index}`].doClose()
                         this.searchProduct()
                       }
                     })

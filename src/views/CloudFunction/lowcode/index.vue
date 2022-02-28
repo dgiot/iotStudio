@@ -331,7 +331,7 @@
           })
         } else {
           this.$router.push({
-            path: `/design/editor/${row.type}`,
+            path: `/design/editor/amis/`,
             query: {
               viewId: row.objectId,
               type: row.type,
