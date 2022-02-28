@@ -28,7 +28,8 @@ pnpm-lock.yaml
 *.tar.gz
 
 # Lock files
-
+pnpm-lock.yaml
+pack-lock.json
 # Yarn v2
 .pnp.*
 .yarn/cache
