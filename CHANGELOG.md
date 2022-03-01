@@ -7,6 +7,7 @@
 * delete ESBuild ([04ce51e](https://github.com/dgiot/dgiot-dashboard/commit/04ce51e1a34e3ec5f00deaf0717198391d760396))
 * Dict ([36cbad8](https://github.com/dgiot/dgiot-dashboard/commit/36cbad8d0757197ba5982673208317eedfefb540))
 * Fixed the problem that the company name could not be set to take effect ([3411c08](https://github.com/dgiot/dgiot-dashboard/commit/3411c085dc72ae04c6cfce5359134f921707e88a))
+* **mqttpublish:** workOrderCompletion ([18c0070](https://github.com/dgiot/dgiot-dashboard/commit/18c00701818f2607f726cfb81434cd95025a159f))
 * rules ([438c50e](https://github.com/dgiot/dgiot-dashboard/commit/438c50e84368f1a2ea39a86d1e2c3ad8d62a4d92))
 * **src/views/devicecloud/manage/component/profile/profiledescriptions.vue:** monacoEditor getCode ([9b40bde](https://github.com/dgiot/dgiot-dashboard/commit/9b40bdee855ed1b3ea3956e7000f5d94557bf2e4))
 
