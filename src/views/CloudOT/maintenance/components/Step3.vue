@@ -166,7 +166,7 @@
       dispatchUser() {
         this.$refs['form'].validate(async (valid) => {
           if (valid && this.form.info.receiveusername) {
-            const { objectId, info,number='' } = this.form
+            const { objectId, info, number = '' } = this.form
             info.timeline.push({
               timestamp: moment(new Date()).format('YYYY-MM-DD HH:mm:ss'),
               h4: '已结单',

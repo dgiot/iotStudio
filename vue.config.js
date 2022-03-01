@@ -74,12 +74,12 @@ function getChainWebpack(config) {
       target: 'es2015',
       tsconfigRaw: require('./tsconfig.json'),
     })
-  // 删除底层 terser, 换用 esbuild-minimize-plugin
-  config.optimization.minimizers.delete('terser')
-  // 使用 esbuild 优化 css 压缩
-  config.optimization
-    .minimizer('esbuild')
-    .use(ESBuildMinifyPlugin, [{ minify: true, css: true }])
+  // // 删除底层 terser, 换用 esbuild-minimize-plugin
+  // config.optimization.minimizers.delete('terser')
+  // // 使用 esbuild 优化 css 压缩
+  // config.optimization
+  //   .minimizer('esbuild')
+  //   .use(ESBuildMinifyPlugin, [{ minify: true, css: true }])
   config.plugins.delete('preload')
   config.plugins.delete('prefetch')
   config.plugins.delete('preload-index')
