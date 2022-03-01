@@ -68,6 +68,7 @@
 
             <el-col v-if="showFooter" :span="24">
               <el-form-item
+                v-if="form.info.step3.Remarks"
                 :label="
                   $translateTitle('Maintenance.Evaluation description') + ': '
                 "
@@ -165,7 +166,7 @@
       dispatchUser() {
         this.$refs['form'].validate(async (valid) => {
           if (valid && this.form.info.receiveusername) {
-            const { objectId, info } = this.form
+            const { objectId, info,number='' } = this.form
             info.timeline.push({
               timestamp: moment(new Date()).format('YYYY-MM-DD HH:mm:ss'),
               h4: '已结单',
@@ -175,7 +176,7 @@
               `MqttPublish`,
               '/workOrderCompletion/up',
               JSON.stringify({
-                id: objectId,
+                id: number,
               }),
               0,
               false
