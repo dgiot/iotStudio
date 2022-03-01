@@ -166,8 +166,8 @@
         backgroundImage: backgroundImage,
         nodeEnv: process.env.NODE_ENV,
         form: {
-          username: '',
-          password: '',
+          username: 'dgiot_admin',
+          password: 'dgiot_admin',
         },
         rules: {
           username: [
