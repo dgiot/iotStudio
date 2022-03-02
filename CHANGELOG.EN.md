@@ -1,4 +1,4 @@
-# 4.5.0 (2022-03-01)
+# 4.5.0 (2022-03-02)
 
 
 ### Bug Fixes
@@ -10,6 +10,7 @@
 * **mqttpublish:** workOrderCompletion ([18c0070](https://github.com/dgiot/dgiot-dashboard/commit/18c00701818f2607f726cfb81434cd95025a159f))
 * rules ([438c50e](https://github.com/dgiot/dgiot-dashboard/commit/438c50e84368f1a2ea39a86d1e2c3ad8d62a4d92))
 * **src/views/devicecloud/manage/component/profile/profiledescriptions.vue:** monacoEditor getCode ([9b40bde](https://github.com/dgiot/dgiot-dashboard/commit/9b40bdee855ed1b3ea3956e7000f5d94557bf2e4))
+* theme ([9876ee6](https://github.com/dgiot/dgiot-dashboard/commit/9876ee62cd1613ed149a39d0e2d6891b95d95b4f))
 
 
 ### Features

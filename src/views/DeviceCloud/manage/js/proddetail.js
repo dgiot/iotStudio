@@ -132,6 +132,10 @@ export default {
       }
     }
     return {
+      modules: {
+        event: { visible: false, data: [] },
+        service: { visible: false, data: [] },
+      },
       amisproductInfo: [],
       upKey: moment.now(),
       codeFlag: false,
@@ -1552,11 +1556,22 @@ export default {
       }
       this.wmxdialogVisible = false
     },
-    createProperty() {
-      this.setSizeForm(this.getFormOrginalData())
-      console.log('sizeForm', this.sizeForm)
-      this.wmxdialogVisible = true
-      this.wmxSituation = '新增'
+    createProperty(type) {
+      switch (type) {
+        case 'attribute':
+          this.setSizeForm(this.getFormOrginalData())
+          this.wmxdialogVisible = true
+          this.wmxSituation = '新增'
+          break
+        case 'event':
+          // alert('event')
+          this.modules.event.visible = true
+          break
+        case 'service':
+          // alert('service')
+          this.modules.service.visible = true
+          break
+      }
     },
     // 物模型修改submitForm
     async wmxDataFill(rowData, index) {

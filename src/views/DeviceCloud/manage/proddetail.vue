@@ -545,18 +545,24 @@
                       <el-button
                         size="small"
                         type="primary"
-                        @click.native="createProperty"
+                        @click.native="createProperty('attribute')"
                       >
                         {{ $translateTitle('product.newcustomattribute') }}
                       </el-button>
-                      <!-- 新建标准属性 -->
-                      <el-button
-                        size="small"
-                        type="primary"
-                        @click.native="addcategory"
-                      >
-                        {{ $translateTitle('product.newstandardattribute') }}
-                      </el-button>
+                      <!--                      <el-button-->
+                      <!--                        size="small"-->
+                      <!--                        type="primary"-->
+                      <!--                        @click.native="createProperty('event')"-->
+                      <!--                      >-->
+                      <!--                        {{ $translateTitle('product.new Custom event') }}-->
+                      <!--                      </el-button>-->
+                      <!--                      <el-button-->
+                      <!--                        size="small"-->
+                      <!--                        type="primary"-->
+                      <!--                        @click.native="createProperty('service')"-->
+                      <!--                      >-->
+                      <!--                        {{ $translateTitle('product.new Custom service') }}-->
+                      <!--                      </el-button>-->
                     </div>
                   </dgiot-query-form-right-panel>
                 </dgiot-query-form>
@@ -1866,6 +1872,36 @@
       </el-tabs>
     </div>
 
+    <el-dialog
+      append-to-body
+      center
+      title="提示"
+      :visible.sync="modules.service.visible"
+      width="30%"
+    >
+      <span>需要注意的是内容是默认不居中的</span>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="modules.service.visible = false">取 消</el-button>
+        <el-button type="primary" @click="modules.service.visible = false">
+          确 定
+        </el-button>
+      </span>
+    </el-dialog>
+    <el-dialog
+      append-to-body
+      center
+      title="event"
+      :visible.sync="modules.event.visible"
+      width="30%"
+    >
+      <span>需要注意的是内容是默认不居中的</span>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="modules.event.visible = false">取 消</el-button>
+        <el-button type="primary" @click="modules.event.visible = false">
+          确 定
+        </el-button>
+      </span>
+    </el-dialog>
     <!--物模型-->
     <el-dialog
       :append-to-body="true"
