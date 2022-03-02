@@ -33,7 +33,7 @@
     <div v-if="amisLoading">
       <el-dialog append-to-body center top="5vh" :visible.sync="amisLoading">
         <el-badge slot="title" class="item" type="primary" :value="amisCount">
-          <el-button size="small">amis列表</el-button>
+          <el-button size="small" @click="goDesign()">amis列表</el-button>
         </el-badge>
         <el-dialog append-to-body :visible.sync="innerVisible">
           <dgiot-amis

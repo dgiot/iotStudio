@@ -1,7 +1,13 @@
 /* eslint-disable */
 import { mapGetters, mapMutations } from 'vuex'
 import { getDeviceCountByProduct } from '@/api/Device/index'
-import { deleteThing, postThing, putThing } from '@/api/Product/index'
+import {
+  deleteThing,
+  postThing,
+  putThing,
+  putProduct,
+  getProduct,
+} from '@/api/Product/index'
 import { downBinary } from '@/api/File/index'
 import { getAllunit, getDictCount } from '@/api/Dict/index'
 import { getChannelCountByProduct, saveChanne } from '@/api/Channel/index'
@@ -14,8 +20,6 @@ import wmxdetail from '@/views/DeviceCloud/manage/component/wmxdetail'
 import { returnLogin } from '@/utils/utilwen'
 import profile from '@/views/DeviceCloud/manage/profile'
 import { dgiotlog } from '../../../../utils/dgiotLog'
-import { getProtocol } from '@/api/Protocol/index'
-import { delCategory } from '../../../../api/Category'
 import { queryView } from '@/api/View'
 var editor
 var editor1
@@ -36,7 +40,7 @@ export default {
     'dgiot-profile': profile,
   },
   data() {
-    var validCode = (rule, value, callback) => {
+    const validCode = (rule, value, callback) => {
       const reg = /[0-9a-zA-Z]/
       if (!reg.test(value)) {
         callback(new Error('协议名称由数字和字母组合'))
@@ -44,7 +48,7 @@ export default {
         callback()
       }
     }
-    var validminnumber = (rule, value, callback) => {
+    const validminnumber = (rule, value, callback) => {
       // dgiotlog.log(value);
       if (value === '') {
         callback(new Error('最小值不能为空'))
@@ -62,7 +66,7 @@ export default {
         // }
       }
     }
-    var validmaxnumber = (rule, value, callback) => {
+    const validmaxnumber = (rule, value, callback) => {
       if (value === '') {
         callback(new Error('最大值不能为空'))
       } else {
@@ -76,7 +80,7 @@ export default {
         // }
       }
     }
-    var vailspecs = (rule, value, callback) => {
+    const vailspecs = (rule, value, callback) => {
       if (value < 0) {
         callback(new Error('步长大于0'))
       } else if (value >= this.sizeForm.endnumber - this.sizeForm.startnumber) {
@@ -85,7 +89,7 @@ export default {
         callback()
       }
     }
-    var validstructminnumber = (rule, value, callback) => {
+    const validstructminnumber = (rule, value, callback) => {
       if (value === '') {
         callback(new Error('最小值不能为空'))
       } else {
@@ -102,7 +106,7 @@ export default {
         }
       }
     }
-    var validstructmaxnumber = (rule, value, callback) => {
+    const validstructmaxnumber = (rule, value, callback) => {
       if (value === '') {
         callback(new Error('最大值不能为空'))
       } else {
@@ -119,7 +123,7 @@ export default {
         // }
       }
     }
-    var vailstructspecs = (rule, value, callback) => {
+    const vailstructspecs = (rule, value, callback) => {
       if (value < 0) {
         callback(new Error('步长大于0'))
       } else if (
@@ -133,8 +137,64 @@ export default {
     }
     return {
       modules: {
-        event: { visible: false, data: [] },
-        service: { visible: false, data: [] },
+        type: 'event',
+        disabled: false,
+        visible: false,
+        event: {
+          rules: {
+            name: [
+              { required: true, message: '请输入功能名称', trigger: 'blur' },
+              {
+                min: 1,
+                max: 30,
+                message: '长度在 1 到 30 个字符',
+                trigger: 'blur',
+              },
+            ],
+            identifier: [
+              { required: true, message: '请输入标识符', trigger: 'blur' },
+            ],
+            types: [
+              { required: true, message: '请选择调用方式', trigger: 'change' },
+            ],
+          },
+          visible: false,
+          data: {
+            name: '',
+            identifier: '',
+            types: 'info',
+            output: '',
+            describe: '',
+          },
+        },
+        service: {
+          rules: {
+            name: [
+              { required: true, message: '请输入功能名称', trigger: 'blur' },
+              {
+                min: 1,
+                max: 40,
+                message: '长度在 1 到 40 个字符',
+                trigger: 'blur',
+              },
+            ],
+            identifier: [
+              { required: true, message: '请输入标识符', trigger: 'blur' },
+            ],
+            transfer: [
+              { required: true, message: '请选择调用方式', trigger: 'change' },
+            ],
+          },
+          visible: false,
+          data: {
+            name: '',
+            identifier: '',
+            enter: '',
+            transfer: 'sync',
+            output: '',
+            describe: '',
+          },
+        },
       },
       amisproductInfo: [],
       upKey: moment.now(),
@@ -148,6 +208,7 @@ export default {
           basedate: { params: [] },
         },
       },
+      productObj: { thing: { properties: [], expand: [] } },
       FromMachine: [{ name: 'ALL' }],
       machineForm: {},
       machine: false,
@@ -477,7 +538,8 @@ export default {
         das: [],
       },
       tableData: [],
-      activeName: 'first',
+      // activeName: 'first',
+      activeName: 'customize',
       form: {
         Productname: '',
         ProductKey: '',
@@ -630,6 +692,7 @@ export default {
     if (this.$route.query.activeName) {
       this.activeName = this.$route.query.activeName
     }
+    if (this.$route.query.id) this.queryProductInfo(this.$route.query.id) // 获取产品信息
   },
   beforeDestroy() {
     window.clearInterval(this.subtimer)
@@ -638,6 +701,102 @@ export default {
     this.subdialogtimer = null
   },
   methods: {
+    clearfix(type) {
+      this.$refs[type].clearValidate()
+      type == 'service'
+        ? this.$refs.service.resetFields()
+        : this.$refs.event.resetFields()
+      this.modules.event.data.types = 'info'
+      this.modules.service.data.transfer = 'sync'
+    },
+    editModus(row) {
+      this.modules[`${row.type}`].data = row
+      this.modules.type = row.type
+      this.modules.visible = true
+      this.modules.disabled = true
+      dgiotlogger.info('editModus', row, this.modules[`${row.type}`])
+    },
+    async deleteModus(index, expand, row) {
+      expand.splice(index, 1)
+      await this.saveExpand(this.productObj.thing)
+    },
+    handleClose() {
+      this.modules.type == 'event'
+        ? this.$refs.event.clearValidate() && this.$refs.event.resetFields()
+        : ''
+      this.modules.type == 'service'
+        ? this.$refs.service.clearValidate() && this.$refs.service.resetFields()
+        : ''
+      this.modules.event.data.types = 'info'
+      this.modules.service.data.transfer = 'sync'
+      this.modules.visible = false
+      if (this.modules.disabled) this.saveExpand(this.productObj.thing)
+    },
+    async saveExpand(_thing) {
+      const res = await putProduct(this.productObj.objectId, {
+        thing: _thing,
+      })
+      if (res.updatedAt) {
+        this.$message({
+          type: 'success',
+          message: '更新成功',
+          showClose: true,
+        })
+      } else {
+        this.$message({
+          type: 'warning',
+          message: '更新失败' + res.msg,
+          showClose: true,
+        })
+      }
+    },
+    async queryProductInfo(productId) {
+      this.productObj = _.merge(await getProduct(productId), {
+        thing: { properties: [], expand: [] },
+      })
+    },
+    async submitModules(type, form) {
+      const { thing } = _.merge(this.productObj, {
+        thing: { properties: [], expand: [] },
+      })
+      dgiotlogger.log(this.productObj, thing)
+      this.$refs[type].validate(async (valid) => {
+        if (valid) {
+          await console.log(type, form.data)
+          const _item = {
+            ...form.data,
+            type: type,
+          }
+          const data = {
+            item: _item,
+            productid: this.$route.query.id,
+          }
+          thing.expand.push(_item)
+          const res = await putProduct(this.productObj.objectId, {
+            thing: thing,
+          })
+          if (res.updatedAt) {
+            this.$message({
+              type: 'success',
+              message: '新增成功',
+            })
+          } else {
+            this.$message({
+              type: 'warning',
+              message: '新增失败' + res.msg,
+            })
+          }
+          this.$refs[type].clearValidate()
+          this.$refs[type].resetFields()
+          this.modules.visible = false
+          // await this.queryProductInfo(this.productObj.objectId) // 更新产品信息
+          this.handleClose()
+        } else {
+          console.log('error submit!!')
+          return false
+        }
+      })
+    },
     feateditorParser1(config, type, flag) {
       let productInfo = this.productInfo
       this.parserType = type
@@ -1557,21 +1716,26 @@ export default {
       this.wmxdialogVisible = false
     },
     createProperty(type) {
+      this.modules.disabled = false
       switch (type) {
         case 'attribute':
           this.setSizeForm(this.getFormOrginalData())
           this.wmxdialogVisible = true
           this.wmxSituation = '新增'
           break
-        case 'event':
-          // alert('event')
-          this.modules.event.visible = true
-          break
         case 'service':
-          // alert('service')
-          this.modules.service.visible = true
+          this.modules.visible = true
+          this.modules.type = type
+          break
+        case 'event':
+          this.modules.visible = true
+          this.modules.type = type
           break
       }
+      this.$nextTick(() => {
+        this.$refs[type].clearValidate()
+        this.$refs[type].resetFields()
+      })
     },
     // 物模型修改submitForm
     async wmxDataFill(rowData, index) {

@@ -9,7 +9,7 @@
 /**
  * @description 导入所有 vuex 模块，自动加入namespaced:true，用于解决vuex命名冲突，请勿修改。
  */
-import { appId, uid, name, email, subscriptionType, isPwa } from '@/config'
+import * as pkg from '../../package.json'
 const info = require('@/config/index')
 Vue.use(Vuex)
 const files = require.context('./modules', false, /\.js$/)
@@ -31,6 +31,43 @@ info.secret = Base64.encode(JSON.stringify(info.secret))
 info.secretMsg =
   'dgiot.secret字段属于机密信息,为了安全起见不予直接展示。已使用Base64加密'
 // 解密方法 Base64.decode(dgiot.secret)
+getTags()
+function getTags() {
+  return new Promise((resolve, reject) => {
+    axios
+      .get(`https://api.github.com/repos/dgiot/dgiot-dashboard/tags`)
+      .then((res) => {
+        res.data.forEach((t) => {
+          t.message = getMessage(t)
+        })
+        info.tag = res.data
+      })
+      .catch((err) => {
+        reject(err)
+      })
+  })
+}
+
+function getMessage(tag) {
+  return new Promise((resolve, reject) => {
+    axios
+      .get(tag.commit.url)
+      .then((res) => {
+        tag.message = res.data
+        if (pkg.default.version === tag.name.replace('v', '')) {
+          info.latest = _.merge(res.data, { tag: tag })
+          info.latestTime = moment(tag.message.commit.committer.date).format(
+            'YYYY-MM-DD HH:mm:ss'
+          )
+          dgiotlogger.log(info.latestTime)
+        }
+      })
+      .catch((err) => {
+        reject(err)
+      })
+  })
+}
+
 window.dashboard = info
 window.dgiot = info
 console.log(

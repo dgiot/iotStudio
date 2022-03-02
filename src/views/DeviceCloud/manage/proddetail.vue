@@ -549,20 +549,6 @@
                       >
                         {{ $translateTitle('product.newcustomattribute') }}
                       </el-button>
-                      <!--                      <el-button-->
-                      <!--                        size="small"-->
-                      <!--                        type="primary"-->
-                      <!--                        @click.native="createProperty('event')"-->
-                      <!--                      >-->
-                      <!--                        {{ $translateTitle('product.new Custom event') }}-->
-                      <!--                      </el-button>-->
-                      <!--                      <el-button-->
-                      <!--                        size="small"-->
-                      <!--                        type="primary"-->
-                      <!--                        @click.native="createProperty('service')"-->
-                      <!--                      >-->
-                      <!--                        {{ $translateTitle('product.new Custom service') }}-->
-                      <!--                      </el-button>-->
                     </div>
                   </dgiot-query-form-right-panel>
                 </dgiot-query-form>
@@ -1484,6 +1470,133 @@
           </div>
         </el-tab-pane>
         <!-- </div> -->
+        <el-tab-pane label="自定义功能" name="customize">
+          <el-button
+            size="small"
+            type="primary"
+            @click.native="createProperty('service')"
+          >
+            新增自定义服务
+          </el-button>
+          <el-table border :data="productObj.thing.expand" style="width: 100%">
+            <el-table-column
+              align="center"
+              label="功能名称"
+              prop="name"
+              show-overflow-tooltip
+              sortable
+              width="auto"
+            />
+            <el-table-column
+              align="center"
+              label="标识符"
+              prop="identifier"
+              show-overflow-tooltip
+              sortable
+              width="auto"
+            />
+            <!--            <el-table-column-->
+            <!--              align="center"-->
+            <!--              label="事件类型、调用方式"-->
+            <!--              prop="transfer"-->
+            <!--              show-overflow-tooltip-->
+            <!--              sortable-->
+            <!--              width="auto"-->
+            <!--            />-->
+            <!--            <el-table-column label="输入参数" prop="enter" />-->
+            <el-table-column
+              align="center"
+              label="事件类型、调用方式"
+              show-overflow-tooltip
+              width="auto"
+            >
+              <template slot-scope="scope">
+                <el-tag
+                  v-show="scope.row.type == 'event'"
+                  effect="dark"
+                  :type="scope.row.types"
+                >
+                  {{
+                    { info: '信息', warning: '告警', error: '故障' }[
+                      scope.row.types
+                    ] || '暂无'
+                  }}
+                </el-tag>
+                <el-tag v-show="scope.row.type == 'service'" effect="Plain">
+                  {{ scope.row.transfer == 'sync' ? '同步' : '异步' }}
+                </el-tag>
+              </template>
+            </el-table-column>
+            <el-table-column
+              align="center"
+              label="功能类型"
+              prop="type"
+              show-overflow-tooltip
+              sortable
+              width="auto"
+            >
+              <template slot-scope="scope">
+                <el-popover
+                  v-if="scope.row.type == 'event'"
+                  placement="top"
+                  trigger="hover"
+                >
+                  <p>输入参数: {{ scope.row.enter }}</p>
+                  <div slot="reference" class="name-wrapper">
+                    <el-tag size="medium">
+                      {{ scope.row.type == 'event' ? '事件' : '服务' }}
+                    </el-tag>
+                  </div>
+                </el-popover>
+                <el-tag v-else size="medium">
+                  {{ scope.row.type == 'event' ? '事件' : '服务' }}
+                </el-tag>
+              </template>
+            </el-table-column>
+            <el-table-column
+              align="center"
+              label="输出参数"
+              prop="output"
+              show-overflow-tooltip
+              sortable
+              width="auto"
+            />
+            <el-table-column
+              align="center"
+              label="描述"
+              prop="describe"
+              show-overflow-tooltip
+              sortable
+              width="auto"
+            />
+            <el-table-column
+              align="center"
+              label="操作"
+              prop="type"
+              show-overflow-tooltip
+              sortable
+              width="auto"
+            >
+              <template slot-scope="scope">
+                <el-button type="info" @click.native="editModus(scope.row)">
+                  修改
+                </el-button>
+                <el-button
+                  type="danger"
+                  @click.native="
+                    deleteModus(
+                      scope.$index,
+                      productObj.thing.expand,
+                      scope.row
+                    )
+                  "
+                >
+                  删除
+                </el-button>
+              </template>
+            </el-table-column>
+          </el-table>
+        </el-tab-pane>
         <!-----------------服务通道------------------------------------------>
         <el-tab-pane
           :label="$translateTitle('product.physicalaccess')"
@@ -1874,33 +1987,128 @@
 
     <el-dialog
       append-to-body
-      center
-      title="提示"
-      :visible.sync="modules.service.visible"
+      :before-close="handleClose"
+      :center="true"
+      :close-on-click-modal="true"
+      :close-on-press-escape="true"
+      :destroy-on-close="true"
+      :modal="true"
+      :title="modules.type == 'event' ? '自定义事件' : '自定义服务'"
+      :visible.sync="modules.visible"
       width="30%"
     >
-      <span>需要注意的是内容是默认不居中的</span>
-      <span slot="footer" class="dialog-footer">
-        <el-button @click="modules.service.visible = false">取 消</el-button>
-        <el-button type="primary" @click="modules.service.visible = false">
-          确 定
-        </el-button>
-      </span>
-    </el-dialog>
-    <el-dialog
-      append-to-body
-      center
-      title="event"
-      :visible.sync="modules.event.visible"
-      width="30%"
-    >
-      <span>需要注意的是内容是默认不居中的</span>
-      <span slot="footer" class="dialog-footer">
-        <el-button @click="modules.event.visible = false">取 消</el-button>
-        <el-button type="primary" @click="modules.event.visible = false">
-          确 定
-        </el-button>
-      </span>
+      <div style="margin-bottom: 9px; display: inline-block">
+        <span
+          style="
+            width: 80px;
+            text-align: right;
+            vertical-align: middle;
+            float: left;
+            font-size: 14px;
+            color: #606266;
+            font-weight: 700;
+            line-height: 40px;
+            padding: 0 12px 0 0;
+            box-sizing: border-box;
+            display: inline-block;
+          "
+        >
+          功能类型
+        </span>
+        <el-radio-group
+          v-model="modules.type"
+          :disabled="modules.disabled"
+          size="mini"
+        >
+          <el-radio border label="service" @change="clearfix(modules.type)">
+            服务
+          </el-radio>
+          <el-radio border label="event" @change="clearfix(modules.type)">
+            事件
+          </el-radio>
+        </el-radio-group>
+      </div>
+      <el-form
+        v-show="modules.type == 'service'"
+        ref="service"
+        label-position="right"
+        label-width="80px"
+        :model="modules.service.data"
+        :rules="modules.service.rules"
+        size="mini"
+      >
+        <el-form-item label="功能名称" prop="name">
+          <el-input v-model="modules.service.data.name" />
+        </el-form-item>
+        <el-form-item label="标识符" prop="identifier">
+          <el-input v-model="modules.service.data.identifier" />
+        </el-form-item>
+        <el-form-item label="调用方式" prop="transfer">
+          <el-radio-group v-model="modules.service.data.transfer" size="mini">
+            <el-radio border label="sync">同步</el-radio>
+            <el-radio border label="async">异步</el-radio>
+          </el-radio-group>
+        </el-form-item>
+        <el-form-item label="输入参数" prop="enter">
+          <el-input v-model="modules.service.data.enter" />
+        </el-form-item>
+        <el-form-item label="输出参数" prop="output">
+          <el-input v-model="modules.service.data.output" />
+        </el-form-item>
+        <el-form-item label="描述" prop="describe">
+          <el-input v-model="modules.service.data.describe" type="textarea" />
+        </el-form-item>
+        <el-form-item size="large" style="text-align: center">
+          <el-button
+            size="mini"
+            type="primary"
+            @click.native="submitModules('service', modules.service)"
+          >
+            确认
+          </el-button>
+          <el-button size="mini" @click.native="handleClose">取消</el-button>
+        </el-form-item>
+      </el-form>
+
+      <el-form
+        v-show="modules.type == 'event'"
+        ref="event"
+        label-position="right"
+        label-width="80px"
+        :model="modules.event.data"
+        :rules="modules.event.rules"
+        size="mini"
+      >
+        <el-form-item label="功能名称" prop="name">
+          <el-input v-model="modules.event.data.name" />
+        </el-form-item>
+        <el-form-item label="标识符" prop="identifier">
+          <el-input v-model="modules.event.data.identifier" />
+        </el-form-item>
+        <el-form-item label="事件类型" prop="types">
+          <el-radio-group v-model="modules.event.data.types" size="mini">
+            <el-radio label="info">信息</el-radio>
+            <el-radio label="warning">告警</el-radio>
+            <el-radio label="error">故障</el-radio>
+          </el-radio-group>
+        </el-form-item>
+        <el-form-item label="输出参数" prop="output">
+          <el-input v-model="modules.event.data.output" />
+        </el-form-item>
+        <el-form-item label="描述" prop="describe">
+          <el-input v-model="modules.event.data.describe" type="textarea" />
+        </el-form-item>
+        <el-form-item size="large" style="text-align: center">
+          <el-button
+            size="mini"
+            type="primary"
+            @click.native="submitModules('event', modules.event)"
+          >
+            确认
+          </el-button>
+          <el-button size="mini" @click.native="handleClose">取消</el-button>
+        </el-form-item>
+      </el-form>
     </el-dialog>
     <!--物模型-->
     <el-dialog

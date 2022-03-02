@@ -11,6 +11,7 @@
 * rules ([438c50e](https://github.com/dgiot/dgiot-dashboard/commit/438c50e84368f1a2ea39a86d1e2c3ad8d62a4d92))
 * **src/views/devicecloud/manage/component/profile/profiledescriptions.vue:** monacoEditor getCode ([9b40bde](https://github.com/dgiot/dgiot-dashboard/commit/9b40bdee855ed1b3ea3956e7000f5d94557bf2e4))
 * theme ([9876ee6](https://github.com/dgiot/dgiot-dashboard/commit/9876ee62cd1613ed149a39d0e2d6891b95d95b4f))
+* **topo:** select default value ([e428aff](https://github.com/dgiot/dgiot-dashboard/commit/e428aff5f28a43efc5ac044413886dee5081078d))
 
 
 ### Features
