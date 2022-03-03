@@ -8,14 +8,14 @@ module.exports = {
      */
     {
       path: 'iotapi',
-      target: 'https://dev.iotn2n.com',
+      target: 'https://cad.iotn2n.com',
     },
     /**
      * @description 静态资源目录。开发使用
      */
     {
       path: 'dgiot_dashboard',
-      target: 'https://dev.iotn2n.com',
+      target: 'https://cad.iotn2n.com',
     },
     /**
      * @description amis server 开发使用

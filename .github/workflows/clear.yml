@@ -1,11 +1,13 @@
 name: claer
 on:
+  push:
+    branches: [ check ]
   workflow_dispatch:
 env:
   TZ: Asia/Shanghai
 
 jobs:
-  claer:
+  clear:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout 🚀

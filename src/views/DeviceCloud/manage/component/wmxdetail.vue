@@ -7,6 +7,16 @@
       @fileInfo="fileInfo"
       @files="files"
     />
+
+    <el-dialog append-to-body :visible.sync="createModal.dialog" width="30%">
+      <el-input v-model="createModal.data" :rows="6" type="textarea" />
+      <span slot="footer" class="dialog-footer">
+        <el-button @click.native="createModal.dialog = false">取 消</el-button>
+        <el-button type="primary" @click.native="createModal.dialog = false">
+          确 定
+        </el-button>
+      </span>
+    </el-dialog>
     <el-form
       :key="upKey"
       ref="sizeForm"
@@ -14,7 +24,7 @@
       label-width="150px"
       :model="sizeForm"
       :rules="sizerule"
-      size="mini"
+      size="medium"
     >
       <!-- update 2020 05-27 hughWang -->
       <!-- 功能名称  -->
@@ -831,50 +841,52 @@
                     <i class="el-icon-question" style="float: left" />
                   </el-tooltip>
                   <el-select
-                    v-if="item.allowCreate"
-                    :key="item.title.zh + upKey"
-                    v-model="resource.addchannel[item.showname]"
-                    allow-create
-                    default-first-option
-                    filterable
-                    multiple
-                    placeholder="输入后按回车确定"
-                    style="width: 98%"
-                  >
-                    <el-option
-                      v-for="(item, index) in item.dis"
-                      :key="index"
-                      :label="item"
-                      :value="item"
-                    />
-                  </el-select>
-                  <el-select
                     v-if="item.type == 'enum' || item._types == 'enum'"
-                    :key="item.title.zh + upKey"
                     v-model="resource.addchannel[item.showname]"
                     style="width: 98%"
                   >
                     <el-option
                       v-for="(item1, index1) in item.enum"
-                      :key="index1"
+                      :key="item.enum[index1].value"
                       :label="item.enum[index1].label"
                       :value="item.enum[index1].value"
                     />
                   </el-select>
                   <el-input
-                    v-if="item.type == 'string' && item._types !== 'enum'"
+                    v-else-if="item.allowCreate"
+                    :key="item.title.zh + upKey"
+                    v-model="resource.addchannel[item.showname]"
+                    placeholder="点击编辑按钮后编辑标识"
+                    style="width: 100%"
+                  >
+                    <template slot="append">
+                      <el-button
+                        circle
+                        class="el-icon-edit"
+                        @click.native="
+                          showCreate(resource.addchannel[item.showname])
+                        "
+                      />
+                    </template>
+                  </el-input>
+                  <el-input
+                    v-else-if="
+                      item.type == 'string' &&
+                      item._types !== 'enum' &&
+                      !item.dis
+                    "
                     :key="item.title.zh + upKey"
                     v-model="resource.addchannel[item.showname]"
                     style="width: 98%"
                   />
                   <el-input
-                    v-if="item.type == 'integer'"
+                    v-else-if="item.type == 'integer'"
                     :key="item.title.zh + upKey"
                     v-model.number="resource.addchannel[item.showname]"
                     style="width: 98%"
                   />
                   <el-select
-                    v-if="item.type == 'boolean'"
+                    v-else-if="item.type == 'boolean'"
                     :key="item.title.zh + upKey"
                     v-model="resource.addchannel[item.showname]"
                     class="notauto"
@@ -1215,6 +1227,10 @@
       }
       return {
         upKey: moment.now(),
+        createModal: {
+          dialog: false,
+          data: '',
+        },
         resource: {
           value: '',
           data: [],
@@ -1424,6 +1440,12 @@
     beforeDestroy() {}, //生命周期 - 销毁之前
     activated() {},
     methods: {
+      async showCreate(row) {
+        this.createModal = {
+          dialog: true,
+          data: row,
+        }
+      },
       // orderObject(object) {
       //   var arr = []
       //   for (var key in object) {
