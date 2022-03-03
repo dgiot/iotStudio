@@ -21,6 +21,7 @@ import { returnLogin } from '@/utils/utilwen'
 import profile from '@/views/DeviceCloud/manage/profile'
 import { dgiotlog } from '../../../../utils/dgiotLog'
 import { queryView } from '@/api/View'
+import { delDict } from '../../../../api/Dict'
 var editor
 var editor1
 var editor2
@@ -163,7 +164,7 @@ export default {
             name: '',
             identifier: '',
             types: 'info',
-            output: '',
+            output: [],
             describe: '',
           },
         },
@@ -189,9 +190,9 @@ export default {
           data: {
             name: '',
             identifier: '',
-            enter: '',
+            enter: [],
             transfer: 'sync',
-            output: '',
+            output: [],
             describe: '',
           },
         },
@@ -538,8 +539,8 @@ export default {
         das: [],
       },
       tableData: [],
-      // activeName: 'first',
-      activeName: 'customize',
+      activeName: 'first',
+      // activeName: 'third', //'customize',
       form: {
         Productname: '',
         ProductKey: '',
@@ -716,9 +717,22 @@ export default {
       this.modules.disabled = true
       dgiotlogger.info('editModus', row, this.modules[`${row.type}`])
     },
-    async deleteModus(index, expand, row) {
-      expand.splice(index, 1)
-      await this.saveExpand(this.productObj.thing)
+    deleteModus(index, expand, row) {
+      this.$baseConfirm(
+        this.$translateTitle(
+          'Maintenance.Are you sure you want to delete the current item'
+        ),
+        null,
+        async () => {
+          expand.splice(index, 1)
+          await this.saveExpand(this.productObj.thing)
+          // this.$baseMessage(
+          //   this.$translateTitle('successfully deleted'),
+          //   'success',
+          //   'dgiot-hey-message-success'
+          // )
+        }
+      )
     },
     handleClose() {
       this.modules.type == 'event'

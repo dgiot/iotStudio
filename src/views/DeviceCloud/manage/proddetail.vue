@@ -1522,7 +1522,7 @@
                     ] || '暂无'
                   }}
                 </el-tag>
-                <el-tag v-show="scope.row.type == 'service'" effect="Plain">
+                <el-tag v-show="scope.row.type == 'service'" effect="plain">
                   {{ scope.row.transfer == 'sync' ? '同步' : '异步' }}
                 </el-tag>
               </template>
@@ -2050,10 +2050,44 @@
           </el-radio-group>
         </el-form-item>
         <el-form-item label="输入参数" prop="enter">
-          <el-input v-model="modules.service.data.enter" />
+          <el-select
+            v-model="modules.service.data.enter"
+            multiple
+            placeholder="请选择输出参数"
+            style="width: 100%"
+          >
+            <el-option
+              v-for="item in wmxDataBk"
+              :key="item.name"
+              :label="item.name"
+              :value="item.identifier"
+            >
+              <span style="float: left">{{ item.name }}</span>
+              <span style="float: right; color: #8492a6; font-size: 13px">
+                {{ item.name }}
+              </span>
+            </el-option>
+          </el-select>
         </el-form-item>
         <el-form-item label="输出参数" prop="output">
-          <el-input v-model="modules.service.data.output" />
+          <el-select
+            v-model="modules.service.data.output"
+            multiple
+            placeholder="请选择输出参数"
+            style="width: 100%"
+          >
+            <el-option
+              v-for="item in wmxDataBk"
+              :key="item.name"
+              :label="item.identifier"
+              :value="item.identifier"
+            >
+              <span style="float: left">{{ item.name }}</span>
+              <span style="float: right; color: #8492a6; font-size: 13px">
+                {{ item.identifier }}
+              </span>
+            </el-option>
+          </el-select>
         </el-form-item>
         <el-form-item label="描述" prop="describe">
           <el-input v-model="modules.service.data.describe" type="textarea" />
@@ -2093,7 +2127,24 @@
           </el-radio-group>
         </el-form-item>
         <el-form-item label="输出参数" prop="output">
-          <el-input v-model="modules.event.data.output" />
+          <el-select
+            v-model="modules.event.data.output"
+            multiple
+            placeholder="请选择输出参数"
+            style="width: 100%"
+          >
+            <el-option
+              v-for="item in wmxDataBk"
+              :key="item.name"
+              :label="item.name"
+              :value="item.identifier"
+            >
+              <span style="float: left">{{ item.name }}</span>
+              <span style="float: right; color: #8492a6; font-size: 13px">
+                {{ item.identifier }}
+              </span>
+            </el-option>
+          </el-select>
         </el-form-item>
         <el-form-item label="描述" prop="describe">
           <el-input v-model="modules.event.data.describe" type="textarea" />
