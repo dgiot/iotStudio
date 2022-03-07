@@ -37,6 +37,7 @@ module.exports = {
     '/quick',
     '/lite',
     '/dev',
+    '/features',
   ],
   loadingText: '正在加载中...',
   // token名称
@@ -46,7 +47,15 @@ module.exports = {
   expiresTime: 60 * 1000 * 30,
   storage: 'cookie',
   refreshSession: true,
-  noCookiePages: ['', '/login', '/jwtLogin', '/quick', '/lite', '/dev'],
+  noCookiePages: [
+    '',
+    '/login',
+    '/jwtLogin',
+    '/quick',
+    '/lite',
+    '/dev',
+    '/feature',
+  ],
   localHost: [
     'tcloudbaseapp.com',
     'gitee.io',

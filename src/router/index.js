@@ -62,6 +62,12 @@ export const constantRoutes = [
     component: () => import('@/views/404'),
     hidden: true,
   },
+  {
+    path: '/feature',
+    name: 'feature',
+    component: () => import('@/views/feature/index'),
+    hidden: true,
+  },
 ]
 
 export const asyncRoutes = []

@@ -484,7 +484,7 @@
     put_rule_id,
   } from '@/api/Rules'
   import provider from '@/api/Ace/index'
-  import datalist from './datalist.js'
+  import datalist from '@/views/CloudFunction/engine/datalist.js'
   export default {
     data() {
       return {

@@ -122,9 +122,8 @@
 <script>
   import { getRule, getRuleDetail, put_rule_id, ruleDelete } from '@/api/Rules'
   // import DgiotParser from '@/dgiot/components/DgiotParser'
-
   export default {
-    // components: { DgiotParser },
+    components: {},
     data() {
       return {
         paginations: { layout: 'total, sizes, prev, pager, next, jumper' },
