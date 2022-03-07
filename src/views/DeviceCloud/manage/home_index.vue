@@ -2408,7 +2408,7 @@
         const loading = this.$baseColorfullLoading(3)
         this.tableData = []
         this.queryPayload.excludeKeys =
-          'channel,children,config,thing,decoder,data,basedata,content,detail'
+          'channel,children,config,thing,decoder,data,basedata,content'
         this.queryPayload.include = 'product.name,name'
         this.queryPayload.where = {
           product: { $ne: null },
@@ -2765,17 +2765,17 @@
         this.deviceform = {
           devaddr: row.devaddr,
           name: row.name,
-          assetNum: row.detail.assetNum,
-          devModel: row.detail.devModel,
-          desc: row.detail.desc,
+          assetNum: row.detail.assetNum || '',
+          devModel: row.detail.devModel || '',
+          desc: row.detail.desc || '',
           productid: row.product.objectId,
-          brand: row.detail.brand,
+          brand: row.detail.brand || '',
           productName: row.product.objectId,
           status: row.status,
           isEnable: row.isEnable,
-          videoType: row.detail.videoType,
-          videoSrc: row.detail.videoSrc,
-          address: row.detail.address,
+          videoType: row.detail.videoType || '',
+          videoSrc: row.detail.videoSrc || '',
+          address: row.detail.address || '',
         }
         dgiotlog.log('this.deviceform12131', this.deviceform)
         dgiotlog.log('row.basedata', row.basedata)
