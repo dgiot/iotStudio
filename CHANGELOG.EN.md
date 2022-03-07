@@ -1,9 +1,10 @@
-# 4.5.0 (2022-03-03)
+# [4.5.0](https://github.com/dgiot/dgiot-dashboard/compare/db37de39b3b74b19e0e357084767b2befb99eaf2...v4.5.0) (2022-03-03)
 
 
 ### Bug Fixes
 
 * **cdn:** react ([b21aede](https://github.com/dgiot/dgiot-dashboard/commit/b21aedefe3660292611b101d69cf8ede4c8319d6))
+* createModal ([081b780](https://github.com/dgiot/dgiot-dashboard/commit/081b7805a86d9388b1db38854bba44e794dd6d6c))
 * delete ESBuild ([04ce51e](https://github.com/dgiot/dgiot-dashboard/commit/04ce51e1a34e3ec5f00deaf0717198391d760396))
 * Dict ([36cbad8](https://github.com/dgiot/dgiot-dashboard/commit/36cbad8d0757197ba5982673208317eedfefb540))
 * Fixed the problem that the company name could not be set to take effect ([3411c08](https://github.com/dgiot/dgiot-dashboard/commit/3411c085dc72ae04c6cfce5359134f921707e88a))
@@ -19,6 +20,7 @@
 * .ignore ([fe7b8f4](https://github.com/dgiot/dgiot-dashboard/commit/fe7b8f4d6a2a4f4ce0ffda07f2aba90e62485af2))
 * **asian.vue:** asian ([5f38008](https://github.com/dgiot/dgiot-dashboard/commit/5f3800816e3e02974ea09a8ff4a9783d8ac8d986))
 * **asian:** theme ([2234d5d](https://github.com/dgiot/dgiot-dashboard/commit/2234d5d2d70decfe13339f4517b2b20a1aae9ee4))
+* **baseconfirm:** event && serve ([86c96bc](https://github.com/dgiot/dgiot-dashboard/commit/86c96bc6780ad8289cb986be891834b77215ad45))
 * **build:** eSBuildMinifyPlugin ([4632cf7](https://github.com/dgiot/dgiot-dashboard/commit/4632cf74835d5a5a4b6a6ba7efa7f4e23154ba93))
 * **lowcode:** types add datav ([bf8b026](https://github.com/dgiot/dgiot-dashboard/commit/bf8b026088b80c760a05c1e10360c31deb4493d5))
 * pnpm ([db37de3](https://github.com/dgiot/dgiot-dashboard/commit/db37de39b3b74b19e0e357084767b2befb99eaf2))
