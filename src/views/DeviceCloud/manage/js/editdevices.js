@@ -890,15 +890,20 @@ export default {
         this.childrenForm.device = ''
       })
     },
-    // deviceToDetail(row) {
-    //   console.log('row', row)
-    //   const query = {
-    //     deviceid: row.objectId,
-    //     nodeType: row.nodeType,
-    //     ischildren: 'false',
-    //   }
-    //   this.$router.push({ path: this.$route.path, query })
-    // },
+    deviceToDetail(row) {
+      console.log('row', row)
+      const query = {
+        deviceid: row.objectId,
+        nodeType: row.nodeType,
+        ischildren: 'false',
+      }
+
+      this.$router.push({
+        path: '/roles/editdevices',
+        query: query,
+      })
+      this.activeName = 'first'
+    },
     loadmore() {
       this.dirstart++
       this.checkProduct(this.selectproduct)
@@ -1019,7 +1024,7 @@ export default {
         })
     },
     /* el-popover点击关闭*/
-    makeSure(scope, $index) {
+    makeSure(row, $index) {
       // 可以在这里执行删除数据的回调操作.......删除操作.....
       const objRoute = JSON.parse(JSON.stringify(row.route))
       const routeKey = this.deviceInfo.devaddr
@@ -1035,7 +1040,7 @@ export default {
             type: 'success',
             message: '解除关联成功',
           })
-          scope._self.$refs[`popover-${$index}`].doClose()
+          // row._self.$refs[`popover-${$index}`].doClose()
           this.getDevices()
         }
       })

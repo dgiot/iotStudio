@@ -410,7 +410,7 @@
                 </el-button>
               </el-form-item>
               <el-form-item>
-                <el-button plain type="info">
+                <el-button plain type="info" @click.native="getDevices(0)">
                   {{ $translateTitle('equipment.Refresh') }}
                 </el-button>
                 <!-- 添加子设备按钮  -->
@@ -508,7 +508,7 @@
                   :label="$translateTitle('developer.operation')"
                   align="center"
                 >
-                  <template #default="{ row, $index }">
+                  <template slot-scope="{ row, $index }">
                     <el-link
                       :underline="false"
                       icon="el-icon-view"
