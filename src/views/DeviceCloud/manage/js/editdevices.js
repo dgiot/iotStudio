@@ -904,6 +904,18 @@ export default {
         query: query,
       })
       this.activeName = 'first'
+      this.getDeviceInfo(this.$route.query.deviceid)
+      this.setTreeFlag(false)
+      this.params.style = this.chartType[0].type
+      console.log(' this.params.style', this.params.style)
+      this.subtopic = `thing/${this.$route.query.deviceid}/realtimedata/post` // 设备实时数据topic
+      this.router = this.$dgiotBus.router(location.href + this.$route.fullPath)
+      this.topicKey = this.$dgiotBus.topicKey(this.router, this.subtopic) // dgiot-mqtt topicKey 唯一标识
+      // if (this.$route.query.deviceid) {
+      this.deviceid = this.$route.query.deviceid
+      this.subRealtimedata()
+      this.initChart()
+      window.addEventListener('resize', this.resizeTheChart)
     },
     loadmore() {
       this.dirstart++
