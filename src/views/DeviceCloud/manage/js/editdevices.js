@@ -239,7 +239,7 @@ export default {
         datetimerange: '',
         keys: '*',
         limit: 100,
-        endTime: new Date(),
+        endTime: new Date() * 1000 * 24 * 7,
         startTime: new Date().getTime() - 3600 * 1000 * 24 * 7,
       },
       interval: [
@@ -645,6 +645,7 @@ export default {
       })
     },
     async queryChart() {
+      dgiotlogger.log('queryChart', this.params)
       this.chartData = {
         identifier: [],
         columns: [],
@@ -658,8 +659,8 @@ export default {
         let deviceid = this.$route.query.deviceid
         // let endTime = moment(this.params.datetimerange[1]).valueOf()
         // let startTime = moment(this.params.datetimerange[0]).valueOf()
-        console.log('endTime', endTime)
-        console.log('startTime', startTime)
+        // console.log('endTime', endTime)
+        // console.log('startTime', startTime)
         // const limit = moment(endTime).diff(moment(startTime), 'days')
         const {
           interval,
