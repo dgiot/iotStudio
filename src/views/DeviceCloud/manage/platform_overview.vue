@@ -1309,7 +1309,7 @@
             }
           }
         })
-        this.subtopic = `dashboard/${this.token}/post`
+        this.subtopic = `$dg/dashboard/32511dbfe5/report`
         this.topicKey = this.$dgiotBus.topicKey(this.router, this.subtopic)
         this.$dgiotBus.$emit('MqttSubscribe', {
           router: this.router,
