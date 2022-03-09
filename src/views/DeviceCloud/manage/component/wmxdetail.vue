@@ -181,7 +181,7 @@
                   </el-radio-group>
                 </el-form-item>
               </el-col>
-              <el-col :span="8">
+              <el-col v-if="moduletype == 'properties'" :span="8">
                 <!-- <el-form-item
                   prop="startnumber"
                   label="取值范围(最小值)"
@@ -207,7 +207,7 @@
               "
               :gutter="24"
             >
-              <el-col :span="12">
+              <el-col v-if="moduletype == 'properties'" :span="12">
                 <!-- <el-form-item
                   prop="endnumber"
                   label="取值范围(最大值)"
@@ -224,7 +224,7 @@
                   />
                 </el-form-item>
               </el-col>
-              <el-col :span="6">
+              <el-col v-if="moduletype == 'properties'" :span="6">
                 <el-form-item label="步长" prop="step">
                   <el-input-number
                     v-model="sizeForm.step"
@@ -236,7 +236,7 @@
                   />
                 </el-form-item>
               </el-col>
-              <el-col :span="6">
+              <el-col v-if="moduletype == 'properties'" :span="6">
                 <!-- 单位 -->
                 <el-form-item :label="$translateTitle('product.unit')">
                   <el-select
@@ -513,7 +513,7 @@
               </el-row>
             </div>
           </el-collapse-item>
-          <el-collapse-item name="2">
+          <el-collapse-item v-if="moduletype == 'properties'" name="2">
             <template slot="title">
               {{ $translateTitle('task.dataacquisition') }}
               <el-row style="margin: 0 auto">
@@ -1170,6 +1170,13 @@
   export default {
     name: 'Wmxdetail',
     components: {},
+    props: {
+      moduletype: {
+        type: String,
+        required: false,
+        default: 'properties', // properties // tags // services // events
+      },
+    },
     data() {
       let identifier = /^[a-z][a-z0-9_]*$/
       let isidentifier = (rule, value, callback) => {
@@ -2277,6 +2284,12 @@
             Object.assign(obj, {
               dataSource: this.resource.addchannel,
             })
+            //  物模型类型属性
+            // properties  tags  services  events
+            // 属性 事件 服务 标签
+            obj.moduleType = this.moduletype
+            // 物模型 创建、更新时间戳(排序用)
+            obj.updateAt = moment(new Date()).format('x')
             // 删除掉icon 属性
             delete obj.dataForm.ico
             dgiotlog.log('submitForm obj', obj)

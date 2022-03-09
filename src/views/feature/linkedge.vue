@@ -4,10 +4,10 @@
       <el-card class="box-card">
         <el-form
           ref="formInline"
-          label-width="80px"
+          label-width="px"
           :model="formInline"
           :rules="formlinerule"
-          size="medium"
+          size="mini"
         >
           <div class="form-block__title">
             {{ $translateTitle('rule.condtion') }}
@@ -17,9 +17,9 @@
           </div>
           <el-row :gutter="20">
             <el-col :span="row1">
-              <el-form-item label="触发器">
-                <el-row :gutter="24">
-                  <el-col :span="4">
+              <el-row :gutter="24">
+                <el-col :span="4">
+                  <el-form-item label="触发器" prop="trigger">
                     <el-select
                       v-model="linkedge.form.trigger"
                       placeholder="请选择触发器类型"
@@ -33,17 +33,19 @@
                         :value="item.label"
                       />
                     </el-select>
-                  </el-col>
-                  <el-col
-                    v-if="linkedge.form.trigger == 'device'"
-                    v-loading="linkedge.trigger[0].loading"
-                    element-loading-background="rgba(0, 0, 0, 0.8)"
-                    element-loading-spinner="el-icon-loading"
-                    element-loading-text="查询产品列表"
-                    :span="4"
-                  >
+                  </el-form-item>
+                </el-col>
+                <el-col
+                  v-if="linkedge.form.trigger == 'device'"
+                  v-loading="linkedge.trigger[0].loading"
+                  element-loading-background="rgba(0, 0, 0, 0.8)"
+                  element-loading-spinner="el-icon-loading"
+                  element-loading-text="查询产品列表"
+                  :span="4"
+                >
+                  <el-form-item label="产品信息" prop="form.productid">
                     <el-select
-                      v-model="linkedge.form.product"
+                      v-model="linkedge.form.productid"
                       placeholder="请选择产品"
                       @change="tiggerProduct"
                     >
@@ -54,39 +56,44 @@
                         :value="item.objectId"
                       />
                     </el-select>
-                  </el-col>
-                  <el-col
-                    v-show="linkedge.form.product"
-                    v-loading="linkedge.trigger[0].device"
-                    element-loading-background="rgba(0, 0, 0, 0.8)"
-                    element-loading-spinner="el-icon-loading"
-                    element-loading-text="查询设备列表"
-                    :span="4"
-                  >
+                  </el-form-item>
+                </el-col>
+                <el-col
+                  v-show="linkedge.form.productid"
+                  v-loading="linkedge.trigger[0].devaddr"
+                  element-loading-background="rgba(0, 0, 0, 0.8)"
+                  element-loading-spinner="el-icon-loading"
+                  element-loading-text="查询设备列表"
+                  :span="4"
+                >
+                  <el-form-item label="触发器" prop="trigger">
                     <el-select
-                      v-model="linkedge.form.device"
+                      v-model="linkedge.form.devaddr"
                       placeholder="请选择设备"
                       @change="tiggerDevice"
                     >
                       <el-option
                         v-for="item in linkedge.device"
-                        :key="item.objectId"
+                        :key="item.devaddr"
                         :label="item.name"
-                        :value="item.objectId"
+                        :value="item.devaddr"
                       />
                     </el-select>
-                  </el-col>
-                  <el-col
-                    v-if="linkedge.form.device"
-                    v-loading="linkedge.trigger[0].device"
-                    element-loading-background="rgba(0, 0, 0, 0.8)"
-                    element-loading-spinner="el-icon-loading"
-                    element-loading-text="查询设备列表"
-                    :span="4"
-                  >
+                  </el-form-item>
+                </el-col>
+                <el-col
+                  v-if="linkedge.form.devaddr"
+                  v-loading="linkedge.trigger[0].device"
+                  element-loading-background="rgba(0, 0, 0, 0.8)"
+                  element-loading-spinner="el-icon-loading"
+                  element-loading-text="查询设备列表"
+                  :span="4"
+                >
+                  <el-form-item label="触发器" prop="trigger">
                     <el-select
                       v-model="linkedge.form.method"
                       placeholder="请选择触发方式"
+                      @change="setDefaultWhere"
                     >
                       <el-option
                         v-for="item in linkedge.method"
@@ -95,84 +102,122 @@
                         :value="item.value"
                       />
                     </el-select>
-                  </el-col>
-                  <el-col v-show="linkedge.form.trigger == 'cron'" :span="4">
+                  </el-form-item>
+                </el-col>
+                <el-col v-show="linkedge.form.trigger == 'cron'" :span="4">
+                  <el-form-item label="触发器" prop="trigger">
                     <el-input
                       v-model="linkedge.form.cron"
                       placeholder="请输入Cron表达式"
                     />
-                  </el-col>
-                </el-row>
-              </el-form-item>
-              <el-form-item label="执行条件">
+                  </el-form-item>
+                </el-col>
+              </el-row>
+              <el-form-item
+                v-for="(domain, index) in linkedge.form.where"
+                v-show="linkedge.form.method.length"
+                :key="domain.key"
+                :label="'执行条件' + Number(index + 1)"
+                prop="trigger"
+              >
                 <el-row :gutter="24">
                   <el-col :span="4">
-                    <el-select v-model="linkedge.value" placeholder="请选择">
+                    <el-select
+                      v-if="linkedge.form.method == 'property'"
+                      v-model="linkedge.form.where[index].identifier"
+                      placeholder="请选择执行条件"
+                    >
                       <el-option
-                        v-for="item in linkedge.options"
-                        :key="item.value"
-                        :disabled="item.disabled"
+                        v-for="item in linkedge.property"
+                        :key="item.lable"
+                        :label="item.lable"
+                        :value="item.value"
+                      />
+                    </el-select>
+                    <el-select
+                      v-if="linkedge.form.method == 'mqttEvent'"
+                      v-model="linkedge.form.where[index].Event"
+                      placeholder="mqtt事件"
+                    >
+                      <el-option
+                        v-for="item in linkedge.mqttEvent"
+                        :key="item.label"
+                        :label="item.label"
+                        :value="item.value"
+                      />
+                    </el-select>
+                    <el-select
+                      v-if="linkedge.form.method == 'mqttConfig'"
+                      :key="linkedge.form.method"
+                      v-model="linkedge.form.where[index].config"
+                      placeholder="mqtt属性"
+                    >
+                      <el-option
+                        v-for="item in linkedge.mqttConfig"
+                        :key="item.label"
                         :label="item.label"
                         :value="item.value"
                       />
                     </el-select>
                   </el-col>
+
                   <el-col :span="4">
-                    <el-select v-model="linkedge.value" placeholder="请选择">
+                    <el-select
+                      v-model="linkedge.form.where[index].operator"
+                      placeholder="请选择比较条件"
+                    >
                       <el-option
-                        v-for="item in linkedge.options"
-                        :key="item.value"
-                        :disabled="item.disabled"
-                        :label="item.label"
-                        :value="item.value"
+                        v-for="item in linkedge.erlOperator"
+                        :key="item"
+                        :label="item"
+                        :value="item"
                       />
                     </el-select>
                   </el-col>
                   <el-col :span="4">
-                    <el-select v-model="linkedge.value" placeholder="请选择">
-                      <el-option
-                        v-for="item in linkedge.options"
-                        :key="item.value"
-                        :disabled="item.disabled"
-                        :label="item.label"
-                        :value="item.value"
-                      />
-                    </el-select>
+                    <el-input
+                      v-model="linkedge.form.where[index].value"
+                      placeholder="请输入比较参数"
+                    />
                   </el-col>
-                  <el-col :span="4">
-                    <el-select v-model="linkedge.value" placeholder="请选择">
-                      <el-option
-                        v-for="item in linkedge.options"
-                        :key="item.value"
-                        :disabled="item.disabled"
-                        :label="item.label"
-                        :value="item.value"
-                      />
-                    </el-select>
+                  <el-col v-show="index === 0" :span="4">
+                    <el-button type="success" @click.prevent="addWhere">
+                      新增
+                    </el-button>
                   </el-col>
-                  <el-col :span="4">
-                    <el-select v-model="linkedge.value" placeholder="请选择">
-                      <el-option
-                        v-for="item in linkedge.options"
-                        :key="item.value"
-                        :disabled="item.disabled"
-                        :label="item.label"
-                        :value="item.value"
-                      />
-                    </el-select>
+                  <el-col v-show="index !== 0" :span="4">
+                    <el-button
+                      type="warning"
+                      @click.prevent="removeDomain(domain)"
+                    >
+                      删除
+                    </el-button>
                   </el-col>
                 </el-row>
               </el-form-item>
-              <el-form-item label="执行动作">
-                <el-select v-model="linkedge.value" placeholder="请选择">
+              <el-form-item
+                v-show="linkedge.form.method.length"
+                label="执行动作"
+                prop="trigger"
+              >
+                <el-select
+                  v-model="linkedge.form.action"
+                  placeholder="请选择执行动作"
+                  style="width: 60%"
+                >
                   <el-option
-                    v-for="item in linkedge.options"
+                    v-for="item in linkedge.action"
                     :key="item.value"
-                    :disabled="item.disabled"
                     :label="item.label"
                     :value="item.value"
                   />
                 </el-select>
+                <el-button
+                  type="success"
+                  @click.native="generatorSql(linkedge.form)"
+                >
+                  生成sql
+                </el-button>
               </el-form-item>
               <el-form-item
                 :label="$translateTitle('rule.RuleSQL')"
@@ -605,6 +650,7 @@
     postResource,
     put_rule_id,
   } from '@/api/Rules'
+  import { sqlTpl } from '@/api/Rules'
   import provider from '@/api/Ace/index'
   import datalist from '@/views/CloudFunction/engine/datalist.js'
   import { queryProduct } from '@/api/Product'
@@ -613,6 +659,31 @@
     data() {
       return {
         linkedge: {
+          mqttEvent: [
+            { label: '消息投递', value: 'message_delivered' },
+            { label: '消息确认', value: 'message_acked' },
+            { label: '消息丢弃', value: 'message_dropped' },
+            { label: '连接完成', value: 'client_connected' },
+            { label: '连接断开', value: 'client_disconnected' },
+            { label: '订阅', value: 'session_subscribed' },
+            { label: '取消订阅', value: 'session_unsubscribed' },
+          ],
+          mqttConfig: [
+            { label: '消息目的 Client ID', value: 'clientid' },
+            { label: '终端连接完成时间 (s)', value: 'connected_at' },
+            { label: 'MQTT 消息 ID', value: 'id' },
+            { label: '用户名', value: 'username' },
+            { label: '客户端地址', value: 'peerhost' },
+            { label: 'MQTT topic', value: 'topic' },
+            { label: 'MQTT qos', value: 'qos' },
+            { label: 'MQTT flags', value: 'flags' },
+            { label: '事件触发时间 (ms)', value: 'timestamp' },
+            {
+              label: 'PUBLISH 消息到达 Broker 的时间 (ms)',
+              value: 'publish_received_at',
+            },
+            { label: '事件触发节点', value: 'node' },
+          ],
           trigger: [
             {
               label: 'device',
@@ -621,39 +692,71 @@
               loading: false,
               device: false,
             },
-            {
-              label: 'cron',
-              value: '定时触发',
-              children: [],
-              disabled: true,
-            },
           ], // 触发器下拉
           device: [
             {
               name: '全部设备',
-              objectId: '0',
+              devaddr: '#',
             },
           ], // 设备列表
+          sqlOperator: ['>', '>=', '<', '<=', '==', '!=', 'in'], // 基础sql运算符 https://www.cnblogs.com/nwgdk/p/9772312.html
+          erlOperator: ['>', '>=', '<', '<=', '==', '=:=', '/=', '=/='], //ERLANG比较运算符  https://blog.csdn.net/u010164190/article/details/51005282
           value: '',
           form: {
-            trigger: '', // 触发规则
+            productid: '', // 产品id
+            devaddr: '', // 设备地址
+            select: {
+              mqttConfig: [],
+              thingConfig: [],
+            },
+
+            trigger: 'device', // 触发规则
             cron: '', // cron的值
-            product: '', // 选择的产品
-            device: '', // 选择的设备
-            method: '', // 触发方式
+            method: 'property', // 触发方式
+            from: {},
+            where: [
+              {
+                identifier: '', // 物模型
+                operator: '', // 条件判断
+                value: '', //比较参数
+                config: 'clientid',
+                event: 'message_delivered',
+              },
+            ],
+            action: [], //执行动作
           }, // 提交到数据库中你的值
+          action: [
+            {
+              label: '设备输出',
+              value: 'device output',
+            },
+            {
+              label: '规则输出',
+              value: 'rule output',
+            },
+            {
+              label: '函数输出',
+              value: 'function output',
+            },
+            {
+              label: '告警输出',
+              value: 'Alarm output',
+            },
+          ],
           method: [
             {
               value: 'property',
-              label: '属性触发',
+              label: '物模型属性触发',
             },
             {
-              value: 'happening',
-              label: '事件触发',
+              value: 'mqttConfig',
+              label: 'mqtt属性触发',
+              disable: true,
             },
             {
-              value: 'offline',
-              label: '上下线触发',
+              value: 'mqttEvent',
+              label: 'mqtt事件触发',
+              disable: true,
             },
           ], // 触发方式
           property: [], // 属性触发的下拉
@@ -726,6 +829,27 @@
           payload: '',
           // ruleId: 'rule:929035',
           result: '',
+          productid: '', // 产品id
+          devaddr: '', // 设备地址
+          select: {
+            mqttConfig: [],
+            thingConfig: [],
+          },
+
+          trigger: 'device', // 触发规则
+          cron: '', // cron的值
+          method: 'property', // 触发方式
+          from: {},
+          where: [
+            {
+              identifier: '', // 物模型
+              operator: '', // 条件判断
+              value: '', //比较参数
+              config: 'clientid',
+              event: 'message_delivered',
+            },
+          ],
+          action: [], //执行动作
         },
         formlinerule: {
           region: [
@@ -733,6 +857,55 @@
               required: true,
               message: '请选择触发事件',
               trigger: 'change',
+            },
+          ],
+          'form.productid': [
+            {
+              required: true,
+              message: '请选择产品',
+              trigger: 'change',
+            },
+          ],
+          enginesql: [
+            {
+              required: true,
+              message: '请填写规则SQL',
+              trigger: 'blur',
+            },
+          ],
+          trigger: [
+            {
+              required: true,
+              message: '请选择触发规则',
+              trigger: 'change',
+            },
+          ],
+          method: [
+            {
+              required: true,
+              message: '请选择触发方式',
+              trigger: 'change',
+            },
+          ],
+          'where.identifier': [
+            {
+              required: true,
+              message: '请选择物模型',
+              trigger: 'change',
+            },
+          ],
+          'where.operator': [
+            {
+              required: true,
+              message: '请选择物模型执行条件',
+              trigger: 'change',
+            },
+          ],
+          'where.value': [
+            {
+              required: true,
+              message: '请输入比较参数',
+              trigger: 'blue',
             },
           ],
           enginesql: [
@@ -796,6 +969,7 @@
         )
       }
       this.$nextTick(() => {
+        this.tiggerAction('device')
         editor2 = ace.edit('editor2')
         editor1 = ace.edit('editor1')
         if (this.ruleId) {
@@ -826,7 +1000,107 @@
       })
     },
     methods: {
-      /**
+      setDefaultWhere() {
+        this.linkedge.form.where = [
+          {
+            identifier: '', // 物模型
+            operator: '', // 条件判断
+            value: '', //比较参数
+            config: 'clientid',
+            event: 'message_delivered',
+          },
+        ]
+      },
+
+      async addWhere() {
+        await this.linkedge.form.where.push({
+          identifier: '', // 物模型
+          operator: '', // 条件判断
+          value: '', //比较参数
+          config: 'clientid',
+          event: 'message_delivered',
+        })
+        // 添加执行条件的限制
+        // if (this.linkedge.form.where.length > this.linkedge.property.length)
+      },
+      removeDomain(item) {
+        var index = this.linkedge.form.where.indexOf(item)
+        if (index !== -1) {
+          this.linkedge.form.where.splice(index, 1)
+        }
+      },
+      generatorSql(form) {
+        this.formInline.sqltest = true
+        this.getEditor2(true)
+        const setValue =
+          form.devaddr == '#'
+            ? 'SELECT\n' +
+              '      payload.msg as msg,\n' +
+              '      clientid,\n' +
+              "      'productid' as productid\n" +
+              '    FROM\n' +
+              `      "thing/${form.productid}/#"\n` +
+              '    WHERE\n' +
+              "      msg = 'hello'"
+            : 'SELECT\n' +
+              '      payload.msg as msg,\n' +
+              '      clientid,\n' +
+              "      'productid' as productid\n" +
+              '    FROM\n' +
+              `      "thing/${form.productid}/${form.devaddr}"\n` +
+              '    WHERE\n' +
+              "      msg = 'hello'"
+        console.log(form)
+        // 判断是否校验成功
+        switch (form.method) {
+          case 'device':
+            form.select.payload = form.where.map((item) => {
+              return item.identifier
+            })
+            break
+          case 'property':
+            form.select.payload = form.where.map((item) => {
+              return item.identifier
+            })
+            break
+          case 'mqttConfig':
+            this.linkedge.form.select.mqttConfig = form.where.map((item) => {
+              return item.config
+            })
+            break
+          case 'mqttEvent':
+            form.select.thingConfig = form.where.map((item) => {
+              return item.event
+            })
+            alert('mqtt')
+            break
+        }
+        this.$refs.formInline.validate(async (valid) => {
+          if (valid) {
+            try {
+              const loading = this.$baseLoading(1)
+              dgiotlogger.log('处理后的form表单', form)
+              dgiotlogger.log('处理后的form表单select参数', form.select)
+              const { template = setValue } = await sqlTpl(form)
+              this.formInline.enginesql = template
+              await editor1.setValue(template)
+              dgiotlogger.log(template)
+              loading.close()
+            } catch (error) {
+              console.log(error)
+              this.$baseMessage(
+                this.$translateTitle('alert.Data request error') + `${error}`,
+                'error',
+                'dgiot-hey-message-error'
+              )
+            }
+          } else {
+            console.log('error submit!!')
+            return false
+          }
+        })
+      },
+      /*
        * @dgiot-fe
        * 根据下来触发器查询产品
        *
@@ -856,16 +1130,40 @@
        * */
       async tiggerProduct(v) {
         this.linkedge.property = []
+        this.linkedge.form.identifier = ''
+        this.linkedge.form.devaddr = ''
+        this.linkedge.form.where = [
+          {
+            identifier: '', // 物模型
+            operator: '', // 条件判断
+            value: '', //比较参数
+          },
+        ]
+        var property = []
         // 选择产品时的物模型
         this.linkedge.trigger[0].children.forEach((product) => {
           if (product.objectId == v) {
             console.log(product)
             // return (product.objectId = v)
-            this.linkedge.property = product?.thing?.properties || []
+            property = product?.thing?.properties || []
           }
         })
-        this.linkedge.property.unshift({ value: '全部属性', lable: 'all' })
-        dgiotlogger.log(this.linkedge.property)
+        // this.linkedge.property.unshift({ value: '全部属性', lable: 'all' })
+        // 循环为key value 的形式
+        dgiotlogger.log(property, '919 line')
+        // this.linkedge.property.forEach((e) => {
+        //   dgiotlogger.log(e, 'line 920 property')
+        // })
+        for (var lable in property) {
+          dgiotlogger.log(lable, property[lable], 'line 923 property')
+          // 将对象形式的物模型转换为数组形式
+          this.linkedge.property.push({
+            lable: property[lable].name,
+            value: property[lable].identifier,
+            data: property[lable],
+          })
+        }
+        dgiotlogger.log(this.linkedge.property, 'line 928 property')
         this.linkedge.trigger[0].device = true
         await console.log(v)
         const queryPayload = {
@@ -881,7 +1179,7 @@
         this.linkedge.device = results
         this.linkedge.device.unshift({
           name: '全部设备',
-          objectId: '0',
+          devaddr: '#',
         })
         this.linkedge.trigger[0].device = false
         // if (v === 'device') await this.getProduct()
@@ -898,25 +1196,25 @@
       // 设置规则sql
       async tiggerDevice(v) {
         dgiotlogger.log(v)
-        const setValue =
-          v == '0'
-            ? 'SELECT\n' +
-              '      payload.msg as msg,\n' +
-              '      clientid,\n' +
-              "      'productid' as productid\n" +
-              '    FROM\n' +
-              `      "thing/${this.linkedge.form.product}/#"\n` +
-              '    WHERE\n' +
-              "      msg = 'hello'"
-            : 'SELECT\n' +
-              '      payload.msg as msg,\n' +
-              '      clientid,\n' +
-              "      'productid' as productid\n" +
-              '    FROM\n' +
-              `      "thing/${this.linkedge.form.product}/${v}"\n` +
-              '    WHERE\n' +
-              "      msg = 'hello'"
-        await editor1.setValue(setValue)
+        // const setValue =
+        //   v == '#'
+        //     ? 'SELECT\n' +
+        //       '      payload.msg as msg,\n' +
+        //       '      clientid,\n' +
+        //       "      'productid' as productid\n" +
+        //       '    FROM\n' +
+        //       `      "thing/${this.linkedge.form.productid}/#"\n` +
+        //       '    WHERE\n' +
+        //       "      msg = 'hello'"
+        //     : 'SELECT\n' +
+        //       '      payload.msg as msg,\n' +
+        //       '      clientid,\n' +
+        //       "      'productid' as productid\n" +
+        //       '    FROM\n' +
+        //       `      "thing/${this.linkedge.form.productid}/${v}"\n` +
+        //       '    WHERE\n' +
+        //       "      msg = 'hello'"
+        // await editor1.setValue(setValue)
         // editor2.setValue(setValue)
       },
       // 布局调整

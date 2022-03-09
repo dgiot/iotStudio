@@ -239,7 +239,7 @@ export default {
         datetimerange: '',
         keys: '*',
         limit: 100,
-        endTime: new Date() * 1000 * 24 * 7,
+        endTime: new Date().getTime(),
         startTime: new Date().getTime() - 3600 * 1000 * 24 * 7,
       },
       interval: [
@@ -490,6 +490,8 @@ export default {
     },
     ...mapActions({
       setTreeFlag: 'settings/setTreeFlag',
+      delVisitedRoute: 'tabs/delVisitedRoute',
+      addVisitedRoute: 'tabs/addVisitedRoute',
     }),
     Unbscribe() {
       const subtopic = 'logger_trace/trace/' + this.deviceInfo.objectId + '/#'
@@ -891,20 +893,17 @@ export default {
         this.childrenForm.device = ''
       })
     },
-    deviceToDetail(row) {
+    async deviceToDetail(row) {
       console.log('row', row)
       const query = {
         deviceid: row.objectId,
         nodeType: row.nodeType,
         ischildren: 'false',
       }
-
-      this.$router.push({
-        path: '/roles/editdevices',
-        query: query,
-      })
+      await this.delVisitedRoute(this.$route.path)
       this.activeName = 'first'
-      this.getDeviceInfo(this.$route.query.deviceid)
+      this.$router.push({ path: this.$route.path, query })
+      this.getDeviceInfo(deviceid)
       this.setTreeFlag(false)
       this.params.style = this.chartType[0].type
       console.log(' this.params.style', this.params.style)
@@ -912,7 +911,7 @@ export default {
       this.router = this.$dgiotBus.router(location.href + this.$route.fullPath)
       this.topicKey = this.$dgiotBus.topicKey(this.router, this.subtopic) // dgiot-mqtt topicKey 唯一标识
       // if (this.$route.query.deviceid) {
-      this.deviceid = this.$route.query.deviceid
+      this.deviceid = deviceid
       this.subRealtimedata()
       this.initChart()
       window.addEventListener('resize', this.resizeTheChart)

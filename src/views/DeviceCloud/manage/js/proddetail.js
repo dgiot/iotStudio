@@ -1,6 +1,6 @@
 /* eslint-disable */
-import { mapGetters, mapMutations } from 'vuex'
-import { getDeviceCountByProduct } from '@/api/Device/index'
+import {mapGetters, mapMutations} from 'vuex'
+import {getDeviceCountByProduct} from '@/api/Device/index'
 import {
   deleteThing,
   postThing,
@@ -8,20 +8,21 @@ import {
   putProduct,
   getProduct,
 } from '@/api/Product/index'
-import { downBinary } from '@/api/File/index'
-import { getAllunit, getDictCount } from '@/api/Dict/index'
-import { getChannelCountByProduct, saveChanne } from '@/api/Channel/index'
-import { getRule } from '@/api/Rules'
-import { postProductTemplet } from '@/api/ProductTemplet'
-import { Compile, subupadte } from '@/api/System/index'
-import { setTimeout } from 'timers'
-import { Websocket } from '@/utils/webscroket/index'
+import {downBinary} from '@/api/File/index'
+import {getAllunit, getDictCount} from '@/api/Dict/index'
+import {getChannelCountByProduct, saveChanne} from '@/api/Channel/index'
+import {getRule} from '@/api/Rules'
+import {postProductTemplet} from '@/api/ProductTemplet'
+import {Compile, subupadte} from '@/api/System/index'
+import {setTimeout} from 'timers'
+import {Websocket} from '@/utils/webscroket/index'
 import wmxdetail from '@/views/DeviceCloud/manage/component/wmxdetail'
-import { returnLogin } from '@/utils/utilwen'
+import {returnLogin} from '@/utils/utilwen'
 import profile from '@/views/DeviceCloud/manage/profile'
-import { dgiotlog } from '../../../../utils/dgiotLog'
-import { queryView } from '@/api/View'
-import { delDict } from '../../../../api/Dict'
+import {dgiotlog} from '../../../../utils/dgiotLog'
+import {queryView} from '@/api/View'
+import {delDict} from '../../../../api/Dict'
+
 var editor
 var editor1
 var editor2
@@ -137,14 +138,21 @@ export default {
       }
     }
     return {
+      tabsChild: 'properties',
       modules: {
-        type: 'event',
+        data: {
+          properties: {},
+          events: [],
+          services: [],
+          tags: [],
+        },
+        type: 'events',
         disabled: false,
         visible: false,
-        event: {
+        events: {
           rules: {
             name: [
-              { required: true, message: '请输入功能名称', trigger: 'blur' },
+              {required: true, message: '请输入功能名称', trigger: 'blur'},
               {
                 min: 1,
                 max: 30,
@@ -153,10 +161,10 @@ export default {
               },
             ],
             identifier: [
-              { required: true, message: '请输入标识符', trigger: 'blur' },
+              {required: true, message: '请输入标识符', trigger: 'blur'},
             ],
             types: [
-              { required: true, message: '请选择调用方式', trigger: 'change' },
+              {required: true, message: '请选择调用方式', trigger: 'change'},
             ],
           },
           visible: false,
@@ -168,10 +176,10 @@ export default {
             describe: '',
           },
         },
-        service: {
+        services: {
           rules: {
             name: [
-              { required: true, message: '请输入功能名称', trigger: 'blur' },
+              {required: true, message: '请输入功能名称', trigger: 'blur'},
               {
                 min: 1,
                 max: 40,
@@ -180,10 +188,10 @@ export default {
               },
             ],
             identifier: [
-              { required: true, message: '请输入标识符', trigger: 'blur' },
+              {required: true, message: '请输入标识符', trigger: 'blur'},
             ],
             transfer: [
-              { required: true, message: '请选择调用方式', trigger: 'change' },
+              {required: true, message: '请选择调用方式', trigger: 'change'},
             ],
           },
           visible: false,
@@ -197,20 +205,23 @@ export default {
           },
         },
       },
+      moduletype: 'tags',
       amisproductInfo: [],
       upKey: moment.now(),
       codeFlag: false,
       productInfo: {
-        decoder: { code: '' },
-        thing: { properties: [] },
+        decoder: {code: ''},
+        thing: {properties: [], events: [], services: [], tags: []},
         config: {
           parser: [],
           profile: [],
-          basedate: { params: [] },
+          basedate: {params: []},
         },
       },
-      productObj: { thing: { properties: [], expand: [] } },
-      FromMachine: [{ name: 'ALL' }],
+      productObj: {
+        thing: {properties: [], events: [], services: [], tags: []},
+      },
+      FromMachine: [{name: 'ALL'}],
       machineForm: {},
       machine: false,
       devicetype: '',
@@ -539,8 +550,8 @@ export default {
         das: [],
       },
       tableData: [],
-      activeName: 'first',
-      // activeName: 'third', //'customize',
+      // activeName: 'first',
+      activeName: 'third', //'customize',
       form: {
         Productname: '',
         ProductKey: '',
@@ -596,6 +607,12 @@ export default {
       producttotal: 0,
       wmxstart: 1,
       wmxPageSize: 10,
+      eventsStart: 1,
+      eventsPageSize: 10,
+      servicesStart: 1,
+      servicesPageSize: 10,
+      tagsStart: 1,
+      tagsPageSize: 10,
       wmxtotal: 20,
       wmxData: [],
       wmxDataBk: [],
@@ -704,11 +721,11 @@ export default {
   methods: {
     clearfix(type) {
       this.$refs[type].clearValidate()
-      type == 'service'
-        ? this.$refs.service.resetFields()
-        : this.$refs.event.resetFields()
-      this.modules.event.data.types = 'info'
-      this.modules.service.data.transfer = 'sync'
+      type == 'services'
+        ? this.$refs.services.resetFields()
+        : this.$refs.events.resetFields()
+      this.modules.events.data.types = 'info'
+      this.modules.services.data.transfer = 'sync'
     },
     editModus(row) {
       this.modules[`${row.type}`].data = row
@@ -735,14 +752,15 @@ export default {
       )
     },
     handleClose() {
-      this.modules.type == 'event'
-        ? this.$refs.event.clearValidate() && this.$refs.event.resetFields()
+      this.modules.type == 'events'
+        ? this.$refs.events.clearValidate() && this.$refs.events.resetFields()
         : ''
-      this.modules.type == 'service'
-        ? this.$refs.service.clearValidate() && this.$refs.service.resetFields()
+      this.modules.type == 'services'
+        ? this.$refs.services.clearValidate() &&
+        this.$refs.services.resetFields()
         : ''
-      this.modules.event.data.types = 'info'
-      this.modules.service.data.transfer = 'sync'
+      this.modules.events.data.types = 'info'
+      this.modules.services.data.transfer = 'sync'
       this.modules.visible = false
       if (this.modules.disabled) this.saveExpand(this.productObj.thing)
     },
@@ -765,13 +783,16 @@ export default {
       }
     },
     async queryProductInfo(productId) {
-      this.productObj = _.merge(await getProduct(productId), {
-        thing: { properties: [], expand: [] },
-      })
+      const {
+        thing = {properties: [], events: [], services: [], tags: []},
+      } = await getProduct(productId)
+      this.productObj = thing
+      this.modules.data = thing
+      this.productdetail.thing = thing
     },
     async submitModules(type, form) {
-      const { thing } = _.merge(this.productObj, {
-        thing: { properties: [], expand: [] },
+      const {thing} = _.merge(this.productObj, {
+        thing: {properties: [], events: [], services: [], tags: []},
       })
       dgiotlogger.log(this.productObj, thing)
       this.$refs[type].validate(async (valid) => {
@@ -832,7 +853,7 @@ export default {
     ...mapMutations({
       setSizeForm: 'konva/setSizeForm',
     }),
-    tableRowClassName({ row, rowIndex }) {
+    tableRowClassName({row, rowIndex}) {
       if (rowIndex === 1) {
         return 'warning-row'
       } else if (rowIndex === 3) {
@@ -925,6 +946,33 @@ export default {
         return 'red_active'
       }
     },
+    async handleChildClick(e) {
+      await this.queryProductInfo(this.$route.query.id)
+      const {
+        properties = [],
+        events = [],
+        services = [],
+        tags = [],
+      } = this.productObj.thing
+      console.log(e.name)
+      switch (e.name) {
+        case 'properties':
+          this.modules.data.properties = properties
+          break
+        case 'events':
+          this.modules.data.events = events
+          break
+        case 'services':
+          this.modules.data.services = services
+          break
+        case 'tags':
+          this.modules.data.tags = tags
+          break
+        default:
+          break
+      }
+      dgiotlogger.info(this.modules.data)
+    },
     handleClick(val) {
       if (val.name == 'fourth') {
         // this.$router.push({
@@ -950,7 +998,7 @@ export default {
     },
     async getAllunit() {
       this.allunit = []
-      const { results } = await getAllunit('unit', 200)
+      const {results} = await getAllunit('unit', 200)
       this.allunit = results.concat([])
       this.allunit.unshift({
         data: {
@@ -1243,7 +1291,7 @@ export default {
       this.allchannelData = []
       this.channeltype = 1
       this.innerVisible = true
-      const type = { $in: ['1', '3'] }
+      const type = {$in: ['1', '3']}
       const product = {
         $ne: {
           __type: 'Pointer',
@@ -1267,7 +1315,7 @@ export default {
     },
     // 物接入
     getProductChannel() {
-      const type = { $in: ['1', '3'] }
+      const type = {$in: ['1', '3']}
       const product = {
         __type: 'Pointer',
         className: 'Product',
@@ -1299,7 +1347,7 @@ export default {
       this.allchannelData = []
       this.channeltype = 0
       this.innerVisible = true
-      const type = { $in: ['2'] }
+      const type = {$in: ['2']}
       const product = {
         $ne: {
           __type: 'Pointer',
@@ -1324,7 +1372,7 @@ export default {
 
     // 物存储
     getResourceChannel() {
-      const type = { $in: ['2'] }
+      const type = {$in: ['2']}
       const product = {
         __type: 'Pointer',
         className: 'Product',
@@ -1728,22 +1776,24 @@ export default {
         })
       }
       this.wmxdialogVisible = false
+      this.queryProductInfo(this.$route.query.id)
     },
-    createProperty(type) {
+    createThing(type) {
       this.modules.disabled = false
+      this.moduletype = type
+      this.setSizeForm(this.getFormOrginalData())
+      this.wmxdialogVisible = true
+      this.wmxSituation = '新增'
       switch (type) {
-        case 'attribute':
-          this.setSizeForm(this.getFormOrginalData())
-          this.wmxdialogVisible = true
-          this.wmxSituation = '新增'
+        case 'properties':
           break
-        case 'service':
-          this.modules.visible = true
-          this.modules.type = type
+        case 'services':
           break
-        case 'event':
-          this.modules.visible = true
-          this.modules.type = type
+        case 'events':
+          break
+        case 'tags':
+          // this.modules.visible = true
+          // this.modules.type = type
           break
       }
       this.$nextTick(() => {
@@ -1752,8 +1802,10 @@ export default {
       })
     },
     // 物模型修改submitForm
-    async wmxDataFill(rowData, index) {
+    async wmxDataFill(rowData, index, moduletype) {
+      this.moduletype = moduletype
       this.modifyIndex = index
+      // this.tgingtype = 'property' 得到物模型的type类型
       this.wmxdialogVisible = true
       this.wmxSituation = '编辑'
       var obj = {}
@@ -2338,6 +2390,7 @@ export default {
               message: '添加成功',
             })
             this.schemadialogVisible = false
+            this.handleChildClick(this.tabsChild)
             // 手动更新完物模型后，再去查询一下当前页面的物模型
             this.getProDetail()
           }
@@ -2348,7 +2401,7 @@ export default {
     },
     async Industry() {
       this.option = []
-      const { results } = await this.$getIndustry('category', 100)
+      const {results} = await this.$getIndustry('category', 100)
       results.map((items) => {
         var obj = {}
         obj.value = items.type
@@ -2555,7 +2608,8 @@ export default {
         .then((_) => {
           done()
         })
-        .catch((_) => {})
+        .catch((_) => {
+        })
     },
 
     // 还原
@@ -2584,10 +2638,10 @@ export default {
       }, 1)
     },
     async query_form() {
-      const { results } = await queryView({
+      const {results} = await queryView({
         where: {
-          key: { $regex: this.$route.query.id },
-          type: { $regex: 'notification' },
+          key: {$regex: this.$route.query.id},
+          type: {$regex: 'notification'},
         },
       })
       this.amisproductInfo = results
@@ -2607,17 +2661,18 @@ export default {
       // 需要找到 this.productId 并传入
       this.productId = this.$route.query.id
       this.queryDeviceCount(this.productId)
+      this.FromMachine = [{name: 'ALL'}]
       this.$get_object('Product', this.productId)
         .then((response) => {
           dgiotlog.log('response', response)
           if (response) {
             this.productInfo = _.merge(response, {
-              decoder: { code: '' },
-              thing: { properties: [] },
+              decoder: {code: ''},
+              thing: {properties: []},
               config: {
                 parser: [],
                 profile: [],
-                basedate: { params: [] },
+                basedate: {params: []},
               },
             })
             this.productName = response.name
@@ -2735,6 +2790,8 @@ export default {
       this.$refs['sizeForm'].resource.disabled = false
       await this.$refs['sizeForm'].queryResource()
       this.wmxdialogVisible = false
+      await this.queryProductInfo(this.$route.query.id)
+      await this.handleChildClick(this.tabsChild)
     },
     // 协议编辑
     protol() {
@@ -3144,6 +3201,7 @@ export default {
               'dgiot-hey-message-success'
             )
             await this.getProDetail()
+            await this.queryProductInfo(this.$route.query.id)
           } else
             this.$baseMessage(
               this.$translateTitle('user.error deleted') + res?.msg
@@ -3163,6 +3221,27 @@ export default {
     wmxCurrentChange(val) {
       console.log(this.wmxData)
       this.wmxstart = val
+    },
+    eventsChange(val) {
+      this.eventsStart = 1
+      this.eventsPageSize = val
+    },
+    eventsCurrentChange(val) {
+      this.eventsStart = val
+    },
+    serverSizeChange(val) {
+      this.servicesStart = 1
+      this.servicesPageSize = val
+    },
+    serverCurrentChange(val) {
+      this.servicesStart = val
+    },
+    tagsSizeChange(val) {
+      this.tagsStart = 1
+      this.tagsPageSize = val
+    },
+    tagsCurrentChange(val) {
+      this.eventsStart = val
     },
     // 订阅日志按钮
     nowtime() {
@@ -3347,7 +3426,7 @@ export default {
       this.topicform.isupdated = index
     },
     async deletetopic(scope, index) {
-      const { topics } = await this.$get_object('Product', this.productId)
+      const {topics} = await this.$get_object('Product', this.productId)
       if (topics) {
         // scope._self.$refs[`popover-${$index}`].doClose();
         var topic = topics.concat([])
@@ -3367,6 +3446,7 @@ export default {
         })
       }
       this.getTopic()
+      this.queryProductInfo(this.$route.query.id)
     },
     // 规则tab显示
     orginRule() {
@@ -3381,8 +3461,10 @@ export default {
         })
     },
     // 分页
-    handleSizeChange(val) {},
-    handleCurrentChange(val) {},
+    handleSizeChange(val) {
+    },
+    handleCurrentChange(val) {
+    },
     addEngine() {
       this.$router.push({
         path: '/rules_engine/addengine',
