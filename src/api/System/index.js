@@ -1,7 +1,7 @@
 import request from '@/utils/request/request'
-export async function Startdashboard(data) {
+export async function Startdashboard(dashboardId, data) {
   return request({
-    url: `dashboard`,
+    url: `dashboard?dashboardId=${dashboardId}`,
     method: 'post',
     data: data,
   })

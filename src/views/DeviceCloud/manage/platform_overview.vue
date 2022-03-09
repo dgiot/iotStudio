@@ -1317,7 +1317,12 @@
           qos: 0,
           ttl: 1000 * 60 * 60 * 3,
         })
-        const res = await Startdashboard(queryParams)
+        /**
+         * @api http://127.0.0.1:5080/dgiot_swagger/#/TOPO/post_dashboard
+         * @type {string}
+         */
+        let dashboardId = '32511dbfe5'
+        const res = await Startdashboard(dashboardId, queryParams)
         // 本地mqtt 存在问题,在请求4秒后手动关闭所有loading
         setTimeout(() => {
           queryParams.forEach((e) => {

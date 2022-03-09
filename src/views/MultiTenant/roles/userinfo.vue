@@ -1,6 +1,13 @@
 <template>
   <div class="userinfo">
     <div class="personal-center-container">
+      <el-dialog append-to-body title="关联大屏" :visible.sync="bigModule">
+        <el-table :data="bigView" @current-change="handleCurrentChange">
+          <el-table-column label="名称" property="title" width="auto" />
+          <el-table-column label="objectId" property="objectId" width="auto" />
+          <el-table-column label="class" property="class" />
+        </el-table>
+      </el-dialog>
       <el-row :gutter="20">
         <el-col :lg="12" :md="12" :sm="24" :xl="8" :xs="24">
           <el-card shadow="hover">
@@ -199,6 +206,18 @@
                           </template>
                         </el-input>
                       </el-form-item>
+                      <el-form-item label="总控台大屏">
+                        <el-input
+                          v-model="companyinfo.homeScreen"
+                          :readonly="bigView.length != 0"
+                        >
+                          <template slot="append">
+                            <el-button @click.native="bigModule = true">
+                              选择
+                            </el-button>
+                          </template>
+                        </el-input>
+                      </el-form-item>
                       <el-form-item>
                         <el-button type="primary" @click.native="onSubmit">
                           保存
@@ -220,6 +239,7 @@
   import { isPhone } from '@/utils/data/validate'
   import { putUser } from '@/api/User'
   import { putProject } from '@/api/Project'
+  import { queryView } from '@/api/View'
 
   export default {
     name: 'Userinfo',
@@ -233,6 +253,8 @@
         }
       }
       return {
+        bigModule: false,
+        bigView: [],
         inputParams: {},
         channeindex: 0,
         password: '',
@@ -266,6 +288,7 @@
           title: '',
           Copyright: '',
           backgroundimage: '',
+          homeScreen: '',
         },
         upNodeType: '',
       }
@@ -284,6 +307,7 @@
     mounted() {
       this.$nextTick(() => {
         if (this.ObjectId) this.queryUserInfo(this.ObjectId)
+        this.queryBigView()
       })
     },
     methods: {
@@ -296,6 +320,21 @@
         set_pcimg: 'dashboard/set_pcimg',
         set_mimg: 'dashboard/set_mimg',
       }),
+      async handleCurrentChange(e) {
+        await console.log(e.objectId)
+        this.companyinfo.homeScreen = e.objectId
+        this.bigModule = false
+      },
+      /**
+       * @description 查询配置的大屏低代码
+       * @returns {Promise<void>}
+       */
+      async queryBigView() {
+        const { results = [] } = await queryView({
+          where: { type: 'bigScreen' },
+        })
+        this.bigView = results
+      },
       fileInfo(info) {
         dgiotlog.log('uploadFinish', info)
         let type = this.upNodeType
@@ -415,6 +454,7 @@
               logo: '',
               title: '',
               Copyright: '',
+              homeScreen: '',
             },
             userinfo: {},
             theme: {},
@@ -429,6 +469,7 @@
         this.companyinfo = Object.assign(tag.companyinfo, {
           _pcimg: this._pcimg || '',
           _mimg: this._mimg || '',
+          homeScreen: '',
         })
 
         dgiotlog.log('this.userinfo', this.userinfo)
