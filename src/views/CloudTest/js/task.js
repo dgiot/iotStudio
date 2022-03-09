@@ -236,7 +236,7 @@ export default {
         })
     },
     async subRealtimedata(params) {
-      let subtopic = `thing/${params.parentId.objectId}/realtimedata/post` // 设备实时数据topic
+      let subtopic = `$dg/user/${params.parentId.objectId}/properties/report` // 设备实时数据topic
       let router = this.$dgiotBus.router(location.href + this.$route.fullPath)
       let topicKey = this.$dgiotBus.topicKey(router, subtopic) // dgiot-mqtt topicKey 唯一标识
       try {

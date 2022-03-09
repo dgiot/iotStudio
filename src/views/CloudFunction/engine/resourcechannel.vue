@@ -1013,14 +1013,15 @@
         Websocket.sendMessage(sendInfo)
       },
       handleCloseSubdialog() {
-        var text0 = JSON.stringify({ action: 'stop_logger' })
-        var sendInfo = {
-          topic: 'channel/' + this.subdialogid,
-          text: text0,
-          retained: true,
-          qos: 2,
-        }
-        Websocket.sendMessage(sendInfo)
+        // var text0 = JSON.stringify({ action: 'stop_logger' })
+        // var sendInfo = {
+        //   topic: 'channel/' + this.subdialogid,
+        //   text: text0,
+        //   retained: true,
+        //   qos: 2,
+        // }
+        // Websocket.sendMessage(sendInfo)
+        subupadte(this.subdialogid, 'stop_logger')
         this.subdialog = false
         window.clearInterval(this.subdialogtimer)
         this.subdialogtimer = null

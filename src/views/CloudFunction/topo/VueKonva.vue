@@ -459,7 +459,7 @@
       handleMqttMsg(subdialogid) {
         let _this = this
 
-        var channeltopic = new RegExp('thing/' + subdialogid + '/post')
+        var channeltopic = new RegExp('$dg/konva/' + subdialogid + '/properties/report')
         Websocket.add_hook(channeltopic, (Msg) => {
           let decodeMqtt
           let updataId = []
@@ -519,7 +519,7 @@
         _this.stop_Mqtt = true
         var text0 = JSON.stringify({ action: 'stop_logger' })
         var sendInfo = {
-          topic: 'thing/' + _this.productid + '/post',
+          topic: '$dg/konva/' + _this.productid + '/properties/report',
           text: text0,
           retained: true,
           qos: 2,

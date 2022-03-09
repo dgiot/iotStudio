@@ -266,7 +266,7 @@
           this.$dgiotBus.$emit(
             'MqttUnbscribe',
             this.$dgiotBus.router(this.$route.fullPath),
-            'log/channel/' + this.channelId + '/#'
+            '$dg/channel/' + this.channelId + '/#'
           )
         }
       },
@@ -290,7 +290,7 @@
           this.queryForm.product +
           '/' +
           devaddr
-        this.subtopic = 'log/' + this.pubtopic
+        this.subtopic = '$dg/' + this.pubtopic
         this.router = this.$dgiotBus.router(location.href)
         this.topicKey = this.$dgiotBus.topicKey(this.router, this.subtopic)
         let subInfo = {

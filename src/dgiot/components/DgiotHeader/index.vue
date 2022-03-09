@@ -101,9 +101,9 @@
       await this.loadDgiotScript()
       // 写在页面公共组件里。确保全局只订阅一个mqtt。刷新则再次重新订阅
       const md5Info = {
-        token: md5(this.token),
-        username: this.mqttName,
-        password: md5(this.loginInfo.password),
+        token: this.token,
+        username: this.objectId,
+        password: this.token,
         router: md5(this.$route.fullPath),
       }
       console.groupCollapsed(
@@ -158,15 +158,12 @@
             : hostname.split(':')[0] // 修复代理带端口的问题
         this.option = {
           keepalive: 60,
-          clientId: this.token, // dlink 协议 user 认证改为user token
+          clientId: md5Info.token, // dlink 协议 user 认证改为user token
           ip,
           isSSL: protocol === 'https:' ? true : false,
           port: protocol == 'http:' ? 8083 : 8084,
           userName: md5Info.username,
-          passWord: await dcodeIO.bcrypt.hash(
-            this.objectId + moment().format('YYYY:MM:DD'),
-            3
-          ),
+          passWord: md5Info.password,
           connectTimeout: 10 * 1000,
           router: md5Info.router,
         }
@@ -177,6 +174,7 @@
 
         console.log(this.option)
         console.groupEnd()
+        dgiotlogger.info('MqttConnect', this.option)
         await this.$dgiotBus.$emit('MqttConnect', this.option)
         // this.$dgiotBus.$emit('MqttSubscribe', {
         //   router: md5(this.$route.fullPath),
