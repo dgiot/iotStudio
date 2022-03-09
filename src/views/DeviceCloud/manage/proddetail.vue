@@ -472,311 +472,754 @@
               </el-button>
             </span>
           </el-dialog>
-          <div>
-            <el-row :gutter="24">
-              <el-col :lg="4" :md="5" :sm="6" :xl="3" :xs="24">
-                <dgiot-query-form class="query-form">
-                  <dgiot-query-form-top-panel>
-                    <el-button type="primary" @click.native="addMachine">
-                      添加类型
-                    </el-button>
-                  </dgiot-query-form-top-panel>
-                </dgiot-query-form>
-                <el-table
-                  border
-                  :data="FromMachine"
-                  :height="$baseTableHeight(0) - 60"
-                  :row-class-name="tableRowClassName"
-                  style="width: 60vh; overflow: auto"
-                  @row-click="clickmachine"
-                >
-                  <el-table-column
-                    align="center"
-                    label="序号"
-                    prop="sort"
-                    width="50"
-                  >
-                    <template #default="{ $index }">
-                      <span>
-                        {{ $index + 1 }}
-                      </span>
-                    </template>
-                  </el-table-column>
-                  <el-table-column
-                    align="center"
-                    label="设备类型"
-                    prop="name"
-                  />
-                  <template #empty>
-                    <el-image
-                      class="dgiot-data-empty"
-                      :src="
-                        require('../../../../public/assets/images/platform/assets/empty_images/data_empty.png')
-                      "
-                    />
-                  </template>
-                </el-table>
-              </el-col>
-              <el-col :lg="20" :md="19" :sm="18" :xl="21" :xs="24">
-                <dgiot-query-form class="query-form">
-                  <dgiot-query-form-right-panel style="width: 100%">
-                    <div class="stripe-panel">
-                      <el-button
-                        size="small"
-                        type="primary"
-                        @click.native="checkAddTest"
-                      >
-                        <!-- 物模型采集公式 -->
-                        {{
-                          $translateTitle(
-                            'product.collectionformulaofobjectmodel'
-                          )
-                        }}
-                      </el-button>
-                      <el-button
-                        size="small"
-                        type="primary"
-                        @click.native="checkschema"
-                      >
-                        {{ $translateTitle('product.viewobjectmodel') }}
-                      </el-button>
 
-                      <!-- 新增自定义属性 -->
-                      <el-button
-                        size="small"
-                        type="primary"
-                        @click.native="createProperty('attribute')"
-                      >
-                        {{ $translateTitle('product.newcustomattribute') }}
-                      </el-button>
-                    </div>
-                  </dgiot-query-form-right-panel>
-                </dgiot-query-form>
-                <el-table
-                  key="upKey"
-                  border
-                  :data="
-                    wmxData.slice(
-                      (wmxstart - 1) * wmxPageSize,
-                      wmxstart * wmxPageSize
-                    )
-                  "
-                  :default-expand-all="false"
-                  :default-sort="{ prop: 'date', order: 'descending' }"
-                  :height="$baseTableHeight(0) - 60"
-                  :row-class-name="getRowClass"
-                  row-key="identifier"
-                  style="width: 100%; margin-top: 10px"
-                >
-                  <el-table-column type="expand">
-                    <template
-                      v-if="row.dataType.type == 'struct'"
-                      slot-scope="{ row }"
-                      class="opentable"
+          <el-tabs v-model="tabsChild" @tab-click="handleChildClick">
+            <el-tab-pane label="属性定义" name="properties">
+              <div>
+                <el-row :gutter="24">
+                  <el-col :lg="4" :md="5" :sm="6" :xl="3" :xs="24">
+                    <dgiot-query-form class="query-form">
+                      <dgiot-query-form-top-panel>
+                        <el-button type="primary" @click.native="addMachine">
+                          添加类型
+                        </el-button>
+                      </dgiot-query-form-top-panel>
+                    </dgiot-query-form>
+                    <el-table
+                      border
+                      :data="FromMachine"
+                      :height="$baseTableHeight(0) - 60"
+                      :row-class-name="tableRowClassName"
+                      style="width: 60vh; overflow: auto"
+                      @row-click="clickmachine"
                     >
-                      <el-table
-                        :data="row.dataType.specs"
-                        style="
-                          box-sizing: border-box;
-                          width: 60%;
-                          text-align: center;
-                        "
+                      <el-table-column
+                        align="center"
+                        label="序号"
+                        prop="sort"
+                        width="50"
                       >
-                        <el-table-column
-                          align="center"
-                          :label="$translateTitle('product.identifier')"
-                        >
-                          <template slot-scope="scope1">
-                            <span>{{ scope1.row.identifier }}</span>
-                          </template>
-                        </el-table-column>
-                        <el-table-column
-                          align="center"
-                          :label="$translateTitle('product.functionaltypes')"
-                        >
+                        <template #default="{ $index }">
                           <span>
-                            {{ $translateTitle('product.attribute') }}
+                            {{ $index + 1 }}
                           </span>
-                        </el-table-column>
-
-                        <el-table-column
-                          align="center"
-                          :label="$translateTitle('product.functionname')"
-                          prop="name"
-                        />
-                        <el-table-column
-                          align="center"
-                          :label="$translateTitle('product.datadefinition')"
-                        >
-                          <template slot-scope="scope2">
-                            <span>{{ scope2.row.dataType.type }}</span>
-                          </template>
-                        </el-table-column>
-                        <template #empty>
-                          <el-image
-                            class="dgiot-data-empty"
-                            :src="
-                              require('../../../../public/assets/images/platform/assets/empty_images/data_empty.png')
-                            "
-                          />
                         </template>
-                      </el-table>
-                    </template>
-                  </el-table-column>
+                      </el-table-column>
+                      <el-table-column
+                        align="center"
+                        label="设备类型"
+                        prop="name"
+                      />
+                      <template #empty>
+                        <el-image
+                          class="dgiot-data-empty"
+                          :src="
+                            require('../../../../public/assets/images/platform/assets/empty_images/data_empty.png')
+                          "
+                        />
+                      </template>
+                    </el-table>
+                  </el-col>
+                  <el-col :lg="20" :md="19" :sm="18" :xl="21" :xs="24">
+                    <dgiot-query-form class="query-form">
+                      <dgiot-query-form-right-panel style="width: 100%">
+                        <div class="stripe-panel">
+                          <el-button
+                            size="small"
+                            type="primary"
+                            @click.native="checkAddTest"
+                          >
+                            <!-- 物模型采集公式 -->
+                            {{
+                              $translateTitle(
+                                'product.collectionformulaofobjectmodel'
+                              )
+                            }}
+                          </el-button>
+                          <el-button
+                            size="small"
+                            type="primary"
+                            @click.native="checkschema"
+                          >
+                            {{ $translateTitle('product.viewobjectmodel') }}
+                          </el-button>
 
-                  <el-table-column
-                    align="center"
-                    :label="$translateTitle('product.order')"
-                    width="60"
-                  >
-                    <template #default="{ row }">
-                      {{ row.dataForm.order }}
-                    </template>
-                  </el-table-column>
-                  <el-table-column
-                    align="center"
-                    :label="$translateTitle('product.devicetype')"
-                    prop="devicetype"
-                    width="80"
-                  />
-                  <el-table-column
-                    align="center"
-                    :label="$translateTitle('product.Rounds')"
-                    width="60"
-                  >
-                    <template #default="{ row }">
-                      {{ row.dataForm.round }}
-                    </template>
-                  </el-table-column>
-
-                  <el-table-column
-                    align="center"
-                    :label="$translateTitle('product.Strategy')"
-                    width="80"
-                  >
-                    <template #default="{ row }">
-                      {{ row.dataForm.strategy }}
-                    </template>
-                  </el-table-column>
-
-                  <el-table-column
-                    align="center"
-                    :label="$translateTitle('product.protocol')"
-                    width="80"
-                  >
-                    <template #default="{ row }">
-                      {{ row.dataForm.protocol }}
-                    </template>
-                  </el-table-column>
-                  <el-table-column
-                    align="center"
-                    :label="$translateTitle('product.functionaltypes')"
-                    width="90"
-                  >
-                    <span>{{ $translateTitle('product.attribute') }}</span>
-                  </el-table-column>
-
-                  <el-table-column
-                    align="center"
-                    :label="$translateTitle('product.identifier')"
-                    prop="identifier"
-                    width="100"
-                  />
-                  <el-table-column
-                    align="center"
-                    :label="$translateTitle('product.functionname')"
-                    prop="name"
-                  />
-                  <el-table-column
-                    align="center"
-                    :label="$translateTitle('product.datatype')"
-                    width="90"
-                  >
-                    <template #default="{ row }">
-                      <span>{{ row.dataType.type }}</span>
-                    </template>
-                  </el-table-column>
-                  <el-table-column
-                    align="center"
-                    :label="$translateTitle('product.datadefinition')"
-                  >
-                    <template #default="{ row }">
-                      <span
-                        v-if="
-                          row.dataType.specs &&
-                          (row.dataType.type == 'double' ||
-                            row.dataType.type == 'float' ||
-                            row.dataType.type == 'int')
-                        "
-                      >
-                        {{
-                          $translateTitle('product.rangeofvalues') +
-                          row.dataType.specs.min +
-                          '~' +
-                          row.dataType.specs.max
-                        }}
-                      </span>
-                      <span v-else-if="row.dataType.type == 'string'">
-                        {{
-                          $translateTitle('product.datalength') +
-                          ':' +
-                          row.dataType.size +
-                          $translateTitle('product.byte')
-                        }}
-                      </span>
-                      <span v-else-if="row.dataType.type == 'date'" />
-                      <span v-else-if="row.dataType.type != 'struct'">
-                        {{ row.dataType.specs }}
-                      </span>
-                      <span v-else />
-                    </template>
-                  </el-table-column>
-                  <el-table-column
-                    align="center"
-                    :label="$translateTitle('developer.operation')"
-                    width="160"
-                  >
-                    <template #default="{ row, $index }">
-                      <el-button
-                        size="mini"
-                        type="danger"
-                        @click.native="deletewmx(row)"
-                      >
-                        {{ $translateTitle('developer.delete') }}
-                      </el-button>
-                      <el-button
-                        size="mini"
-                        type="primary"
-                        @click.native="wmxDataFill(row, $index)"
-                      >
-                        <!-- 编辑 -->
-                        {{ $translateTitle('task.Edit') }}
-                      </el-button>
-                    </template>
-                  </el-table-column>
-                  <template #empty>
-                    <el-image
-                      class="dgiot-data-empty"
-                      :src="
-                        require('../../../../public/assets/images/platform/assets/empty_images/data_empty.png')
+                          <!-- 新增自定义属性 -->
+                          <el-button
+                            size="small"
+                            type="primary"
+                            @click.native="createThing('properties')"
+                          >
+                            {{ $translateTitle('product.newcustomattribute') }}
+                          </el-button>
+                        </div>
+                      </dgiot-query-form-right-panel>
+                    </dgiot-query-form>
+                    <el-table
+                      key="tabsChild"
+                      border
+                      :data="
+                        wmxData.slice(
+                          (wmxstart - 1) * wmxPageSize,
+                          wmxstart * wmxPageSize
+                        )
                       "
-                    />
-                  </template>
-                </el-table>
-                <!--功能定义分页-->
-                <el-pagination
-                  layout="total, sizes, prev, pager, next, jumper"
-                  :page-size="wmxPageSize"
-                  :page-sizes="[10, 20, 30, 50]"
-                  style="margin-top: 10px"
-                  :total="wmxData.length"
-                  @current-change="wmxCurrentChange"
-                  @size-change="wmxSizeChange"
-                />
-              </el-col>
-            </el-row>
-          </div>
+                      :default-expand-all="false"
+                      :default-sort="{ prop: 'date', order: 'descending' }"
+                      :height="$baseTableHeight(0) - 60"
+                      :row-class-name="getRowClass"
+                      row-key="identifier"
+                      style="width: 100%; margin-top: 10px"
+                    >
+                      <el-table-column type="expand">
+                        <template
+                          v-if="row.dataType.type == 'struct'"
+                          slot-scope="{ row }"
+                          class="opentable"
+                        >
+                          <el-table
+                            :data="row.dataType.specs"
+                            style="
+                              box-sizing: border-box;
+                              width: 60%;
+                              text-align: center;
+                            "
+                          >
+                            <el-table-column
+                              align="center"
+                              :label="$translateTitle('product.identifier')"
+                            >
+                              <template slot-scope="scope1">
+                                <span>{{ scope1.row.identifier }}</span>
+                              </template>
+                            </el-table-column>
+                            <el-table-column
+                              align="center"
+                              :label="
+                                $translateTitle('product.functionaltypes')
+                              "
+                            >
+                              <span>
+                                {{ $translateTitle('product.attribute') }}
+                              </span>
+                            </el-table-column>
 
+                            <el-table-column
+                              align="center"
+                              :label="$translateTitle('product.functionname')"
+                              prop="name"
+                            />
+                            <el-table-column
+                              align="center"
+                              :label="$translateTitle('product.datadefinition')"
+                            >
+                              <template slot-scope="scope2">
+                                <span>{{ scope2.row.dataType.type }}</span>
+                              </template>
+                            </el-table-column>
+                            <template #empty>
+                              <el-image
+                                class="dgiot-data-empty"
+                                :src="
+                                  require('../../../../public/assets/images/platform/assets/empty_images/data_empty.png')
+                                "
+                              />
+                            </template>
+                          </el-table>
+                        </template>
+                      </el-table-column>
+
+                      <el-table-column
+                        align="center"
+                        :label="$translateTitle('product.order')"
+                        width="60"
+                      >
+                        <template #default="{ row }">
+                          {{ row.dataForm.order }}
+                        </template>
+                      </el-table-column>
+                      <el-table-column
+                        align="center"
+                        :label="$translateTitle('product.devicetype')"
+                        prop="devicetype"
+                        width="80"
+                      />
+                      <el-table-column
+                        align="center"
+                        :label="$translateTitle('product.Rounds')"
+                        width="60"
+                      >
+                        <template #default="{ row }">
+                          {{ row.dataForm.round }}
+                        </template>
+                      </el-table-column>
+
+                      <el-table-column
+                        align="center"
+                        :label="$translateTitle('product.Strategy')"
+                        width="80"
+                      >
+                        <template #default="{ row }">
+                          {{ row.dataForm.strategy }}
+                        </template>
+                      </el-table-column>
+
+                      <el-table-column
+                        align="center"
+                        :label="$translateTitle('product.protocol')"
+                        width="80"
+                      >
+                        <template #default="{ row }">
+                          {{ row.dataForm.protocol }}
+                        </template>
+                      </el-table-column>
+                      <el-table-column
+                        align="center"
+                        :label="$translateTitle('product.functionaltypes')"
+                        width="90"
+                      >
+                        <span>{{ $translateTitle('product.attribute') }}</span>
+                      </el-table-column>
+
+                      <el-table-column
+                        align="center"
+                        :label="$translateTitle('product.identifier')"
+                        prop="identifier"
+                        width="100"
+                      />
+                      <el-table-column
+                        align="center"
+                        :label="$translateTitle('product.functionname')"
+                        prop="name"
+                      />
+                      <el-table-column
+                        align="center"
+                        :label="$translateTitle('product.datatype')"
+                        width="90"
+                      >
+                        <template #default="{ row }">
+                          <span>{{ row.dataType.type }}</span>
+                        </template>
+                      </el-table-column>
+                      <el-table-column
+                        align="center"
+                        :label="$translateTitle('product.datadefinition')"
+                      >
+                        <template #default="{ row }">
+                          <span
+                            v-if="
+                              row.dataType.specs &&
+                              (row.dataType.type == 'double' ||
+                                row.dataType.type == 'float' ||
+                                row.dataType.type == 'int')
+                            "
+                          >
+                            {{
+                              $translateTitle('product.rangeofvalues') +
+                              row.dataType.specs.min +
+                              '~' +
+                              row.dataType.specs.max
+                            }}
+                          </span>
+                          <span v-else-if="row.dataType.type == 'string'">
+                            {{
+                              $translateTitle('product.datalength') +
+                              ':' +
+                              row.dataType.size +
+                              $translateTitle('product.byte')
+                            }}
+                          </span>
+                          <span v-else-if="row.dataType.type == 'date'" />
+                          <span v-else-if="row.dataType.type != 'struct'">
+                            {{ row.dataType.specs }}
+                          </span>
+                          <span v-else />
+                        </template>
+                      </el-table-column>
+                      <el-table-column
+                        align="center"
+                        :label="$translateTitle('developer.operation')"
+                        width="160"
+                      >
+                        <template #default="{ row, $index }">
+                          <el-button
+                            size="mini"
+                            type="danger"
+                            @click.native="deletewmx(row)"
+                          >
+                            {{ $translateTitle('developer.delete') }}
+                          </el-button>
+                          <el-button
+                            size="mini"
+                            type="primary"
+                            @click.native="
+                              wmxDataFill(row, $index, 'properties')
+                            "
+                          >
+                            <!-- 编辑 -->
+                            {{ $translateTitle('task.Edit') }}
+                          </el-button>
+                        </template>
+                      </el-table-column>
+                      <template #empty>
+                        <el-image
+                          class="dgiot-data-empty"
+                          :src="
+                            require('../../../../public/assets/images/platform/assets/empty_images/data_empty.png')
+                          "
+                        />
+                      </template>
+                    </el-table>
+                    <!--功能定义分页-->
+                    <el-pagination
+                      layout="total, sizes, prev, pager, next, jumper"
+                      :page-size="wmxPageSize"
+                      :page-sizes="[10, 20, 30, 50]"
+                      style="margin-top: 10px"
+                      :total="wmxData.length"
+                      @current-change="wmxCurrentChange"
+                      @size-change="wmxSizeChange"
+                    />
+                  </el-col>
+                </el-row>
+              </div>
+            </el-tab-pane>
+            <el-tab-pane label="事件定义" name="events">
+              <dgiot-query-form class="query-form">
+                <dgiot-query-form-right-panel style="width: 100%">
+                  <div class="stripe-panel">
+                    <el-button
+                      size="small"
+                      type="primary"
+                      @click.native="checkschema"
+                    >
+                      {{ $translateTitle('product.viewobjectmodel') }}
+                    </el-button>
+
+                    <!-- 新增自定义属性 -->
+                    <el-button
+                      size="small"
+                      type="primary"
+                      @click.native="createThing('events')"
+                    >
+                      新增事件
+                    </el-button>
+                  </div>
+                </dgiot-query-form-right-panel>
+              </dgiot-query-form>
+              <el-table
+                key="tabsChild"
+                border
+                :data="
+                  modules.data.events.slice(
+                    (eventsStart - 1) * eventsPageSize,
+                    eventsStart * eventsPageSize
+                  )
+                "
+                :default-sort="{ prop: 'date', order: 'descending' }"
+                :height="$baseTableHeight(0) - 60"
+                :row-class-name="getRowClass"
+                row-key="identifier"
+                style="width: 100%; margin-top: 10px"
+              >
+                <el-table-column
+                  align="center"
+                  :label="$translateTitle('product.order')"
+                  width="60"
+                >
+                  <template #default="{ row }">
+                    {{ row.dataForm.order }}
+                  </template>
+                </el-table-column>
+                <el-table-column
+                  align="center"
+                  :label="$translateTitle('product.identifier')"
+                  prop="identifier"
+                  width="100"
+                />
+                <el-table-column
+                  align="center"
+                  :label="$translateTitle('product.functionname')"
+                  prop="name"
+                />
+                <el-table-column
+                  align="center"
+                  :label="$translateTitle('product.datatype')"
+                  width="90"
+                >
+                  <template #default="{ row }">
+                    <span>{{ row.dataType.type }}</span>
+                  </template>
+                </el-table-column>
+                <el-table-column
+                  align="center"
+                  :label="$translateTitle('product.datadefinition')"
+                >
+                  <template #default="{ row }">
+                    <span
+                      v-if="
+                        row.dataType.specs &&
+                        (row.dataType.type == 'double' ||
+                          row.dataType.type == 'float' ||
+                          row.dataType.type == 'int')
+                      "
+                    >
+                      {{
+                        $translateTitle('product.rangeofvalues') +
+                        row.dataType.specs.min +
+                        '~' +
+                        row.dataType.specs.max
+                      }}
+                    </span>
+                    <span v-else-if="row.dataType.type == 'string'">
+                      {{
+                        $translateTitle('product.datalength') +
+                        ':' +
+                        row.dataType.size +
+                        $translateTitle('product.byte')
+                      }}
+                    </span>
+                    <span v-else-if="row.dataType.type == 'date'" />
+                    <span v-else-if="row.dataType.type != 'struct'">
+                      {{ row.dataType.specs }}
+                    </span>
+                    <span v-else />
+                  </template>
+                </el-table-column>
+                <el-table-column
+                  align="center"
+                  :label="$translateTitle('developer.operation')"
+                  width="160"
+                >
+                  <template #default="{ row, $index }">
+                    <el-button
+                      size="mini"
+                      type="danger"
+                      @click.native="deletewmx(row)"
+                    >
+                      {{ $translateTitle('developer.delete') }}
+                    </el-button>
+                    <el-button
+                      size="mini"
+                      type="primary"
+                      @click.native="wmxDataFill(row, $index, 'events')"
+                    >
+                      <!-- 编辑 -->
+                      {{ $translateTitle('task.Edit') }}
+                    </el-button>
+                  </template>
+                </el-table-column>
+                <template #empty>
+                  <el-image
+                    class="dgiot-data-empty"
+                    :src="
+                      require('../../../../public/assets/images/platform/assets/empty_images/data_empty.png')
+                    "
+                  />
+                </template>
+              </el-table>
+              <!--功能定义分页-->
+              <el-pagination
+                layout="total, sizes, prev, pager, next, jumper"
+                :page-size="eventsPageSize"
+                :page-sizes="[10, 20, 30, 50]"
+                style="margin-top: 10px"
+                :total="modules.data.events.length"
+                @current-change="eventsCurrentChange"
+                @size-change="eventsChange"
+              />
+            </el-tab-pane>
+            <el-tab-pane label="服务定义" name="services">
+              <dgiot-query-form class="query-form">
+                <dgiot-query-form-right-panel style="width: 100%">
+                  <div class="stripe-panel">
+                    <el-button
+                      size="small"
+                      type="primary"
+                      @click.native="checkschema"
+                    >
+                      {{ $translateTitle('product.viewobjectmodel') }}
+                    </el-button>
+
+                    <!-- 新增自定义服务 -->
+                    <el-button
+                      size="small"
+                      type="primary"
+                      @click.native="createThing('services')"
+                    >
+                      新增服务
+                    </el-button>
+                  </div>
+                </dgiot-query-form-right-panel>
+              </dgiot-query-form>
+              <el-table
+                key="tabsChild"
+                border
+                :data="
+                  modules.data.services.slice(
+                    (servicesStart - 1) * servicesPageSize,
+                    servicesStart * servicesPageSize
+                  )
+                "
+                :default-sort="{ prop: 'date', order: 'descending' }"
+                :height="$baseTableHeight(0) - 60"
+                :row-class-name="getRowClass"
+                row-key="identifier"
+                style="width: 100%; margin-top: 10px"
+              >
+                <el-table-column
+                  align="center"
+                  :label="$translateTitle('product.order')"
+                  width="60"
+                >
+                  <template #default="{ row }">
+                    {{ row.dataForm.order }}
+                  </template>
+                </el-table-column>
+                <el-table-column
+                  align="center"
+                  :label="$translateTitle('product.identifier')"
+                  prop="identifier"
+                  width="100"
+                />
+                <el-table-column
+                  align="center"
+                  :label="$translateTitle('product.functionname')"
+                  prop="name"
+                />
+                <el-table-column
+                  align="center"
+                  :label="$translateTitle('product.datatype')"
+                  width="90"
+                >
+                  <template #default="{ row }">
+                    <span>{{ row.dataType.type }}</span>
+                  </template>
+                </el-table-column>
+                <el-table-column
+                  align="center"
+                  :label="$translateTitle('product.datadefinition')"
+                >
+                  <template #default="{ row }">
+                    <span
+                      v-if="
+                        row.dataType.specs &&
+                        (row.dataType.type == 'double' ||
+                          row.dataType.type == 'float' ||
+                          row.dataType.type == 'int')
+                      "
+                    >
+                      {{
+                        $translateTitle('product.rangeofvalues') +
+                        row.dataType.specs.min +
+                        '~' +
+                        row.dataType.specs.max
+                      }}
+                    </span>
+                    <span v-else-if="row.dataType.type == 'string'">
+                      {{
+                        $translateTitle('product.datalength') +
+                        ':' +
+                        row.dataType.size +
+                        $translateTitle('product.byte')
+                      }}
+                    </span>
+                    <span v-else-if="row.dataType.type == 'date'" />
+                    <span v-else-if="row.dataType.type != 'struct'">
+                      {{ row.dataType.specs }}
+                    </span>
+                    <span v-else />
+                  </template>
+                </el-table-column>
+                <el-table-column
+                  align="center"
+                  :label="$translateTitle('developer.operation')"
+                  width="160"
+                >
+                  <template #default="{ row, $index }">
+                    <el-button
+                      size="mini"
+                      type="danger"
+                      @click.native="deletewmx(row)"
+                    >
+                      {{ $translateTitle('developer.delete') }}
+                    </el-button>
+                    <el-button
+                      size="mini"
+                      type="primary"
+                      @click.native="wmxDataFill(row, $index, 'services')"
+                    >
+                      <!-- 编辑 -->
+                      {{ $translateTitle('task.Edit') }}
+                    </el-button>
+                  </template>
+                </el-table-column>
+                <template #empty>
+                  <el-image
+                    class="dgiot-data-empty"
+                    :src="
+                      require('../../../../public/assets/images/platform/assets/empty_images/data_empty.png')
+                    "
+                  />
+                </template>
+              </el-table>
+              <!--功能定义分页-->
+              <el-pagination
+                layout="total, sizes, prev, pager, next, jumper"
+                :page-size="servicesPageSize"
+                :page-sizes="[10, 20, 30, 50]"
+                style="margin-top: 10px"
+                :total="modules.data.services.length"
+                @current-change="serverCurrentChange"
+                @size-change="serverSizeChange"
+              />
+            </el-tab-pane>
+            <el-tab-pane label="标签定义" name="tags">
+              <dgiot-query-form class="query-form">
+                <dgiot-query-form-right-panel style="width: 100%">
+                  <div class="stripe-panel">
+                    <el-button
+                      size="small"
+                      type="primary"
+                      @click.native="checkschema"
+                    >
+                      {{ $translateTitle('product.viewobjectmodel') }}
+                    </el-button>
+
+                    <!-- 新增自定义属性 -->
+                    <el-button
+                      size="small"
+                      type="primary"
+                      @click.native="createThing('tags')"
+                    >
+                      新增标签
+                    </el-button>
+                  </div>
+                </dgiot-query-form-right-panel>
+              </dgiot-query-form>
+              <el-table
+                key="tabsChild"
+                border
+                :data="
+                  modules.data.tags.slice(
+                    (tagsStart - 1) * tagsPageSize,
+                    tagsStart * tagsPageSize
+                  )
+                "
+                :default-sort="{ prop: 'date', order: 'descending' }"
+                :height="$baseTableHeight(0) - 60"
+                :row-class-name="getRowClass"
+                row-key="identifier"
+                style="width: 100%; margin-top: 10px"
+              >
+                <el-table-column
+                  align="center"
+                  :label="$translateTitle('product.order')"
+                  width="60"
+                >
+                  <template #default="{ row }">
+                    {{ row.dataForm.order }}
+                  </template>
+                </el-table-column>
+                <el-table-column
+                  align="center"
+                  :label="$translateTitle('product.identifier')"
+                  prop="identifier"
+                  width="100"
+                />
+                <el-table-column
+                  align="center"
+                  :label="$translateTitle('product.functionname')"
+                  prop="name"
+                />
+                <el-table-column
+                  align="center"
+                  :label="$translateTitle('product.datatype')"
+                  width="90"
+                >
+                  <template #default="{ row }">
+                    <span>{{ row.dataType.type }}</span>
+                  </template>
+                </el-table-column>
+                <el-table-column
+                  align="center"
+                  :label="$translateTitle('product.datadefinition')"
+                >
+                  <template #default="{ row }">
+                    <span
+                      v-if="
+                        row.dataType.specs &&
+                        (row.dataType.type == 'double' ||
+                          row.dataType.type == 'float' ||
+                          row.dataType.type == 'int')
+                      "
+                    >
+                      {{
+                        $translateTitle('product.rangeofvalues') +
+                        row.dataType.specs.min +
+                        '~' +
+                        row.dataType.specs.max
+                      }}
+                    </span>
+                    <span v-else-if="row.dataType.type == 'string'">
+                      {{
+                        $translateTitle('product.datalength') +
+                        ':' +
+                        row.dataType.size +
+                        $translateTitle('product.byte')
+                      }}
+                    </span>
+                    <span v-else-if="row.dataType.type == 'date'" />
+                    <span v-else-if="row.dataType.type != 'struct'">
+                      {{ row.dataType.specs }}
+                    </span>
+                    <span v-else />
+                  </template>
+                </el-table-column>
+                <el-table-column
+                  align="center"
+                  :label="$translateTitle('developer.operation')"
+                  width="160"
+                >
+                  <template #default="{ row, $index }">
+                    <el-button
+                      size="mini"
+                      type="danger"
+                      @click.native="deletewmx(row)"
+                    >
+                      {{ $translateTitle('developer.delete') }}
+                    </el-button>
+                    <el-button
+                      size="mini"
+                      type="primary"
+                      @click.native="wmxDataFill(row, $index, 'tags')"
+                    >
+                      <!-- 编辑 -->
+                      {{ $translateTitle('task.Edit') }}
+                    </el-button>
+                  </template>
+                </el-table-column>
+                <template #empty>
+                  <el-image
+                    class="dgiot-data-empty"
+                    :src="
+                      require('../../../../public/assets/images/platform/assets/empty_images/data_empty.png')
+                    "
+                  />
+                </template>
+              </el-table>
+              <!--功能定义分页-->
+              <el-pagination
+                layout="total, sizes, prev, pager, next, jumper"
+                :page-size="tagsPageSize"
+                :page-sizes="[10, 20, 30, 50]"
+                style="margin-top: 10px"
+                :total="modules.data.tags.length"
+                @current-change="tagsCurrentChange"
+                @size-change="tagsSizeChange"
+              />
+            </el-tab-pane>
+          </el-tabs>
           <!--取物模型模板-->
           <el-dialog
             :append-to-body="true"
@@ -894,6 +1337,7 @@
             <dgiot-wmx
               :key="upKey"
               ref="sizeForm"
+              :moduletype="moduletype"
               :size-form1="sizeForm"
               @addDas="addDas"
               @addDomain="addDomain"
@@ -1470,133 +1914,6 @@
           </div>
         </el-tab-pane>
         <!-- </div> -->
-        <el-tab-pane label="自定义功能" name="customize">
-          <el-button
-            size="small"
-            type="primary"
-            @click.native="createProperty('service')"
-          >
-            新增自定义服务
-          </el-button>
-          <el-table border :data="productObj.thing.expand" style="width: 100%">
-            <el-table-column
-              align="center"
-              label="功能名称"
-              prop="name"
-              show-overflow-tooltip
-              sortable
-              width="auto"
-            />
-            <el-table-column
-              align="center"
-              label="标识符"
-              prop="identifier"
-              show-overflow-tooltip
-              sortable
-              width="auto"
-            />
-            <!--            <el-table-column-->
-            <!--              align="center"-->
-            <!--              label="事件类型、调用方式"-->
-            <!--              prop="transfer"-->
-            <!--              show-overflow-tooltip-->
-            <!--              sortable-->
-            <!--              width="auto"-->
-            <!--            />-->
-            <!--            <el-table-column label="输入参数" prop="enter" />-->
-            <el-table-column
-              align="center"
-              label="事件类型、调用方式"
-              show-overflow-tooltip
-              width="auto"
-            >
-              <template slot-scope="scope">
-                <el-tag
-                  v-show="scope.row.type == 'event'"
-                  effect="dark"
-                  :type="scope.row.types"
-                >
-                  {{
-                    { info: '信息', warning: '告警', error: '故障' }[
-                      scope.row.types
-                    ] || '暂无'
-                  }}
-                </el-tag>
-                <el-tag v-show="scope.row.type == 'service'" effect="plain">
-                  {{ scope.row.transfer == 'sync' ? '同步' : '异步' }}
-                </el-tag>
-              </template>
-            </el-table-column>
-            <el-table-column
-              align="center"
-              label="功能类型"
-              prop="type"
-              show-overflow-tooltip
-              sortable
-              width="auto"
-            >
-              <template slot-scope="scope">
-                <el-popover
-                  v-if="scope.row.type == 'event'"
-                  placement="top"
-                  trigger="hover"
-                >
-                  <p>输入参数: {{ scope.row.enter }}</p>
-                  <div slot="reference" class="name-wrapper">
-                    <el-tag size="medium">
-                      {{ scope.row.type == 'event' ? '事件' : '服务' }}
-                    </el-tag>
-                  </div>
-                </el-popover>
-                <el-tag v-else size="medium">
-                  {{ scope.row.type == 'event' ? '事件' : '服务' }}
-                </el-tag>
-              </template>
-            </el-table-column>
-            <el-table-column
-              align="center"
-              label="输出参数"
-              prop="output"
-              show-overflow-tooltip
-              sortable
-              width="auto"
-            />
-            <el-table-column
-              align="center"
-              label="描述"
-              prop="describe"
-              show-overflow-tooltip
-              sortable
-              width="auto"
-            />
-            <el-table-column
-              align="center"
-              label="操作"
-              prop="type"
-              show-overflow-tooltip
-              sortable
-              width="auto"
-            >
-              <template slot-scope="scope">
-                <el-button type="info" @click.native="editModus(scope.row)">
-                  修改
-                </el-button>
-                <el-button
-                  type="danger"
-                  @click.native="
-                    deleteModus(
-                      scope.$index,
-                      productObj.thing.expand,
-                      scope.row
-                    )
-                  "
-                >
-                  删除
-                </el-button>
-              </template>
-            </el-table-column>
-          </el-table>
-        </el-tab-pane>
         <!-----------------服务通道------------------------------------------>
         <el-tab-pane
           :label="$translateTitle('product.physicalaccess')"
@@ -1993,11 +2310,11 @@
       :close-on-press-escape="true"
       :destroy-on-close="true"
       :modal="true"
-      :title="modules.type == 'event' ? '自定义事件' : '自定义服务'"
+      :title="modules.type == 'events' ? '自定义事件' : '自定义服务'"
       :visible.sync="modules.visible"
       width="30%"
     >
-      <div style="margin-bottom: 9px; display: inline-block">
+      <!-- <div style="margin-bottom: 9px; display: inline-block">
         <span
           style="
             width: 80px;
@@ -2027,31 +2344,31 @@
             事件
           </el-radio>
         </el-radio-group>
-      </div>
+      </div> -->
       <el-form
-        v-show="modules.type == 'service'"
-        ref="service"
+        v-show="modules.type == 'services'"
+        ref="services"
         label-position="right"
         label-width="80px"
-        :model="modules.service.data"
-        :rules="modules.service.rules"
+        :model="modules.services.data"
+        :rules="modules.services.rules"
         size="mini"
       >
         <el-form-item label="功能名称" prop="name">
-          <el-input v-model="modules.service.data.name" />
+          <el-input v-model="modules.services.data.name" />
         </el-form-item>
         <el-form-item label="标识符" prop="identifier">
-          <el-input v-model="modules.service.data.identifier" />
+          <el-input v-model="modules.services.data.identifier" />
         </el-form-item>
         <el-form-item label="调用方式" prop="transfer">
-          <el-radio-group v-model="modules.service.data.transfer" size="mini">
+          <el-radio-group v-model="modules.services.data.transfer" size="mini">
             <el-radio border label="sync">同步</el-radio>
             <el-radio border label="async">异步</el-radio>
           </el-radio-group>
         </el-form-item>
         <el-form-item label="输入参数" prop="enter">
           <el-select
-            v-model="modules.service.data.enter"
+            v-model="modules.services.data.enter"
             multiple
             placeholder="请选择输出参数"
             style="width: 100%"
@@ -2071,7 +2388,7 @@
         </el-form-item>
         <el-form-item label="输出参数" prop="output">
           <el-select
-            v-model="modules.service.data.output"
+            v-model="modules.services.data.output"
             multiple
             placeholder="请选择输出参数"
             style="width: 100%"
@@ -2090,13 +2407,13 @@
           </el-select>
         </el-form-item>
         <el-form-item label="描述" prop="describe">
-          <el-input v-model="modules.service.data.describe" type="textarea" />
+          <el-input v-model="modules.services.data.describe" type="textarea" />
         </el-form-item>
         <el-form-item size="large" style="text-align: center">
           <el-button
             size="mini"
             type="primary"
-            @click.native="submitModules('service', modules.service)"
+            @click.native="submitModules('services', modules.services)"
           >
             确认
           </el-button>
@@ -2105,22 +2422,22 @@
       </el-form>
 
       <el-form
-        v-show="modules.type == 'event'"
-        ref="event"
+        v-show="modules.type == 'events'"
+        ref="events"
         label-position="right"
         label-width="80px"
-        :model="modules.event.data"
-        :rules="modules.event.rules"
+        :model="modules.events.data"
+        :rules="modules.events.rules"
         size="mini"
       >
         <el-form-item label="功能名称" prop="name">
-          <el-input v-model="modules.event.data.name" />
+          <el-input v-model="modules.events.data.name" />
         </el-form-item>
         <el-form-item label="标识符" prop="identifier">
-          <el-input v-model="modules.event.data.identifier" />
+          <el-input v-model="modules.events.data.identifier" />
         </el-form-item>
         <el-form-item label="事件类型" prop="types">
-          <el-radio-group v-model="modules.event.data.types" size="mini">
+          <el-radio-group v-model="modules.events.data.types" size="mini">
             <el-radio label="info">信息</el-radio>
             <el-radio label="warning">告警</el-radio>
             <el-radio label="error">故障</el-radio>
@@ -2128,7 +2445,7 @@
         </el-form-item>
         <el-form-item label="输出参数" prop="output">
           <el-select
-            v-model="modules.event.data.output"
+            v-model="modules.events.data.output"
             multiple
             placeholder="请选择输出参数"
             style="width: 100%"
@@ -2147,13 +2464,13 @@
           </el-select>
         </el-form-item>
         <el-form-item label="描述" prop="describe">
-          <el-input v-model="modules.event.data.describe" type="textarea" />
+          <el-input v-model="modules.events.data.describe" type="textarea" />
         </el-form-item>
         <el-form-item size="large" style="text-align: center">
           <el-button
             size="mini"
             type="primary"
-            @click.native="submitModules('event', modules.event)"
+            @click.native="submitModules('events', modules.events)"
           >
             确认
           </el-button>

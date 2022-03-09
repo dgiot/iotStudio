@@ -129,3 +129,18 @@ export function ruleTest(actions, ctx, description, forname, name, rawsql) {
     },
   })
 }
+
+/**
+ * [export description]
+ *
+ * @param   {[type]}  params  [params description]
+ *
+ * @return  {[type]}          [return description]
+ */
+export function sqlTpl(params) {
+  return request({
+    url: 'rulesql',
+    method: 'post',
+    data: params,
+  })
+}
