@@ -1428,26 +1428,8 @@
         this.$dgiotBus.$emit('MqttSubscribe', subInfo)
         subupadte(row.objectId, 'start_logger')
         this.topicKey = this.$dgiotBus.topicKey(this.router, this.subtopic)
-        // this.pubtopic = 'channel/' + row.objectId
-        // setTimeout(() => {
-        //   this.$dgiotBus.$emit(
-        //     `MqttPublish`,
-        //     this.pubtopic,
-        //     JSON.stringify({ action: 'start_logger' }),
-        //     0,
-        //     false
-        //   )
-        //   this.refreshFlag = this.subtopic.split('log')[1]
-        // }, 500)
       },
       handleCloseSubdialog(pubtopic) {
-        // this.$dgiotBus.$emit(
-        //   `MqttPublish`,
-        //   pubtopic,
-        //   JSON.stringify({ action: 'stop_logger' }),
-        //   0,
-        //   false
-        // )
         subupadte(this.channelid, 'stop_logger')
         this.refreshFlag = moment().format('x')
         this.submessage = ''

@@ -1,4 +1,5 @@
 /* eslint-disable */
+import mqttLog from '@/views/CloudFunction/engine/components/mqttLog.vue'
 import {mapGetters, mapMutations} from 'vuex'
 import {getDeviceCountByProduct} from '@/api/Device/index'
 import {
@@ -15,18 +16,14 @@ import {getRule} from '@/api/Rules'
 import {postProductTemplet} from '@/api/ProductTemplet'
 import {Compile, subupadte} from '@/api/System/index'
 import {setTimeout} from 'timers'
-import {Websocket} from '@/utils/webscroket/index' // todo 需要替换为dgiotmqtt
 import wmxdetail from '@/views/DeviceCloud/manage/component/wmxdetail'
 import {returnLogin} from '@/utils/utilwen'
 import profile from '@/views/DeviceCloud/manage/profile'
 import {dgiotlog} from '../../../../utils/dgiotLog'
 import {queryView} from '@/api/View'
-import {delDict} from '../../../../api/Dict'
-
 var editor
 var editor1
 var editor2
-var subdialog
 var editormodel
 var editorcreate
 var editorinsert
@@ -38,6 +35,7 @@ var isupdatetrue = ''
 
 export default {
   components: {
+    mqttLog,
     'dgiot-wmx': wmxdetail,
     'dgiot-profile': profile,
   },
@@ -617,6 +615,10 @@ export default {
       wmxData: [],
       wmxDataBk: [],
       editorList: [],
+      topicKey: '',
+      refreshFlag: '99',
+      msgList: [],
+      submessage: '',
       mqtt:{
         router:'',
         subtopic:'',
@@ -630,6 +632,8 @@ export default {
       issub: false,
       subtimer: null,
       subdialog: false,
+      channelid: '',
+      channelInfo: [],
       textarea: '',
       subdialogtimer: null,
       subdialogid: '',
@@ -681,13 +685,28 @@ export default {
     }),
   },
   watch: {
-    'mqtt.subtopic':{
-      deep: true,
-      handler(topic) {
-        this.subtimer = window.setInterval(() => {
-          this.subAce('formInline', false)
-        }, 5000)
+    topicKey: {
+      handler: function (newVal, oldval) {
+        console.log('newVal topicKey', newVal)
+        console.log('oldval topicKey', oldval)
+        let _this = this
+        if (newVal) {
+          this.$dgiotBus.$off(newVal)
+          this.$dgiotBus.$on(newVal, (res) => {
+            console.error(res)
+            const { payload } = res
+            this.mqttMsg(payload)
+          })
+        }
+        if (oldval) {
+          // 取消订阅
+          _this.submessage = ''
+          _this.msgList = []
+          _this.logKey = '99'
+        }
       },
+      deep: true,
+      limit: true,
     },
     issub: {
       deep: true,
@@ -702,7 +721,6 @@ export default {
     this.$nextTick(() => {
       this.$refs._tabs.$children[0].$refs.tabs[3].style.display = 'none'
       this.mqtt.router = this.$dgiotBus.router(this.$route.fullPath)
-      // this.mqtt.subtopic = '$dg/channel/#'
     })
     this.Industry()
     this.getAllunit()
@@ -3283,98 +3301,37 @@ export default {
     },
     // 订阅日志
     subProTopic(row) {
+      this.channelid = row.objectId
       this.subdialog = true
       this.subdialogid = row.objectId
       this.channelname = row.objectId
-      setTimeout(() => {
-        subdialog = ace.edit('subdialog')
-        subdialog.session.setMode('ace/mode/text') // 设置语言
-        subdialog.setTheme('ace/theme/gob') // 设置主题
-        subdialog.setReadOnly(true)
-        subdialog.setOptions({
-          enableBasicAutocompletion: false,
-          enableSnippets: true,
-          enableLiveAutocompletion: true, // 设置自动提示
-        })
-      })
-      var info = {
-        topic: 'log/channel/' + row.objectId + '/' + this.productId,
+      this.mqtt.subtopic = '$dg/channel/' + row.objectId + '/#'
+      let subInfo = {
+        router: this.mqtt.router,
+        topic: this.mqtt.subtopic,
         qos: 2,
+        ttl: 1000 * 60 * 60 * 3,
       }
-      var channeltopic = new RegExp(
-        'log/channel/' + row.objectId + '/' + this.productId
-      )
-      this.mqtt.subtopic = '$dg/channel/' + row.objectId + '/' + this.productId+"#"
-      var submessage = ''
-      var _this = this
-      Websocket.add_hook(channeltopic, function (Msg) {
-        // 判断长度
-        if (subdialog.session.getLength() >= 1000) {
-          submessage = ''
-        } else {
-          submessage += _this.nowtime() + Msg + `\n`
-        }
-        subdialog.setValue(submessage)
-        subdialog.gotoLine(subdialog.session.getLength())
+      this.$dgiotBus.$emit('MqttSubscribe', subInfo)
+      subupadte(row.objectId, 'start_logger')
+      this.topicKey = this.$dgiotBus.topicKey(this.mqtt.router, this.mqtt.subtopic)
+    },
+    mqttMsg(Msg) {
+      console.error(Msg)
+      this.msgList.push({
+        timestamp: moment().format('x'),
+        msg: Msg,
       })
-      // 订阅
-      var text0 = JSON.stringify({
-        action: 'start_logger',
-      })
-      Websocket.subscribe(info, function (res) {
-        if (res.result) {
-          // dgiotlog.log(info);
-          // dgiotlog.log("订阅成功");
-          var sendInfo = {
-            topic: 'channel/' + row.objectId + '/' + _this.productId,
-            text: text0,
-            retained: true,
-            qos: 2,
-          }
-          Websocket.sendMessage(sendInfo)
-          _this.subdialogtimer = window.setInterval(() => {
-            Websocket.sendMessage(sendInfo)
-          }, 600000)
-        }
-      })
+      this.refreshFlag = moment().format('x')
+      this.submessage += Msg + `\n`
     },
     // 关闭弹窗操作
     handleCloseSubdialog() {
-      var text0 = JSON.stringify({
-        action: 'stop_logger',
-      })
-      var sendInfo = {
-        topic: 'channel/' + this.subdialogid + '/' + this.productId,
-        text: text0,
-        retained: true,
-        qos: 2,
-      }
-      Websocket.sendMessage(sendInfo)
+      subupadte(this.channelid, 'stop_logger')
       this.subdialog = false
-      window.clearInterval(this.subdialogtimer)
-      this.subdialogtimer = null
     },
     // 停止topic刷新
     stopsub(value) {
-      var text0
-      if (value == false) {
-        // this.subaction = 'start'
-        text0 = JSON.stringify({
-          action: 'stop_logger',
-        })
-      } else {
-        // this.subaction = 'stop'
-        text0 = JSON.stringify({
-          action: 'start_logger',
-        })
-      }
-      var sendInfo = {
-        topic: 'channel/' + this.subdialogid + '/' + this.productId,
-        text: text0,
-        retained: true,
-        qos: 2,
-      }
-      Websocket.sendMessage(sendInfo)
     }, // topic增加
     subTopic(formName, isupdated) {
       this.$refs[formName].validate((valid) => {

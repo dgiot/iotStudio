@@ -2592,32 +2592,13 @@
       :visible.sync="subdialog"
       width="85%"
     >
-      <div style="margin-top: 20px">
-        <pre
-          id="subdialog"
-          class="ace_editor"
-          style="width: 100%; min-height: 300px"
-        >
-                      <textarea
-                        class="ace_text-input"
-                        style="overflow:scroll"
-                      />
-        </pre>
-      </div>
-
-      <!-- </div> -->
-      <span slot="footer" class="dialog-footer" style="height: 30px">
-        <el-switch
-          v-model="value4"
-          active-color="#13ce66"
-          inactive-color="#ff4949"
-          inactive-text="自动刷新"
-          style="display: inline-block; margin-right: 10px"
-          @change="stopsub"
-        />
-        <!-- <el-button type="success" size="mini" @click.native="stopsub('start')" v-if="subaction=='start'">启动</el-button>
-        <el-button type="warning" size="mini" @click.native="stopsub('stop')" v-else>停止</el-button>-->
-      </span>
+      <mqtt-log
+        :channel-id="channelname"
+        :list="msgList"
+        :msg="submessage"
+        :product="channelInfo"
+        :refresh-key="refreshFlag"
+      />
     </el-dialog>
     <!--资源通道关联模型-->
     <el-dialog
