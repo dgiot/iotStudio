@@ -1328,11 +1328,11 @@
             :append-to-body="true"
             :before-close="wmxhandleClose"
             :close-on-click-modal="false"
-            fullscreen
+            :fullscreen="moduletype == 'properties' ? true : false"
             :title="wmxSituation + '自定义属性'"
-            top="0vh"
+            :top="moduletype == 'properties' ? '0vh' : '10vh'"
             :visible.sync="wmxdialogVisible"
-            width="100%"
+            :width="moduletype == 'properties' ? '100%' : '80%'"
           >
             <dgiot-wmx
               :key="upKey"

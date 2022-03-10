@@ -1059,8 +1059,9 @@
           this.formInline.from.where.splice(index, 1)
         }
       },
-      generatorSql(from) {
-        console.error(from.form)
+      generatorSql(tpl) {
+        const from = this.formInline.from
+        console.error(from, this.formInline.from)
         // this.formInline.sqltest = true
         // this.getEditor2(true)
         const setValue =
@@ -1095,7 +1096,7 @@
             })
             break
           case 'mqttConfig':
-            this.formInline.from.select.mqttConfig = from.where.map((item) => {
+            from.select.mqttConfig = from.where.map((item) => {
               return item.config
             })
             break

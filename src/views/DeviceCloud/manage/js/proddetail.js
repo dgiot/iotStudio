@@ -141,7 +141,7 @@ export default {
       tabsChild: 'properties',
       modules: {
         data: {
-          properties: {},
+          properties: [],
           events: [],
           services: [],
           tags: [],
@@ -205,7 +205,7 @@ export default {
           },
         },
       },
-      moduletype: 'tags',
+      moduletype: 'properties',
       amisproductInfo: [],
       upKey: moment.now(),
       codeFlag: false,
@@ -550,8 +550,8 @@ export default {
         das: [],
       },
       tableData: [],
-      // activeName: 'first',
-      activeName: 'third', //'customize',
+      activeName: 'first',
+      // activeName: 'third', //'customize',
       form: {
         Productname: '',
         ProductKey: '',
@@ -561,7 +561,7 @@ export default {
       dynamicReg: false,
       productId: '',
       productName: '',
-      productdetail: {},
+      productdetail: {thing:{properties: [], events: [], services: [], tags: []}},
       topicData: [],
       topic: [
         {
@@ -786,9 +786,12 @@ export default {
       const {
         thing = {properties: [], events: [], services: [], tags: []},
       } = await getProduct(productId)
-      this.productObj = thing
-      this.modules.data = thing
-      this.productdetail.thing = thing
+      _.merge({properties: [], events: [], services: [], tags: []}, thing);
+      const setThing = _.merge({properties: [], events: [], services: [], tags: []}, thing)
+      dgiotlogger.log('thing', setThing)
+      this.productObj = setThing
+      this.modules.data = setThing
+      this.productdetail.thing = setThing
     },
     async submitModules(type, form) {
       const {thing} = _.merge(this.productObj, {
@@ -954,19 +957,19 @@ export default {
         services = [],
         tags = [],
       } = this.productObj.thing
-      console.log(e.name)
+      console.log(e.name,this.productObj.thing,this.productObj.thing[e.name])
       switch (e.name) {
         case 'properties':
-          this.modules.data.properties = properties
+          this.modules.data.properties = properties || []
           break
         case 'events':
-          this.modules.data.events = events
+          this.modules.data.events = events || []
           break
         case 'services':
-          this.modules.data.services = services
+          this.modules.data.services = services || []
           break
         case 'tags':
-          this.modules.data.tags = tags
+          this.modules.data.tags = tags ||[]
           break
         default:
           break
@@ -1797,8 +1800,8 @@ export default {
           break
       }
       this.$nextTick(() => {
-        this.$refs[type].clearValidate()
-        this.$refs[type].resetFields()
+        if(this.this.$refs[type])    this.$refs[type].clearValidate()
+        if(this.this.$refs[type])    this.$refs[type].resetFields()
       })
     },
     // 物模型修改submitForm
