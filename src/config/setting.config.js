@@ -95,7 +95,7 @@ module.exports = {
   uniqueOpened: false,
   defaultOpeneds: [''],
   debounce: ['doEdit'],
-  clearConsole: false,
+  clearConsole: true,
   openFirstMenu: true,
   templateFolder: 'project',
   webpackBarName: '杭州数蛙科技有限公司',
