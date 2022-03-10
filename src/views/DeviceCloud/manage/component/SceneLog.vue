@@ -14,16 +14,17 @@
           @submit.native.prevent
         >
           <el-form-item :label="$translateTitle('device.tracetype')">
-            <el-select v-model="queryForm.tracetype">
-              <el-option
-                v-for="item in traceData"
-                :key="item"
-                :label="item"
-                :value="item"
-              >
-                {{ item }}
-              </el-option>
-            </el-select>
+            <span style="font-size: 18px">{{ 'clientid' }}</span>
+            <!--            <el-select v-model="queryForm.tracetype">-->
+            <!--              <el-option-->
+            <!--                v-for="item in traceData"-->
+            <!--                :key="item"-->
+            <!--                :label="item"-->
+            <!--                :value="item"-->
+            <!--              >-->
+            <!--                {{ item }}-->
+            <!--              </el-option>-->
+            <!--            </el-select>-->
           </el-form-item>
           <el-form-item :label="$translateTitle('device.action')">
             <el-switch
@@ -37,43 +38,6 @@
               style="display: block"
               @change="starttrace"
             />
-          </el-form-item>
-          <el-form-item>
-            <el-button
-              style="margin: 0 10px 10px 10px !important"
-              type="success"
-              @click="handleHeight"
-            >
-              <dgiot-icon
-                :icon="
-                  isFullscreen ? 'fullscreen-exit-fill' : 'fullscreen-fill'
-                "
-              />
-            </el-button>
-            <el-popover v-show="scroketMsg.length" trigger="hover">
-              <el-checkbox-group v-model="checkList">
-                <vue-draggable :list="logcolumns" v-bind="dragOptions">
-                  <div v-for="(item, index) in logcolumns" :key="item + index">
-                    <dgiot-icon icon="drag-drop-line" />
-                    <el-checkbox
-                      :disabled="item.disableCheck === true"
-                      :label="item"
-                    >
-                      {{ item }}
-                    </el-checkbox>
-                  </div>
-                </vue-draggable>
-              </el-checkbox-group>
-              <template #reference>
-                <el-button
-                  icon="el-icon-setting"
-                  style="margin: 0 0 10px 0 !important"
-                  type="primary"
-                >
-                  {{ $translateTitle('Logs.Draggable column settings') }}
-                </el-button>
-              </template>
-            </el-popover>
           </el-form-item>
           <el-form-item :label="$translateTitle('device.topic')" prop="product">
             <el-select v-model="instructtopic">
@@ -383,7 +347,7 @@
         this.queryForm.deviceid = this.deviceInfo.objectId
         if (this.queryForm.action == 'start') {
           this.subtopic =
-            'logger_trace/trace/' + this.deviceInfo.objectId + '/#'
+            '$dg/trace/' + this.deviceInfo.objectId + '/#'
         }
         this.topicKey = this.$dgiotBus.topicKey(this.router, this.subtopic)
         this.$dgiotBus.$emit(`MqttSubscribe`, {

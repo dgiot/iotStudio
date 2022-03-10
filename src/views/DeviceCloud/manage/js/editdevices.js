@@ -494,7 +494,7 @@ export default {
       addVisitedRoute: 'tabs/addVisitedRoute',
     }),
     Unbscribe() {
-      const subtopic = 'logger_trace/trace/' + this.deviceInfo.objectId + '/#'
+      const subtopic = '$dg/trace/' + this.deviceInfo.objectId + '/#'
       const topicKey = this.$dgiotBus.topicKey(this.router, subtopic)
       this.$dgiotBus.$emit('MqttUnbscribe', topicKey, subtopic)
       this.$dgiotBus.$emit('MqttUnbscribe', this.topicKey, this.subtopic)
