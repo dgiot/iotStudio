@@ -41,7 +41,7 @@ const handleData = ({ config, data, status, statusText }) => {
   // 若code属于操作正常code，则status修改为200
   if (codeVerificationArray.includes(code)) code = 200
   if (errorcodeVerificationArray.includes(code)) backHome()
-  dgiotlogger.info('code：', code)
+  // dgiotlogger.info('code：', code)
   // fixed https://gitee.com/dgiiot/dgiot/issues/I4TVGK
   if ([400, 401, 404, 406, 410, 500, 502, 504, 503].includes(Number(code))) {
     console.error(code, statusText, data)

@@ -984,8 +984,11 @@
     watch: {
       topicKey: {
         handler: function (newVal) {
-          this.$dgiotBus.$off(newVal)
+          console.info('mttt debug -----------------')
+          // this.$dgiotBus.$off(newVal)
           this.$dgiotBus.$on(newVal, (res) => {
+            console.info('mttt debug -----------------')
+            console.log(res)
             const { payload } = res
             this.mqttMsg(payload)
           })
@@ -1186,7 +1189,9 @@
         // )
         // // dgiotlog.log(key, mqttMsgValue, JSON.parse(mqttMsg))
         // console.clear()
-
+        console.info('mttt debug -----------------')
+        console.info(key)
+        console.info(mqttMsgValue)
         switch (key) {
           case 'app_count':
             this.app_count = mqttMsgValue.count
@@ -1311,7 +1316,7 @@
         })
         this.subtopic = `$dg/dashboard/32511dbfe5/report`
         this.topicKey = this.$dgiotBus.topicKey(this.router, this.subtopic)
-        this.$dgiotBus.$emit('MqttSubscribe', {
+        await this.$dgiotBus.$emit('MqttSubscribe', {
           router: this.router,
           topic: this.subtopic,
           qos: 0,
