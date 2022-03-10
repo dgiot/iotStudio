@@ -985,7 +985,7 @@
       topicKey: {
         handler: function (newVal) {
           console.info('mttt debug -----------------')
-          // this.$dgiotBus.$off(newVal)
+          this.$dgiotBus.$off(newVal)
           this.$dgiotBus.$on(newVal, (res) => {
             console.info('mttt debug -----------------')
             console.log(res)

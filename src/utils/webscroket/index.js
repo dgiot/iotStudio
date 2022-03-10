@@ -342,3 +342,4 @@ export {
   getsession,
   _scokethost,
 }
+window.Websocket = Websocket

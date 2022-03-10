@@ -121,7 +121,7 @@
   import requiremodule from '@/utils/file/requiremodule'
   import createState from '@/utils/konva/createState'
   import { mapGetters, mapMutations } from 'vuex'
-  import { Websocket } from '@/utils/webscroket/index'
+  // import { Websocket } from '@/utils/webscroket/index'
   import { _getTopo } from '@/api/Topo'
   import { putProduct, queryProduct } from '@/api/Product'
 
@@ -458,9 +458,19 @@
       // 处理mqtt信息
       handleMqttMsg(subdialogid) {
         let _this = this
-
+        const router = _this.$dgiotBus.router(this.$route.fullPath)
         var channeltopic = new RegExp('$dg/konva/' + subdialogid + '/properties/report')
-        Websocket.add_hook(channeltopic, (Msg) => {
+        _this.topicKey = _this.$dgiotBus.topicKey(router, channeltopic)
+        _this.$dgiotBus.$emit('MqttSubscribe', {
+          router: router,
+          topic: channeltopic,
+          qos: 0,
+          ttl: 1000 * 60 * 60 * 3,
+        })
+        _this.$dgiotBus.$off(subdialogid)
+        _this.$dgiotBus.$on(subdialogid, (res) => {
+          const Msg = res.payload
+          // this.mqttMsg(payload)
           let decodeMqtt
           let updataId = []
           console.log('收到消息', Msg)
@@ -476,7 +486,7 @@
           const Shape = decodeMqtt.konva
           // apply transition to all nodes in the array
           // Text.each(function (shape) {
-          const Text = this.stage.find('Text')
+          const Text = _this.stage.find('Text')
           console.log(Text)
           const tweens = []
           for (var n = 0; n < tweens.length; n++) {
@@ -507,7 +517,59 @@
           _this.stage.batchDraw()
           console.log('konva数据更新成功')
           // _this.updataProduct(this.productid)
+
+
+
         })
+
+        // Websocket.add_hook(channeltopic, (Msg) => {
+        //   let decodeMqtt
+        //   let updataId = []
+        //   console.log('收到消息', Msg)
+        //   if (!isBase64(Msg)) {
+        //     console.log('非base64数据类型')
+        //     return
+        //   } else {
+        //     decodeMqtt = JSON.parse(Base64.decode(Msg))
+        //     console.log('消息解密消息', decodeMqtt)
+        //   }
+        //
+        //   console.log(decodeMqtt.konva)
+        //   const Shape = decodeMqtt.konva
+        //   // apply transition to all nodes in the array
+        //   // Text.each(function (shape) {
+        //   const Text = this.stage.find('Text')
+        //   console.log(Text)
+        //   const tweens = []
+        //   for (var n = 0; n < tweens.length; n++) {
+        //     tweens[n].destroy()
+        //   }
+        //
+        //   Shape.each((i) => {
+        //     Text.each((shape) => {
+        //       if (i.id == shape.attrs.id) {
+        //         console.log('更新节点', i)
+        //         console.log(shape)
+        //         shape.text(i.text)
+        //         tweens.push(
+        //           new Konva.Tween({
+        //             node: shape,
+        //             duration: 1,
+        //             easing: Konva.Easings.ElasticEaseOut,
+        //           }).play(),
+        //         )
+        //       } else {
+        //         updataId.push(i.id)
+        //       }
+        //     })
+        //   })
+        //   if (updataId) {
+        //     console.log('以下组态id未更新', updataId)
+        //   }
+        //   _this.stage.batchDraw()
+        //   console.log('konva数据更新成功')
+        //   // _this.updataProduct(this.productid)
+        // })
       },
       // 取消订阅mqtt
       async handleCloseSub() {

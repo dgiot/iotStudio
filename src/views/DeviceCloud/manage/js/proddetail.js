@@ -15,7 +15,7 @@ import {getRule} from '@/api/Rules'
 import {postProductTemplet} from '@/api/ProductTemplet'
 import {Compile, subupadte} from '@/api/System/index'
 import {setTimeout} from 'timers'
-import {Websocket} from '@/utils/webscroket/index'
+import {Websocket} from '@/utils/webscroket/index' // todo 需要替换为dgiotmqtt
 import wmxdetail from '@/views/DeviceCloud/manage/component/wmxdetail'
 import {returnLogin} from '@/utils/utilwen'
 import profile from '@/views/DeviceCloud/manage/profile'
@@ -617,7 +617,11 @@ export default {
       wmxData: [],
       wmxDataBk: [],
       editorList: [],
-
+      mqtt:{
+        router:'',
+        subtopic:'',
+        pubtopic:''
+      },
       warningeditror: [],
       channellength: 20,
       channelstart: 0,
@@ -677,6 +681,14 @@ export default {
     }),
   },
   watch: {
+    'mqtt.subtopic':{
+      deep: true,
+      handler(topic) {
+        this.subtimer = window.setInterval(() => {
+          this.subAce('formInline', false)
+        }, 5000)
+      },
+    },
     issub: {
       deep: true,
       handler(val) {
@@ -689,10 +701,8 @@ export default {
   mounted() {
     this.$nextTick(() => {
       this.$refs._tabs.$children[0].$refs.tabs[3].style.display = 'none'
-      Websocket.subscribe({
-        topic: 'log/channel/#',
-        qos: 2,
-      })
+      this.mqtt.router = this.$dgiotBus.router(this.$route.fullPath)
+      // this.mqtt.subtopic = '$dg/channel/#'
     })
     this.Industry()
     this.getAllunit()
@@ -3294,6 +3304,7 @@ export default {
       var channeltopic = new RegExp(
         'log/channel/' + row.objectId + '/' + this.productId
       )
+      this.mqtt.subtopic = '$dg/channel/' + row.objectId + '/' + this.productId+"#"
       var submessage = ''
       var _this = this
       Websocket.add_hook(channeltopic, function (Msg) {
