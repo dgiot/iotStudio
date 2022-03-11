@@ -1,0 +1,66 @@
+{
+  "RegionId": "cn-shanghai",
+  "ProductKey": "a1lcmeFVu97",
+  "ThingModelJson": {
+    "productKey": "a1lcmeFVu97",
+    "events": [
+      {
+        "productKey": "a1lcmeFVu97",
+        "abilityType": 3,
+        "name": "自定义事件名称",
+        "identifier": "zidingyishijianbiaoshifu",
+        "description": "描述",
+        "eventName": "自定义事件名称",
+        "eventType": "INFO_EVENT_TYPE",
+        "outputData": [
+          {
+            "paraOrder": 0,
+            "direction": "PARAM_OUTPUT",
+            "custom": true,
+            "index": 0,
+            "name": "11",
+            "identifier": "11",
+            "dataSpecs": {
+              "unit": "var",
+              "step": "11",
+              "dataType": "INT",
+              "max": "111111",
+              "min": "11",
+              "unitName": "乏"
+            },
+            "dataType": "INT"
+          },
+          {
+            "paraOrder": 1,
+            "direction": "PARAM_OUTPUT",
+            "custom": true,
+            "index": 1,
+            "name": "参数名称",
+            "identifier": "biaoshifu",
+            "dataSpecs": {
+              "unit": "W/㎡",
+              "step": "1",
+              "dataType": "INT",
+              "max": "2",
+              "min": "1",
+              "unitName": "太阳总辐射"
+            },
+            "dataType": "INT"
+          }
+        ],
+        "outputParams": [
+          {
+            "index": 0,
+            "identifier": "11"
+          },
+          {
+            "index": 1,
+            "identifier": "biaoshifu"
+          }
+        ],
+        "required": false,
+        "custom": true
+      }
+    ]
+  }
+}

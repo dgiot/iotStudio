@@ -1,5 +1,6 @@
 /* eslint-disable */
 import mqttLog from '@/views/CloudFunction/engine/components/mqttLog.vue'
+import thingForm from '@/views/DeviceCloud/manage/component/Thing/form'
 import  {getDlinkTopic} from '@/api/Dlink'
 import {mapGetters, mapMutations} from 'vuex'
 import {getDeviceCountByProduct} from '@/api/Device/index'
@@ -39,6 +40,7 @@ export default {
     mqttLog,
     'dgiot-wmx': wmxdetail,
     'dgiot-profile': profile,
+    'thing-form': thingForm,
   },
   data() {
     const validCode = (rule, value, callback) => {
@@ -139,7 +141,8 @@ export default {
     return {
       dlinkTopic:{basic:[],thing:[]},
       mergeObj: {basic:[],thing:[]},
-      tabsChild: 'properties',
+      tabsChild:'properties',
+      // tabsChild: 'events',
       modules: {
         data: {
           properties: [],
@@ -552,7 +555,7 @@ export default {
       },
       tableData: [],
       activeName: 'first',
-      // activeName: 'second', //'customize',
+      // activeName: 'third', //'customize',
       form: {
         Productname: '',
         ProductKey: '',
@@ -662,6 +665,44 @@ export default {
       modifyIndex: -1,
       ace_editor: '',
       iframeShow: false,
+      atbas:{
+        visible: false,
+        childrenDrawer: false,
+      },
+      ruleForm: {
+        name: '',
+        region: '',
+        date1: '',
+        date2: '',
+        delivery: false,
+        type: [],
+        resource: '',
+        desc: ''
+      },
+      rules: {
+        name: [
+          { required: true, message: '请输入活动名称', trigger: 'blur' },
+          { min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' }
+        ],
+        region: [
+          { required: true, message: '请选择活动区域', trigger: 'change' }
+        ],
+        date1: [
+          { type: 'date', required: true, message: '请选择日期', trigger: 'change' }
+        ],
+        date2: [
+          { type: 'date', required: true, message: '请选择时间', trigger: 'change' }
+        ],
+        type: [
+          { type: 'array', required: true, message: '请至少选择一个活动性质', trigger: 'change' }
+        ],
+        resource: [
+          { required: true, message: '请选择活动资源', trigger: 'change' }
+        ],
+        desc: [
+          { required: true, message: '请填写活动形式', trigger: 'blur' }
+        ]
+      }
     }
   },
   computed: {
@@ -751,6 +792,21 @@ export default {
     this.subdialogtimer = null
   },
   methods: {
+    showDrawer() {
+      this.atbas.visible = true;
+    },
+    onClose() {
+      this.atbas.visible = false;
+    },
+    showChildrenDrawer() {
+      this.atbas.childrenDrawer = true;
+    },
+    onChildrenDrawerClose() {
+      this.atbas.childrenDrawer = false;
+      //  清空子组件的规则校验和表单数据
+      this.$refs.thingForm.resetForm('ruleForm')
+      console.log('清空子组件的规则校验和表单数据')
+    },
     basicMethod({  column, rowIndex }) {
         return this.mergeObj.basic[column.property][rowIndex]? {
           rowspan:this.mergeObj.basic[column.property][rowIndex],
@@ -773,67 +829,6 @@ export default {
     async getDefaultTopic(){
       const res = await getDlinkTopic()
       this.dlinkTopic = res
-      // this.dlinkTopic = {
-      //   "basic": [
-      //     {
-      //       "category": "OTA 升级",
-      //       "desc": "设备属性上报",
-      //       "isdef": true,
-      //       "topic": "$dg/user/${deviceid}/post",
-      //       "type": "sub"
-      //     },
-      //     {
-      //       "category": "OTA 升级",
-      //       "desc": "消息下发",
-      //       "isdef": true,
-      //       "topic": "$dg/thing/${deviceid}/",
-      //       "type": "pub"
-      //     },
-      //     {
-      //       "category": "OTA 升级",
-      //       "desc": "设备属性上报",
-      //       "isdef": true,
-      //       "topic": "$dg/user/${deviceid}/post",
-      //       "type": "sub"
-      //     },
-      //     {
-      //       "category": "OTA 升级",
-      //       "desc": "消息下发",
-      //       "isdef": true,
-      //       "topic": "$dg/thing/${deviceid}/",
-      //       "type": "pub"
-      //     },          {
-      //       "category": "OTA 升级",
-      //       "desc": "设备属性上报",
-      //       "isdef": true,
-      //       "topic": "$dg/user/${deviceid}/post",
-      //       "type": "sub"
-      //     },
-      //     {
-      //       "category": "OTA 升级",
-      //       "desc": "消息下发",
-      //       "isdef": true,
-      //       "topic": "$dg/thing/${deviceid}/",
-      //       "type": "pub"
-      //     }
-      //   ],
-      //   "thing": [
-      //     {
-      //       "category": "属性上报",
-      //       "desc": "设备属性上报",
-      //       "isdef": true,
-      //       "topic": "$dg/user/${deviceid}/post",
-      //       "type": "sub'"
-      //     },
-      //     {
-      //       "category": "属性上报",
-      //       "desc": "消息下发",
-      //       "isdef": true,
-      //       "topic": "$dg/thing/${deviceid}/",
-      //       "type": "pub"
-      //     }
-      //   ]
-      // }
       for(var k in this.dlinkTopic){
         await this.mergeTable(k,this.dlinkTopic[k])
       }
@@ -1926,7 +1921,8 @@ export default {
       this.modules.disabled = false
       this.moduletype = type
       this.setSizeForm(this.getFormOrginalData())
-      if(type !=='events') this.wmxdialogVisible = true
+      // if(type !=='events')
+        this.wmxdialogVisible = true
       this.wmxSituation = '新增'
       switch (type) {
         case 'properties':
@@ -1934,6 +1930,8 @@ export default {
         case 'services':
           break
         case 'events':
+          // this.atbas.visible = true;
+          // this.modules.type = 'events';
           break
         case 'tags':
           // this.modules.visible = true
@@ -1941,8 +1939,8 @@ export default {
           break
       }
       this.$nextTick(() => {
-        if(this.this.$refs[type])    this.$refs[type].clearValidate()
-        if(this.this.$refs[type])    this.$refs[type].resetFields()
+        if(this.$refs[type])    this.$refs[type].clearValidate()
+        if(this.$refs[type])    this.$refs[type].resetFields()
       })
     },
     // 物模型修改submitForm

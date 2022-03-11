@@ -520,6 +520,204 @@
             </span>
           </el-dialog>
 
+          <div>
+            <a-drawer
+              :closable="false"
+              :title="wmxSituation + '物模型事件'"
+              :visible="atbas.visible"
+              width="520"
+              @close="onClose"
+            >
+              <el-form
+                v-show="modules.type == 'services'"
+                ref="services"
+                label-position="right"
+                label-width="80px"
+                :model="modules.services.data"
+                :rules="modules.services.rules"
+                size="mini"
+              >
+                <el-form-item label="功能名称" prop="name">
+                  <el-input v-model="modules.services.data.name" />
+                </el-form-item>
+                <el-form-item label="标识符" prop="identifier">
+                  <el-input v-model="modules.services.data.identifier" />
+                </el-form-item>
+                <el-form-item label="调用方式" prop="transfer">
+                  <el-radio-group
+                    v-model="modules.services.data.transfer"
+                    size="mini"
+                  >
+                    <el-radio border label="sync">同步</el-radio>
+                    <el-radio border label="async">异步</el-radio>
+                  </el-radio-group>
+                </el-form-item>
+                <el-form-item label="输入参数" prop="enter">
+                  <el-select
+                    v-model="modules.services.data.enter"
+                    multiple
+                    placeholder="请选择输出参数"
+                    style="width: 100%"
+                  >
+                    <el-option
+                      v-for="item in wmxDataBk"
+                      :key="item.name"
+                      :label="item.name"
+                      :value="item.identifier"
+                    >
+                      <span style="float: left">{{ item.name }}</span>
+                      <span
+                        style="float: right; color: #8492a6; font-size: 13px"
+                      >
+                        {{ item.name }}
+                      </span>
+                    </el-option>
+                  </el-select>
+                </el-form-item>
+                <el-form-item label="输出参数" prop="output">
+                  <el-select
+                    v-model="modules.services.data.output"
+                    multiple
+                    placeholder="请选择输出参数"
+                    style="width: 100%"
+                  >
+                    <el-option
+                      v-for="item in wmxDataBk"
+                      :key="item.name"
+                      :label="item.identifier"
+                      :value="item.identifier"
+                    >
+                      <span style="float: left">{{ item.name }}</span>
+                      <span
+                        style="float: right; color: #8492a6; font-size: 13px"
+                      >
+                        {{ item.identifier }}
+                      </span>
+                    </el-option>
+                  </el-select>
+                </el-form-item>
+                <el-form-item label="描述" prop="describe">
+                  <el-input
+                    v-model="modules.services.data.describe"
+                    type="textarea"
+                  />
+                </el-form-item>
+                <el-form-item size="large" style="text-align: center">
+                  <el-button
+                    size="mini"
+                    type="primary"
+                    @click.native="submitModules('services', modules.services)"
+                  >
+                    确认
+                  </el-button>
+                  <el-button size="mini" @click.native="handleClose">
+                    取消
+                  </el-button>
+                </el-form-item>
+              </el-form>
+
+              <el-form
+                v-show="modules.type == 'events'"
+                ref="events"
+                label-position="right"
+                label-width="80px"
+                :model="modules.events.data"
+                :rules="modules.events.rules"
+                size="mini"
+              >
+                <el-form-item label="功能名称" prop="name">
+                  <el-input v-model="modules.events.data.name" />
+                </el-form-item>
+                <el-form-item label="标识符" prop="identifier">
+                  <el-input v-model="modules.events.data.identifier" />
+                </el-form-item>
+                <el-form-item label="事件类型" prop="types">
+                  <el-radio-group
+                    v-model="modules.events.data.types"
+                    size="mini"
+                  >
+                    <el-radio label="info">信息</el-radio>
+                    <el-radio label="warning">告警</el-radio>
+                    <el-radio label="error">故障</el-radio>
+                  </el-radio-group>
+                </el-form-item>
+                <el-form-item label="输出参数" prop="output">
+                  <el-select
+                    v-model="modules.events.data.output"
+                    multiple
+                    placeholder="请选择输出参数"
+                    style="width: 100%"
+                  >
+                    <el-option
+                      v-for="item in wmxDataBk"
+                      :key="item.name"
+                      :label="item.name"
+                      :value="item.identifier"
+                    >
+                      <span style="float: left">{{ item.name }}</span>
+                      <span
+                        style="float: right; color: #8492a6; font-size: 13px"
+                      >
+                        {{ item.identifier }}
+                      </span>
+                    </el-option>
+                  </el-select>
+
+                  <el-link type="primary" @click.native="showChildrenDrawer">
+                    <a-icon type="plus" />
+                    增加参数
+                  </el-link>
+                </el-form-item>
+                <el-form-item label="描述" prop="describe">
+                  <el-input
+                    v-model="modules.events.data.describe"
+                    type="textarea"
+                  />
+                </el-form-item>
+                <el-form-item size="large" style="text-align: center">
+                  <el-button
+                    size="mini"
+                    type="primary"
+                    @click.native="submitModules('events', modules.events)"
+                  >
+                    确认
+                  </el-button>
+                  <el-button size="mini" @click.native="handleClose">
+                    取消
+                  </el-button>
+                </el-form-item>
+              </el-form>
+
+              <a-drawer
+                :closable="false"
+                title="Two-level Drawer"
+                :visible="atbas.childrenDrawer"
+                width="500"
+                @close="onChildrenDrawerClose"
+              >
+                <thing-form ref="thingForm" />
+              </a-drawer>
+              <div
+                :style="{
+                  position: 'absolute',
+                  bottom: 0,
+                  width: '100%',
+                  borderTop: '1px solid #e8e8e8',
+                  padding: '10px 16px',
+                  textAlign: 'right',
+                  left: 0,
+                  background: '#fff',
+                  borderRadius: '0 0 4px 4px',
+                }"
+              >
+                <!--                <a-button style="marginright: 8px" @click="onClose">-->
+                <!--                  Cancel-->
+                <!--                </a-button>-->
+                <!--                <a-button type="primary" @click="onClose">Submit</a-button>-->
+              </div>
+            </a-drawer>
+          </div>
+
           <el-tabs v-model="tabsChild" @tab-click="handleChildClick">
             <el-tab-pane label="属性定义" name="properties">
               <div>
@@ -2392,138 +2590,6 @@
           </el-radio>
         </el-radio-group>
       </div> -->
-      <el-form
-        v-show="modules.type == 'services'"
-        ref="services"
-        label-position="right"
-        label-width="80px"
-        :model="modules.services.data"
-        :rules="modules.services.rules"
-        size="mini"
-      >
-        <el-form-item label="功能名称" prop="name">
-          <el-input v-model="modules.services.data.name" />
-        </el-form-item>
-        <el-form-item label="标识符" prop="identifier">
-          <el-input v-model="modules.services.data.identifier" />
-        </el-form-item>
-        <el-form-item label="调用方式" prop="transfer">
-          <el-radio-group v-model="modules.services.data.transfer" size="mini">
-            <el-radio border label="sync">同步</el-radio>
-            <el-radio border label="async">异步</el-radio>
-          </el-radio-group>
-        </el-form-item>
-        <el-form-item label="输入参数" prop="enter">
-          <el-select
-            v-model="modules.services.data.enter"
-            multiple
-            placeholder="请选择输出参数"
-            style="width: 100%"
-          >
-            <el-option
-              v-for="item in wmxDataBk"
-              :key="item.name"
-              :label="item.name"
-              :value="item.identifier"
-            >
-              <span style="float: left">{{ item.name }}</span>
-              <span style="float: right; color: #8492a6; font-size: 13px">
-                {{ item.name }}
-              </span>
-            </el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="输出参数" prop="output">
-          <el-select
-            v-model="modules.services.data.output"
-            multiple
-            placeholder="请选择输出参数"
-            style="width: 100%"
-          >
-            <el-option
-              v-for="item in wmxDataBk"
-              :key="item.name"
-              :label="item.identifier"
-              :value="item.identifier"
-            >
-              <span style="float: left">{{ item.name }}</span>
-              <span style="float: right; color: #8492a6; font-size: 13px">
-                {{ item.identifier }}
-              </span>
-            </el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="描述" prop="describe">
-          <el-input v-model="modules.services.data.describe" type="textarea" />
-        </el-form-item>
-        <el-form-item size="large" style="text-align: center">
-          <el-button
-            size="mini"
-            type="primary"
-            @click.native="submitModules('services', modules.services)"
-          >
-            确认
-          </el-button>
-          <el-button size="mini" @click.native="handleClose">取消</el-button>
-        </el-form-item>
-      </el-form>
-
-      <el-form
-        v-show="modules.type == 'events'"
-        ref="events"
-        label-position="right"
-        label-width="80px"
-        :model="modules.events.data"
-        :rules="modules.events.rules"
-        size="mini"
-      >
-        <el-form-item label="功能名称" prop="name">
-          <el-input v-model="modules.events.data.name" />
-        </el-form-item>
-        <el-form-item label="标识符" prop="identifier">
-          <el-input v-model="modules.events.data.identifier" />
-        </el-form-item>
-        <el-form-item label="事件类型" prop="types">
-          <el-radio-group v-model="modules.events.data.types" size="mini">
-            <el-radio label="info">信息</el-radio>
-            <el-radio label="warning">告警</el-radio>
-            <el-radio label="error">故障</el-radio>
-          </el-radio-group>
-        </el-form-item>
-        <el-form-item label="输出参数" prop="output">
-          <el-select
-            v-model="modules.events.data.output"
-            multiple
-            placeholder="请选择输出参数"
-            style="width: 100%"
-          >
-            <el-option
-              v-for="item in wmxDataBk"
-              :key="item.name"
-              :label="item.name"
-              :value="item.identifier"
-            >
-              <span style="float: left">{{ item.name }}</span>
-              <span style="float: right; color: #8492a6; font-size: 13px">
-                {{ item.identifier }}
-              </span>
-            </el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="描述" prop="describe">
-          <el-input v-model="modules.events.data.describe" type="textarea" />
-        </el-form-item>
-        <el-form-item size="large" style="text-align: center">
-          <el-button
-            size="mini"
-            type="primary"
-            @click.native="submitModules('events', modules.events)"
-          >
-            确认
-          </el-button>
-          <el-button size="mini" @click.native="handleClose">取消</el-button>
-        </el-form-item>
-      </el-form>
     </el-dialog>
     <!--物模型-->
     <el-dialog

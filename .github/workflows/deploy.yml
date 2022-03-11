@@ -54,15 +54,16 @@ jobs:
       - name: cdn static 🚀
         run: |
           cd dist
-          wget https://dgiot-release-1306147891.cos.ap-nanjing.myqcloud.com/v4.4.0/dgiot_dashboard.tar.gz
-          tar xf dgiot_dashboard.tar.gz
-          wget https://dgiot-release-1306147891.cos.ap-nanjing.myqcloud.com/v4.4.0/dgiot_swagger.tar.gz
-          tar xf dgiot_swagger.tar.gz
-          wget https://dgiot-release-1306147891.cos.ap-nanjing.myqcloud.com/v4.4.0/dgiot_file.tar.gz
-          tar xf dgiot_file.tar.gz
-          rm -rf dgiot_dashboard.tar.gz dgiot_swagger.tar.gz dgiot_file.tar.gz
-          wget http://dev.iotn2n.com/swagger.json
-          wget https://raw.githubusercontent.com/dgiot/dgiot-dashboard/251eb208615d55bfde630e26a3f957591ae09f7e/public/netlify.toml
+          wget https://dgiot-release-1306147891.cos.ap-nanjing.myqcloud.com/v4.4.0/dgiot_dashboard.tar.gz &> /dev/null
+          tar xf dgiot_dashboard.tar.gz &> /dev/null
+          cp -r dgiot_dashboard/* .
+          wget https://dgiot-release-1306147891.cos.ap-nanjing.myqcloud.com/v4.4.0/dgiot_swagger.tar.gz &> /dev/null
+          tar xf dgiot_swagger.tar.gz &> /dev/null
+          wget https://dgiot-release-1306147891.cos.ap-nanjing.myqcloud.com/v4.4.0/dgiot_file.tar.gz &> /dev/null
+          tar xf dgiot_file.tar.gz &> /dev/null
+          rm -rf dgiot_dashboard.tar.gz dgiot_swagger.tar.gz dgiot_file.tar.gz &> /dev/null
+          wget http://dev.iotn2n.com/swagger.json &> /dev/null
+          wget https://raw.githubusercontent.com/dgiot/dgiot-dashboard/251eb208615d55bfde630e26a3f957591ae09f7e/public/netlify.toml &> /dev/null
       - name: Deploy to github gh-pages 🚀
         uses: JamesIves/github-pages-deploy-action@releases/v3
         with:
@@ -99,26 +100,26 @@ jobs:
           npx surge --project ./dist --domain $DEPLOY_DOMAIN --token ${{ secrets.surge_token }}
           echo the preview URL is $DEPLOY_DOMAIN
           echo "::set-output name=url::$DEPLOY_DOMAIN"
-#      - name: Deploy to vercel 🚀
-#        uses: amondnet/vercel-action@v20
-#        with:
-#          vercel-token: ${{ secrets.VERCEL_TOKEN }}
-#          github-token: ${{ secrets.GIT_TOKEN }}
-#          vercel-args: '--prod' #Optional
-#          vercel-org-id: ${{ secrets.ORG_ID}}
-#          vercel-project-id: ${{ secrets.PROJECT_ID}}
-#          working-directory: ./dev
-#      # 使用云开发 Github Action 部署
-#      - name: Deploy CloudBase 🚀
-#        uses: TencentCloudBase/cloudbase-action@v1.1.0
-#        with:
-#          # 云开发的访问密钥 secretId 和 secretKey
-#          secretId: ${{ secrets.SECRET_ID }}
-#          secretKey: ${{ secrets.SECRET_KEY }}
-#          # 云开发的环境id
-#          envId: ${{ secrets.ENV_ID }}
-#          # Github 项目静态文件的路径
-#          staticSrcPath: ./dev
+      #      - name: Deploy to vercel 🚀
+      #        uses: amondnet/vercel-action@v20
+      #        with:
+      #          vercel-token: ${{ secrets.VERCEL_TOKEN }}
+      #          github-token: ${{ secrets.GIT_TOKEN }}
+      #          vercel-args: '--prod' #Optional
+      #          vercel-org-id: ${{ secrets.ORG_ID}}
+      #          vercel-project-id: ${{ secrets.PROJECT_ID}}
+      #          working-directory: ./dev
+      #      # 使用云开发 Github Action 部署
+      #      - name: Deploy CloudBase 🚀
+      #        uses: TencentCloudBase/cloudbase-action@v1.1.0
+      #        with:
+      #          # 云开发的访问密钥 secretId 和 secretKey
+      #          secretId: ${{ secrets.SECRET_ID }}
+      #          secretKey: ${{ secrets.SECRET_KEY }}
+      #          # 云开发的环境id
+      #          envId: ${{ secrets.ENV_ID }}
+      #          # Github 项目静态文件的路径
+      #          staticSrcPath: ./dev
       - name: Sync dgiot-dashboard Pages  🚀
         uses: yanglbme/gitee-pages-action@main
         with:
