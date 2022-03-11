@@ -1,5 +1,6 @@
 /* eslint-disable */
 import mqttLog from '@/views/CloudFunction/engine/components/mqttLog.vue'
+import  {getDlinkTopic} from '@/api/Dlink'
 import {mapGetters, mapMutations} from 'vuex'
 import {getDeviceCountByProduct} from '@/api/Device/index'
 import {
@@ -136,6 +137,8 @@ export default {
       }
     }
     return {
+      dlinkTopic:{basic:[],thing:[]},
+      mergeObj: {basic:[],thing:[]},
       tabsChild: 'properties',
       modules: {
         data: {
@@ -549,7 +552,7 @@ export default {
       },
       tableData: [],
       activeName: 'first',
-      // activeName: 'third', //'customize',
+      // activeName: 'second', //'customize',
       form: {
         Productname: '',
         ProductKey: '',
@@ -563,14 +566,14 @@ export default {
       topicData: [],
       topic: [
         {
-          topic: 'thing/${ProductId}/${DevAddr}/post',
-          type: 'pub',
-          desc: '设备上报',
+          topic: '$dg/user/${deviceid}/post',
+          type: 'sub',
+          desc: '设备属性上报',
           isdef: true,
         },
         {
-          topic: 'thing/${ProductId}/${DevAddr}',
-          type: 'sub',
+          topic: '$dg/thing/${deviceid}/',
+          type: 'pub',
           desc: '消息下发',
           isdef: true,
         },
@@ -718,6 +721,7 @@ export default {
     },
   },
   mounted() {
+    this.getDefaultTopic()
     this.$nextTick(() => {
       this.$refs._tabs.$children[0].$refs.tabs[3].style.display = 'none'
       this.mqtt.router = this.$dgiotBus.router(this.$route.fullPath)
@@ -747,6 +751,115 @@ export default {
     this.subdialogtimer = null
   },
   methods: {
+    basicMethod({  column, rowIndex }) {
+        return this.mergeObj.basic[column.property][rowIndex]? {
+          rowspan:this.mergeObj.basic[column.property][rowIndex],
+          colspan: 1
+        }:{
+          rowspan: 0,
+          colspan: 0
+        }
+    },
+    thingMethod({  column, rowIndex }) {
+      return this.mergeObj.basic[column.property][rowIndex]?
+        {
+        rowspan:this.mergeObj.basic[column.property][rowIndex],
+        colspan: 1
+      }:{
+        rowspan: 0,
+        colspan: 0
+      }
+    },
+    async getDefaultTopic(){
+      const res = await getDlinkTopic()
+      this.dlinkTopic = res
+      // this.dlinkTopic = {
+      //   "basic": [
+      //     {
+      //       "category": "OTA 升级",
+      //       "desc": "设备属性上报",
+      //       "isdef": true,
+      //       "topic": "$dg/user/${deviceid}/post",
+      //       "type": "sub"
+      //     },
+      //     {
+      //       "category": "OTA 升级",
+      //       "desc": "消息下发",
+      //       "isdef": true,
+      //       "topic": "$dg/thing/${deviceid}/",
+      //       "type": "pub"
+      //     },
+      //     {
+      //       "category": "OTA 升级",
+      //       "desc": "设备属性上报",
+      //       "isdef": true,
+      //       "topic": "$dg/user/${deviceid}/post",
+      //       "type": "sub"
+      //     },
+      //     {
+      //       "category": "OTA 升级",
+      //       "desc": "消息下发",
+      //       "isdef": true,
+      //       "topic": "$dg/thing/${deviceid}/",
+      //       "type": "pub"
+      //     },          {
+      //       "category": "OTA 升级",
+      //       "desc": "设备属性上报",
+      //       "isdef": true,
+      //       "topic": "$dg/user/${deviceid}/post",
+      //       "type": "sub"
+      //     },
+      //     {
+      //       "category": "OTA 升级",
+      //       "desc": "消息下发",
+      //       "isdef": true,
+      //       "topic": "$dg/thing/${deviceid}/",
+      //       "type": "pub"
+      //     }
+      //   ],
+      //   "thing": [
+      //     {
+      //       "category": "属性上报",
+      //       "desc": "设备属性上报",
+      //       "isdef": true,
+      //       "topic": "$dg/user/${deviceid}/post",
+      //       "type": "sub'"
+      //     },
+      //     {
+      //       "category": "属性上报",
+      //       "desc": "消息下发",
+      //       "isdef": true,
+      //       "topic": "$dg/thing/${deviceid}/",
+      //       "type": "pub"
+      //     }
+      //   ]
+      // }
+      for(var k in this.dlinkTopic){
+        await this.mergeTable(k,this.dlinkTopic[k])
+      }
+      dgiotlogger.error('mergeObj',this.mergeObj)
+    },
+   async topicChange(e){
+      if(e=='user'  )     await this.getTopic()
+    },
+    async mergeTable(lable,table){
+      let numerical = 0;
+      for (let key in table[0]) {
+        this.mergeObj[lable][key] = []
+        table.forEach((item,index) => {
+          if (index === 0) {
+            this.mergeObj[lable][key].push(1)
+          } else {
+            if (item[key] ===  table[index-1][key]) {
+              this.mergeObj[lable][key][numerical] += 1;
+              this.mergeObj[lable][key].push(0)
+            } else {
+              numerical = index
+              this.mergeObj[lable][key].push(1)
+            }
+          }
+        })
+    }},
     clearfix(type) {
       this.$refs[type].clearValidate()
       type == 'services'
@@ -1813,7 +1926,7 @@ export default {
       this.modules.disabled = false
       this.moduletype = type
       this.setSizeForm(this.getFormOrginalData())
-      this.wmxdialogVisible = true
+      if(type !=='events') this.wmxdialogVisible = true
       this.wmxSituation = '新增'
       switch (type) {
         case 'properties':
@@ -3328,6 +3441,8 @@ export default {
     // 关闭弹窗操作
     handleCloseSubdialog() {
       subupadte(this.channelid, 'stop_logger')
+      this.msgList = []
+      this.submessage =[]
       this.subdialog = false
     },
     // 停止topic刷新

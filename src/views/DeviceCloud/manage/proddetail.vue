@@ -230,133 +230,174 @@
           :label="'Topic' + $translateTitle('product.list')"
           name="second"
         >
-          <div
-            style="box-sizing: border-box; padding: 10px; background: #ffffff"
-          >
-            <dgiot-query-form>
-              <dgiot-query-form-left-panel>
-                <div class="addtopic">
-                  <el-button
-                    size="small"
-                    type="primary"
-                    @click.native="topicdialogVisible = true"
-                  >
-                    {{ $translateTitle('product.customtopicclass') }}
-                  </el-button>
-                </div>
-              </dgiot-query-form-left-panel>
-              <dgiot-query-form-right-panel>
-                <dgiot-help
-                  src="https://tech.iotn2n.com/w/docs/details?id=6"
-                  title="产品下的所有设备都会继承该产品的 Topic 类"
-                  trigger="click"
-                />
-              </dgiot-query-form-right-panel>
-            </dgiot-query-form>
-            <el-table
-              :data="
-                topicData.slice(
-                  (topicstart - 1) * topiclength,
-                  topicstart * topiclength
-                )
-              "
-              :height="$baseTableHeight(0) - 60"
-              style="width: 100%; text-align: center"
-            >
-              <el-table-column align="left" label="Topic">
-                <template #default="{ row }">
-                  <span>
-                    {{ row.topic.replace('\$\{ProductId\}', productId) }}
-                  </span>
-                </template>
-              </el-table-column>
-              <el-table-column
-                align="center"
-                :label="$translateTitle('product.operationauthority')"
-              >
-                <template #default="{ row }">
-                  <span v-if="row.type == 'pub'">
-                    {{ $translateTitle('product.pub') }}
-                  </span>
-                  <span v-if="row.type == 'sub'">
-                    {{ $translateTitle('product.sub') }}
-                  </span>
-                </template>
-              </el-table-column>
-              <el-table-column
-                align="center"
-                :label="$translateTitle('developer.describe')"
-                prop="desc"
-              />
-              <el-table-column
-                align="center"
-                :label="$translateTitle('developer.operation')"
-              >
-                <template #default="{ row, $index }">
-                  <el-button
-                    v-if="!row.isdef"
-                    size="mini"
-                    type="primary"
-                    @click.native="updatetopic($index)"
-                  >
-                    {{ $translateTitle('developer.edit') }}
-                  </el-button>
-                  <!--                  <el-popover-->
-                  <!--                    :ref="`popover-${$index}`"-->
-                  <!--                    placement="top"-->
-                  <!--                    width="300"-->
-                  <!--                  >-->
-                  <!--                    <p>确定删除Topic【{{ row.topic }}】吗？</p>-->
-                  <!--                  <div style="text-align: right; margin: 0">-->
-                  <!--                    <el-button-->
-                  <!--                      size="mini"-->
-                  <!--                      size="mini"-->
-                  <!--                      @click.native="-->
-                  <!--                        scope._self.$refs[`popover-${$index}`].doClose()-->
-                  <!--                      "-->
-                  <!--                    >-->
-                  <!--                      {{  $translateTitle("developer.cancel") }}</el-button-->
-                  <!--                      >-->
-                  <!--                    <el-button-->
-                  <!--                      type="primary"-->
-                  <!--                      size="mini"-->
-                  <!--                      @click.native="deletetopic(row, $index)"-->
-                  <!--                    >-->
-                  <!--                      {{  $translateTitle("developer.determine") }}</el-button-->
-                  <!--                      >-->
-                  <!--                  </div>-->
-                  <el-button
-                    v-if="!row.isdef"
-                    slot="reference"
-                    size="mini"
-                    type="danger"
-                    @click.native="deletetopic(row, $index)"
-                  >
-                    {{ $translateTitle('developer.delete') }}
-                  </el-button>
-                  <!--                  </el-popover>-->
-                </template>
-              </el-table-column>
-              <template #empty>
-                <el-image
-                  class="dgiot-data-empty"
-                  :src="
-                    require('../../../../public/assets/images/platform/assets/empty_images/data_empty.png')
+          <div class="card-container">
+            <a-tabs type="card" @change="topicChange">
+              <a-tab-pane key="basic" tab="基础通信Topic">
+                <el-table
+                  ref="basic"
+                  border
+                  :data="dlinkTopic.basic"
+                  :span-method="basicMethod"
+                  style="width: 100%; margin-top: 20px"
+                >
+                  <el-table-column label="功能" prop="category" width="180" />
+                  <!--                  <el-table-column label="操作权限" prop="isdef" />-->
+                  <el-table-column label="topic" prop="topic" />
+                  <el-table-column label="描述" prop="desc" />
+                  <el-table-column label="描述" prop="type" />
+                </el-table>
+              </a-tab-pane>
+              <a-tab-pane key="thing" tab="物模型通信Topic">
+                <el-table
+                  ref="thing"
+                  border
+                  :data="dlinkTopic.thing"
+                  :span-method="thingMethod"
+                  style="width: 100%; margin-top: 20px"
+                >
+                  <el-table-column label="功能" prop="category" width="180" />
+                  <!--                  <el-table-column label="操作权限" prop="isdef" />-->
+                  <el-table-column label="topic" prop="topic" />
+                  <el-table-column label="描述" prop="desc" />
+                  <el-table-column label="描述" prop="type" />
+                </el-table>
+              </a-tab-pane>
+              <a-tab-pane key="user" tab="自定义Topic">
+                <div
+                  style="
+                    box-sizing: border-box;
+                    padding: 10px;
+                    background: #ffffff;
                   "
-                />
-              </template>
-            </el-table>
-            <div class="elpagination" style="margin-top: 20px">
-              <el-pagination
-                layout="total, sizes, prev, pager, next, jumper"
-                :page-size="topiclength"
-                :page-sizes="[10, 20, 30, 50]"
-                :total="topicData.length"
-                @current-change="topicCurrentChange"
-                @size-change="topicSizeChange"
-              />
-            </div>
+                >
+                  <dgiot-query-form>
+                    <dgiot-query-form-left-panel>
+                      <div class="addtopic">
+                        <el-button
+                          size="small"
+                          type="primary"
+                          @click.native="topicdialogVisible = true"
+                        >
+                          {{ $translateTitle('product.customtopicclass') }}
+                        </el-button>
+                      </div>
+                    </dgiot-query-form-left-panel>
+                    <dgiot-query-form-right-panel>
+                      <dgiot-help
+                        src="https://tech.iotn2n.com/w/docs/details?id=6"
+                        title="产品下的所有设备都会继承该产品的 Topic 类"
+                        trigger="click"
+                      />
+                    </dgiot-query-form-right-panel>
+                  </dgiot-query-form>
+                  <el-table
+                    :data="
+                      topicData.slice(
+                        (topicstart - 1) * topiclength,
+                        topicstart * topiclength
+                      )
+                    "
+                    :height="$baseTableHeight(0) - 60"
+                    style="width: 100%; text-align: center"
+                  >
+                    <el-table-column align="left" label="Topic">
+                      <template #default="{ row }">
+                        <span>
+                          {{ row.topic.replace('\$\{ProductId\}', productId) }}
+                        </span>
+                      </template>
+                    </el-table-column>
+                    <el-table-column
+                      align="center"
+                      :label="$translateTitle('product.operationauthority')"
+                    >
+                      <template #default="{ row }">
+                        <span v-if="row.type == 'pub'">
+                          {{ $translateTitle('product.pub') }}
+                        </span>
+                        <span v-if="row.type == 'sub'">
+                          {{ $translateTitle('product.sub') }}
+                        </span>
+                      </template>
+                    </el-table-column>
+                    <el-table-column
+                      align="center"
+                      :label="$translateTitle('developer.describe')"
+                      prop="desc"
+                    />
+                    <el-table-column
+                      align="center"
+                      :label="$translateTitle('developer.operation')"
+                    >
+                      <template #default="{ row, $index }">
+                        <el-button
+                          v-if="!row.isdef"
+                          size="mini"
+                          type="primary"
+                          @click.native="updatetopic($index)"
+                        >
+                          {{ $translateTitle('developer.edit') }}
+                        </el-button>
+                        <!--                  <el-popover-->
+                        <!--                    :ref="`popover-${$index}`"-->
+                        <!--                    placement="top"-->
+                        <!--                    width="300"-->
+                        <!--                  >-->
+                        <!--                    <p>确定删除Topic【{{ row.topic }}】吗？</p>-->
+                        <!--                  <div style="text-align: right; margin: 0">-->
+                        <!--                    <el-button-->
+                        <!--                      size="mini"-->
+                        <!--                      size="mini"-->
+                        <!--                      @click.native="-->
+                        <!--                        scope._self.$refs[`popover-${$index}`].doClose()-->
+                        <!--                      "-->
+                        <!--                    >-->
+                        <!--                      {{  $translateTitle("developer.cancel") }}</el-button-->
+                        <!--                      >-->
+                        <!--                    <el-button-->
+                        <!--                      type="primary"-->
+                        <!--                      size="mini"-->
+                        <!--                      @click.native="deletetopic(row, $index)"-->
+                        <!--                    >-->
+                        <!--                      {{  $translateTitle("developer.determine") }}</el-button-->
+                        <!--                      >-->
+                        <!--                  </div>-->
+                        <el-button
+                          v-if="!row.isdef"
+                          slot="reference"
+                          size="mini"
+                          type="danger"
+                          @click.native="deletetopic(row, $index)"
+                        >
+                          {{ $translateTitle('developer.delete') }}
+                        </el-button>
+                        <!--                  </el-popover>-->
+                      </template>
+                    </el-table-column>
+                    <template #empty>
+                      <el-image
+                        class="dgiot-data-empty"
+                        :src="
+                          require('../../../../public/assets/images/platform/assets/empty_images/data_empty.png')
+                        "
+                      />
+                    </template>
+                  </el-table>
+                  <div class="elpagination" style="margin-top: 20px">
+                    <el-pagination
+                      layout="total, sizes, prev, pager, next, jumper"
+                      :page-size="topiclength"
+                      :page-sizes="[10, 20, 30, 50]"
+                      :total="topicData.length"
+                      @current-change="topicCurrentChange"
+                      @size-change="topicSizeChange"
+                    />
+                  </div>
+                </div>
+              </a-tab-pane>
+            </a-tabs>
           </div>
+
           <!--topic弹窗-->
           <el-dialog
             :append-to-body="true"
@@ -382,9 +423,15 @@
                   <el-form-item label="Topic类：" prop="topic">
                     <el-input v-model="topicform.topic">
                       <template slot="prepend">
-                        {{ 'thing/' + productId + '/${DevAddr}/' }}
+                        {{ '$dg/' }}
                       </template>
                     </el-input>
+                    <dgiot-help
+                      src="https://gitee.com/dgiiot/dgiot_dlink"
+                      style="width: 60px"
+                      title="产品下的所有设备都会继承该产品的 Topic 类"
+                      trigger="click"
+                    />
                   </el-form-item>
                   <el-form-item
                     :label="$translateTitle('product.operationauthority')"
@@ -1892,7 +1939,7 @@
               id="editor"
               class="ace_editor ace-monokai ace_dark"
               style="min-height: 600px; margin-bottom: 0"
-            ><textarea class="ace_text-input" /></pre>
+            ><textarea class="ace_text-input"/></pre>
             <div style="background: #ffffff">
               <label id="plug-name2" />
             </div>
@@ -1910,7 +1957,7 @@
               id="editor2"
               class="ace_editor"
               style="min-height: 300px; margin-top: 0; margin-bottom: 0"
-            ><textarea class="ace_text-input" /></pre>
+            ><textarea class="ace_text-input"/></pre>
           </div>
         </el-tab-pane>
         <!-- </div> -->
@@ -2770,7 +2817,7 @@
                   :id="item.name"
                   class="ace_editor3"
                   style="min-height: 300px; margin-top: 0; margin-bottom: 0"
-                ><textarea class="ace_text-input" /></pre>
+                ><textarea class="ace_text-input"/></pre>
               </div>
             </el-tab-pane>
           </el-tabs>

@@ -93,11 +93,7 @@
             :label="$translateTitle('developer.password')"
             prop="password"
           >
-            <el-input
-              v-model="userInfoForm.password"
-              auto-complete="off"
-              :placeholder="$translateTitle('product.entermmzh')"
-            />
+            <el-input v-model="userInfoForm.password" auto-complete="off" />
           </el-form-item>
           <!-- <el-form-item label="确认密码" prop="checkPass"> -->
           <el-form-item
@@ -364,7 +360,7 @@
         if (value === '') {
           callback(new Error('请输入密码'))
         } else {
-          if (!/^\w{4,10}$/.test(value)) {
+          if (!/^\w{4,20}$/.test(value)) {
             // if (!/^([\w]|[.]){6,10}$/.test(value)) {
             callback(new Error('密码长度必须大于4位'))
           }
@@ -511,12 +507,6 @@
             {
               required: true,
               message: '请输入昵称',
-              trigger: 'blur',
-            },
-            {
-              min: 2,
-              max: 7,
-              message: '昵称格式不正确',
               trigger: 'blur',
             },
           ],
