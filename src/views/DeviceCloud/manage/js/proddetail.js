@@ -1990,13 +1990,16 @@ export default {
       this.modules.disabled = false
       this.moduletype = type
       this.setSizeForm(this.getFormOrginalData())
-      if(type !=='events')
+      if(type !=='events'||type !=='services'){
         this.wmxdialogVisible = true
+      }
       this.wmxSituation = '新增'
       switch (type) {
         case 'properties':
           break
         case 'services':
+          this.atbas.visible = true;
+          this.modules.type = 'services';
           break
         case 'events':
           this.atbas.visible = true;

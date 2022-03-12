@@ -1,0 +1,61 @@
+{
+  "RuleContent": {
+    "type": "IFTTT",
+    "trigger": {
+      "uri": "trigger/product/event",
+      "params": {
+        "productKey": "a1lcmeFVu97",
+        "compareType": "!=",
+        "compareValue": "55",
+        "propertyName": "Payload",
+        "eventCode": "OnSync"
+      }
+    },
+    "condition": {
+      "uri": "logical/and",
+      "items": [
+        {
+          "uri": "condition/device/stateContinue",
+          "params": {
+            "stateName": "event.status",
+            "duration": 8,
+            "compareType": "==",
+            "compareValue": 1
+          }
+        },
+        {
+          "uri": "condition/device/property",
+          "params": {
+            "productKey": "a1lcmeFVu97",
+            "deviceName": "csk84X8upjtNlkdyrry8",
+            "propertyName": "Direction",
+            "compareType": "==",
+            "compareValue": 1
+          }
+        },
+        {
+          "uri": "condition/device/property",
+          "params": {
+            "productKey": "a1lcmeFVu97",
+            "deviceName": "csk84X8upjtNlkdyrry8",
+            "propertyName": "Direction",
+            "compareType": "==",
+            "compareValue": 0
+          }
+        }
+      ]
+    },
+    "action": [
+      {
+        "uri": "action/device/setProperty",
+        "params": {
+          "productKey": "a1lcmeFVu97",
+          "deviceName": "kEdtCEM8p9bYJYUO1rDI",
+          "propertyItems": {
+            "Direction": 1
+          }
+        }
+      }
+    ]
+  }
+}

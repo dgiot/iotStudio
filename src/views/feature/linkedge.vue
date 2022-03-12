@@ -1059,7 +1059,14 @@
           this.formInline.from.where.splice(index, 1)
         }
       },
+      /**
+       * 查询规则
+       * @param {String} ruleId 规则id
+       *@docs https://www.emqx.io/docs/zh/v4.3/rule/rule-engine.html#sql-%E8%AF%AD%E5%8F%A5
+       * @param tpl
+       */
       generatorSql(tpl) {
+        // topo 过滤&&验证重复的执行条件
         const from = this.formInline.from
         console.error(from, this.formInline.from)
         // this.formInline.sqltest = true
@@ -1072,15 +1079,15 @@
               "      'productid' as productid\n" +
               '    FROM\n' +
               `      "thing/${from.productid}/#"\n` +
-              '    WHERE\n' +
+              'WHERE\n' +
               "      msg = 'hello'"
             : 'SELECT\n' +
               '      payload.msg as msg,\n' +
               '      clientid,\n' +
               "      'productid' as productid\n" +
-              '    FROM\n' +
+              'FROM\n' +
               `      "thing/${from.productid}/${from.devaddr}"\n` +
-              '    WHERE\n' +
+              'WHERE\n' +
               "      msg = 'hello'"
         console.log(from)
         // 判断是否校验成功
@@ -1255,18 +1262,20 @@
       // 布局调整
       getEditor2(val) {
         if (val == true) {
-          editor2 = ace.edit('editor2')
-          editor2 = ace.edit('editor2')
-          editor2.session.setMode('ace/mode/json') // 设置语言
-          editor2.setTheme('ace/theme/eclipse') // 设置主题
-          editor2.setOptions({
-            enableBasicAutocompletion: true,
-            enableSnippets: true,
-            enableLiveAutocompletion: true, // 设置自动提示
-          })
-          editor2.setValue(`{"msg":"hello"}`)
           this.row1 = 12
           this.row2 = 12
+          this.$nextTick(() => {
+            editor2 = ace.edit('editor2')
+            editor2 = ace.edit('editor2')
+            editor2.session.setMode('ace/mode/json') // 设置语言
+            editor2.setTheme('ace/theme/eclipse') // 设置主题
+            editor2.setOptions({
+              enableBasicAutocompletion: true,
+              enableSnippets: true,
+              enableLiveAutocompletion: true, // 设置自动提示
+            })
+            editor2.setValue(`{"msg":"hello"}`)
+          })
         } else {
           this.row1 = 24
           this.row2 = 0
@@ -1378,11 +1387,16 @@
               topic: this.formInline.topic,
               username: this.formInline.username,
             }
+            console.log(editor1.getValue(), 'rawsql')
+            window.editor1 = editor1
+            window.editor1Value = editor1.getValue()
+            console.log(editor1, editor1.getValue().match(regex)[1], 'for')
             const params = {
               actions: this.actionData,
               ctx: ctx,
               description: this.formInline.remarks,
               for: editor1.getValue().match(regex)[1],
+              // for: 'thing/test/#',
               name: this.formInline.username,
               rawsql: editor1.getValue(),
               test: 'true',
@@ -1397,14 +1411,23 @@
                     '     this.formInline.result ',
                     this.formInline.result
                   )
+                  this.$message({
+                    message: 'sql测试成功',
+                    type: 'success',
+                  })
                 } else {
-                  this.$message.error('SQL Not Match')
-                  console.log('error response', response)
+                  this.$message({
+                    message: 'sql测试失败',
+                    type: 'error',
+                  })
                 }
               })
               .catch((error) => {
+                this.$message({
+                  message: 'sql测试失败，原因' + error,
+                  type: 'error',
+                })
                 console.log(error)
-                this.$message.error(error)
               })
           }
         })
