@@ -1,7 +1,7 @@
 /* eslint-disable */
 import mqttLog from '@/views/CloudFunction/engine/components/mqttLog.vue'
 import thingForm from '@/views/DeviceCloud/manage/component/Thing/form'
-import  {getDlinkTopic} from '@/api/Dlink'
+import  {getDlinkJson} from '@/api/Dlink'
 import {mapGetters, mapMutations} from 'vuex'
 import {getDeviceCountByProduct} from '@/api/Device/index'
 import {
@@ -139,6 +139,7 @@ export default {
       }
     }
     return {
+      dlinkUnit:[],
       dlinkTopic:{basic:[],thing:[]},
       mergeObj: {basic:[],thing:[]},
       tabsChild:'properties',
@@ -170,9 +171,13 @@ export default {
             types: [
               {required: true, message: '请选择调用方式', trigger: 'change'},
             ],
+            output: [
+              { type: 'array', required: true, message: '请至少选择一个输出参数',trigger: 'blur'},
+            ],
           },
           visible: false,
           data: {
+            outputParams: [],
             name: '',
             identifier: '',
             types: 'info',
@@ -669,6 +674,9 @@ export default {
         visible: false,
         childrenDrawer: false,
       },
+      editIndex: -1,
+      eventType:'add',
+      eventForm:{},
       ruleForm: {
         name: '',
         region: '',
@@ -792,6 +800,25 @@ export default {
     this.subdialogtimer = null
   },
   methods: {
+     thingParameters(form,index) {
+       this.editIndex = index
+      console.log('thingParameters', form)
+      // 向events 的 outputData 添加 输出参数
+      this.modules.events.data.output.push(form)
+       this.atbas.childrenDrawer = false
+
+       // outputParams
+       // this.onChildrenDrawerClose()
+    },
+    editParameters(form) {
+      console.log('thingParameters', form)
+      // 向events 的 outputData 添加 输出参数
+      this.modules.events.data.output[this.editIndex] = form
+      this.atbas.childrenDrawer = false
+
+      // outputParams
+      // this.onChildrenDrawerClose()
+    },
     showDrawer() {
       this.atbas.visible = true;
     },
@@ -799,12 +826,23 @@ export default {
       this.atbas.visible = false;
     },
     showChildrenDrawer() {
+      this.eventForm =  {
+        name: '',
+        unit: '/',
+        isread: 'rw',
+        dataType: 'int32',
+        identifier: '',
+        min: '',
+        max: '',
+        step: '',
+      }
+      this.eventType = 'add'
       this.atbas.childrenDrawer = true;
     },
     onChildrenDrawerClose() {
       this.atbas.childrenDrawer = false;
       //  清空子组件的规则校验和表单数据
-      this.$refs.thingForm.resetForm('ruleForm')
+      // this.$refs.thingForm.resetForm('ruleForm')
       console.log('清空子组件的规则校验和表单数据')
     },
     basicMethod({  column, rowIndex }) {
@@ -826,8 +864,18 @@ export default {
         colspan: 0
       }
     },
+    async editEvent(item,index){
+      this.editIndex = index
+      await console.log('editEvent', item)
+        this.atbas.childrenDrawer = true
+      this.eventForm = item
+      this.eventType = 'edit'
+    },
     async getDefaultTopic(){
-      const res = await getDlinkTopic()
+      const res = await getDlinkJson('Topic')
+      const {UnifyUnitSpecsDTO=[]} = await getDlinkJson('Unit')
+      this.dlinkUnit = UnifyUnitSpecsDTO
+      this.dlinkUnit.unshift({Symbol: '/', Name: '无'})
       this.dlinkTopic = res
       for(var k in this.dlinkTopic){
         await this.mergeTable(k,this.dlinkTopic[k])
@@ -919,35 +967,55 @@ export default {
       }
     },
     async queryProductInfo(productId) {
+      const res =  await getProduct(productId)
       const {
         thing = {properties: [], events: [], services: [], tags: []},
-      } = await getProduct(productId)
+      } = res
       _.merge({properties: [], events: [], services: [], tags: []}, thing);
       const setThing = _.merge({properties: [], events: [], services: [], tags: []}, thing)
       dgiotlogger.log('thing', setThing)
-      this.productObj = setThing
+      this.productObj = res
       this.modules.data = setThing
       this.productdetail.thing = setThing
     },
     async submitModules(type, form) {
-      const {thing} = _.merge(this.productObj, {
-        thing: {properties: [], events: [], services: [], tags: []},
+      form.data.outputParams = []
+      console.log(form.data.output,'form.data.output')
+      console.log(form.data,'form.data')
+      // 计算输出参数
+      form.data.output.forEach((o,index)=>{
+        form.data.outputParams.push({
+          identifier: o.identifier,
+          index: index,
+        })
       })
-      dgiotlogger.log(this.productObj, thing)
+      const _item = {
+        ...form.data,
+        devicetype:form.data.name,
+        required:false,
+        isshow:true,
+        dataForm:{order:moment(new Date()).format('x')},
+        dataType:{
+          type:type
+        },
+        moduleType: type,
+        updateAt : moment(new Date()).format('x')
+      }
+      console.log('_item', _item)
+      window._item = _item
+      await this.submitForm(_item)
+      this.atbas.visible = false
+      await this.queryProductInfo(this.$route.query.id)
+      return false
+      const {thing} = this.productObj
+      dgiotlogger.log(this.productObj, thing,this.modules.data)
+      dgiotlogger.info('this.modules.data')
       this.$refs[type].validate(async (valid) => {
         if (valid) {
           await console.log(type, form.data)
-          const _item = {
-            ...form.data,
-            type: type,
-          }
-          const data = {
-            item: _item,
-            productid: this.$route.query.id,
-          }
-          thing.expand.push(_item)
+          this.modules.data.events.push(_item)
           const res = await putProduct(this.productObj.objectId, {
-            thing: thing,
+            thing: this.modules.data,
           })
           if (res.updatedAt) {
             this.$message({
@@ -962,6 +1030,7 @@ export default {
           }
           this.$refs[type].clearValidate()
           this.$refs[type].resetFields()
+          this.atbas.visible= false
           this.modules.visible = false
           // await this.queryProductInfo(this.productObj.objectId) // 更新产品信息
           this.handleClose()
@@ -1921,7 +1990,7 @@ export default {
       this.modules.disabled = false
       this.moduletype = type
       this.setSizeForm(this.getFormOrginalData())
-      // if(type !=='events')
+      if(type !=='events')
         this.wmxdialogVisible = true
       this.wmxSituation = '新增'
       switch (type) {
@@ -1930,8 +1999,8 @@ export default {
         case 'services':
           break
         case 'events':
-          // this.atbas.visible = true;
-          // this.modules.type = 'events';
+          this.atbas.visible = true;
+          this.modules.type = 'events';
           break
         case 'tags':
           // this.modules.visible = true
@@ -1946,10 +2015,17 @@ export default {
     // 物模型修改submitForm
     async wmxDataFill(rowData, index, moduletype) {
       this.moduletype = moduletype
+      this.modules.type = moduletype
+      this.modules.events.data = rowData
+      this.wmxSituation = '编辑'
+      if(moduletype === 'events'){
+        this.atbas.visible = true;
+        this.modules.type = 'events';
+        return false
+      }
       this.modifyIndex = index
       // this.tgingtype = 'property' 得到物模型的type类型
       this.wmxdialogVisible = true
-      this.wmxSituation = '编辑'
       var obj = {}
       var daslist = []
       rowData.dataType.das.forEach((val) => {

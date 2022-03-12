@@ -14,12 +14,13 @@ import {
 import request from '@/utils/request/request'
 
 /**
- * @description 获取dlink topic 列表
+ * @description: 获取dlink json 列表
+ * @param type
  * @returns {Promise<*>}
  */
-export async function getDlinkTopic() {
+export async function getDlinkJson(type = 'Topic') {
   return request({
-    url: 'topic',
+    url: `dlinkjson?type=${type}`,
     method: 'get',
   })
 }

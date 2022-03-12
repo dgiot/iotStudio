@@ -525,7 +525,7 @@
               :closable="false"
               :title="wmxSituation + '物模型事件'"
               :visible="atbas.visible"
-              width="520"
+              width="620"
               @close="onClose"
             >
               <el-form
@@ -642,27 +642,36 @@
                   </el-radio-group>
                 </el-form-item>
                 <el-form-item label="输出参数" prop="output">
-                  <el-select
-                    v-model="modules.events.data.output"
-                    multiple
-                    placeholder="请选择输出参数"
-                    style="width: 100%"
+                  <a-list
+                    :data-source="modules.events.data.output"
+                    item-layout="horizontal"
                   >
-                    <el-option
-                      v-for="item in wmxDataBk"
-                      :key="item.name"
-                      :label="item.name"
-                      :value="item.identifier"
-                    >
-                      <span style="float: left">{{ item.name }}</span>
-                      <span
-                        style="float: right; color: #8492a6; font-size: 13px"
+                    <a-list-item slot="renderItem" slot-scope="item, index">
+                      <el-button
+                        slot="actions"
+                        type="info"
+                        @click.native="editEvent(item, index)"
                       >
-                        {{ item.identifier }}
-                      </span>
-                    </el-option>
-                  </el-select>
-
+                        编辑
+                      </el-button>
+                      <el-button
+                        slot="actions"
+                        size="mini"
+                        type="danger"
+                        @click.native="
+                          modules.events.data.output.splice(index, 1)
+                        "
+                      >
+                        删除
+                      </el-button>
+                      <a-list-item-meta style="border: 1px solid #e1e2e5">
+                        <!--                        <el-link slot="avatar">{{ item.name   }}</el-link>-->
+                        <el-tag slot="title" type="success">
+                          参数名称:{{ item.identifier }}
+                        </el-tag>
+                      </a-list-item-meta>
+                    </a-list-item>
+                  </a-list>
                   <el-link type="primary" @click.native="showChildrenDrawer">
                     <a-icon type="plus" />
                     增加参数
@@ -690,12 +699,19 @@
 
               <a-drawer
                 :closable="false"
-                title="Two-level Drawer"
+                :title="eventType == 'add' ? '新增输出参数' : '修改输出参数'"
                 :visible="atbas.childrenDrawer"
-                width="500"
+                width="550"
                 @close="onChildrenDrawerClose"
               >
-                <thing-form ref="thingForm" />
+                <thing-form
+                  ref="thingForm"
+                  :dlink-unit="dlinkUnit"
+                  :event-type="eventType"
+                  :rule-form="eventForm"
+                  @OutputParameters="thingParameters"
+                  @editParameters="editParameters"
+                />
               </a-drawer>
               <div
                 :style="{
@@ -812,7 +828,6 @@
                       :default-expand-all="false"
                       :default-sort="{ prop: 'date', order: 'descending' }"
                       :height="$baseTableHeight(0) - 60"
-                      :row-class-name="getRowClass"
                       row-key="identifier"
                       style="width: 100%; margin-top: 10px"
                     >
@@ -1063,24 +1078,64 @@
                 "
                 :default-sort="{ prop: 'date', order: 'descending' }"
                 :height="$baseTableHeight(0) - 60"
-                :row-class-name="getRowClass"
-                row-key="identifier"
                 style="width: 100%; margin-top: 10px"
               >
-                <el-table-column
-                  align="center"
-                  :label="$translateTitle('product.order')"
-                  width="60"
-                >
-                  <template #default="{ row }">
-                    {{ row.dataForm.order }}
+                <el-table-column prop="输出参数" type="expand">
+                  <template slot-scope="props">
+                    <el-form
+                      class="demo-table-expand"
+                      inline
+                      label-position="left"
+                    >
+                      <a-descriptions
+                        v-for="(item, index) in props.row.output"
+                        :key="index"
+                        bordered
+                        :title="'输出参数:' + item.name"
+                      >
+                        <a-descriptions-item label="标识符">
+                          {{ item.identifier }}
+                        </a-descriptions-item>
+                        <a-descriptions-item label="数据类型">
+                          {{ item.dataType }}
+                        </a-descriptions-item>
+                        <a-descriptions-item label="取值范围">
+                          最小值:{{ item.min }} 最大值:{{ item.max }}
+                        </a-descriptions-item>
+                        <a-descriptions-item label="步长">
+                          {{ item.step }}
+                        </a-descriptions-item>
+                        <a-descriptions-item label="单位">
+                          <el-tag
+                            v-for="(Unit, index) of dlinkUnit"
+                            v-show="Unit.Symbol == item.unit"
+                            :key="index"
+                            type="success"
+                          >
+                            <span>
+                              {{ Unit.Name }}
+                            </span>
+                          </el-tag>
+                        </a-descriptions-item>
+                        <a-descriptions-item label="读写类型">
+                          {{ item.isread == 'rw' ? '读写' : '只读' }}
+                        </a-descriptions-item>
+                      </a-descriptions>
+                    </el-form>
                   </template>
                 </el-table-column>
                 <el-table-column
                   align="center"
+                  :label="$translateTitle('product.order')"
+                  prop="dataForm.order"
+                  sortable
+                  width="auto"
+                />
+                <el-table-column
+                  align="center"
                   :label="$translateTitle('product.identifier')"
                   prop="identifier"
-                  width="100"
+                  width="auto"
                 />
                 <el-table-column
                   align="center"
@@ -1089,46 +1144,18 @@
                 />
                 <el-table-column
                   align="center"
-                  :label="$translateTitle('product.datatype')"
-                  width="90"
+                  label="事件类型"
+                  prop="types"
+                  sortable
                 >
                   <template #default="{ row }">
-                    <span>{{ row.dataType.type }}</span>
-                  </template>
-                </el-table-column>
-                <el-table-column
-                  align="center"
-                  :label="$translateTitle('product.datadefinition')"
-                >
-                  <template #default="{ row }">
-                    <span
-                      v-if="
-                        row.dataType.specs &&
-                        (row.dataType.type == 'double' ||
-                          row.dataType.type == 'float' ||
-                          row.dataType.type == 'int')
-                      "
-                    >
+                    <span>
                       {{
-                        $translateTitle('product.rangeofvalues') +
-                        row.dataType.specs.min +
-                        '~' +
-                        row.dataType.specs.max
+                        ['信息', '告警', '故障'][
+                          ['info', 'warning', 'error'].indexOf(row.types)
+                        ]
                       }}
                     </span>
-                    <span v-else-if="row.dataType.type == 'string'">
-                      {{
-                        $translateTitle('product.datalength') +
-                        ':' +
-                        row.dataType.size +
-                        $translateTitle('product.byte')
-                      }}
-                    </span>
-                    <span v-else-if="row.dataType.type == 'date'" />
-                    <span v-else-if="row.dataType.type != 'struct'">
-                      {{ row.dataType.specs }}
-                    </span>
-                    <span v-else />
                   </template>
                 </el-table-column>
                 <el-table-column
@@ -1208,7 +1235,6 @@
                 "
                 :default-sort="{ prop: 'date', order: 'descending' }"
                 :height="$baseTableHeight(0) - 60"
-                :row-class-name="getRowClass"
                 row-key="identifier"
                 style="width: 100%; margin-top: 10px"
               >
@@ -1353,7 +1379,6 @@
                 "
                 :default-sort="{ prop: 'date', order: 'descending' }"
                 :height="$baseTableHeight(0) - 60"
-                :row-class-name="getRowClass"
                 row-key="identifier"
                 style="width: 100%; margin-top: 10px"
               >

@@ -798,7 +798,7 @@
   import { Startdashboard } from '@/api/System/index'
   import { isBase64 } from '@/utils'
   import info from '@/components/Device/info'
-  import queryParams from '@/api/Mock/dashboard'
+  import { getDlinkJson } from '@/api/Dlink'
   import {
     BaiduMap,
     BmCityList,
@@ -1280,6 +1280,7 @@
         // dgiotlog.log(objectId)
       },
       async queryData() {
+        const { dashboard } = await getDlinkJson('Dashboard')
         this.$nextTick(() => {
           if (this.mapType == 'tencent') {
             this.setTreeFlag(false)
@@ -1327,7 +1328,7 @@
          * @type {string}
          */
         let dashboardId = '32511dbfe5'
-        const res = await Startdashboard(dashboardId, queryParams)
+        const res = await Startdashboard(dashboardId, dashboard)
         // 本地mqtt 存在问题,在请求4秒后手动关闭所有loading
         setTimeout(() => {
           queryParams.forEach((e) => {
