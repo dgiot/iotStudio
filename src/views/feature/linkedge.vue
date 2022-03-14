@@ -124,9 +124,9 @@
                   <el-col :span="4">
                     <!--          如果选择的是属性的判断          -->
                     <el-select
-                      v-if="formInline.from.method == 'properties'"
+                      v-if="formInline.form.method == 'properties'"
                       v-model="formInline.from.where[index].identifier"
-                      placeholder="请选择执行条件"
+                      placeholder="物模型属性"
                     >
                       <el-option
                         v-for="item in formInline.data.properties"
@@ -138,41 +138,40 @@
                     </el-select>
                     <!--          如果选择的是事件的判断          -->
                     <el-select
-                      v-if="formInline.from.method == 'Event'"
+                      v-if="formInline.form.method == 'Event'"
                       v-model="formInline.from.where[index].identifier"
-                      placeholder="请选择执行条件"
+                      placeholder="物模型事件"
                     >
                       <el-option
                         v-for="item in formInline.data.events"
                         :key="item.lable + item.disable"
-                        :disabled="item.disabled"
+                        :disabled="computedDisable(item)"
                         :label="item.lable"
                         :value="item.value"
                       />
                     </el-select>
                     <el-select
-                      v-if="formInline.from.method == 'mqttEvent'"
-                      v-model="formInline.from.where[index].Event"
+                      v-if="formInline.form.method == 'mqttEvent'"
+                      v-model="formInline.from.where[index].identifier"
                       placeholder="mqtt事件"
                     >
                       <el-option
                         v-for="item in formInline.mqttEvent"
-                        :key="item.lable + item.disable"
-                        :disabled="item.disabled"
+                        :key="item.lable"
+                        :disabled="computedDisable(item)"
                         :label="item.label"
                         :value="item.value"
                       />
                     </el-select>
                     <el-select
-                      v-if="formInline.from.method == 'mqttConfig'"
-                      :key="formInline.from.method"
-                      v-model="formInline.from.where[index].config"
+                      v-if="formInline.form.method == 'mqttConfig'"
+                      v-model="formInline.from.where[index].identifier"
                       placeholder="mqtt属性"
                     >
                       <el-option
                         v-for="item in formInline.mqttConfig"
                         :key="item.label"
-                        :disabled="item.disabled"
+                        :disabled="computedDisable(item)"
                         :label="item.label"
                         :value="item.value"
                       />
@@ -1077,10 +1076,11 @@
             identifier: '', // 物模型
             operator: '', // 条件判断
             value: '', //比较参数
-            config: 'clientid',
-            event: 'message_delivered',
+            config: '',
+            event: '',
           },
         ]
+        console.log('toggle', this.formInline.form.method)
       },
 
       async addWhere(type) {
@@ -1133,30 +1133,30 @@
         switch (from.method) {
           case 'device':
             from.select.payload = from.where.map((item) => {
-              return item.identifier != ''
+              return item.identifier
             })
             break
           case 'properties':
             from.select.payload = from.where.map((item) => {
-              return item.identifier != ''
+              return item.identifier
             })
             break
           case 'mqttConfig':
             from.select.mqttConfig = from.where.map((item) => {
-              return item.config != ''
+              return item.identifier
             })
             break
           case 'mqttEvent':
             from.select.thingConfig = from.where.map((item) => {
-              return item.event != ''
+              return item.identifier
             })
             alert('mqtt')
             break
         }
         // 过滤掉 select 为空的物模型
-        from.where = from.where.filter((item) => {
-          return item.identifier != ''
-        })
+        // from.where = from.where.filter((item) => {
+        //   return item.identifier != ''
+        // })
         this.$refs.formInline.validate(async (valid) => {
           if (valid) {
             try {
