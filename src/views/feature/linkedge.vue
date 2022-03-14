@@ -381,10 +381,15 @@
                 v-if="formInline.sqltest == true"
                 :label="$translateTitle('rule.TestJie')"
               >
-                <el-input
+                <!--                <el-input-->
+                <!--                  v-model="formInline.result"-->
+                <!--                  :rows="4"-->
+                <!--                  type="textarea"-->
+                <!--                />-->
+                <dgiot-editor
                   v-model="formInline.result"
-                  :rows="4"
-                  type="textarea"
+                  :lang="'json'"
+                  :theme="'gob'"
                 />
               </el-form-item>
             </el-col>
@@ -1319,6 +1324,7 @@
               enableLiveAutocompletion: true, // 设置自动提示
             })
             editor2.setValue(`{"msg":"hello"}`)
+            window.editor2 = editor2
           })
         } else {
           this.row1 = 24
@@ -1418,7 +1424,7 @@
       //   })
       // },
       testRule(forName) {
-        this.formInline.result = ''
+        this.formInline.result = '{}'
         this.formInline.payload = editor2.getValue()
         this.formInline.enginesql = editor1.getValue()
         this.$refs[forName].validate((valid) => {
@@ -1448,9 +1454,9 @@
             addRule(params)
               .then((response) => {
                 console.log('response', response)
-                const { code } = response
+                const { code, message = '', data = {} } = response
                 if (code == 0) {
-                  this.formInline.result = response.data.msg
+                  this.formInline.result = JSON.stringify(data, null, 2)
                   console.log(
                     '     this.formInline.result ',
                     this.formInline.result
@@ -1460,8 +1466,9 @@
                     type: 'success',
                   })
                 } else {
+                  this.formInline.result = JSON.stringify(response, null, 2)
                   this.$message({
-                    message: 'sql测试失败',
+                    message: 'sql测试失败' + message,
                     type: 'error',
                   })
                 }
