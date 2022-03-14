@@ -43,9 +43,9 @@
                   element-loading-text="查询产品列表"
                   :span="4"
                 >
-                  <el-form-item label="产品信息" prop="form.productid">
+                  <el-form-item label="产品信息" prop="from.from.productid">
                     <el-select
-                      v-model="formInline.form.productid"
+                      v-model="formInline.from.from.productid"
                       placeholder="请选择产品"
                       @change="tiggerProduct"
                     >
@@ -59,16 +59,16 @@
                   </el-form-item>
                 </el-col>
                 <el-col
-                  v-show="formInline.form.productid"
+                  v-show="formInline.from.from.productid"
                   v-loading="formInline.triggerSelect[0].devaddr"
                   element-loading-background="rgba(0, 0, 0, 0.8)"
                   element-loading-spinner="el-icon-loading"
                   element-loading-text="查询设备列表"
                   :span="4"
                 >
-                  <el-form-item label="设备信息" prop="form.devaddr">
+                  <el-form-item label="设备信息" prop="from.from.devaddr">
                     <el-select
-                      v-model="formInline.form.devaddr"
+                      v-model="formInline.from.from.devaddr"
                       placeholder="请选择设备"
                       @change="tiggerDevice"
                     >
@@ -82,14 +82,14 @@
                   </el-form-item>
                 </el-col>
                 <el-col
-                  v-if="formInline.form.devaddr"
+                  v-if="formInline.from.from.devaddr"
                   v-loading="formInline.triggerSelect[0].device"
                   element-loading-background="rgba(0, 0, 0, 0.8)"
                   element-loading-spinner="el-icon-loading"
                   element-loading-text="查询设备列表"
                   :span="4"
                 >
-                  <el-form-item label="事件信息" prop="form.method">
+                  <el-form-item label="事件信息" prop="from.method">
                     <el-select
                       v-model="formInline.form.method"
                       placeholder="请选择触发方式"
@@ -124,13 +124,14 @@
                   <el-col :span="4">
                     <!--          如果选择的是属性的判断          -->
                     <el-select
-                      v-if="formInline.from.method == 'property'"
+                      v-if="formInline.from.method == 'properties'"
                       v-model="formInline.from.where[index].identifier"
                       placeholder="请选择执行条件"
                     >
                       <el-option
                         v-for="item in formInline.data.properties"
-                        :key="item.lable"
+                        :key="item.lable + item.disable"
+                        :disabled="computedDisable(item)"
                         :label="item.lable"
                         :value="item.value"
                       />
@@ -143,7 +144,8 @@
                     >
                       <el-option
                         v-for="item in formInline.data.events"
-                        :key="item.lable"
+                        :key="item.lable + item.disable"
+                        :disabled="item.disabled"
                         :label="item.lable"
                         :value="item.value"
                       />
@@ -155,7 +157,8 @@
                     >
                       <el-option
                         v-for="item in formInline.mqttEvent"
-                        :key="item.label"
+                        :key="item.lable + item.disable"
+                        :disabled="item.disabled"
                         :label="item.label"
                         :value="item.value"
                       />
@@ -169,6 +172,7 @@
                       <el-option
                         v-for="item in formInline.mqttConfig"
                         :key="item.label"
+                        :disabled="item.disabled"
                         :label="item.label"
                         :value="item.value"
                       />
@@ -195,14 +199,20 @@
                     />
                   </el-col>
                   <el-col v-show="index === 0" :span="4">
-                    <el-button type="success" @click.prevent="addWhere">
+                    <el-button
+                      :disabled="formInline.from.from.devaddr == ''"
+                      type="success"
+                      @click.prevent="addWhere(formInline.from.method)"
+                    >
                       新增
                     </el-button>
                   </el-col>
                   <el-col v-show="index !== 0" :span="4">
                     <el-button
                       type="warning"
-                      @click.prevent="removeDomain(domain)"
+                      @click.prevent="
+                        removeDomain(formInline.from.method, domain)
+                      "
                     >
                       删除
                     </el-button>
@@ -228,7 +238,7 @@
                 </el-select>
                 <el-button
                   type="success"
-                  @click.native="generatorSql(formInline.form)"
+                  @click.native="generatorSql(formInline.from)"
                 >
                   生成sql
                 </el-button>
@@ -761,8 +771,6 @@
           erlOperator: ['>', '>=', '<', '<=', '==', '=:=', '/=', '=/='], //ERLANG比较运算符  https://blog.csdn.net/u010164190/article/details/51005282
           value: '',
           from: {
-            productid: '', // 产品id
-            devaddr: '', // 设备地址
             select: {
               mqttConfig: [],
               thingConfig: [],
@@ -770,8 +778,11 @@
 
             trigger: 'device', // 触发规则
             cron: '', // cron的值
-            method: 'property', // 触发方式
-            from: {},
+            method: 'properties', // 触发方式
+            from: {
+              productid: '', // 产品id
+              devaddr: '', // 设备地址
+            },
             where: [
               {
                 identifier: '', // 物模型
@@ -803,7 +814,7 @@
           ],
           methodSelect: [
             {
-              value: 'property',
+              value: 'properties',
               label: '物模型属性触发',
             },
             {
@@ -852,7 +863,7 @@
 
           trigger: 'device', // 触发规则
           cron: '', // cron的值
-          method: 'property', // 触发方式
+          method: 'properties', // 触发方式
           form: {
             productid: '', // 产品id
             devaddr: '', // 设备地址
@@ -863,7 +874,7 @@
 
             trigger: 'device', // 触发规则
             cron: '', // cron的值
-            method: 'property', // 触发方式
+            method: 'properties', // 触发方式
             from: {},
             where: [
               {
@@ -895,21 +906,21 @@
               trigger: 'change',
             },
           ],
-          'form.productid': [
+          'from.from.productid': [
             {
               required: true,
               message: '请选择产品',
               trigger: 'change',
             },
           ],
-          'form.method': [
+          'from.method': [
             {
               required: true,
               message: '请选择触发方式',
               trigger: 'change',
             },
           ],
-          'form.devaddr': [
+          'from.from.devaddr': [
             {
               required: true,
               message: '请选择设备',
@@ -1002,6 +1013,26 @@
         allChannelstart: 0,
       }
     },
+    watch: {
+      'formInline.from.where': {
+        handler(val, oldVal) {
+          console.log((val, oldVal))
+          // https://www.emqx.io/docs/zh/v4.3/rule/rule-engine.html#sql-%E8%AF%AD%E5%8F%A5
+          // 将已经选中了的物模型设置为disable
+          val.forEach((where) => {
+            this.formInline.data[this.formInline.from.method].forEach(
+              (data) => {
+                data.disabled = false
+                if (where.identifier == data.value) {
+                  data.disabled = true
+                }
+              }
+            )
+          })
+        },
+        deep: true,
+      },
+    },
     mounted() {
       if (this.$route.query.type && this.$route.query.uid) {
         this.queryRule(
@@ -1030,6 +1061,16 @@
       })
     },
     methods: {
+      // 设置选中项不可重复选择
+      computedDisable(item) {
+        let flag = false
+        this.formInline.from.where.forEach((where) => {
+          if (where.identifier == item.value) {
+            flag = true
+          }
+        })
+        return flag
+      },
       setDefaultWhere() {
         this.formInline.from.where = [
           {
@@ -1042,18 +1083,18 @@
         ]
       },
 
-      async addWhere() {
+      async addWhere(type) {
+        console.log(type)
+        // // 将已经选中了的物模型设置为disable
         await this.formInline.from.where.push({
           identifier: '', // 物模型
           operator: '', // 条件判断
           value: '', //比较参数
-          config: 'clientid',
-          event: 'message_delivered',
         })
         // 添加执行条件的限制
         // if (this.formInline.from.where.length > this.formInline.property.length)
       },
-      removeDomain(item) {
+      removeDomain(type, item) {
         var index = this.formInline.from.where.indexOf(item)
         if (index !== -1) {
           this.formInline.from.where.splice(index, 1)
@@ -1065,10 +1106,9 @@
        *@docs https://www.emqx.io/docs/zh/v4.3/rule/rule-engine.html#sql-%E8%AF%AD%E5%8F%A5
        * @param tpl
        */
-      generatorSql(tpl) {
+      generatorSql(from) {
         // topo 过滤&&验证重复的执行条件
-        const from = this.formInline.from
-        console.error(from, this.formInline.from)
+        console.error(from)
         // this.formInline.sqltest = true
         // this.getEditor2(true)
         const setValue =
@@ -1089,31 +1129,34 @@
               `      "thing/${from.productid}/${from.devaddr}"\n` +
               'WHERE\n' +
               "      msg = 'hello'"
-        console.log(from)
         // 判断是否校验成功
         switch (from.method) {
           case 'device':
             from.select.payload = from.where.map((item) => {
-              return item.identifier
+              return item.identifier != ''
             })
             break
-          case 'property':
+          case 'properties':
             from.select.payload = from.where.map((item) => {
-              return item.identifier
+              return item.identifier != ''
             })
             break
           case 'mqttConfig':
             from.select.mqttConfig = from.where.map((item) => {
-              return item.config
+              return item.config != ''
             })
             break
           case 'mqttEvent':
             from.select.thingConfig = from.where.map((item) => {
-              return item.event
+              return item.event != ''
             })
             alert('mqtt')
             break
         }
+        // 过滤掉 select 为空的物模型
+        from.where = from.where.filter((item) => {
+          return item.identifier != ''
+        })
         this.$refs.formInline.validate(async (valid) => {
           if (valid) {
             try {
@@ -1195,6 +1238,7 @@
               lable: Thing[lable][j].name,
               value: Thing[lable][j].identifier,
               data: Thing[lable][j],
+              disabled: false,
             })
           }
           // // 将对象形式的物模型转换为数组形式
