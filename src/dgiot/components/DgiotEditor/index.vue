@@ -127,10 +127,10 @@
         this.editor.setOption('mode', 'ace/mode/' + val)
       },
       minLines(val) {
-        this.editor.setOption('minLines', val)
+        this.editor.setOption('minLines', `${val}px !important`)
       },
       maxLines(val) {
-        this.editor.setOption('maxLines', val)
+        this.editor.setOption('maxLines', `${val}px !important`)
       },
     },
     mounted() {

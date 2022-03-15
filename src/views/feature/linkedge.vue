@@ -4,7 +4,7 @@
       <el-card class="box-card">
         <el-form
           ref="formInline"
-          label-width="px"
+          label-width="75px"
           :model="formInline"
           :rules="formlinerule"
           size="mini"
@@ -15,11 +15,15 @@
               {{ $translateTitle('rule.Processing') }}
             </div>
           </div>
-          <el-row :gutter="20">
+          <el-row :gutter="24">
             <el-col :span="row1">
               <el-row :gutter="24">
-                <el-col :span="4">
-                  <el-form-item label="触发器" prop="trigger">
+                <el-col :span="6">
+                  <el-form-item
+                    label="触发器"
+                    label-width="70px"
+                    prop="trigger"
+                  >
                     <el-select
                       v-model="formInline.from.trigger"
                       placeholder="请选择触发器类型"
@@ -41,9 +45,13 @@
                   element-loading-background="rgba(0, 0, 0, 0.8)"
                   element-loading-spinner="el-icon-loading"
                   element-loading-text="查询产品列表"
-                  :span="4"
+                  :span="6"
                 >
-                  <el-form-item label="产品信息" prop="from.from.productid">
+                  <el-form-item
+                    label="产品信息"
+                    label-width="80px"
+                    prop="from.from.productid"
+                  >
                     <el-select
                       v-model="formInline.from.from.productid"
                       placeholder="请选择产品"
@@ -59,14 +67,18 @@
                   </el-form-item>
                 </el-col>
                 <el-col
-                  v-show="formInline.from.from.productid"
+                  v-if="formInline.from.from.productid"
                   v-loading="formInline.triggerSelect[0].devaddr"
                   element-loading-background="rgba(0, 0, 0, 0.8)"
                   element-loading-spinner="el-icon-loading"
                   element-loading-text="查询设备列表"
-                  :span="4"
+                  :span="6"
                 >
-                  <el-form-item label="设备信息" prop="from.from.devaddr">
+                  <el-form-item
+                    label="设备信息"
+                    label-width="80px"
+                    prop="from.from.devaddr"
+                  >
                     <el-select
                       v-model="formInline.from.from.devaddr"
                       placeholder="请选择设备"
@@ -87,11 +99,15 @@
                   element-loading-background="rgba(0, 0, 0, 0.8)"
                   element-loading-spinner="el-icon-loading"
                   element-loading-text="查询设备列表"
-                  :span="4"
+                  :span="6"
                 >
-                  <el-form-item label="事件信息" prop="from.method">
+                  <el-form-item
+                    label="事件信息"
+                    label-width="80px"
+                    prop="from.method"
+                  >
                     <el-select
-                      v-model="formInline.form.method"
+                      v-model="formInline.from.method"
                       placeholder="请选择触发方式"
                       @change="setDefaultWhere"
                     >
@@ -104,7 +120,7 @@
                     </el-select>
                   </el-form-item>
                 </el-col>
-                <el-col v-show="formInline.from.trigger == 'cron'" :span="4">
+                <el-col v-show="formInline.from.trigger == 'cron'" :span="6">
                   <el-form-item label="触发器" prop="trigger">
                     <el-input
                       v-model="formInline.from.cron"
@@ -113,18 +129,24 @@
                   </el-form-item>
                 </el-col>
               </el-row>
-              <el-form-item
+              <el-row
                 v-for="(domain, index) in formInline.from.where"
-                v-show="formInline.from.method.length"
+                v-show="formInline.from.trigger == 'device'"
                 :key="domain.key"
-                :label="'执行条件' + Number(index + 1)"
-                prop="trigger"
+                :gutter="24"
               >
-                <el-row :gutter="24">
-                  <el-col :span="4">
+                <el-divider content-position="left">
+                  {{ '执行条件:' + Number(index + 1) }}
+                </el-divider>
+
+                <el-col
+                  prop="trigger"
+                  :span="formInline.from.method === 'mqttEvent' ? 20 : 6"
+                >
+                  <el-form-item label="属性" label-width="70px" prop="trigger">
                     <!--          如果选择的是属性的判断          -->
                     <el-select
-                      v-if="formInline.form.method == 'properties'"
+                      v-if="formInline.from.method == 'properties'"
                       v-model="formInline.from.where[index].identifier"
                       placeholder="物模型属性"
                     >
@@ -138,7 +160,7 @@
                     </el-select>
                     <!--          如果选择的是事件的判断          -->
                     <el-select
-                      v-if="formInline.form.method == 'Event'"
+                      v-if="formInline.from.method == 'Event'"
                       v-model="formInline.from.where[index].identifier"
                       placeholder="物模型事件"
                     >
@@ -151,7 +173,7 @@
                       />
                     </el-select>
                     <el-select
-                      v-if="formInline.form.method == 'mqttEvent'"
+                      v-if="formInline.from.method == 'mqttEvent'"
                       v-model="formInline.from.where[index].identifier"
                       placeholder="mqtt事件"
                     >
@@ -164,7 +186,7 @@
                       />
                     </el-select>
                     <el-select
-                      v-if="formInline.form.method == 'mqttConfig'"
+                      v-if="formInline.from.method == 'mqttConfig'"
                       v-model="formInline.from.where[index].identifier"
                       placeholder="mqtt属性"
                     >
@@ -176,9 +198,10 @@
                         :value="item.value"
                       />
                     </el-select>
-                  </el-col>
-
-                  <el-col :span="4">
+                  </el-form-item>
+                </el-col>
+                <el-col v-if="formInline.from.method !== 'mqttEvent'" :span="6">
+                  <el-form-item label="条件" label-width="70px" prop="trigger">
                     <el-select
                       v-model="formInline.from.where[index].operator"
                       placeholder="请选择比较条件"
@@ -190,24 +213,38 @@
                         :value="item"
                       />
                     </el-select>
-                  </el-col>
-                  <el-col :span="4">
+                  </el-form-item>
+                </el-col>
+                <el-col v-if="formInline.from.method !== 'mqttEvent'" :span="6">
+                  <el-form-item label="值" label-width="70px" prop="trigger">
                     <el-input
                       v-model="formInline.from.where[index].value"
                       placeholder="请输入比较参数"
                     />
-                  </el-col>
-                  <el-col v-show="index === 0" :span="4">
+                  </el-form-item>
+                </el-col>
+                <el-col :span="4">
+                  <el-form-item label="" label-width="0px">
                     <el-button
-                      :disabled="formInline.from.from.devaddr == ''"
-                      type="success"
+                      v-if="
+                        index === 0 && formInline.from.method !== 'mqttEvent'
+                      "
+                      :disabled="calculateDisable == true"
+                      type="info"
                       @click.prevent="addWhere(formInline.from.method)"
                     >
                       新增
                     </el-button>
-                  </el-col>
-                  <el-col v-show="index !== 0" :span="4">
                     <el-button
+                      v-if="index === 0"
+                      :disabled="calculateDisable == true"
+                      type="success"
+                      @click.native="generatorSql(formInline.from)"
+                    >
+                      生成sql
+                    </el-button>
+                    <el-button
+                      v-if="index !== 0"
                       type="warning"
                       @click.prevent="
                         removeDomain(formInline.from.method, domain)
@@ -215,12 +252,13 @@
                     >
                       删除
                     </el-button>
-                  </el-col>
-                </el-row>
-              </el-form-item>
+                  </el-form-item>
+                </el-col>
+              </el-row>
               <el-form-item
                 v-show="formInline.from.method.length"
                 label="执行动作"
+                label-width="80px"
                 prop="trigger"
               >
                 <el-select
@@ -235,12 +273,6 @@
                     :value="item.value"
                   />
                 </el-select>
-                <el-button
-                  type="success"
-                  @click.native="generatorSql(formInline.from)"
-                >
-                  生成sql
-                </el-button>
               </el-form-item>
               <el-form-item
                 :label="$translateTitle('rule.RuleSQL')"
@@ -290,13 +322,11 @@
               </el-form-item>
               <!--其他信息-->
             </el-col>
-
-            <!--中间间隔-->
-            <el-col :span="4" />
             <el-col class="animated fadeInRightBig" :span="row2">
               <el-form-item
                 v-if="formInline.sqltest == true"
                 label="clientid"
+                label-width="80px"
                 prop="clientid"
                 :rules="[
                   {
@@ -311,6 +341,7 @@
               <el-form-item
                 v-if="formInline.sqltest == true"
                 label="username"
+                label-width="80px"
                 prop="username"
                 :rules="[
                   {
@@ -325,6 +356,7 @@
               <el-form-item
                 v-if="formInline.sqltest == true"
                 label="topic"
+                label-width="80px"
                 prop="topic"
                 :rules="[
                   {
@@ -339,6 +371,7 @@
               <el-form-item
                 v-if="formInline.sqltest == true"
                 label="qos"
+                label-width="80px"
                 prop="qos"
                 :rules="[
                   { required: true, message: 'qos 不能为空', trigger: 'blur' },
@@ -349,33 +382,39 @@
               <el-form-item
                 v-if="formInline.sqltest == true"
                 label="payload"
+                label-width="80px"
                 prop="payload"
                 :rules="[
                   { required: true, message: '请填写payload', trigger: 'blur' },
                 ]"
               >
-                <el-input
-                  v-model="formInline.payload"
-                  style="visibility: hidden"
-                  type="text"
-                />
                 <pre
                   id="editor2"
                   class="ace_editor"
-                  style="min-height: 300px"
-                ><el-input
-                  v-model="formInline.payload"
-                  class="ace_text-input"
-                  type="textarea"
-                /></pre>
+                  style="min-height: 100px"
+                ></pre>
               </el-form-item>
-              <el-form-item v-if="formInline.sqltest == true" label=" ">
+              <el-form-item
+                v-if="formInline.sqltest == true"
+                label=" "
+                label-width="80px"
+              >
                 <el-button
                   type="success"
                   @click.native="testRule('formInline')"
                 >
                   {{ $translateTitle('rule.Test') }}
                 </el-button>
+                <el-input
+                  v-model="formInline.payload"
+                  style="visibility: hidden"
+                  type="text"
+                />
+                <el-input
+                  v-model="formInline.payload"
+                  class="ace_text-input"
+                  type="textarea"
+                />
               </el-form-item>
               <el-form-item
                 v-if="formInline.sqltest == true"
@@ -387,9 +426,14 @@
                 <!--                  type="textarea"-->
                 <!--                />-->
                 <dgiot-editor
+                  :key="formInline.result"
                   v-model="formInline.result"
-                  :lang="'json'"
-                  :theme="'gob'"
+                  :height="100"
+                  :lang="'sql'"
+                  :min-lines="100"
+                  :readonly="true"
+                  style="min-height: 100px"
+                  :theme="'eclipse'"
                 />
               </el-form-item>
             </el-col>
@@ -687,6 +731,7 @@
   export default {
     data() {
       return {
+        calculateDisable: true,
         ruleId: this.$route.query.id || '',
         uid: this.$route.query.uid || '',
         ruleType: this.$route.query.type || '',
@@ -774,30 +819,6 @@
           sqlOperator: ['>', '>=', '<', '<=', '==', '!=', 'in'], // 基础sql运算符 https://www.cnblogs.com/nwgdk/p/9772312.html
           erlOperator: ['>', '>=', '<', '<=', '==', '=:=', '/=', '=/='], //ERLANG比较运算符  https://blog.csdn.net/u010164190/article/details/51005282
           value: '',
-          from: {
-            select: {
-              mqttConfig: [],
-              thingConfig: [],
-            },
-
-            trigger: 'device', // 触发规则
-            cron: '', // cron的值
-            method: 'properties', // 触发方式
-            from: {
-              productid: '', // 产品id
-              devaddr: '', // 设备地址
-            },
-            where: [
-              {
-                identifier: '', // 物模型
-                operator: '', // 条件判断
-                value: '', //比较参数
-                config: 'clientid',
-                event: 'message_delivered',
-              },
-            ],
-            action: [], //执行动作
-          }, // 提交到数据库中你的值
           actionSelect: [
             {
               label: '设备输出',
@@ -845,9 +866,9 @@
             '      payload.msg as msg,\n' +
             '      clientid,\n' +
             "      'productid' as productid\n" +
-            '    FROM\n' +
+            'FROM\n' +
             '      "t/#"\n' +
-            '    WHERE\n' +
+            'WHERE\n' +
             "      msg = 'hello'",
           remarks: '',
           sqltest: false,
@@ -868,7 +889,7 @@
           trigger: 'device', // 触发规则
           cron: '', // cron的值
           method: 'properties', // 触发方式
-          form: {
+          from: {
             productid: '', // 产品id
             devaddr: '', // 设备地址
             select: {
@@ -879,7 +900,10 @@
             trigger: 'device', // 触发规则
             cron: '', // cron的值
             method: 'properties', // 触发方式
-            from: {},
+            from: {
+              productid: '', // 产品id
+              devaddr: '', // 设备地址
+            },
             where: [
               {
                 identifier: '', // 物模型
@@ -1020,18 +1044,23 @@
     watch: {
       'formInline.from.where': {
         handler(val, oldVal) {
-          console.log((val, oldVal))
           // https://www.emqx.io/docs/zh/v4.3/rule/rule-engine.html#sql-%E8%AF%AD%E5%8F%A5
           // 将已经选中了的物模型设置为disable
+          if (this.formInline.from.from.devaddr == '')
+            this.calculateDisable = true
           val.forEach((where) => {
-            this.formInline.data[this.formInline.from.method].forEach(
-              (data) => {
-                data.disabled = false
-                if (where.identifier == data.value) {
-                  data.disabled = true
+            if (where.identifier == '') this.calculateDisable = true
+            else this.calculateDisable = false
+
+            if (this.formInline.data[this.formInline.from.method])
+              this.formInline.data[this.formInline.from.method].forEach(
+                (data) => {
+                  data.disabled = false
+                  if (where.identifier == data.value) {
+                    data.disabled = true
+                  }
                 }
-              }
-            )
+              )
           })
         },
         deep: true,
@@ -1085,11 +1114,23 @@
             event: '',
           },
         ]
-        console.log('toggle', this.formInline.form.method)
+        console.log('toggle', this.formInline.from.method)
       },
 
       async addWhere(type) {
         console.log(type)
+        if (
+          this.formInline.data[this.formInline.from.method].length <=
+          this.formInline.from.where.length
+        ) {
+          this.$message({
+            message: `最多只能添加${
+              this.formInline.data[this.formInline.from.method].length
+            }个比较参数`,
+            type: 'warning',
+          })
+          return
+        }
         // // 将已经选中了的物模型设置为disable
         await this.formInline.from.where.push({
           identifier: '', // 物模型
@@ -1122,7 +1163,7 @@
               '      payload.msg as msg,\n' +
               '      clientid,\n' +
               "      'productid' as productid\n" +
-              '    FROM\n' +
+              'FROM\n' +
               `      "thing/${from.productid}/#"\n` +
               'WHERE\n' +
               "      msg = 'hello'"
@@ -1155,7 +1196,7 @@
             from.select.thingConfig = from.where.map((item) => {
               return item.identifier
             })
-            alert('mqtt')
+            // 将mqtt event 事件 处理为from 语句
             break
         }
         // 过滤掉 select 为空的物模型
@@ -1238,7 +1279,6 @@
           this.formInline.data[lable] = []
           console.error(Thing[lable])
           for (let j in Thing[lable]) {
-            dgiotlogger.log(lable, j, Thing[lable][j], 'line 923 property')
             this.formInline.data[lable].push({
               lable: Thing[lable][j].name,
               value: Thing[lable][j].identifier,
@@ -1311,8 +1351,8 @@
       // 布局调整
       getEditor2(val) {
         if (val == true) {
-          this.row1 = 12
-          this.row2 = 12
+          this.row1 = 16
+          this.row2 = 8
           this.$nextTick(() => {
             editor2 = ace.edit('editor2')
             editor2 = ace.edit('editor2')
@@ -1343,9 +1383,9 @@
                 '      payload.msg as msg,\n' +
                 '      clientid,\n' +
                 "      'productid' as productid\n" +
-                '    FROM\n' +
+                'FROM\n' +
                 '      "t/#"\n' +
-                '    WHERE\n' +
+                'WHERE\n' +
                 "      msg = 'hello'",
             },
           } = await get_rule_id(ruleId)
