@@ -524,7 +524,7 @@
             <a-drawer
               :closable="false"
               :title="wmxSituation + '物模型事件'"
-              :visible="atbas.visible"
+              :visible="atbas.visible && modules.type === 'events'"
               width="620"
               @close="onClose"
             >
@@ -650,7 +650,7 @@
                       <el-button
                         slot="actions"
                         type="info"
-                        @click.native="editEvent(item, index)"
+                        @click.native="editEvent(item, index, 'output')"
                       >
                         编辑
                       </el-button>
@@ -699,7 +699,256 @@
 
               <a-drawer
                 :closable="false"
-                :title="eventType == 'add' ? '新增输出参数' : '修改输出参数'"
+                :title="
+                  eventType == 'add'
+                    ? '新增'
+                    : '修改' + thingType == 'events'
+                    ? '事件定义'
+                    : '服务定义'
+                "
+                :visible="atbas.childrenDrawer"
+                width="550"
+                @close="onChildrenDrawerClose"
+              >
+                <thing-form
+                  ref="thingForm"
+                  :dlink-unit="dlinkUnit"
+                  :event-type="eventType"
+                  :form-type="formType"
+                  :rule-form="eventForm"
+                  @OutputParameters="thingParameters"
+                  @editParameters="editParameters"
+                />
+              </a-drawer>
+              <div
+                :style="{
+                  position: 'absolute',
+                  bottom: 0,
+                  width: '100%',
+                  borderTop: '1px solid #e8e8e8',
+                  padding: '10px 16px',
+                  textAlign: 'right',
+                  left: 0,
+                  background: '#fff',
+                  borderRadius: '0 0 4px 4px',
+                }"
+              >
+                <!--                <a-button style="marginright: 8px" @click="onClose">-->
+                <!--                  Cancel-->
+                <!--                </a-button>-->
+                <!--                <a-button type="primary" @click="onClose">Submit</a-button>-->
+              </div>
+            </a-drawer>
+            <a-drawer
+              :closable="false"
+              :title="wmxSituation + '物模型服务'"
+              :visible="atbas.visible && modules.type === 'services'"
+              width="620"
+              @close="onClose"
+            >
+              <el-form
+                v-show="modules.type == 'services'"
+                ref="services"
+                label-position="right"
+                label-width="80px"
+                :model="modules.services.data"
+                :rules="modules.services.rules"
+                size="mini"
+              >
+                <el-form-item label="功能名称" prop="name">
+                  <el-input v-model="modules.services.data.name" />
+                </el-form-item>
+                <el-form-item label="标识符" prop="identifier">
+                  <el-input v-model="modules.services.data.identifier" />
+                </el-form-item>
+                <el-form-item label="调用方式" prop="transfer">
+                  <el-radio-group
+                    v-model="modules.services.data.transfer"
+                    size="mini"
+                  >
+                    <el-radio border label="sync">同步</el-radio>
+                    <el-radio border label="async">异步</el-radio>
+                  </el-radio-group>
+                </el-form-item>
+                <el-form-item label="输入参数" prop="enter">
+                  <a-list
+                    :data-source="modules.services.data.enter"
+                    item-layout="horizontal"
+                  >
+                    <a-list-item slot="renderItem" slot-scope="item, index">
+                      <el-button
+                        slot="actions"
+                        type="info"
+                        @click.native="editEvent(item, index, 'enter')"
+                      >
+                        编辑
+                      </el-button>
+                      <el-button
+                        slot="actions"
+                        size="mini"
+                        type="danger"
+                        @click.native="
+                          modules.services.data.enter.splice(index, 1)
+                        "
+                      >
+                        删除
+                      </el-button>
+                      <a-list-item-meta style="border: 1px solid #e1e2e5">
+                        <!--                        <el-link slot="avatar">{{ item.name   }}</el-link>-->
+                        <el-tag slot="title" type="success">
+                          参数名称:{{ item.identifier }}
+                        </el-tag>
+                      </a-list-item-meta>
+                    </a-list-item>
+                  </a-list>
+                  <el-link type="primary" @click.native="showChildrenDrawer">
+                    <a-icon type="plus" />
+                    增加参数
+                  </el-link>
+                </el-form-item>
+                <el-form-item label="输出参数" prop="output">
+                  <a-list
+                    :data-source="modules.services.data.output"
+                    item-layout="horizontal"
+                  >
+                    <a-list-item slot="renderItem" slot-scope="item, index">
+                      <el-button
+                        slot="actions"
+                        type="info"
+                        @click.native="editEvent(item, index, 'output')"
+                      >
+                        编辑
+                      </el-button>
+                      <el-button
+                        slot="actions"
+                        size="mini"
+                        type="danger"
+                        @click.native="
+                          modules.services.data.output.splice(index, 1)
+                        "
+                      >
+                        删除
+                      </el-button>
+                      <a-list-item-meta style="border: 1px solid #e1e2e5">
+                        <!--                        <el-link slot="avatar">{{ item.name   }}</el-link>-->
+                        <el-tag slot="title" type="success">
+                          参数名称:{{ item.identifier }}
+                        </el-tag>
+                      </a-list-item-meta>
+                    </a-list-item>
+                  </a-list>
+                  <el-link type="primary" @click.native="showChildrenDrawer">
+                    <a-icon type="plus" />
+                    增加参数
+                  </el-link>
+                </el-form-item>
+                <el-form-item label="描述" prop="describe">
+                  <el-input
+                    v-model="modules.services.data.describe"
+                    type="textarea"
+                  />
+                </el-form-item>
+                <el-form-item size="large" style="text-align: center">
+                  <el-button
+                    size="mini"
+                    type="primary"
+                    @click.native="submitModules('services', modules.services)"
+                  >
+                    确认
+                  </el-button>
+                  <el-button size="mini" @click.native="handleClose">
+                    取消
+                  </el-button>
+                </el-form-item>
+              </el-form>
+
+              <el-form
+                v-show="modules.type == 'events'"
+                ref="events"
+                label-position="right"
+                label-width="80px"
+                :model="modules.events.data"
+                :rules="modules.events.rules"
+                size="mini"
+              >
+                <el-form-item label="功能名称" prop="name">
+                  <el-input v-model="modules.events.data.name" />
+                </el-form-item>
+                <el-form-item label="标识符" prop="identifier">
+                  <el-input v-model="modules.events.data.identifier" />
+                </el-form-item>
+                <el-form-item label="事件类型" prop="types">
+                  <el-radio-group
+                    v-model="modules.events.data.types"
+                    size="mini"
+                  >
+                    <el-radio label="info">信息</el-radio>
+                    <el-radio label="warning">告警</el-radio>
+                    <el-radio label="error">故障</el-radio>
+                  </el-radio-group>
+                </el-form-item>
+                <el-form-item label="输出参数" prop="output">
+                  <a-list
+                    :data-source="modules.events.data.output"
+                    item-layout="horizontal"
+                  >
+                    <a-list-item slot="renderItem" slot-scope="item, index">
+                      <el-button
+                        slot="actions"
+                        type="info"
+                        @click.native="editEvent(item, index, 'output')"
+                      >
+                        编辑
+                      </el-button>
+                      <el-button
+                        slot="actions"
+                        size="mini"
+                        type="danger"
+                        @click.native="
+                          modules.events.data.output.splice(index, 1)
+                        "
+                      >
+                        删除
+                      </el-button>
+                      <a-list-item-meta style="border: 1px solid #e1e2e5">
+                        <!--                        <el-link slot="avatar">{{ item.name   }}</el-link>-->
+                        <el-tag slot="title" type="success">
+                          参数名称:{{ item.identifier }}
+                        </el-tag>
+                      </a-list-item-meta>
+                    </a-list-item>
+                  </a-list>
+                  <el-link type="primary" @click.native="showChildrenDrawer">
+                    <a-icon type="plus" />
+                    增加参数
+                  </el-link>
+                </el-form-item>
+                <el-form-item label="描述" prop="describe">
+                  <el-input
+                    v-model="modules.events.data.describe"
+                    type="textarea"
+                  />
+                </el-form-item>
+                <el-form-item size="large" style="text-align: center">
+                  <el-button
+                    size="mini"
+                    type="primary"
+                    @click.native="submitModules('events', modules.events)"
+                  >
+                    确认
+                  </el-button>
+                  <el-button size="mini" @click.native="handleClose">
+                    取消
+                  </el-button>
+                </el-form-item>
+              </el-form>
+
+              <a-drawer
+                :closable="false"
+                :title="
+                  (eventType == 'add' ? '新增' : '修改',
+                  thingType == 'events' ? '事件定义' : '服务定义')
+                "
                 :visible="atbas.childrenDrawer"
                 width="550"
                 @close="onChildrenDrawerClose"
@@ -1078,6 +1327,7 @@
                 "
                 :default-sort="{ prop: 'date', order: 'descending' }"
                 :height="$baseTableHeight(0) - 60"
+                row-key="identifier"
                 style="width: 100%; margin-top: 10px"
               >
                 <el-table-column prop="输出参数" type="expand">
@@ -1238,6 +1488,90 @@
                 row-key="identifier"
                 style="width: 100%; margin-top: 10px"
               >
+                <el-table-column prop="输出参数" type="expand">
+                  <template slot-scope="props">
+                    <el-form
+                      class="demo-table-expand"
+                      inline
+                      label-position="left"
+                    >
+                      <a-descriptions
+                        v-for="(item, index) in props.row.enter"
+                        :key="index"
+                        bordered
+                        :title="'输入参数:' + item.name"
+                      >
+                        <a-descriptions-item label="标识符">
+                          {{ item.identifier }}
+                        </a-descriptions-item>
+                        <a-descriptions-item label="数据类型">
+                          {{ item.dataType }}
+                        </a-descriptions-item>
+                        <a-descriptions-item label="取值范围">
+                          最小值:{{ item.min }} 最大值:{{ item.max }}
+                        </a-descriptions-item>
+                        <a-descriptions-item label="步长">
+                          {{ item.step }}
+                        </a-descriptions-item>
+                        <a-descriptions-item label="单位">
+                          <el-tag
+                            v-for="(Unit, index) of dlinkUnit"
+                            v-show="Unit.Symbol == item.unit"
+                            :key="index"
+                            type="success"
+                          >
+                            <span>
+                              {{ Unit.Name }}
+                            </span>
+                          </el-tag>
+                        </a-descriptions-item>
+                        <a-descriptions-item label="读写类型">
+                          {{ item.isread == 'rw' ? '读写' : '只读' }}
+                        </a-descriptions-item>
+                      </a-descriptions>
+                    </el-form>
+                    <el-form
+                      class="demo-table-expand"
+                      inline
+                      label-position="left"
+                    >
+                      <a-descriptions
+                        v-for="(item, index) in props.row.output"
+                        :key="index"
+                        bordered
+                        :title="'输出参数:' + item.name"
+                      >
+                        <a-descriptions-item label="标识符">
+                          {{ item.identifier }}
+                        </a-descriptions-item>
+                        <a-descriptions-item label="数据类型">
+                          {{ item.dataType }}
+                        </a-descriptions-item>
+                        <a-descriptions-item label="取值范围">
+                          最小值:{{ item.min }} 最大值:{{ item.max }}
+                        </a-descriptions-item>
+                        <a-descriptions-item label="步长">
+                          {{ item.step }}
+                        </a-descriptions-item>
+                        <a-descriptions-item label="单位">
+                          <el-tag
+                            v-for="(Unit, index) of dlinkUnit"
+                            v-show="Unit.Symbol == item.unit"
+                            :key="index"
+                            type="success"
+                          >
+                            <span>
+                              {{ Unit.Name }}
+                            </span>
+                          </el-tag>
+                        </a-descriptions-item>
+                        <a-descriptions-item label="读写类型">
+                          {{ item.isread == 'rw' ? '读写' : '只读' }}
+                        </a-descriptions-item>
+                      </a-descriptions>
+                    </el-form>
+                  </template>
+                </el-table-column>
                 <el-table-column
                   align="center"
                   :label="$translateTitle('product.order')"
@@ -1249,19 +1583,14 @@
                 </el-table-column>
                 <el-table-column
                   align="center"
-                  :label="$translateTitle('product.identifier')"
+                  label="标识符"
                   prop="identifier"
-                  width="100"
-                />
-                <el-table-column
-                  align="center"
-                  :label="$translateTitle('product.functionname')"
-                  prop="name"
+                  width="auto"
                 />
                 <el-table-column
                   align="center"
                   :label="$translateTitle('product.datatype')"
-                  width="90"
+                  width="auto"
                 >
                   <template #default="{ row }">
                     <span>{{ row.dataType.type }}</span>
@@ -1269,37 +1598,18 @@
                 </el-table-column>
                 <el-table-column
                   align="center"
-                  :label="$translateTitle('product.datadefinition')"
+                  label="调用方式"
+                  prop="types"
+                  sortable
                 >
                   <template #default="{ row }">
-                    <span
-                      v-if="
-                        row.dataType.specs &&
-                        (row.dataType.type == 'double' ||
-                          row.dataType.type == 'float' ||
-                          row.dataType.type == 'int')
-                      "
-                    >
+                    <span>
                       {{
-                        $translateTitle('product.rangeofvalues') +
-                        row.dataType.specs.min +
-                        '~' +
-                        row.dataType.specs.max
+                        ['同步', '异步'][
+                          ['sync', 'async'].indexOf(row.transfer)
+                        ]
                       }}
                     </span>
-                    <span v-else-if="row.dataType.type == 'string'">
-                      {{
-                        $translateTitle('product.datalength') +
-                        ':' +
-                        row.dataType.size +
-                        $translateTitle('product.byte')
-                      }}
-                    </span>
-                    <span v-else-if="row.dataType.type == 'date'" />
-                    <span v-else-if="row.dataType.type != 'struct'">
-                      {{ row.dataType.specs }}
-                    </span>
-                    <span v-else />
                   </template>
                 </el-table-column>
                 <el-table-column

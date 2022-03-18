@@ -676,6 +676,8 @@ export default {
       },
       editIndex: -1,
       eventType:'add',
+      formType:'output',
+      thingType:'events',
       eventForm:{},
       ruleForm: {
         name: '',
@@ -800,20 +802,21 @@ export default {
     this.subdialogtimer = null
   },
   methods: {
-     thingParameters(form,index) {
+     thingParameters(form,index,type) {
+       console.log(type)
        this.editIndex = index
       console.log('thingParameters', form)
       // 向events 的 outputData 添加 输出参数
-      this.modules.events.data.output.push(form)
+      this.modules[type].data.output.push(form)
        this.atbas.childrenDrawer = false
 
        // outputParams
        // this.onChildrenDrawerClose()
     },
-    editParameters(form) {
+    editParameters(form,type) {
       console.log('thingParameters', form)
       // 向events 的 outputData 添加 输出参数
-      this.modules.events.data.output[this.editIndex] = form
+      this.modules[type].data.output[this.editIndex] = form
       this.atbas.childrenDrawer = false
 
       // outputParams
@@ -864,12 +867,13 @@ export default {
         colspan: 0
       }
     },
-    async editEvent(item,index){
+    async editEvent(item,index,type){
       this.editIndex = index
       await console.log('editEvent', item)
         this.atbas.childrenDrawer = true
       this.eventForm = item
       this.eventType = 'edit'
+      this.formType=type
     },
     async getDefaultTopic(){
       const res = await getDlinkJson('Topic')
@@ -1990,12 +1994,9 @@ export default {
       this.modules.disabled = false
       this.moduletype = type
       this.setSizeForm(this.getFormOrginalData())
-      if(type !=='events'||type !=='services'){
-        this.wmxdialogVisible = true
-      }
-      this.wmxSituation = '新增'
       switch (type) {
         case 'properties':
+          this.wmxdialogVisible = true
           break
         case 'services':
           this.atbas.visible = true;
@@ -2006,6 +2007,7 @@ export default {
           this.modules.type = 'events';
           break
         case 'tags':
+          this.wmxdialogVisible = true
           // this.modules.visible = true
           // this.modules.type = type
           break
@@ -2019,11 +2021,13 @@ export default {
     async wmxDataFill(rowData, index, moduletype) {
       this.moduletype = moduletype
       this.modules.type = moduletype
-      this.modules.events.data = rowData
+      this.modules[moduletype].data = rowData
       this.wmxSituation = '编辑'
-      if(moduletype === 'events'){
+      this.thingType = moduletype
+      this.eventType = 'edit'
+      if(moduletype === 'events' || moduletype === 'services'){
         this.atbas.visible = true;
-        this.modules.type = 'events';
+        dgiotlogger.log(this.modules.type, this.modules[moduletype].data)
         return false
       }
       this.modifyIndex = index

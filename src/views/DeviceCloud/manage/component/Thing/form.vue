@@ -75,7 +75,7 @@
         <el-button type="primary" @click="submitForm('ruleForm',eventType)">
           {{ eventType == 'add' ? '立即创建' : '修改' }}
         </el-button>
-        <el-button v-show="eventType=='add'" @click="resetForm('ruleForm')">重置</el-button>
+        <!--        <el-button v-show="eventType=='add'" @click="resetForm('ruleForm')">重置</el-button>-->
       </el-form-item>
     </el-form>
   </div>
@@ -89,6 +89,20 @@
         require: true, // 必填
         default() {
           return 'add'
+        },
+      },
+      formType: {
+        type: String,
+        require: true, // 必填
+        default() {
+          return 'input'
+        },
+      },
+      thingType: {
+        type: String,
+        require: true, // 必填
+        default() {
+          return 'events'
         },
       },
       ruleForm: {
@@ -273,9 +287,9 @@
           if (valid) {
             // 子组件中调用父组件的方法
             if (type == 'add') {
-              this.$emit('OutputParameters', this.ruleForm)
+              this.$emit('OutputParameters', this.ruleForm, this.thingType)
             } else {
-              this.$emit('editParameters', this.ruleForm)
+              this.$emit('editParameters', this.ruleForm, this.thingType)
             }
           } else {
             console.log('error submit!!')

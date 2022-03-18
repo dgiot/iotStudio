@@ -2,6 +2,7 @@
   <div class="addengine">
     <div class="addcontent">
       <el-card class="box-card">
+        <dynamic-forms />
         <el-form
           ref="formInline"
           label-width="80px"
@@ -473,6 +474,7 @@
   </div>
 </template>
 <script>
+  import DynamicForms from '@/views/CloudFunction/engine/components/DynamicForms' // 动态表单
   var editor1
   var editor2
   import {
@@ -485,7 +487,11 @@
   } from '@/api/Rules'
   import provider from '@/api/Ace/index'
   import datalist from './datalist.js'
+
   export default {
+    components: {
+      DynamicForms,
+    },
     data() {
       return {
         ruleId: this.$route.query.id || '',
@@ -534,13 +540,13 @@
           region: '',
           enginesql:
             'SELECT\n' +
-            '      payload.msg as msg,\n' +
-            '      clientid,\n' +
-            "      'productid' as productid\n" +
-            '    FROM\n' +
-            '      "t/#"\n' +
-            '    WHERE\n' +
-            "      msg = 'hello'",
+            '   payload.msg as msg,\n' +
+            '   clientid,\n' +
+            "   'productid' as productid\n" +
+            'FROM\n' +
+            '   "t/#"\n' +
+            'WHERE\n' +
+            "   msg = 'hello'",
           remarks: '',
           sqltest: false,
           clientid: 'c_swqx',
@@ -603,12 +609,9 @@
         ctype: '',
         originlist: datalist,
         client: [],
-        sqlexample: `SELECT
-        payload.msg as msg
-      FROM
-        "t/#"
-      WHERE
-        msg = 'hello'`,
+        sqlexample: `SELECT payload.msg as msg
+                   FROM "t/#"
+                   WHERE msg = 'hello'`,
         actionslist: [],
         allChannelstart: 0,
       }
@@ -678,13 +681,13 @@
               description: '',
               rawsql:
                 'SELECT\n' +
-                '      payload.msg as msg,\n' +
-                '      clientid,\n' +
-                "      'productid' as productid\n" +
-                '    FROM\n' +
-                '      "t/#"\n' +
-                '    WHERE\n' +
-                "      msg = 'hello'",
+                '    payload.msg as msg,\n' +
+                '    clientid,\n' +
+                "    'productid' as productid\n" +
+                'FROM\n' +
+                '    "t/#"\n' +
+                'WHERE\n' +
+                "    msg = 'hello'",
             },
           } = await get_rule_id(ruleId)
           dgiotlogger.log(data)

@@ -863,13 +863,13 @@
           region: '',
           enginesql:
             'SELECT\n' +
-            '      payload.msg as msg,\n' +
-            '      clientid,\n' +
-            "      'productid' as productid\n" +
+            '    payload.msg as msg,\n' +
+            '    clientid,\n' +
+            "    'productid' as productid\n" +
             'FROM\n' +
-            '      "t/#"\n' +
+            '    "t/#"\n' +
             'WHERE\n' +
-            "      msg = 'hello'",
+            "    msg = 'hello'",
           remarks: '',
           sqltest: false,
           clientid: 'c_swqx',
