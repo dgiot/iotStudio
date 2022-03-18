@@ -11,10 +11,11 @@
         >
           <el-row :gutter="24">
             <el-col :lg="4" :md="6" :sm="8" :xl="8" :xs="8">
-              <el-form-item :label="'触发方式' + index" prop="uri">
+              <el-form-item :label="'触发方式' + (Number(index)+1)" :prop="item+'.uri'"
+                            :rules="[{ required: true, message: '请选择触发方式', trigger: 'change' }]">
                 <el-select
-                  v-model="ruleContent.trigger.items[index].uri"
-                  placeholder="请选择"
+                  v-model="item.uri"
+                  placeholder="请选择触发方式"
                 >
                   <el-option
                     v-for="item in options.Trigger"
@@ -28,12 +29,13 @@
             <!-- 定时触发-->
             <el-col
               v-if="item.uri === 'trigger/timer'"
-              :lg="4" :md="6" :sm="8" :xl="8" :xs="8"
+              :lg="6" :md="8" :sm="10" :xl="10" :xs="10"
             >
-              <el-form-item label="触发时间" prop="time">
+              <el-form-item label="触发时间" :prop="item+'.params.cron'"
+                            :rules="[{ required: true, message: '请填写触发时间', trigger: 'blur' }]">
                 <el-input
-                  v-model="ruleContent.trigger.items[index].params.cron"
-                  placeholder="placeholder"
+                  v-model="item.params.cron"
+                  placeholder="请填写触发时间"
                   style="width: 60%"
                 />
               </el-form-item>
@@ -43,16 +45,16 @@
               v-if="item.uri == 'trigger/mqtt/event'"
               :lg="4" :md="6" :sm="8" :xl="8" :xs="8"
             >
-              <el-form-item label="mqtt事件">
+              <el-form-item label="mqtt事件" :prop="item+'.params.mqtt'" :rules="[{ required: true, message: '请选择mqtt事件', trigger: 'change' }]">
                 <el-select
-                  v-model="ruleContent.trigger.items[index].params.mqtt"
-                  placeholder="请选择"
+                  v-model="item.params.mqtt"
+                  placeholder="请选择mqtt事件"
                 >
                   <el-option
-                    v-for="item in options.mqttEvent"
-                    :key="item.lable"
-                    :label="item.label"
-                    :value="item.value"
+                    v-for="_item in options.mqttEvent"
+                    :key="_item.lable"
+                    :label="_item.label"
+                    :value="_item.value"
                   />
                 </el-select>
               </el-form-item>
@@ -62,10 +64,10 @@
               v-if="item.uri === 'trigger/product/event' || item.uri === 'trigger/mqtt/event'"
               :lg="4" :md="6" :sm="8" :xl="8" :xs="8"
             >
-              <el-form-item label="产品信息">
+              <el-form-item label="产品信息" :prop="item+'.params.productKey'" :rules="[{ required: true, message: '请选择产品信息', trigger: 'change' }]">
                 <el-select
-                  v-model="ruleContent.trigger.items[index].params.productKey"
-                  placeholder="请选择"
+                  v-model="item.params.productKey"
+                  placeholder="请选择产品信息"
                 >
                   <el-option
                     v-for="item in options.Product"
@@ -80,18 +82,18 @@
               v-if="item.uri === 'trigger/product/event'||item.uri === 'trigger/mqtt/event'"
               :lg="4" :md="6" :sm="8" :xl="8" :xs="8"
             >
-              <el-form-item label="设备信息">
+              <el-form-item label="设备信息" :prop="item+'.params.deviceName'" :rules="[{ required: true, message: '请选择设备信息', trigger: 'change' }]">
                 <el-select
-                  v-model="ruleContent.trigger.items[index].params.deviceName"
-                  placeholder="请选择"
+                  v-model="item.params.deviceName"
+                  placeholder="请选择设备信息"
                 >
                   <el-option
-                    v-for="item in filtersDevice(
-                      ruleContent.trigger.items[index].params.productKey
+                    v-for="deviceName in filtersDevice(
+                      item.params.productKey
                     )"
-                    :key="item.objectId"
-                    :label="item.name"
-                    :value="item.objectId"
+                    :key="deviceName.objectId"
+                    :label="deviceName.name"
+                    :value="deviceName.objectId"
                   />
                 </el-select>
               </el-form-item>
@@ -100,20 +102,20 @@
               v-if="item.uri === 'trigger/product/event' ||item.uri === 'trigger/mqtt/event'"
               :lg="4" :md="6" :sm="8" :xl="8" :xs="8"
             >
-              <el-form-item label="事件" label-width="80px">
+              <el-form-item label="事件"  :prop="item+'.params.propertyName'" :rules="[{ required: true, message: '请选择物模型事件', trigger: 'change' }]" label-width="80px">
                 <el-select
-                  v-model="ruleContent.trigger.items[index].params.propertyName"
-                  placeholder="请选择"
+                  v-model="item.params.propertyName"
+                  placeholder="请选择物模型事件"
                   style="width: 100%"
                 >
                   <el-option
-                    v-for="item in filtersProperty(
-                      ruleContent.trigger.items[index].params.productKey
+                    v-for="propertyName in filtersProperty(
+                      item.params.productKey
                     )"
-                    :key="item.identifier"
-                    :label="item.name"
+                    :key="propertyName.identifier"
+                    :label="propertyName.name"
                     style="width: 100%"
-                    :value="item.identifier"
+                    :value="propertyName.identifier"
                   />
                 </el-select>
               </el-form-item>
@@ -124,10 +126,10 @@
               v-if="item.uri == 'trigger/product/property'"
               :lg="4" :md="6" :sm="8" :xl="8" :xs="8"
             >
-              <el-form-item label="产品信息">
+              <el-form-item label="产品信息"   :prop="item+'.params.productKey'" :rules="[{ required: true, message: '请选择产品信息', trigger: 'change' }]" >
                 <el-select
-                  v-model="ruleContent.trigger.items[index].params.productKey"
-                  placeholder="请选择"
+                  v-model="item.params.productKey"
+                  placeholder="请选择产品信息"
                 >
                   <el-option
                     v-for="item in options.Product"
@@ -142,18 +144,18 @@
               v-if="item.uri == 'trigger/product/property'"
               :lg="4" :md="6" :sm="8" :xl="8" :xs="8"
             >
-              <el-form-item label="设备信息">
+              <el-form-item label="设备信息" :prop="item+'.params.deviceName'" :rules="[{ required: true, message: '请选择设备信息', trigger: 'change' }]" >
                 <el-select
-                  v-model="ruleContent.trigger.items[index].params.deviceName"
-                  placeholder="请选择"
+                  v-model="item.params.deviceName"
+                  placeholder="请选择设备信息"
                 >
                   <el-option
-                    v-for="item in filtersDevice(
-                      ruleContent.trigger.items[index].params.productKey
+                    v-for="device in filtersDevice(
+                      item.params.productKey
                     )"
-                    :key="item.objectId"
-                    :label="item.name"
-                    :value="item.objectId"
+                    :key="device.objectId"
+                    :label="device.name"
+                    :value="device.objectId"
                   />
                 </el-select>
               </el-form-item>
@@ -162,20 +164,20 @@
               v-if="item.uri === 'trigger/product/property'"
               :lg="4" :md="6" :sm="8" :xl="8" :xs="8"
             >
-              <el-form-item label="属性" label-width="80px">
+              <el-form-item label="属性" label-width="80px" :prop="item+'.params.propertyName'" :rules="[{ required: true, message: '请选择物模型属性', trigger: 'change' }]" >
                 <el-select
-                  v-model="ruleContent.trigger.items[index].params.propertyName"
-                  placeholder="请选择"
+                  v-model="item.params.propertyName"
+                  placeholder="请选择物模型属性"
                   style="width: 100%"
                 >
                   <el-option
-                    v-for="item in filtersProperty(
-                      ruleContent.trigger.items[index].params.productKey
+                    v-for="propert in filtersProperty(
+                      item.params.productKey
                     )"
-                    :key="item.identifier"
-                    :label="item.name"
+                    :key="propert.identifier"
+                    :label="propert.name"
                     style="width: 100%"
-                    :value="item.identifier"
+                    :value="propert.identifier"
                   />
                 </el-select>
               </el-form-item>
@@ -185,10 +187,10 @@
               v-if="item.uri === 'trigger/product/property'"
               :lg="4" :md="6" :sm="8" :xl="8" :xs="8"
             >
-              <el-form-item label="条件" label-width="80px">
+              <el-form-item label="条件" label-width="80px"  :prop="item+'.params.compareType'" :rules="[{ required: true, message: '请选择比较条件', trigger: 'change' }]" >
                 <el-select
-                  v-model="ruleContent.trigger.items[index].params.compareType"
-                  placeholder="请选择"
+                  v-model="item.params.compareType"
+                  placeholder="请选择比较条件"
                   style="width: 100%"
                 >
                   <el-option
@@ -205,9 +207,9 @@
               v-if="item.uri === 'trigger/product/property'"
               :lg="4" :md="6" :sm="8" :xl="8" :xs="8"
             >
-              <el-form-item label="值" label-width="80px">
+              <el-form-item label="值" label-width="80px"  :prop="item+'.params.compareValue'" :rules="[{ required: true, message: '请输入物模型比较值', trigger: 'blur' }]" >
                 <el-input
-                  v-model="ruleContent.trigger.items[index].params.compareValue"
+                  v-model="item.params.compareValue"
                   placeholder="物模型比较值"
                 />
               </el-form-item>
@@ -259,10 +261,10 @@
         >
           <el-row :gutter="24">
             <el-col :lg="4" :md="6" :sm="8" :xl="8" :xs="8">
-              <el-form-item :label="'执行条件' + _index" prop="uri">
+              <el-form-item :label="'执行条件' + (Number(_index)+1)"  :prop="condition+'.uri'" :rules="[{ required: true, message: '请选择执行条件', trigger: 'change' }]">
                 <el-select
                   v-model="condition.uri"
-                  placeholder="请选择"
+                  placeholder="请选择执行条件"
                 >
                   <el-option
                     v-for="item in options.Condition"
@@ -275,10 +277,10 @@
             </el-col>
             <!--            状态持续时长判断-->
             <el-col :lg="4" :md="6" :sm="8" :xl="8" :xs="8" v-if="condition.uri=='condition/device/stateContinue'">
-              <el-form-item label="设备状态" prop="uri">
+              <el-form-item label="设备状态"  :prop="condition+'.params.state'" :rules="[{ required: true, message: '请选择设备状态', trigger: 'change' }]" >
                 <el-select
                   v-model="condition.params.state"
-                  placeholder="请选择"
+                  placeholder="请选择设备状态"
                 >
                   <el-option
                     v-for="item in options.line"
@@ -292,7 +294,7 @@
             <!--            状态持续时长判断-->
             <el-col :lg="4" :md="6" :sm="8" :xl="8" :xs="8"
                     v-if="condition.uri=='condition/device/stateContinue'">
-              <el-form-item label="持续时长" prop="uri">
+              <el-form-item label="持续时长"  :prop="condition+'.params.times'" :rules="[{ required: true, message: '请选择设备状态', trigger: 'change' }]" >
                 <el-input
                   v-model="condition.params.times"
                   placeholder="请选择"
@@ -306,10 +308,10 @@
               v-if="condition.uri == 'condition/device/deviceState'"
               :lg="4" :md="6" :sm="8" :xl="8" :xs="8"
             >
-              <el-form-item label="产品信息">
+              <el-form-item label="产品信息"  :prop="condition+'.params.productKey'" :rules="[{ required: true, message: '请选择产品信息', trigger: 'change' }]" >
                 <el-select
                   v-model="condition.params.productKey"
-                  placeholder="请选择"
+                  placeholder="请选择产品信息"
                 >
                   <el-option
                     v-for="item in options.Product"
@@ -325,10 +327,10 @@
               v-if="condition.uri == 'condition/device/deviceState'"
               :lg="4" :md="6" :sm="8" :xl="8" :xs="8"
             >
-              <el-form-item label="设备信息">
+              <el-form-item label="设备信息"  :prop="condition+'.params.deviceName'" :rules="[{ required: true, message: '请选择设备信息', trigger: 'change' }]" >
                 <el-select
                   v-model="condition.params.deviceName"
-                  placeholder="请选择"
+                  placeholder="请选择设备信息"
                 >
                   <el-option
                     v-for="item in filtersDevice(
@@ -346,10 +348,10 @@
               v-if="condition.uri === 'condition/device/deviceState'"
               :lg="4" :md="6" :sm="8" :xl="8" :xs="8"
             >
-              <el-form-item label="属性" label-width="80px">
+              <el-form-item label="属性" :prop="condition+'.params.propertyName'" :rules="[{ required: true, message: '请选择设备属性', trigger: 'change' }]" label-width="80px">
                 <el-select
                   v-model="condition.params.propertyName"
-                  placeholder="请选择"
+                  placeholder="请选择设备属性"
                   style="width: 100%"
                 >
                   <el-option
@@ -369,10 +371,10 @@
               v-if="condition.uri === 'condition/device/deviceState'"
               :lg="4" :md="6" :sm="8" :xl="8" :xs="8"
             >
-              <el-form-item label="条件" label-width="80px">
+              <el-form-item label="条件" :prop="condition+'.params.compareType'" :rules="[{ required: true, message: '请选择条件', trigger: 'change' }]"  label-width="80px">
                 <el-select
                   v-model="condition.params.compareType"
-                  placeholder="请选择"
+                  placeholder="请选择条件"
                   style="width: 100%"
                 >
                   <el-option
@@ -389,7 +391,7 @@
               v-if="condition.uri === 'condition/device/deviceState'"
               :lg="4" :md="6" :sm="8" :xl="8" :xs="8"
             >
-              <el-form-item label="值" label-width="80px">
+              <el-form-item label="值" :prop="condition+'.params.compareValue'" :rules="[{ required: true, message: '请选择物模型比较值', trigger: 'change' }]"  label-width="80px">
                 <el-input
                   v-model="condition.params.compareValue"
                   placeholder="物模型比较值"
@@ -402,9 +404,10 @@
               v-if="condition.uri === 'condition/device/time'"
               :lg="4" :md="6" :sm="8" :xl="8" :xs="8"
             >
-              <el-form-item label="起止时间" label-width="80px">
+              <el-form-item label="起止时间" :prop="condition+'.params.compareValue'" :rules="[{ required: true, message: '请选择起止时间', trigger: 'change' }]" label-width="80px">
                 <el-date-picker
                   v-model="condition.params.time"
+                  value-format="timestamp"
                   type="datetimerange"
                   range-separator="至"
                   start-placeholder="开始日期"
@@ -471,7 +474,7 @@
                 {
                   uri: 'trigger/product/event',
                   params: {
-                    productKey: 'a1lcmeFVu97',
+                    productKey: '',
                   },
                 },
               ],
@@ -482,10 +485,10 @@
                 {
                   uri: 'condition/device/stateContinue',
                   params: {
-                    stateName: 'event.status',
-                    duration: 8,
-                    compareType: '==',
-                    compareValue: 1,
+                    stateName: '',
+                    duration: '',
+                    compareType: '',
+                    compareValue: '',
                   },
                 },
               ],
@@ -494,10 +497,10 @@
               {
                 uri: 'action/device/setProperty',
                 params: {
-                  productKey: 'a1lcmeFVu97',
-                  deviceName: 'kEdtCEM8p9bYJYUO1rDI',
+                  productKey: '',
+                  deviceName: '',
                   propertyItems: {
-                    Direction: 1,
+                    Direction: '',
                   },
                 },
               },
@@ -519,6 +522,7 @@
 
     data() {
       return {
+        rules: {},
         options: {
           erlOperator: [
             '>',
