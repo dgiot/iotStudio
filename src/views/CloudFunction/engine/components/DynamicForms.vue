@@ -38,9 +38,28 @@
                 />
               </el-form-item>
             </el-col>
+            <!--mqtt事件触发-->
+            <el-col
+              v-if="item.uri == 'trigger/mqtt/event'"
+              :lg="4" :md="6" :sm="8" :xl="8" :xs="8"
+            >
+              <el-form-item label="mqtt事件">
+                <el-select
+                  v-model="ruleContent.trigger.items[index].params.mqtt"
+                  placeholder="请选择"
+                >
+                  <el-option
+                    v-for="item in options.mqttEvent"
+                    :key="item.lable"
+                    :label="item.label"
+                    :value="item.value"
+                  />
+                </el-select>
+              </el-form-item>
+            </el-col>
             <!--设备事件触发-->
             <el-col
-              v-if="item.uri === 'trigger/product/event'"
+              v-if="item.uri === 'trigger/product/event' || item.uri === 'trigger/mqtt/event'"
               :lg="4" :md="6" :sm="8" :xl="8" :xs="8"
             >
               <el-form-item label="产品信息">
@@ -58,7 +77,7 @@
               </el-form-item>
             </el-col>
             <el-col
-              v-if="item.uri === 'trigger/product/event'"
+              v-if="item.uri === 'trigger/product/event'||item.uri === 'trigger/mqtt/event'"
               :lg="4" :md="6" :sm="8" :xl="8" :xs="8"
             >
               <el-form-item label="设备信息">
@@ -78,7 +97,7 @@
               </el-form-item>
             </el-col>
             <el-col
-              v-if="item.uri === 'trigger/product/event'"
+              v-if="item.uri === 'trigger/product/event' ||item.uri === 'trigger/mqtt/event'"
               :lg="4" :md="6" :sm="8" :xl="8" :xs="8"
             >
               <el-form-item label="事件" label-width="80px">
@@ -95,25 +114,6 @@
                     :label="item.name"
                     style="width: 100%"
                     :value="item.identifier"
-                  />
-                </el-select>
-              </el-form-item>
-            </el-col>
-
-            <el-col
-              v-if="item.uri == 'trigger/mqtt/event'"
-              :lg="4" :md="6" :sm="8" :xl="8" :xs="8"
-            >
-              <el-form-item label="mqtt事件">
-                <el-select
-                  v-model="ruleContent.trigger.items[index].params.productKey"
-                  placeholder="请选择"
-                >
-                  <el-option
-                    v-for="item in options.mqttEvent"
-                    :key="item.lable"
-                    :label="item.label"
-                    :value="item.value"
                   />
                 </el-select>
               </el-form-item>
@@ -213,37 +213,37 @@
               </el-form-item>
             </el-col>
 
-            <el-col>
-              <el-button
-                v-if="index == 0"
-                size="mini"
-                style="margin-left: 10px"
-                type="success"
-                @click.native="ruleContent.trigger.items.push({
-          uri: '',
-          params: {
-            productKey: '',
-            compareType: '',
-            compareValue: '',
-            propertyName: '',
-            eventCode: '',
-          },
-        })"
-              >
-                新增触发器
-              </el-button>
-              <el-button
-                v-if="index !== 0"
-                size="mini"
-                style="margin-left: 10px"
-                type="danger"
-                @click.native="
-                  removeTriggerItem(ruleContent.trigger.items, index, item)
-                "
-              >
-                删除触发器
-              </el-button>
-            </el-col>
+            <!--            <el-col>-->
+            <!--              <el-button-->
+            <!--                v-if="index == 0"-->
+            <!--                size="mini"-->
+            <!--                style="margin-left: 10px"-->
+            <!--                type="success"-->
+            <!--                @click.native="ruleContent.trigger.items.push({-->
+            <!--          uri: '',-->
+            <!--          params: {-->
+            <!--            productKey: '',-->
+            <!--            compareType: '',-->
+            <!--            compareValue: '',-->
+            <!--            propertyName: '',-->
+            <!--            eventCode: '',-->
+            <!--          },-->
+            <!--        })"-->
+            <!--              >-->
+            <!--                新增触发器-->
+            <!--              </el-button>-->
+            <!--              <el-button-->
+            <!--                v-if="index !== 0"-->
+            <!--                size="mini"-->
+            <!--                style="margin-left: 10px"-->
+            <!--                type="danger"-->
+            <!--                @click.native="-->
+            <!--                  removeTriggerItem(ruleContent.trigger.items, index, item)-->
+            <!--                "-->
+            <!--              >-->
+            <!--                删除触发器-->
+            <!--              </el-button>-->
+            <!--            </el-col>-->
             <!-- mqtt事件触发-->
           </el-row>
         </el-col>
@@ -474,23 +474,6 @@
                     productKey: 'a1lcmeFVu97',
                   },
                 },
-                {
-                  uri: 'trigger/product/property',
-                  params: {
-                    productKey: 'a11Ecu7de6V',
-                    compareType: '!=',
-                    compareValue: '55',
-                    propertyName: 'Payload',
-                    eventCode: 'OnSync',
-                  },
-                },
-                {
-                  uri: 'trigger/timer',
-                  params: {
-                    cron: '0 0 3 3 0',
-                    cronType: 'linux',
-                  },
-                },
               ],
             },
             condition: {
@@ -503,26 +486,6 @@
                     duration: 8,
                     compareType: '==',
                     compareValue: 1,
-                  },
-                },
-                {
-                  uri: 'condition/device/property',
-                  params: {
-                    productKey: 'a1lcmeFVu97',
-                    deviceName: 'csk84X8upjtNlkdyrry8',
-                    propertyName: 'Direction',
-                    compareType: '==',
-                    compareValue: 1,
-                  },
-                },
-                {
-                  uri: 'condition/device/property',
-                  params: {
-                    productKey: 'a1lcmeFVu97',
-                    deviceName: 'csk84X8upjtNlkdyrry8',
-                    propertyName: 'Direction',
-                    compareType: '==',
-                    compareValue: 0,
                   },
                 },
               ],
