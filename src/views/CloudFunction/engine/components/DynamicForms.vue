@@ -11,7 +11,7 @@
         >
           <el-row :gutter="24">
             <el-col :lg="4" :md="6" :sm="8" :xl="8" :xs="8">
-              <el-form-item :label="'触发方式' + (Number(index)+1)" :prop="item+'.uri'"
+              <el-form-item label-width="60px"  :label="'方式' + (Number(index)+1)" :prop="item+'.uri'"
                             :rules="[{ required: true, message: '请选择触发方式', trigger: 'change' }]">
                 <el-select
                   v-model="item.uri"
@@ -261,7 +261,7 @@
         >
           <el-row :gutter="24">
             <el-col :lg="4" :md="6" :sm="8" :xl="8" :xs="8">
-              <el-form-item :label="'执行条件' + (Number(_index)+1)"  :prop="condition+'.uri'" :rules="[{ required: true, message: '请选择执行条件', trigger: 'change' }]">
+              <el-form-item label-width="60px" :label="'条件' + (Number(_index)+1)"  :prop="condition+'.uri'" :rules="[{ required: true, message: '请选择执行条件', trigger: 'change' }]">
                 <el-select
                   v-model="condition.uri"
                   placeholder="请选择执行条件"
@@ -453,6 +453,7 @@
 </template>
 
 <script>
+  import { getDlinkJson } from '@/api/Dlink'
   import { sqlTpl } from '@/api/Rules'
   import { queryProduct } from '@/api/Product'
   import { queryDevice } from '@/api/Device'
@@ -523,81 +524,7 @@
     data() {
       return {
         rules: {},
-        options: {
-          erlOperator: [
-            '>',
-            '>=',
-            '<',
-            '<=',
-            '==',
-            '=:=',
-            '/=',
-            '=/=',
-            '!=',
-            'in',
-          ], //ERLANG比较运算符  https://blog.csdn.net/u010164190/article/details/51005282
-          mqttEvent: [
-            { label: '消息投递', value: 'message_delivered' },
-            { label: '消息确认', value: 'message_acked' },
-            { label: '消息丢弃', value: 'message_dropped' },
-            { label: '连接完成', value: 'client_connected' },
-            { label: '连接断开', value: 'client_disconnected' },
-            { label: '订阅', value: 'session_subscribed' },
-            { label: '取消订阅', value: 'session_unsubscribed' },
-          ], // mqtt事件
-          mqttConfig: [
-            { label: '消息目的 Client ID', value: 'clientid' },
-            { label: '终端连接完成时间 (s)', value: 'connected_at' },
-            { label: 'MQTT 消息 ID', value: 'id' },
-            { label: '用户名', value: 'username' },
-            { label: '客户端地址', value: 'peerhost' },
-            { label: 'MQTT topic', value: 'topic' },
-            { label: 'MQTT qos', value: 'qos' },
-            { label: 'MQTT flags', value: 'flags' },
-            { label: '事件触发时间 (ms)', value: 'timestamp' },
-            {
-              label: 'PUBLISH 消息到达 Broker 的时间 (ms)',
-              value: 'publish_received_at',
-            },
-            { label: '事件触发节点', value: 'node' },
-          ],
-          line: [
-            { label: '设备在线', value: 'online' },
-            { label: '设备离线', value: 'line' },
-          ],
-          Product: [],
-          Device: [],
-          Condition: [
-            {
-              label: '状态持续时长判断',
-              value: 'condition/device/stateContinue',
-            },
-            {
-              label: '设备状态',
-              value: 'condition/device/deviceState',
-            },
-            { label: '时间范围', value: 'condition/device/time' },
-            // { label: '设备属性值', value: 'condition/device/property' },
-          ],
-          Trigger: [
-            {
-              label: '设备属性触发',
-              value: 'trigger/product/property',
-            },
-            {
-              label: '设备事件触发',
-              value: 'trigger/product/event',
-            },
-            {
-              label: 'mqtt事件触发',
-              value: 'trigger/mqtt/event',
-            },
-            {
-              label: '定时触发',
-              value: 'trigger/timer',
-            },
-          ],
-        },
+        options: {},
       }
     },
     async created() {
@@ -627,6 +554,7 @@
         }
       },
       async queryOptions() {
+        this.options = await getDlinkJson('rule-options')
         this.options.Device = []
         this.options.Product = []
         const { results: Product = [] } = await queryProduct({})

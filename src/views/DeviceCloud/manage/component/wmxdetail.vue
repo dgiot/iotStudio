@@ -826,12 +826,18 @@
                 v-for="(item, index) in resource.data[index].arr"
                 v-show="resource.value == k.cType"
                 :key="resource.value + index + upKey"
-                :span="resource.data.colum ? resource.data.colum : 12"
+                :lg="item.allowCreate ? 24 : 12"
+                :md="item.allowCreate ? 24 : 12"
+                :sm="item.allowCreate ? 24 : 12"
+                :xl="item.allowCreate ? 24 : 6"
+                :xs="item.allowCreate ? 24 : 12"
               >
                 <el-form-item
                   v-if="item.showname != 'ico'"
+                  id="allowCreate"
                   :key="item.title.zh + upKey"
                   :label="item.title.zh"
+                  :label-width="item.allowCreate ? '100px' : '100px'"
                   :prop="item.showname"
                 >
                   <el-tooltip effect="dark" placement="right-start">
@@ -852,23 +858,59 @@
                       :value="item.enum[index1].value"
                     />
                   </el-select>
-                  <el-input
-                    v-else-if="item.allowCreate"
-                    :key="item.title.zh + upKey"
-                    v-model="resource.addchannel[item.showname]"
-                    placeholder="点击编辑按钮后编辑标识"
-                    style="width: 100%"
-                  >
-                    <template slot="append">
-                      <el-button
-                        circle
-                        class="el-icon-edit"
-                        @click.native="
-                          showCreate(resource.addchannel[item.showname])
-                        "
-                      />
-                    </template>
-                  </el-input>
+                  <div v-else-if="item.allowCreate">
+                    <el-button @click="createColumn(item)">新增</el-button>
+
+                    <el-table :data="dybaneucForms" style="width: 100%">
+                      <el-table-column
+                        v-for="(j, index) in colCum.prop"
+                        :key="index"
+                        align="center"
+                        :label="colCum.prop[index]"
+                        :prop="colCum.label[index]"
+                        show-overflow-tooltip
+                        sortable
+                      >
+                        <template slot-scope="scope">
+                          <el-input
+                            v-show="getFromType(item, j) == 'input'"
+                            v-model="scope.row[j]"
+                            placeholder="placeholder"
+                          />
+                          <el-select
+                            v-show="getFromType(item, j) == 'select'"
+                            v-model="scope.row[j]"
+                            placeholder="placeholder"
+                          >
+                            <el-option
+                              v-for="item in getFromType(item, j, 'select')"
+                              :key="item.value"
+                              :label="item.label"
+                              :value="item.value"
+                            />
+                          </el-select>
+                        </template>
+                      </el-table-column>
+                      <el-table-column
+                        align="center"
+                        fixed="right"
+                        label="操作"
+                        width="220px"
+                      >
+                        <template slot-scope="scope">
+                          <el-button
+                            size="mini"
+                            type="danger"
+                            @click.native="
+                              dybaneucDleform(scope.$index, dybaneucForms)
+                            "
+                          >
+                            删除
+                          </el-button>
+                        </template>
+                      </el-table-column>
+                    </el-table>
+                  </div>
                   <el-input
                     v-else-if="
                       item.type == 'string' &&
@@ -899,249 +941,6 @@
                 </el-form-item>
               </el-col>
             </el-row>
-            <el-row v-show="sizeForm.protocol == 'modbus'" :gutter="24">
-              <el-col :span="12">
-                <el-form-item label="数据格式">
-                  <el-select
-                    v-model="sizeForm.originaltype"
-                    placeholder="请选择"
-                    style="width: 100%"
-                  >
-                    <el-option
-                      v-for="item in [
-                        { value: 'bit', label: '位' },
-                        { value: 'short16_AB', label: '16位 有符号(AB)' },
-                        { value: 'short16_BA', label: '16位 有符号(BA)' },
-                        { value: 'ushort16_AB', label: '16位 无符号(AB)' },
-                        { value: 'ushort16_BA', label: '16位 无符号(BA)' },
-                        { value: 'long32_ABCD', label: '32位 有符号(ABCD)' },
-                        { value: 'long32_CDAB', label: '32位 有符号(CDAB)' },
-                        { value: 'ulong32_ABCD', label: '32位 无符号(ABCD)' },
-                        { value: 'ulong32_CDAB', label: '32位 无符号(CDAB)' },
-                        { value: 'float32_ABCD', label: '32位 浮点数(ABCD)' },
-                        { value: 'float32_CDAB', label: '32位 浮点数(CDAB)' },
-                      ]"
-                      :key="item.value"
-                      :label="item.label"
-                      :value="item.value"
-                    />
-                  </el-select>
-                </el-form-item>
-              </el-col>
-            </el-row>
-            <el-row v-show="sizeForm.protocol == 'opc'" :gutter="24">
-              <el-col :span="24">
-                <el-form-item label="数据地址集">
-                  <el-link
-                    icon="el-icon-plus"
-                    type="primary"
-                    :underline="false"
-                    @click="addDas"
-                  >
-                    {{ $translateTitle('product.add') }}
-                  </el-link>
-                  <el-table
-                    :data="sizeForm.daslist"
-                    style="width: 100%; text-align: center"
-                  >
-                    <el-table-column align="center" label="数据地址">
-                      <template #default="{ row }">
-                        <el-input v-model="row.addr" />
-                      </template>
-                    </el-table-column>
-                    <el-table-column align="center" label="操作">
-                      <template #default="{ row }">
-                        <el-button
-                          plain
-                          size="mini"
-                          title="删除"
-                          type="danger"
-                          @click.native="removeDas(row)"
-                        >
-                          删除
-                        </el-button>
-                      </template>
-                    </el-table-column>
-                  </el-table>
-                </el-form-item>
-              </el-col>
-            </el-row>
-            <el-table
-              v-show="sizeForm.protocol == 'modbus'"
-              border
-              :data="dataList"
-              size="small"
-              style="width: 100%"
-            >
-              <el-table-column
-                align="center"
-                label="从机地址(16进制加0X,例:0X10,否则是十进制)"
-                min-width="120"
-              >
-                <!--关键代码-->
-                <template #default="{ row }">
-                  <el-input v-model="sizeForm.slaveid" />
-                  <span v-show="false">{{ row }}</span>
-                </template>
-              </el-table-column>
-              <el-table-column
-                align="center"
-                label="寄存器状态"
-                min-width="120"
-              >
-                <!--关键代码-->
-                <template #default="{ row }">
-                  <el-select
-                    v-model="sizeForm.operatetype"
-                    placeholder="请选择"
-                    style="width: 100%"
-                  >
-                    <el-option
-                      v-for="item in [
-                        { value: 'readCoils', label: '0X01:读线圈寄存器' },
-                        { value: 'readInputs', label: '0X02:读离散输入寄存器' },
-                        {
-                          value: 'readHregs',
-                          label: '0X03:读保持寄存器',
-                        },
-                        {
-                          value: 'readIregs',
-                          label: '0X04:读输入寄存器',
-                        },
-                        {
-                          value: 'writeCoil',
-                          label: '0X05:写单个线圈寄存器',
-                        },
-                        {
-                          value: 'writeHreg',
-                          label: '0X06:写单个保持寄存器',
-                        },
-                        {
-                          value: 'writeCoils',
-                          label: '0X0f:写多个线圈寄存器',
-                        },
-                        {
-                          value: 'writeHregs',
-                          label: '0X10:写多个保持寄存器',
-                        },
-                      ]"
-                      :key="item.value"
-                      :label="item.label"
-                      :value="item.value"
-                    />
-                  </el-select>
-                  <span v-show="false">{{ row.slaveid }}</span>
-                </template>
-              </el-table-column>
-              <el-table-column
-                align="center"
-                label="数据地址(16进制加0X,例:0X10,否则是十进制)"
-                min-width="120"
-              >
-                <!--关键代码-->
-                <template #default="{ row }">
-                  <el-input v-model="sizeForm.dis" />
-                  <span v-show="false">{{ row.slaveid }}</span>
-                </template>
-              </el-table-column>
-              <el-table-column
-                align="center"
-                label="数据长度(字节)"
-                min-width="120"
-              >
-                <!--关键代码-->
-                <template #default="{ row }">
-                  <el-input v-model="sizeForm.dinumber" />
-                  <span v-show="false">{{ row.slaveid }}</span>
-                </template>
-              </el-table-column>
-            </el-table>
-            <el-table
-              v-show="sizeForm.protocol == 'modbusTcp'"
-              border
-              :data="dataList"
-              size="small"
-              style="width: 100%"
-            >
-              <el-table-column
-                align="center"
-                label="单元标识符"
-                min-width="120"
-              >
-                <!--关键代码-->
-                <template #default="{ row }">
-                  <el-input v-model="sizeForm.slaveid" />
-                  <span v-show="false">{{ row }}</span>
-                </template>
-              </el-table-column>
-              <el-table-column align="center" label="功能码" min-width="120">
-                <!--关键代码-->
-                <template #default="{ row }">
-                  <el-select
-                    v-model="sizeForm.operatetype"
-                    placeholder="请选择"
-                    style="width: 100%"
-                  >
-                    <el-option
-                      v-for="item in [
-                        { value: 'readCoils', label: '0X01:读线圈寄存器' },
-                        { value: 'readInputs', label: '0X02:读离散输入寄存器' },
-                        {
-                          value: 'readHregs',
-                          label: '0X03:读保持寄存器',
-                        },
-                        {
-                          value: 'readIregs',
-                          label: '0X04:读输入寄存器',
-                        },
-                        {
-                          value: 'writeCoil',
-                          label: '0X05:写单个线圈寄存器',
-                        },
-                        {
-                          value: 'writeHreg',
-                          label: '0X06:写单个保持寄存器',
-                        },
-                        {
-                          value: 'writeCoils',
-                          label: '0X0f:写多个线圈寄存器',
-                        },
-                        {
-                          value: 'writeHregs',
-                          label: '0X10:写多个保持寄存器',
-                        },
-                      ]"
-                      :key="item.value"
-                      :label="item.label"
-                      :value="item.value"
-                    />
-                  </el-select>
-                  <span v-show="false">{{ row.slaveid }}</span>
-                </template>
-              </el-table-column>
-              <el-table-column
-                align="center"
-                label="起始地址(16进制加0X,例:0X0001,否则是十进制)"
-                min-width="120"
-              >
-                <!--关键代码-->
-                <template #default="{ row }">
-                  <el-input v-model="sizeForm.dis" />
-                  <span v-show="false">{{ row.slaveid }}</span>
-                </template>
-              </el-table-column>
-              <el-table-column
-                align="center"
-                label="寄存器数量"
-                min-width="120"
-              >
-                <!--关键代码-->
-                <template #default="{ row }">
-                  <el-input v-model="sizeForm.dinumber" />
-                  <span v-show="false">{{ row.slaveid }}</span>
-                </template>
-              </el-table-column>
-            </el-table>
           </el-collapse-item>
         </el-collapse>
       </div>
@@ -1162,7 +961,7 @@
   import mockModules from '@/api/Mock/Modules'
 
   // dgiotlog.log('dataType', mockModules)
-  import { getAllunit } from '@/api/Dict/index'
+  import { delDict, getAllunit } from '@/api/Dict/index'
   import { getProtocol } from '@/api/Protocol/index'
   import { mapGetters, mapMutations } from 'vuex'
   import defaultLogo from '../../../../../public/assets/images/logo/logo.png'
@@ -1233,6 +1032,10 @@
         }
       }
       return {
+        colCum: {},
+        dybaneucForms: [],
+        tableName: '',
+        tableTitle: {},
         upKey: moment.now(),
         createModal: {
           dialog: false,
@@ -1429,7 +1232,6 @@
         immediate: true,
         handler(e) {
           this.upKey++
-          console.log(e, this.upKey)
         },
       },
     },
@@ -1447,27 +1249,104 @@
     beforeDestroy() {}, //生命周期 - 销毁之前
     activated() {},
     methods: {
+      handleClick(tab) {
+        console.log(tab)
+      },
+      createColumn(tab) {
+        this.dybaneucForms.unshift({})
+        console.log(tab)
+      },
+      getFromType(item, column, type) {
+        var res = 'input'
+        for (var i in item.table) {
+          if (item.table[i].title.zh == column) {
+            res = item.table[i].enum?.length ? 'select' : 'input'
+            if (type === 'select') return item.table[i].enum
+            else return res
+          }
+        }
+      },
+      dybaneucDleform(index, row) {
+        this.$baseConfirm(
+          this.$translateTitle(
+            'Maintenance.Are you sure you want to delete the current item'
+          ),
+          null,
+          async () => {
+            row.splice(index, 1)
+            this.$baseMessage(
+              this.$translateTitle('user.successfully deleted'),
+              'success',
+              'dgiot-hey-message-success'
+            )
+          }
+        )
+        console.log(index, row)
+      },
+      dynamicTable(data, type, _table) {
+        console.log(type)
+        this.tableName = data.showname
+        var dybaneucForms = []
+        this.colCum = { label: [], prop: [] }
+        dgiotlogger.error(1291, data, _table)
+        const { table } = data
+        var arr = {}
+        var title = {}
+        for (let t in table) {
+          arr[table[t].title.zh] = table[t].default.label || table[t].default
+          this.colCum.prop.push(table[t].title.zh)
+          this.colCum.label.push(table[t].key)
+          title[table[t].title.zh] = table[t].key
+          title[table[t].key] = table[t].zh
+          arr[table[t].key] = table[t].default.label || table[t].default
+          this.tableTitle = title
+          console.error(1298, table[t], t, arr)
+          console.error(1304, t, table[t], this.tableTitle)
+        }
+        if (type === '回显') {
+          console.error(1307, '回显', title)
+          dybaneucForms = []
+          _table.forEach((_itme, _tidx) => {
+            arr = {}
+            for (var t in title) {
+              var _title = title[t]
+              arr[t] = _itme[_title]
+              console.error(_itme[_title], t, _itme, 1312)
+            }
+            dybaneucForms.push(arr)
+          })
+        } else {
+          dybaneucForms.push(arr)
+        }
+        dgiotlogger.error('1320', dybaneucForms, this.colCum, this.tableTitle)
+        this.dybaneucForms = dybaneucForms
+        return this.dybaneucForms
+      },
       async showCreate(row) {
         this.createModal = {
           dialog: true,
           data: row,
         }
       },
-      // orderObject(object) {
-      //   var arr = []
-      //   for (var key in object) {
-      //     object[key].showname = key
-      //     arr.push(object[key])
-      //   }
-      //   return arr.sort(this.arrSort)
-      // },
+      // 解析物模型字典为指定类型
+      dictParse(dybaneucForms, title) {
+        const obj = []
+        dybaneucForms.map((i) => {
+          var arr = {}
+          for (let j in i) {
+            console.log(j, i[j], title[j])
+            arr[title[j]] = i[j]
+          }
+          obj.push(arr)
+        })
+        dgiotlogger.error(1328, obj)
+        return obj
+      },
       async changeResource(val) {
-        console.log('changeResource', val)
+        console.error('changeResource', val)
         this.resource.changeData = {}
         // this.resource.arrlist = []
         // this.$nextTick(async () => {
-        var obj = {}
-        var arr = []
         await this.$refs['sizeForm'].clearValidate()
         await this.resource.data.forEach((resource) => {
           if (resource.cType == val) {
@@ -1475,44 +1354,15 @@
             this.resource.arrlist = resource.arr
             this.resource.addchannel = resource.obj
             console.log(this.resource.arrlist)
+            this.resource.arrlist.forEach((i) => {
+              console.error(i)
+              if (i.allowCreate) this.dynamicTable(i)
+            })
+            // allowCreate
           }
         })
-        await this.Protocol(this.resource.changeData)
         //  修改子组件el-form 后 修改父组件的uPKey
         // })
-      },
-      async Protocol() {
-        // 动态渲染表单
-        var obj = {}
-        var sizerule = {
-          applicationtText: [
-            {
-              required: true,
-              message: '请选择所属应用',
-              trigger: 'change',
-            },
-          ],
-          name: [
-            {
-              required: true,
-              message: '请输入通道名称',
-              trigger: 'blur',
-            },
-          ],
-          region: [
-            {
-              required: true,
-              message: '请选择通道类型',
-              trigger: 'change',
-            },
-          ],
-        }
-        this.upKey = moment.now()
-        // this.sizerule = sizerule
-        console.info('this.resource, this.sizerule')
-        console.log(this.resource, this.sizerule)
-        window.resource = this.resource
-        this.upKey = moment.now()
       },
       async queryResource() {
         this.resource.data = (await getProtocol()) ?? [
@@ -2129,6 +1979,8 @@
         })
       },
       submitForm(formName) {
+        const table = this.dictParse(this.dybaneucForms, this.tableTitle)
+        console.log(table)
         this.$refs[formName].validate((valid) => {
           if (valid) {
             var sizeForm = this.sizeForm
@@ -2281,8 +2133,12 @@
             obj.dataForm.protocol = this.resource.value
             // 处理动态数据源
             console.log(this.resource)
+            var dataSource = {
+              ...this.resource.addchannel,
+            }
+            dataSource[this.tableName] = table
             Object.assign(obj, {
-              dataSource: this.resource.addchannel,
+              dataSource: dataSource,
             })
             //  物模型类型属性
             // properties  tags  services  events

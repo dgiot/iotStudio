@@ -204,7 +204,7 @@ const state = () => ({
   // backgroundimage:
   //   getToken('backgroundimage') ||
   backgroundimage:
-    '//prod.iotn2n.com/dgiot_dashboard/public/assets/images/platform/assets/login_images/background.jpg',
+    '/dgiot_dashboard/public/assets/images/platform/assets/login_images/background.jpg',
   objectId: getToken('objectId'),
   treeKey: moment().format('x'),
   currentDepartment:

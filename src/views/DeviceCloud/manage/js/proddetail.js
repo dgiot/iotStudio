@@ -1,7 +1,7 @@
 /* eslint-disable */
 import mqttLog from '@/views/CloudFunction/engine/components/mqttLog.vue'
 import thingForm from '@/views/DeviceCloud/manage/component/Thing/form'
-import  {getDlinkJson} from '@/api/Dlink'
+import {getDlinkJson} from '@/api/Dlink'
 import {mapGetters, mapMutations} from 'vuex'
 import {getDeviceCountByProduct} from '@/api/Device/index'
 import {
@@ -23,6 +23,7 @@ import {returnLogin} from '@/utils/utilwen'
 import profile from '@/views/DeviceCloud/manage/profile'
 import {dgiotlog} from '../../../../utils/dgiotLog'
 import {queryView} from '@/api/View'
+
 var editor
 var editor1
 var editor2
@@ -139,10 +140,10 @@ export default {
       }
     }
     return {
-      dlinkUnit:[],
-      dlinkTopic:{basic:[],thing:[]},
-      mergeObj: {basic:[],thing:[]},
-      tabsChild:'properties',
+      dlinkUnit: [],
+      dlinkTopic: {basic: [], thing: []},
+      mergeObj: {basic: [], thing: []},
+      tabsChild: 'properties',
       // tabsChild: 'events',
       modules: {
         data: {
@@ -172,7 +173,7 @@ export default {
               {required: true, message: '请选择调用方式', trigger: 'change'},
             ],
             output: [
-              { type: 'array', required: true, message: '请至少选择一个输出参数',trigger: 'blur'},
+              {type: 'array', required: true, message: '请至少选择一个输出参数', trigger: 'blur'},
             ],
           },
           visible: false,
@@ -570,7 +571,7 @@ export default {
       dynamicReg: false,
       productId: '',
       productName: '',
-      productdetail: {thing:{properties: [], events: [], services: [], tags: []}},
+      productdetail: {thing: {properties: [], events: [], services: [], tags: []}},
       topicData: [],
       topic: [
         {
@@ -630,10 +631,10 @@ export default {
       refreshFlag: '99',
       msgList: [],
       submessage: '',
-      mqtt:{
-        router:'',
-        subtopic:'',
-        pubtopic:''
+      mqtt: {
+        router: '',
+        subtopic: '',
+        pubtopic: ''
       },
       warningeditror: [],
       channellength: 20,
@@ -670,15 +671,15 @@ export default {
       modifyIndex: -1,
       ace_editor: '',
       iframeShow: false,
-      atbas:{
+      atbas: {
         visible: false,
         childrenDrawer: false,
       },
       editIndex: -1,
-      eventType:'add',
-      formType:'output',
-      thingType:'events',
-      eventForm:{},
+      eventType: 'add',
+      formType: 'output',
+      thingType: 'events',
+      eventForm: {},
       ruleForm: {
         name: '',
         region: '',
@@ -691,26 +692,26 @@ export default {
       },
       rules: {
         name: [
-          { required: true, message: '请输入活动名称', trigger: 'blur' },
-          { min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' }
+          {required: true, message: '请输入活动名称', trigger: 'blur'},
+          {min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur'}
         ],
         region: [
-          { required: true, message: '请选择活动区域', trigger: 'change' }
+          {required: true, message: '请选择活动区域', trigger: 'change'}
         ],
         date1: [
-          { type: 'date', required: true, message: '请选择日期', trigger: 'change' }
+          {type: 'date', required: true, message: '请选择日期', trigger: 'change'}
         ],
         date2: [
-          { type: 'date', required: true, message: '请选择时间', trigger: 'change' }
+          {type: 'date', required: true, message: '请选择时间', trigger: 'change'}
         ],
         type: [
-          { type: 'array', required: true, message: '请至少选择一个活动性质', trigger: 'change' }
+          {type: 'array', required: true, message: '请至少选择一个活动性质', trigger: 'change'}
         ],
         resource: [
-          { required: true, message: '请选择活动资源', trigger: 'change' }
+          {required: true, message: '请选择活动资源', trigger: 'change'}
         ],
         desc: [
-          { required: true, message: '请填写活动形式', trigger: 'blur' }
+          {required: true, message: '请填写活动形式', trigger: 'blur'}
         ]
       }
     }
@@ -748,7 +749,7 @@ export default {
           this.$dgiotBus.$off(newVal)
           this.$dgiotBus.$on(newVal, (res) => {
             console.error(res)
-            const { payload } = res
+            const {payload} = res
             this.mqttMsg(payload)
           })
         }
@@ -802,18 +803,18 @@ export default {
     this.subdialogtimer = null
   },
   methods: {
-     thingParameters(form,index,type) {
-       console.log(type)
-       this.editIndex = index
+    thingParameters(form, index, type) {
+      console.log(type)
+      this.editIndex = index
       console.log('thingParameters', form)
       // 向events 的 outputData 添加 输出参数
       this.modules[type].data.output.push(form)
-       this.atbas.childrenDrawer = false
+      this.atbas.childrenDrawer = false
 
-       // outputParams
-       // this.onChildrenDrawerClose()
+      // outputParams
+      // this.onChildrenDrawerClose()
     },
-    editParameters(form,type) {
+    editParameters(form, type) {
       console.log('thingParameters', form)
       // 向events 的 outputData 添加 输出参数
       this.modules[type].data.output[this.editIndex] = form
@@ -829,7 +830,7 @@ export default {
       this.atbas.visible = false;
     },
     showChildrenDrawer() {
-      this.eventForm =  {
+      this.eventForm = {
         name: '',
         unit: '/',
         isread: 'rw',
@@ -848,56 +849,56 @@ export default {
       // this.$refs.thingForm.resetForm('ruleForm')
       console.log('清空子组件的规则校验和表单数据')
     },
-    basicMethod({  column, rowIndex }) {
-        return this.mergeObj.basic[column.property][rowIndex]? {
-          rowspan:this.mergeObj.basic[column.property][rowIndex],
-          colspan: 1
-        }:{
-          rowspan: 0,
-          colspan: 0
-        }
-    },
-    thingMethod({  column, rowIndex }) {
-      return this.mergeObj.basic[column.property][rowIndex]?
-        {
-        rowspan:this.mergeObj.basic[column.property][rowIndex],
+    basicMethod({column, rowIndex}) {
+      return this.mergeObj.basic[column.property][rowIndex] ? {
+        rowspan: this.mergeObj.basic[column.property][rowIndex],
         colspan: 1
-      }:{
+      } : {
         rowspan: 0,
         colspan: 0
       }
     },
-    async editEvent(item,index,type){
+    thingMethod({column, rowIndex}) {
+      return this.mergeObj.basic[column.property][rowIndex] ?
+        {
+          rowspan: this.mergeObj.basic[column.property][rowIndex],
+          colspan: 1
+        } : {
+          rowspan: 0,
+          colspan: 0
+        }
+    },
+    async editEvent(item, index, type) {
       this.editIndex = index
       await console.log('editEvent', item)
-        this.atbas.childrenDrawer = true
+      this.atbas.childrenDrawer = true
       this.eventForm = item
       this.eventType = 'edit'
-      this.formType=type
+      this.formType = type
     },
-    async getDefaultTopic(){
+    async getDefaultTopic() {
       const res = await getDlinkJson('Topic')
-      const {UnifyUnitSpecsDTO=[]} = await getDlinkJson('Unit')
+      const {UnifyUnitSpecsDTO = []} = await getDlinkJson('Unit')
       this.dlinkUnit = UnifyUnitSpecsDTO
       this.dlinkUnit.unshift({Symbol: '/', Name: '无'})
       this.dlinkTopic = res
-      for(var k in this.dlinkTopic){
-        await this.mergeTable(k,this.dlinkTopic[k])
+      for (var k in this.dlinkTopic) {
+        await this.mergeTable(k, this.dlinkTopic[k])
       }
-      dgiotlogger.error('mergeObj',this.mergeObj)
+      dgiotlogger.error('mergeObj', this.mergeObj)
     },
-   async topicChange(e){
-      if(e=='user'  )     await this.getTopic()
+    async topicChange(e) {
+      if (e == 'user') await this.getTopic()
     },
-    async mergeTable(lable,table){
+    async mergeTable(lable, table) {
       let numerical = 0;
       for (let key in table[0]) {
         this.mergeObj[lable][key] = []
-        table.forEach((item,index) => {
+        table.forEach((item, index) => {
           if (index === 0) {
             this.mergeObj[lable][key].push(1)
           } else {
-            if (item[key] ===  table[index-1][key]) {
+            if (item[key] === table[index - 1][key]) {
               this.mergeObj[lable][key][numerical] += 1;
               this.mergeObj[lable][key].push(0)
             } else {
@@ -906,7 +907,8 @@ export default {
             }
           }
         })
-    }},
+      }
+    },
     clearfix(type) {
       this.$refs[type].clearValidate()
       type == 'services'
@@ -971,7 +973,7 @@ export default {
       }
     },
     async queryProductInfo(productId) {
-      const res =  await getProduct(productId)
+      const res = await getProduct(productId)
       const {
         thing = {properties: [], events: [], services: [], tags: []},
       } = res
@@ -984,10 +986,10 @@ export default {
     },
     async submitModules(type, form) {
       form.data.outputParams = []
-      console.log(form.data.output,'form.data.output')
-      console.log(form.data,'form.data')
+      console.log(form.data.output, 'form.data.output')
+      console.log(form.data, 'form.data')
       // 计算输出参数
-      form.data.output.forEach((o,index)=>{
+      form.data.output.forEach((o, index) => {
         form.data.outputParams.push({
           identifier: o.identifier,
           index: index,
@@ -995,15 +997,15 @@ export default {
       })
       const _item = {
         ...form.data,
-        devicetype:form.data.name,
-        required:false,
-        isshow:true,
-        dataForm:{order:moment(new Date()).format('x')},
-        dataType:{
-          type:type
+        devicetype: form.data.name,
+        required: false,
+        isshow: true,
+        dataForm: {order: moment(new Date()).format('x')},
+        dataType: {
+          type: type
         },
         moduleType: type,
-        updateAt : moment(new Date()).format('x')
+        updateAt: moment(new Date()).format('x')
       }
       console.log('_item', _item)
       window._item = _item
@@ -1012,7 +1014,7 @@ export default {
       await this.queryProductInfo(this.$route.query.id)
       return false
       const {thing} = this.productObj
-      dgiotlogger.log(this.productObj, thing,this.modules.data)
+      dgiotlogger.log(this.productObj, thing, this.modules.data)
       dgiotlogger.info('this.modules.data')
       this.$refs[type].validate(async (valid) => {
         if (valid) {
@@ -1034,7 +1036,7 @@ export default {
           }
           this.$refs[type].clearValidate()
           this.$refs[type].resetFields()
-          this.atbas.visible= false
+          this.atbas.visible = false
           this.modules.visible = false
           // await this.queryProductInfo(this.productObj.objectId) // 更新产品信息
           this.handleClose()
@@ -1166,7 +1168,7 @@ export default {
         services = [],
         tags = [],
       } = this.productObj.thing
-      console.log(e.name,this.productObj.thing,this.productObj.thing[e.name])
+      console.log(e.name, this.productObj.thing, this.productObj.thing[e.name])
       switch (e.name) {
         case 'properties':
           this.modules.data.properties = properties || []
@@ -1178,7 +1180,7 @@ export default {
           this.modules.data.services = services || []
           break
         case 'tags':
-          this.modules.data.tags = tags ||[]
+          this.modules.data.tags = tags || []
           break
         default:
           break
@@ -2013,19 +2015,19 @@ export default {
           break
       }
       this.$nextTick(() => {
-        if(this.$refs[type])    this.$refs[type].clearValidate()
-        if(this.$refs[type])    this.$refs[type].resetFields()
+        if (this.$refs[type]) this.$refs[type].clearValidate()
+        if (this.$refs[type]) this.$refs[type].resetFields()
       })
     },
     // 物模型修改submitForm
     async wmxDataFill(rowData, index, moduletype) {
       this.moduletype = moduletype
       this.modules.type = moduletype
-      this.modules[moduletype].data = rowData
       this.wmxSituation = '编辑'
       this.thingType = moduletype
       this.eventType = 'edit'
-      if(moduletype === 'events' || moduletype === 'services'){
+      if (this.modules[moduletype]) this.modules[moduletype].data = rowData
+      if (moduletype === 'events' || moduletype === 'services') {
         this.atbas.visible = true;
         dgiotlogger.log(this.modules.type, this.modules[moduletype].data)
         return false
@@ -2415,6 +2417,11 @@ export default {
             // resource[index].obj = {}
             if (this.$refs['sizeForm'].resource.value === resource.cType) {
               console.info(resource, 'success cType')
+              resource.arr.forEach(i => {
+                if (i.allowCreate) {
+                   this.$refs['sizeForm'].dynamicTable(i, '回显',rowData.dataSource[i.showname])
+                }
+              })
               console.info(rowData.dataSource, 'rowData.dataSource')
               for (var o in rowData.dataSource) {
                 for (var j in resource.obj) {
@@ -2424,7 +2431,6 @@ export default {
               console.info(resource.obj, 'set resource.obj')
               this.$refs['sizeForm'].resource.addchannel = resource.obj
             }
-            this.$refs['sizeForm'].resource.changeData = rowData.dataSource
             this.$refs['sizeForm'].resource.changeData = rowData.dataSource
             if (resource.cType == rowData.dataForm.protocol) {
               console.log(resource, 'success')
@@ -3523,7 +3529,7 @@ export default {
     handleCloseSubdialog() {
       subupadte(this.channelid, 'stop_logger')
       this.msgList = []
-      this.submessage =[]
+      this.submessage = []
       this.subdialog = false
     },
     // 停止topic刷新

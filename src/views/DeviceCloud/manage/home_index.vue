@@ -501,7 +501,7 @@
                         <el-link
                           size="mini"
                           type="warning"
-                          @click="goLink('video', row)"
+                          @click="goLink('video', row.objectId)"
                         >
                           {{ $translateTitle('concentrator.video') }}
                         </el-link>
@@ -1337,7 +1337,12 @@
     BmScale,
   } from 'vue-baidu-map'
   import { returnLogin } from '@/utils/utilwen'
-  import { addimeidevice, putDevice, querycompanyDevice } from '@/api/Device'
+  import {
+    addimeidevice,
+    putDevice,
+    querycompanyDevice,
+    getDevice,
+  } from '@/api/Device'
   import { getToken } from '@/api/Menu'
   import { secret } from '@/config/secret.config'
 
@@ -1762,8 +1767,9 @@
       async paginationQuery(queryPayload) {
         this.queryPayload = queryPayload
       },
-      goLink(type, item) {
-        const { basedata } = item
+      async goLink(type, objectId) {
+        const { basedata = {} } = await getDevice(objectId)
+        console.error(objectId, basedata)
         if (basedata?.videoSrc?.length) {
           this.$router.push({
             path: '/Tools/player',
