@@ -184,8 +184,20 @@
               </div>
               <i class="el-icon-question" style="float: left" />
             </el-tooltip>
+            <el-select
+              v-if="item.enum"
+              v-model="addchannel[item.showname]"
+              style="width: 100%"
+            >
+              <el-option
+                v-for="(item2, index2) in item.enum"
+                :key="index2"
+                :label="item2.label"
+                :value="item2.value"
+              />
+            </el-select>
             <el-input
-              v-if="item.type == 'string'"
+              v-else-if="item.type == 'string'"
               v-model="addchannel[item.showname]"
               style="width: 98%"
             />
@@ -216,10 +228,75 @@
               <el-option
                 v-for="(item1, index1) in item.enum"
                 :key="index1"
-                :label="item.enum[index1]"
-                :value="item.enum[index1]"
+                :label="item1.enum[index1]"
+                :value="item1.enum[index1]"
               />
             </el-select>
+            <div v-else-if="item.allowCreate">
+              <el-button
+                @click.native="dybaneucForms[item.showname].unshift({})"
+              >
+                新增
+              </el-button>
+
+              <el-table
+                :data="dybaneucForms[item.showname]"
+                style="width: 100%"
+              >
+                <el-table-column
+                  v-for="(j, index) in colCum[item.showname].prop"
+                  :key="index"
+                  align="center"
+                  :label="colCum[item.showname].prop[index]"
+                  :prop="colCum[item.showname].label[index]"
+                  show-overflow-tooltip
+                  sortable
+                >
+                  <template slot-scope="scope">
+                    <el-input
+                      v-show="getFromType(item, j) == 'input'"
+                      v-model="scope.row[j]"
+                      placeholder="placeholder"
+                    />
+                    <el-select
+                      v-show="getFromType(item, j) == 'select'"
+                      v-model="scope.row[j]"
+                      allow-create
+                      filterable
+                      placeholder="placeholder"
+                    >
+                      <el-option
+                        v-for="item in getFromType(item, j, 'select')"
+                        :key="item.value"
+                        :label="item.label"
+                        :value="item.value"
+                      />
+                    </el-select>
+                  </template>
+                </el-table-column>
+                <el-table-column
+                  align="center"
+                  fixed="right"
+                  label="操作"
+                  width="50px"
+                >
+                  <template slot-scope="scope">
+                    <el-button
+                      circle
+                      class="el-icon-delete"
+                      size="mini"
+                      type="danger"
+                      @click.native="
+                        dybaneucDleform(
+                          scope.$index,
+                          dybaneucForms[item.showname]
+                        )
+                      "
+                    />
+                  </template>
+                </el-table-column>
+              </el-table>
+            </div>
           </el-form-item>
         </el-col>
         <!---------------------统一的配置描述---------------------------->
@@ -235,26 +312,26 @@
           </el-form-item>
         </el-col>
         <!-- 低代码-->
-        <el-col v-if="active == 2" :span="24">
-          <el-form-item :label="$translateTitle('product.view')">
-            <!--            <el-input-->
-            <!--              v-model="addchannel.data"-->
-            <!--              autocomplete="off"-->
-            <!--              :placeholder="$translateTitle('product.view')"-->
-            <!--              :rows="3"-->
-            <!--              type="textarea"-->
-            <!--            />-->
-            <div style="height: 30vh; overflow: auto">
-              <dgiot-monaco-plus
-                ref="monacoCode"
-                :codes="addchannel.codes"
-                :lang="'json'"
-                :read-only="false"
-                :theme="'vs-dark'"
-              />
-            </div>
-          </el-form-item>
-        </el-col>
+        <!--        <el-col v-if="active == 2" :span="24">-->
+        <!--          <el-form-item :label="$translateTitle('product.view')">-->
+        <!--            &lt;!&ndash;            <el-input&ndash;&gt;-->
+        <!--            &lt;!&ndash;              v-model="addchannel.data"&ndash;&gt;-->
+        <!--            &lt;!&ndash;              autocomplete="off"&ndash;&gt;-->
+        <!--            &lt;!&ndash;              :placeholder="$translateTitle('product.view')"&ndash;&gt;-->
+        <!--            &lt;!&ndash;              :rows="3"&ndash;&gt;-->
+        <!--            &lt;!&ndash;              type="textarea"&ndash;&gt;-->
+        <!--            &lt;!&ndash;            />&ndash;&gt;-->
+        <!--            <div style="height: 30vh; overflow: auto">-->
+        <!--              <dgiot-monaco-plus-->
+        <!--                ref="monacoCode"-->
+        <!--                :codes="addchannel.codes"-->
+        <!--                :lang="'json'"-->
+        <!--                :read-only="false"-->
+        <!--                :theme="'vs-dark'"-->
+        <!--              />-->
+        <!--            </div>-->
+        <!--          </el-form-item>-->
+        <!--        </el-col>-->
       </el-row>
     </el-form>
   </div>
@@ -271,6 +348,10 @@
     components: {},
     data() {
       return {
+        colCum: {},
+        dybaneucForms: {},
+        tableName: [],
+        tableTitle: {},
         active: 1,
         viewShow: false,
         channelregion: [],
@@ -371,14 +452,112 @@
       handleClose() {
         this.handleTabRemove()
       },
+      dynamicTable(data, type, _table, showname) {
+        console.log(type)
+        this.tableName.push(data.showname)
+        // var dybaneucForms = {}
+        this.dybaneucForms[showname] = []
+        this.colCum[showname] = { label: [], prop: [] }
+        dgiotlogger.error(1291, data, _table)
+        const { table } = data
+        var arr = {}
+        var title = {}
+        arr[showname] = {}
+        title[showname] = {}
+        for (let t in table) {
+          arr[showname][table[t].title.zh] =
+            table[t].default.label || table[t].default
+          this.colCum[showname].prop.push(table[t].title.zh)
+          this.colCum[showname].label.push(table[t].key)
+          title[showname][table[t].title.zh] = table[t].key
+          title[showname][table[t].key] = table[t].zh
+          arr[showname][table[t].key] =
+            table[t].default.label || table[t].default
+          this.tableTitle[showname] = title[showname]
+          console.error(1298, table[t], t, arr)
+          console.error(1304, t, table[t], this.tableTitle)
+        }
+        if (type === '回显') {
+          console.error(945, '回显', title)
+          // dybaneucForms = []
+          arr[showname] = {}
+          _table.forEach((_itme, _tidx) => {
+            for (var t in title[showname]) {
+              var _title = title[showname][t]
+              arr[showname][t] = _itme[_title]
+              console.error(_itme[_title], t, _itme, 952)
+            }
+            this.dybaneucForms[showname].push(arr[showname])
+          })
+        } else {
+          this.dybaneucForms[showname].push(arr[showname])
+        }
+        dgiotlogger.error(
+          '1320',
+          this.dybaneucForms,
+          this.colCum,
+          this.tableTitle
+        )
+        return this.dybaneucForms
+      },
+      getFromType(item, column, type) {
+        var res = 'input'
+        for (var i in item.table) {
+          if (item.table[i].title.zh == column) {
+            res = item.table[i].enum?.length ? 'select' : 'input'
+            if (type === 'select') return item.table[i].enum
+            else return res
+          }
+        }
+      },
+      // 解析物模型字典为指定类型
+      dictParse(dybaneucForms, title) {
+        const obj = []
+        dybaneucForms.map((i) => {
+          var arr = {}
+          for (let j in i) {
+            console.log(j, i[j], title[j])
+            if (title[j] != undefined) {
+              arr[title[j]] = i[j]
+            }
+          }
+          obj.push(arr)
+        })
+        dgiotlogger.error(1328, obj)
+        return obj
+      },
+      dybaneucDleform(index, row) {
+        this.$baseConfirm(
+          this.$translateTitle(
+            'Maintenance.Are you sure you want to delete the current item'
+          ),
+          null,
+          async () => {
+            row.splice(index, 1)
+            this.$baseMessage(
+              this.$translateTitle('user.successfully deleted'),
+              'success',
+              'dgiot-hey-message-success'
+            )
+          }
+        )
+        console.log(index, row)
+      },
       addchannelForm(formName) {
-        console.log(this.addchannel.applicationtText)
         this.$refs[formName].validate((valid) => {
           if (valid) {
             var obj = {}
             for (var key in this.addchannel) {
               obj[key] = this.addchannel[key]
             }
+            const _table = _.uniq(this.tableName)
+            _table.forEach((item) => {
+              obj[item] = this.dictParse(
+                this.dybaneucForms[item],
+                this.tableTitle[item]
+              )
+            })
+            console.error(525, obj)
             delete obj.region
             delete obj.desc
             delete obj.type
@@ -390,13 +569,13 @@
               read: true,
               write: true,
             }
-            console.log(this.$refs.monacoCode.$refs.monacoEditor.editor)
             const data = {
-              data: this.$refs.monacoCode.$refs.monacoEditor.editor
-                ? JSON.parse(
-                    this.$refs.monacoCode.$refs.monacoEditor.editor.getValue()
-                  )
-                : {},
+              // data: this.$refs.monacoCode.$refs.monacoEditor.editor
+              //   ? JSON.parse(
+              //       this.$refs.monacoCode.$refs.monacoEditor.editor.getValue()
+              //     )
+              //   : {},
+              data: {},
               ACL: aclObj,
               config: obj,
               name: this.addchannel.name,
@@ -406,6 +585,7 @@
               status: 'OFFLINE',
               type: this.addchannel.type.toString(),
             }
+            console.error(data)
             this.addchannelaxios(data)
           } else {
             this.$message('有必填项未填')
@@ -458,9 +638,11 @@
               this.selectregion = item
               this.arrlist = this.orderObject(this.selectregion.params)
               this.arrlist.map((item) => {
+                if (item.allowCreate)
+                  this.dynamicTable(item, '', {}, item.showname)
                 //  这里过滤掉 showname 为ico的
                 if (item.default) {
-                  obj[item.showname] = item.default
+                  obj[item.showname] = item.default.value || item.default
                 } else {
                   obj[item.showname] = ''
                 }
@@ -480,6 +662,9 @@
                       },
                     ]
                   }
+                  // if (item.enum) {
+                  //   obj[item.showname] = item.default.value
+                  // }
                 }
               })
               console.log('arr', this.arrlist)
@@ -517,6 +702,10 @@
                         },
                       ]
                     }
+                    // if (item.enum) {
+                    //   obj[item.showname] =
+                    //     this.channelrow.config[key].default.value
+                    // }
                   }
                   obj.region = val
                   obj.desc = this.channelrow.desc

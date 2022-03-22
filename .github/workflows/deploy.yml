@@ -69,20 +69,20 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GIT_TOKEN }}
           BRANCH: gh-pages
           FOLDER: dist
-      - name: Deploy to Netlify  🚀
-        uses: nwtgck/actions-netlify@v1.2
-        with:
-          publish-dir: './dist'
-          production-branch: master
-          github-token: ${{ secrets.GIT_TOKEN }}
-          deploy-message: "Deploy from GitHub Actions"
-          enable-pull-request-comment: false
-          enable-commit-comment: true
-          netlify-config-path: './dist/netlify.toml'
-          overwrites-pull-request-comment: false
-        env:
-          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
-          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+#      - name: Deploy to Netlify  🚀
+#        uses: nwtgck/actions-netlify@v1.2
+#        with:
+#          publish-dir: './dist'
+#          production-branch: master
+#          github-token: ${{ secrets.GIT_TOKEN }}
+#          deploy-message: "Deploy from GitHub Actions"
+#          enable-pull-request-comment: false
+#          enable-commit-comment: true
+#          netlify-config-path: './dist/netlify.toml'
+#          overwrites-pull-request-comment: false
+#        env:
+#          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+#          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
       - name: Deploy to surge 🚀
         uses: dswistowski/surge-sh-action@v1
         with:

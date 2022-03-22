@@ -199,13 +199,13 @@
           show-overflow-tooltip
           sortable
         />
-        <el-table-column :label="$translateTitle('product.view')">
-          <template #default="{ row }">
-            <el-button @click="viewDesign(row.data, row.objectId)">
-              {{ $translateTitle('product.view') }}
-            </el-button>
-          </template>
-        </el-table-column>
+        <!--        <el-table-column :label="$translateTitle('product.view')">-->
+        <!--          <template #default="{ row }">-->
+        <!--            <el-button @click="viewDesign(row.data, row.objectId)">-->
+        <!--              {{ $translateTitle('product.view') }}-->
+        <!--            </el-button>-->
+        <!--          </template>-->
+        <!--        </el-table-column>-->
         <el-table-column
           fixed="right"
           :label="$translateTitle('developer.operation')"
@@ -317,6 +317,7 @@
             v-model="addchannel.region"
             disabled
             :placeholder="$translateTitle('developer.channeltype')"
+            style="width: 100%"
             @change="removeauto"
           >
             <el-option
@@ -342,48 +343,48 @@
               :span="24"
               style="cursor: pointer"
             >
-              <el-card
-                v-if="item.params.ico && item.params.ico.default"
-                v-show="addchannel.region == item.cType"
-                class="box-card"
-                :shadow="addchannel.region == item.cType ? 'always' : 'hover'"
-                size="mini"
-                :style="{
-                  display: addchannel.region == item.cType ? 'block' : 'none',
-                  color:
-                    addchannel.region == item.cType ? '#00bad0' : '#c0c4cc',
-                }"
-              >
-                <div slot="header" class="clearfix">
-                  <span>{{ item.title.zh }}</span>
-                  <el-button
-                    :disabled="resourceid != ''"
-                    size="mini"
-                    style="float: right"
-                    type="success"
-                    @click="setCard(item.cType)"
-                  >
-                    <!-- 已选 -->
-                    {{ $translateTitle('product.selected') }}
-                  </el-button>
-                </div>
-                <div class="text item">
-                  <el-row :gutter="24">
-                    <el-col :span="12">
-                      <img
-                        class="image"
-                        :src="
-                          item.params.ico.default ? item.params.ico.default : ''
-                        "
-                        style="width: 50px; height: 50px"
-                      />
-                    </el-col>
-                    <el-col :span="12">
-                      <el-tag>{{ item.cType }}</el-tag>
-                    </el-col>
-                  </el-row>
-                </div>
-              </el-card>
+              <!--              <el-card-->
+              <!--                v-if="item.params.ico && item.params.ico.default"-->
+              <!--                v-show="addchannel.region == item.cType"-->
+              <!--                class="box-card"-->
+              <!--                :shadow="addchannel.region == item.cType ? 'always' : 'hover'"-->
+              <!--                size="mini"-->
+              <!--                :style="{-->
+              <!--                  display: addchannel.region == item.cType ? 'block' : 'none',-->
+              <!--                  color:-->
+              <!--                    addchannel.region == item.cType ? '#00bad0' : '#c0c4cc',-->
+              <!--                }"-->
+              <!--              >-->
+              <!--                <div slot="header" class="clearfix">-->
+              <!--                  <span>{{ item.title.zh }}</span>-->
+              <!--                  <el-button-->
+              <!--                    :disabled="resourceid != ''"-->
+              <!--                    size="mini"-->
+              <!--                    style="float: right"-->
+              <!--                    type="success"-->
+              <!--                    @click="setCard(item.cType)"-->
+              <!--                  >-->
+              <!--                    &lt;!&ndash; 已选 &ndash;&gt;-->
+              <!--                    {{ $translateTitle('product.selected') }}-->
+              <!--                  </el-button>-->
+              <!--                </div>-->
+              <!--                <div class="text item">-->
+              <!--                  <el-row :gutter="24">-->
+              <!--                    <el-col :span="12">-->
+              <!--                      <img-->
+              <!--                        class="image"-->
+              <!--                        :src="-->
+              <!--                          item.params.ico.default ? item.params.ico.default : ''-->
+              <!--                        "-->
+              <!--                        style="width: 50px; height: 50px"-->
+              <!--                      />-->
+              <!--                    </el-col>-->
+              <!--                    <el-col :span="12">-->
+              <!--                      <el-tag>{{ item.cType }}</el-tag>-->
+              <!--                    </el-col>-->
+              <!--                  </el-row>-->
+              <!--                </div>-->
+              <!--              </el-card>-->
             </el-col>
           </el-row>
         </el-form-item>
@@ -416,7 +417,11 @@
           </div>
         </el-form-item>
 
-        <el-col v-for="(item, index) in arrlist" :key="index" :span="12">
+        <el-col
+          v-for="(item, index) in arrlist"
+          :key="index"
+          :span="item.allowCreate ? 24 : 12"
+        >
           <el-form-item
             :label="item.title.zh"
             :prop="item.showname"
@@ -428,14 +433,26 @@
               </div>
               <i class="el-icon-question" style="float: left" />
             </el-tooltip>
+            <el-select
+              v-if="item.enum"
+              v-model="addchannel[item.showname]"
+              style="width: 100%"
+            >
+              <el-option
+                v-for="(item2, index2) in item.enum"
+                :key="index2"
+                :label="item2.label"
+                :value="item2.value"
+              />
+            </el-select>
             <el-input
-              v-if="item.type == 'string'"
+              v-else-if="item.type == 'string'"
               v-show="item.title.zh !== '通道ICO'"
               v-model="addchannel[item.showname]"
               style="width: 96%"
             />
             <el-input
-              v-if="item.title.zh == '通道ICO'"
+              v-else-if="item.title.zh == '通道ICO'"
               v-show="item.title.zh == '通道ICO'"
               v-model.number="addchannel[item.showname]"
               style="width: 96%"
@@ -483,6 +500,69 @@
                 :value="item.enum[index1]"
               />
             </el-select>
+            <div v-else-if="item.allowCreate">
+              <el-button
+                @click.native="dybaneucForms[item.showname].unshift({})"
+              >
+                新增
+              </el-button>
+
+              <el-table
+                :data="dybaneucForms[item.showname]"
+                style="width: 100%"
+              >
+                <el-table-column
+                  v-for="(j, index) in colCum[item.showname].prop"
+                  :key="index"
+                  align="center"
+                  :label="colCum[item.showname].prop[index]"
+                  :prop="colCum[item.showname].label[index]"
+                  show-overflow-tooltip
+                  sortable
+                >
+                  <template slot-scope="scope">
+                    <el-input
+                      v-show="getFromType(item, j) == 'input'"
+                      v-model="scope.row[j]"
+                      placeholder="placeholder"
+                    />
+                    <el-select
+                      v-show="getFromType(item, j) == 'select'"
+                      v-model="scope.row[j]"
+                      placeholder="placeholder"
+                    >
+                      <el-option
+                        v-for="item in getFromType(item, j, 'select')"
+                        :key="item.value"
+                        :label="item.label"
+                        :value="item.value"
+                      />
+                    </el-select>
+                  </template>
+                </el-table-column>
+                <el-table-column
+                  align="center"
+                  fixed="right"
+                  label="操作"
+                  width="220px"
+                >
+                  <template slot-scope="scope">
+                    <el-button
+                      size="mini"
+                      type="danger"
+                      @click.native="
+                        dybaneucDleform(
+                          scope.$index,
+                          dybaneucForms[item.showname]
+                        )
+                      "
+                    >
+                      删除
+                    </el-button>
+                  </template>
+                </el-table-column>
+              </el-table>
+            </div>
           </el-form-item>
         </el-col>
         <!---------------------统一的配置描述---------------------------->
@@ -675,6 +755,10 @@
     // inject: ['reload'],
     data() {
       return {
+        colCum: {},
+        dybaneucForms: {},
+        tableName: [],
+        tableTitle: {},
         amisFlag: false,
         isPreview: true,
         renderSchema: {},
@@ -815,6 +899,97 @@
       this.getApplication()
     },
     methods: {
+      dybaneucDleform(index, row) {
+        this.$baseConfirm(
+          this.$translateTitle(
+            'Maintenance.Are you sure you want to delete the current item'
+          ),
+          null,
+          async () => {
+            row.splice(index, 1)
+            this.$baseMessage(
+              this.$translateTitle('user.successfully deleted'),
+              'success',
+              'dgiot-hey-message-success'
+            )
+          }
+        )
+        console.log(index, row)
+      },
+      dynamicTable(data, type, _table, showname, line) {
+        console.log(data, type, _table, showname, line, 920)
+        this.tableName.push(data.showname)
+        // var dybaneucForms = {}
+        this.dybaneucForms[showname] = []
+        this.colCum[showname] = { label: [], prop: [] }
+        dgiotlogger.error(925, data, _table)
+        const { table } = data
+        var arr = {}
+        var title = {}
+        arr[showname] = {}
+        title[showname] = {}
+        for (let t in table) {
+          arr[showname][table[t].title.zh] =
+            table[t].default.label || table[t].default
+          this.colCum[showname].prop.push(table[t].title.zh)
+          this.colCum[showname].label.push(table[t].key)
+          title[showname][table[t].title.zh] = table[t].key
+          title[showname][table[t].key] = table[t].zh
+          arr[showname][table[t].key] =
+            table[t].default.label || table[t].default
+          this.tableTitle[showname] = title[showname]
+          console.error(941, table[t], t, arr)
+          console.error(942, t, table[t], this.tableTitle)
+        }
+        if (type === '回显') {
+          console.error(945, '回显', title)
+          // dybaneucForms = []
+          arr[showname] = {}
+          _table.forEach((_itme, _tidx) => {
+            for (var t in title[showname]) {
+              var _title = title[showname][t]
+              arr[showname][t] = _itme[_title]
+              console.error(_itme[_title], t, _itme, 952)
+            }
+            this.dybaneucForms[showname].push(arr[showname])
+          })
+        } else {
+          this.dybaneucForms[showname].push(arr[showname])
+        }
+        dgiotlogger.error(
+          '960',
+          this.dybaneucForms,
+          this.colCum,
+          this.tableTitle
+        )
+        return this.dybaneucForms
+      },
+      getFromType(item, column, type) {
+        var res = 'input'
+        for (var i in item.table) {
+          if (item.table[i].title.zh == column) {
+            res = item.table[i].enum?.length ? 'select' : 'input'
+            if (type === 'select') return item.table[i].enum
+            else return res
+          }
+        }
+      },
+      // 解析物模型字典为指定类型
+      dictParse(dybaneucForms, title) {
+        const obj = []
+        dybaneucForms.map((i) => {
+          var arr = {}
+          for (let j in i) {
+            console.log(j, i[j], title[j])
+            if (title[j] != undefined) {
+              arr[title[j]] = i[j]
+            }
+          }
+          obj.push(arr)
+        })
+        dgiotlogger.error(1328, obj)
+        return obj
+      },
       /**
        * @Author: h7ml
        * @Date: 2021-11-22 11:07:21
@@ -991,6 +1166,13 @@
                 read: true,
                 write: true,
               }
+              const _table = _.uniq(this.tableName)
+              _table.forEach((item) => {
+                obj[item] = this.dictParse(
+                  this.dybaneucForms[item],
+                  this.tableTitle[item]
+                )
+              })
               const data = {
                 ACL: aclObj,
                 config: obj,
@@ -1150,6 +1332,13 @@
         delete obj.type
         delete obj.isEnable
         delete obj.name
+        const _table = _.uniq(this.tableName)
+        _table.forEach((item) => {
+          obj[item] = this.dictParse(
+            this.dybaneucForms[item],
+            this.tableTitle[item]
+          )
+        })
         const data = {
           config: obj,
           name: this.addchannel.name,
@@ -1288,6 +1477,15 @@
               this.selectregion = item
               this.arrlist = this.orderObject(this.selectregion.params)
               this.arrlist.map((item) => {
+                if (item.allowCreate) {
+                  this.dynamicTable(
+                    item,
+                    '回显',
+                    this.channelrow.config[item.showname],
+                    item.showname,
+                    1485
+                  )
+                }
                 if (item.default) {
                   obj[item.showname] = item.default
                 } else {
@@ -1328,6 +1526,16 @@
                 for (var key in this.channelrow.config) {
                   if (item.showname == key) {
                     obj[item.showname] = this.channelrow.config[key]
+                  }
+                  if (item.allowCreate) {
+                    console.error(item, '111')
+                    this.dynamicTable(
+                      item,
+                      '回显',
+                      this.channelrow.config[item.showname],
+                      item.showname,
+                      1535
+                    )
                   }
                   if (item.required) {
                     if (item.type == 'string' || item.type == 'integer') {
@@ -1371,9 +1579,11 @@
         console.log(row)
         this.channelrow = row
         this.resourceid = row.objectId
-        this.channelForm = true
         this.channelupdated = '编辑'
         this.removeauto(row.cType)
+        this.$nextTick(() => {
+          this.channelForm = true
+        })
       },
       // 弹窗订阅日志
       nowtime() {
