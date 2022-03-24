@@ -318,7 +318,6 @@
             disabled
             :placeholder="$translateTitle('developer.channeltype')"
             style="width: 100%"
-            @change="removeauto"
           >
             <el-option
               v-for="(item, index) in channelregion"
@@ -512,11 +511,11 @@
                 style="width: 100%"
               >
                 <el-table-column
-                  v-for="(j, index) in colCum[item.showname].prop"
-                  :key="index"
+                  v-for="(j, _index) in colCum[item.showname].prop"
+                  :key="_index"
                   align="center"
-                  :label="colCum[item.showname].prop[index]"
-                  :prop="colCum[item.showname].label[index]"
+                  :label="colCum[item.showname].prop[_index]"
+                  :prop="colCum[item.showname].label[_index]"
                   show-overflow-tooltip
                   sortable
                 >
@@ -928,7 +927,7 @@
         var title = {}
         arr[showname] = {}
         title[showname] = {}
-        for (let t in table) {
+        for (const t in table) {
           arr[showname][table[t].title.zh] =
             table[t].default.label || table[t].default
           this.colCum[showname].prop.push(table[t].title.zh)
@@ -942,16 +941,19 @@
           console.error(942, t, table[t], this.tableTitle)
         }
         if (type === '回显') {
-          console.error(945, '回显', title)
+          console.error(945, '回显', title, _table)
           // dybaneucForms = []
-          arr[showname] = {}
           _table.forEach((_itme, _tidx) => {
-            for (var t in title[showname]) {
-              var _title = title[showname][t]
-              arr[showname][t] = _itme[_title]
-              console.error(_itme[_title], t, _itme, 952)
+            this.dybaneucForms[showname][_tidx] = {}
+            for (var _t in title[showname]) {
+              // console.info(_t, 949)
+              var _title = title[showname][_t]
+              // arr[showname][_t] = _itme[_title]
+              this.dybaneucForms[showname][_tidx][_t] = _itme[_title]
+              console.error(_itme[_title], _t, _itme, 952)
             }
-            this.dybaneucForms[showname].push(arr[showname])
+            console.error(arr[showname], 954)
+            // this.dybaneucForms[showname][_tidx] = arr[showname]
           })
         } else {
           this.dybaneucForms[showname].push(arr[showname])
@@ -1470,26 +1472,72 @@
             },
           ],
         }
-        if (this.resourceid == '') {
-          this.channelregion.map((item) => {
-            if (item.cType == val) {
-              this.$forceUpdate()
-              this.selectregion = item
-              this.arrlist = this.orderObject(this.selectregion.params)
-              this.arrlist.map((item) => {
+        // if (this.resourceid == '') {
+        //   this.channelregion.map((item) => {
+        //     if (item.cType == val) {
+        //       this.$forceUpdate()
+        //       this.selectregion = item
+        //       this.arrlist = this.orderObject(this.selectregion.params)
+        //       this.arrlist.map((item) => {
+        //         if (item.allowCreate) {
+        //           this.dynamicTable(
+        //             item,
+        //             '回显',
+        //             this.channelrow.config[item.showname],
+        //             item.showname,
+        //             1485
+        //           )
+        //         }
+        //         if (item.default) {
+        //           obj[item.showname] = item.default
+        //         } else {
+        //           obj[item.showname] = ''
+        //         }
+        //         if (item.required) {
+        //           if (item.type == 'string' || item.type == 'integer') {
+        //             obj1[item.showname] = [
+        //               {
+        //                 required: true,
+        //                 trigger: 'blur',
+        //               },
+        //             ]
+        //           } else {
+        //             obj1[item.showname] = [
+        //               {
+        //                 required: true,
+        //                 trigger: 'change',
+        //               },
+        //             ]
+        //           }
+        //         }
+        //       })
+        //       obj.region = val
+        //       obj.desc = ''
+        //       obj.name = ''
+        //       obj.type = this.selectregion.type
+        //       obj.isEnable = false
+        //     }
+        //   })
+        // } else {
+        this.channelregion.map((item) => {
+          if (item.cType == val) {
+            this.selectregion = item
+            this.$forceUpdate()
+            this.arrlist = this.orderObject(this.selectregion.params)
+            this.arrlist.map((item) => {
+              for (var key in this.channelrow.config) {
+                if (item.showname == key) {
+                  obj[item.showname] = this.channelrow.config[key]
+                }
                 if (item.allowCreate) {
+                  console.error(item, '1532', item.showname)
                   this.dynamicTable(
                     item,
                     '回显',
                     this.channelrow.config[item.showname],
                     item.showname,
-                    1485
+                    1535
                   )
-                }
-                if (item.default) {
-                  obj[item.showname] = item.default
-                } else {
-                  obj[item.showname] = ''
                 }
                 if (item.required) {
                   if (item.type == 'string' || item.type == 'integer') {
@@ -1508,63 +1556,17 @@
                     ]
                   }
                 }
-              })
-              obj.region = val
-              obj.desc = ''
-              obj.name = ''
-              obj.type = this.selectregion.type
-              obj.isEnable = false
-            }
-          })
-        } else {
-          this.channelregion.map((item) => {
-            if (item.cType == val) {
-              this.selectregion = item
-              this.$forceUpdate()
-              this.arrlist = this.orderObject(this.selectregion.params)
-              this.arrlist.map((item) => {
-                for (var key in this.channelrow.config) {
-                  if (item.showname == key) {
-                    obj[item.showname] = this.channelrow.config[key]
-                  }
-                  if (item.allowCreate) {
-                    console.error(item, '111')
-                    this.dynamicTable(
-                      item,
-                      '回显',
-                      this.channelrow.config[item.showname],
-                      item.showname,
-                      1535
-                    )
-                  }
-                  if (item.required) {
-                    if (item.type == 'string' || item.type == 'integer') {
-                      obj1[item.showname] = [
-                        {
-                          required: true,
-                          trigger: 'blur',
-                        },
-                      ]
-                    } else {
-                      obj1[item.showname] = [
-                        {
-                          required: true,
-                          trigger: 'change',
-                        },
-                      ]
-                    }
-                  }
-                  obj.region = val
-                  obj.desc = this.channelrow.desc
-                  obj.name = this.channelrow.name
-                  obj.type = this.selectregion.type
-                  obj.isEnable = this.channelrow.isEnable
-                  // obj.applicationtText =
-                }
-              })
-            }
-          })
-        }
+                obj.region = val
+                obj.desc = this.channelrow.desc
+                obj.name = this.channelrow.name
+                obj.type = this.selectregion.type
+                obj.isEnable = this.channelrow.isEnable
+                // obj.applicationtText =
+              }
+            })
+          }
+        })
+        // }
         // 读取acl列表,获取所属应用名称
         if (this.channelrow) {
           for (var key in this.channelrow.ACL) {
