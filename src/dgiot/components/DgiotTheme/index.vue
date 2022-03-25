@@ -1,5 +1,5 @@
 <template>
-  <span v-if="theme.showTheme" v-show="false">
+  <span v-if="theme.showTheme" v-show="$route.query.theme">
     <dgiot-icon icon="brush-2-line" @click.native="handleOpenTheme" />
   </span>
 </template>
@@ -9,10 +9,14 @@
 
   export default {
     name: 'DgiotTheme',
+    data() {},
     computed: {
       ...mapGetters({
         theme: 'settings/theme',
       }),
+    },
+    mounted() {
+      console.error('this.$route.query.theme', this.$route.query.theme)
     },
     methods: {
       handleOpenTheme() {

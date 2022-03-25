@@ -35,6 +35,7 @@
               v-show="isShow"
               :title="$translateTitle(`home.language`)"
             />
+            <dgiot-theme :title="$translateTitle(`home.theme`)" />
             <dgiot-refresh :title="$translateTitle(`home.refresh`)" />
             <dgiot-avatar
               v-show="isShow"

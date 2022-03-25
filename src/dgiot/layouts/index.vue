@@ -7,6 +7,7 @@
       :fixed-header="theme.fixedHeader"
       :show-tabs="theme.showTabs"
     />
+    <dgiot-theme-drawer />
     <el-backtop target="#dgiot" />
   </div>
 </template>

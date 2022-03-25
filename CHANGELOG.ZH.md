@@ -1,3 +1,39 @@
+## [4.5.1](https://github.com/dgiot/dgiot-dashboard/compare/v4.5.0...v4.5.1) (2022-03-25)
+
+
+### Bug Fixes
+
+* dgiot player ([a63ecb2](https://github.com/dgiot/dgiot-dashboard/commit/a63ecb246655209940b635f94d0a31262909cfbc))
+* properties ([1b9ddc0](https://github.com/dgiot/dgiot-dashboard/commit/1b9ddc08a20067c22081143cac2b1c799243d21a))
+* query children ([22ffd8d](https://github.com/dgiot/dgiot-dashboard/commit/22ffd8de7b7359d6c02deb8f4f65b4377e4e959e))
+* showName ([7bdc1b8](https://github.com/dgiot/dgiot-dashboard/commit/7bdc1b8ba5ff101cc4ba339066ed0f1713bca767))
+* **user:** check parssword ([953e09d](https://github.com/dgiot/dgiot-dashboard/commit/953e09da58fac5cfb116ed21e82962283a875d93))
+
+
+### Features
+
+* **api:** api ([7b2e883](https://github.com/dgiot/dgiot-dashboard/commit/7b2e8830db65f6aa201250fccbb4b0305f8fe80b))
+* baidu map Key ([fb57820](https://github.com/dgiot/dgiot-dashboard/commit/fb57820edfdee2bce9ab26bd5f90378f2385ace0))
+* change diasble ([4d6e334](https://github.com/dgiot/dgiot-dashboard/commit/4d6e334deeb0b7a715eb97c62274ceac37ae66cd))
+* channel log topic ([eb440ab](https://github.com/dgiot/dgiot-dashboard/commit/eb440abc35f1e84340aef27a26bacb37592334ce))
+* **debug:** clear console ([b2ba0b4](https://github.com/dgiot/dgiot-dashboard/commit/b2ba0b44aff5c6699f9c9add1756316c082fa020))
+* dg/dashboard ([d4d7fbd](https://github.com/dgiot/dgiot-dashboard/commit/d4d7fbd3a42562cbffdcbf054d9fb387f03d8216))
+* **dgiot thing:** dgiot thing function expansion ([715a714](https://github.com/dgiot/dgiot-dashboard/commit/715a7140673bab6b25d75ecd3f587147b78a5c7a))
+* **easy and fast development:** added quick development page ([a371593](https://github.com/dgiot/dgiot-dashboard/commit/a371593264dbbce775b46bbf631312f2baa534ef))
+* json ([1298390](https://github.com/dgiot/dgiot-dashboard/commit/1298390ea1324cc686a12997fdec6374416c41f8))
+* json2string ([a88e978](https://github.com/dgiot/dgiot-dashboard/commit/a88e9782c5f9b6730c4ee3ad0cb0a111b5572385))
+* mqtt(dlint) ([e9462df](https://github.com/dgiot/dgiot-dashboard/commit/e9462df5d1c2db8ac45f808420f4610663e22ec5))
+* **page:** thing ([1a8bee5](https://github.com/dgiot/dgiot-dashboard/commit/1a8bee56edd61da8de16d0db3933efdbb5b91709))
+* Platform associated large screen id ([ab8d665](https://github.com/dgiot/dgiot-dashboard/commit/ab8d6652c71c8c89d0bc579e65c6155f2339fc10))
+* setSqlvalue ([4148b36](https://github.com/dgiot/dgiot-dashboard/commit/4148b36f268127d12724a1ee4f7cab07b3e41985))
+* **sql:** sql where ([c1bb23d](https://github.com/dgiot/dgiot-dashboard/commit/c1bb23d787792793b98f270618e7a5d72779d7f8))
+* **src/views/feature/linkedge.vue:** sql ([03843d7](https://github.com/dgiot/dgiot-dashboard/commit/03843d7b0196e01ebd0ed6c1569cf96ada1681fc))
+* **topic:** custom topic list ([c4f529a](https://github.com/dgiot/dgiot-dashboard/commit/c4f529af51e6767dc9a60c0eb7e800bc2ec1373b))
+* trace topic ([24ae952](https://github.com/dgiot/dgiot-dashboard/commit/24ae952ccc6ef7d1eb7c320587341c7bbc306c36))
+* update dlink topic ([6167b36](https://github.com/dgiot/dgiot-dashboard/commit/6167b3676744d2e6d607097baca761a086e3fe0d))
+
+
+
 # [4.5.0](https://github.com/dgiot/dgiot-dashboard/compare/db37de39b3b74b19e0e357084767b2befb99eaf2...v4.5.0) (2022-03-03)
 
 
