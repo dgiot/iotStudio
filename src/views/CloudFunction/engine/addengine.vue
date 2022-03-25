@@ -2,7 +2,7 @@
   <div class="addengine">
     <div class="addcontent">
       <el-card class="box-card">
-        <dynamic-forms />
+        <dynamic-forms :rule-content="ruleContent" @childByValue="childValue" />
         <el-form
           ref="formInline"
           label-width="80px"
@@ -494,6 +494,56 @@
     },
     data() {
       return {
+        ruleContent: {
+          type: 'IFTTT',
+          trigger: {
+            uri: 'logical/or',
+            items: [
+              {
+                uri: 'trigger/product/event',
+                params: {
+                  productKey: '',
+                },
+              },
+            ],
+          },
+          condition: {
+            uri: 'logical/and',
+            items: [
+              {
+                uri: 'condition/device/stateContinue',
+                params: {
+                  stateName: '',
+                  duration: '',
+                  compareType: '',
+                  compareValue: '',
+                },
+              },
+            ],
+          },
+          action: [
+            {
+              uri: 'action/device/setProperty',
+              params: {
+                productKey: '',
+                deviceName: '',
+                propertyItems: {
+                  Direction: '',
+                },
+              },
+            },
+            {
+              uri: 'action/scene/trigger',
+              params: {
+                automationRuleId: 'b362b597dacc4da58d63ec2abb95355d',
+              },
+            },
+            {
+              uri: 'action/event/triggerAlarm',
+              params: {},
+            },
+          ],
+        },
         ruleId: this.$route.query.id || '',
         uid: this.$route.query.uid || '',
         ruleType: this.$route.query.type || '',
@@ -653,6 +703,12 @@
       })
     },
     methods: {
+      // childByValue
+      childValue(res, ruleContent) {
+        console.log(res, ruleContent)
+        this.ruleContent = ruleContent
+        editor1.setValue(res)
+      },
       // 规则选择
       selectRegion(val) {
         this.originlist.map((item) => {
@@ -688,6 +744,56 @@
                 '    "t/#"\n' +
                 'WHERE\n' +
                 "    msg = 'hello'",
+              ruleContent: {
+                type: 'IFTTT',
+                trigger: {
+                  uri: 'logical/or',
+                  items: [
+                    {
+                      uri: 'trigger/product/event',
+                      params: {
+                        productKey: '',
+                      },
+                    },
+                  ],
+                },
+                condition: {
+                  uri: 'logical/and',
+                  items: [
+                    {
+                      uri: 'condition/device/stateContinue',
+                      params: {
+                        stateName: '',
+                        duration: '',
+                        compareType: '',
+                        compareValue: '',
+                      },
+                    },
+                  ],
+                },
+                action: [
+                  {
+                    uri: 'action/device/setProperty',
+                    params: {
+                      productKey: '',
+                      deviceName: '',
+                      propertyItems: {
+                        Direction: '',
+                      },
+                    },
+                  },
+                  {
+                    uri: 'action/scene/trigger',
+                    params: {
+                      automationRuleId: 'b362b597dacc4da58d63ec2abb95355d',
+                    },
+                  },
+                  {
+                    uri: 'action/event/triggerAlarm',
+                    params: {},
+                  },
+                ],
+              },
             },
           } = await get_rule_id(ruleId)
           dgiotlogger.log(data)
@@ -697,6 +803,7 @@
           editor1.setValue(this.formInline.enginesql)
           this.formInline.ruleId = data.id
           this.formInline.remarks = data.description
+          this.ruleContent = data.ruleContent
           editor1.setValue(data.rawsql)
         } catch (error) {
           dgiotlogger.error(error)
@@ -850,6 +957,7 @@
             const params = {
               actions: this.actionData,
               ctx: ctx,
+              ruleContent: this.ruleContent,
               description: this.formInline.remarks,
               for: '["t/#"]',
               rawsql: editor1.getValue(),

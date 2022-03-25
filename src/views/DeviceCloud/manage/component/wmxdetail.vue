@@ -181,12 +181,23 @@
                   </el-radio-group>
                 </el-form-item>
               </el-col>
-              <el-col v-if="moduletype == 'properties'" :span="8">
+              <el-col
+                v-if="moduletype == 'properties' && sizeForm.type !== 'enum'"
+                :span="8"
+              >
                 <!-- <el-form-item
                   prop="startnumber"
                   label="取值范围(最小值)"
                 > -->
                 <el-form-item
+                  v-if="
+                    moduletype == 'properties' ||
+                    sizeForm.type == 'int' ||
+                    sizeForm.type == 'long' ||
+                    sizeForm.type == 'float' ||
+                    sizeForm.type == 'double' ||
+                    sizeForm.type !== 'enum'
+                  "
                   :label="$translateTitle('product.valuerangemin')"
                   prop="startnumber"
                 >
@@ -1485,7 +1496,7 @@
       },
       // 数据类型
       changeGroup(type) {
-        dgiotlog.log(type)
+        console.log(type, this.sizeForm.type)
       },
       fileInfo(info) {
         dgiotlog.log('========================', info)

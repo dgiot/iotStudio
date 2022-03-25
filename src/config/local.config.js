@@ -53,7 +53,7 @@ let systemStatic = {
     'iview.min.js',
     'vuetify.min.js',
     'resize-observer-polyfill.js',
-    'vue-aliplayer-v2.js',
+    // 'vue-aliplayer-v2.js',
     'Sortable.min.js',
     'vue-flv-player.umd.min.js',
     'md5.min.js',

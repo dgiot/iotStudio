@@ -569,6 +569,7 @@
         console.log(this.ruleContent)
         console.log('submit!')
         const res = await sqlTpl(this.ruleContent)
+        this.$emit('childByValue', res.template || res, this.ruleContent)
         console.log(res)
       },
     },

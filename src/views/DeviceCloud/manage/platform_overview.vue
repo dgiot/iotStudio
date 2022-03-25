@@ -858,7 +858,7 @@
         },
         mapType: window.name == 'dgiot_iframe' ? 'tencent' : 'baidu',
         isShow: true,
-        ak: secret.baidu.map ?? 'fnc5Z92jC7CwfBGz8Dk66E9sXEIYZ6TG',
+        ak: secret.baidu.map ?? 't9A84QM5lt6a3SMumuQOQtvM2spIQQ2A',
         // ak: 'oW2UEhdth2tRbEE4FUpF9E5YVDCIPYih',
         // center:{ lng: 120.187273, lat: 30.334877 },
         center: { lng: 121.337516, lat: 28.48195 },
