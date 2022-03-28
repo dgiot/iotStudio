@@ -2483,6 +2483,8 @@
         this.$message({
           type: type || 'info',
           message: msg,
+          showClose: true,
+          duration:2000
         })
         this.dialogFormVisible = false
         this.resetProductForm()
