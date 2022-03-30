@@ -124,7 +124,6 @@
           </dgiot-query-form>
           <el-table
             ref="tableSort"
-            v-loading="listLoading"
             :border="border"
             :data="ruleForm.properties"
             :stripe="stripe"
@@ -386,12 +385,10 @@
         }
       },
       async fetchData(objectId) {
-        this.listLoading = true
         const ruleForm = await getMetaData(objectId)
         delete ruleForm.createdAt
         delete ruleForm.updatedAt
         this.ruleForm = ruleForm
-        this.listLoading = false
       },
     }, //如果页面有keep-alive缓存功能，这个函数会触发
   }
