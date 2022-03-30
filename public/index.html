@@ -2,13 +2,13 @@
 <html lang="zh-cmn-Hans">
 <head>
   <title><%= VUE_APP_TITLE %></title>
-  <meta charset="utf-8"/>
-  <meta content="IE=edge" http-equiv="X-UA-Compatible"/>
-  <meta content="width=device-width,initial-scale=1.0" name="viewport"/>
-  <meta content="<%= VUE_APP_Keywords %>" name="keywords"/>
-  <meta content="<%= VUE_APP_Description %>" name="description"/>
-  <meta content="<%= VUE_APP_AUTHOR %>" name="author"/>
-  <meta content="Colby Fayock" property="og:site_name"/>
+  <meta charset="utf-8" />
+  <meta content="IE=edge" http-equiv="X-UA-Compatible" />
+  <meta content="width=device-width,initial-scale=1.0" name="viewport" />
+  <meta content="<%= VUE_APP_Keywords %>" name="keywords" />
+  <meta content="<%= VUE_APP_Description %>" name="description" />
+  <meta content="<%= VUE_APP_AUTHOR %>" name="author" />
+  <meta content="Colby Fayock" property="og:site_name" />
   <!-- 引入og -->
   <% for(let property in htmlWebpackPlugin.options.ogConfig) { %>
   <meta
@@ -18,7 +18,7 @@
   <% } %>
   <!--  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />-->
   <!--  <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">-->
-  <meta content="#ffffff" name="msapplication-TileColor"/>
+  <meta content="#ffffff" name="msapplication-TileColor" />
   <link
     href="<%= VUE_APP_CDN_URL %>/assets/css/loading.css?random=<%= VUE_APP_UPDATE_TIME %>"
     auth="<%= VUE_APP_AUTHOR %>"
@@ -64,21 +64,21 @@
     // https://tongji.baidu.com/web/welcome/ico?s=a0f8b01930320b849a92a00e0c6da990
     // https://tongji.baidu.com/web/welcome/ico?s=32e7c4bdc95a01203a3c27102912a44e
     // https://new.cnzz.com/v1/login.php?siteid=1279876845
-    ;(function (w, d, s, q, i) {
-      w[q] = w[q] || []
+    ;(function(w, d, s, q, i) {
+      w[q] = w[q] || [];
       var f = d.getElementsByTagName(s)[0],
-        j = d.createElement(s)
-      j.async = true
-      j.id = 'beacon-aplus'
-      j.src = 'https://d.alicdn.com/alilog/mlog/aplus/' + i + '.js'
-      f.parentNode.insertBefore(j, f)
-    })(window, document, 'script', 'aplus_queue', '203467608')
+        j = d.createElement(s);
+      j.async = true;
+      j.id = "beacon-aplus";
+      j.src = "https://d.alicdn.com/alilog/mlog/aplus/" + i + ".js";
+      f.parentNode.insertBefore(j, f);
+    })(window, document, "script", "aplus_queue", "203467608");
 
     //集成应用的appKey
     aplus_queue.push({
-      action: 'aplus.setMetaInfo',
-      arguments: ['appKey', '61cc0914e014255fcbcf694d'],
-    })
+      action: "aplus.setMetaInfo",
+      arguments: ["appKey", "61cc0914e014255fcbcf694d"]
+    });
   </script>
 </head>
 <body>
@@ -90,9 +90,9 @@
     <div id="loader"></div>
     <div class="loader-section section-left"></div>
     <div class="loader-section section-right"></div>
-    <div class="load_title">正在加载<%= VUE_APP_TITLE %>系统,请耐心等待...
+    <div class="load_title" style="font-size:16px!important">当前访问人多过多，资源加载可能慢，请耐心等待...
       <br>
-      <p>v<%= VUE_APP_VERSION %></p>
+      <p style="font-size:16px!important">当前版本v<%= VUE_APP_VERSION %></p>
     </div>
   </div>
 </div>
@@ -106,11 +106,11 @@
   version="<%= VUE_APP_VERSION %>"
 ></script>
 <% } %>
-<script   auth="<%= VUE_APP_AUTHOR %>"
-          charset="utf-8"
-          src="<%= VUE_APP_CDN_URL %>/assets/js/vue-aliplayer-v2.js?random=<%= VUE_APP_UPDATE_TIME %>"
-          time="<%= VUE_APP_UPDATE_TIME %>"
-          version="<%= VUE_APP_VERSION %>">
+<script auth="<%= VUE_APP_AUTHOR %>"
+        charset="utf-8"
+        src="<%= VUE_APP_CDN_URL %>/assets/js/vue-aliplayer-v2.js?random=<%= VUE_APP_UPDATE_TIME %>"
+        time="<%= VUE_APP_UPDATE_TIME %>"
+        version="<%= VUE_APP_VERSION %>">
 
 </script>
 <!--    <script src="<%= VUE_APP_CDN_URL %>/assets/js/monaco-editor/min/vs/loader.js?v=<%= VUE_APP_VERSION %>&t=<%= VUE_APP_UPDATE_TIME %>"></script>-->

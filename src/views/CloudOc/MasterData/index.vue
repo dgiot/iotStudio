@@ -1,23 +1,23 @@
 <!--
 * @Author: dgiot-fe <dgiot@foxmail.com>
-* @Date: 2022-03-29 19:59:21
-* @LastEditors: 19:59
-* @LastEditTime: 2022-03-29 19:59:21
+* @Date: 2022-03-29 20:02:35
+* @LastEditors: 20:02
+* @LastEditTime: 2022-03-29 20:02:35
 * @Description:
-* @FilePath: src\views\CloudOT\maintenance\alert.vue
+* @FilePath: src\views\CloudOc\MasterData\index.vue
 * @DocumentLink: https://dev.iotn2n.com
 * @github: https://github.com/dgiot/dgiot-dashboard.git
-* @name: alert
+* @name: index
 -->
 <template>
-  <div class="alert-container">
-    <div class="alert">alert</div>
+  <div class="index-container">
+    <div class="index">主数据管理</div>
   </div>
 </template>
 
 <script>
   export default {
-    name: 'Alert',
+    name: 'Index',
     components: {},
     props: {},
     data() {
@@ -33,7 +33,7 @@
 </script>
 
 <style lang="scss" scoped>
-  .alert-container {
+  .index-container {
     width: 100%;
     heigth: 100%;
   }
