@@ -170,7 +170,7 @@ html {
       display: flex;
       align-items: center;
       justify-content: center;
-      min-height: calc(#{$base-keep-alive-height} - 250px);
+      min-height: calc(#{$base-keep-alive-height});
 
       .el-image__inner {
         width: 22.5%;

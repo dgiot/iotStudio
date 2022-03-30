@@ -54,3 +54,4 @@ lite.sh
 /dev
 !/src/views/CloudOT/maintenance/alarm/generate/index.vue
 !/src/views/CloudFunction/lowcode/index.vue
+!/src/views/CloudOc/MetaData/components/module.vue

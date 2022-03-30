@@ -182,7 +182,11 @@
                 </el-form-item>
               </el-col>
               <el-col
-                v-if="moduletype == 'properties' && sizeForm.type !== 'enum'"
+                v-if="
+                  moduletype == 'properties' &&
+                  sizeForm.type !== 'enum' &&
+                  sizeForm.type !== 'text'
+                "
                 :span="8"
               >
                 <!-- <el-form-item
@@ -195,8 +199,7 @@
                     sizeForm.type == 'int' ||
                     sizeForm.type == 'long' ||
                     sizeForm.type == 'float' ||
-                    sizeForm.type == 'double' ||
-                    sizeForm.type !== 'enum'
+                    sizeForm.type == 'double'
                   "
                   :label="$translateTitle('product.valuerangemin')"
                   prop="startnumber"
