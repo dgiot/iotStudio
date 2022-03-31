@@ -210,6 +210,7 @@ const cssExport = {
 }
 const configure = {
   externals: {
+    'vue-qr': 'VueQr',
     react: 'React',
     'react-dom': 'ReactDOM',
     bcrypt: 'bcrypt',

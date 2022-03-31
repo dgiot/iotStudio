@@ -261,7 +261,7 @@
           async () => {
             const res = await delDict(row.objectId)
             this.$baseMessage(
-              this.$translateTitle('successfully deleted'),
+              this.$translateTitle('Maintenance.successfully deleted'),
               'success',
               'dgiot-hey-message-success'
             )

@@ -25,7 +25,7 @@
           @submit.native.prevent
         >
           <el-form-item>
-            <el-input v-model="queryForm.title" placeholder="标题" />
+            <el-input v-model="queryForm.name" placeholder="元数据名称" />
           </el-form-item>
           <el-form-item>
             <el-button
@@ -89,7 +89,6 @@
         align="center"
         label="序号"
         show-overflow-tooltip
-        sortable
         width="95"
       >
         <template #default="{ $index }">
@@ -101,11 +100,15 @@
         :key="index"
         align="center"
         :label="item.label"
+        :prop="item.label"
         sortable
         :width="item.width"
       >
         <template #default="{ row }">
-          <span>{{ row[item.prop] }}</span>
+          <span v-if="item.prop !== 'multiVersion'">{{ row[item.prop] }}</span>
+          <span v-else>
+            {{ row[item.prop] == '0' ? '是' : '否' }}
+          </span>
         </template>
       </el-table-column>
 
@@ -113,8 +116,7 @@
         align="center"
         label="操作"
         show-overflow-tooltip
-        sortable
-        width="85"
+        width="200"
       >
         <template #default="{ row }">
           <el-button
@@ -145,9 +147,9 @@
     </el-table>
     <el-pagination
       background
-      :current-page="queryForm.pageNo"
+      :current-page="queryForm.limit"
       :layout="layout"
-      :page-size="queryForm.pageSize"
+      :page-size="queryForm.limit"
       :total="total"
       @current-change="handleCurrentChange"
       @size-change="handleSizeChange"
@@ -185,20 +187,20 @@
         columns: [
           {
             label: '元数据名称',
-            width: 'auto',
+            width: '160',
             prop: 'name',
             sortable: true,
             disableCheck: true,
           },
           {
             label: '多版本管理',
-            width: 'auto',
+            width: '120',
             prop: 'multiVersion',
             sortable: true,
           },
           {
             label: '描述',
-            width: '200',
+            width: 'auto',
             prop: 'description',
             sortable: true,
           },
@@ -210,9 +212,9 @@
         total: 0,
         selectRows: '',
         queryForm: {
-          pageNo: 1,
-          pageSize: 20,
-          title: '',
+          skip: 0,
+          limit: 20,
+          name: '',
         },
       }
     },
@@ -260,7 +262,7 @@
         this.$baseConfirm('你确定要删除当前项吗', null, async () => {
           await delMetaData(row.objectId)
           this.$baseMessage(
-            this.$translateTitle('successfully deleted'),
+            this.$translateTitle('Maintenance.successfully deleted'),
             'success',
             'dgiot-hey-message-success'
           )
@@ -268,25 +270,36 @@
         })
       },
       handleSizeChange(val) {
-        this.queryForm.pageSize = val
+        this.queryForm.limit = val
         this.fetchData()
       },
       handleCurrentChange(val) {
-        this.queryForm.pageNo = val
+        this.queryForm.skip = Number(val - 1) * Number(this.queryForm.limit)
         this.fetchData()
       },
       handleQuery() {
-        this.queryForm.pageNo = 1
+        this.queryForm.limit = 0
+        this.queryForm.limit = 20
         this.fetchData()
       },
       async fetchData() {
+        const params = {
+          skip: this.queryForm.skip,
+          limit: this.queryForm.limit,
+          count: 'objectId',
+          order: '-createdAt',
+          excludeKeys: 'properties',
+          where: {
+            name: this.queryForm.name
+              ? { $regex: this.queryForm.name }
+              : { $ne: null },
+          },
+        }
+        console.info(params)
         this.listLoading = true
-        const { results, count } = await queryMetaData({ count: 'objectId' })
-        const {
-          data: { list, total },
-        } = await getList(this.queryForm)
+        const { results, count } = await queryMetaData(params)
         this.list = results
-        this.total = total
+        this.total = count
         this.listLoading = false
       },
     },

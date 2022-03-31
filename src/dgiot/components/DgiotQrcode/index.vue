@@ -41,12 +41,11 @@
 
 <script>
   // https://www.itxst.com/qrcodejs/fmmvyaer.html
-  import VueQr from 'vue-qr'
 
   export default {
     name: 'DgiotQrcode',
     components: {
-      VueQr,
+      // VueQr,
     },
     props: {
       iconstyle: {

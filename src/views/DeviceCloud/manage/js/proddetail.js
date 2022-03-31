@@ -934,7 +934,7 @@ export default {
           expand.splice(index, 1)
           await this.saveExpand(this.productObj.thing)
           // this.$baseMessage(
-          //   this.$translateTitle('successfully deleted'),
+          //   this.$translateTitle('Maintenance.successfully deleted'),
           //   'success',
           //   'dgiot-hey-message-success'
           // )

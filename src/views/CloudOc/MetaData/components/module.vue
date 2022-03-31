@@ -81,7 +81,7 @@
             <dgiot-query-form-right-panel>
               <el-button
                 class="el-icon-edit"
-                type="primary"
+                :type="$route.query.type !== 'edit' ? 'primary' : 'info'"
                 @click="submitForm('ruleForm')"
               >
                 {{ $route.query.type !== 'edit' ? '立即创建' : '修改' }}
@@ -132,6 +132,20 @@
                   v-if="$loadsh.isBoolean(row[item.prop])"
                   v-model="row[item.prop]"
                 />
+                <el-select
+                  v-else-if="item.prop === 'propertyType'"
+                  v-model="row[item.prop]"
+                  allow-create
+                  filterable
+                  placeholder="请选择"
+                >
+                  <el-option
+                    v-for="item in dataTypes"
+                    :key="item"
+                    :label="item"
+                    :value="item"
+                  />
+                </el-select>
                 <el-input v-else v-model="row[item.prop]" />
               </template>
             </el-table-column>
@@ -141,9 +155,14 @@
               label="操作"
               width="auto"
             >
-              <template #default="{ row }">
+              <template #default="{ row, $index }">
                 <el-button type="text" @click="handleEdit(row)">编辑</el-button>
-                <el-button type="text" @click="handleDelete(row)">
+                <el-button
+                  type="text"
+                  @click.native.prevent="
+                    handleDelete($index, ruleForm.properties)
+                  "
+                >
                   删除
                 </el-button>
               </template>
@@ -166,13 +185,32 @@
     postMetaData,
   } from '@/api/MetaData'
   import TableEdit from './tableEdit'
+  import { getDlinkJson } from '@/api/Dlink'
 
   export default {
     name: 'Index',
     components: {
       TableEdit,
     },
-    props: {},
+    props: {
+      dataTypes: {
+        type: Array,
+        required: false,
+        default() {
+          return [
+            'int32',
+            'float',
+            'double',
+            'enum',
+            'bool',
+            'text',
+            'date',
+            'struct',
+            'array',
+          ]
+        },
+      },
+    },
     data() {
       return {
         ruleForm: {
@@ -309,7 +347,8 @@
     },
     watch: {},
     created() {
-      if (this.$route.query.objectId) this.fetchData(this.$route.query.objectId)
+      this.featUnit()
+      if (this.$route.query.objectId) this.fetchData()
     },
     mounted() {},
     destroyed() {},
@@ -317,6 +356,10 @@
       ...mapActions({
         delVisitedRoute: 'tabs/delVisitedRoute',
       }),
+      async featUnit() {
+        const { UnifyUnitSpecsDTO = [] } = await getDlinkJson('Unit')
+        console.info(UnifyUnitSpecsDTO)
+      },
       handleEdit(row) {
         this.$refs['edit'].showEdit(row)
       },
@@ -335,11 +378,25 @@
           }
         })
       },
-      async fetchData(objectId) {
+      async fetchData() {
+        const objectId = this.$route.query.objectId
+        document.title = document.title.replace('新建', '修改')
+        const loading = this.$baseColorfullLoading(2)
         const ruleForm = await getMetaData(objectId)
+        loading.close()
         delete ruleForm.createdAt
         delete ruleForm.updatedAt
         this.ruleForm = ruleForm
+      },
+      async handleDelete(index, rows) {
+        this.$baseConfirm('你确定要删除当前项吗', null, async () => {
+          rows.splice(index, 1)
+          this.$baseMessage(
+            this.$translateTitle('Maintenance.successfully deleted'),
+            'success',
+            'dgiot-hey-message-success'
+          )
+        })
       },
     }, //如果页面有keep-alive缓存功能，这个函数会触发
   }

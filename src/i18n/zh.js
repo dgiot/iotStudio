@@ -882,7 +882,7 @@ export default {
       'Save the template successfully': '保存模板成功',
       'Save the template error': '保存模板失败',
       'update completed': '更新成功',
-      'successfully deleted': '删除成功',
+      'Maintenance.successfully deleted': '删除成功',
       'error deleted': '删除失败',
       'This operation will permanently delete this role, do you want to continue?':
         '此操作将永久删除此角色, 是否继续?',
@@ -1076,7 +1076,7 @@ export default {
       'The current user department': '当前用户所在部门',
       'Are you sure you want to transfer this user to':
         '你确定要将本用户转岗到',
-      'successfully deleted': '删除成功',
+      'Maintenance.successfully deleted': '删除成功',
       'Delete reminder': '删除提示',
       Unfold: '展开',
       merge: '合并',
