@@ -84,17 +84,7 @@
 
             <el-popover trigger="hover">
               <el-checkbox-group v-model="checkList">
-                <vue-draggable :list="logcolumns" v-bind="dragOptions">
-                  <div v-for="(item, index) in logcolumns" :key="item + index">
-                    <dgiot-icon icon="drag-drop-line" />
-                    <el-checkbox
-                      :disabled="item.disableCheck === true"
-                      :label="item"
-                    >
-                      {{ $translateTitle(`deviceLog.${item}`) }}
-                    </el-checkbox>
-                  </div>
-                </vue-draggable>
+                <dgiot-draggable :list="logcolumns" />
               </el-checkbox-group>
               <template #reference>
                 <el-button

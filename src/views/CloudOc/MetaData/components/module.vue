@@ -10,14 +10,12 @@
 * @name: module
 -->
 <template>
-  <div
-    ref="custom-table"
-    class="index-container"
-    :class="{ 'dgiot-fullscreen': isFullscreen }"
-  >
+  <div ref="custom-table" class="index-container">
+    <DgiotQrcode />
     <el-form
       ref="ruleForm"
       class="demo-ruleForm"
+      :class="{ 'dgiot-fullscreen': isFullscreen }"
       label-position="top"
       label-width="160px"
       :model="ruleForm"
@@ -75,40 +73,22 @@
                       })
                     "
                   >
-                    添加
+                    添加数据
                   </el-button>
                 </el-form-item>
               </el-form>
             </dgiot-query-form-left-panel>
             <dgiot-query-form-right-panel>
-              <el-button type="primary" @click="submitForm('ruleForm')">
-                立即创建
-              </el-button>
               <el-button
-                style="margin: 0 10px 10px 0 !important"
+                class="el-icon-edit"
                 type="primary"
-                @click="clickFullScreen"
+                @click="submitForm('ruleForm')"
               >
-                <dgiot-icon
-                  :icon="
-                    isFullscreen ? 'fullscreen-exit-fill' : 'fullscreen-fill'
-                  "
-                />
-                表格全屏
+                {{ $route.query.type !== 'edit' ? '立即创建' : '修改' }}
               </el-button>
               <el-popover popper-class="custom-table-checkbox" trigger="hover">
                 <el-checkbox-group v-model="checkList">
-                  <vue-draggable :list="columns" v-bind="dragOptions">
-                    <div v-for="(item, index) in columns" :key="item + index">
-                      <dgiot-icon icon="drag-drop-line" />
-                      <el-checkbox
-                        :disabled="item.disableCheck === true"
-                        :label="item.label"
-                      >
-                        {{ item.label }}
-                      </el-checkbox>
-                    </div>
-                  </vue-draggable>
+                  <dgiot-draggable :list="columns" />
                 </el-checkbox-group>
                 <template #reference>
                   <el-button
@@ -172,6 +152,7 @@
         </el-card>
       </el-form-item>
     </el-form>
+    <table-edit ref="edit" @fetch-data="fetchData" />
   </div>
 </template>
 
@@ -184,8 +165,7 @@
     putMetaData,
     postMetaData,
   } from '@/api/MetaData'
-  import { doDelete, getList } from '@/api/Mock/table'
-  import TableEdit from '@/views/DeviceCloud/empty/tableEdit'
+  import TableEdit from './tableEdit'
 
   export default {
     name: 'Index',
@@ -196,8 +176,8 @@
     data() {
       return {
         ruleForm: {
-          name: '元数据名称',
-          description: '元数据描述',
+          name: '',
+          description: '',
           multiVersion: 1,
           properties: [
             {
@@ -218,46 +198,26 @@
         },
         rules: {
           name: [
-            { required: true, message: '请输入活动名称', trigger: 'blur' },
+            { required: true, message: '请输入元数据名称', trigger: 'blur' },
             {
-              min: 3,
-              max: 5,
-              message: '长度在 3 到 5 个字符',
+              min: 1,
+              max: 32,
+              message: '长度在 1 到 32 个字符',
               trigger: 'blur',
             },
           ],
-          region: [
-            { required: true, message: '请选择活动区域', trigger: 'change' },
+          multiVersion: [
+            { required: true, message: '请选择多版本管理', trigger: 'change' },
           ],
-          date1: [
+          description: [
+            { required: false, message: '请输入元数据描述', trigger: 'blur' },
+          ],
+          prefixNested: [
             {
-              type: 'date',
               required: true,
-              message: '请选择日期',
+              message: '请选择是否需要唯一标识定义层级关系',
               trigger: 'change',
             },
-          ],
-          date2: [
-            {
-              type: 'date',
-              required: true,
-              message: '请选择时间',
-              trigger: 'change',
-            },
-          ],
-          type: [
-            {
-              type: 'array',
-              required: true,
-              message: '请至少选择一个活动性质',
-              trigger: 'change',
-            },
-          ],
-          resource: [
-            { required: true, message: '请选择活动资源', trigger: 'change' },
-          ],
-          desc: [
-            { required: true, message: '请填写活动形式', trigger: 'blur' },
           ],
         },
         infoData: 'Empty',
@@ -323,7 +283,7 @@
         ],
         list: [],
         imageList: [],
-        listLoading: true,
+        listLoading: this.$route.query.objectId ? true : false,
         layout: 'total, sizes, prev, pager, next, jumper',
         total: 0,
         selectRows: '',
@@ -356,8 +316,10 @@
     methods: {
       ...mapActions({
         delVisitedRoute: 'tabs/delVisitedRoute',
-        _logout: 'user/logout',
       }),
+      handleEdit(row) {
+        this.$refs['edit'].showEdit(row)
+      },
       submitForm(formName) {
         this.$refs[formName].validate(async (valid) => {
           if (valid) {
@@ -372,17 +334,6 @@
             return false
           }
         })
-      },
-      clickFullScreen() {
-        this.isFullscreen = !this.isFullscreen
-        this.handleHeight()
-      },
-      handleHeight() {
-        if (this.isFullscreen) {
-          this.height = this.$baseTableHeight(1) + 210
-        } else {
-          this.height = this.$baseTableHeight(1)
-        }
       },
       async fetchData(objectId) {
         const ruleForm = await getMetaData(objectId)

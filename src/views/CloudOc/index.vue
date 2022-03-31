@@ -59,17 +59,7 @@
         </el-button>
         <el-popover popper-class="custom-table-checkbox" trigger="hover">
           <el-checkbox-group v-model="checkList">
-            <vue-draggable :list="columns" v-bind="dragOptions">
-              <div v-for="(item, index) in columns" :key="item + index">
-                <dgiot-icon icon="drag-drop-line" />
-                <el-checkbox
-                  :disabled="item.disableCheck === true"
-                  :label="item.label"
-                >
-                  {{ item.label }}
-                </el-checkbox>
-              </div>
-            </vue-draggable>
+            <dgiot-draggable :list="columns" />
           </el-checkbox-group>
           <template #reference>
             <el-button

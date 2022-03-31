@@ -85,6 +85,7 @@
     "standard-version": "^9.3.2",
     "vue-audio-visual": "^2.4.0",
     "vue-contextmenu": "1.5.11",
+    "vue-qr": "^3.2.4",
     "vuera": "^0.2.7"
   },
   "devDependencies": {
