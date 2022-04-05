@@ -38,7 +38,7 @@ jobs:
         run: |
           pnpm config set registry https://registry.npmmirror.com
           pnpm install
-          pnpm build
+          pnpm build &> /dev/null
           cp -r README.md README-CN.md CHANGELOG.md LICENSE dist
       - name: Deploy to github www 🚀
         uses: JamesIves/github-pages-deploy-action@releases/v3

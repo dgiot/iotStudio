@@ -2015,6 +2015,12 @@
             this.queryForm.access_token
           )
           results.forEach((item) => {
+            if (_.isEmpty(item.location)) {
+              item.location = {
+                longitude: 0,
+                latitude: 0,
+              }
+            }
             if (item.ACL) {
               for (var key in item.ACL) {
                 item.Company = key.substr(5)

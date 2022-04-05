@@ -798,7 +798,7 @@
   import { Startdashboard } from '@/api/System/index'
   import { isBase64 } from '@/utils'
   import info from '@/components/Device/info'
-  import { getDlinkJson } from '@/api/Dlink'
+  import queryParams from '@/api/Mock/dashboard'
   import {
     BaiduMap,
     BmCityList,
@@ -816,7 +816,7 @@
   import { secret } from '@/config/secret.config'
   window.dgiot.dgiotEnv = process.env
   export default {
-    name: 'Index',
+    name: 'Home',
     components: {
       BmInfoWindow,
       info,
@@ -984,11 +984,8 @@
     watch: {
       topicKey: {
         handler: function (newVal) {
-          console.info('mttt debug -----------------')
           this.$dgiotBus.$off(newVal)
           this.$dgiotBus.$on(newVal, (res) => {
-            console.info('mttt debug -----------------')
-            console.log(res)
             const { payload } = res
             this.mqttMsg(payload)
           })
@@ -1189,9 +1186,7 @@
         // )
         // // dgiotlog.log(key, mqttMsgValue, JSON.parse(mqttMsg))
         // console.clear()
-        console.info('mttt debug -----------------')
-        console.info(key)
-        console.info(mqttMsgValue)
+
         switch (key) {
           case 'app_count':
             this.app_count = mqttMsgValue.count
@@ -1280,7 +1275,6 @@
         // dgiotlog.log(objectId)
       },
       async queryData() {
-        const { dashboard } = await getDlinkJson('Dashboard')
         this.$nextTick(() => {
           if (this.mapType == 'tencent') {
             this.setTreeFlag(false)
@@ -1315,20 +1309,15 @@
             }
           }
         })
-        this.subtopic = `$dg/dashboard/32511dbfe5/report`
+        this.subtopic = `dashboard/${this.token}/post`
         this.topicKey = this.$dgiotBus.topicKey(this.router, this.subtopic)
-        await this.$dgiotBus.$emit('MqttSubscribe', {
+        this.$dgiotBus.$emit('MqttSubscribe', {
           router: this.router,
           topic: this.subtopic,
           qos: 0,
           ttl: 1000 * 60 * 60 * 3,
         })
-        /**
-         * @api http://127.0.0.1:5080/dgiot_swagger/#/TOPO/post_dashboard
-         * @type {string}
-         */
-        let dashboardId = '32511dbfe5'
-        const res = await Startdashboard(dashboardId, dashboard)
+        const res = await Startdashboard(queryParams)
         // 本地mqtt 存在问题,在请求4秒后手动关闭所有loading
         setTimeout(() => {
           queryParams.forEach((e) => {
