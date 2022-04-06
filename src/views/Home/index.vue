@@ -814,6 +814,7 @@
     BmScale,
   } from 'vue-baidu-map'
   import { secret } from '@/config/secret.config'
+
   window.dgiot.dgiotEnv = process.env
   export default {
     name: 'Home',
@@ -1317,7 +1318,8 @@
           qos: 0,
           ttl: 1000 * 60 * 60 * 3,
         })
-        const res = await Startdashboard(queryParams)
+        const Startdashboardid = 'dgiot'
+        const res = await Startdashboard(Startdashboardid, queryParams)
         // 本地mqtt 存在问题,在请求4秒后手动关闭所有loading
         setTimeout(() => {
           queryParams.forEach((e) => {

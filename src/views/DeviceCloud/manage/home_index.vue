@@ -3177,13 +3177,13 @@
   }
 
   .deviceTree {
-    width: 200px;
+    //width: 200px;
     /* height: calc(120vh - #{$base-top-bar-height}* 4 + 38px); */
     overflow-x: scroll;
     //overflow-y: scroll;
 
     ::v-deep .el-tree {
-      width: 200px;
+      //width: 200px;
       //height: calc(120vh - 60px * 4 + 30px);
       height: auto;
       overflow-x: scroll;
