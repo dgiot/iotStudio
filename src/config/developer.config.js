@@ -8,7 +8,7 @@ module.exports = {
      */
     {
       path: 'iotapi',
-      target: 'http://39.104.86.18',
+      target: 'https://dev.iotn2n.com',
     },
     /**
      * @description 静态资源目录。开发使用

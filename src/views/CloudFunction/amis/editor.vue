@@ -73,6 +73,7 @@
        * @Description:
        */
       async viewData(viewId) {
+        localStorage.removeItem('parse_objectid')
         const amisEnv = {}
         try {
           const loading = this.$baseLoading(1)

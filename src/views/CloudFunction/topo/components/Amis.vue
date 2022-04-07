@@ -136,6 +136,7 @@
       }),
     },
     mounted() {
+      localStorage.removeItem('parse_objectid')
       this.nodeAttr.visible = false
       this.$dgiotBus.$off('nodeInfo')
       this.$dgiotBus.$on('nodeInfo', (args) => {

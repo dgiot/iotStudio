@@ -51,6 +51,7 @@
       }
     },
     mounted() {
+      localStorage.removeItem('parse_objectid')
       this.$dgiotBus.$off('lowcodePreview')
       this.$dgiotBus.$on('lowcodePreview', (params) => {
         const amisEnv = {}

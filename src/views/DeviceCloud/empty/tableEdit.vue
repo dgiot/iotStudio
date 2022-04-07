@@ -23,7 +23,6 @@
 
 <script>
   import { doEdit } from '@/api/Mock/table'
-
   export default {
     name: 'TableEdit',
     data() {
