@@ -58,28 +58,6 @@
     version="<%= VUE_APP_VERSION %>"
   />
   <% } %>
-
-  <script>
-    // doc https://mp.umeng.com/realtime/61cc0914e014255fcbcf694d/overview
-    // https://tongji.baidu.com/web/welcome/ico?s=a0f8b01930320b849a92a00e0c6da990
-    // https://tongji.baidu.com/web/welcome/ico?s=32e7c4bdc95a01203a3c27102912a44e
-    // https://new.cnzz.com/v1/login.php?siteid=1279876845
-    ;(function(w, d, s, q, i) {
-      w[q] = w[q] || [];
-      var f = d.getElementsByTagName(s)[0],
-        j = d.createElement(s);
-      j.async = true;
-      j.id = "beacon-aplus";
-      j.src = "https://d.alicdn.com/alilog/mlog/aplus/" + i + ".js";
-      f.parentNode.insertBefore(j, f);
-    })(window, document, "script", "aplus_queue", "203467608");
-
-    //集成应用的appKey
-    aplus_queue.push({
-      action: "aplus.setMetaInfo",
-      arguments: ["appKey", "61cc0914e014255fcbcf694d"]
-    });
-  </script>
 </head>
 <dgiot>
   <dgiot-dashboard>
@@ -102,7 +80,6 @@
         </div>
       </div>
     </div>
-
     <!-- 引入JS -->
     <% for(var js of htmlWebpackPlugin.options.staticUrl.js) { %>
     <script
@@ -124,6 +101,13 @@
       auth="<%= VUE_APP_AUTHOR %>"
       charset="utf-8"
       src="/assets/js/vue-qr.js?random=<%= VUE_APP_UPDATE_TIME %>"
+      time="<%= VUE_APP_UPDATE_TIME %>"
+      version="<%= VUE_APP_VERSION %>"
+    ></script>
+    <script
+      auth="<%= VUE_APP_AUTHOR %>"
+      charset="utf-8"
+      src="/assets/js/analytics.js?random=<%= VUE_APP_UPDATE_TIME %>"
       time="<%= VUE_APP_UPDATE_TIME %>"
       version="<%= VUE_APP_VERSION %>"
     ></script>

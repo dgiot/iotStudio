@@ -6,6 +6,7 @@
 * (build) vue-qr dependencies ([f5abd2b](https://github.com/dgiot/dgiot-dashboard/commit/f5abd2b159b3819d69b46f492635a5de6535427d))
 * js ([45a4710](https://github.com/dgiot/dgiot-dashboard/commit/45a471030c9acb0cf3ee9c988465820002c05cc4))
 * MetaData loading ([3297edb](https://github.com/dgiot/dgiot-dashboard/commit/3297edbfb9e65c8984bcfcfc8d46fa89a71e7df0))
+* **permission control:** improve authority control ([2229a3e](https://github.com/dgiot/dgiot-dashboard/commit/2229a3e43bd7b6241f4ee57f8474af4e4179e94f))
 * qecode ([79dfe8e](https://github.com/dgiot/dgiot-dashboard/commit/79dfe8edd3228abd66b0d8fc88434348e2e9b519))
 
 
