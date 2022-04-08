@@ -289,6 +289,44 @@
       </el-table-column>
       <el-table-column
         align="center"
+        :label="$translateTitle('equipment.state')"
+        prop="status"
+        show-overflow-tooltip
+        sortable
+        width="80"
+      >
+        <template #default="{ row }">
+          <span v-if="row.status == 'ONLINE'" :class="row.status">
+            {{ $translateTitle('product.online') }}
+          </span>
+          <el-tooltip
+            v-if="row.status == 'ONLINE'"
+            :content="$translateTitle('equipment.thedeviceisonline')"
+            placement="top"
+          >
+            <i class="el-icon-question" />
+          </el-tooltip>
+          <span v-if="row.status == 'OFFLINE'" :class="row.status">
+            {{ $translateTitle('product.offline') }}
+          </span>
+          <el-tooltip
+            v-if="row.status == 'OFFLINE'"
+            :content="$translateTitle('equipment.thedeviceisoffline')"
+            placement="top"
+          >
+            <i class="el-icon-question" />
+          </el-tooltip>
+          <span
+            v-if="row.status != 'OFFLINE' && row.status != 'ONLINE'"
+            :class="row.status"
+          >
+            <!-- 未注册 -->
+            {{ $translateTitle('product.unregistered') }}
+          </span>
+        </template>
+      </el-table-column>
+      <el-table-column
+        align="center"
         label="添加时间"
         prop="createdAt"
         show-overflow-tooltip
@@ -957,5 +995,15 @@
   .xinmahe-container {
     width: 100%;
     heigth: 100%;
+
+    .ACTIVE,
+    .ONLINE {
+      color: green;
+    }
+
+    .OFFLINE,
+    .UNACTIVE {
+      color: red;
+    }
   }
 </style>

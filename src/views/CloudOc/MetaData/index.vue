@@ -147,7 +147,7 @@
     </el-table>
     <el-pagination
       background
-      :current-page="queryForm.limit"
+      :current-page="queryForm.size"
       :layout="layout"
       :page-size="queryForm.limit"
       :total="total"

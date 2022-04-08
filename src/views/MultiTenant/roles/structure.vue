@@ -206,33 +206,35 @@
                     width="400"
                   >
                     <template #default="{ row }">
-                      <el-button
-                        size="small"
-                        type="success"
-                        @click="handleLeaving(row)"
-                      >
-                        {{ $translateTitle('developer.leaving') }}
-                      </el-button>
-                      <el-button
-                        size="small"
-                        type="danger"
-                        @click="handleDetele(row)"
-                      >
-                        {{ $translateTitle('task.Delete') }}
-                      </el-button>
-                      <el-button
-                        size="small"
-                        type="warning"
-                        @click="handleResign(row)"
-                      >
-                        {{ $translateTitle('developer.resign') }}
-                      </el-button>
-                      <!-- <el-button
+                      <div v-if="objectId !== row.objectId">
+                        <el-button
+                          size="small"
+                          type="success"
+                          @click="handleLeaving(row)"
+                        >
+                          {{ $translateTitle('developer.leaving') }}
+                        </el-button>
+                        <el-button
+                          size="small"
+                          type="danger"
+                          @click="handleDetele(row)"
+                        >
+                          {{ $translateTitle('task.Delete') }}
+                        </el-button>
+                        <el-button
+                          size="small"
+                          type="warning"
+                          @click="handleResign(row)"
+                        >
+                          {{ $translateTitle('developer.resign') }}
+                        </el-button>
+                        <!-- <el-button
                         size="mini"
                         type="primary"
                         @click="editorrole(row.objectId)"
                       >{{  $translateTitle("user.assignroles") }}</el-button
                       > -->
+                      </div>
                     </template>
                   </el-table-column>
 
@@ -246,6 +248,7 @@
                   >
                     <template #default="{ row }">
                       <el-tooltip
+                        v-if="objectId !== row.objectId"
                         :content="
                           $translateTitle('user.Current state') +
                           row.emailVerified
