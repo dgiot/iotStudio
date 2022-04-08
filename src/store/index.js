@@ -10,6 +10,7 @@
  * @description 导入所有 vuex 模块，自动加入namespaced:true，用于解决vuex命名冲突，请勿修改。
  */
 import * as pkg from '../../package.json'
+
 const info = require('@/config/index')
 Vue.use(Vuex)
 const files = require.context('./modules', false, /\.js$/)
@@ -31,7 +32,8 @@ info.secret = Base64.encode(JSON.stringify(info.secret))
 info.secretMsg =
   'dgiot.secret字段属于机密信息,为了安全起见不予直接展示。已使用Base64加密'
 // 解密方法 Base64.decode(dgiot.secret)
-// getTags()
+if (!window.isInnerIp) getTags()
+
 function getTags() {
   return new Promise((resolve, reject) => {
     axios

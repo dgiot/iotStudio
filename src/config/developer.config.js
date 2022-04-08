@@ -18,6 +18,13 @@ module.exports = {
       target: 'https://dev.iotn2n.com',
     },
     /**
+     * @description dgiot_file文件资源目录。开发使用
+     */
+    {
+      path: 'dgiot_file',
+      target: 'https://dev.iotn2n.com',
+    },
+    /**
      * @description amis server 开发使用
      */
     {

@@ -47,7 +47,8 @@
     "template": "plop",
     "config:delete": "rimraf vue.config.js package.json pnpm-lock.yaml",
     "config:all": "node config:delete && cp -r config/all",
-    "config:lite": "node config:delete && cp -r config/lite"
+    "config:lite": "node config:delete && cp -r config/lite",
+    "prepare": "husky install"
   },
   "repository": {
     "type": "git",

@@ -162,9 +162,8 @@
 
 <script>
   import DgiotIconSelector from '@/dgiot/components/DgiotIconSelector'
-  import { postMenu, putMenu } from '@/api/Menu'
+  import { postMenu, putMenu, queryMenu } from '@/api/Menu'
   import menuCollapse from './menuCollapse.vue'
-  import router from '@/router/router'
   import { mapGetters } from 'vuex'
 
   export default {
@@ -175,7 +174,7 @@
     },
     data() {
       return {
-        router,
+        router: [],
         visible: false,
         inputParams: {},
         cascadervalue: [],
@@ -295,17 +294,22 @@
       }),
     },
     mounted() {
-      router.forEach((r) => {
-        r.title = r.meta.title
-        if (r?.children?.length) {
-          r.children.forEach((c) => {
-            c.title = c.meta.title
-          })
-        }
-      })
-      dgiotlog.log('router', router)
+      this.queryRouter()
     },
     methods: {
+      async queryRouter() {
+        const { results } = await queryMenu({})
+        this.router = results
+        this.router.forEach((r) => {
+          r.title = r.meta.title
+          if (r?.children?.length) {
+            r.children.forEach((c) => {
+              c.title = c.meta.title
+            })
+          }
+        })
+        dgiotlog.log('router', this.router)
+      },
       uploadIcon(item) {
         dgiotlog.log(item, this.form)
         // 触发子组件的点击事件

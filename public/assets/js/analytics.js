@@ -51,6 +51,7 @@ function isInnerIPFn() {
     isInner(ipNum, bBegin, bEnd) ||
     isInner(ipNum, cBegin, cEnd) ||
     isInner(ipNum, dBegin, dEnd)
+  window.isInnerIp = isInnerIp
   return isInnerIp
 }
 

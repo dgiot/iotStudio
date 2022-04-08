@@ -12,6 +12,7 @@
 
 ### Features
 
+* analytics ([dc71779](https://github.com/dgiot/dgiot-dashboard/commit/dc71779e6d286a488cd329547a19159469ea8ba7))
 * **dgiot oc:** dgiot oc ([7b8f634](https://github.com/dgiot/dgiot-dashboard/commit/7b8f63488b00f3f3092169f7eb145b8ed29271f6))
 * MetaData ([10c7ddb](https://github.com/dgiot/dgiot-dashboard/commit/10c7ddb04320d6aca9493487cb4994797f1b0bb5))
 * qrcode ([b11b330](https://github.com/dgiot/dgiot-dashboard/commit/b11b33068748f9d9097cc153af30d34b544cd701))
