@@ -31,11 +31,6 @@ export const constantRoutes = [
     hidden: true,
   },
   {
-    path: '/datav',
-    component: () => import('@/components/datav/index'),
-    hidden: true,
-  },
-  {
     path: '/login',
     component: () => import('@/views/MultiTenant/user/login'),
     hidden: true,

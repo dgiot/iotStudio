@@ -32,7 +32,6 @@ module.exports = {
     '/callback',
     '/404',
     '/403',
-    '/datav',
     '/jwtLogin',
     '/quick',
     '/lite',

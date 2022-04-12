@@ -13,6 +13,7 @@
 ### Features
 
 * analytics ([dc71779](https://github.com/dgiot/dgiot-dashboard/commit/dc71779e6d286a488cd329547a19159469ea8ba7))
+* **device:** location ([3c971c8](https://github.com/dgiot/dgiot-dashboard/commit/3c971c8438e48ecc65aedb0ee710149c3a324c0b))
 * **dgiot oc:** dgiot oc ([7b8f634](https://github.com/dgiot/dgiot-dashboard/commit/7b8f63488b00f3f3092169f7eb145b8ed29271f6))
 * map ([35cc047](https://github.com/dgiot/dgiot-dashboard/commit/35cc04733f0aa00ef5cd52d0cab7cfca3f77b14e))
 * MetaData ([10c7ddb](https://github.com/dgiot/dgiot-dashboard/commit/10c7ddb04320d6aca9493487cb4994797f1b0bb5))
