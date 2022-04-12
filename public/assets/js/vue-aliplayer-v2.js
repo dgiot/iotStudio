@@ -145,13 +145,13 @@
               required: !1,
               type: [String],
               default:
-                '/assets/js/aliplayer-min.css',
+                '/dgiot_dashboard/public/assets/aliplayer-min.css',
             },
             scriptSrc: {
               required: !1,
               type: [String],
               default:
-                '/assets/js/aliplayer-min.js',
+                '/dgiot_dashboard/public/assets/js/aliplayer-min.js',
             },
           },
           data: function () {

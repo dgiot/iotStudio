@@ -986,6 +986,8 @@
         handler: function (newVal) {
           this.$dgiotBus.$off(newVal)
           this.$dgiotBus.$on(newVal, (res) => {
+            console.log('payload')
+            console.log(newVal)
             const { payload } = res
             this.mqttMsg(payload)
           })
@@ -1176,6 +1178,8 @@
       },
       mqttMsg(e) {
         let mqttMsg = isBase64(e) ? Base64.decode(e) : e
+        console.log(mqttMsg, '收到消息')
+        console.table(mqttMsg)
         // // dgiotlog.log(destinationName, mqttMsg, 'mqttMsg')
         let mqttMsgValue = JSON.parse(mqttMsg).value
         let key = JSON.parse(mqttMsg).vuekey
@@ -1309,16 +1313,16 @@
             }
           }
         })
-        this.subtopic = `dashboard/${this.token}/post`
+        const Startdashboardid = '32511dbfe5'
+        this.subtopic = `$dg/dashboard/${Startdashboardid}/report`
         this.topicKey = this.$dgiotBus.topicKey(this.router, this.subtopic)
         this.$dgiotBus.$emit('MqttSubscribe', {
           router: this.router,
-          topic: this.subtopic,
+          topic: Startdashboardid,
           qos: 0,
           ttl: 1000 * 60 * 60 * 3,
         })
-        const Startdashboardid = 'dgiot'
-        const res = await Startdashboard(Startdashboardid, queryParams)
+        const res = await Startdashboard(queryParams, Startdashboardid)
         // 本地mqtt 存在问题,在请求4秒后手动关闭所有loading
         setTimeout(() => {
           queryParams.forEach((e) => {
@@ -1392,7 +1396,7 @@
       },
       goDevice(name) {
         this.$router.push({
-          path: '/dashboard/devicelist',
+          path: '/dashboard/device',
           query: {
             product: name,
           },

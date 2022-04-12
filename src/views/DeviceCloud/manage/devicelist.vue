@@ -243,12 +243,11 @@
       :stripe="stripe"
       @selection-change="setSelectRows"
     >
-      <el-table-column align="center" type="selection" width="55" />
       <el-table-column
         align="center"
         label="序号"
         show-overflow-tooltip
-        width="95"
+        width="55"
       >
         <template #default="{ $index }">
           {{ $index + 1 }}
@@ -343,16 +342,20 @@
         prop="basedata.expirationTime"
         show-overflow-tooltip
         sortable
-        width="100"
+        width="140"
       >
         <template #default="{ row }">
           <!--          <span v-html="timestampToTime(row.basedata.expirationTime)" />-->
           {{
-            row.basedata.expirationTime
+            row.basedata.expirationTime &&
+            row.basedata.expirationTime.length != 13
               ? $moment(new Date(row.basedata.expirationTime * 1000)).format(
                   'YYYY-MM-DD'
                 )
-              : ''
+              : row.basedata.expirationTime &&
+                row.basedata.expirationTime.length == 13
+              ? $moment($moment().unix() * 1000).format('YYYY-MM-DD')
+              : $moment(row.basedata.expirationTime).format('YYYY-MM-DD')
           }}
         </template>
       </el-table-column>
@@ -390,25 +393,12 @@
         width="320px"
       >
         <template #default="{ row }">
-          <el-dropdown>
-            <el-button
-              plain
-              size="mini"
-              style="margin-right: 10px"
-              type="success"
-            >
-              更多
-              <i class="el-icon-arrow-down el-icon--right"></i>
-            </el-button>
-            <el-dropdown-menu slot="dropdown">
-              <el-dropdown-item>
-                <el-button type="text" @click="command(row)">控制</el-button>
-              </el-dropdown-item>
-              <el-dropdown-item>
-                <el-button type="text" @click="move(row)">迁移</el-button>
-              </el-dropdown-item>
-            </el-dropdown-menu>
-          </el-dropdown>
+          <el-button plain size="mini" type="info" @click="command(row)">
+            控制
+          </el-button>
+          <el-button plain size="mini" type="success" @click="move(row)">
+            迁移
+          </el-button>
           <el-button
             plain
             size="mini"
@@ -420,9 +410,9 @@
           <!--          <el-button plain size="mini" type="info" @click="handleDelete(row)">-->
           <!--            状态-->
           <!--          </el-button>-->
-          <el-button plain size="mini" type="danger" @click="handleDelete(row)">
-            删除
-          </el-button>
+          <!--          <el-button plain size="mini" type="danger" @click="handleDelete(row)">-->
+          <!--            删除-->
+          <!--          </el-button>-->
         </template>
       </el-table-column>
       <template #empty>
@@ -482,6 +472,7 @@
         }, 1000)
       }
       return {
+        productId: '0765bee775',
         deviceInfo: {},
         roleProps: {
           children: 'children',
@@ -627,7 +618,7 @@
           },
           {
             label: '外壳编号',
-            width: '120',
+            width: '110',
             prop: 'basedata.basicdata.partAddr',
             sortable: true,
           },
@@ -738,14 +729,15 @@
       transferAcl(data) {
         const aclKey1 = 'role' + ':' + data.name
         const aclObj = {}
+        console.log(this.deviceInfo)
         aclObj[aclKey1] = {
           read: true,
           write: true,
         }
-        this.deviceInfo.detail['factory'] = data.depname
+        this.deviceInfo.basedata.factory = data.depname
         const parmas = {
           ACL: aclObj,
-          detail: this.deviceInfo.detail,
+          basedata: this.deviceInfo.basedata,
         }
         this.$confirm(
           this.$translateTitle(`确定要将设备迁移到` + data.name + '吗'),
@@ -860,8 +852,9 @@
             params.basedata[this.deviceForm.devaddr] =
               this.deviceForm.basedata.expirationTime
             console.error(params)
-            return false
             const res = await postDevice(params)
+            this.createDeviceDialog = false
+            this.fetchData()
           } else {
             console.log('error submit!!')
             return false

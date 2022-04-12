@@ -1,11 +1,13 @@
 import request from '@/utils/request/request'
-export async function Startdashboard(dashboardId, data) {
+
+export async function Startdashboard(data, dashboardId) {
   return request({
-    url: `dashboard?dashboardId=${dashboardId}`,
+    url: dashboardId ? `dashboard?dashboardId=${dashboardId}` : `dashboard`,
     method: 'post',
     data: data,
   })
 }
+
 export async function post_tree(params) {
   return request({
     url: 'tree',

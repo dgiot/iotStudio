@@ -78,6 +78,17 @@
           {{ $translateTitle('application.secretkey') + ':' }}
         </td>
         <td>{{ devicedetail.deviceSecret || '-' }}</td>
+        <td class="cloumn">设备操作：</td>
+        <td>
+          <el-button
+            plain
+            size="mini"
+            type="text"
+            @click="handleDelete(devicedetail)"
+          >
+            删除
+          </el-button>
+        </td>
       </tr>
     </table>
     <el-table
@@ -129,6 +140,8 @@
   </div>
 </template>
 <script>
+  import { delDevice } from '@/api/Device'
+
   export default {
     name: 'CardInfo',
     props: {
@@ -141,6 +154,22 @@
       return {}
     },
     created() {},
+    methods: {
+      handleDelete(row) {
+        console.log(row)
+        this.$baseConfirm('你确定要删除当前项吗', null, async () => {
+          await delDevice(row.objectId)
+          this.$baseMessage(
+            this.$translateTitle('Maintenance.successfully deleted'),
+            'success',
+            'dgiot-hey-message-success'
+          )
+          this.$router.push({
+            path: '/dashboard/device',
+          })
+        })
+      },
+    },
   }
 </script>
 <style>
