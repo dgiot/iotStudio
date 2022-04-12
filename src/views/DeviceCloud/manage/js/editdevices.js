@@ -513,7 +513,7 @@ export default {
         var resultes = await getDevice(deviceid)
         const { location = { longitude: '116.404', latitude: '39.915' } } =
           resultes
-        const mapLabel = {
+        let mapLabel = {
           content: resultes.name,
           style: {
             color: 'red',
@@ -525,6 +525,25 @@ export default {
           },
           title: resultes.name,
         }
+        if (
+          resultes.basedata.basicdata &&
+          resultes.basedata.basicdata.baiduaddr &&
+          resultes.basedata.basicdata.baiduaddr.formatted_address
+        ) {
+          mapLabel = {
+            content: resultes.name,
+            style: {
+              color: 'red',
+              fontSize: '24px',
+            },
+            position: {
+              lng: Number(resultes.basedata.basicdata.baiduaddr.location.lng),
+              lat: Number(resultes.basedata.basicdata.baiduaddr.location.lat),
+            },
+            title: resultes.name,
+          }
+        }
+
         var ProductId = resultes.product.objectId ?? ''
         const DevAddr = resultes.devaddr
         let _toppic = [

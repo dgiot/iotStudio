@@ -1310,7 +1310,8 @@
             }
           }
         })
-        this.subtopic = `dashboard/${this.token}/post`
+        const Startdashboardid = 'dgiot'
+        this.subtopic = `dashboard/${Startdashboardid}/post`
         this.topicKey = this.$dgiotBus.topicKey(this.router, this.subtopic)
         this.$dgiotBus.$emit('MqttSubscribe', {
           router: this.router,
@@ -1318,7 +1319,6 @@
           qos: 0,
           ttl: 1000 * 60 * 60 * 3,
         })
-        const Startdashboardid = 'dgiot'
         const res = await Startdashboard(Startdashboardid, queryParams)
         // 本地mqtt 存在问题,在请求4秒后手动关闭所有loading
         setTimeout(() => {

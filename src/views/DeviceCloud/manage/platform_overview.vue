@@ -106,7 +106,7 @@
                   <dgiot-icon icon="device-recover-fill" />
                 </el-col>
                 <el-col class="card-right" :span="12">
-                  <router-link to="/dashboard/devicelist">
+                  <router-link to="dashboard/device">
                     <p>{{ $translateTitle('home.dev_count') }}</p>
                     <p>{{ _dev_count }}</p>
                   </router-link>
@@ -143,111 +143,8 @@
             </el-col>
           </el-row>
         </div>
-        <dgiot-query-form>
-          <dgiot-query-form-top-panel>
-            <el-form
-              :inline="true"
-              label-width="100px"
-              :model="queryForm"
-              @submit.native.prevent
-            >
-              <el-form-item :label="$translateTitle('equipment.products')">
-                <el-select
-                  v-model="queryForm.account"
-                  class="selectdetail"
-                  size="small"
-                  @change="selectProdChange"
-                >
-                  <el-option
-                    v-for="(item, index) in _Product"
-                    :key="index"
-                    :label="item.name"
-                    :value="item.objectId"
-                  />
-                </el-select>
-              </el-form-item>
-              <el-form-item :label="$translateTitle('home.updatedAt')">
-                <el-date-picker
-                  v-model="queryForm.searchDate"
-                  end-placeholder="结束日期"
-                  format="yyyy-MM-dd"
-                  start-placeholder="开始日期"
-                  type="daterange"
-                  value-format="yyyy-MM-dd"
-                />
-              </el-form-item>
-              <el-form-item>
-                <el-button
-                  icon="el-icon-search"
-                  type="primary"
-                  @click="queryData"
-                >
-                  {{ $translateTitle('concentrator.search') }}
-                </el-button>
-                <!--              <el-button-->
-                <!--                :icon="leftWidth != '0px' ? 'el-icon-back' : 'el-icon-right'"-->
-                <!--                type="primary"-->
-                <!--                @click="toggleLeftWidth(leftWidth)"-->
-                <!--              >-->
-                <!--                {{-->
-                <!--                  leftWidth != '0px'-->
-                <!--                    ? $translateTitle('konva.hide')-->
-                <!--                    : $translateTitle('konva.show')-->
-                <!--                }}-->
-                <!--                {{ $translateTitle('konva.left') }}-->
-                <!--              </el-button>-->
-                <!--              <el-button-->
-                <!--                :icon="-->
-                <!--                  fixedPaddingTop != '0px' ? 'el-icon-top' : 'el-icon-bottom'-->
-                <!--                "-->
-                <!--                type="primary"-->
-                <!--                @click="setPadding(fixedPaddingTop)"-->
-                <!--              >-->
-                <!--                {{-->
-                <!--                  fixedPaddingTop != '0px'-->
-                <!--                    ? $translateTitle('konva.hide')-->
-                <!--                    : $translateTitle('konva.show')-->
-                <!--                }}-->
-                <!--                {{ $translateTitle('konva.top') }}-->
-                <!--              </el-button>-->
-                <el-button
-                  type="primary"
-                  @click="leftRow == 20 ? (leftRow = 24) : (leftRow = 20)"
-                >
-                  {{
-                    leftRow == 20
-                      ? $translateTitle('konva.hide')
-                      : $translateTitle('konva.show')
-                  }}
-                  {{ $translateTitle('konva.right') }}
-                </el-button>
-                <el-button
-                  type="primary"
-                  @click.native="toggleCard(cardHeight)"
-                >
-                  {{
-                    cardHeight != '0px'
-                      ? $translateTitle('konva.hide')
-                      : $translateTitle('konva.show')
-                  }}
-                  {{ $translateTitle('konva.card') }}
-                </el-button>
-              </el-form-item>
-            </el-form>
-          </dgiot-query-form-top-panel>
-        </dgiot-query-form>
       </div>
       <el-card shadow="hover">
-        <el-radio-group v-model="mapType" size="mini" @change="queryData()">
-          <el-radio-button label="tencent">腾讯地图</el-radio-button>
-          <el-radio-button label="baidu">百度地图</el-radio-button>
-        </el-radio-group>
-        <dgiot-qq-map
-          v-show="mapType == 'tencent'"
-          ref="qqmap"
-          :list="list"
-          style="height: 80vh"
-        />
         <el-row v-show="mapType == 'baidu'" :row="24">
           <el-col :span="leftRow" :xs="24">
             <el-row :span="24">
@@ -852,8 +749,8 @@
       return {
         list: {
           toolbar: false,
-          latitude: '28.475997',
-          longitude: '121.331121',
+          latitude: '31.551162',
+          longitude: '120.260545',
           zoom: 15,
         },
         mapType: window.name == 'dgiot_iframe' ? 'tencent' : 'baidu',
@@ -861,7 +758,7 @@
         ak: secret.baidu.map ?? 't9A84QM5lt6a3SMumuQOQtvM2spIQQ2A',
         // ak: 'oW2UEhdth2tRbEE4FUpF9E5YVDCIPYih',
         // center:{ lng: 120.187273, lat: 30.334877 },
-        center: { lng: 121.337516, lat: 28.48195 },
+        center: { lng: 120.260545, lat: 31.551162 },
         icoPath: {
           icoPath1: icoPath1,
           icoPath2: icoPath2,
@@ -1318,7 +1215,7 @@
         this.topicKey = this.$dgiotBus.topicKey(this.router, this.subtopic)
         this.$dgiotBus.$emit('MqttSubscribe', {
           router: this.router,
-          topic: Startdashboardid,
+          topic: this.subtopic,
           qos: 0,
           ttl: 1000 * 60 * 60 * 3,
         })
@@ -1404,7 +1301,7 @@
       },
       _goDevice(type) {
         this.$router.push({
-          path: '/dashboard/devicelist',
+          path: 'dashboard/device',
           query: {
             deciceType: type,
           },

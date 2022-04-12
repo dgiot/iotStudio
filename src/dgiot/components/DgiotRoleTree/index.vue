@@ -11,7 +11,7 @@
   <div class="role-tree">
     <h4 v-show="currentDepartment.depname" class="role-tree-header">
       {{ $translateTitle('product.Current department') }}
-      {{ currentDepartment.depname }}
+      {{ currentDepartment.name }}
     </h4>
     <el-input
       v-if="showFilter"
