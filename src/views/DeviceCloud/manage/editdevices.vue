@@ -298,6 +298,297 @@
         <!--        <el-tab-pane :label="$translateTitle('route.在线调试')" name="ninth" />-->
         <!--子设备管理-->
         <el-tab-pane
+          v-if="$route.query.nodeType != '0'"
+          :label="$translateTitle('equipment.subdevice')"
+          name="children"
+        >
+          <div class="childrendevices">
+            <el-form
+              :inline="true"
+              :model="childrendevices"
+              class="demo-form-inline"
+              size="small"
+            >
+              <el-form-item
+                :label="$translateTitle('equipment.devicenumber') + ':'"
+              >
+                <el-input
+                  v-model="childrendevices.devicesname"
+                  :placeholder="$translateTitle('equipment.devicenumber')"
+                />
+              </el-form-item>
+              <el-form-item>
+                <el-button type="primary" @click.native="getDevices(0)">
+                  {{ $translateTitle("developer.search") }}
+                </el-button>
+              </el-form-item>
+              <el-form-item>
+                <el-button
+                  :disabled="multipleTable.length == 0"
+                  type="primary"
+                  @click="deleteDevcie"
+                >
+                  {{ $translateTitle("equipment.RelievingAssociation") }}
+                </el-button>
+                <el-button
+                  :disabled="multipleTable.length == 0"
+                  type="primary"
+                  @click="unactiveDevice"
+                >
+                  {{ $translateTitle("developer.prohibit") }}
+                </el-button>
+                <el-button
+                  :disabled="multipleTable.length == 0"
+                  type="primary"
+                  @click="activeDevice"
+                >
+                  {{ $translateTitle("developer.enable") }}
+                </el-button>
+              </el-form-item>
+              <el-form-item>
+                <el-button plain type="info" @click.native="getDevices(0)">
+                  {{ $translateTitle("equipment.Refresh") }}
+                </el-button>
+                <!-- 添加子设备按钮  -->
+                <el-button type="primary" @click.native="childDialog = true">
+                  {{ $translateTitle("equipment.addchilddevice") }}
+                </el-button>
+              </el-form-item>
+            </el-form>
+            <div class="devicetable">
+              <el-table
+                ref="filterTable"
+                :data="devicesTableData"
+                style="width: 100%; margin-top: 20px; text-align: center"
+                :height="$baseTableHeight(0) - 120"
+                @selection-change="DevicesSelectionChange"
+              >
+                <el-table-column align="center" type="selection" width="55" />
+                <el-table-column
+                  :label="$translateTitle('equipment.devicenumber')"
+                  align="center"
+                  width="170"
+                >
+                  <template #default="{ row }">
+                    <span>{{ row.devaddr }}</span>
+                  </template>
+                </el-table-column>
+                <el-table-column
+                  :label="$translateTitle('equipment.devicename')"
+                  align="center"
+                >
+                  <template #default="{ row }">
+                    <span>{{ row.name }}</span>
+                  </template>
+                </el-table-column>
+                <el-table-column
+                  :label="$translateTitle('equipment.state')"
+                  align="center"
+                >
+                  <template #default="{ row }">
+                    <span :class="row.status">
+                      {{ row.status }}
+                    </span>
+                  </template>
+                </el-table-column>
+                <el-table-column align="center" label="子网地址" width="165">
+                  <template #default="{ row }">
+                    <span>
+                      {{
+                        row.route == undefined
+                          ? ""
+                          : row.route[deviceInfo.devaddr]
+                      }}
+                    </span>
+                  </template>
+                </el-table-column>
+                <el-table-column
+                  :label="$translateTitle('equipment.product')"
+                  align="center"
+                >
+                  <template #default="{ row }">
+                    <span type="success">{{ row.productName }}</span>
+                  </template>
+                </el-table-column>
+
+                <el-table-column
+                  :label="
+                    $translateTitle('developer.prohibit') +
+                    '/' +
+                    $translateTitle('developer.enable')
+                  "
+                  align="center"
+                >
+                  <template #default="{ row, $index }">
+                    <el-switch
+                      v-model="row.isEnable"
+                      active-color="#5eb058"
+                      inactive-color="#cccccc"
+                      @change="handelUpdate($event, row.$index)"
+                    />
+                  </template>
+                </el-table-column>
+
+                <el-table-column
+                  :label="$translateTitle('equipment.lastonlinetime')"
+                  align="center"
+                >
+                  <template #default="{ row }">
+                    <span v-if="row.lastOnlineTime">
+                      {{ timestampToTime(row.lastOnlineTime) }}
+                    </span>
+                    <span v-else>—</span>
+                  </template>
+                </el-table-column>
+                <el-table-column
+                  :label="$translateTitle('developer.operation')"
+                  align="center"
+                >
+                  <template slot-scope="{ row, $index }">
+                    <el-link
+                      :underline="false"
+                      icon="el-icon-view"
+                      type="primary"
+                      @click="deviceToDetail(row)"
+                    >
+                      {{ $translateTitle("equipment.see") }}
+                    </el-link>
+
+                    <el-popover
+                      :ref="`popover-${$index}`"
+                      placement="top"
+                      width="300"
+                    >
+                      <p>确定解除这个{{ row.name }}设备关联吗？</p>
+                      <div style="margin: 0; text-align: right">
+                        <el-button
+                          size="mini"
+                          @click="
+                            row._self.$refs[`popover-${$index}`].doClose()
+                          "
+                        >
+                          {{ $translateTitle("developer.cancel") }}
+                        </el-button>
+                        <el-button
+                          size="mini"
+                          type="primary"
+                          @click="makeSure(row, $index)"
+                        >
+                          {{ $translateTitle("developer.determine") }}
+                        </el-button>
+                      </div>
+                      <el-link
+                        slot="reference"
+                        :underline="false"
+                        icon="el-icon-delete"
+                        type="danger"
+                      >
+                        {{ $translateTitle("equipment.RelievingAssociation") }}
+                      </el-link>
+                    </el-popover>
+                  </template>
+                </el-table-column>
+              </el-table>
+            </div>
+            <div class="elpagination" style="margin-top: 20px">
+              <el-pagination
+                :page-size="childrenDeviceLength"
+                :page-sizes="[10, 20, 30, 50]"
+                :total="childrenDeviceTotal"
+                layout="total, sizes, prev, pager, next, jumper"
+                @current-change="childrenDeviceCurrentChange"
+                @size-change="childrenDeviceSizeChange"
+              />
+            </div>
+          </div>
+          <!--添加子设备弹窗-->
+          <el-dialog
+            :append-to-body="true"
+            :close-on-click-modal="false"
+            :title="$translateTitle('equipment.addchilddevice')"
+            :visible.sync="childDialog"
+            width="30%"
+          >
+            <div class="childdialog">
+              <el-form
+                ref="childrenForm"
+                :model="childrenForm"
+                class="demo-form-inline"
+              >
+                <el-form-item
+                  :label="$translateTitle('equipment.products')"
+                  :rules="[
+                    { required: true, message: '选择产品', trigger: 'change' },
+                  ]"
+                  prop="product"
+                >
+                  <el-select
+                    v-model="childrenForm.product"
+                    :placeholder="$t('equipment.products')"
+                    @change="checkProduct"
+                  >
+                    <el-option
+                      v-for="(item, index) in allProudct"
+                      :key="index"
+                      :label="item.name"
+                      :value="item.objectId"
+                    />
+                  </el-select>
+                </el-form-item>
+
+                <el-form-item
+                  :label="$translateTitle('product.equipment')"
+                  :rules="[
+                    { required: true, message: '选择设备', trigger: 'change' },
+                  ]"
+                  prop="device"
+                >
+                  <el-select
+                    v-model="childrenForm.device"
+                    v-el-select-loadmore="loadmore"
+                    :disabled="!ischange"
+                    :placeholder="$t('product.equipment')"
+                  >
+                    <el-option
+                      v-for="(item, index) in productDevices"
+                      :key="index"
+                      :label="item.name"
+                      :value="item.objectId"
+                    />
+                  </el-select>
+                </el-form-item>
+                <el-form-item
+                  :rules="[
+                    {
+                      required: true,
+                      message: '请输入子网地址',
+                      trigger: 'blur',
+                    },
+                  ]"
+                  label="子网地址"
+                  prop="route"
+                >
+                  <el-input
+                    v-model="childrenForm.route"
+                    placeholder="子网地址"
+                  />
+                </el-form-item>
+              </el-form>
+            </div>
+            <span slot="footer" class="dialog-footer">
+              <el-button @click="childDialog = false">
+                {{ $translateTitle("developer.cancel") }}
+              </el-button>
+              <el-button
+                type="primary"
+                @click.native="submitDevice('childrenForm')"
+              >
+                {{ $translateTitle("developer.determine") }}
+              </el-button>
+            </span>
+          </el-dialog>
+        </el-tab-pane>
+        <el-tab-pane
           v-if="isshowchild"
           :label="$translateTitle('device.instruct')"
           name="instruct"
@@ -319,6 +610,10 @@
             :is-device-info="true"
             :productid="productId"
           />
+        </el-tab-pane>
+
+        <el-tab-pane :label="$translateTitle('device.alert')" name="alert">
+          <dgiot-empty />
         </el-tab-pane>
       </el-tabs>
     </div>

@@ -1,4 +1,4 @@
-## 4.5.1 (2022-04-08)
+## 4.5.1 (2022-04-12)
 
 
 ### Bug Fixes
@@ -14,9 +14,12 @@
 
 * analytics ([dc71779](https://github.com/dgiot/dgiot-dashboard/commit/dc71779e6d286a488cd329547a19159469ea8ba7))
 * **dgiot oc:** dgiot oc ([7b8f634](https://github.com/dgiot/dgiot-dashboard/commit/7b8f63488b00f3f3092169f7eb145b8ed29271f6))
+* map ([35cc047](https://github.com/dgiot/dgiot-dashboard/commit/35cc04733f0aa00ef5cd52d0cab7cfca3f77b14e))
 * MetaData ([10c7ddb](https://github.com/dgiot/dgiot-dashboard/commit/10c7ddb04320d6aca9493487cb4994797f1b0bb5))
+* **proxy:** dgiot_file ([3902b11](https://github.com/dgiot/dgiot-dashboard/commit/3902b11366f209e5cf251618bb19b5656afa46c0))
 * qrcode ([b11b330](https://github.com/dgiot/dgiot-dashboard/commit/b11b33068748f9d9097cc153af30d34b544cd701))
 * query ([4776a80](https://github.com/dgiot/dgiot-dashboard/commit/4776a80ac7c598e34f740329dabfff5fb2bcd54e))
+* toppic ([c9eafbf](https://github.com/dgiot/dgiot-dashboard/commit/c9eafbfadb848ab1ad89d211ced2ecd8d327b33a))
 * xinmahe ([9b4f106](https://github.com/dgiot/dgiot-dashboard/commit/9b4f1060608061eb2b3acc2ab5adc3c8aadd7ba7))
 
 

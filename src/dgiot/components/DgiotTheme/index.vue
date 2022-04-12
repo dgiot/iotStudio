@@ -1,5 +1,5 @@
 <template>
-  <span v-if="theme.showTheme">
+  <span v-if="theme.showTheme" v-show="$route.query.theme">
     <dgiot-icon icon="brush-2-line" @click.native="handleOpenTheme" />
   </span>
 </template>

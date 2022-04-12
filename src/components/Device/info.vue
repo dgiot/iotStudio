@@ -78,17 +78,6 @@
           {{ $translateTitle('application.secretkey') + ':' }}
         </td>
         <td>{{ devicedetail.deviceSecret || '-' }}</td>
-        <td class="cloumn">设备操作：</td>
-        <td>
-          <el-button
-            plain
-            size="mini"
-            type="text"
-            @click="handleDelete(devicedetail)"
-          >
-            删除
-          </el-button>
-        </td>
       </tr>
     </table>
     <el-table
@@ -165,7 +154,7 @@
             'dgiot-hey-message-success'
           )
           this.$router.push({
-            path: '/dashboard/device',
+            path: '/dashboard/devicelist',
           })
         })
       },

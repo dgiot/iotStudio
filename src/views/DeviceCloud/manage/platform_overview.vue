@@ -106,7 +106,7 @@
                   <dgiot-icon icon="device-recover-fill" />
                 </el-col>
                 <el-col class="card-right" :span="12">
-                  <router-link to="dashboard/device">
+                  <router-link to="dashboard/devicelist">
                     <p>{{ $translateTitle('home.dev_count') }}</p>
                     <p>{{ _dev_count }}</p>
                   </router-link>
@@ -1293,7 +1293,7 @@
       },
       goDevice(name) {
         this.$router.push({
-          path: '/dashboard/device',
+          path: '/dashboard/devicelist',
           query: {
             product: name,
           },
@@ -1301,7 +1301,7 @@
       },
       _goDevice(type) {
         this.$router.push({
-          path: 'dashboard/device',
+          path: 'dashboard/devicelist',
           query: {
             deciceType: type,
           },

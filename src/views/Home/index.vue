@@ -106,7 +106,7 @@
                   <dgiot-icon icon="device-recover-fill" />
                 </el-col>
                 <el-col class="card-right" :span="12">
-                  <router-link to="/dashboard/devicelist">
+                  <router-link to="/dashboard/devicelistlist">
                     <p>{{ $translateTitle('home.dev_count') }}</p>
                     <p>{{ _dev_count }}</p>
                   </router-link>
@@ -1319,7 +1319,7 @@
           qos: 0,
           ttl: 1000 * 60 * 60 * 3,
         })
-        const res = await Startdashboard(Startdashboardid, queryParams)
+        const res = await Startdashboard(queryParams, Startdashboardid)
         // 本地mqtt 存在问题,在请求4秒后手动关闭所有loading
         setTimeout(() => {
           queryParams.forEach((e) => {
@@ -1393,7 +1393,7 @@
       },
       goDevice(name) {
         this.$router.push({
-          path: '/dashboard/devicelist',
+          path: '/dashboard/devicelistlist',
           query: {
             product: name,
           },
@@ -1401,7 +1401,7 @@
       },
       _goDevice(type) {
         this.$router.push({
-          path: '/dashboard/devicelist',
+          path: '/dashboard/devicelistlist',
           query: {
             deciceType: type,
           },
