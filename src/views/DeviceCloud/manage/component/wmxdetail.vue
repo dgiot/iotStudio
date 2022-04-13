@@ -181,6 +181,21 @@
                   </el-radio-group>
                 </el-form-item>
               </el-col>
+              <el-col :span="8">
+                <el-form-item
+                  :label="$translateTitle('product.isaccumulate')"
+                  prop="isshow"
+                >
+                  <el-radio-group
+                    v-model="sizeForm.isaccumulate"
+                    size="medium"
+                    style="width: 100%"
+                  >
+                    <el-radio :label="true">累积</el-radio>
+                    <el-radio :label="false">不累积</el-radio>
+                  </el-radio-group>
+                </el-form-item>
+              </el-col>
               <el-col
                 v-if="
                   moduletype == 'properties' &&
@@ -1582,6 +1597,7 @@
             required: true,
             isread: item.accessMode,
             isshow: item.isshow,
+            isaccumulate: item.isaccumulate,
             identifier: item.identifier,
           }
           if (item.dataForm) {
@@ -1624,6 +1640,7 @@
             required: false,
             isread: item.accessMode,
             isshow: item.isshow,
+            isaccumulate: item.isaccumulate,
             identifier: item.identifier,
             collection:
               item.dataForm == undefined ? '' : item.dataForm.collection,
@@ -1664,6 +1681,7 @@
             required: false,
             isread: item.accessMode,
             isshow: item.isshow,
+            isaccumulate: item.isaccumulate,
             identifier: item.identifier,
             collection:
               item.dataForm == undefined ? '' : item.dataForm.collection,
@@ -1710,6 +1728,7 @@
             required: true,
             isread: item.accessMode,
             isshow: item.isshow,
+            isaccumulate: item.isaccumulate,
             identifier: item.identifier,
             collection:
               item.dataForm == undefined ? '' : item.dataForm.collection,
@@ -1748,6 +1767,7 @@
             required: true,
             isread: item.accessMode,
             isshow: item.isshow,
+            isaccumulate: item.isaccumulate,
             collection:
               item.dataForm == undefined ? '' : item.dataForm.collection,
             control: item.dataForm == undefined ? '' : item.dataForm.control,
@@ -1789,6 +1809,7 @@
             required: true,
             isread: item.accessMode,
             isshow: item.isshow,
+            isaccumulate: item.isaccumulate,
             identifier: item.identifier,
             strategy: item.dataForm == undefined ? '' : item.dataForm.strategy,
           }
@@ -1827,6 +1848,7 @@
             required: true,
             isread: item.accessMode,
             isshow: item.isshow,
+            isaccumulate: item.isaccumulate,
             identifier: item.identifier,
           }
         } else if (item.dataType.type == 'file') {
@@ -1864,6 +1886,7 @@
             required: true,
             isread: item.accessMode,
             isshow: item.isshow,
+            isaccumulate: item.isaccumulate,
             identifier: item.identifier,
           }
         } else if (item.dataType.type == 'url') {
@@ -1900,6 +1923,7 @@
             countcollection: that.$objGet(item, 'dataForm.countcollection'),
             required: true,
             isread: item.accessMode,
+            isaccumulate: item.isaccumulate,
             isshow: item.isshow,
             identifier: item.identifier,
           }
@@ -1938,7 +1962,9 @@
             countcollection: that.$objGet(item, 'dataForm.countcollection'),
             required: true,
             isread: item.accessMode,
+            isaccumulate: item.isaccumulate,
             isshow: item.isshow,
+            isaccumulate: item.isaccumulate,
             identifier: item.identifier,
           }
         }
@@ -2034,6 +2060,7 @@
               required: true,
               accessMode: sizeForm.isread,
               isshow: sizeForm.isshow,
+              isaccumulate: sizeForm.isaccumulate,
               identifier: sizeForm.identifier,
             }
             // 提交之前需要先判断类型

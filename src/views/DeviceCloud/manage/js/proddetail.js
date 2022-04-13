@@ -588,6 +588,7 @@ export default {
         },
       ],
       isshow: false,
+      isaccumulate: false,
       addRules: {
         name: [
           {
@@ -1000,6 +1001,7 @@ export default {
         devicetype: form.data.name,
         required: false,
         isshow: true,
+        isaccumulate: false,
         dataForm: {order: moment(new Date()).format('x')},
         dataType: {
           type: type
@@ -1099,6 +1101,7 @@ export default {
         falsevalue: 0,
         isread: 'r',
         isshow: true,
+        isaccumulate: false,
         unit: '',
         string: '',
         date: 'String类型的UTC时间戳 (毫秒)',
@@ -2083,6 +2086,7 @@ export default {
           ico: rowData.ico,
           isread: rowData.accessMode,
           isshow: rowData.isshow,
+          isaccumulate:  rowData.isaccumulate,
           identifier: rowData.identifier,
           editdatatype: true,
         }
@@ -2125,6 +2129,7 @@ export default {
           ico: rowData.ico,
           isread: rowData.accessMode,
           isshow: rowData.isshow,
+          isaccumulate:  rowData.isaccumulate,
           identifier: rowData.identifier,
           collection:
             rowData.dataForm == undefined ? '' : rowData.dataForm.collection,
@@ -2167,6 +2172,7 @@ export default {
           ico: rowData.ico,
           isread: rowData.accessMode,
           isshow: rowData.isshow,
+          isaccumulate:  rowData.isaccumulate,
           identifier: rowData.identifier,
           collection:
             rowData.dataForm == undefined ? '' : rowData.dataForm.collection,
@@ -2217,6 +2223,7 @@ export default {
           ico: rowData.ico,
           isread: rowData.accessMode,
           isshow: rowData.isshow,
+          isaccumulate:  rowData.isaccumulate,
           identifier: rowData.identifier,
           collection:
             rowData.dataForm == undefined ? '' : rowData.dataForm.collection,
@@ -2259,6 +2266,7 @@ export default {
           ico: rowData.ico,
           isread: rowData.accessMode,
           isshow: rowData.isshow,
+          isaccumulate:  rowData.isaccumulate,
           collection:
             rowData.dataForm == undefined ? '' : rowData.dataForm.collection,
           control:
@@ -2305,6 +2313,7 @@ export default {
           ico: rowData.ico,
           isread: rowData.accessMode,
           isshow: rowData.isshow,
+          isaccumulate:  rowData.isaccumulate,
           identifier: rowData.identifier,
           strategy:
             rowData.dataForm == undefined ? '' : rowData.dataForm.strategy,
@@ -2348,6 +2357,7 @@ export default {
           ico: rowData.ico,
           isread: rowData.accessMode,
           isshow: rowData.isshow,
+          isaccumulate:  rowData.isaccumulate,
           identifier: rowData.identifier,
           editdatatype: true,
         }
@@ -2390,6 +2400,7 @@ export default {
           ico: rowData.ico,
           isread: rowData.accessMode,
           isshow: rowData.isshow,
+          isaccumulate:  rowData.isaccumulate,
           identifier: rowData.identifier,
           editdatatype: true,
         }

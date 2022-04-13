@@ -8,5 +8,6 @@ import 'amis/lib/themes/ang.css'
 import 'amis/sdk/sdk.css'
 import 'amis-editor/dist/style.css'
 import * as Qs from 'qs'
-
+import infiniteScroll from 'vue-infinite-scroll'
+Vue.use(infiniteScroll)
 window.qs = Qs

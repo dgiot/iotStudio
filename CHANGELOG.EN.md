@@ -4,6 +4,7 @@
 ### Bug Fixes
 
 * (build) vue-qr dependencies ([f5abd2b](https://github.com/dgiot/dgiot-dashboard/commit/f5abd2b159b3819d69b46f492635a5de6535427d))
+* **amis:** fix amis view lowcode ([6827c5e](https://github.com/dgiot/dgiot-dashboard/commit/6827c5e7f79e06bf37cffc889601874beb6cc014))
 * js ([45a4710](https://github.com/dgiot/dgiot-dashboard/commit/45a471030c9acb0cf3ee9c988465820002c05cc4))
 * MetaData loading ([3297edb](https://github.com/dgiot/dgiot-dashboard/commit/3297edbfb9e65c8984bcfcfc8d46fa89a71e7df0))
 * **permission control:** improve authority control ([2229a3e](https://github.com/dgiot/dgiot-dashboard/commit/2229a3e43bd7b6241f4ee57f8474af4e4179e94f))

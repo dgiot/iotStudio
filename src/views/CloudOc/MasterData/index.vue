@@ -15,17 +15,59 @@
     class="index-container"
     :class="{ 'dgiot-fullscreen': isFullscreen }"
   >
+    <div class="dialog">
+      <el-dialog
+        append-to-body
+        :title="properties.type || '新增主数据: ' + properties.name"
+        :visible.sync="formDialog"
+        @close="closeDilog"
+      >
+        <div class="form">
+          <el-form
+            :key="properties.objectId"
+            ref="form"
+            label-width="80px"
+            status-icon
+          >
+            <el-form-item
+              v-for="(item, index) in properties.properties"
+              :key="index"
+              :label="item.prop.label"
+              :rules="item.prop.rules"
+            >
+              <el-input v-model="item.propertyValue" />
+            </el-form-item>
+          </el-form>
+        </div>
+        <div slot="footer" class="dialog-footer" style="text-align: center">
+          <el-button type="primary" @click="submitForm('form')">
+            {{ properties.type ? '修改' : '新增' }}
+          </el-button>
+        </div>
+      </el-dialog>
+    </div>
     <el-row>
       <el-col :span="4">
-        <a-list :data-source="list" item-layout="horizontal">
-          <a-list-item slot="renderItem" slot-scope="item, index">
-            <a-list-item-meta>
-              <a slot="title" @click="queryItem(item)">
-                {{ item.name }}
-              </a>
-            </a-list-item-meta>
-          </a-list-item>
-        </a-list>
+        主数据列表:
+        <ul
+          v-infinite-scroll="load"
+          class="infinite-list"
+          :infinite-scroll-distance="50"
+          style="overflow: scroll; height: 75vh"
+        >
+          <li
+            v-for="i in list"
+            :key="i.objectId"
+            class="infinite-list-item"
+            @click="queryItem(i)"
+          >
+            <el-link
+              :type="properties.objectId == i.objectId ? 'primary' : 'warning'"
+            >
+              {{ i.name }}
+            </el-link>
+          </li>
+        </ul>
       </el-col>
       <el-col :span="20">
         <dgiot-query-form>
@@ -50,11 +92,12 @@
                   查询
                 </el-button>
                 <el-button
+                  :disabled="!properties.objectId"
                   icon="el-icon-plus"
                   type="primary"
-                  @click.native="$router.push('/oc/MetaData/module')"
+                  @click.native="showDiloog(properties)"
                 >
-                  添加
+                  新增主数据
                 </el-button>
               </el-form-item>
             </el-form>
@@ -91,9 +134,12 @@
 
         <el-table
           ref="tableSort"
-          v-loading="listLoading"
+          v-loading="loading"
           :border="border"
-          :data="properties"
+          :data="MasterData"
+          element-loading-background="rgba(0, 0, 0, 0.8)"
+          element-loading-spinner="el-icon-loading"
+          element-loading-text="拼命加载中"
           :height="height"
           :size="lineHeight"
           :stripe="stripe"
@@ -120,29 +166,23 @@
             :width="item.width"
           >
             <template #default="{ row }">
-              <span v-if="item.prop !== 'multiVersion'">
-                {{ row[item.prop] }}
-              </span>
-              <span v-else>{{ item }}</span>
+              <span>{{ row.data[item.prop] }}</span>
             </template>
           </el-table-column>
           <el-table-column align="center" label="操作" show-overflow-tooltip>
-            <template #default="{ row }">
+            <template #default="{ row, $index }">
               <el-button
                 type="text"
-                @click.native="
-                  $router.push({
-                    path: '/oc/MetaData/module',
-                    query: {
-                      objectId: row.objectId,
-                      type: 'edit',
-                    },
-                  })
-                "
+                @click.native="editItem($index, row, MasterData)"
               >
                 编辑
               </el-button>
-              <el-button type="text" @click="handleDelete(row)">删除</el-button>
+              <el-button
+                type="text"
+                @click.native.prevent="handleDelete($index, row, MasterData)"
+              >
+                删除
+              </el-button>
             </template>
           </el-table-column>
           <template #empty>
@@ -155,6 +195,7 @@
           </template>
         </el-table>
         <el-pagination
+          v-show="MasterData.length"
           background
           :current-page="queryForm.size"
           :layout="layout"
@@ -163,6 +204,7 @@
           @current-change="handleCurrentChange"
           @size-change="handleSizeChange"
         />
+        <el-empty v-show="!properties.properties" :image-size="height - 200" />
       </el-col>
     </el-row>
 
@@ -171,8 +213,14 @@
 </template>
 
 <script>
-  import { doDelete, getList } from '@/api/Mock/table'
   import TableEdit from '@/views/DeviceCloud/empty/tableEdit'
+  import {
+    queryMasterData,
+    getMasterData,
+    delMasterData,
+    putMasterData,
+    postMasterData,
+  } from '@/api/MasterData'
   import {
     queryMetaData,
     getMetaData,
@@ -188,6 +236,11 @@
     props: {},
     data() {
       return {
+        clickRow: {},
+        MasterData: [],
+        formDialog: false,
+        loading: false,
+        count: 0,
         properties: [],
         drawerAdd: false,
         infoData: 'Empty',
@@ -196,16 +249,18 @@
         height: this.$baseTableHeight(0) + 20,
         stripe: true,
         lineHeight: 'mini',
-        checkList: ['propertyDesc'],
-        columns: [
-          {
-            label: 'propertyDesc',
-            width: '160',
-            prop: 'propertyDesc',
-            sortable: true,
-            disableCheck: true,
-          },
-        ],
+        columns: [],
+        checkList: [],
+        // checkList: ['propertyDesc'],
+        // columns: [
+        //   {
+        //     label: 'propertyDesc',
+        //     width: '160',
+        //     prop: 'propertyDesc',
+        //     sortable: true,
+        //     disableCheck: true,
+        //   },
+        // ],
         list: [],
         imageList: [],
         listLoading: true,
@@ -239,12 +294,105 @@
     mounted() {},
     destroyed() {},
     methods: {
-      async queryItem(item) {
-        const loading = this.$baseColorfullLoading(3)
-        const { properties = [] } = await getMetaData(item.objectId)
-        loading.close()
-        dgiotlog.log(properties)
+      closeDilog() {
+        delete this.properties.type
+      },
+      async submitForm(formName) {
+        const data = {
+          data: {},
+          metadata: {
+            type: 'Pointer',
+            __type: 'Pointer',
+            className: 'MetaData',
+            objectId: this.properties.objectId,
+          },
+        }
+        this.properties.properties.forEach((item) => {
+          data.data[item.propertyCode] = item.propertyValue
+        })
+        if (this.clickRow.objectId) {
+          await putMasterData(this.clickRow.objectId, { data: data.data })
+        } else {
+          const res = await postMasterData(data)
+          this.total = this.total + 1
+        }
+        this.queryItem(this.clickItem, false)
+        this.formDialog = false
+      },
+      load() {
+        this.count += 2
+      },
+      async showDiloog(item) {
+        if (item.properties) {
+          await this.properties.properties.forEach((i) => {
+            i.prop = {
+              label: i.propertyDesc,
+              prop: i.propertyCode,
+              rules: {
+                required: true,
+                message: i.propertyDesc + '不能为空',
+                trigger: 'blur',
+              },
+              data: {},
+            }
+            i[i.propertyCode] = ''
+            i.propertyValue = ''
+          })
+          this.formDialog = true
+        } else await this.$message.info('元数据暂无配置信息')
+      },
+      async queryItem(item, loading = true) {
+        this.clickItem = item
+        this.loading = loading
+        this.checkList = []
+        this.columns = []
+        const properties = await getMetaData(item.objectId)
+        const { results = [], count = 0 } = await queryMasterData({
+          skip: this.queryForm.skip,
+          limit: this.queryForm.limit,
+          count: 'objectId',
+          order: '-createdAt',
+          where: {
+            metadata: {
+              __type: 'Pointer',
+              className: 'MetaData',
+              objectId: item.objectId,
+            },
+          },
+        })
+        console.log(results)
+        this.total = count
+        this.MasterData = results
+        if (!_.isEmpty(properties.properties)) {
+          properties.properties.forEach((i) => {
+            i.prop = {
+              label: i.propertyDesc,
+              prop: i.propertyCode,
+              rules: {
+                required: true,
+                message: i.propertyDesc + '不能为空',
+                trigger: 'blur',
+              },
+              data: {},
+            }
+            i[i.propertyCode] = ''
+            if (i.propertyDesc) {
+              this.checkList.push(i.propertyDesc)
+              this.columns.push({
+                label: i.propertyDesc,
+                width: 'auto',
+                prop: i.propertyCode,
+                sortable: true,
+                disableCheck: true,
+              })
+            }
+            i.propertyValue = ''
+          })
+        }
         this.properties = properties
+        setTimeout(() => {
+          this.loading = false
+        }, 300)
       },
       onSubmit() {
         console.log('submit!')
@@ -266,15 +414,35 @@
       handleEdit(row) {
         this.$refs['edit'].showEdit(row)
       },
-      handleDelete(row) {
+      editItem(index, row) {
+        this.clickRow = row
+        this.properties.properties.forEach((i) => {
+          i.prop = {
+            label: i.propertyDesc,
+            prop: i.propertyCode,
+            rules: {
+              required: true,
+              message: i.propertyDesc + '不能为空',
+              trigger: 'blur',
+            },
+            data: {},
+          }
+          i[i.propertyCode] = ''
+          i.propertyValue = row.data[i.propertyCode]
+        })
+        this.properties.type = '修改主数据'
+        this.formDialog = true
+      },
+      handleDelete(index, row, MasterData) {
         this.$baseConfirm('你确定要删除当前项吗', null, async () => {
-          await delMetaData(row.objectId)
+          await delMasterData(row.objectId)
           this.$baseMessage(
             this.$translateTitle('Maintenance.successfully deleted'),
             'success',
             'dgiot-hey-message-success'
           )
-          await this.fetchData()
+          MasterData.splice(index, 1)
+          this.total = this.total - 1
         })
       },
       handleSizeChange(val) {
@@ -292,8 +460,6 @@
       },
       async fetchData() {
         const params = {
-          skip: this.queryForm.skip,
-          limit: this.queryForm.limit,
           count: 'objectId',
           order: '-createdAt',
           excludeKeys: 'properties',
@@ -304,11 +470,11 @@
           },
         }
         console.info(params)
-        this.listLoading = true
-        const { results, count } = await queryMetaData(params)
+        const { results } = await queryMetaData(params)
         this.list = results
-        this.total = count
-        this.listLoading = false
+        if (results.length > 0) {
+          this.queryItem(results[0], false)
+        }
       },
     },
   }
@@ -318,5 +484,14 @@
   .index-container {
     width: 100%;
     heigth: 100%;
+
+    .infinite-list .infinite-list-item {
+      display: flex;
+      align-items: center;
+      justify-content: left;
+      height: 30px;
+      margin: 10px;
+      color: #7dbcfc;
+    }
   }
 </style>
