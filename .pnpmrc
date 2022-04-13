@@ -1,4 +1,4 @@
 engine-strict = true
 shamefully-hoist = true
 hoist = true
-registry = https://mirrors.cloud.tencent.com/npm/
+registry = https://registry.npmmirror.com/

@@ -20,12 +20,8 @@
       :with-header="withHeader"
     >
       <topo v-if="type === 'topo'" :code="code.konva" :object-id="objectId" />
-      <amis v-else-if="type === 'amis'" :code="code" :object-id="objectId" />
-      <amis
-        v-else-if="type === 'amis_view'"
-        :code="code"
-        :object-id="objectId"
-      />
+      <amis v-if="type === 'amis'" :code="code" :object-id="objectId" />
+      <amis v-if="type === 'amis_view'" :code="code" :object-id="objectId" />
     </el-drawer>
   </div>
 </template>
@@ -34,6 +30,7 @@
   import amis from '@/views/CloudFunction/lowcode/components/amis'
   import topo from '@/views/CloudFunction/lowcode/components/dgiotKonva'
   import { mapMutations } from 'vuex'
+
   export default {
     name: 'Index',
     components: {
@@ -55,13 +52,7 @@
       this.$dgiotBus.$off('lowcodePreview')
       this.$dgiotBus.$on('lowcodePreview', (params) => {
         const amisEnv = {}
-        const {
-          type,
-          data,
-          objectId,
-          class: _class,
-          key: parse_objectid,
-        } = params
+        const { type, data, objectId, class: _class } = params
         if (_class == 'Device') {
           console.log(data)
           // const { headers = { store: 'localStorage' } } = data.initApi
@@ -128,7 +119,9 @@
        * @return {Promise<void>}
        */
       async designLowCode(type, objectId, data) {
-        console.log(type, objectId, data)
+        console.log(type)
+        console.log(data)
+        console.log(objectId)
         this.code = data
         this.type = type
         this.objectId = objectId
@@ -141,6 +134,7 @@
   .index-container {
     width: 100%;
     height: 100%;
+
     &-container {
       width: 100%;
       height: 100%;
