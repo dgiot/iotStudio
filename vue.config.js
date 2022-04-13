@@ -8,6 +8,7 @@
  * @description vue.config.js全局配置
  */
 const path = require('path')
+const MonacoWebpackPlugin = require('monaco-editor-esm-webpack-plugin')
 const {
   publicPath,
   assetsDir,
@@ -32,6 +33,7 @@ const {
   pwaConfig,
   isSmp,
   CDN_URL,
+  monacoConfig,
 } = require('./src/config')
 const { version, author } = require('./package.json')
 const { ESBuildMinifyPlugin } = require('esbuild-loader')
@@ -126,6 +128,7 @@ function getChainWebpack(config) {
     } else console.log(`当前未使用cdn,可能会导致打包体积过大`)
     config.performance.set('hints', false)
     config.devtool('none')
+    config.plugin('monaco-editor').use(MonacoWebpackPlugin, [monacoConfig])
     config.optimization.splitChunks({
       chunks: 'all',
       minSize: 300000, //字节 引入的文件大于300kb才进行分割
@@ -257,6 +260,21 @@ const configure = {
     'vue-flv-player': 'vueFlvPlayer',
     'vue-aliplayer-v2': 'VueAliplayerV2',
   },
+  module: {
+    /**
+     * @description: 汉化 Monaco 右键菜单
+     * @doc: https://blog.csdn.net/m0_37986789/article/details/121135519
+     * @topo: 汉化放出下列注释
+     */
+    rules: [
+      {
+        test: /\.js/,
+        enforce: 'pre',
+        include: /node_modules[\\\/]monaco-editor[\\\/]esm/,
+        use: MonacoWebpackPlugin.loader,
+      },
+    ],
+  },
   resolve: {
     alias: {
       '@': resolve('src'),
@@ -266,6 +284,7 @@ const configure = {
   plugins: [
     new CleanWebpackPlugin({ cleanStaleWebpackAssets: false }),
     // new HardSourceWebpackPlugin(),
+    new MonacoWebpackPlugin(),
     new Webpack.ProvidePlugin(providePlugin),
     new WebpackBar({
       name: webpackBarName,

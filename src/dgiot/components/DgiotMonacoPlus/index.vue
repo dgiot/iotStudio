@@ -116,7 +116,7 @@
 </template>
 
 <script>
-  import dgiotMonaco from '@dgiot/dgiot-monaco'
+  import dgiotMonaco from '../DgiotMonaco'
   window.dgiotMonaco = dgiotMonaco
   export default {
     name: 'DgiotMonacoPlus',

@@ -36,7 +36,6 @@ jobs:
           run_install: false
       - name: Pnpm script 🚀
         run: |
-          pnpm config set registry https://registry.npmmirror.com
           pnpm install
           pnpm build &> /dev/null
           cp -r README.md README-CN.md CHANGELOG.md LICENSE dist

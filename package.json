@@ -56,9 +56,12 @@
     "url": "git+https://github.com/dgiot/dgiot-dashboard.git"
   },
   "dependencies": {
+    "font-awesome": "^4.7.0",
+    "monaco-editor": "^0.20",
+    "monaco-editor-nls": "^2.0.0",
+    "monaco-editor-webpack-plugin": "^1.9.1",
     "@dgiot/dgiot-component": "0.0.3",
     "@dgiot/dgiot-icons": "0.0.19",
-    "@dgiot/dgiot-monaco": "^0.2.2",
     "@dgiot/dgiot-mqtt-dashboard": "1.1.5",
     "@material/icon-button": "13.0.0",
     "amis": "1.5.3",
@@ -73,6 +76,7 @@
     "q": "^1.5.1"
   },
   "devDependencies": {
+    "monaco-editor-esm-webpack-plugin": "^2.0.0",
     "increase-memory-limit": "^1.0.7",
     "indent-string": "5.0.0",
     "file-loader": "6.2.0",
