@@ -449,19 +449,15 @@
           })
           this.logdata = results
           this.queryForm.total = total
-          this.$baseMessage(
-            this.$translateTitle('alert.Data request successfully'),
-            'success',
-            'dgiot-hey-message-success'
-          )
           loading.close()
         } catch (error) {
           loading.close()
-          this.$baseMessage(
-            this.$translateTitle('alert.Data request error') + `${error}`,
-            'error',
-            'dgiot-hey-message-error'
-          )
+          if (this.isDeviceInfo)
+            this.$baseMessage(
+              this.$translateTitle('alert.Data request error') + `${error}`,
+              'error',
+              'dgiot-hey-message-error'
+            )
         }
         this.loading = false
       },

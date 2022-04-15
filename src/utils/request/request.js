@@ -43,7 +43,7 @@ const handleData = ({ config, data, status, statusText }) => {
   if (errorcodeVerificationArray.includes(code)) backHome()
   // dgiotlogger.info('code：', code)
   // fixed https://gitee.com/dgiiot/dgiot/issues/I4TVGK
-  if ([400, 401, 404, 406, 410, 500, 502, 504, 503].includes(Number(code))) {
+  if ([401, 404, 406, 410, 500, 502, 504, 503].includes(Number(code))) {
     console.error(code, statusText, data)
     Vue.prototype.$baseMessage(data, 'error', true, 'dgiot-hey-message-error')
   }

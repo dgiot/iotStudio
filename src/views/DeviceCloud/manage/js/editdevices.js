@@ -509,7 +509,7 @@ export default {
      */
     async getDeviceInfo(deviceid) {
       try {
-        const loading = this.$baseColorfullLoading()
+        // const loading = this.$baseColorfullLoading()
         var resultes = await getDevice(deviceid)
         const { location = { longitude: '116.404', latitude: '39.915' } } =
           resultes
@@ -566,14 +566,15 @@ export default {
           : _toppic
         console.log(resultes, 'resultes')
         this.deviceInfo = resultes
-        this.$baseMessage(
-          this.$translateTitle('alert.Data request successfully'),
-          'success',
-          'dgiot-hey-message-success'
-        )
-        loading.close()
+        // this.$baseMessage(
+        //   this.$translateTitle('alert.Data request successfully'),
+        //   'success',
+        //   'dgiot-hey-message-success'
+        // )
+        // loading.close()
         this.mapLabel = mapLabel
-        this.$refs['map'].baiduCenter = this.mapLabel.position
+        if (this.$refs['map'])
+          this.$refs['map'].baiduCenter = this.mapLabel.position
         this.bmLabel = true
         // this.$refs['map'].label = this.mapLabel
         console.info('vm.mapLabel\n', this.mapLabel)
@@ -666,6 +667,7 @@ export default {
       })
     },
     async queryChart() {
+      this.loading = true
       dgiotlogger.log('queryChart', this.params)
       this.chartData = {
         identifier: [],
@@ -673,10 +675,10 @@ export default {
         rows: [],
       }
       if (this.params.startTime && this.params.endTime) {
-        this.$baseColorfullLoading(
-          1,
-          this.$translateTitle('home.messag_loding')
-        )
+        // this.$baseColorfullLoading(
+        //   1,
+        //   this.$translateTitle('home.messag_loding')
+        // )
         let deviceid = this.$route.query.deviceid
         // let endTime = moment(this.params.datetimerange[1]).valueOf()
         // let startTime = moment(this.params.datetimerange[0]).valueOf()
@@ -704,7 +706,7 @@ export default {
         }
         await getDabDevice(deviceid, params)
           .then((res) => {
-            this.$baseColorfullLoading().close()
+            // this.$baseColorfullLoading().close()
             console.log(res, 'res charts')
             if (res?.chartData) {
               const { chartData = {} } = res
@@ -723,12 +725,12 @@ export default {
           .catch((e) => {
             console.log(e)
             this.loading = false
-            this.$baseColorfullLoading().close()
+            // this.$baseColorfullLoading().close()
           })
       } else {
-        this.$message.error(
-          this.$translateTitle('developer.Please select the query Time')
-        )
+        // this.$message.error(
+        //   this.$translateTitle('developer.Please select the query Time')
+        // )
       }
     },
     print(item) {
@@ -748,12 +750,26 @@ export default {
           break
         case 'children':
           this.getDevices()
+          this.loading = true
+          setTimeout(() => {
+            this.loading = false
+          }, 300)
+          break
+        case 'instruct':
+          this.loading = true
+          setTimeout(() => {
+            this.loading = false
+          }, 300)
           break
         case 'third':
           this.queryChart()
           break
         case 'right':
           this.toggleClass('rightrow')
+          this.loading = true
+          setTimeout(() => {
+            this.loading = false
+          }, 300)
           break
         case 'task':
           this.$refs.SceneLog.get_topic()
@@ -828,9 +844,9 @@ export default {
     },
     getCardDevice() {
       var vm = this
+      vm.loading = true
       getCardDevice(vm.deviceid)
         .then((response) => {
-          vm.machinelist = {}
           if (response?.data) {
             vm.renderCard(response.data)
           }
@@ -838,6 +854,9 @@ export default {
         .catch((error) => {
           console.log('update error 清除timer', error)
         })
+      setTimeout(() => {
+        vm.loading = false
+      }, 800)
     },
     //渲染卡片
     renderCard(resData) {
@@ -934,6 +953,7 @@ export default {
       this.subRealtimedata()
       this.initChart()
       window.addEventListener('resize', this.resizeTheChart)
+      this.getCardDevice()
     },
     loadmore() {
       this.dirstart++

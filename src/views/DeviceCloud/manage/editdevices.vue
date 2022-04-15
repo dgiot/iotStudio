@@ -7,7 +7,7 @@
           :label="$translateTitle('equipment.deviceinformation')"
           name="first"
         >
-          <info :devicedetail="deviceInfo" />
+          <info :devicedetail="deviceInfo"/>
           <el-card>
             <dgiot-baidu-map
               ref="map"
@@ -23,7 +23,7 @@
           :label="$translateTitle('equipment.realTime data')"
           name="first1"
         >
-          <div>
+          <div v-loading="loading">
             <div class="thirdtb">
               <!--运行状态卡片-->
               <el-row :key="thirdtbKey">
@@ -100,6 +100,7 @@
           name="third"
         >
           <div
+            v-loading=loading
             style="box-sizing: border-box; padding: 10px; background: #ffffff"
           >
             <!-- <h4>设备信息</h4> -->
@@ -220,7 +221,6 @@
                   :data-empty="dataEmpty"
                   :data-zoom="chartDataZoom"
                   :extend="chartExtend"
-                  :loading="loading"
                   :set-option-opts="false"
                   :settings="chartSettings"
                   :toolbox="toolbox"
@@ -246,7 +246,7 @@
                           style="float: right; padding: 3px 0"
                           type="text"
                         >
-                          <el-button icon="el-icon-warning-outline" />
+                          <el-button icon="el-icon-warning-outline"/>
                           <el-button
                             icon="el-icon-full-screen"
                             @click="toggleCardRow(index, xs, sm, md, xl)"
@@ -262,7 +262,6 @@
                         :data-zoom="chartDataZoom"
                         :extend="chartExtend"
                         :legend-visible="false"
-                        :loading="loading"
                         :set-option-opts="false"
                         :settings="chartSettings"
                         :toolbox="toolbox"
@@ -272,7 +271,7 @@
                     </el-card>
                   </el-col>
                   <el-col v-show="!chartData.child" :span="24">
-                    <dgiot-empty />
+                    <dgiot-empty/>
                   </el-col>
                 </el-row>
               </div>
@@ -302,7 +301,7 @@
           :label="$translateTitle('equipment.subdevice')"
           name="children"
         >
-          <div class="childrendevices">
+          <div class="childrendevices" v-loading="loading">
             <el-form
               :inline="true"
               :model="childrendevices"
@@ -363,7 +362,7 @@
                 :height="$baseTableHeight(0) - 120"
                 @selection-change="DevicesSelectionChange"
               >
-                <el-table-column align="center" type="selection" width="55" />
+                <el-table-column align="center" type="selection" width="55"/>
                 <el-table-column
                   :label="$translateTitle('equipment.devicenumber')"
                   align="center"
@@ -593,10 +592,11 @@
           :label="$translateTitle('device.instruct')"
           name="instruct"
         >
-          <Instruct :devices-id="deviceid" :product-id="productid" />
+          <Instruct v-loading="loading" :devices-id="deviceid" :product-id="productid"/>
         </el-tab-pane>
         <el-tab-pane v-show="activeName == 'task'" :label="$translateTitle('device.trace')" name="task">
           <scene-log
+            v-if="activeName == 'task'"
             ref="SceneLog"
             :device-info="deviceInfo"
             :name="activeName"
@@ -604,7 +604,7 @@
         </el-tab-pane>
         <el-tab-pane :label="$translateTitle('device.log')" name="trace">
           <device-log
-            v-show="activeName == 'trace'"
+            v-if="activeName == 'trace'"
             :devaddr="devicedevaddr"
             :deviceid="deviceid"
             :is-device-info="true"
@@ -613,7 +613,7 @@
         </el-tab-pane>
 
         <el-tab-pane :label="$translateTitle('device.alert')" name="alert">
-          <dgiot-empty />
+          <dgiot-empty/>
         </el-tab-pane>
       </el-tabs>
     </div>
@@ -678,6 +678,12 @@
     background: #fafafc;
     border-right: 1px solid #ebecec;
     border-bottom: 1px solid #ebecec;
+  }
+
+  .thirdtb {
+    width: 100vh;
+    height: 76vh;
+    background: #f4f4f4;
   }
 
   .editdevices .updatedtable {

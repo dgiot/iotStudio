@@ -2417,7 +2417,7 @@
       async getDevices(args = {}) {
         // this.pagination.total = 0
         this.listLoading = true
-        const loading = this.$baseColorfullLoading(3)
+        // const loading = this.$baseColorfullLoading(3)
         this.tableData = []
         this.queryPayload.excludeKeys =
           'channel,children,config,thing,decoder,data,basedata,content'
@@ -2456,7 +2456,7 @@
             this.queryForm.access_token
           )
           this.listLoading = false
-          loading.close()
+          // loading.close()
           if (!results?.length) return
           results.forEach((item) => {
             if (!item.location) {
@@ -2484,7 +2484,7 @@
         } catch (error) {
           dgiotlog.log(error)
           this.listLoading = false
-          loading.close()
+          // loading.close()
           this.tableData = []
           this.devicetotal = 0
           this.$message.error(`${error}`)

@@ -1749,7 +1749,8 @@
       },
       async queryprodut(args) {
         const categorys = args.categorys
-        const loading = this.$baseColorfullLoading()
+
+        // const loading = this.$baseColorfullLoading()
         if (!args.limit) {
           args = this.queryForm
         }
@@ -1771,11 +1772,11 @@
         }
         try {
           const { results = [], count = 0 } = await queryProductTemplet(params)
-          loading.close()
+          // loading.close()
           this.tableData = results
           this.queryForm.total = count
         } catch (error) {
-          loading.close()
+          // loading.close()
           dgiotlog.log(error)
           this.$message.error(`${error}`)
         }
@@ -2220,10 +2221,10 @@
         rows.splice(index, 1)
       },
       async editorDict(ObjectId) {
-        const loading = this.$baseColorfullLoading()
+        // const loading = this.$baseColorfullLoading()
         this.getAllunit()
         const row = await getProduct(ObjectId)
-        loading.close()
+        // loading.close()
         const { config = { basedate: {} } } = row
         this.productInfo = row
         dgiotlog.log(' this.parserDict', this.parserDict)
