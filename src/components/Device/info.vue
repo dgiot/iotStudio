@@ -78,6 +78,14 @@
           {{ $translateTitle('application.secretkey') + ':' }}
         </td>
         <td>{{ devicedetail.deviceSecret || '-' }}</td>
+        <td class="cloumn">
+          {{ $translateTitle('node.operation') + ':' }}
+        </td>
+        <td>
+          <el-link plain size="mini" @click="handleDelete(devicedetail)">
+            {{ $translateTitle('konva.delete') }}
+          </el-link>
+        </td>
       </tr>
     </table>
     <el-table
@@ -153,9 +161,7 @@
             'success',
             'dgiot-hey-message-success'
           )
-          this.$router.push({
-            path: '/dashboard/devicelist',
-          })
+          this.$router.go(-1)
         })
       },
     },

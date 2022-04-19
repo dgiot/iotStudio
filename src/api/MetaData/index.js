@@ -27,17 +27,17 @@ export async function queryMetaData(params) {
 }
 
 export async function getMetaData(ObjectId) {
-  return get_object('/MetaData', ObjectId)
+  return get_object('MetaData', ObjectId)
 }
 
 export async function delMetaData(ObjectId) {
-  return del_object('/MetaData', ObjectId)
+  return del_object('MetaData', ObjectId)
 }
 
 export async function putMetaData(ObjectId, params) {
-  return update_object('/MetaData', ObjectId, params)
+  return update_object('MetaData', ObjectId, params)
 }
 
 export async function postMetaData(params) {
-  return create_object('/MetaData', params)
+  return create_object('MetaData', params)
 }

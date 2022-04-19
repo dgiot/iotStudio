@@ -1,4 +1,4 @@
-## 4.5.1 (2022-04-13)
+## [4.5.2](https://github.com/dgiot/dgiot-dashboard/compare/7b8f63488b00f3f3092169f7eb145b8ed29271f6...v4.5.2) (2022-04-13)
 
 
 ### Bug Fixes
@@ -18,6 +18,7 @@
 * **device:** location ([3c971c8](https://github.com/dgiot/dgiot-dashboard/commit/3c971c8438e48ecc65aedb0ee710149c3a324c0b))
 * **dgiot oc:** dgiot oc ([7b8f634](https://github.com/dgiot/dgiot-dashboard/commit/7b8f63488b00f3f3092169f7eb145b8ed29271f6))
 * map ([35cc047](https://github.com/dgiot/dgiot-dashboard/commit/35cc04733f0aa00ef5cd52d0cab7cfca3f77b14e))
+* **masterdata:** masterData table ([10e42ee](https://github.com/dgiot/dgiot-dashboard/commit/10e42eebf954deb4211aa03ca127763f58614695))
 * MetaData ([10c7ddb](https://github.com/dgiot/dgiot-dashboard/commit/10c7ddb04320d6aca9493487cb4994797f1b0bb5))
 * monaco ([22e2180](https://github.com/dgiot/dgiot-dashboard/commit/22e218014284689c746a0b46c06d3e82685c3a24))
 * **proxy:** dgiot_file ([3902b11](https://github.com/dgiot/dgiot-dashboard/commit/3902b11366f209e5cf251618bb19b5656afa46c0))

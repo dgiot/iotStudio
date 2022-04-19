@@ -612,9 +612,9 @@
           />
         </el-tab-pane>
 
-        <el-tab-pane :label="$translateTitle('device.alert')" name="alert">
-          <dgiot-empty/>
-        </el-tab-pane>
+<!--        <el-tab-pane :label="$translateTitle('device.alert')" name="alert">-->
+<!--          <dgiot-empty/>-->
+<!--        </el-tab-pane>-->
       </el-tabs>
     </div>
   </div>

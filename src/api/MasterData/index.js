@@ -27,17 +27,17 @@ export async function queryMasterData(params) {
 }
 
 export async function getMasterData(ObjectId) {
-  return get_object('/MasterData', ObjectId)
+  return get_object('MasterData', ObjectId)
 }
 
 export async function delMasterData(ObjectId) {
-  return del_object('/MasterData', ObjectId)
+  return del_object('MasterData', ObjectId)
 }
 
 export async function putMasterData(ObjectId, params) {
-  return update_object('/MasterData', ObjectId, params)
+  return update_object('MasterData', ObjectId, params)
 }
 
 export async function postMasterData(params) {
-  return create_object('/MasterData', params)
+  return create_object('MasterData', params)
 }

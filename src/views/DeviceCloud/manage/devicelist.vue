@@ -36,7 +36,7 @@
             slot="prepend"
           >
             <el-option label="设备名称" value="name" />
-            <el-option label="外壳编号" value="basedata.basicdata.partAddr" />
+            <el-option label="外壳编号" value="detail.assetNum" />
             <el-option label="主板编号" value="devaddr" />
           </el-select>
         </el-input>
@@ -95,6 +95,7 @@
       </el-dialog>
       <el-dialog
         append-to-body
+        :before-close="handleClose"
         center
         title="设备参数控制"
         :visible.sync="commandInfo.dialog"
@@ -158,7 +159,7 @@
       </el-dialog>
       <el-dialog
         append-to-body
-        :before-close="handleClose"
+        :before-close="handleClosedevice"
         class="map_dialog"
         title="设备位置"
         :visible.sync="dialog_device"
@@ -197,27 +198,24 @@
           <el-form-item label="设备名称：" prop="name">
             <el-input v-model="deviceForm.name" autocomplete="off" />
           </el-form-item>
-          <el-form-item label="外壳编号：" prop="devaddr">
+          <el-form-item label="外壳编号：" prop="detail.assetNum">
+            <el-input v-model="deviceForm.detail.assetNum" autocomplete="off" />
+          </el-form-item>
+          <el-form-item label="主板编号：" prop="devaddr">
             <el-input v-model="deviceForm.devaddr" autocomplete="off" />
           </el-form-item>
-          <el-form-item label="主板编号：" prop="basedata.basicdata.partAddr">
-            <el-input
-              v-model="deviceForm.basedata.basicdata.partAddr"
-              autocomplete="off"
-            />
-          </el-form-item>
-          <el-form-item label="到期时间：" prop="basedata.expirationTime">
+          <el-form-item label="到期时间：" prop="detail.expirationTime">
             <el-date-picker
-              v-model="deviceForm.basedata.expirationTime"
+              v-model="deviceForm.detail.expirationTime"
               placeholder="选择日期："
               style="width: 100%"
               type="date"
               value-format="timestamp"
             />
           </el-form-item>
-          <el-form-item label="归属厂家：" prop="basedata.factory">
+          <el-form-item label="归属厂家：" prop="detail.factory">
             <el-input
-              v-model="deviceForm.basedata.factory"
+              v-model="deviceForm.detail.factory"
               autocomplete="off"
               disabled
             />
@@ -271,18 +269,27 @@
       </el-table-column>
       <el-table-column
         align="center"
-        label="开关机状态"
-        prop="basedata.PowerState"
+        label="外壳编号"
+        prop="detail.assetNum"
         show-overflow-tooltip
         sortable
         width="120"
       >
         <template #default="{ row }">
-          <el-link
-            effect="dark"
-            :type="row.basedata.PowerState == 1 ? 'success' : 'info'"
-          >
-            {{ row.basedata.PowerState == 1 ? '开机' : '关机' }}
+          {{ row.detail.assetNum }}
+        </template>
+      </el-table-column>
+      <el-table-column
+        align="center"
+        label="开关机状态"
+        prop="isEnable"
+        show-overflow-tooltip
+        sortable
+        width="120"
+      >
+        <template #default="{ row }">
+          <el-link effect="dark" :type="row.isEnable ? 'success' : 'info'">
+            {{ row.isEnable ? '开机' : '关机' }}
           </el-link>
         </template>
       </el-table-column>
@@ -333,30 +340,19 @@
         width="180"
       >
         <template #default="{ row }">
-          {{ $moment(row.createdAt).format('YYYY-MM-DD HH:mm:ss') || '' }}
+          {{ $moment(row.createdAt).format('YYYY-MM-DD') || '' }}
         </template>
       </el-table-column>
       <el-table-column
         align="center"
         label="到期时间"
-        prop="basedata.expirationTime"
+        prop="detail.expirationTime"
         show-overflow-tooltip
         sortable
         width="140"
       >
         <template #default="{ row }">
-          <!--          <span v-html="timestampToTime(row.basedata.expirationTime)" />-->
-          {{
-            row.basedata.expirationTime &&
-            row.basedata.expirationTime.length != 13
-              ? $moment(new Date(row.basedata.expirationTime * 1000)).format(
-                  'YYYY-MM-DD'
-                )
-              : row.basedata.expirationTime &&
-                row.basedata.expirationTime.length == 13
-              ? $moment($moment().unix() * 1000).format('YYYY-MM-DD')
-              : $moment(row.basedata.expirationTime).format('YYYY-MM-DD')
-          }}
+          {{ getTime(row.detail.expirationTime, row) }}
         </template>
       </el-table-column>
       <el-table-column
@@ -368,21 +364,15 @@
       >
         <template slot-scope="scope">
           <el-button
-            v-if="
-              scope.row.basedata.basicdata &&
-              scope.row.basedata.basicdata.baiduaddr &&
-              scope.row.basedata.basicdata.baiduaddr.formatted_address
-            "
+            v-if="scope.row.detail.address"
             class="el-icon-location"
             type="text"
-            @click="
-              clickRow(scope.row.basedata.basicdata.baiduaddr, scope.row.name)
-            "
+            @click="clickRow(scope.row.location, scope.row.name)"
           >
-            {{ scope.row.basedata.basicdata.baiduaddr.formatted_address }}
+            {{ scope.row.detail.address || '暂无' }}
           </el-button>
 
-          <span v-else>暂未上报设备地址</span>
+          <span v-else></span>
         </template>
       </el-table-column>
       <el-table-column
@@ -524,21 +514,21 @@
               trigger: 'blur',
             },
           ],
-          'basedata.basicdata.partAddr': [
+          'detail.assetNum': [
             {
               required: true,
               validator: checkAevAddr,
               trigger: 'blur',
             },
           ],
-          'basedata.expirationTime': [
+          'detail.expirationTime': [
             {
               required: true,
               message: '请选择服务到期时间',
               trigger: 'blur',
             },
           ],
-          'basedata.factory': [
+          'detail.factory': [
             {
               required: true,
               message: '请选择归属场景',
@@ -553,40 +543,19 @@
           lat: 39.915,
         },
         deviceForm: {
+          content: {
+            devddrNum: moment().format('x'),
+          },
+          detail: {
+            assetNum: '',
+            expirationTime: moment().format('x'),
+            factory: '',
+          },
           name: '',
           isEnable: true,
           status: 'OFFLINE',
           devaddr: '',
-          basedata: {
-            expirationTime: moment().format('x'),
-            factory: '',
-            basicdata: {
-              devddrNum: moment().format('x'),
-              GPS: { Lon: 120.455, Lat: 31.555 },
-              partAddr: '',
-              SerialNo: '',
-              SumLayer: '',
-              RatedFreq: '',
-              RatedLoad: '',
-              MDSerialNo: '',
-              RatedPower: '',
-              SelfAdjust: '',
-              SIMSerialNo: '',
-              SelfLearned: '',
-              CtrlSerialNo: '',
-              LearnedLayer: '',
-              WeightFactor: '',
-              MDSoftVersion: '',
-              CtrSoftVersion: '',
-              mapAddressText: '',
-              ProtocolVersion: '',
-              PowerOnCtrl: 0,
-              PubFreq: 20,
-              PubCtrl: 1,
-              ParaGet: 0,
-              FOTA: 0,
-            },
-          },
+          basedata: {},
           route: {},
           product: { __type: 'Pointer', className: 'Product', objectId: '' },
         },
@@ -615,12 +584,6 @@
             prop: 'name',
             sortable: true,
             disableCheck: true,
-          },
-          {
-            label: '外壳编号',
-            width: '110',
-            prop: 'basedata.basicdata.partAddr',
-            sortable: true,
           },
           // {
           //   label: '开关机状态',
@@ -695,7 +658,7 @@
         read: true,
         write: true,
       }
-      this.deviceForm.basedata.factory = this.currentDepartment.alias
+      this.deviceForm.detail.factory = this.currentDepartment.alias
       this.deviceForm.ACL = aclObj
       this.deviceForm.product = {
         __type: 'Pointer',
@@ -710,6 +673,14 @@
       ...mapMutations({
         setCurrentDepartment: 'user/setCurrentDepartment',
       }),
+      getTime(t, row) {
+        console.log(t, row.basedata.expirationTime, row)
+        return t
+          ? moment(Number(t)).format('YYYY-MM-DD')
+          : moment(Number(row.basedata.expirationTime) * 1000).format(
+              'YYYY-MM-DD'
+            )
+      },
       handleMenuClick(e) {
         console.error(e)
       },
@@ -725,6 +696,14 @@
           },
         })
       },
+      handleClosedevice() {
+        this.fetchData(false)
+        this.dialog_device = false
+        this.coordinate = {
+          lng: 116.404,
+          lat: 39.915,
+        }
+      },
       // 迁移设备
       transferAcl(data) {
         const aclKey1 = 'role' + ':' + data.name
@@ -734,7 +713,7 @@
           read: true,
           write: true,
         }
-        this.deviceInfo.basedata.factory = data.depname
+        this.deviceInfo.detail.factory = data.depname
         const parmas = {
           ACL: aclObj,
           basedata: this.deviceInfo.basedata,
@@ -800,6 +779,8 @@
           lat: 39.915,
         }
         this.dialog_device = false
+        this.commandInfo.dialog = false
+        this.fetchData(false)
       },
       onCloseDialog(formName) {
         this.$refs[formName].resetFields()
@@ -813,9 +794,6 @@
         } else if (row[prop]) {
           console.error('basicdata', row[prop])
           return row[prop]
-        } else if (!_.isEmpty(basedata.basicdata)) {
-          const st = prop.split('.')[2]
-          return basedata?.basicdata[st] ? basedata.basicdata[st] : '暂无'
         }
       },
       handler({ BMap, map }) {
@@ -829,8 +807,8 @@
       clickRow(baidulocation, title) {
         // 经度 Lon 纬度 Lat
         const position = {
-          lng: Number(baidulocation.location.lng),
-          lat: Number(baidulocation.location.lat),
+          lng: Number(baidulocation.longitude),
+          lat: Number(baidulocation.latitude),
         }
         this.mapLabel = {
           content: title,
@@ -841,16 +819,18 @@
           position: position,
           title: title,
         }
+        this.bmLabel = true
+        console.log(this.mapLabel)
         this.dialog_device = true
         // this.$refs['map'].baiduCenter = position
-        this.bmLabel = true
       },
       onSubmit(formName) {
         this.$refs[formName].validate(async (valid) => {
           if (valid) {
             let params = this.deviceForm
-            params.basedata[this.deviceForm.devaddr] =
-              this.deviceForm.basedata.expirationTime
+            params.detail[this.deviceForm.devaddr] =
+              this.deviceForm.detail.expirationTime
+            params.detail.assetNum = this.deviceForm.detail.assetNum
             console.error(params)
             const res = await postDevice(params)
             this.createDeviceDialog = false
@@ -957,7 +937,7 @@
         this.queryForm.limit = 20
         this.fetchData()
       },
-      async fetchData() {
+      async fetchData(listLoading = true) {
         console.log(this.queryForm.type, this.queryForm)
         let params = {
           skip: this.queryForm.skip,
@@ -974,8 +954,14 @@
             ? { $regex: this.queryForm.search }
             : { $ne: '！' }
         console.info(params)
-        this.listLoading = true
+        this.listLoading = listLoading
         const { results, count } = await querycompanyDevice(params)
+        results.forEach((i) => {
+          if (_.isEmpty(i.detail)) i.detail = {}
+          if (_.isEmpty(i.content)) i.content = {}
+          if (_.isEmpty(i.profile)) i.profile = {}
+          if (_.isEmpty(i.isEnable)) i.isEnable = false
+        })
         this.list = results
         this.total = count
         this.listLoading = false

@@ -17,6 +17,7 @@ let systemStatic = {
     'amis/lib/themes/antd.css',
   ],
   js: [
+    'aliplayer-min.css',
     'vue.js',
     'mqttws31.js',
     'vue-router.min.js',
@@ -53,7 +54,7 @@ let systemStatic = {
     'iview.min.js',
     'vuetify.min.js',
     'resize-observer-polyfill.js',
-    // 'vue-aliplayer-v2.js',
+    'vue-aliplayer-v2.js',
     'Sortable.min.js',
     'vue-flv-player.umd.min.js',
     'md5.min.js',
@@ -62,6 +63,9 @@ let systemStatic = {
     'vue-multipane.js',
     'bcryptjs.js',
     'macarons.js',
+    'aliplayer-min.js',
+    'analytics.js',
+    'vue-qr.js',
   ],
 }
 let runTimeStatic = {
@@ -84,7 +88,6 @@ let runTimeStatic = {
     'javascript.js',
     'json-lint.js',
     'vditor.js',
-    'aliplayer-min.js',
   ],
 }
 if (process.env.NODE_ENV !== 'development') systemStatic.js[0] = 'vue.min.js'

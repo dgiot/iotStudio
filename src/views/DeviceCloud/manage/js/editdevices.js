@@ -526,9 +526,9 @@ export default {
           title: resultes.name,
         }
         if (
-          resultes.basedata.basicdata &&
-          resultes.basedata.basicdata.baiduaddr &&
-          resultes.basedata.basicdata.baiduaddr.formatted_address
+          resultes.basedata &&
+          resultes.basedata.baiduaddr &&
+          resultes.basedata.baiduaddr.formatted_address
         ) {
           mapLabel = {
             content: resultes.name,
@@ -537,8 +537,8 @@ export default {
               fontSize: '24px',
             },
             position: {
-              lng: Number(resultes.basedata.basicdata.baiduaddr.location.lng),
-              lat: Number(resultes.basedata.basicdata.baiduaddr.location.lat),
+              lng: Number(resultes.basedata.baiduaddr.location.lng),
+              lat: Number(resultes.basedata.baiduaddr.location.lat),
             },
             title: resultes.name,
           }
