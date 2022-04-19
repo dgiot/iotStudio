@@ -6,8 +6,8 @@ const queryParams = [
   {
     dataType: 'map',
     vuekey: 'baiduMap',
-    table: 'baidu',
-    query: { keys: ['count(*)'] },
+    table: 'Device',
+    query: { keys: ['count(*)', 'name', 'location', 'status'] },
   },
   {
     dataType: 'card',
@@ -79,7 +79,7 @@ const queryParams = [
     table: 'Device',
     query: {
       limit: 1,
-      keys: ['count(*)'],
+      keys: ['count(*)', 'name', 'location', 'status'],
       where: {},
     },
   },

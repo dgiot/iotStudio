@@ -213,6 +213,25 @@
               value-format="timestamp"
             />
           </el-form-item>
+          <el-form-item label="所属产品：" prop="productId">
+            <el-select
+              v-model="productId"
+              placeholder="请选择"
+              style="width: 100%"
+            >
+              <el-option
+                v-for="item in Product"
+                :key="item.objectId"
+                :label="item.name"
+                :value="item.objectId"
+              >
+                <span style="float: left">{{ item.name }}</span>
+                <span style="float: right; color: #8492a6; font-size: 13px">
+                  {{ item.objectId }}
+                </span>
+              </el-option>
+            </el-select>
+          </el-form-item>
           <el-form-item label="归属厂家：" prop="detail.factory">
             <el-input
               v-model="deviceForm.detail.factory"
@@ -288,8 +307,12 @@
         width="120"
       >
         <template #default="{ row }">
-          <el-link effect="dark" :type="row.isEnable ? 'success' : 'info'">
-            {{ row.isEnable ? '开机' : '关机' }}
+          <el-link
+            effect="dark"
+            :type="row.isEnable == true ? 'success' : 'info'"
+            @click="print(row)"
+          >
+            {{ row.isEnable == true ? '开机' : '关机' }}
           </el-link>
         </template>
       </el-table-column>
@@ -429,7 +452,7 @@
 
 <script>
   import TableEdit from '@/views/DeviceCloud/empty/tableEdit'
-  import { getProduct, queryProduct } from '@/api/Product/index'
+  import { queryProduct } from '@/api/Product/index'
   import { getStatistics } from '@/api/Python'
   import { mapGetters, mapMutations } from 'vuex'
   import { queryView } from '@/api/View'
@@ -462,7 +485,8 @@
         }, 1000)
       }
       return {
-        productId: '0765bee775',
+        Product: [],
+        productId: '',
         deviceInfo: {},
         roleProps: {
           children: 'children',
@@ -559,7 +583,7 @@
           route: {},
           product: { __type: 'Pointer', className: 'Product', objectId: '' },
         },
-        product: '0765bee775',
+        product: '',
         createDeviceDialog: false,
         drawerAdd: false,
         infoData: 'Empty',
@@ -650,6 +674,10 @@
     },
     watch: {},
     created() {
+      this.getProduct()
+      this.queryForm.search = this.$route.query.devicename
+        ? this.$route.query.devicename
+        : ''
       this.fetchData()
       // 设置默认归属厂家
       const aclKey1 = 'role' + ':' + this.currentDepartment.alias
@@ -660,12 +688,6 @@
       }
       this.deviceForm.detail.factory = this.currentDepartment.alias
       this.deviceForm.ACL = aclObj
-      this.deviceForm.product = {
-        __type: 'Pointer',
-        className: 'Product',
-        objectId: this.productId,
-      }
-      console.log('deviceForm', this.deviceForm)
     },
     mounted() {},
     destroyed() {},
@@ -673,8 +695,23 @@
       ...mapMutations({
         setCurrentDepartment: 'user/setCurrentDepartment',
       }),
+      async getProduct() {
+        const { results = [] } = await queryProduct({})
+        this.Product = results
+        this.productId = results[0].objectId
+        this.product = results[0].objectId
+        this.deviceForm.product = {
+          __type: 'Pointer',
+          className: 'Product',
+          objectId: this.productId,
+        }
+        console.log('deviceForm', this.deviceForm)
+      },
+      async print(row) {
+        console.log(await getDevice(row.objectId))
+        console.log(row, row.isEnable)
+      },
       getTime(t, row) {
-        console.log(t, row.basedata.expirationTime, row)
         return t
           ? moment(Number(t)).format('YYYY-MM-DD')
           : moment(Number(row.basedata.expirationTime) * 1000).format(
@@ -687,7 +724,7 @@
       // 设备详情
       deviceToDetail(row) {
         this.$router.push({
-          path: '/roles/editdevices',
+          path: '/roles/devicesDetailLite',
           query: {
             deviceid: row.objectId,
             nodeType: row.nodeType,
@@ -945,9 +982,7 @@
           count: 'objectId',
           order: '-createdAt',
           excludeKeys: 'properties',
-          where: {
-            product: this.product,
-          },
+          where: {},
         }
         if (this.queryForm.type)
           params.where[this.queryForm.type] = this.queryForm.search.length
@@ -960,7 +995,6 @@
           if (_.isEmpty(i.detail)) i.detail = {}
           if (_.isEmpty(i.content)) i.content = {}
           if (_.isEmpty(i.profile)) i.profile = {}
-          if (_.isEmpty(i.isEnable)) i.isEnable = false
         })
         this.list = results
         this.total = count

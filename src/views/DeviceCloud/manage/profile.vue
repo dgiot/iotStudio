@@ -897,7 +897,7 @@
         this.categorytree = results
       },
       async queryProduttemp(args) {
-        const loading = this.$baseColorfullLoading()
+        // const loading = this.$baseColorfullLoading()
         let params = {
           order: '-createdAt',
           keys: 'count(*)',
@@ -919,11 +919,11 @@
         }
         try {
           const { results = [], count = 0 } = await queryProductTemplet(params)
-          loading.close()
+          // loading.close()
           this.proTableData = results
           this.total = count
         } catch (error) {
-          loading.close()
+          // loading.close()
           dgiotlog.log(error)
           this.$message.error(`${error}`)
         }

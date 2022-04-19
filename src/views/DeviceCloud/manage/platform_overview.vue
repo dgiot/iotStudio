@@ -324,17 +324,42 @@
                       :offset="{ width: 400, height: 0 }"
                     />
                   </bm-control>
+                  <div
+                    v-for="position in getPosition(_tableData)"
+                    v-show="sizeZoom <= 8"
+                    :key="position.objectId"
+                  >
+                    <bm-point-collection
+                      v-if="sizeZoom <= 8"
+                      color="red"
+                      :points="[position]"
+                      :shape="
+                        position.icon == 1
+                          ? 'BMAP_POINT_SHAPE_STAR'
+                          : 'BMAP_POINT_SHAPE_WATERDROP'
+                      "
+                      size="BMAP_POINT_SIZE_SMALL"
+                      @click="_goDevice(position)"
+                    />
+                  </div>
+
                   <div v-for="(item, index) in _tableData" :key="index">
                     <bm-marker
+                      v-if="sizeZoom > 8"
                       animation="BMAP_ANIMATION_BOUNCE"
                       :dragging="true"
+                      :icon="{
+                        url:
+                          item.icon == 1 ? icoPath.icoPath1 : icoPath.icoPath2,
+                        size: { width: 100, height: 5 * sizeZoom },
+                      }"
                       :position="{
                         lng: item.location.longitude,
                         lat: item.location.latitude,
                       }"
                     >
                       <bm-label
-                        :content="item.name"
+                        :content="sizeZoom >= 13 ? item.name : ''"
                         :label-style="{ color: 'red', fontSize: '24px' }"
                         :offset="{ width: -35, height: 30 }"
                         @click="_goDevice(item, index)"
@@ -367,6 +392,7 @@
                     anchor="BMAP_ANCHOR_BOTTOM_RIGHT"
                     :auto-location="true"
                     :show-address-bar="true"
+                    :show-zoom-info="true"
                   />
                 </baidu-map>
               </div>
@@ -594,7 +620,7 @@
 <script>
   import icoPath1 from '../../../../public/assets/images/Device/1.png'
   import icoPath2 from '../../../../public/assets/images/Device/2.png'
-  import { queryProduct } from '@/api/Product'
+  // import { queryProduct } from '@/api/Product'
   import { getDevice } from '@/api/Device'
   import { mapGetters, mapMutations } from 'vuex'
   import { getToken } from '@/api/Menu'
@@ -616,6 +642,7 @@
     BmPanorama,
     BmScale,
     BmLabel,
+    BmPointCollection,
   } from 'vue-baidu-map'
   import { secret } from '@/config/secret.config'
 
@@ -623,6 +650,7 @@
   export default {
     name: 'Home',
     components: {
+      BmPointCollection,
       BmInfoWindow,
       info,
       BmScale,
@@ -732,7 +760,8 @@
         deptTreeData: [],
         show: false,
         // sizeZoom: 6,
-        sizeZoom: 19,
+        // https://img-blog.csdnimg.cn/20200429215931435.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L0dhYnJpZWxfd2Vp,size_16,color_FFFFFF,t_70
+        sizeZoom: 5,
         tableData: [],
         offlineData: [],
         onlineData: [],
@@ -800,9 +829,22 @@
         deep: true,
         limit: true,
       },
+      sizeZoom: {
+        handler: function (zoom) {
+          console.log(`当前sizeZoom 为 ${zoom}`)
+        },
+        deep: true,
+        limit: true,
+      },
     },
     created() {},
     mounted() {
+      setTimeout(() => {
+        queryParams.forEach((e) => {
+          let key = e.vuekey
+          this.loadingConfig[`${key}`] = false
+        })
+      }, 1240)
       this.router = this.$dgiotBus.router(this.$route.fullPath)
       this.$dgiotBus.$off('qqMapClcik')
       this.$dgiotBus.$on('qqMapClcik', (ev) => {
@@ -823,13 +865,38 @@
     methods: {
       /**
        *
+       * @param BMap
+       * @param map
+       */
+      handler({ BMap, map }) {
+        console.log(BMap, map)
+        // 自动获取展示的比例
+        // var view = map.getViewport(eval(this._tableData))
+        // this.sizeZoom = view.zoom;
+        // this.center = view.center;
+      },
+      /**
+       *
+       * @param position
+       * @returns {*}
+       */
+      getPosition(position) {
+        position.forEach((p) => {
+          p.lng = p.location.longitude
+          p.lat = p.location.latitude
+        })
+        console.log(position)
+        return position
+      },
+      /**
+       *
        * @param
        * @returns
        */
       initDgiotMqtt() {
         // 页面加载完cdn 资源后执行。
         this.$nextTick(async () => {
-          await this.getProduct()
+          // await this.getProduct()
           await this.queryData()
           await this.setTreeFlag(true)
         })
@@ -981,14 +1048,20 @@
           : (this.deviceInfo.topicData = _toppic)
         this.deviceFlag = true
       },
+      printQueryInfo(value, mqttMsg) {
+        queryParams.forEach((e) => {
+          if (e.vuekey)
+            console.log(`收到订阅${value}的消息${mqttMsg},查询参数为${mqttMsg}`)
+        })
+      },
       mqttMsg(e) {
         let mqttMsg = isBase64(e) ? Base64.decode(e) : e
         console.log(mqttMsg, '收到消息')
-        console.table(mqttMsg)
         // // dgiotlog.log(destinationName, mqttMsg, 'mqttMsg')
         let mqttMsgValue = JSON.parse(mqttMsg).value
         let key = JSON.parse(mqttMsg).vuekey
-        this.loadingConfig[`${key}`] = true
+        this.printQueryInfo(mqttMsgValue, mqttMsg)
+        // this.loadingConfig[`${key}`] = true
         // this.$baseNotify(
         //   '',
         //   `${this.$translateTitle('websocket.messages')}${key}`
@@ -1087,6 +1160,25 @@
         // dgiotlog.log(objectId)
       },
       async queryData() {
+        // https://lbsyun.baidu.com/cms/jsapi/class/jsapi_reference.html#a3b22
+        setTimeout(() => {
+          queryParams.forEach((e) => {
+            let key = e.vuekey
+            this.loadingConfig[`${key}`] = true
+          })
+        }, 1240)
+        const Startdashboardid = 'dgiot-dashboard'
+        this.subtopic = `$dg/dashboard/${Startdashboardid}/report`
+        this.topicKey = this.$dgiotBus.topicKey(this.router, this.subtopic)
+        this.$dgiotBus.$emit('MqttSubscribe', {
+          router: this.router,
+          topic: this.subtopic,
+          qos: 0,
+          ttl: 1000 * 60 * 60 * 3,
+        })
+        console.error(queryParams)
+        await Startdashboard(queryParams, Startdashboardid)
+        // 本地mqtt 存在问题,在请求4秒后手动关闭所有loading
         this.$nextTick(() => {
           if (this.mapType == 'tencent') {
             this.setTreeFlag(false)
@@ -1121,33 +1213,6 @@
             }
           }
         })
-        const Startdashboardid = 'dgiot-dashboard'
-        this.subtopic = `$dg/dashboard/${Startdashboardid}/report`
-        this.topicKey = this.$dgiotBus.topicKey(this.router, this.subtopic)
-        this.$dgiotBus.$emit('MqttSubscribe', {
-          router: this.router,
-          topic: this.subtopic,
-          qos: 0,
-          ttl: 1000 * 60 * 60 * 3,
-        })
-        // // 新马赫只查 0765bee775 下的设备
-        // queryParams[2].query.where = {
-        //   product: '0765bee775',
-        // }
-        // queryParams[8].query.where = {
-        //   product: '0765bee775',
-        // }
-        console.clear()
-        // queryParams[2].query.count = 'objectId'
-        console.error(queryParams[2])
-        const res = await Startdashboard(queryParams, Startdashboardid)
-        // 本地mqtt 存在问题,在请求4秒后手动关闭所有loading
-        setTimeout(() => {
-          queryParams.forEach((e) => {
-            let key = e.vuekey
-            this.loadingConfig[`${key}`] = true
-          })
-        }, 3000)
       },
       async getProduct() {
         const { results } = await queryProduct({

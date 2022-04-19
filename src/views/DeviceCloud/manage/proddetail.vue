@@ -1915,6 +1915,7 @@
             :width="moduletype == 'properties' ? '100%' : '80%'"
           >
             <dgiot-wmx
+              v-if="wmxdialogVisible"
               :key="upKey"
               ref="sizeForm"
               :moduletype="moduletype"
@@ -1924,7 +1925,7 @@
               @removeDas="removeDas"
               @removeDomain="removeDomain"
               @submitForm="submitForm"
-              @wmxhandleClose="wmxhandleClose"
+              @wmxhandleClose="wmxhandleClose('close')"
             />
           </el-dialog>
           <!--物模型结构体-->
