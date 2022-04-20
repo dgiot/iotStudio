@@ -15,7 +15,7 @@ jobs:
     strategy:
       matrix:
         node-version: [ latest,current,stable ]
-        pnpm-version: [ latest,current,stable ]
+        pnpm-version: [ latest ]
     steps:
       - name: Checkout 🚀
         uses: actions/checkout@v2
@@ -30,14 +30,13 @@ jobs:
           key: ${{ runner.os }}-${{ matrix.pnpm-version }}-build-${{ env.cache-name }}-${{ matrix.node-version }}-${{ hashFiles('**/pnpm-lock.yaml') }}
           restore-keys: |
             ${{ runner.os }}-${{ matrix.pnpm-version }}-build-${{ env.cache-name }}-${{ matrix.node-version }}-
-      - name: Use Pnpm 🚀
+      - name: Use Pnpm ${{ matrix.pnpm-version }} 🚀
         uses: pnpm/action-setup@v2.2.1
         with:
           version: ${{ matrix.pnpm-version }}
-          run_install: false
+          run_install: true
       - name: Pnpm script 🚀
         run: |
-          pnpm install
           pnpm build
   deploy:
     name: deploy 🚀
@@ -45,6 +44,7 @@ jobs:
     strategy:
       matrix:
         node-version: [ 16.14.2 ]
+        pnpm-version: [ 6.32.8 ]
     steps:
       - name: Checkout 🚀
         uses: actions/checkout@v2
@@ -59,10 +59,10 @@ jobs:
           key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ matrix.node-version }}-${{ hashFiles('**/pnpm-lock.yaml') }}
           restore-keys: |
             ${{ runner.os }}-build-${{ env.cache-name }}-${{ matrix.node-version }}-
-      - name: Use Pnpm 🚀
+      - name: Use Pnpm ${{ matrix.pnpm-version }} 🚀
         uses: pnpm/action-setup@v2.2.1
         with:
-          version: 6.3.0
+          version: ${{ matrix.pnpm-version }}
           run_install: false
       - name: Pnpm script 🚀
         run: |
