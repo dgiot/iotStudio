@@ -182,4 +182,4 @@ jobs:
           runs: 5
           uploadArtifacts: true
           configPath: './.github/workflows/setup/lighthouse-audit.json'
-    needs: deploy
+    needs: build
