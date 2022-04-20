@@ -713,7 +713,7 @@
             this.$baseMessage(
               this.$translateTitle('alert.Data request error') + `${error}`,
               'error',
-              'vab-hey-message-error'
+              'dgiot-hey-message-error'
             )
             throw new Error(error)
           }
@@ -721,7 +721,7 @@
           // this.$baseMessage(
           //   this.$translateTitle('alert.Data request error') + `${e}`,
           //   'error',
-          //   'vab-hey-message-error'
+          //   'dgiot-hey-message-error'
           // )
           throw new Error(e)
         }

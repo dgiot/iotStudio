@@ -1345,8 +1345,6 @@
   } from '@/api/Device'
   import { getToken } from '@/api/Menu'
   import { secret } from '@/config/secret.config'
-
-  var pcdata
   export default {
     components: {
       BmScale,
@@ -2818,15 +2816,6 @@
         this.equipmentEditor = '编辑'
         // this.rolesSelect(row.productid)
         // this.deviceform.batchId = row.detail.batchId.batch_name
-      },
-      getBatch() {
-        return new Promise((resolve, reject) => {
-          if (pcdata.length > 0) {
-            resolve(pcdata)
-          } else {
-            reject(false)
-          }
-        })
       },
       initQuery(msg, type) {
         this.$message({
