@@ -15,8 +15,15 @@ jobs:
     strategy:
       matrix:
         node-version: [ latest,current,stable ]
-        pnpm-version: [ latest,next ]
+        pnpm-version: [ latest ]
     steps:
+      - name: Sync dgiot-dashboard Pages  🚀
+        uses: yanglbme/gitee-pages-action@main
+        with:
+          gitee-username: ${{ secrets.GITEE_USERNAME }}
+          gitee-password: ${{ secrets.GITEE_PASSWORD }}
+          gitee-repo: dgiiot/dgiot-dashboard
+          branch: master
       - name: Checkout 🚀
         uses: actions/checkout@v2
       - name: Use Node.js ${{ matrix.node-version }} 🚀
@@ -155,13 +162,6 @@ jobs:
           gitee-password: ${{ secrets.GITEE_PASSWORD }}
           gitee-repo: dgiiot/dgiot-dashboard
           branch: gh-pages
-      - name: Sync to dgiot 🚀
-        uses: wearerequired/git-mirror-action@master
-        env:
-          SSH_PRIVATE_KEY: ${{ secrets.GITEE_PRIVATE_KEY }}
-        with:
-          source-repo: git@github.com:dgiot/dgiot-dashboard.git
-          destination-repo: git@gitee.com:dgiiot/dgiot-dashboard.git
       - name: Accurics Scan 🚀
         id: accurics-scan
         uses: docker://accurics/terrascan-action:latest
