@@ -9,12 +9,42 @@ env:
   TZ: Asia/Shanghai
 
 jobs:
+  build:
+    name: build 🚀
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [ latest,current,stable ]
+        pnpm-version: [ latest,current,stable ]
+    steps:
+      - name: Checkout 🚀
+        uses: actions/checkout@v2
+      - name: Use Node.js ${{ matrix.node-version }} 🚀
+        uses: actions/setup-node@v2
+      - name: Cache pnpm modules  🚀
+        uses: actions/cache@v2
+        env:
+          cache-name: cache-pnpm-modules
+        with:
+          path: ~/.pnpm-store
+          key: ${{ runner.os }}-${{ matrix.pnpm-version }}-build-${{ env.cache-name }}-${{ matrix.node-version }}-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-${{ matrix.pnpm-version }}-build-${{ env.cache-name }}-${{ matrix.node-version }}-
+      - name: Use Pnpm 🚀
+        uses: pnpm/action-setup@v2.2.1
+        with:
+          version: ${{ matrix.pnpm-version }}
+          run_install: false
+      - name: Pnpm script 🚀
+        run: |
+          pnpm install
+          pnpm build
   deploy:
     name: deploy 🚀
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node-version: [ 16.13.2 ]
+        node-version: [ 16.14.2 ]
     steps:
       - name: Checkout 🚀
         uses: actions/checkout@v2
@@ -30,7 +60,7 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-build-${{ env.cache-name }}-${{ matrix.node-version }}-
       - name: Use Pnpm 🚀
-        uses: pnpm/action-setup@v2.0.1
+        uses: pnpm/action-setup@v2.2.1
         with:
           version: 6.3.0
           run_install: false
