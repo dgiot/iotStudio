@@ -10,7 +10,7 @@ env:
 
 jobs:
   sync:
-    name: sync 🚀
+    name: sync gitee 🚀
     runs-on: ubuntu-latest
     steps:
       - name: Checkout 🚀
@@ -52,6 +52,7 @@ jobs:
       - name: Pnpm script 🚀
         run: |
           pnpm build
+    needs: sync
   deploy:
     name: deploy 🚀
     runs-on: ubuntu-latest
@@ -181,3 +182,4 @@ jobs:
           runs: 5
           uploadArtifacts: true
           configPath: './.github/workflows/setup/lighthouse-audit.json'
+    needs: deploy
