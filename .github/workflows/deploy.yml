@@ -9,6 +9,20 @@ env:
   TZ: Asia/Shanghai
 
 jobs:
+  sync:
+    name: sync 🚀
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout 🚀
+        uses: actions/checkout@v2
+      - name: Sync dgiot-dashboard 🚀
+        uses: Yikun/hub-mirror-action@v1.0
+        with:
+          src: github/dgiot
+          dst: gitee/dgiiot
+          dst_key: ${{ secrets.PRIVATE_KEY }}
+          dst_token: ${{ secrets.GIT_TOKEN }}
+          white_list: "dgiot-dashboard" # 只同步这个项目 https://github.com/Yikun/hub-mirror-action#%E9%BB%91%E7%99%BD%E5%90%8D%E5%8D%95
   build:
     name: build 🚀
     runs-on: ubuntu-latest
@@ -19,18 +33,6 @@ jobs:
     steps:
       - name: Checkout 🚀
         uses: actions/checkout@v2
-      - name: Sync dgiot-dashboard 🚀
-        uses: Yikun/hub-mirror-action@v1.0
-        with:
-          src: github/dgiot
-          dst: gitee/dgiiot
-          dst_key: ${{ secrets.PRIVATE_KEY }}
-          dst_token:  ${{ secrets.GIT_TOKEN }}
-          account_type: org
-          timeout: '1h'
-          debug: true
-          force_update: true
-          white_list: "dgiot-dashboard" # 只同步这个项目 https://github.com/Yikun/hub-mirror-action#%E9%BB%91%E7%99%BD%E5%90%8D%E5%8D%95
       - name: Use Node.js ${{ matrix.node-version }} 🚀
         uses: actions/setup-node@v2
       - name: Cache pnpm modules  🚀
