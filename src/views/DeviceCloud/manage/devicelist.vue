@@ -1035,7 +1035,7 @@
 <style lang="scss" scoped>
   .xinmahe-container {
     width: 100%;
-    heigth: 100%;
+    height: 100%;
 
     .ACTIVE,
     .ONLINE {

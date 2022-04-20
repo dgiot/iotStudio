@@ -19,7 +19,7 @@
         <div class="btm_wrap">
           <div v-for="item in plantlist" :key="item.id" class="wrap_content">
             <div class="ct_top">
-              <img src="../../../../public/img/plant/gc.png" />
+              <img src="../../../../public/assets/images/plant/gc.png" />
               <div class="top_right">
                 <div class="right_item right_title">{{ item.title }}</div>
                 <div class="right_item">编码:{{ item.id }}</div>

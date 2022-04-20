@@ -2839,7 +2839,27 @@
         this.getDevices({ start: 0 })
       },
       async updateDevice(params) {
-        const res = await this.$update_object('Device', this.deviceid, params)
+        // 更新时。以下三个字段需要与数据库匹配合并
+        const deviceInfo = await getDevice(this.deviceid)
+        const {
+          content = {},
+          detail = {},
+          profile = {},
+          basedata = {},
+        } = deviceInfo
+        const mergeParams = _.merge(
+          {
+            content,
+            detail,
+            profile,
+            basedata,
+          },
+          params
+        )
+        console.log('params', params)
+        console.log('deviceInfo', deviceInfo)
+        console.log('mergeParams', mergeParams)
+        const res = await putDevice(this.deviceid, params)
         if (res.updatedAt || res.devaddr) {
           this.initQuery('设备更新成功', 'success')
         } else {

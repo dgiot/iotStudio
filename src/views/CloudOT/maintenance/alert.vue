@@ -35,6 +35,6 @@
 <style lang="scss" scoped>
   .alert-container {
     width: 100%;
-    heigth: 100%;
+    height: 100%;
   }
 </style>
