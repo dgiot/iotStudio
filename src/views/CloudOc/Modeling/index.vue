@@ -11,30 +11,222 @@
 -->
 <template>
   <div class="index-container">
-    <div class="index">工厂建模</div>
+    <div class="index">
+      <div class="in_top">工厂建模</div>
+      <div class="in_ctr">工厂列表</div>
+      <div class="in_btm">
+        <el-button type="warning" @click="openCreatePlant">新增工厂</el-button>
+        <div class="btm_wrap">
+          <div v-for="item in plantlist" :key="item.id" class="wrap_content">
+            <div class="ct_top">
+              <img src="../../../../public/img/plant/gc.png" />
+              <div class="top_right">
+                <div class="right_item right_title">{{ item.title }}</div>
+                <div class="right_item">编码:{{ item.id }}</div>
+                <div class="right_item">
+                  描述:
+                  <span v-if="item.description">{{ item.description }}</span>
+                  <span v-else>--</span>
+                </div>
+              </div>
+            </div>
+            <div class="ct_btm">
+              <el-button class="btm_left">查看</el-button>
+              <div class="btm_right">更新时间:{{ item.datetime }}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <el-dialog
+      :append-to-body="true"
+      :direction="direction"
+      height="60%"
+      title="新增工厂"
+      :visible.sync="drawer"
+      width="30%"
+    >
+      <div class="demo-drawer__content">
+        <el-form ref="ruleForm" :model="form" :rules="rules">
+          <el-form-item
+            label="工厂名称"
+            :label-width="formLabelWidth"
+            prop="name"
+          >
+            <el-input v-model="form.name" placeholder="请输入工厂名称" />
+          </el-form-item>
+          <el-form-item
+            label="工厂编号"
+            :label-width="formLabelWidth"
+            prop="objectid"
+          >
+            <el-input v-model="form.objectid" placeholder="请输入工厂编号" />
+          </el-form-item>
+          <el-form-item label="工厂描述" :label-width="formLabelWidth">
+            <el-input
+              v-model="form.desc"
+              maxlength="500"
+              placeholder="不超过500个字符"
+              show-word-limit
+              type="textarea"
+            />
+          </el-form-item>
+          <el-form-item>
+            <el-button type="primary" @click="submitForm('ruleForm')">
+              立即创建
+            </el-button>
+            <el-button @click="openCreatePlant">取消</el-button>
+          </el-form-item>
+        </el-form>
+        <!-- <div class="demo-drawer__footer">
+          <el-button @click="cancelForm">取 消</el-button>
+          <el-button
+            :loading="loading"
+            type="primary"
+            @click="$refs.drawer.closeDrawer()"
+          >
+            {{ loading ? '提交中 ...' : '确 定' }}
+          </el-button>
+        </div> -->
+      </div>
+    </el-dialog>
   </div>
 </template>
 
 <script>
+  import { getList } from '@/api/Mock/plant'
   export default {
     name: 'Index',
     components: {},
     props: {},
     data() {
-      return {}
+      return {
+        plantlist: [],
+        drawer: false,
+        direction: 'rtl',
+        wrapclose: false,
+        form: {
+          name: '',
+          objectid: '',
+          desc: '',
+        },
+        rules: {
+          name: [
+            { required: true, message: '请输入工厂名称', trigger: 'blur' },
+            {
+              min: 2,
+              max: 50,
+              message: '长度在 3 到 50 个字符',
+              trigger: 'blur',
+            },
+          ],
+          objectid: [
+            { required: true, message: '请输入工厂编码', trigger: 'blur' },
+            {
+              min: 2,
+              max: 10,
+              message: '长度在 3 到 10 个字符',
+              trigger: 'blur',
+            },
+          ],
+        },
+      }
     },
     computed: {},
     watch: {},
     created() {},
-    mounted() {},
+    mounted() {
+      const res = getList()
+      console.log('list', res)
+      this.plantlist = res.data.List
+    },
     destroyed() {},
-    methods: {},
+    methods: {
+      openCreatePlant() {
+        this.form = {
+          name: '',
+          objectid: '',
+          desc: '',
+        }
+        this.drawer = !this.drawer
+      },
+      submitForm(formName) {
+        this.$refs[formName].validate((valid) => {
+          if (valid) {
+            alert('submit!')
+          } else {
+            console.log('error submit!!')
+            return false
+          }
+        })
+      },
+    },
   }
 </script>
 
 <style lang="scss" scoped>
   .index-container {
     width: 100%;
-    heigth: 100%;
+    height: 100%;
+    .index {
+      display: flex;
+      flex-direction: column;
+      margin-left: 10px;
+      .in_top {
+        font-size: 30px;
+        font-weight: 600;
+      }
+      .in_ctr {
+        margin: 25px 0;
+      }
+      .in_btm {
+        .btm_wrap {
+          margin-top: 20px;
+          display: flex;
+          flex-wrap: wrap;
+          .wrap_content {
+            width: 380px;
+            height: 220px;
+            margin-right: 20px;
+            margin-bottom: 20px;
+            box-shadow: -1px -1px 6px #ccc;
+            .ct_top {
+              height: 70%;
+              width: 100%;
+              display: flex;
+              padding: 30px;
+              img {
+                height: 90px;
+                width: 90px;
+              }
+              .top_right {
+                margin-left: 10px;
+                .right_item:nth-child(n + 2) {
+                  margin-top: 10px;
+                }
+                .right_title {
+                  font-weight: 600;
+                  font-size: 24px;
+                }
+              }
+            }
+            .ct_btm {
+              height: 30%;
+              display: flex;
+              margin-left: 30px;
+              .btm_left {
+                height: 30px;
+                width: 60px;
+              }
+              .btm_right {
+                color: #c7c6c0;
+                margin-left: 25px;
+                padding-top: 6px;
+              }
+            }
+          }
+        }
+      }
+    }
   }
 </style>

@@ -2444,7 +2444,10 @@
         }
         if (this.equvalue != 0) {
           // params.where.product = this.equvalue
+          this.devicestart = args.skip
           this.selectProdChange(this.equvalue)
+          // this.listLoading = false
+          // return
         }
         if (args.start == 0) {
           this.devicestart = 0
