@@ -8,6 +8,25 @@
 /**
  * 使 Error 对象支持 JSON 序列化
  */
+window.console =
+  window.console ||
+  (function () {
+    var c = {}
+    c.log =
+      c.warn =
+      c.debug =
+      c.info =
+      c.error =
+      c.time =
+      c.dir =
+      c.profile =
+      c.clear =
+      c.exception =
+      c.trace =
+      c.assert =
+        function () {}
+    return c
+  })()
 if (!('toJSON' in Error.prototype)) {
   /* eslint-disable no-extend-native */
   Object.defineProperty(Error.prototype, 'toJSON', {

@@ -324,69 +324,71 @@
                       :offset="{ width: 400, height: 0 }"
                     />
                   </bm-control>
-                  <div
-                    v-for="position in getPosition(_tableData)"
-                    v-show="sizeZoom <= 8"
-                    :key="position.objectId"
-                  >
-                    <bm-point-collection
-                      v-if="sizeZoom <= 8"
-                      color="red"
-                      :points="[position]"
-                      :shape="
-                        position.icon == 1
-                          ? 'BMAP_POINT_SHAPE_STAR'
-                          : 'BMAP_POINT_SHAPE_WATERDROP'
-                      "
-                      size="BMAP_POINT_SIZE_SMALL"
-                      @click="_goDevice(position)"
-                    />
-                  </div>
-
-                  <div v-for="(item, index) in _tableData" :key="index">
-                    <bm-marker
-                      v-if="sizeZoom > 8"
-                      animation="BMAP_ANIMATION_BOUNCE"
-                      :dragging="true"
-                      :icon="{
-                        url:
-                          item.icon == 1 ? icoPath.icoPath1 : icoPath.icoPath2,
-                        size: { width: 100, height: 5 * sizeZoom },
-                      }"
-                      :position="{
-                        lng: item.location.longitude,
-                        lat: item.location.latitude,
-                      }"
-                    >
-                      <bm-label
-                        :content="sizeZoom >= 13 ? item.name : ''"
-                        :label-style="{ color: 'red', fontSize: '24px' }"
-                        :offset="{ width: -35, height: 30 }"
-                        @click="_goDevice(item, index)"
-                      />
-                    </bm-marker>
-                    <!--                    <bm-marker-->
-                    <!--                      :ref="'bm_info' + index"-->
-                    <!--                      :icon="{-->
-                    <!--                          url:-->
-                    <!--                            item.icon == 1-->
-                    <!--                              ? icoPath.icoPath1-->
-                    <!--                              : icoPath.icoPath2,-->
-                    <!--                          size: { width: 100, height: 100 },-->
-                    <!--                        }"-->
-                    <!--                      :position="{-->
-                    <!--                          lng: item.location.longitude,-->
-                    <!--                          lat: item.location.latitude,-->
-                    <!--                        }"-->
-                    <!--                      @click="showDeatils(item, index)"-->
-                    <!--                    >-->
-                    <!--                      <bm-label-->
-                    <!--                        :content="item.name"-->
-                    <!--                        :label-style="{ color: 'red', fontSize: '24px' }"-->
-                    <!--                        :offset="{ width: -35, height: 30 }"-->
-                    <!--                      />-->
-                    <!--                    </bm-marker>-->
-                  </div>
+                  <!--                  <div-->
+                  <!--                    v-for="position in getPosition(_tableData)"-->
+                  <!--                    v-show="sizeZoom <= 8"-->
+                  <!--                    :key="position.objectId"-->
+                  <!--                  >-->
+                  <!--                    <bm-point-collection-->
+                  <!--                      v-if="sizeZoom <= 8"-->
+                  <!--                      color="red"-->
+                  <!--                      :points="[position]"-->
+                  <!--                      :shape="-->
+                  <!--                        position.icon == 1-->
+                  <!--                          ? 'BMAP_POINT_SHAPE_STAR'-->
+                  <!--                          : 'BMAP_POINT_SHAPE_WATERDROP'-->
+                  <!--                      "-->
+                  <!--                      size="BMAP_POINT_SIZE_SMALL"-->
+                  <!--                      @click="_goDevice(position)"-->
+                  <!--                    />-->
+                  <!--                  </div>-->
+                  <bml-marker-clusterer :average-center="true">
+                    <div v-for="(item, index) in _tableData" :key="index">
+                      <bm-marker
+                        animation="BMAP_ANIMATION_BOUNCE"
+                        :dragging="true"
+                        :icon="{
+                          url:
+                            item.icon == 1
+                              ? icoPath.icoPath1
+                              : icoPath.icoPath2,
+                          size: { width: 70, height: 70 },
+                        }"
+                        :position="{
+                          lng: item.location.longitude,
+                          lat: item.location.latitude,
+                        }"
+                      >
+                        <bm-label
+                          :content="item.name"
+                          :label-style="{ color: 'red', fontSize: '12px' }"
+                          :offset="{ width: 15, height: 6 }"
+                          @click="_goDevice(item, index)"
+                        />
+                      </bm-marker>
+                      <!--                    <bm-marker-->
+                      <!--                      :ref="'bm_info' + index"-->
+                      <!--                      :icon="{-->
+                      <!--                          url:-->
+                      <!--                            item.icon == 1-->
+                      <!--                              ? icoPath.icoPath1-->
+                      <!--                              : icoPath.icoPath2,-->
+                      <!--                          size: { width: 100, height: 100 },-->
+                      <!--                        }"-->
+                      <!--                      :position="{-->
+                      <!--                          lng: item.location.longitude,-->
+                      <!--                          lat: item.location.latitude,-->
+                      <!--                        }"-->
+                      <!--                      @click="showDeatils(item, index)"-->
+                      <!--                    >-->
+                      <!--                      <bm-label-->
+                      <!--                        :content="item.name"-->
+                      <!--                        :label-style="{ color: 'red', fontSize: '24px' }"-->
+                      <!--                        :offset="{ width: -35, height: 30 }"-->
+                      <!--                      />-->
+                      <!--                    </bm-marker>-->
+                    </div>
+                  </bml-marker-clusterer>
                   <bm-navigation anchor="BMAP_ANCHOR_TOP_RIGHT" />
                   <bm-geolocation
                     anchor="BMAP_ANCHOR_BOTTOM_RIGHT"
@@ -683,6 +685,10 @@
       }
 
       return {
+        polyline: {
+          editing: false,
+          paths: [],
+        },
         list: {
           toolbar: false,
           latitude: '31.551162',
@@ -1049,10 +1055,10 @@
         this.deviceFlag = true
       },
       printQueryInfo(value, mqttMsg) {
-        queryParams.forEach((e) => {
-          if (e.vuekey)
-            console.log(`收到订阅${value}的消息${mqttMsg},查询参数为${mqttMsg}`)
-        })
+        // queryParams.forEach((e) => {
+        //   if (e.vuekey)
+        //     console.log(`收到订阅${value}的消息${mqttMsg},查询参数为${mqttMsg}`)
+        // })
       },
       mqttMsg(e) {
         let mqttMsg = isBase64(e) ? Base64.decode(e) : e
@@ -1119,9 +1125,6 @@
               //   item.icon
               // }.png?${new Date().getTime()}\``)
             })
-            console.error('this.tableData')
-            console.debug()
-            console.error(this.tableData)
             this.set_tableData(this.tableData)
             this.$forceUpdate()
             break
@@ -1176,7 +1179,6 @@
           qos: 0,
           ttl: 1000 * 60 * 60 * 3,
         })
-        console.error(queryParams)
         await Startdashboard(queryParams, Startdashboardid)
         // 本地mqtt 存在问题,在请求4秒后手动关闭所有loading
         this.$nextTick(() => {

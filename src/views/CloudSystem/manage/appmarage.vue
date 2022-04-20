@@ -124,7 +124,6 @@
       :before-close="handleClose"
       :title="$translateTitle('plugins.modulelist')"
       :visible.sync="dialogVisible"
-      width="40%"
     >
       <div>
         <el-table
@@ -142,27 +141,44 @@
             align="center"
             :label="$translateTitle('plugins.ischange')"
             prop="is_changed"
+            show-overflow-tooltip
             sortable
-          />
+            width="auto"
+          >
+            <template #default="{ row }">
+              <el-tag
+                :effect="row.is_changed ? 'plain' : 'dark'"
+                :type="row.is_changed ? '' : 'info'"
+              >
+                {{ row.is_changed ? '未修改' : '已修改' }}
+              </el-tag>
+            </template>
+          </el-table-column>
         </el-table>
-        <div class="block">
-          <el-pagination
-            background
-            layout="total, sizes, prev, pager, next, jumper"
-            :page-size="length1"
-            :page-sizes="[10, 25, 50, 100]"
-            style="margin-top: 30px"
-            :total="total1"
-            @current-change="handleCurrentChange1"
-            @size-change="handleSizeChange1"
-          />
-        </div>
+        <el-pagination
+          background
+          layout="total, sizes, prev, pager, next, jumper"
+          :page-size="length1"
+          :page-sizes="[10, 25, 50, 100]"
+          :total="total1"
+          @current-change="handleCurrentChange1"
+          @size-change="handleSizeChange1"
+        />
       </div>
-      <span slot="footer" class="dialog-footer">
-        <el-button style="float: left" @click="dialogVisible = false">
+      <span slot="footer" style="padding: 0 0 20px 0; display: block">
+        <el-button
+          size="mini"
+          style="float: left"
+          @click="dialogVisible = false"
+        >
           {{ $translateTitle('developer.cancel') }}
         </el-button>
-        <el-button style="float: right" type="primary" @click.native="reupload">
+        <el-button
+          size="mini"
+          style="float: right"
+          type="primary"
+          @click.native="reupload"
+        >
           {{ $translateTitle('developer.determine') }}
         </el-button>
       </span>
@@ -359,6 +375,9 @@
             }
           })
         }
+        setTimeout(() => {
+          this.dialogVisible = false
+        }, 3000)
       },
     },
   }

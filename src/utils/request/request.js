@@ -33,6 +33,8 @@ const errorcodeVerificationArray = isArray(errorCode)
   : [...[errorCode]]
 
 const handleData = ({ config, data, status, statusText }) => {
+  if (localStorage.getItem('debugaxios'))
+    console.log({ config, data, status, statusText })
   if (loadingInstance) loadingInstance.close()
   // 极个别情况，若将错误code设置为0时，防止识别成false影响判断
   if (data[statusName] === 0) data[statusName] = '0'
@@ -49,7 +51,10 @@ const handleData = ({ config, data, status, statusText }) => {
   }
 
   switch (code) {
-    case 200:
+    case 403:
+      router.push({ path: '/403' })
+      break
+    default:
       // 业务层级错误处理，以下是假定restful有一套统一输出格式(指不管成功与否都有相应的数据格式)情况下进行处理
       // 例如响应内容：
       // 错误内容：{ status: 1, msg: '非法参数' }
@@ -58,9 +63,6 @@ const handleData = ({ config, data, status, statusText }) => {
       // return data.data ? data.data : data.msg
       // 或者依然保持完整的格式
       return data
-    case 403:
-      router.push({ path: '/403' })
-      break
   }
   // 异常处理
   // 若data.msg存在，覆盖默认提醒消息

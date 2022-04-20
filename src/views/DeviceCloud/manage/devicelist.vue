@@ -97,9 +97,8 @@
         append-to-body
         :before-close="handleClose"
         center
-        title="设备参数控制"
         :visible.sync="commandInfo.dialog"
-        width="50%"
+        width="80%"
       >
         <el-tabs v-model="activeName">
           <el-tab-pane
@@ -196,13 +195,13 @@
           :rules="deviceFormRules"
         >
           <el-form-item label="设备名称：" prop="name">
-            <el-input v-model="deviceForm.name" autocomplete="off" />
+            <el-input v-model="deviceForm.name" />
           </el-form-item>
           <el-form-item label="外壳编号：" prop="detail.assetNum">
-            <el-input v-model="deviceForm.detail.assetNum" autocomplete="off" />
+            <el-input v-model="deviceForm.detail.assetNum" />
           </el-form-item>
           <el-form-item label="主板编号：" prop="devaddr">
-            <el-input v-model="deviceForm.devaddr" autocomplete="off" />
+            <el-input v-model="deviceForm.devaddr" />
           </el-form-item>
           <el-form-item label="到期时间：" prop="detail.expirationTime">
             <el-date-picker
@@ -695,6 +694,38 @@
       ...mapMutations({
         setCurrentDepartment: 'user/setCurrentDepartment',
       }),
+      // 新建设备
+      /**
+       * @Author: dgiot-fe
+       * @Date: 2022-04-20 14:17:24
+       * @LastEditors:
+       * @param
+       * @return {Promise<void>}
+       * @Description:
+       */
+      async doPostDevice(params) {
+        try {
+          const { objectId = '', error = '' } = await postDevice(params)
+          if (objectId) {
+            this.fetchData()
+            this.createDeviceDialog = false
+          } else {
+            this.$baseMessage(
+              this.$translateTitle('alert.Data request error') + `${error}`,
+              'error',
+              'vab-hey-message-error'
+            )
+            throw new Error(error)
+          }
+        } catch (e) {
+          // this.$baseMessage(
+          //   this.$translateTitle('alert.Data request error') + `${e}`,
+          //   'error',
+          //   'vab-hey-message-error'
+          // )
+          throw new Error(e)
+        }
+      },
       async getProduct() {
         const { results = [] } = await queryProduct({})
         this.Product = results
@@ -868,10 +899,7 @@
             params.detail[this.deviceForm.devaddr] =
               this.deviceForm.detail.expirationTime
             params.detail.assetNum = this.deviceForm.detail.assetNum
-            console.error(params)
-            const res = await postDevice(params)
-            this.createDeviceDialog = false
-            this.fetchData()
+            await this.doPostDevice(params)
           } else {
             console.log('error submit!!')
             return false
