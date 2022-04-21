@@ -10,7 +10,22 @@
           size="mini"
         >
           <el-form-item :label="$translateTitle('product.Table Name')">
-            <el-input v-model="queryForm.class" size="mini" />
+            <el-select
+              v-model="queryForm.class"
+              allow-create
+              clearable
+              default-first-option
+              filterable
+              size="mini"
+              @change="changeClass"
+            >
+              <el-option
+                v-for="item in DbaTable"
+                :key="item.className"
+                :label="item.className"
+                :value="item.className"
+              />
+            </el-select>
           </el-form-item>
           <el-form-item :label="$translateTitle('product.title')">
             <el-input v-model="queryForm.title" />
@@ -19,7 +34,34 @@
             <el-input v-model="queryForm.type" />
           </el-form-item>
           <el-form-item label="key">
-            <el-input v-model="queryForm.key" />
+            <el-select
+              v-model="queryForm.key"
+              allow-create
+              clearable
+              default-first-option
+              filterable
+              size="mini"
+              style="width: 100%"
+            >
+              <el-option
+                v-for="item in keys"
+                :key="item.objectId"
+                :label="item.objectId"
+                :value="item.objectId"
+              >
+                <span style="float: left">{{ item.objectId }}</span>
+                <span style="float: right; color: #8492a6; font-size: 13px">
+                  <!--兼容所有表明的提示-->
+                  {{
+                    item.description ||
+                    item.name ||
+                    item.title ||
+                    item.username ||
+                    item.type
+                  }}
+                </span>
+              </el-option>
+            </el-select>
           </el-form-item>
           <el-form-item label="id">
             <el-input v-model="queryForm.objectId" size="mini" />
@@ -60,8 +102,34 @@
         :label="$translateTitle('product.title')"
         prop="title"
         show-overflow-tooltip
-        width="auto"
-      />
+        width="200px"
+      >
+        <template #default="{ row }">
+          <el-form :model="row">
+            <el-form-item size="mini" style="margin-bottom: 0">
+              <el-input
+                v-if="row.isEdit"
+                v-model="row.title"
+                v-focus
+                size="mini"
+                @blur="blurEvent(row)"
+                @focus="row.oldTitle = row.title"
+              />
+              <p
+                v-else
+                style="height: 8px; float: left; margin-left: 15px"
+                v-html="row.title"
+              />
+              <i
+                v-show="!row.isEdit"
+                class="el-icon-edit"
+                style="float: right; line-height: 26px; cursor: pointer"
+                @click="row.isEdit = !row.isEdit"
+              ></i>
+            </el-form-item>
+          </el-form>
+        </template>
+      </el-table-column>
       <el-table-column
         v-show="!queryForm.hiddenRow.includes('class')"
         align="center"
@@ -131,10 +199,12 @@
 </template>
 
 <script>
+  import { getTable } from '@/api/Dba'
   import { mapMutations } from 'vuex'
   import lowcodeDesign from '@/views/CloudFunction/lowcode/components/index'
   import { queryView, putView, postView, delView, getView } from '@/api/View'
   import ViewEdit from './components/ViewEdit'
+
   const defaultQuery = {
     class: '',
     type: '',
@@ -186,6 +256,13 @@
       ViewEdit,
       lowcodeDesign,
     },
+    directives: {
+      focus: {
+        inserted: function (el) {
+          el.querySelector('input').focus()
+        },
+      },
+    },
     filters: {
       statusFilter(status) {
         const statusMap = {
@@ -205,6 +282,8 @@
     },
     data() {
       return {
+        DbaTable: [],
+        keys: [],
         lowcodeId: '',
         paginations: {
           // 每页显示个数选择器的选项设置
@@ -256,6 +335,7 @@
     created() {
       this.setTreeFlag(false)
       this.fetchData()
+      this.featchTable()
     },
     mounted() {
       if (this.$route.query.type == 'amis') {
@@ -311,12 +391,71 @@
         set_amisJson: 'amis/set_amisJson',
         setTreeFlag: 'settings/setTreeFlag',
       }),
+      async blurEvent(row) {
+        row.isEdit = !row.isEdit
+        if (row.title !== row.oldTitle)
+          await putView(row.objectId, {
+            title: row.title,
+          })
+        this.$message({
+          message: '标题修改成功',
+          type: 'success',
+          showClose: true,
+          duration: 1500,
+        })
+      },
+      /**
+       * @Author: dgiot-fe
+       * @Date: 2022-04-21 13:05:02
+       * @LastEditors:
+       * @param
+       * @return {Promise<void>}
+       * @Description:
+       */
+      async changeClass(_class) {
+        try {
+          console.log(_class)
+          //  根据下拉的表,查到对应表数据
+          const params = {
+            order: '-updatedAt',
+          }
+          const { results = [] } = await this.$query_object(_class, params)
+          console.log(results)
+          this.keys = results
+        } catch (error) {
+          console.log(error)
+          this.$baseMessage(
+            this.$translateTitle('alert.Data request error') + `${error}`,
+            'error',
+            'dgiot-hey-message-error'
+          )
+        }
+      },
+      /**
+       * @Author: dgiot-fe
+       * @Date: 2022-04-21 12:50:35
+       * @LastEditors:
+       * @param
+       * @return {Promise<void>}
+       * @Description:
+       */
+      async featchTable() {
+        try {
+          const { results: table = [] } = await getTable()
+          this.DbaTable = table
+        } catch (error) {
+          console.log(error)
+        }
+      },
       async handleNotification(rows) {
         await this.$baseEventBus.$emit('showNotificationSettings', rows)
       },
       handleAdd() {
         this.$refs['edit'].type = 'add'
-        this.$refs['edit'].showEdit(this.queryForm)
+        // 解决子组件修改影响父组件的显示问题
+        this.$refs['edit'].DbaTable = this.DbaTable
+        this.$refs['edit'].row = this.queryForm
+        this.$refs['edit'].dialogFormVisible = true
       },
       async handleEdit(row) {
         const loading = this.$baseLoading(1)
@@ -405,6 +544,8 @@
         })
         if (results)
           results.forEach((item) => {
+            item.isEdit = false
+            item.oldTitle = item.title
             item.createdAt = moment(item.createdAt).format(
               'YYYY-MM-DD HH:mm:ss'
             )

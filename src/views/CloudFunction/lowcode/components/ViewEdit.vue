@@ -7,13 +7,54 @@
   >
     <el-form ref="form" label-width="80px" :model="form" :rules="rules">
       <el-form-item label="表名" prop="class">
-        <el-input v-model="form.class" />
+        <el-select
+          v-model="form.class"
+          allow-create
+          clearable
+          default-first-option
+          filterable
+          style="width: 100%"
+          @change="changeClass"
+        >
+          <el-option
+            v-for="item in DbaTable"
+            :key="item.className"
+            :label="item.className"
+            :value="item.className"
+          />
+        </el-select>
       </el-form-item>
       <el-form-item label="类型" prop="type">
         <el-input v-model="form.type" />
       </el-form-item>
       <el-form-item label="key" prop="key">
-        <el-input v-model.trim="form.key" />
+        <el-select
+          v-model="form.key"
+          allow-create
+          clearable
+          default-first-option
+          filterable
+          size="mini"
+          style="width: 100%"
+        >
+          <el-option
+            v-for="item in keys"
+            :key="item.objectId"
+            :label="item.objectId"
+            :value="item.objectId"
+          >
+            <span style="float: left">{{ item.objectId }}</span>
+            <span style="float: right; color: #8492a6; font-size: 13px">
+              {{
+                item.description ||
+                item.name ||
+                item.title ||
+                item.username ||
+                item.type
+              }}
+            </span>
+          </el-option>
+        </el-select>
       </el-form-item>
       <el-form-item :label="$translateTitle('product.title')" prop="title">
         <el-input v-model="form.title" />
@@ -67,10 +108,13 @@
 <script>
   import { putView, postView } from '@/api/View'
   import { mapGetters, mapMutations } from 'vuex'
+
   export default {
     name: 'TableEdit',
     data() {
       return {
+        DbaTable: [],
+        keys: [],
         activeName: 'first',
         amisKey: moment(new Date()).format('X'),
         type: '',
@@ -107,9 +151,32 @@
       ...mapMutations({
         set_amisJson: 'amis/set_amisJson',
       }),
-      showEdit(row) {
-        this.form = row
-        this.dialogFormVisible = true
+      /**
+       * @Author: dgiot-fe
+       * @Date: 2022-04-21 13:05:02
+       * @LastEditors:
+       * @param
+       * @return {Promise<void>}
+       * @Description:
+       */
+      async changeClass(_class) {
+        try {
+          console.log(_class)
+          //  根据下拉的表,查到对应表数据
+          const params = {
+            order: '-updatedAt',
+          }
+          const { results = [] } = await this.$query_object(_class, params)
+          console.log(results)
+          this.keys = results
+        } catch (error) {
+          console.log(error)
+          this.$baseMessage(
+            this.$translateTitle('alert.Data request error') + `${error}`,
+            'error',
+            'dgiot-hey-message-error'
+          )
+        }
       },
       close() {
         // this.$refs['form'].resetFields()
