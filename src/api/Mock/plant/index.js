@@ -1,6 +1,6 @@
 function handleRandomImage(/* width = 50, height = 50 */) {
   //return `https://picsum.photos/${width}/${height}?random=${Random.guid()}`
-  return `https://gitee.com/chu1204505056/image/raw/master/table/dgiot-image-${Mock.Random.integer(
+  return `https://cdn.jsdelivr.net/gh/chuzhixin/image/table/vab-image-${Mock.Random.integer(
     1,
     38
   )}.jpg`

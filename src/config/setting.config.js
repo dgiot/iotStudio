@@ -84,7 +84,7 @@ module.exports = {
   recordRoute: process.env.NODE_ENV == 'development' ? true : false,
   logo: 'vuejs-fill',
   i18n: 'zh',
-  messageDuration: 3000,
+  messageDuration: 1500,
   errorLog: ['development'],
   loginInterception: true,
   loginRSA: false,

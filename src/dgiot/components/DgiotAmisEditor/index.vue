@@ -72,7 +72,7 @@
   }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
   .amis {
     width: 100%;
     height: calc(100vh - 60px * 2.7) !important;
