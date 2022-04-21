@@ -56,8 +56,9 @@
           <el-form-item label="岗位" prop="tempname">
             <el-select
               v-model="form.tempname"
-              placeholder="请选择活动区域"
+              placeholder="请选择岗位"
               size="medium"
+              style="width: '100%'"
             >
               <el-option
                 v-for="item in dict"
@@ -119,7 +120,7 @@
             },
           ],
           tempname: [
-            { required: true, message: '请输入工厂编码', trigger: 'blur' },
+            { required: true, message: '请选择岗位', trigger: 'blur' },
             {
               min: 2,
               max: 10,
