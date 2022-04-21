@@ -57,8 +57,7 @@
             <el-select
               v-model="form.tempname"
               placeholder="请选择岗位"
-              size="medium"
-              style="width: '100%'"
+              style="width: 100%"
             >
               <el-option
                 v-for="item in dict"
