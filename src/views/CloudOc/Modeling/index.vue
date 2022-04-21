@@ -17,7 +17,16 @@
       <div class="in_btm">
         <el-button type="warning" @click="openCreatePlant">新增工厂</el-button>
         <div class="btm_wrap">
-          <div v-for="item in plantlist" :key="item.id" class="wrap_content">
+          <el-row
+            v-for="item in plantlist"
+            :key="item.id"
+            class="wrap_content"
+            :lg="4"
+            :md="8"
+            :sm="12"
+            :xl="4"
+            :xs="24"
+          >
             <div class="ct_top">
               <img src="../../../../public/assets/images/plant/gc.png" />
               <div class="top_right">
@@ -36,7 +45,7 @@
               </el-button>
               <div class="btm_right">组织类型:{{ item.org_type }}</div>
             </div>
-          </div>
+          </el-row>
         </div>
       </div>
     </div>
@@ -120,12 +129,6 @@
           ],
           tempname: [
             { required: true, message: '请选择岗位', trigger: 'blur' },
-            {
-              min: 2,
-              max: 10,
-              message: '长度在 3 到 10 个字符',
-              trigger: 'blur',
-            },
           ],
         },
       }
@@ -238,7 +241,7 @@
           display: flex;
           flex-wrap: wrap;
           .wrap_content {
-            width: 380px;
+            // width: 22%;
             height: 220px;
             margin-right: 20px;
             margin-bottom: 20px;
