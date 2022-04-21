@@ -21,18 +21,20 @@
             <div class="ct_top">
               <img src="../../../../public/assets/images/plant/gc.png" />
               <div class="top_right">
-                <div class="right_item right_title">{{ item.title }}</div>
-                <div class="right_item">编码:{{ item.id }}</div>
+                <div class="right_item right_title">{{ item.name }}</div>
+                <div class="right_item">编码:{{ item.objectId }}</div>
                 <div class="right_item">
                   描述:
-                  <span v-if="item.description">{{ item.description }}</span>
+                  <span v-if="item.desc">{{ item.desc }}</span>
                   <span v-else>--</span>
                 </div>
               </div>
             </div>
             <div class="ct_btm">
-              <el-button class="btm_left">查看</el-button>
-              <div class="btm_right">更新时间:{{ item.datetime }}</div>
+              <el-button class="btm_left" @click.native="modelToDetail(item)">
+                查看
+              </el-button>
+              <div class="btm_right">组织类型:{{ item.org_type }}</div>
             </div>
           </div>
         </div>
@@ -48,21 +50,24 @@
     >
       <div class="demo-drawer__content">
         <el-form ref="ruleForm" :model="form" :rules="rules">
-          <el-form-item
-            label="工厂名称"
-            :label-width="formLabelWidth"
-            prop="name"
-          >
+          <el-form-item label="工厂名称" prop="name">
             <el-input v-model="form.name" placeholder="请输入工厂名称" />
           </el-form-item>
-          <el-form-item
-            label="工厂编号"
-            :label-width="formLabelWidth"
-            prop="objectid"
-          >
-            <el-input v-model="form.objectid" placeholder="请输入工厂编号" />
+          <el-form-item label="岗位" prop="tempname">
+            <el-select
+              v-model="form.tempname"
+              placeholder="请选择活动区域"
+              size="medium"
+            >
+              <el-option
+                v-for="item in dict"
+                :key="item.objectId"
+                :label="item.key"
+                :value="item.key"
+              />
+            </el-select>
           </el-form-item>
-          <el-form-item label="工厂描述" :label-width="formLabelWidth">
+          <el-form-item label="工厂描述">
             <el-input
               v-model="form.desc"
               maxlength="500"
@@ -78,16 +83,6 @@
             <el-button @click="openCreatePlant">取消</el-button>
           </el-form-item>
         </el-form>
-        <!-- <div class="demo-drawer__footer">
-          <el-button @click="cancelForm">取 消</el-button>
-          <el-button
-            :loading="loading"
-            type="primary"
-            @click="$refs.drawer.closeDrawer()"
-          >
-            {{ loading ? '提交中 ...' : '确 定' }}
-          </el-button>
-        </div> -->
       </div>
     </el-dialog>
   </div>
@@ -95,6 +90,7 @@
 
 <script>
   import { getList } from '@/api/Mock/plant'
+  import { queryRoleTree, postRole, queryDictTemp } from '@/api/Modeling'
   export default {
     name: 'Index',
     components: {},
@@ -103,11 +99,13 @@
       return {
         plantlist: [],
         drawer: false,
+        parent: '', //当前部门id
         direction: 'rtl',
+        dict: [],
         wrapclose: false,
         form: {
           name: '',
-          objectid: '',
+          tempname: '',
           desc: '',
         },
         rules: {
@@ -120,7 +118,7 @@
               trigger: 'blur',
             },
           ],
-          objectid: [
+          tempname: [
             { required: true, message: '请输入工厂编码', trigger: 'blur' },
             {
               min: 2,
@@ -136,16 +134,59 @@
     watch: {},
     created() {},
     mounted() {
-      const res = getList()
-      console.log('list', res)
-      this.plantlist = res.data.List
+      this.fetchData()
+      this.getDict()
+      // const res = getList()
+      // console.log('list', res)
+      // this.plantlist = res.data.List
     },
     destroyed() {},
     methods: {
+      async getDict() {
+        const params = {
+          where: {
+            type: 'roletemp',
+          },
+        }
+        const { results } = await queryDictTemp(params)
+        console.log('模板', results)
+        this.dict = results
+      },
+      async fetchData() {
+        // const params = {
+        //   skip: this.queryForm.skip,
+        //   limit: this.queryForm.limit,
+        //   count: 'objectId',
+        //   order: '-createdAt',
+        //   excludeKeys: 'properties',
+        //   where: {
+        //     name: this.queryForm.name
+        //       ? { $regex: this.queryForm.name }
+        //       : { $ne: null },
+        //   },
+        // }
+        // console.info(params)
+        // this.listLoading = true
+        const { results } = await queryRoleTree()
+        this.plantlist = results[0].children
+        this.parent = results[0].objectId
+        // this.total = count
+        // this.listLoading = false
+      },
+      modelToDetail(item) {
+        console.log(item)
+        // return
+        this.$router.push({
+          path: '/oc/Modeling/modeldetail',
+          query: {
+            objectid: item.objectId,
+          },
+        })
+      },
       openCreatePlant() {
         this.form = {
           name: '',
-          objectid: '',
+          tempname: '',
           desc: '',
         }
         this.drawer = !this.drawer
@@ -153,7 +194,19 @@
       submitForm(formName) {
         this.$refs[formName].validate((valid) => {
           if (valid) {
-            alert('submit!')
+            const params = {
+              depname: this.form.name,
+              desc: this.form.desc,
+              name: this.form.name,
+              parent: this.parent,
+              tempname: this.form.tempname,
+            }
+            console.log('部门', params)
+            postRole(params).then((res) => {
+              console.log('result', res)
+              this.fetchData()
+              this.drawer = !this.drawer
+            })
           } else {
             console.log('error submit!!')
             return false
