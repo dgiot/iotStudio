@@ -11,11 +11,19 @@
 -->
 <template>
   <div class="index-container">
+    <dgiot-input
+      ref="uploadFinish"
+      :params="inputParams"
+      @fileInfo="fileInfo"
+      @files="files"
+    />
     <div class="ftechnology">
       <div class="dlalog">
         <dgiot-dialog
+          :key="ftechnology.type"
           :show.sync="ftechnology.dialogVisible"
           :title="ftechnology.type == 'add' ? '新增工艺路径' : '修改工艺路径'"
+          @beforeClose="handleClose"
         >
           <el-form
             ref="ftechnology"
@@ -48,27 +56,25 @@
                 type="textarea"
               />
             </el-form-item>
-            <el-form-item label="工艺路径logo">
-              <el-upload
-                action="https://jsonplaceholder.typicode.com/posts/"
-                :before-upload="beforeAvatarUpload"
-                class="avatar-uploader"
-                :on-success="handleAvatarSuccess"
-                :show-file-list="false"
+            <el-form-item :key="ftechnology.form.img" label="工艺路径logo">
+              <el-avatar
+                :key="imgKey"
+                :size="100"
+                :src="$FileServe + ftechnology.form.img"
+                @click.native="uploadCkick('userinfo.avatar')"
               >
-                <img
-                  v-if="ftechnology.form.img"
-                  class="avatar"
-                  :src="ftechnology.form.img"
-                />
-                <i v-else class="el-icon-plus avatar-uploader-icon"></i>
-              </el-upload>
+                <div
+                  v-if="!ftechnology.form.img"
+                  :key="ftechnology.form.img"
+                  slot="error"
+                  class="el-icon-plus avatar-uploader-icon"
+                  @click="uploadCkick('userinfo.avatar')"
+                ></div>
+              </el-avatar>
             </el-form-item>
           </el-form>
           <div slot="footer" class="dialog-footer">
-            <el-button @click.native="ftechnology.dialogVisible = false">
-              取 消
-            </el-button>
+            <el-button @click.native="handleClose">取 消</el-button>
             <el-button
               type="primary"
               @click.native="submitForm('ftechnology', ftechnology.type)"
@@ -113,6 +119,7 @@
           </el-form>
         </dgiot-query-form-left-panel>
       </dgiot-query-form>
+      <el-empty v-show="total === 0" :image-size="$baseTableHeight(0) - 160" />
       <el-row
         v-loading="loadingConfig"
         class="box-card"
@@ -133,27 +140,33 @@
           <el-card class="card" shadow="hover">
             <div class="box">
               <div class="left">
-                <el-image
-                  fit="scale-down"
-                  :preview-src-list="[o.img]"
-                  :src="o.img"
+                <el-avatar
+                  :key="imgKey"
+                  :src="$FileServe + o.data.img"
                   style="width: 100px; height: 100px"
                 >
                   <div slot="error" class="image-slot">
                     <i class="el-icon-picture-outline"></i>
                   </div>
-                </el-image>
+                </el-avatar>
               </div>
               <div class="right">
-                <el-descriptions :column="1" size="medium">
-                  <el-descriptions-item label="编码" :title="o.code">
-                    {{ o.code }}
+                <el-descriptions
+                  :column="1"
+                  size="medium"
+                  :title="o.data.title"
+                >
+                  <el-descriptions-item label="编码" :title="o.data.code">
+                    {{ o.data.code }}
                   </el-descriptions-item>
-                  <el-descriptions-item label="描述" :title="o.description">
-                    {{ o.description }}
+                  <el-descriptions-item
+                    label="描述"
+                    :title="o.data.description"
+                  >
+                    {{ o.data.description }}
                   </el-descriptions-item>
-                  <el-descriptions-item label="更新时间" :title="o.datetime">
-                    {{ o.datetime }}
+                  <el-descriptions-item label="更新时间" :title="o.updatedAt">
+                    {{ $moment(o.updatedAt).format('YYYY-MM-DD HH:mm:ss') }}
                   </el-descriptions-item>
                 </el-descriptions>
               </div>
@@ -167,7 +180,7 @@
                   font-weight: 700;
                 "
               >
-                {{ o.title }}
+                {{ o.data.title }}
               </span>
               <div style="float: right">
                 <el-button
@@ -205,9 +218,9 @@
       </el-row>
       <el-pagination
         background
-        :current-page="queryForm.pageNo"
+        :current-page="queryForm.size"
         :layout="layout"
-        :page-size="queryForm.pageSize"
+        :page-size="queryForm.limit"
         :total="total"
         @current-change="handleCurrentChange"
         @size-change="handleSizeChange"
@@ -217,7 +230,9 @@
 </template>
 
 <script>
-  import { doDelete, getList, doEdit } from '@/api/Mock/table'
+  // import { doDelete, getList, doEdit } from '@/api/Mock/table'
+  import { queryDict, delDict, putDict, postDict } from '@/api/Dict'
+  import { mapGetters, mapMutations } from 'vuex'
 
   export default {
     name: 'Index',
@@ -225,6 +240,8 @@
     props: {},
     data() {
       return {
+        imgKey: moment().format('x'),
+        inputParams: {},
         layout: 'total, sizes, prev, pager, next, jumper',
         total: 0,
         rules: {
@@ -270,6 +287,7 @@
         },
         ftechnology: {
           type: 'add',
+          objectId: '',
           dialogVisible: false,
           form: {
             title: '',
@@ -279,15 +297,22 @@
         },
         list: [],
         loadingConfig: false,
+        upNodeType: '',
         queryForm: {
-          pageNo: 1,
-          pageSize: 20,
           title: '',
+          skip: 0,
+          limit: 8,
+          name: '',
+          search: '',
         },
         currentDate: new Date().toLocaleString(),
       }
     },
-    computed: {},
+    computed: {
+      ...mapGetters({
+        ObjectId: 'user/objectId',
+      }),
+    },
     watch: {},
     created() {
       this.fetechData()
@@ -295,6 +320,40 @@
     mounted() {},
     destroyed() {},
     methods: {
+      uploadCkick(type) {
+        // 触发子组件的点击事件
+        this.$refs['uploadFinish'].$refs.uploader.dispatchEvent(
+          new MouseEvent('click')
+        )
+        this.inputParams = {
+          file: '',
+          scene: 'app',
+          path: 'user/Ftechnology/',
+          filename: `${this.ObjectId}_Ftechnology_${this.upNodeType.replace(
+            '.',
+            '_'
+          )}.${type}`,
+        }
+      },
+      fileInfo(file) {
+        console.log(file)
+        this.$baseMessage(
+          '上传成功',
+          `${file.name} 上传成功，请点击确定按钮，查看图片`,
+          'success',
+          false,
+          'dgiot-hey-message-success'
+        )
+        this.imgKey = moment().format('x')
+        this.ftechnology.form.img = file.path + '?' + new Date().getTime()
+      },
+      files(file, type) {
+        this.inputParams.filename = `${this.ObjectId}_${this.upNodeType.replace(
+          '.',
+          '_'
+        )}.${type}`
+        this.inputParams.file = file
+      },
       /**
        * @Author: dgiot-fe
        * @Date: 2022-04-22 15:43:20
@@ -304,8 +363,9 @@
        * @Description:
        */
       editItem(params) {
+        this.ftechnology.objectId = params.objectId
         this.ftechnology.dialogVisible = true
-        this.ftechnology.form = params
+        this.ftechnology.form = params.data
         this.ftechnology.type = 'edit'
       },
       /**
@@ -318,51 +378,23 @@
        */
       async deleteItem(objectId, index, list) {
         this.$baseConfirm('你确定要删除选中项吗', null, async () => {
-          const { msg } = await doDelete({ ids: objectId })
+          await delDict(objectId)
           list.splice(index, 1)
-          this.$baseMessage(msg, 'success', 'dgiot-hey-message-success')
+          this.$baseMessage('删除成功', 'success', 'dgiot-hey-message-success')
         })
       },
       handleCurrentChange(val) {
-        this.queryForm.pageNo = val
+        this.queryForm.skip = Number(val - 1) * Number(this.queryForm.limit)
         this.fetechData()
       },
       handleSizeChange(val) {
-        this.queryForm.pageSize = val
+        this.queryForm.limit = val
         this.fetechData()
       },
-      beforeAvatarUpload(file) {
-        var extension = [
-          'image/jpeg',
-          'image/png',
-          'image/gif',
-          'image/bmp',
-          'image/jpg',
-          'image/webp',
-          'image/svg+xml',
-          'image/tiff',
-          'image/x-icon',
-        ]
-        const isJPG = extension.includes(file.type)
-        const isLt2M = file.size / 1024 / 1024 < 2
-        if (!isJPG) {
-          this.$baseMessage(
-            '上传图片格式不正确!',
-            'error',
-            'dgiot-hey-message-error'
-          )
-        }
-        if (!isLt2M) {
-          this.$baseMessage(
-            '上传头像图片大小不能超过 2MB!',
-            'error',
-            'dgiot-hey-message-error'
-          )
-        }
-        return isJPG && isLt2M
-      },
-      handleAvatarSuccess(res, file) {
-        this.ftechnology.form.img = URL.createObjectURL(file.raw)
+      handleClose() {
+        this.ftechnology.type = 'add'
+        this.ftechnology.objectId = ''
+        this.ftechnology.dialogVisible = false
       },
       /**
        * @Author: dgiot-fe
@@ -376,11 +408,18 @@
         this.loadingConfig = true
         if (type === 'add') {
           try {
-            this.ftechnology.form.datetime = moment(moment.now()).format(
-              'YYYY:MM:DD  HH:mm:ss'
-            )
-            console.log(this.ftechnology.form, formName)
-            this.list.unshift(this.ftechnology.form)
+            const { error } = await postDict({
+              type: 'technology',
+              data: this.ftechnology.form,
+              class: 'technology',
+              key: this.ftechnology.form.code,
+            })
+            if (error) {
+              this.$baseMessage(error, 'error', 'dgiot-hey-message-error')
+              this.loadingConfig = false
+              return
+            }
+            this.fetechData()
           } catch (error) {
             console.log(error)
             this.$baseMessage(
@@ -390,11 +429,14 @@
             )
           }
         } else {
-          const { msg } = await doEdit(
-            this.ftechnology.form.objectId,
-            this.ftechnology.form
+          await putDict(this.ftechnology.objectId, {
+            data: this.ftechnology.form,
+          })
+          this.$baseMessage(
+            '数据更新成功',
+            'success',
+            'dgiot-hey-message-success'
           )
-          this.$baseMessage(msg, 'success', 'dgiot-hey-message-success')
         }
         this.ftechnology.dialogVisible = false
         setTimeout(() => {
@@ -414,14 +456,21 @@
        */
       async fetechData(params) {
         this.loadingConfig = true
-        this.list = []
+        // this.list = []
+        // this.queryForm
+        const queryForm = {
+          where: {
+            type: 'technology',
+          },
+          skip: this.queryForm.skip,
+          limit: this.queryForm.limit,
+          count: 'objectId',
+          order: '-createdAt',
+        }
         try {
-          const {
-            data: { list, total },
-          } = await getList(this.queryForm)
-          this.list = list
-          this.total = total
-          console.log(list)
+          const { results = [], count } = await queryDict(queryForm)
+          this.list = results
+          this.total = count
         } catch (error) {
           console.log(error)
           this.$baseMessage(
@@ -432,7 +481,7 @@
         }
         setTimeout(() => {
           this.loadingConfig = false
-        }, 1000)
+        }, 100)
       },
       /**
        * @Author: dgiot-fe
@@ -444,7 +493,7 @@
        */
       async handleQuery() {
         this.loadingConfig = true
-        this.queryForm.pageNo = 1
+        this.queryForm.limit = 8
         await this.fetechData()
       },
     },

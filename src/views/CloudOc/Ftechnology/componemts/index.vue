@@ -15,43 +15,49 @@
         :column="5"
         direction="vertical"
         size="medium"
-        :title="$route.query.title"
+        :title="detail.data.title"
       >
         <el-descriptions-item label="工艺路径编号">
-          {{ detail.code }}
+          {{ detail.data.code }}
           <DgiotQrcode
             :iconstyle="{
               type: 'qrcode',
               'font-size': '12px',
             }"
-            :setting="{ text: detail.code, binarizeThreshold: 0.5 }"
+            :setting="{ text: detail.data.code, binarizeThreshold: 0.5 }"
           />
         </el-descriptions-item>
         <el-descriptions-item label="工艺路径名称">
-          {{ detail.title }}
+          {{ detail.data.title }}
         </el-descriptions-item>
         <el-descriptions-item label="工艺路径描述">
-          {{ detail.description }}
+          {{ detail.data.description }}
         </el-descriptions-item>
         <el-descriptions-item label="创建时间">
-          {{ detail.datetime }}
+          {{ $moment(detail.createdAt).format('YYYY-MM-DD HH:mm:ss') }}
         </el-descriptions-item>
         <el-descriptions-item label="更新时间">
-          {{ detail.datetime }}
+          {{ $moment(detail.updatedAt).format('YYYY-MM-DD HH:mm:ss') }}
         </el-descriptions-item>
         <template slot="extra">
-          <el-button @click.native="busInfo('file', $route.query.info)">
+          <el-button @click.native="busInfo('view', $route.query)">
+            表单
+          </el-button>
+          <el-button
+            type="primary"
+            @click.native="busInfo('file', $route.query)"
+          >
             归档
           </el-button>
           <el-button
             type="warning"
-            @click.native="busInfo('release', $route.query.info)"
+            @click.native="busInfo('release', $route.query)"
           >
             发布
           </el-button>
           <el-button
             type="danger"
-            @click.native="busInfo('delete', $route.query.info)"
+            @click.native="busInfo('delete', $route.query)"
           >
             删除
           </el-button>
@@ -390,7 +396,8 @@
 </template>
 
 <script>
-  import { getList, queryMock } from '@/api/Mock/table'
+  import { getDict, delDict } from '@/api/Dict'
+  import { getList } from '@/api/Mock/table'
   import { queryView } from '@/api/View'
   export default {
     name: 'Index',
@@ -399,7 +406,7 @@
       return {
         amis: [],
         detail: {},
-        activeName: 'first',
+        activeName: 0,
         infoData: 'Empty',
         isFullscreen: false,
         border: true,
@@ -494,7 +501,8 @@
           },
         }
         try {
-          this.amis = await queryView(query)
+          const { results = [] } = await queryView(query)
+          this.amis = results
         } catch (error) {
           console.log(error)
           this.$baseMessage(
@@ -514,7 +522,7 @@
        */
       async queryDetails(id) {
         try {
-          this.detail = await queryMock(id)
+          this.detail = await getDict(id)
         } catch (error) {
           console.log(error)
           this.$baseMessage(
@@ -565,7 +573,18 @@
        * @Description:
        */
       async busInfo(type, params) {
+        console.log(type, params)
         switch (type) {
+          case 'view':
+            this.$router.push({
+              path: `/design`,
+              query: {
+                type: 'amis',
+                _class: 'Ftechnology',
+                key: params.objectId,
+              },
+            })
+            break
           case 'file':
             this.$message.success('归档成功')
             break
@@ -574,6 +593,7 @@
             break
           case 'delete':
             // 二次删除确认
+            await delDict(params.objectId)
             this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
               confirmButtonText: '确定',
               cancelButtonText: '取消',
