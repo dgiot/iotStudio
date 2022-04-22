@@ -16,16 +16,16 @@
       <div class="in_ctr">工厂列表</div>
       <div class="in_btm">
         <el-button type="warning" @click="openCreatePlant">新增工厂</el-button>
-        <div class="btm_wrap">
-          <el-row
+        <el-row class="btm_wrap">
+          <el-col
             v-for="item in plantlist"
             :key="item.id"
             class="wrap_content"
-            :lg="4"
-            :md="8"
-            :sm="12"
-            :xl="4"
-            :xs="24"
+            :lg="{ span: 7, offset: 1 }"
+            :md="{ span: 7, offset: 1 }"
+            :sm="{ span: 11, offset: 1 }"
+            :xl="{ span: 5, offset: 1 }"
+            :xs="{ span: 20, offset: 4 }"
           >
             <div class="ct_top">
               <img src="../../../../public/assets/images/plant/gc.png" />
@@ -45,8 +45,8 @@
               </el-button>
               <div class="btm_right">组织类型:{{ item.org_type }}</div>
             </div>
-          </el-row>
-        </div>
+          </el-col>
+        </el-row>
       </div>
     </div>
     <el-dialog
@@ -243,7 +243,7 @@
           .wrap_content {
             // width: 22%;
             height: 220px;
-            margin-right: 20px;
+            // margin-right: 20px;
             margin-bottom: 20px;
             box-shadow: -1px -1px 6px #ccc;
             .ct_top {
