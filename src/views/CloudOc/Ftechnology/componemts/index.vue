@@ -12,28 +12,32 @@
     <div class="index-content">
       <el-descriptions
         border
-        :column="4"
+        :column="5"
         direction="vertical"
+        size="medium"
         :title="$route.query.title"
       >
         <el-descriptions-item label="工艺路径编号">
-          {{ $route.query.info.code }}
+          {{ detail.code }}
           <DgiotQrcode
             :iconstyle="{
               type: 'qrcode',
               'font-size': '12px',
             }"
-            :setting="{ text: $route.query.info.code, binarizeThreshold: 0.5 }"
+            :setting="{ text: detail.code, binarizeThreshold: 0.5 }"
           />
         </el-descriptions-item>
+        <el-descriptions-item label="工艺路径名称">
+          {{ detail.title }}
+        </el-descriptions-item>
         <el-descriptions-item label="工艺路径描述">
-          {{ $route.query.info.description }}
+          {{ detail.description }}
         </el-descriptions-item>
         <el-descriptions-item label="创建时间">
-          {{ $route.query.info.datetime }}
+          {{ detail.datetime }}
         </el-descriptions-item>
         <el-descriptions-item label="更新时间">
-          {{ $route.query.info.datetime }}
+          {{ detail.datetime }}
         </el-descriptions-item>
         <template slot="extra">
           <el-button @click.native="busInfo('file', $route.query.info)">
@@ -51,229 +55,350 @@
           >
             删除
           </el-button>
-          <el-button
-            type="info"
-            @click.native="busInfo('edit', $route.query.info)"
-          >
-            编辑
-          </el-button>
         </template>
       </el-descriptions>
-      <el-tabs v-model="activeName" @tab-click="handleClick">
-        <el-tab-pane label="工序列表" name="first">
-          <el-table
-            ref="tableSort"
-            v-loading="listLoading"
-            :border="border"
-            :data="list"
-            :height="height"
-            :size="lineHeight"
-            :stripe="stripe"
-            @selection-change="setSelectRows"
-          >
-            <el-table-column align="center" type="selection" width="55" />
-            <el-table-column
-              align="center"
-              label="序号"
-              show-overflow-tooltip
-              sortable
-              width="95"
-            >
-              <template #default="{ $index }">
-                {{ $index + 1 }}
-              </template>
-            </el-table-column>
-            <el-table-column
-              v-for="(item, index) in finallyColumns"
-              :key="index"
-              align="center"
-              :label="item.label"
-              sortable
-              :width="item.width"
-            >
-              <template #default="{ row }">
-                <span v-if="item.label === '评级'">
-                  <el-rate v-model="row.rate" disabled />
-                </span>
-                <span v-else>{{ row[item.prop] }}</span>
-              </template>
-            </el-table-column>
-
-            <el-table-column
-              align="center"
-              label="操作"
-              show-overflow-tooltip
-              sortable
-              width="85"
-            >
-              <template #default="{ row }">
-                <el-button type="text" @click="handleEdit(row)">编辑</el-button>
-                <el-button type="text" @click="handleDelete(row)">
-                  删除
-                </el-button>
-              </template>
-            </el-table-column>
-            <template #empty>
-              <el-empty />
-            </template>
-          </el-table>
-          <el-pagination
-            background
-            :current-page="queryForm.pageNo"
-            :layout="layout"
-            :page-size="queryForm.pageSize"
-            :total="total"
-            @current-change="handleCurrentChange"
-            @size-change="handleSizeChange"
-          />
-        </el-tab-pane>
-        <el-tab-pane label="属性列表" name="second">
-          <el-table
-            ref="tableSort"
-            v-loading="listLoading"
-            :border="border"
-            :data="list"
-            :height="height"
-            :size="lineHeight"
-            :stripe="stripe"
-            @selection-change="setSelectRows"
-          >
-            <el-table-column align="center" type="selection" width="55" />
-            <el-table-column
-              align="center"
-              label="序号"
-              show-overflow-tooltip
-              sortable
-              width="95"
-            >
-              <template #default="{ $index }">
-                {{ $index + 1 }}
-              </template>
-            </el-table-column>
-            <el-table-column
-              v-for="(item, index) in finallyColumns"
-              :key="index"
-              align="center"
-              :label="item.label"
-              sortable
-              :width="item.width"
-            >
-              <template #default="{ row }">
-                <span v-if="item.label === '评级'">
-                  <el-rate v-model="row.rate" disabled />
-                </span>
-                <span v-else>{{ row[item.prop] }}</span>
-              </template>
-            </el-table-column>
-
-            <el-table-column
-              align="center"
-              label="操作"
-              show-overflow-tooltip
-              sortable
-              width="85"
-            >
-              <template #default="{ row }">
-                <el-button type="text" @click="handleEdit(row)">编辑</el-button>
-                <el-button type="text" @click="handleDelete(row)">
-                  删除
-                </el-button>
-              </template>
-            </el-table-column>
-            <template #empty>
-              <el-empty />
-            </template>
-          </el-table>
-          <el-pagination
-            background
-            :current-page="queryForm.pageNo"
-            :layout="layout"
-            :page-size="queryForm.pageSize"
-            :total="total"
-            @current-change="handleCurrentChange"
-            @size-change="handleSizeChange"
-          />
-        </el-tab-pane>
-        <el-tab-pane label="可执行产线" name="third">
-          <el-table
-            ref="tableSort"
-            v-loading="listLoading"
-            :border="border"
-            :data="list"
-            :height="height"
-            :size="lineHeight"
-            :stripe="stripe"
-            @selection-change="setSelectRows"
-          >
-            <el-table-column align="center" type="selection" width="55" />
-            <el-table-column
-              align="center"
-              label="序号"
-              show-overflow-tooltip
-              sortable
-              width="95"
-            >
-              <template #default="{ $index }">
-                {{ $index + 1 }}
-              </template>
-            </el-table-column>
-            <el-table-column
-              v-for="(item, index) in finallyColumns"
-              :key="index"
-              align="center"
-              :label="item.label"
-              sortable
-              :width="item.width"
-            >
-              <template #default="{ row }">
-                <span v-if="item.label === '评级'">
-                  <el-rate v-model="row.rate" disabled />
-                </span>
-                <span v-else>{{ row[item.prop] }}</span>
-              </template>
-            </el-table-column>
-
-            <el-table-column
-              align="center"
-              label="操作"
-              show-overflow-tooltip
-              sortable
-              width="85"
-            >
-              <template #default="{ row }">
-                <el-button type="text" @click="handleEdit(row)">编辑</el-button>
-                <el-button type="text" @click="handleDelete(row)">
-                  删除
-                </el-button>
-              </template>
-            </el-table-column>
-            <template #empty>
-              <el-empty />
-            </template>
-          </el-table>
-          <el-pagination
-            background
-            :current-page="queryForm.pageNo"
-            :layout="layout"
-            :page-size="queryForm.pageSize"
-            :total="total"
-            @current-change="handleCurrentChange"
-            @size-change="handleSizeChange"
-          />
+      <el-tabs v-model="activeName">
+        <el-tab-pane
+          v-for="(item, index) in amis"
+          :key="index"
+          :label="item.title"
+          :name="index"
+        >
+          <dgiot-amis :schema="item.data" :show-help="false" />
         </el-tab-pane>
       </el-tabs>
+      <!--      <el-tabs v-model="activeName" @tab-click="handleClick">-->
+      <!--        <el-tab-pane label="工序列表" name="first">-->
+      <!--          <dgiot-query-form-left-panel>-->
+      <!--            工艺路径工序-->
+      <!--          </dgiot-query-form-left-panel>-->
+      <!--          <dgiot-query-form>-->
+      <!--            <dgiot-query-form-right-panel>-->
+      <!--              <el-form-->
+      <!--                ref="form"-->
+      <!--                :inline="true"-->
+      <!--                label-width="0"-->
+      <!--                :model="queryForm"-->
+      <!--                @submit.native.prevent-->
+      <!--              >-->
+      <!--                <el-form-item>-->
+      <!--                  <el-input-->
+      <!--                    v-model="queryForm.title"-->
+      <!--                    placeholder="请输入工艺路径名称"-->
+      <!--                  />-->
+      <!--                </el-form-item>-->
+      <!--                <el-form-item>-->
+      <!--                  <el-button-->
+      <!--                    icon="el-icon-search"-->
+      <!--                    native-type="submit"-->
+      <!--                    type="primary"-->
+      <!--                    @click.native="handleQuery"-->
+      <!--                  >-->
+      <!--                    查询-->
+      <!--                  </el-button>-->
+      <!--                  <el-button-->
+      <!--                    icon="el-icon-plus"-->
+      <!--                    type="primary"-->
+      <!--                    @click.native="ftechnology.dialogVisible = true"-->
+      <!--                  >-->
+      <!--                    添加工艺路径-->
+      <!--                  </el-button>-->
+      <!--                </el-form-item>-->
+      <!--              </el-form>-->
+      <!--            </dgiot-query-form-right-panel>-->
+      <!--          </dgiot-query-form>-->
+      <!--          <el-table-->
+      <!--            ref="tableSort"-->
+      <!--            v-loading="listLoading"-->
+      <!--            :border="border"-->
+      <!--            :data="list"-->
+      <!--            :height="height"-->
+      <!--            :size="lineHeight"-->
+      <!--            :stripe="stripe"-->
+      <!--            @selection-change="setSelectRows"-->
+      <!--          >-->
+      <!--            <el-table-column align="center" type="selection" width="55" />-->
+      <!--            <el-table-column-->
+      <!--              align="center"-->
+      <!--              label="序号"-->
+      <!--              show-overflow-tooltip-->
+      <!--              sortable-->
+      <!--              width="95"-->
+      <!--            >-->
+      <!--              <template #default="{ $index }">-->
+      <!--                {{ $index + 1 }}-->
+      <!--              </template>-->
+      <!--            </el-table-column>-->
+      <!--            <el-table-column-->
+      <!--              v-for="(item, index) in finallyColumns"-->
+      <!--              :key="index"-->
+      <!--              align="center"-->
+      <!--              :label="item.label"-->
+      <!--              sortable-->
+      <!--              :width="item.width"-->
+      <!--            >-->
+      <!--              <template #default="{ row }">-->
+      <!--                <span v-if="item.label === '评级'">-->
+      <!--                  <el-rate v-model="row.rate" disabled />-->
+      <!--                </span>-->
+      <!--                <span v-else>{{ row[item.prop] }}</span>-->
+      <!--              </template>-->
+      <!--            </el-table-column>-->
+
+      <!--            <el-table-column-->
+      <!--              align="center"-->
+      <!--              label="操作"-->
+      <!--              show-overflow-tooltip-->
+      <!--              sortable-->
+      <!--              width="85"-->
+      <!--            >-->
+      <!--              <template #default="{ row }">-->
+      <!--                <el-button type="text" @click="handleEdit(row)">编辑</el-button>-->
+      <!--                <el-button type="text" @click="handleDelete(row)">-->
+      <!--                  删除-->
+      <!--                </el-button>-->
+      <!--              </template>-->
+      <!--            </el-table-column>-->
+      <!--            <template #empty>-->
+      <!--              <el-empty />-->
+      <!--            </template>-->
+      <!--          </el-table>-->
+      <!--          <el-pagination-->
+      <!--            background-->
+      <!--            :current-page="queryForm.pageNo"-->
+      <!--            :layout="layout"-->
+      <!--            :page-size="queryForm.pageSize"-->
+      <!--            :total="total"-->
+      <!--            @current-change="handleCurrentChange"-->
+      <!--            @size-change="handleSizeChange"-->
+      <!--          />-->
+      <!--        </el-tab-pane>-->
+      <!--        <el-tab-pane label="属性列表" name="second">-->
+      <!--          <dgiot-query-form>-->
+      <!--            <dgiot-query-form-left-panel>-->
+      <!--              工艺路径属性-->
+      <!--            </dgiot-query-form-left-panel>-->
+      <!--            <dgiot-query-form-right-panel>-->
+      <!--              <el-form-->
+      <!--                ref="form"-->
+      <!--                :inline="true"-->
+      <!--                label-width="0"-->
+      <!--                :model="queryForm"-->
+      <!--                @submit.native.prevent-->
+      <!--              >-->
+      <!--                <el-form-item>-->
+      <!--                  <el-input-->
+      <!--                    v-model="queryForm.title"-->
+      <!--                    placeholder="请输入工艺路径名称"-->
+      <!--                  />-->
+      <!--                </el-form-item>-->
+      <!--                <el-form-item>-->
+      <!--                  <el-button-->
+      <!--                    icon="el-icon-search"-->
+      <!--                    native-type="submit"-->
+      <!--                    type="primary"-->
+      <!--                    @click.native="handleQuery"-->
+      <!--                  >-->
+      <!--                    查询-->
+      <!--                  </el-button>-->
+      <!--                  <el-button-->
+      <!--                    icon="el-icon-plus"-->
+      <!--                    type="primary"-->
+      <!--                    @click.native="ftechnology.dialogVisible = true"-->
+      <!--                  >-->
+      <!--                    添加工艺路径-->
+      <!--                  </el-button>-->
+      <!--                </el-form-item>-->
+      <!--              </el-form>-->
+      <!--            </dgiot-query-form-right-panel>-->
+      <!--          </dgiot-query-form>-->
+      <!--          <el-table-->
+      <!--            ref="tableSort"-->
+      <!--            v-loading="listLoading"-->
+      <!--            :border="border"-->
+      <!--            :data="list"-->
+      <!--            :height="height"-->
+      <!--            :size="lineHeight"-->
+      <!--            :stripe="stripe"-->
+      <!--            @selection-change="setSelectRows"-->
+      <!--          >-->
+      <!--            <el-table-column align="center" type="selection" width="55" />-->
+      <!--            <el-table-column-->
+      <!--              align="center"-->
+      <!--              label="序号"-->
+      <!--              show-overflow-tooltip-->
+      <!--              sortable-->
+      <!--              width="95"-->
+      <!--            >-->
+      <!--              <template #default="{ $index }">-->
+      <!--                {{ $index + 1 }}-->
+      <!--              </template>-->
+      <!--            </el-table-column>-->
+      <!--            <el-table-column-->
+      <!--              v-for="(item, index) in finallyColumns"-->
+      <!--              :key="index"-->
+      <!--              align="center"-->
+      <!--              :label="item.label"-->
+      <!--              sortable-->
+      <!--              :width="item.width"-->
+      <!--            >-->
+      <!--              <template #default="{ row }">-->
+      <!--                <span v-if="item.label === '评级'">-->
+      <!--                  <el-rate v-model="row.rate" disabled />-->
+      <!--                </span>-->
+      <!--                <span v-else>{{ row[item.prop] }}</span>-->
+      <!--              </template>-->
+      <!--            </el-table-column>-->
+
+      <!--            <el-table-column-->
+      <!--              align="center"-->
+      <!--              label="操作"-->
+      <!--              show-overflow-tooltip-->
+      <!--              sortable-->
+      <!--              width="85"-->
+      <!--            >-->
+      <!--              <template #default="{ row }">-->
+      <!--                <el-button type="text" @click="handleEdit(row)">编辑</el-button>-->
+      <!--                <el-button type="text" @click="handleDelete(row)">-->
+      <!--                  删除-->
+      <!--                </el-button>-->
+      <!--              </template>-->
+      <!--            </el-table-column>-->
+      <!--            <template #empty>-->
+      <!--              <el-empty />-->
+      <!--            </template>-->
+      <!--          </el-table>-->
+      <!--          <el-pagination-->
+      <!--            background-->
+      <!--            :current-page="queryForm.pageNo"-->
+      <!--            :layout="layout"-->
+      <!--            :page-size="queryForm.pageSize"-->
+      <!--            :total="total"-->
+      <!--            @current-change="handleCurrentChange"-->
+      <!--            @size-change="handleSizeChange"-->
+      <!--          />-->
+      <!--        </el-tab-pane>-->
+      <!--        <el-tab-pane label="可执行产线" name="third">-->
+      <!--          <dgiot-query-form>-->
+      <!--            <dgiot-query-form-left-panel>-->
+      <!--              可执行产线-->
+      <!--            </dgiot-query-form-left-panel>-->
+      <!--            <dgiot-query-form-right-panel>-->
+      <!--              <el-form-->
+      <!--                ref="form"-->
+      <!--                :inline="true"-->
+      <!--                label-width="0"-->
+      <!--                :model="queryForm"-->
+      <!--                @submit.native.prevent-->
+      <!--              >-->
+      <!--                <el-form-item>-->
+      <!--                  <el-input-->
+      <!--                    v-model="queryForm.title"-->
+      <!--                    placeholder="请输入工艺路径名称"-->
+      <!--                  />-->
+      <!--                </el-form-item>-->
+      <!--                <el-form-item>-->
+      <!--                  <el-button-->
+      <!--                    icon="el-icon-search"-->
+      <!--                    native-type="submit"-->
+      <!--                    type="primary"-->
+      <!--                    @click.native="handleQuery"-->
+      <!--                  >-->
+      <!--                    查询-->
+      <!--                  </el-button>-->
+      <!--                  <el-button-->
+      <!--                    icon="el-icon-plus"-->
+      <!--                    type="primary"-->
+      <!--                    @click.native="ftechnology.dialogVisible = true"-->
+      <!--                  >-->
+      <!--                    添加工艺路径-->
+      <!--                  </el-button>-->
+      <!--                </el-form-item>-->
+      <!--              </el-form>-->
+      <!--            </dgiot-query-form-right-panel>-->
+      <!--          </dgiot-query-form>-->
+      <!--          <el-table-->
+      <!--            ref="tableSort"-->
+      <!--            v-loading="listLoading"-->
+      <!--            :border="border"-->
+      <!--            :data="list"-->
+      <!--            :height="height"-->
+      <!--            :size="lineHeight"-->
+      <!--            :stripe="stripe"-->
+      <!--            @selection-change="setSelectRows"-->
+      <!--          >-->
+      <!--            <el-table-column align="center" type="selection" width="55" />-->
+      <!--            <el-table-column-->
+      <!--              align="center"-->
+      <!--              label="序号"-->
+      <!--              show-overflow-tooltip-->
+      <!--              sortable-->
+      <!--              width="95"-->
+      <!--            >-->
+      <!--              <template #default="{ $index }">-->
+      <!--                {{ $index + 1 }}-->
+      <!--              </template>-->
+      <!--            </el-table-column>-->
+      <!--            <el-table-column-->
+      <!--              v-for="(item, index) in finallyColumns"-->
+      <!--              :key="index"-->
+      <!--              align="center"-->
+      <!--              :label="item.label"-->
+      <!--              sortable-->
+      <!--              :width="item.width"-->
+      <!--            >-->
+      <!--              <template #default="{ row }">-->
+      <!--                <span v-if="item.label === '评级'">-->
+      <!--                  <el-rate v-model="row.rate" disabled />-->
+      <!--                </span>-->
+      <!--                <span v-else>{{ row[item.prop] }}</span>-->
+      <!--              </template>-->
+      <!--            </el-table-column>-->
+
+      <!--            <el-table-column-->
+      <!--              align="center"-->
+      <!--              label="操作"-->
+      <!--              show-overflow-tooltip-->
+      <!--              sortable-->
+      <!--              width="85"-->
+      <!--            >-->
+      <!--              <template #default="{ row }">-->
+      <!--                <el-button type="text" @click="handleEdit(row)">编辑</el-button>-->
+      <!--                <el-button type="text" @click="handleDelete(row)">-->
+      <!--                  删除-->
+      <!--                </el-button>-->
+      <!--              </template>-->
+      <!--            </el-table-column>-->
+      <!--            <template #empty>-->
+      <!--              <el-empty />-->
+      <!--            </template>-->
+      <!--          </el-table>-->
+      <!--          <el-pagination-->
+      <!--            background-->
+      <!--            :current-page="queryForm.pageNo"-->
+      <!--            :layout="layout"-->
+      <!--            :page-size="queryForm.pageSize"-->
+      <!--            :total="total"-->
+      <!--            @current-change="handleCurrentChange"-->
+      <!--            @size-change="handleSizeChange"-->
+      <!--          />-->
+      <!--        </el-tab-pane>-->
+      <!--      </el-tabs> -->
+      <!--      改为配置低代码-->
     </div>
   </div>
 </template>
 
 <script>
-  import { getList } from '@/api/Mock/table'
-
+  import { getList, queryMock } from '@/api/Mock/table'
+  import { queryView } from '@/api/View'
   export default {
     name: 'Index',
     components: {},
     data() {
       return {
+        amis: [],
+        detail: {},
         activeName: 'first',
         infoData: 'Empty',
         isFullscreen: false,
@@ -335,6 +460,10 @@
         )
       },
     },
+    created() {
+      this.queryDetails(this.$route.query.objectId)
+      this.queryAmisDeatil(this.$route.query.objectId)
+    },
     mounted() {
       this.fetchData()
     },
@@ -346,6 +475,55 @@
     destroyed() {}, //生命周期 - 销毁完成
     activated() {},
     methods: {
+      /**
+       * @Author: dgiot-fe
+       * @Date: 2022-04-22 16:50:45
+       * @LastEditors:
+       * @param
+       * @return {Promise<void>}
+       * @Description:
+       */
+      async queryAmisDeatil(objectId) {
+        const query = {
+          where: {
+            class: 'Ftechnology',
+            type: 'amis',
+            title: { $ne: null },
+            key: objectId,
+            objectId: { $ne: null },
+          },
+        }
+        try {
+          this.amis = await queryView(query)
+        } catch (error) {
+          console.log(error)
+          this.$baseMessage(
+            this.$translateTitle('alert.Data request error') + `${error}`,
+            'error',
+            'dgiot-hey-message-error'
+          )
+        }
+      },
+      /**
+       * @Author: dgiot-fe
+       * @Date: 2022-04-22 16:23:25
+       * @LastEditors:
+       * @param
+       * @return {Promise<void>}
+       * @Description:
+       */
+      async queryDetails(id) {
+        try {
+          this.detail = await queryMock(id)
+        } catch (error) {
+          console.log(error)
+          this.$baseMessage(
+            this.$translateTitle('alert.Data request error') + `${error}`,
+            'error',
+            'dgiot-hey-message-error'
+          )
+        }
+      },
       setSelectRows(val) {
         this.selectRows = val
       },

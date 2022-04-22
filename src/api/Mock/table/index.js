@@ -1,10 +1,23 @@
-function handleRandomImage(/* width = 50, height = 50 */) {
-  //return `https://picsum.photos/${width}/${height}?random=${Random.guid()}`
-  return `https://cdn.jsdelivr.net/gh/chuzhixin/image/table/vab-image-${Mock.Random.integer(
-    1,
-    38
-  )}.jpg`
-}
+const imgCdn = [
+  'http://www.dmoe.cc/random.php',
+  'https://unsplash.it/1600/900?random',
+  'http://www.dmoe.cc/random.php',
+  'https://api.dujin.org/bing/1366.php',
+  'https://api.dujin.org/bing/1920.php',
+  'http://api.mtyqx.cn/api/random.php',
+  'http://api.mtyqx.cn/tapi/random.php',
+  'https://source.unsplash.com/random',
+  'http://www.dmoe.cc/random.php',
+  'https://acg.yanwz.cn/api.php',
+  'https://img.paulzzh.tech/touhou/random',
+  'https://acg.toubiec.cn/random.php',
+  'https://tuapi.eees.cc/api.php?category=dongman&type=302',
+  'https://api.dujin.org/bing/1366.php',
+  'https://api.ixiaowai.cn/api/api.php',
+  'https://api.ixiaowai.cn/mcapi/mcapi.php',
+  'https://api.ixiaowai.cn/gqapi/gqapi.php',
+  'https://api.123home.page/api.php?category=all',
+]
 
 const List = []
 const count = 50
@@ -20,8 +33,10 @@ for (let i = 0; i < count; i++) {
       'status|1': ['published', 'draft', 'deleted'],
       author: '@cname',
       datetime: '@datetime',
+      createdAt: '@datetime',
+      updatedAt: '@datetime',
       pageViews: '@integer(300, 5000)',
-      img: handleRandomImage(228, 228),
+      img: _.sampleSize(imgCdn, 1)[0],
       switch: '@boolean',
       percent: '@integer(80,99)',
       'rate|1': [1, 2, 3, 4, 5],
@@ -45,16 +60,38 @@ export function getList(params) {
     data: { list, ...{ total: mockList.length } },
   }
 }
+
+export function queryMock(Id) {
+  return Mock.mock({
+    uuid: '@uuid',
+    id: Id,
+    title: '@cword(3,10)',
+    objectId: Id,
+    code: /\S\d{5,6}/,
+    description: '@csentence',
+    'status|1': ['published', 'draft', 'deleted'],
+    author: '@cname',
+    datetime: '@datetime',
+    createdAt: '@datetime',
+    updatedAt: '@datetime',
+    pageViews: '@integer(300, 5000)',
+    img: _.sampleSize(imgCdn, 1)[0],
+    switch: '@boolean',
+    percent: '@integer(80,99)',
+    'rate|1': [1, 2, 3, 4, 5],
+    percentage: '@integer(0,100)',
+  })
+}
 export function doEdit() {
   return {
     code: 200,
-    msg: '模拟保存成功',
+    msg: '修改成功',
   }
 }
 
 export function doDelete() {
   return {
     code: 200,
-    msg: '模拟删除成功',
+    msg: '删除成功',
   }
 }

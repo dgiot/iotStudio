@@ -15,7 +15,7 @@
       <div class="dlalog">
         <dgiot-dialog
           :show.sync="ftechnology.dialogVisible"
-          title="新增工艺路径"
+          :title="ftechnology.type == 'add' ? '新增工艺路径' : '修改工艺路径'"
         >
           <el-form
             ref="ftechnology"
@@ -25,24 +25,21 @@
             :rules="rules"
             status-icon
           >
-            <el-form-item label="工艺路径名称" prop="ftechnology.form.title">
+            <el-form-item label="工艺路径名称" prop="form.title">
               <el-input
                 v-model="ftechnology.form.title"
                 autocomplete="off"
                 placeholder="请输入工艺路径名称"
               />
             </el-form-item>
-            <el-form-item label="工艺路径编码" prop="ftechnology.form.code">
+            <el-form-item label="工艺路径编码" prop="form.code">
               <el-input
                 v-model="ftechnology.form.code"
                 autocomplete="off"
                 placeholder="请输入工艺路径编码"
               />
             </el-form-item>
-            <el-form-item
-              label="工艺路径描述"
-              prop="ftechnology.form.description"
-            >
+            <el-form-item label="工艺路径描述" prop="form.description">
               <el-input
                 v-model="ftechnology.form.description"
                 autocomplete="off"
@@ -51,12 +48,31 @@
                 type="textarea"
               />
             </el-form-item>
+            <el-form-item label="工艺路径logo">
+              <el-upload
+                action="https://jsonplaceholder.typicode.com/posts/"
+                :before-upload="beforeAvatarUpload"
+                class="avatar-uploader"
+                :on-success="handleAvatarSuccess"
+                :show-file-list="false"
+              >
+                <img
+                  v-if="ftechnology.form.img"
+                  class="avatar"
+                  :src="ftechnology.form.img"
+                />
+                <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+              </el-upload>
+            </el-form-item>
           </el-form>
           <div slot="footer" class="dialog-footer">
             <el-button @click.native="ftechnology.dialogVisible = false">
               取 消
             </el-button>
-            <el-button type="primary" @click.native="submitForm('ftechnology')">
+            <el-button
+              type="primary"
+              @click.native="submitForm('ftechnology', ftechnology.type)"
+            >
               确 定
             </el-button>
           </div>
@@ -72,7 +88,10 @@
             @submit.native.prevent
           >
             <el-form-item>
-              <el-input v-model="queryForm.title" placeholder="标题" />
+              <el-input
+                v-model="queryForm.title"
+                placeholder="请输入工艺路径名称"
+              />
             </el-form-item>
             <el-form-item>
               <el-button
@@ -93,7 +112,6 @@
             </el-form-item>
           </el-form>
         </dgiot-query-form-left-panel>
-        <dgiot-query-form-right-panel>2</dgiot-query-form-right-panel>
       </dgiot-query-form>
       <el-row
         v-loading="loadingConfig"
@@ -116,41 +134,70 @@
             <div class="box">
               <div class="left">
                 <el-image
+                  fit="scale-down"
                   :preview-src-list="[o.img]"
                   :src="o.img"
                   style="width: 100px; height: 100px"
-                />
+                >
+                  <div slot="error" class="image-slot">
+                    <i class="el-icon-picture-outline"></i>
+                  </div>
+                </el-image>
               </div>
               <div class="right">
-                <h3 class="time" :title="o.title">{{ o.title }}</h3>
-                <p class="time" :title="o.code">编码: {{ o.code }}</p>
-                <p class="time" :title="o.description">
-                  描述: {{ o.description }}
-                </p>
+                <el-descriptions :column="1" size="medium">
+                  <el-descriptions-item label="编码" :title="o.code">
+                    {{ o.code }}
+                  </el-descriptions-item>
+                  <el-descriptions-item label="描述" :title="o.description">
+                    {{ o.description }}
+                  </el-descriptions-item>
+                  <el-descriptions-item label="更新时间" :title="o.datetime">
+                    {{ o.datetime }}
+                  </el-descriptions-item>
+                </el-descriptions>
               </div>
             </div>
-            <div class="box">
-              <div class="left">
+            <div slot="header" class="clearfix">
+              <span
+                style="
+                  font-size: 14px;
+                  color: #333;
+                  line-height: 22px;
+                  font-weight: 700;
+                "
+              >
+                {{ o.title }}
+              </span>
+              <div style="float: right">
                 <el-button
                   size="mini"
+                  type="primary"
                   @click.native="
                     $router.push({
                       path: '/oc/Ftechnology/detail',
                       query: {
                         objectId: o.objectId,
-                        title: o.title,
-                        info: o,
                       },
                     })
                   "
                 >
                   查看
                 </el-button>
-              </div>
-              <div class="right">
-                <p class="time" style="color: #999" :title="o.datetime">
-                  更新时间: {{ o.datetime }}
-                </p>
+                <el-button
+                  size="mini"
+                  type="warning"
+                  @click.native="editItem(o)"
+                >
+                  编辑
+                </el-button>
+                <el-button
+                  size="mini"
+                  type="danger"
+                  @click.native="deleteItem(o.objectId, index, list)"
+                >
+                  删除
+                </el-button>
               </div>
             </div>
           </el-card>
@@ -170,7 +217,7 @@
 </template>
 
 <script>
-  import { doDelete, getList } from '@/api/Mock/table'
+  import { doDelete, getList, doEdit } from '@/api/Mock/table'
 
   export default {
     name: 'Index',
@@ -181,7 +228,7 @@
         layout: 'total, sizes, prev, pager, next, jumper',
         total: 0,
         rules: {
-          'ftechnology.form.title': [
+          'form.title': [
             {
               required: true,
               message: '请输入工艺路径名称',
@@ -194,7 +241,7 @@
               trigger: 'blur',
             },
           ],
-          'ftechnology.form.code': [
+          'form.code': [
             {
               required: true,
               message: '请输入工艺路径编码',
@@ -207,7 +254,7 @@
               trigger: 'blur',
             },
           ],
-          'ftechnology.form.description': [
+          'form.description': [
             {
               required: false,
               message: '请输入工艺路径描述',
@@ -222,6 +269,7 @@
           ],
         },
         ftechnology: {
+          type: 'add',
           dialogVisible: false,
           form: {
             title: '',
@@ -247,6 +295,34 @@
     mounted() {},
     destroyed() {},
     methods: {
+      /**
+       * @Author: dgiot-fe
+       * @Date: 2022-04-22 15:43:20
+       * @LastEditors:
+       * @param
+       * @return {Promise<void>}
+       * @Description:
+       */
+      editItem(params) {
+        this.ftechnology.dialogVisible = true
+        this.ftechnology.form = params
+        this.ftechnology.type = 'edit'
+      },
+      /**
+       * @Author: dgiot-fe
+       * @Date: 2022-04-22 15:34:21
+       * @LastEditors:
+       * @param
+       * @return {Promise<void>}
+       * @Description:
+       */
+      async deleteItem(objectId, index, list) {
+        this.$baseConfirm('你确定要删除选中项吗', null, async () => {
+          const { msg } = await doDelete({ ids: objectId })
+          list.splice(index, 1)
+          this.$baseMessage(msg, 'success', 'dgiot-hey-message-success')
+        })
+      },
       handleCurrentChange(val) {
         this.queryForm.pageNo = val
         this.fetechData()
@@ -254,6 +330,39 @@
       handleSizeChange(val) {
         this.queryForm.pageSize = val
         this.fetechData()
+      },
+      beforeAvatarUpload(file) {
+        var extension = [
+          'image/jpeg',
+          'image/png',
+          'image/gif',
+          'image/bmp',
+          'image/jpg',
+          'image/webp',
+          'image/svg+xml',
+          'image/tiff',
+          'image/x-icon',
+        ]
+        const isJPG = extension.includes(file.type)
+        const isLt2M = file.size / 1024 / 1024 < 2
+        if (!isJPG) {
+          this.$baseMessage(
+            '上传图片格式不正确!',
+            'error',
+            'dgiot-hey-message-error'
+          )
+        }
+        if (!isLt2M) {
+          this.$baseMessage(
+            '上传头像图片大小不能超过 2MB!',
+            'error',
+            'dgiot-hey-message-error'
+          )
+        }
+        return isJPG && isLt2M
+      },
+      handleAvatarSuccess(res, file) {
+        this.ftechnology.form.img = URL.createObjectURL(file.raw)
       },
       /**
        * @Author: dgiot-fe
@@ -263,30 +372,29 @@
        * @return {Promise<void>}
        * @Description:
        */
-      async submitForm(formName) {
+      async submitForm(formName, type) {
         this.loadingConfig = true
-        try {
-          this.ftechnology.form.datetime = moment(moment.now()).format(
-            'YYYY:MM:DD  HH:mm:ss'
+        if (type === 'add') {
+          try {
+            this.ftechnology.form.datetime = moment(moment.now()).format(
+              'YYYY:MM:DD  HH:mm:ss'
+            )
+            console.log(this.ftechnology.form, formName)
+            this.list.unshift(this.ftechnology.form)
+          } catch (error) {
+            console.log(error)
+            this.$baseMessage(
+              this.$translateTitle('alert.Data request error') + `${error}`,
+              'error',
+              'dgiot-hey-message-error'
+            )
+          }
+        } else {
+          const { msg } = await doEdit(
+            this.ftechnology.form.objectId,
+            this.ftechnology.form
           )
-          this.ftechnology.form.img = 'https://img.xjh.me/random_img.php'
-          console.log(this.ftechnology.form, formName)
-          this.list.unshift(this.ftechnology.form)
-          // this.$refs.ftechnology.validate((valid) => {
-          //   if (valid) {
-          //     alert('submit!')
-          //   } else {
-          //     console.log('error submit!!')
-          //     return false
-          //   }
-          // })
-        } catch (error) {
-          console.log(error)
-          this.$baseMessage(
-            this.$translateTitle('alert.Data request error') + `${error}`,
-            'error',
-            'dgiot-hey-message-error'
-          )
+          this.$baseMessage(msg, 'success', 'dgiot-hey-message-success')
         }
         this.ftechnology.dialogVisible = false
         setTimeout(() => {
@@ -353,11 +461,9 @@
       height: 100%;
 
       .box-card {
-        //width: 100%;
-        //height: 80vh;
-
         .card {
           margin: 10px;
+
           .box {
             margin: 5px 0 0 0;
             display: flex;
@@ -367,13 +473,8 @@
               text-align: center;
               flex: 1;
             }
+
             .right {
-              h3 {
-                font-size: 14px;
-                color: #333;
-                line-height: 22px;
-                font-weight: 700;
-              }
               flex: 3;
               white-space: nowrap;
               text-overflow: ellipsis;
