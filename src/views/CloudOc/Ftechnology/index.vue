@@ -101,47 +101,70 @@
         element-loading-background="rgba(0, 0, 0, 0.8)"
         element-loading-spinner="el-icon-loading"
         :element-loading-text="$translateTitle('developer.Waitingtoreturn')"
+        :gutter="20"
       >
         <el-col
           v-for="(o, index) in list"
           :key="index"
-          :lg="4"
+          :lg="6"
           :md="8"
           :sm="12"
-          :xl="4"
+          :xl="6"
           :xs="24"
         >
           <el-card class="card" shadow="hover">
-            <el-row>
-              <el-col :span="12">
+            <div class="box">
+              <div class="left">
                 <el-image
                   :preview-src-list="[o.img]"
                   :src="o.img"
                   style="width: 100px; height: 100px"
                 />
-              </el-col>
-              <el-col :span="12">
-                <h3>{{ o.title }}</h3>
-                <p class="time">编码: {{ o.code }}</p>
-              </el-col>
-            </el-row>
-
-            <div style="padding: 14px">
-              <p class="time">更新时间: {{ o.datetime }}</p>
-              <p class="time">描述: {{ o.description }}</p>
-              <div class="bottom clearfix">
+              </div>
+              <div class="right">
+                <h3 class="time" :title="o.title">{{ o.title }}</h3>
+                <p class="time" :title="o.code">编码: {{ o.code }}</p>
+                <p class="time" :title="o.description">
+                  描述: {{ o.description }}
+                </p>
+              </div>
+            </div>
+            <div class="box">
+              <div class="left">
                 <el-button
+                  size="mini"
                   @click.native="
-                    $router.push('/oc/Ftechnology/detail/' + o.objectId)
+                    $router.push({
+                      path: '/oc/Ftechnology/detail',
+                      query: {
+                        objectId: o.objectId,
+                        title: o.title,
+                        info: o,
+                      },
+                    })
                   "
                 >
                   查看
                 </el-button>
               </div>
+              <div class="right">
+                <p class="time" style="color: #999" :title="o.datetime">
+                  更新时间: {{ o.datetime }}
+                </p>
+              </div>
             </div>
           </el-card>
         </el-col>
       </el-row>
+      <el-pagination
+        background
+        :current-page="queryForm.pageNo"
+        :layout="layout"
+        :page-size="queryForm.pageSize"
+        :total="total"
+        @current-change="handleCurrentChange"
+        @size-change="handleSizeChange"
+      />
     </div>
   </div>
 </template>
@@ -155,6 +178,8 @@
     props: {},
     data() {
       return {
+        layout: 'total, sizes, prev, pager, next, jumper',
+        total: 0,
         rules: {
           'ftechnology.form.title': [
             {
@@ -222,6 +247,14 @@
     mounted() {},
     destroyed() {},
     methods: {
+      handleCurrentChange(val) {
+        this.queryForm.pageNo = val
+        this.fetechData()
+      },
+      handleSizeChange(val) {
+        this.queryForm.pageSize = val
+        this.fetechData()
+      },
       /**
        * @Author: dgiot-fe
        * @Date: 2022-04-21 17:47:28
@@ -273,11 +306,13 @@
        */
       async fetechData(params) {
         this.loadingConfig = true
+        this.list = []
         try {
           const {
             data: { list, total },
           } = await getList(this.queryForm)
           this.list = list
+          this.total = total
           console.log(list)
         } catch (error) {
           console.log(error)
@@ -318,11 +353,40 @@
       height: 100%;
 
       .box-card {
-        width: 100%;
-        height: 80vh;
+        //width: 100%;
+        //height: 80vh;
 
         .card {
-          margin: 20px;
+          margin: 10px;
+          .box {
+            margin: 5px 0 0 0;
+            display: flex;
+            justify-content: space-between;
+
+            .left {
+              text-align: center;
+              flex: 1;
+            }
+            .right {
+              h3 {
+                font-size: 14px;
+                color: #333;
+                line-height: 22px;
+                font-weight: 700;
+              }
+              flex: 3;
+              white-space: nowrap;
+              text-overflow: ellipsis;
+              overflow: hidden;
+              margin-left: 10px;
+            }
+          }
+        }
+
+        .time {
+          white-space: nowrap;
+          text-overflow: ellipsis;
+          overflow: hidden;
         }
 
         .image {
