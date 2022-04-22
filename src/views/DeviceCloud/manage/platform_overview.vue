@@ -105,11 +105,14 @@
                 <el-col :span="12">
                   <dgiot-icon icon="device-recover-fill" />
                 </el-col>
-                <el-col class="card-right" :span="12">
-                  <router-link to="dashboard/device">
-                    <p>{{ $translateTitle('home.dev_count') }}</p>
-                    <p>{{ _dev_count }}</p>
-                  </router-link>
+                <el-col
+                  class="card-right"
+                  :span="12"
+                  style="cursor: pointer"
+                  @click.native="goDevice()"
+                >
+                  <p>{{ $translateTitle('home.dev_count') }}</p>
+                  <p>{{ _dev_count }}</p>
                 </el-col>
               </el-card>
             </el-col>
@@ -1286,6 +1289,14 @@
             product: name,
           },
         })
+        console.log(window.errRoute)
+        if (window?.errRoute?.name)
+          this.$router.push({
+            path: '/dashboard/devicelist',
+            query: {
+              product: name,
+            },
+          })
       },
       _goDevice(item) {
         this.$router.push({
@@ -1294,6 +1305,14 @@
             devicename: item.name,
           },
         })
+        console.log(window.errRoute)
+        if (window?.errRoute?.name)
+          this.$router.push({
+            path: '/dashboard/devicelist',
+            query: {
+              devicename: item.name,
+            },
+          })
       },
       goLink(type, item) {
         switch (type) {
