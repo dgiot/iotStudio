@@ -339,7 +339,7 @@
       },
       markerClustererShow: {
         type: Boolean,
-        default: false,
+        default: true,
       },
       busShow: {
         type: Boolean,
@@ -423,7 +423,7 @@
       },
       scrollWheelZoom: {
         type: Boolean,
-        default: false,
+        default: true,
       },
       center: {
         type: Object,

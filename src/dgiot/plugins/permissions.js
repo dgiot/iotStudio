@@ -29,11 +29,13 @@ DgiotProgress.configure({
   showSpinner: false,
 })
 router.beforeEach(async (to, from, next) => {
+  window.errRoute = null
   store.dispatch('routes/setRoutesOpenTime', {
     router: to.meta.component,
     timestamp: moment(new Date()).valueOf(),
   })
   if (to.name == '404') {
+    window.errRoute = to
     console.log('dgiot router log---')
     console.log(to)
     return false

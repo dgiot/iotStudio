@@ -172,6 +172,7 @@
             :map-center="mapLabel.position"
             :nav-show="true"
             :scale-show="true"
+            :scroll-wheel-zoom="true"
           />
         </el-card>
         <span slot="footer" class="dialog-footer">

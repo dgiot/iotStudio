@@ -13,7 +13,9 @@ for (let i = 0; i < count; i++) {
     Mock.mock({
       uuid: '@uuid',
       id: '@id',
-      title: '@title(1, 2)',
+      title: '@cword(3,10)',
+      objectId: /\S\d{5,6}/,
+      code: /\S\d{5,6}/,
       description: '@csentence',
       'status|1': ['published', 'draft', 'deleted'],
       author: '@cname',

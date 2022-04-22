@@ -11,7 +11,6 @@
 -->
 <template>
   <div ref="custom-table" class="index-container">
-    <DgiotQrcode />
     <el-form
       ref="ruleForm"
       class="demo-ruleForm"
