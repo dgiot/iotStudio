@@ -21,11 +21,11 @@
             v-for="item in plantlist"
             :key="item.id"
             class="wrap_content"
-            :lg="{ span: 7, offset: 1 }"
-            :md="{ span: 7, offset: 1 }"
-            :sm="{ span: 11, offset: 1 }"
-            :xl="{ span: 5, offset: 1 }"
-            :xs="{ span: 20, offset: 4 }"
+            :lg="{ span: 7 }"
+            :md="{ span: 7 }"
+            :sm="{ span: 11 }"
+            :xl="{ span: 5 }"
+            :xs="{ span: 20 }"
           >
             <div class="ct_top">
               <img src="../../../../public/assets/images/plant/gc.png" />
@@ -183,6 +183,7 @@
           path: '/oc/Modeling/modeldetail',
           query: {
             objectid: item.objectId,
+            name: item.name,
           },
         })
       },
@@ -243,7 +244,7 @@
           .wrap_content {
             // width: 22%;
             height: 220px;
-            // margin-right: 20px;
+            margin-right: 3%;
             margin-bottom: 20px;
             box-shadow: -1px -1px 6px #ccc;
             .ct_top {
