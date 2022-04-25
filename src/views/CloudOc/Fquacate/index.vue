@@ -11,14 +11,15 @@
 -->
 <template>
   <div class="index-container">
-    <div class="index">资质管理</div>
+    <empty />
   </div>
 </template>
 
 <script>
+  import empty from '@/views/DeviceCloud/empty/index.vue'
   export default {
     name: 'Index',
-    components: {},
+    components: { empty },
     props: {},
     data() {
       return {}
