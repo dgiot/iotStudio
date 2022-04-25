@@ -496,7 +496,7 @@
             class: 'Ftechnology',
             type: 'amis',
             title: { $ne: null },
-            key: objectId,
+            // key: objectId,
             objectId: { $ne: null },
           },
         }
