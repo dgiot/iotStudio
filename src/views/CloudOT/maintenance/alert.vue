@@ -11,14 +11,16 @@
 -->
 <template>
   <div class="alert-container">
-    <div class="alert">alert</div>
+    <empty />
   </div>
 </template>
 
 <script>
+  import empty from '@/views/DeviceCloud/empty/index.vue'
+
   export default {
     name: 'Alert',
-    components: {},
+    components: { empty },
     props: {},
     data() {
       return {}

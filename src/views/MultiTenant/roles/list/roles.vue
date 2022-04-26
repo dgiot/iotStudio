@@ -811,6 +811,8 @@
         skip: this.start,
         limit: this.pagesize,
         order: "-createdAt",
+        keys: "name,objectId,alias",
+        excludeKeys: "menus,rules,users,roles,dict",
         where: where,
         count: "objectId"
       };

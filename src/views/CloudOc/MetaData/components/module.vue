@@ -371,7 +371,8 @@
             if (this.$route.query.objectId)
               await putDict(this.$route.query.objectId, postParams)
             else await postDict(postParams)
-            this.$router.push('/oc/MetaData')
+            // this.$router.push('/oc/MetaData')
+            this.$router.go(-1)
           } else {
             console.log('error submit!!')
             return false
