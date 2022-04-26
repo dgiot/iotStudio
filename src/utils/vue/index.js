@@ -76,7 +76,7 @@ export function removeToken() {
       ? localStorage.removeItem(l)
       : tempToken.sessionStorage.push(l)
   }
-  // if ('localStorage' === storage) {
+  // if ('localStorage'    === storage) {
   //   return localStorage.removeItem(tokenName)
   // } else if ('sessionStorage' === storage) {
   //   return sessionStorage.removeItem(tokenName)

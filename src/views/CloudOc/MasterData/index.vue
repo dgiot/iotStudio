@@ -18,7 +18,7 @@
     <div class="dialog">
       <el-dialog
         append-to-body
-        :title="properties.type || '新增主数据: ' + properties.name"
+        :title="properties.types || '新增主数据: ' + properties.title"
         :visible.sync="formDialog"
         @close="closeDilog"
       >
@@ -30,7 +30,7 @@
             status-icon
           >
             <el-form-item
-              v-for="(item, index) in properties.properties"
+              v-for="(item, index) in properties.data.properties"
               :key="index"
               :label="item.prop.label"
               :rules="item.prop.rules"
@@ -41,7 +41,7 @@
         </div>
         <div slot="footer" class="dialog-footer" style="text-align: center">
           <el-button type="primary" @click="submitForm('form')">
-            {{ properties.type ? '修改' : '新增' }}
+            {{ properties.types ? '修改' : '新增' }}
           </el-button>
         </div>
       </el-dialog>
@@ -55,18 +55,40 @@
           :infinite-scroll-distance="50"
           style="overflow: scroll; height: 75vh"
         >
-          <li
-            v-for="i in list"
-            :key="i.objectId"
-            class="infinite-list-item"
-            @click="queryItem(i)"
-          >
-            <el-link
-              :type="properties.objectId == i.objectId ? 'primary' : 'warning'"
+          <el-row :gutter="24">
+            <li
+              v-for="i in list"
+              :key="i.objectId"
+              class="infinite-list-item"
+              @click="queryItem(i)"
             >
-              {{ i.name }}
-            </el-link>
-          </li>
+              <el-col :span="18">
+                <el-link
+                  :type="
+                    properties.objectId == i.objectId ? 'primary' : 'warning'
+                  "
+                >
+                  {{ i.title }}
+                </el-link>
+              </el-col>
+              <el-col :span="4">
+                <el-button
+                  class="el-icon-edit"
+                  style="float: right"
+                  type="text"
+                  @click.native="
+                    $router.push({
+                      path: '/oc/MetaData/module',
+                      query: {
+                        objectId: i.objectId,
+                        type: 'edit',
+                      },
+                    })
+                  "
+                />
+              </el-col>
+            </li>
+          </el-row>
         </ul>
       </el-col>
       <el-col :span="20">
@@ -204,7 +226,10 @@
           @current-change="handleCurrentChange"
           @size-change="handleSizeChange"
         />
-        <el-empty v-show="!properties.properties" :image-size="height - 200" />
+        <el-empty
+          v-show="!properties.data.properties"
+          :image-size="height - 200"
+        />
       </el-col>
     </el-row>
 
@@ -214,19 +239,7 @@
 
 <script>
   import TableEdit from '@/views/DeviceCloud/empty/tableEdit'
-  import {
-    queryMasterData,
-    getMasterData,
-    delMasterData,
-    putMasterData,
-    postMasterData,
-  } from '@/api/MasterData'
-  import {
-    queryMetaData,
-    getMetaData,
-    delMetaData,
-    putMetaData,
-  } from '@/api/MetaData'
+  import { queryDict, getDict, delDict, putDict, postDict } from '@/api/Dict'
 
   export default {
     name: 'Index',
@@ -295,25 +308,31 @@
     destroyed() {},
     methods: {
       closeDilog() {
-        delete this.properties.type
+        delete this.properties.types
       },
       async submitForm(formName) {
-        const data = {
+        var data = {
           data: {},
-          metadata: {
-            type: 'Pointer',
-            __type: 'Pointer',
-            className: 'MetaData',
-            objectId: this.properties.objectId,
-          },
         }
-        this.properties.properties.forEach((item) => {
+        this.properties.data.properties.forEach((item) => {
           data.data[item.propertyCode] = item.propertyValue
         })
+        console.log(data)
         if (this.clickRow.objectId) {
-          await putMasterData(this.clickRow.objectId, { data: data.data })
+          await putDict(this.clickRow.objectId, { data: data.data })
         } else {
-          const res = await postMasterData(data)
+          const res = await postDict({
+            data: data.data,
+            type: this.properties.objectId + 'metaData',
+            class: 'metaData',
+            title: this.properties.title,
+            key: 'metaData:' + moment().format('x'),
+            dict: {
+              __type: 'Pointer',
+              className: 'Dict',
+              objectId: this.properties.objectId,
+            },
+          })
           this.total = this.total + 1
         }
         this.queryItem(this.clickItem, false)
@@ -323,8 +342,9 @@
         this.count += 2
       },
       async showDiloog(item) {
-        if (item.properties) {
-          await this.properties.properties.forEach((i) => {
+        if (item.data.properties) {
+          await this.properties.data.properties.forEach((i) => {
+            console.log(i)
             i.prop = {
               label: i.propertyDesc,
               prop: i.propertyCode,
@@ -338,6 +358,7 @@
             i[i.propertyCode] = ''
             i.propertyValue = ''
           })
+          console.log(this.properties.data.properties)
           this.formDialog = true
         } else await this.$message.info('元数据暂无配置信息')
       },
@@ -346,25 +367,21 @@
         this.loading = loading
         this.checkList = []
         this.columns = []
-        const properties = await getMetaData(item.objectId)
-        const { results = [], count = 0 } = await queryMasterData({
+        const properties = await getDict(item.objectId)
+        const { results = [], count = 0 } = await queryDict({
           skip: this.queryForm.skip,
           limit: this.queryForm.limit,
           count: 'objectId',
           order: '-createdAt',
           where: {
-            metadata: {
-              __type: 'Pointer',
-              className: 'MetaData',
-              objectId: item.objectId,
-            },
+            dict: item.objectId,
           },
         })
         console.log(results)
         this.total = count
         this.MasterData = results
-        if (!_.isEmpty(properties.properties)) {
-          properties.properties.forEach((i) => {
+        if (!_.isEmpty(properties.data.properties)) {
+          properties.data.properties.forEach((i) => {
             i.prop = {
               label: i.propertyDesc,
               prop: i.propertyCode,
@@ -416,7 +433,7 @@
       },
       editItem(index, row) {
         this.clickRow = row
-        this.properties.properties.forEach((i) => {
+        this.properties.data.properties.forEach((i) => {
           i.prop = {
             label: i.propertyDesc,
             prop: i.propertyCode,
@@ -430,12 +447,12 @@
           i[i.propertyCode] = ''
           i.propertyValue = row.data[i.propertyCode]
         })
-        this.properties.type = '修改主数据'
+        this.properties.types = '修改主数据'
         this.formDialog = true
       },
       handleDelete(index, row, MasterData) {
         this.$baseConfirm('你确定要删除当前项吗', null, async () => {
-          await delMasterData(row.objectId)
+          await delDict(row.objectId)
           this.$baseMessage(
             this.$translateTitle('Maintenance.successfully deleted'),
             'success',
@@ -462,15 +479,16 @@
         const params = {
           count: 'objectId',
           order: '-createdAt',
-          excludeKeys: 'properties',
+          excludeKeys: '',
           where: {
-            name: this.queryForm.name
+            type: 'metaData',
+            title: this.queryForm.name
               ? { $regex: this.queryForm.name }
               : { $ne: null },
           },
         }
         console.info(params)
-        const { results } = await queryMetaData(params)
+        const { results } = await queryDict(params)
         this.list = results
         if (results.length > 0) {
           this.queryItem(results[0], false)
