@@ -36,13 +36,13 @@
           type="primary"
           @click.native.prevent="addParse(parserTableList)"
         >
-          {{ $translateTitle("product.newlyadded") }}
+          {{ $translateTitle('product.newlyadded') }}
         </el-button>
         <el-button
           type="success"
           @click.native.prevent="saveParse(parserTableList)"
         >
-          {{ $translateTitle("product.preservation") }}
+          {{ $translateTitle('product.preservation') }}
         </el-button>
       </div>
       <el-table
@@ -70,10 +70,10 @@
         >
           <template #default="{ row, $index }">
             <el-button plain type="primary" @click="editParse($index, row)">
-              {{ $translateTitle("concentrator.edit") }}
+              {{ $translateTitle('concentrator.edit') }}
             </el-button>
             <el-button plain type="success" @click="previewParse(row.config)">
-              {{ $translateTitle("application.preview") }}
+              {{ $translateTitle('application.preview') }}
             </el-button>
             <el-button
               plain
@@ -83,7 +83,7 @@
                 deleteParse($index, parserTableList.parser)
               "
             >
-              {{ $translateTitle("task.Delete") }}
+              {{ $translateTitle('task.Delete') }}
             </el-button>
           </template>
         </el-table-column>
@@ -111,266 +111,292 @@
         </el-form-item>
         <el-form-item>
           <el-button type="primary" @click.native="searchProduct(0)">
-            {{ $translateTitle("developer.search") }}
+            {{ $translateTitle('developer.search') }}
           </el-button>
         </el-form-item>
         <el-form-item style="text-align: right">
           <el-button type="primary" @click.native="addproduct">
-            {{ $translateTitle("product.createproduct") }}
+            {{ $translateTitle('product.createproduct') }}
           </el-button>
         </el-form-item>
         <el-form-item style="text-align: right">
           <el-button type="primary" @click.native="exportpro">
-            {{ $translateTitle("product.exportpro") }}
+            {{ $translateTitle('product.exportpro') }}
           </el-button>
         </el-form-item>
         <el-form-item style="text-align: right">
           <el-button type="primary" @click.native="handleImport()">
-            {{ $translateTitle("product.importpro") }}
+            {{ $translateTitle('product.importpro') }}
           </el-button>
         </el-form-item>
       </el-form>
-      <el-tabs v-model="tabs">
-        <el-tab-pane label="卡片模式" name="card">
-          <el-row
-            v-loading="listLoading"
-            class="box-card"
-            element-loading-background="rgba(0, 0, 0, 0.8)"
-            element-loading-spinner="el-icon-loading"
-            :element-loading-text="$translateTitle('developer.Waitingtoreturn')"
-            :gutter="20"
-          >
-            <el-col
-              v-for="(o, index) in proTableData"
-              :key="index"
-              :lg="6"
-              :md="8"
-              :sm="12"
-              :xl="6"
-              :xs="24"
-            >
-              <a-card hoverable style="margin-bottom: 24px"  :title="o.name">
-                <template #extra>
-                  <el-button
+      <!--      <el-tabs v-model="tabs">-->
+      <!--        <el-tab-pane label="卡片模式" name="card">-->
+      <el-row
+        v-loading="listLoading"
+        class="box-card"
+        element-loading-background="rgba(0, 0, 0, 0.8)"
+        element-loading-spinner="el-icon-loading"
+        :element-loading-text="$translateTitle('developer.Waitingtoreturn')"
+        :gutter="20"
+      >
+        <el-col
+          v-for="(o, index) in proTableData"
+          :key="index"
+          :lg="6"
+          :md="8"
+          :sm="12"
+          :xl="6"
+          :xs="24"
+        >
+          <a-card hoverable style="margin-bottom: 24px">
+            <template #actions style="height: 44px !important">
+              <el-row :gutter="24">
+                <el-col
+                  :offset="2"
+                  :span="2"
+                  style="text-align: center; margin: 0 auto"
+                >
+                  <dgiot-icon
+                    style="font-size: 24px"
+                    icon="eye-line"
                     :underline="false"
                     size="mini"
-                    type="primary"
-                    @click="deviceToDetail(o)"
+                    circle
+                    class="eye-line"
+                    title="产品详情"
+                    @click.native="deviceToDetail(o)"
+                  />
+                </el-col>
+                <el-col :span="2" style="text-align: center; margin: 0 auto">
+                  <dgiot-icon
+                    style="font-size: 24px"
+                    icon="book-3-fill"
+                    @click.native="editorDict(o.objectId)"
+                    :title="$translateTitle('product.dict')"
+                  />
+                </el-col>
+                <el-col :span="2" style="text-align: center; margin: 0 auto">
+                  <dgiot-icon
+                    style="font-size: 24px"
+                    icon="tv-line"
+                    @click.native="goKonva(o.objectId)"
+                    :title="$translateTitle('concentrator.konva')"
+                  />
+                </el-col>
+                <el-col
+                  :offset="1"
+                  style="text-align: center; margin: 0 auto"
+                  :span="2"
+                >
+                  <dgiot-icon
+                    icon="edit-2-fill"
+                    style="font-size: 24px"
+                    @click.native="editorProduct(o.objectId)"
+                    :title="$translateTitle('button.edit')"
+                  />
+                </el-col>
+                <el-col :span="2" style="text-align: center; margin: 0 auto">
+                  <dgiot-icon
+                    style="font-size: 24px"
+                    icon="delete-bin-fill"
+                    @click.native="makeSure(o, index)"
+                    :title="$translateTitle('button.Delete')"
+                  />
+                </el-col>
+              </el-row>
+            </template>
+
+            <a-card-meta :title="o.name" :description="o.desc">
+              <template #avatar>
+                <el-image
+                  style="height: 40px"
+                  :key="o.icon + o.objectId"
+                  :src="$FileServe + o.icon"
+                  :preview-src-list="[$FileServe + o.icon]"
+                >
+                  <div
+                    slot="error"
+                    class="image-slot"
+                    style="text-align: center"
                   >
-                    {{ $translateTitle("product.config") }}
-                  </el-button>
-                </template>
-                <template #actions>
-                  <div>
-
-                    <el-button
-                      :underline="false"
-                      size="mini"
-                      type="warning"
-                      @click="editorDict(o.objectId)"
-                    >
-                      {{ $translateTitle("product.dict") }}
-                    </el-button>
-
-                    <el-button size="mini" @click="goKonva(o.objectId)">
-                      {{ $translateTitle("concentrator.konva") }}
-                    </el-button>
-
-                    <el-button
-                      :underline="false"
-                      size="mini"
-                      type="success"
-                      @click="editorProduct(o.objectId)"
-                    >
-                      {{ $translateTitle("concentrator.edit") }}
-                    </el-button>
-
-                    <el-button size="mini" type="danger" @click="makeSure(o, index)">
-                      {{ $translateTitle("task.Delete") }}
-                    </el-button>
+                    <i
+                      class="el-icon-picture-outline"
+                      style="font-size: 40px; text-align: center"
+                    ></i>
                   </div>
-                </template>
-
-                <a-card-meta>
-                  <template #avatar>
-                    <el-image style="height: 40px" :key="o.icon + o.objectId"
-                              :src="$FileServe + o.icon" :preview-src-list="[$FileServe + o.icon]">
-                      <div slot="error" class="image-slot" style="text-align: center">
-                        <i class="el-icon-picture-outline" style="font-size: 40px;text-align: center"></i>
-                      </div>
-                    </el-image>
-                  </template>
-                  <template #title>
-                    <div>
-                      <span>{{ o.desc }}</span>
-                    </div>
-                  </template>
-                </a-card-meta>
-                <el-descriptions :column="3" size="medium" direction="vertical" border>
-                  <el-descriptions-item label="ProductId" :title="o.objectId">
-                    {{ o.objectId }}
-                  </el-descriptions-item>
-                  <el-descriptions-item
-                    :label="$translateTitle('product.nodetype')"
-                    :title="o.nodeType"
-                  >
-                    <span v-if="o.nodeType == 3">
-                      {{ $translateTitle("product.direct") }}
-                    </span>
-                    <span v-if="o.nodeType == 1">
-                      {{ $translateTitle("product.gateway") }}
-                    </span>
-                    <span v-if="o.nodeType == 2">
-                      {{ $translateTitle("product.groupgateway") }}
-                    </span>
-                    <span v-else-if="o.nodeType == 0">
-                      {{ $translateTitle("product.equipment") }}
-                    </span>
-                  </el-descriptions-item>
-
-                  <el-descriptions-item
-                    :label="$translateTitle('product.classification')"
-                    :title="o.objectId"
-                  >
-                    {{ o.category ? o.category.name : "" }}
-                  </el-descriptions-item>
-                  <el-descriptions-item :label="$translateTitle('product.addingtime')" :title="o.updatedAt">
-                    {{ $moment(o.createdAt).format("YYYY-MM-DD") }}
-                  </el-descriptions-item>
-                  <el-descriptions-item :contentStyle="{'text-align': 'center'}" label="描述" :title="o.desc">
-                    {{ o.desc }}
-                  </el-descriptions-item>
-                </el-descriptions>
-
-              </a-card>
-            </el-col>
-          </el-row>
-        </el-tab-pane>
-        <el-tab-pane label="列表模式" name="table">
-          <el-table
-            v-loading="listLoading"
-            :cell-style="{ 'text-align': 'center' }"
-            :data="proTableData"
-            :header-cell-style="{ 'text-align': 'center' }"
-            :height="height"
-            border
-            size="mini"
-            style="width: 100%"
-          >
-            <el-table-column
-              label="ProductID"
-              prop="objectId"
-              width="auto"
-              show-overflow-tooltip
-              sortable
-            />
-            <el-table-column
-              width="auto"
-              show-overflow-tooltip
-              sortable
-              prop="name"
-              :label="$translateTitle('product.productname')"
-            />
-            <el-table-column
-              show-overflow-tooltip
-              sortable
-              prop="nodeType"
-              width="auto"
-              :label="$translateTitle('product.nodetype')"
-            >
-              <template #default="{ row }">
-            <span v-if="row.nodeType == 3">
-              {{ $translateTitle("product.direct") }}
-            </span>
-                <span v-if="row.nodeType == 1">
-              {{ $translateTitle("product.gateway") }}
-            </span>
-                <span v-if="row.nodeType == 2">
-              {{ $translateTitle("product.groupgateway") }}
-            </span>
-                <span v-else-if="row.nodeType == 0">
-              {{ $translateTitle("product.equipment") }}
-            </span>
+                </el-image>
               </template>
-            </el-table-column>
-            <el-table-column
-              show-overflow-tooltip
-              sortable
-              prop="nodeType"
-              width="auto"
-              :label="$translateTitle('product.classification')"
+              <!--              <template #title>-->
+              <!--                <div>-->
+              <!--                  <span>{{ o.name }}</span>-->
+              <!--                </div>-->
+              <!--              </template>-->
+            </a-card-meta>
+            <el-descriptions
+              :column="4"
+              size="medium"
+              direction="vertical"
+              border
             >
-              <template #default="{ row }">
-            <span>
-              {{ row.category ? row.category.name : "" }}
-            </span>
-              </template>
-            </el-table-column>
-            <!--          <el-table-column :label="$translateTitle('product.producttemplet')">-->
-            <!--            <template #default="{ row }">-->
-            <!--              <span>-->
-            <!--                {{ row.producttemplet ? row.producttemplet.name : '' }}-->
-            <!--              </span>-->
-            <!--            </template>-->
-            <!--          </el-table-column>-->
-            <el-table-column
-              show-overflow-tooltip
-              sortable
-              prop="createdAt"
-              width="auto"
-              :label="$translateTitle('product.addingtime')"
-            >
-              <template #default="{ row }">
-                <span>{{ utc2beijing(row.createdAt) }}</span>
-              </template>
-            </el-table-column>
-            <el-table-column
-              ref="rightCol"
-              :label="$translateTitle('developer.operation')"
-              fixed="right"
-              width="auto"
-              min-width="280"
-            >
-              <template #default="{ row, $index }">
-                <el-button
-                  :underline="false"
-                  size="mini"
-                  type="primary"
-                  style="margin-left: 10px"
-                  @click="deviceToDetail(row)"
-                >
-                  {{ $translateTitle("product.config") }}
-                </el-button>
-                <el-button
-                  :underline="false"
-                  size="mini"
-                  type="warning"
-                  @click="editorDict(row.objectId)"
-                >
-                  {{ $translateTitle("product.dict") }}
-                </el-button>
+              <el-descriptions-item
+                :contentStyle="{ 'text-align': 'center' }"
+                :label="$translateTitle('equipment.Total number of alarms')"
+                :title="o.objectId"
+              >
+                <el-tag @click.native="goLink(o,'alarms')">{{ o.channel.alarms || 0 }}</el-tag>
+              </el-descriptions-item>
+              <el-descriptions-item
+                :contentStyle="{ 'text-align': 'center' }"
+                :label="$translateTitle('home.dev_online')"
+                :title="o.objectId"
+              >
+                <el-tag @click.native="goLink(o,'online')">{{ o.channel.online || 0 }}</el-tag>
+              </el-descriptions-item>
 
-                <el-button size="mini" @click="goKonva(row.objectId)">
-                  {{ $translateTitle("concentrator.konva") }}
-                </el-button>
+              <el-descriptions-item
+                :contentStyle="{ 'text-align': 'center' }"
+                :label="$translateTitle('home.dev_unline')"
+                :title="o.objectId"
+              >
+                <el-tag @click.native="goLink(o,'offline')">{{ o.channel.offline || 0 }}</el-tag>
+              </el-descriptions-item>
+              <!--              <el-descriptions-item :label="$translateTitle('product.addingtime')" :title="o.updatedAt">-->
+              <!--                {{ $moment(o.createdAt).format("YYYY-MM-DD") }}-->
+              <!--              </el-descriptions-item>-->
+              <!--              <el-descriptions-item :contentStyle="{'text-align': 'center'}" label="描述" :title="o.desc">-->
+              <!--                {{ o.desc }}-->
+              <!--              </el-descriptions-item>-->
+            </el-descriptions>
+          </a-card>
+        </el-col>
+      </el-row>
+      <!--        </el-tab-pane>-->
+      <!--        <el-tab-pane label="列表模式" name="table">-->
+      <!--          <el-table-->
+      <!--            v-loading="listLoading"-->
+      <!--            :cell-style="{ 'text-align': 'center' }"-->
+      <!--            :data="proTableData"-->
+      <!--            :header-cell-style="{ 'text-align': 'center' }"-->
+      <!--            :height="height"-->
+      <!--            border-->
+      <!--            size="mini"-->
+      <!--            style="width: 100%"-->
+      <!--          >-->
+      <!--            <el-table-column-->
+      <!--              label="ProductID"-->
+      <!--              prop="objectId"-->
+      <!--              width="auto"-->
+      <!--              show-overflow-tooltip-->
+      <!--              sortable-->
+      <!--            />-->
+      <!--            <el-table-column-->
+      <!--              width="auto"-->
+      <!--              show-overflow-tooltip-->
+      <!--              sortable-->
+      <!--              prop="name"-->
+      <!--              :label="$translateTitle('product.productname')"-->
+      <!--            />-->
+      <!--            <el-table-column-->
+      <!--              show-overflow-tooltip-->
+      <!--              sortable-->
+      <!--              prop="nodeType"-->
+      <!--              width="auto"-->
+      <!--              :label="$translateTitle('product.nodetype')"-->
+      <!--            >-->
+      <!--              <template #default="{ row }">-->
+      <!--            <span v-if="row.nodeType == 3">-->
+      <!--              {{ $translateTitle("product.direct") }}-->
+      <!--            </span>-->
+      <!--                <span v-if="row.nodeType == 1">-->
+      <!--              {{ $translateTitle("product.gateway") }}-->
+      <!--            </span>-->
+      <!--                <span v-if="row.nodeType == 2">-->
+      <!--              {{ $translateTitle("product.groupgateway") }}-->
+      <!--            </span>-->
+      <!--                <span v-else-if="row.nodeType == 0">-->
+      <!--              {{ $translateTitle("product.equipment") }}-->
+      <!--            </span>-->
+      <!--              </template>-->
+      <!--            </el-table-column>-->
+      <!--            <el-table-column-->
+      <!--              show-overflow-tooltip-->
+      <!--              sortable-->
+      <!--              prop="nodeType"-->
+      <!--              width="auto"-->
+      <!--              :label="$translateTitle('product.classification')"-->
+      <!--            >-->
+      <!--              <template #default="{ row }">-->
+      <!--            <span>-->
+      <!--              {{ row.category ? row.category.name : "" }}-->
+      <!--            </span>-->
+      <!--              </template>-->
+      <!--            </el-table-column>-->
+      <!--            &lt;!&ndash;          <el-table-column :label="$translateTitle('product.producttemplet')">&ndash;&gt;-->
+      <!--            &lt;!&ndash;            <template #default="{ row }">&ndash;&gt;-->
+      <!--            &lt;!&ndash;              <span>&ndash;&gt;-->
+      <!--            &lt;!&ndash;                {{ row.producttemplet ? row.producttemplet.name : '' }}&ndash;&gt;-->
+      <!--            &lt;!&ndash;              </span>&ndash;&gt;-->
+      <!--            &lt;!&ndash;            </template>&ndash;&gt;-->
+      <!--            &lt;!&ndash;          </el-table-column>&ndash;&gt;-->
+      <!--            <el-table-column-->
+      <!--              show-overflow-tooltip-->
+      <!--              sortable-->
+      <!--              prop="createdAt"-->
+      <!--              width="auto"-->
+      <!--              :label="$translateTitle('product.addingtime')"-->
+      <!--            >-->
+      <!--              <template #default="{ row }">-->
+      <!--                <span>{{ utc2beijing(row.createdAt) }}</span>-->
+      <!--              </template>-->
+      <!--            </el-table-column>-->
+      <!--            <el-table-column-->
+      <!--              ref="rightCol"-->
+      <!--              :label="$translateTitle('developer.operation')"-->
+      <!--              fixed="right"-->
+      <!--              width="auto"-->
+      <!--              min-width="280"-->
+      <!--            >-->
+      <!--              <template #default="{ row, $index }">-->
+      <!--                <el-button-->
+      <!--                  :underline="false"-->
+      <!--                  size="mini"-->
+      <!--                  type="primary"-->
+      <!--                  style="margin-left: 10px"-->
+      <!--                  @click="deviceToDetail(row)"-->
+      <!--                >-->
+      <!--                  {{ $translateTitle("product.config") }}-->
+      <!--                </el-button>-->
+      <!--                <el-button-->
+      <!--                  :underline="false"-->
+      <!--                  size="mini"-->
+      <!--                  type="warning"-->
+      <!--                  @click="editorDict(row.objectId)"-->
+      <!--                >-->
+      <!--                  {{ $translateTitle("product.dict") }}-->
+      <!--                </el-button>-->
 
-                <el-button
-                  :underline="false"
-                  size="mini"
-                  type="success"
-                  @click="editorProduct(row.objectId)"
-                >
-                  {{ $translateTitle("concentrator.edit") }}
-                </el-button>
+      <!--                <el-button size="mini" @click="goKonva(row.objectId)">-->
+      <!--                  {{ $translateTitle("concentrator.konva") }}-->
+      <!--                </el-button>-->
 
-                <el-button size="mini" type="danger" @click="makeSure(row, $index)">
-                  {{ $translateTitle("task.Delete") }}
-                </el-button>
-              </template>
-            </el-table-column>
-          </el-table>
-        </el-tab-pane>
-      </el-tabs>
+      <!--                <el-button-->
+      <!--                  :underline="false"-->
+      <!--                  size="mini"-->
+      <!--                  type="success"-->
+      <!--                  @click="editorProduct(row.objectId)"-->
+      <!--                >-->
+      <!--                  {{ $translateTitle("concentrator.edit") }}-->
+      <!--                </el-button>-->
+
+      <!--                <el-button size="mini" type="danger" @click="makeSure(row, $index)">-->
+      <!--                  {{ $translateTitle("task.Delete") }}-->
+      <!--                </el-button>-->
+      <!--              </template>-->
+      <!--            </el-table-column>-->
+      <!--          </el-table>-->
+      <!--        </el-tab-pane>-->
+      <!--      </el-tabs>-->
 
       <el-pagination
         background
@@ -417,7 +443,7 @@
           <div class="contentone">
             <div style="display: flex">
               <span>
-                {{ $translateTitle("product.productinformation") }}
+                {{ $translateTitle('product.productinformation') }}
               </span>
               <p
                 style="
@@ -471,10 +497,10 @@
                       :disabled="custom_status == 'edit'"
                     >
                       <el-radio :label="1">
-                        {{ $translateTitle("product.Standard category") }}
+                        {{ $translateTitle('product.Standard category') }}
                       </el-radio>
                       <el-radio :label="0">
-                        {{ $translateTitle("product.Custom category") }}
+                        {{ $translateTitle('product.Custom category') }}
                       </el-radio>
                     </el-radio-group>
                   </el-col>
@@ -562,16 +588,16 @@
               >
                 <el-radio-group v-model="form.nodeType">
                   <el-radio :label="3">
-                    {{ $translateTitle("product.direct") }}
+                    {{ $translateTitle('product.direct') }}
                   </el-radio>
                   <el-radio :label="1">
-                    {{ $translateTitle("product.gateway") }}
+                    {{ $translateTitle('product.gateway') }}
                   </el-radio>
                   <el-radio :label="2">
-                    {{ $translateTitle("product.groupgateway") }}
+                    {{ $translateTitle('product.groupgateway') }}
                   </el-radio>
                   <el-radio :label="0">
-                    {{ $translateTitle("product.equipment") }}
+                    {{ $translateTitle('product.equipment') }}
                   </el-radio>
                 </el-radio-group>
               </el-form-item>
@@ -629,13 +655,6 @@
                 </form>
                 <br />
               </el-form-item>
-              <el-form-item label="可视化管理" prop="config.checkList">
-                <el-checkbox-group v-model="form.config.checkList">
-                  <el-checkbox label="konva">组态</el-checkbox>
-                  <el-checkbox label="amis">低代码</el-checkbox>
-                  <el-checkbox label="dict">字典</el-checkbox>
-                </el-checkbox-group>
-              </el-form-item>
               <el-form-item
                 :label="$translateTitle('developer.describe')"
                 prop="desc"
@@ -647,10 +666,10 @@
         </div>
         <div class="devproduct-prodialog-footer">
           <el-button type="primary" @click.native="submitForm()">
-            {{ $translateTitle("developer.determine") }}
+            {{ $translateTitle('developer.determine') }}
           </el-button>
           <el-button @click="handleCloseDialogForm()">
-            {{ $translateTitle("developer.cancel") }}
+            {{ $translateTitle('developer.cancel') }}
           </el-button>
         </div>
         <!-- 分类对话框 ###-->
@@ -1432,1348 +1451,1385 @@
 </template>
 <!--eslint-disable-->
 <script>
-// import Pagination from '@dgiot/dgiot-component/src/components/Pagination'
-import profile from "@/views/DeviceCloud/manage/profile";
-import { uuid } from "@/utils";
-import { queryChannel } from "@/api/Channel/index";
-import { mapGetters } from "vuex";
-import {
-  delProduct,
-  getProduct,
-  putProduct,
-  postProduct
-} from "@/api/Product";
-import { getAllunit } from "@/api/Dict/index";
-import { delDevice, queryDevice } from "@/api/Device/index";
-import { getServer } from "@/api/Role/index";
-import { postDict } from "@/api/Dict";
-import { getHashClass } from "@/api/Hash";
-import { ExportParse, ImportParse } from "@/api/Export";
-import { queryProductTemplet } from "@/api/ProductTemplet";
-import { getCategory, queryCategory } from "@/api/Category";
+  // import Pagination from '@dgiot/dgiot-component/src/components/Pagination'
+  import profile from '@/views/DeviceCloud/manage/profile'
+  import { uuid } from '@/utils'
+  import { queryChannel } from '@/api/Channel/index'
+  import { mapGetters } from 'vuex'
+  import {
+    delProduct,
+    getProduct,
+    putProduct,
+    postProduct,
+  } from '@/api/Product'
+  import { getAllunit } from '@/api/Dict/index'
+  import { delDevice, queryDevice } from '@/api/Device/index'
+  import { getServer } from '@/api/Role/index'
+  import { postDict } from '@/api/Dict'
+  import { getHashClass } from '@/api/Hash'
+  import { ExportParse, ImportParse } from '@/api/Export'
+  import { queryProductTemplet } from '@/api/ProductTemplet'
+  import { getCategory, queryCategory } from '@/api/Category'
 
-const context = require.context("./component/profile", true, /\.vue$/);
-let res_components = {};
-context.keys().forEach((fileName) => {
-  let comp = context(fileName);
-  res_components[fileName.replace(/^\.\/(.*)\.\w+$/, "$1")] = comp.default;
-});
+  const context = require.context('./component/profile', true, /\.vue$/)
+  let res_components = {}
+  context.keys().forEach((fileName) => {
+    let comp = context(fileName)
+    res_components[fileName.replace(/^\.\/(.*)\.\w+$/, '$1')] = comp.default
+  })
 
-export default {
-  components: {
-    "dgiot-profile": profile,
-    ...res_components
-  },
-  data() {
-    return {
-      inputParams: {},
-      storageArr: [
-        "默认-行式存储",
-        "默认-列式存储",
-        "InfluxDB-行式存储",
-        "InfluxDB-列式存储",
-        "TDEngine-列式存储"
-      ], // http://doc.jetlinks.cn/best-practices/start.html#tdengine-%E5%88%97%E5%BC%8F%E5%AD%98%E5%82%A8
-      channeltype: "2", // 1，采集 2，存储 任务
-      channeldialog: false,
-      channelResource: [],
-      selectedRow: {},
-      tableData: [],
-      product: {},
-      allTemp: [],
-      category: [],
-      descriptions: {
-        tableType: "things",
-        things: [],
-        productId: "",
-        dictTableList: [],
-        decoderTableList: {},
-        productDetail: {
-          decoder: { code: "" },
-          thing: { properties: [] },
-          config: {
-            parser: [],
-            profile: [],
-            basedate: { params: [] }
-          }
+  export default {
+    components: {
+      'dgiot-profile': profile,
+      ...res_components,
+    },
+    data() {
+      return {
+        inputParams: {},
+        storageArr: [
+          '默认-行式存储',
+          '默认-列式存储',
+          'InfluxDB-行式存储',
+          'InfluxDB-列式存储',
+          'TDEngine-列式存储',
+        ], // http://doc.jetlinks.cn/best-practices/start.html#tdengine-%E5%88%97%E5%BC%8F%E5%AD%98%E5%82%A8
+        channeltype: '2', // 1，采集 2，存储 任务
+        channeldialog: false,
+        channelResource: [],
+        selectedRow: {},
+        tableData: [],
+        product: {},
+        allTemp: [],
+        category: [],
+        descriptions: {
+          tableType: 'things',
+          things: [],
+          productId: '',
+          dictTableList: [],
+          decoderTableList: {},
+          productDetail: {
+            decoder: { code: '' },
+            thing: { properties: [] },
+            config: {
+              parser: [],
+              profile: [],
+              basedate: { params: [] },
+            },
+          },
+          parserTableList: [],
+          tableLoading: false,
         },
-        parserTableList: [],
-        tableLoading: false
-      },
-      queryForm: {
-        name: "",
-        category: "",
-        productId: "",
-        productFlag: false,
-        pageNo: 1,
-        pageSize: 1,
-        searchDate: [],
-        limit: 8,
-        skip: 0,
+        queryForm: {
+          name: '',
+          category: '',
+          productId: '',
+          productFlag: false,
+          pageNo: 1,
+          pageSize: 1,
+          searchDate: [],
+          limit: 8,
+          skip: 0,
+          total: 0,
+          order: '-createdAt',
+          keys: 'count(*)',
+        },
+        cascaderDrawer: false,
+        drawerWidth: Number($(window).width()) - 240,
+        height: this.$baseTableHeight(0),
+        config: {},
+        dataList: [{}],
+        parserView: false,
+        parserTable: false,
+        parserTableList: { parser: [] },
+        parserFromId: '',
+        dialogVisible: false,
+        moduleTitle: this.$translateTitle('product.createproduct'),
+        allunit: [],
+        productInfo: {},
+        edit_dict_temp_dialog: false,
+        title_dict_edit_dialog: '新增字典数据',
+        tempparams: {
+          name: '',
+          identifier: '',
+          type: '',
+          order: 0,
+          address: '',
+          bytes: '',
+          registersnumber: '',
+          default: 0,
+          required: false,
+          isshow: false,
+          readonly: true,
+          specs: [
+            {
+              attribute: '',
+              attributevalue: '',
+            },
+          ],
+          struct: {},
+          unit: '',
+          inactivevalue: '',
+          activevalue: '',
+          da: '',
+          dt: '',
+          afn: '',
+        },
+        tabs: 'card',
+        elactiveName: 'Table',
+        elactiveName1: 'Table1',
+        editDictTempId: '',
+        title_temp_dialog: '',
+        dictTempForm: '',
+        rule: [],
+        dictVisible: false,
+        listLoading: false,
+        custom_row: {},
+        custom_status: 'add',
+        hashkey: '',
+        length: 10,
         total: 0,
-        order: "-createdAt",
-        keys: "count(*)"
-      },
-      cascaderDrawer: false,
-      drawerWidth: Number($(window).width()) - 240,
-      height: this.$baseTableHeight(0),
-      config: {},
-      dataList: [{}],
-      parserView: false,
-      parserTable: false,
-      parserTableList: { parser: [] },
-      parserFromId: "",
-      dialogVisible: false,
-      moduleTitle: this.$translateTitle("product.createproduct"),
-      allunit: [],
-      productInfo: {},
-      edit_dict_temp_dialog: false,
-      title_dict_edit_dialog: "新增字典数据",
-      tempparams: {
-        name: "",
-        identifier: "",
-        type: "",
-        order: 0,
-        address: "",
-        bytes: "",
-        registersnumber: "",
-        default: 0,
-        required: false,
-        isshow: false,
-        readonly: true,
-        specs: [
+        start: 0,
+        activeName: 'first',
+        formInline: {
+          productname: '',
+        },
+        uploadHeaders: {
+          sessionToken: Cookies.get('access_token'),
+        },
+        uploadAction: '',
+        uploadData: {},
+        fileList: [],
+        productIdentifier: '',
+        proTableData: [],
+        formLabelWidth: '120px',
+        dialogFormVisible: false,
+        importDialogShow: false,
+        cType: '',
+        form: {
+          config: { checkList: ['konva', 'amis'] },
+          type: 1,
+          storageStrategy: '',
+          name: '',
+          tdchannel: '7b290e5a0a',
+          category: '',
+          taskchannel: '6c48effac2',
+          otherchannel: [],
+          nodeType: 3,
+          desc: '',
+          netType: '',
+          devType: '',
+          categoryid: '',
+          producttempid: '',
+          productSecret: '',
+          roles: [],
+          relationApp: '',
+        },
+        taskchannelList: [],
+        tdchannelList: [],
+        otherchannelList: [],
+        formPro: {
+          name: '',
+          url: '',
+        },
+        rules: {
+          name: [
+            {
+              required: true,
+              message: '请输入产品',
+              trigger: 'blur',
+            },
+          ],
+          tdchannel: [
+            {
+              required: true,
+              message: '请选择存储通道',
+              trigger: 'blur',
+            },
+          ],
+          storageStrategy: [
+            {
+              required: true,
+              message: '请选择存储策略',
+              trigger: 'blur',
+            },
+          ],
+          taskchannel: [
+            {
+              required: true,
+              message: '请选择任务通道',
+              trigger: 'blur',
+            },
+          ],
+          otherchannel: [
+            {
+              required: true,
+              message: '请选择采集通道',
+              trigger: 'blur',
+            },
+          ],
+          devType: [
+            {
+              required: true,
+              message: '请输入设备厂家',
+              trigger: 'blur',
+            },
+          ],
+          categoryname: [
+            {
+              required: true,
+              message: '请选择所属分类',
+              trigger: 'change',
+            },
+          ],
+          nodeType: [
+            {
+              required: true,
+              message: '请选择节点类型',
+              trigger: 'change',
+            },
+          ],
+          netType: [
+            {
+              required: true,
+              message: '请选择联网方式',
+              trigger: 'change',
+            },
+          ],
+          relationApp: [
+            {
+              required: true,
+              message: '请选择产品可见角色',
+              trigger: 'change',
+            },
+          ],
+        },
+        option: [],
+        ruleoptions: [],
+        channel: [
           {
-            attribute: "",
-            attributevalue: ""
-          }
+            label: '蜂窝(2G/3G/4G)',
+            value: 'CELLULAR',
+          },
+          {
+            label: 'NB-IOT通道',
+            value: 'NB-IOT',
+          },
+          {
+            label: 'BLE(低功耗蓝牙)',
+            value: 'Bluetooth',
+          },
+          {
+            label: '5G通道(直连)',
+            value: '5G',
+          },
+          {
+            label: 'WIFI通道(直连)',
+            value: 'WIFI',
+          },
+          {
+            label: 'ZigBee通道',
+            value: 'ZigBee',
+          },
+          {
+            label: 'Modbus',
+            value: 'Modbus',
+          },
+          {
+            label: 'LoRa(WAN)(直连)',
+            value: 'LoRaWAN',
+          },
+          {
+            label: 'OPC UA',
+            value: ' OPC UA',
+          },
+          {
+            label: 'ZETA通道',
+            value: 'ZETA',
+          },
+          {
+            label: '网线连接(直连)',
+            value: '网线连接',
+          },
+          {
+            label: '自定义',
+            value: 'OTHER',
+          },
         ],
-        struct: {},
-        unit: "",
-        inactivevalue: "",
-        activevalue: "",
-        da: "",
-        dt: "",
-        afn: ""
-      },
-      tabs: "card",
-      elactiveName: "Table",
-      elactiveName1: "Table1",
-      editDictTempId: "",
-      title_temp_dialog: "",
-      dictTempForm: "",
-      rule: [],
-      dictVisible: false,
-      listLoading: false,
-      custom_row: {},
-      custom_status: "add",
-      hashkey: "",
-      length: 10,
-      total: 0,
-      start: 0,
-      activeName: "first",
-      formInline: {
-        productname: ""
-      },
-      uploadHeaders: {
-        sessionToken: Cookies.get("access_token")
-      },
-      uploadAction: "",
-      uploadData: {},
-      fileList: [],
-      productIdentifier: "",
-      proTableData: [],
-      formLabelWidth: "120px",
-      dialogFormVisible: false,
-      importDialogShow: false,
-      cType: "",
-      form: {
-        config: { checkList: [] },
-        type: 1,
-        storageStrategy: "",
-        name: "",
-        tdchannel: "7b290e5a0a",
-        category: "",
-        taskchannel: "6c48effac2",
-        otherchannel: [],
-        nodeType: 3,
-        desc: "",
-        netType: "",
-        devType: "",
-        categoryid: "",
-        producttempid: "",
-        productSecret: "",
-        roles: [],
-        relationApp: ""
-      },
-      taskchannelList: [],
-      tdchannelList: [],
-      otherchannelList: [],
-      formPro: {
-        name: "",
-        url: ""
-      },
-      rules: {
-        name: [
-          {
-            required: true,
-            message: "请输入产品",
-            trigger: "blur"
-          }
-        ],
-        tdchannel: [
-          {
-            required: true,
-            message: "请选择存储通道",
-            trigger: "blur"
-          }
-        ],
-        storageStrategy: [
-          {
-            required: true,
-            message: "请选择存储策略",
-            trigger: "blur"
-          }
-        ],
-        taskchannel: [
-          {
-            required: true,
-            message: "请选择任务通道",
-            trigger: "blur"
-          }
-        ],
-        otherchannel: [
-          {
-            required: true,
-            message: "请选择采集通道",
-            trigger: "blur"
-          }
-        ],
-        devType: [
-          {
-            required: true,
-            message: "请输入设备厂家",
-            trigger: "blur"
-          }
-        ],
-        categoryname: [
-          {
-            required: true,
-            message: "请选择所属分类",
-            trigger: "change"
-          }
-        ],
-        nodeType: [
-          {
-            required: true,
-            message: "请选择节点类型",
-            trigger: "change"
-          }
-        ],
-        netType: [
-          {
-            required: true,
-            message: "请选择联网方式",
-            trigger: "change"
-          }
-        ],
-        relationApp: [
-          {
-            required: true,
-            message: "请选择产品可见角色",
-            trigger: "change"
-          }
-        ]
-      },
-      option: [],
-      ruleoptions: [],
-      channel: [
-        {
-          label: "蜂窝(2G/3G/4G)",
-          value: "CELLULAR"
-        },
-        {
-          label: "NB-IOT通道",
-          value: "NB-IOT"
-        },
-        {
-          label: "BLE(低功耗蓝牙)",
-          value: "Bluetooth"
-        },
-        {
-          label: "5G通道(直连)",
-          value: "5G"
-        },
-        {
-          label: "WIFI通道(直连)",
-          value: "WIFI"
-        },
-        {
-          label: "ZigBee通道",
-          value: "ZigBee"
-        },
-        {
-          label: "Modbus",
-          value: "Modbus"
-        },
-        {
-          label: "LoRa(WAN)(直连)",
-          value: "LoRaWAN"
-        },
-        {
-          label: "OPC UA",
-          value: " OPC UA"
-        },
-        {
-          label: "ZETA通道",
-          value: "ZETA"
-        },
-        {
-          label: "网线连接(直连)",
-          value: "网线连接"
-        },
-        {
-          label: "自定义",
-          value: "OTHER"
+        dialogProfile: false,
+        imageUrl: '',
+        selectfromtype: '',
+        productid: '',
+        parserDict: [],
+        formConfig: {},
+        editIndex: 0,
+        Parserzh: '',
+        parseren: '',
+        loading: false,
+        categoryList: [],
+        fileServer: '',
+        access_token: '',
+        projectid: '',
+        projectName: '',
+        allTableDate: [],
+        showTree: false,
+        showcateTree: false,
+        multipleSelection: [],
+      }
+    },
+    computed: {
+      ...mapGetters({
+        defaultKonva: 'topo/defaultKonva',
+        token: 'user/token',
+        currentDepartment: 'user/currentDepartment',
+      }),
+    },
+    mounted() {
+      const { project = '' } = this.$route.query
+      this.formInline.productname = project
+      this.Get_Re_Channel()
+      this.queryprodut({})
+      this.searchProduct(0)
+    },
+    beforeDestroy() {
+      this.projectName = ''
+    },
+    methods: {
+      goLink(product,type){
+        // 根据不同的type跳到不同的页面
+        switch (type){
+          case 'online':
+            this.$router.push({
+              path: '/dashboard/devicelist',
+              query: {
+                productid: product.objectId,
+                line: 'online',
+              },
+            })
+            break
+          case 'offline':
+            this.$router.push({
+              path: '/dashboard/devicelist',
+              query: {
+                productid: product.objectId,
+                line: 'offline',
+              },
+            })
+            break
+          case 'alarms':
+            this.$router.push({
+              path: '/CloudOt/alarm',
+              query: {
+                productid: product.objectId,
+              },
+            })
+            break
         }
-      ],
-      dialogProfile: false,
-      imageUrl: "",
-      selectfromtype: "",
-      productid: "",
-      parserDict: [],
-      formConfig: {},
-      editIndex: 0,
-      Parserzh: "",
-      parseren: "",
-      loading: false,
-      categoryList: [],
-      fileServer: "",
-      access_token: "",
-      projectid: "",
-      projectName: "",
-      allTableDate: [],
-      showTree: false,
-      showcateTree: false,
-      multipleSelection: []
-    };
-  },
-  computed: {
-    ...mapGetters({
-      defaultKonva: "topo/defaultKonva",
-      token: "user/token",
-      currentDepartment: "user/currentDepartment"
-    })
-  },
-  mounted() {
-    const { project = "" } = this.$route.query;
-    this.formInline.productname = project;
-    this.Get_Re_Channel();
-    this.queryprodut({});
-    this.searchProduct(0);
-  },
-  beforeDestroy() {
-    this.projectName = "";
-  },
-  methods: {
-    handleSizeChange(val) {
-      this.queryForm.limit = val;
-      this.searchProduct();
-    },
-    handleCurrentChange(val) {
-      this.queryForm.skip = Number(val - 1) * Number(this.queryForm.limit);
-      this.searchProduct();
-    },
-    async handleIconClick(ev) {
-      this.dialogProfile = !this.dialogProfile;
-      await this.$refs.dialogProfile.StepsListRowClick(this.selectedRow);
-    },
-    handlecateClick() {
-      this.categorytree();
-      this.cascaderDrawer = true;
-    },
-    handleSelectionChange(val) {
-      this.multipleSelection = val;
-      let vals = [];
-      dgiotlog.log(
-        "multipleSelection",
-        this.multipleSelection,
-        this.selectfromtype
-      );
-      if (!_.isObject(val)) {
-        val.forEach((v) => {
-          vals.push(v.objectId);
-        });
-      }
 
-      if (this.selectfromtype == "otherchannel") {
-        this.form[this.selectfromtype] = vals;
-      } else {
-        dgiotlog.log(this.cType);
-        this.form[this.selectfromtype] = val.objectId;
-      }
-      dgiotlog.log("multipleSelection", this.form);
-    },
-    async getResource(text, type, cType) {
-      this.cType = cType;
-      this.selectfromtype = text;
-      this.channeltype = type;
-    },
-    getChannel(channelResource, type, cType) {
-      let res = {};
-      if (cType == "") {
-        res = channelResource.filter(function(item) {
-          return item.type == type;
-        });
-      } else {
-        res = channelResource.filter(function(item) {
-          return item.type == type && item.cType == cType;
-        });
-      }
-      return res;
-    },
-    async Get_Re_Channel() {
-      const params = {
-        count: "objectId",
-        order: "-createdAt",
-        keys: "count(*)",
-        where: {}
-      };
-      const { results } = await queryChannel(params);
-      this.channelResource = results;
-      this.taskchannelList = this.getChannel(results, "2", "INSTRUCT");
-      this.tdchannelList = this.getChannel(results, "2", "TD");
-      this.otherchannelList = this.getChannel(results, "1", "");
-    },
-    async referenceHandle(row) {
-      await this.$refs.profile.StepsListRowClick(row);
-    },
-    async queryprodut(args) {
-      const categorys = args.categorys;
-
-      // const loading = this.$baseColorfullLoading()
-      if (!args.limit) {
-        args = this.queryForm;
-      }
-      let params = {
-        skip: this.queryForm.skip,
-        limit: this.queryForm.limit,
-        keys: args.keys,
-        include: "category",
-        where: {
-          category: categorys ? { $in: categorys } : { $ne: null },
-          name: args.name
-            ? {
-              $regex: args.name,
-              $options: "i"
-            }
-            : { $ne: null }
+        console.log(product,type)
+      },
+      handleSizeChange(val) {
+        this.queryForm.limit = val
+        this.searchProduct()
+      },
+      handleCurrentChange(val) {
+        this.queryForm.skip = Number(val - 1) * Number(this.queryForm.limit)
+        this.searchProduct()
+      },
+      async handleIconClick(ev) {
+        this.dialogProfile = !this.dialogProfile
+        await this.$refs.dialogProfile.StepsListRowClick(this.selectedRow)
+      },
+      handlecateClick() {
+        this.categorytree()
+        this.cascaderDrawer = true
+      },
+      handleSelectionChange(val) {
+        this.multipleSelection = val
+        let vals = []
+        dgiotlog.log(
+          'multipleSelection',
+          this.multipleSelection,
+          this.selectfromtype
+        )
+        if (!_.isObject(val)) {
+          val.forEach((v) => {
+            vals.push(v.objectId)
+          })
         }
-      };
-      try {
-        const { results = [], count = 0 } = await queryProductTemplet(params);
-        // loading.close()
-        this.tableData = results;
-        this.queryForm.total = count;
-      } catch (error) {
-        // loading.close()
-        dgiotlog.log(error);
-        this.$message.error(`${error}`);
-      }
-    },
-    goKonva(id) {
-      this.$router.push({
-        path: "/Topo?productid",
-        query: {
-          productid: id
-        }
-      });
-    },
-    uploadCkick(type) {
-      this.loading = true;
-      // 触发子组件的点击事件
-      this.$refs["uploadFinish"].$refs.uploader.dispatchEvent(
-        new MouseEvent("click")
-      );
-      this.inputParams = {
-        file: "",
-        scene: "app",
-        path: "product/ico/",
-        filename: `${this.productid}.${type}`
-      };
-    },
-    fileInfo(info) {
-      dgiotlog.log("info", info);
-      this.imageUrl = info.path;
-      this.loading = false;
-    },
-    files(file, type) {
-      this.inputParams.filename = `${this.productid}.${type}`;
-      this.inputParams.file = file;
-    },
-    async getAllunit() {
-      this.allunit = [];
-      const { results } = await getAllunit("unit", 200);
-      this.allunit = results.concat([]);
-    },
-    submitEnum() {
-      if (this.tempparams.type == "Enum") {
-        this.tempparams.specs.map((items) => {
-          var newkey = items["attribute"];
-          this.tempparams.struct[newkey] = items["attributevalue"];
-        });
-      }
-    },
-    // 添加枚举型
-    addDomain() {
-      this.tempparams.specs.push({
-        attribute: "",
-        attributevalue: ""
-      });
-    },
-    // 删除枚举型
-    removeDomain(item) {
-      var index = this.tempparams.specs.indexOf(item);
-      if (index !== -1) {
-        this.tempparams.specs.splice(index, 1);
-      }
-    },
-    delRow(index, rows) {
-      rows.splice(index, 1);
-      // this.onJsonSave("dictTempForm");
-    },
-    editRow(index, params) {
-      this.editIndexId = index;
-      this.title_dict_edit_dialog = "修改字典数据";
-      this.edit_dict_temp_dialog = true;
-      this.tempparams = params;
-    },
-    closeDict() {
-      this.edit_dict_temp_dialog = !this.edit_dict_temp_dialog;
-      // this.$refs.tempparams.resetFields()
-    },
-    onJsonSave(formName) {
-      // 点击保存触发
-      // dgiotlog.log("onJsonSave", this.dictTempForm.params);
-      this.$refs[formName].validate((valid) => {
-        dgiotlog.log(this.editDictTempId);
-        if (valid) {
-          this.put_Dict_temp(this.editDictTempId, this.dictTempForm);
-        }
-      });
-    },
-    async put_Dict_temp(editDictId, row) {
-      dgiotlog.log(row);
-      const {
-        config = {
-          basedate: {}
-        }
-      } = this.productInfo;
-      config.basedate = row;
-      const params = {
-        config: config
-      };
-      const { updatedAt } = await putProduct(editDictId, params);
-      if (updatedAt != undefined) {
-        this.dictVisible = false;
-        this.$message({
-          type: "success",
-          message: "字典数据更新成功"
-        });
-      } else {
-        this.$message({
-          type: "error",
-          message: "字典数据更新失败"
-        });
-      }
-    },
-    submitFormTempDict() {
-      this.submitEnum();
-      this.edit_dict_temp_dialog = false;
-      if (this.editIndexId != undefined) {
-        this.dictTempForm.params[this.editIndexId] = this.tempparams;
-        this.$message({
-          type: "success",
-          message: "编辑成功"
-        });
-      } else {
-        this.dictTempForm.params.push(this.tempparams);
-        this.$message({
-          type: "success",
-          message: "新增成功"
-        });
-      }
-    },
-    opendialog(name) {
-      this.$nextTick(() => {
-        this.$refs[name].clearValidate();
-      });
-    },
-    tempTypeChange(value) {
-      if (value == "bool") {
-        this.tempparams.default = true;
-        this.tempparams.default = true;
-      } else if (value == "int") {
-        this.tempparams.default = 0;
-      } else {
-        this.tempparams.default = undefined;
-      }
-    },
-    addRow(tabs) {
-      this.editIndexId = undefined;
-      this.title_dict_edit_dialog = "新增字典数据";
-      this.edit_dict_temp_dialog = true;
-      this.tempparams = {
-        name: "",
-        identifier: "",
-        type: "",
-        order: 0,
-        address: "",
-        bytes: "",
-        registersnumber: "",
-        default: 0,
-        required: false,
-        isshow: false,
-        readonly: true,
-        specs: [
-          {
-            attribute: "",
-            attributevalue: ""
-          }
-        ],
-        struct: {},
-        collection: "%s",
-        setting: "%s",
-        unit: ""
-      };
-    },
-    onError() {
-      this.$message("非Json数据类型");
-    },
-    selectApp(val) {
-      if (!val) {
-        return;
-      }
-      getServer(val).then((resultes) => {
-        if (resultes) {
-          this.fileServer = resultes.file;
-          this.access_token = resultes.access_token;
-        }
-      });
-    },
-    treeData(paramData) {
-      const cloneData = JSON.parse(JSON.stringify(paramData)); // 对源数据深度克隆
-      return cloneData.filter((father) => {
-        const branchArr = cloneData.filter(
-          (child) => father.objectId == child.parent.objectId
-        ); // 返回每一项的子级数组
-        branchArr.length > 0 ? (father.children = branchArr) : ""; // 如果存在子级，则给父级添加一个children属性，并赋值
-        return father.parent.objectId == 0; // 返回第一层
-      });
-    },
-    deleteImgsrc() {
-      // event.stopPropagation()
-      this.imageUrl = "";
-    },
-    dataURItoBlob(dataURI) {
-      // base64 解码
-      var byteString = atob(dataURI.split(",")[1]);
-      var mimeString = dataURI.split(",")[0].split(":")[1].split(";")[0];
-      var ab = new ArrayBuffer(byteString.length);
-      var ia = new Uint8Array(ab);
-      for (var i = 0; i < byteString.length; i++) {
-        ia[i] = byteString.charCodeAt(i);
-      }
-      return new Blob([ab], {
-        type: mimeString
-      });
-    },
-    submitUpload() {
-      // this.uploadAction = Cookies.get('apiserver') + '/product?appid=' + Cookies.get("appids");
 
-      this.uploadAction = "/product";
-      // this.uploadAction = 'http://cad.iotn2n.com:5080/product?appid=' + Cookies.get("appids");
+        if (this.selectfromtype == 'otherchannel') {
+          this.form[this.selectfromtype] = vals
+        } else {
+          dgiotlog.log(this.cType)
+          this.form[this.selectfromtype] = val.objectId
+        }
+        dgiotlog.log('multipleSelection', this.form)
+      },
+      async getResource(text, type, cType) {
+        this.cType = cType
+        this.selectfromtype = text
+        this.channeltype = type
+      },
+      getChannel(channelResource, type, cType) {
+        let res = {}
+        if (cType == '') {
+          res = channelResource.filter(function (item) {
+            return item.type == type
+          })
+        } else {
+          res = channelResource.filter(function (item) {
+            return item.type == type && item.cType == cType
+          })
+        }
+        return res
+      },
+      async Get_Re_Channel() {
+        const params = {
+          count: 'objectId',
+          order: '-createdAt',
+          keys: 'count(*)',
+          where: {},
+        }
+        const { results } = await queryChannel(params)
+        this.channelResource = results
+        this.taskchannelList = this.getChannel(results, '2', 'INSTRUCT')
+        this.tdchannelList = this.getChannel(results, '2', 'TD')
+        this.otherchannelList = this.getChannel(results, '1', '')
+      },
+      async referenceHandle(row) {
+        await this.$refs.profile.StepsListRowClick(row)
+      },
+      async queryprodut(args) {
+        const categorys = args.categorys
 
-      this.$nextTick(() => {
-        // dgiotlog.log('uploadHeaders',this.uploadHeaders);
-
-        this.uploadData.appid = Cookies.get("appids");
-        // this.uploadData.key = "key";
-        this.$refs.fileUpload.submit();
-      });
-    },
-    handleUploadSuccess(response, file, fileList) {
-      // dgiotlog.log('### Success response', response)
-      this.$message({
-        type: "success",
-        message: "产品导入成功"
-      });
-      this.importDialogShow = false;
-      this.$refs["uploadProForm"].resetFields();
-      this.searchProduct();
-    },
-    handleUploadError(err, file, fileList) {
-      this.$message({
-        showClose: true,
-        message: err
-      });
-    },
-    handleChange(file, fileList) {
-      if (fileList.length > 0) {
-        this.fileList = [fileList[fileList.length - 1]]; // 展示最后一次选择的文件
-      }
-    },
-    utc2beijing(utc_datetime) {
-      // 转为正常的时间格式 年-月-日 时:分:秒
-      var date = new Date(+new Date(utc_datetime) + 8 * 3600 * 1000)
-        .toISOString()
-        .replace(/T/g, " ")
-        .replace(/\.[\d]{3}Z/, "");
-      return date; // 2017-03-31 16:02:06
-    },
-    async searchProduct(start) {
-      try {
-        this.listLoading = true;
-        if (start == 0) this.start = 0;
-
-        var category = [];
-        // 优化下查询条件,新增忽略字段
-        const parsms = {
-          count: "objectId",
-          order: "-updatedAt",
+        // const loading = this.$baseColorfullLoading()
+        if (!args.limit) {
+          args = this.queryForm
+        }
+        let params = {
           skip: this.queryForm.skip,
           limit: this.queryForm.limit,
-          excludeKeys: "channel,children,config,thing,decoder",
-          include: "category,producttemplet",
+          keys: args.keys,
+          include: 'category',
           where: {
-            name: this.formInline.productname.length
-              ? { $regex: this.formInline.productname }
-              : { $ne: null }
+            category: categorys ? { $in: categorys } : { $ne: null },
+            name: args.name
+              ? {
+                  $regex: args.name,
+                  $options: 'i',
+                }
+              : { $ne: null },
+          },
+        }
+        try {
+          const { results = [], count = 0 } = await queryProductTemplet(params)
+          // loading.close()
+          this.tableData = results
+          this.queryForm.total = count
+        } catch (error) {
+          // loading.close()
+          dgiotlog.log(error)
+          this.$message.error(`${error}`)
+        }
+      },
+      goKonva(id) {
+        this.$router.push({
+          path: '/Topo?productid',
+          query: {
+            productid: id,
+          },
+        })
+      },
+      uploadCkick(type) {
+        this.loading = true
+        // 触发子组件的点击事件
+        this.$refs['uploadFinish'].$refs.uploader.dispatchEvent(
+          new MouseEvent('click')
+        )
+        this.inputParams = {
+          file: '',
+          scene: 'app',
+          path: 'product/ico/',
+          filename: `${this.productid}.${type}`,
+        }
+      },
+      fileInfo(info) {
+        dgiotlog.log('info', info)
+        this.imageUrl = info.path
+        this.loading = false
+      },
+      files(file, type) {
+        this.inputParams.filename = `${this.productid}.${type}`
+        this.inputParams.file = file
+      },
+      async getAllunit() {
+        this.allunit = []
+        const { results } = await getAllunit('unit', 200)
+        this.allunit = results.concat([])
+      },
+      submitEnum() {
+        if (this.tempparams.type == 'Enum') {
+          this.tempparams.specs.map((items) => {
+            var newkey = items['attribute']
+            this.tempparams.struct[newkey] = items['attributevalue']
+          })
+        }
+      },
+      // 添加枚举型
+      addDomain() {
+        this.tempparams.specs.push({
+          attribute: '',
+          attributevalue: '',
+        })
+      },
+      // 删除枚举型
+      removeDomain(item) {
+        var index = this.tempparams.specs.indexOf(item)
+        if (index !== -1) {
+          this.tempparams.specs.splice(index, 1)
+        }
+      },
+      delRow(index, rows) {
+        rows.splice(index, 1)
+        // this.onJsonSave("dictTempForm");
+      },
+      editRow(index, params) {
+        this.editIndexId = index
+        this.title_dict_edit_dialog = '修改字典数据'
+        this.edit_dict_temp_dialog = true
+        this.tempparams = params
+      },
+      closeDict() {
+        this.edit_dict_temp_dialog = !this.edit_dict_temp_dialog
+        // this.$refs.tempparams.resetFields()
+      },
+      onJsonSave(formName) {
+        // 点击保存触发
+        // dgiotlog.log("onJsonSave", this.dictTempForm.params);
+        this.$refs[formName].validate((valid) => {
+          dgiotlog.log(this.editDictTempId)
+          if (valid) {
+            this.put_Dict_temp(this.editDictTempId, this.dictTempForm)
           }
-        };
-        const { results = [], count = 0 } = await this.$query_object(
-          "Product",
-          parsms
-        );
-        // dgiotlog.log("results", results)
-        if (results) {
-          results.map((items) => {
-            if (
-              items.category != "" &&
-              items.category &&
-              items.devType != "report"
-            ) {
-              category.push(items.category);
-            }
-          });
-          this.listLoading = false;
-          this.proTableData = results;
-          this.total = count;
-        }
-      } catch (error) {
-        this.listLoading = false;
-        dgiotlog.log(error);
-        this.$baseMessage(
-          this.$translateTitle("alert.Data request error") + `${error}`,
-          "error",
-          "dgiot-hey-message-error"
-        );
-      }
-    },
-    handleClose() {
-      this.dialogFormVisible = false;
-    },
-    // 选择产品模板
-    async chooseTemplate(row) {
-      const res = await this.getcategoryname(row.category);
-      this.selectedRow = row;
-      this.$set(this.form, "categoryid", row.category.objectId);
-      this.$set(this.form, "categoryname", res + "/" + row.name);
-      this.$set(this.form, "producttempid", row.objectId);
-      this.form.thing = row.thing ? row.thing : {};
-      this.cascaderDrawer = !this.cascaderDrawer;
-      console.log("select", row);
-    },
-    async getcategoryname(category) {
-      const { name } = await getCategory(category.parent.objectId);
-      const returnName =
-        name == "所有领域" ? category.name : name + "/" + category.name;
-      return returnName;
-    },
-    // 关闭dialog 事件
-    handleCloseDialogForm() {
-      this.dialogFormVisible = false;
-      // 重置表单
-      this.$nextTick(() => {
-        this.$refs["form"].resetFields();
-      });
-    },
-    properties(things, type = "things") {
-      this.descriptions.tableLoading = true;
-      dgiotlog.log(things);
-      this.descriptions.things = things;
-      this.descriptions.tableType = type;
-      setTimeout(() => (this.descriptions.tableLoading = false), 1200);
-    },
-    // 添加产品弹窗
-    addproduct() {
-      this.custom_status = "add";
-      // return false
-      this.moduleTitle = this.$translateTitle("product.createproduct");
-      this.imageUrl = "";
-      this.form = {
-        name: "",
-        type: 1,
-        category: "",
-        nodeType: 3,
-        desc: "",
-        netType: " ",
-        devType: "",
-        productSecret: "",
-        relationApp: this.currentDepartment.name,
-        roles: [],
-        categoryname: "",
-        config: { checkList: [] }
-      };
-      this.productid = moment(new Date()).valueOf().toString();
-      this.dialogFormVisible = true;
-    },
-    getParent(id, origin, returnarr) {
-      origin.map((item) => {
-        if (id == item.id) {
-          returnarr.unshift(item.value);
-          this.getParent(item.parentid, origin, returnarr);
-        } else if (item.parentid == 0 && item.id == id) {
-          returnarr.unshift(item.value);
-        }
-      });
-      this.form.category = returnarr[0];
-      return returnarr;
-    },
-    // 查找Industry父级
-    getIndustryParent(type, originarr) {
-      originarr.map((item) => {
-        if (item.value == type) {
-          this.getParent(item.id, originarr, []);
-        }
-      });
-    },
-    async editorParser(ObjectId) {
-      this.parserFromId = ObjectId;
-      try {
+        })
+      },
+      async put_Dict_temp(editDictId, row) {
+        dgiotlog.log(row)
         const {
           config = {
-            parser: []
+            basedate: {},
           },
-          thing = {}
-        } = await getProduct(ObjectId);
-        this.parserTableList = config;
-        dgiotlog.log(this.parserTableList);
-        this.parserDict = _.merge(thing, config);
-      } catch (e) {
-        this.parserTableList = { parser: [] };
-        dgiotlog.log("eeeeeeeeeeeee", e);
-      }
-      this.parserTable = true;
-    },
-    editParse(index, row) {
-      this.formConfig = row;
-      this.editIndex = index;
-      this.dialogVisible = true;
-    },
-    async saveParse(list, type = -1) {
-      if (type + 2 > 0) {
-        this.parserTableList.parser[type] = _.merge({}, list);
-      }
-      try {
-        const res = await putProduct(this.parserFromId, {
-          config: type + 2 > 0 ? this.parserTableList : list
-        });
-        this.$message({
-          showClose: true,
-          message: this.$translateTitle(
-            "user.Save the template successfully"
-          ),
-          type: "success"
-        });
-        this.dialogVisible = false;
-        this.parserTable = false;
-      } catch (e) {
-        this.$message.error(
-          this.$translateTitle("user.Save the template error") + `${e}`
-        );
-        dgiotlog.log(e, "eeee");
-      }
-      dgiotlog.log(list);
-    },
-    previewParse(row) {
-      this.parserView = true;
-      this.formConfig = row;
-      dgiotlog.log("previewParse", row);
-    },
-    addParse(row) {
-      row["parser"].push({
-        name: uuid(6),
-        enname: uuid(6),
-        config: {}
-      });
-    },
-    deleteParse(index, rows) {
-      rows.splice(index, 1);
-    },
-    async editorDict(ObjectId) {
-      // const loading = this.$baseColorfullLoading()
-      this.getAllunit();
-      const row = await getProduct(ObjectId);
-      // loading.close()
-      const { config = { basedate: {} } } = row;
-      this.productInfo = row;
-      dgiotlog.log(" this.parserDict", this.parserDict);
-      this.editDictTempId = ObjectId;
-      this.dictTempForm = {
-        name: "",
-        cType: "",
-        enable: "1",
-        description: "",
-        params: []
-      };
-      this.title_temp_dialog = "创建字典模板";
-      dgiotlog.log(config);
-      if (config.basedate && config.basedate.name) {
-        this.title_temp_dialog = "修改字典模板";
-        this.dictTempForm = config.basedate;
-      }
-      this.rule = {
-        name: [
-          {
-            required: true,
-            message: "请输入字典模板名称",
-            trigger: "blur"
-          }
-        ],
-        cType: [
-          {
-            required: true,
-            message: "请输入字典模板类型",
-            trigger: "blur"
-          }
-        ],
-        enable: [
-          {
-            required: true,
-            message: "请选择状态",
-            trigger: "change"
-          }
-        ]
-      };
-      dgiotlog.log(this.dictTempForm, "config");
-      this.dictVisible = true;
-    },
-    async editorProduct(editorProductid) {
-      const loading = this.$baseColorfullLoading();
-      const row = await getProduct(editorProductid);
-      this.form = row;
-      loading.close();
-      this.product = row;
-      this.imageUrl = "";
-      this.moduleTitle = this.$translateTitle("product.editproduct");
-      this.custom_status = "edit";
-      this.custom_row = row;
-      this.dialogFormVisible = true;
-      this.productid = row.objectId;
-      this.form.desc = row.desc;
-      this.form.category = row.category;
-      this.form.producttemplet = row.producttemplet;
-      this.form.config = _.merge(row.config, { checkList: [] });
-      this.form.name = row.name;
-      this.form.nodeType = row.nodeType;
-      this.$set(this.form, "type", row.channel ? row.channel.type : "");
-      this.$set(
-        this.form,
-        "tdchannel",
-        row.channel ? row.channel.tdchannel : ""
-      );
-      this.$set(
-        this.form,
-        "taskchannel",
-        row.channel ? row.channel.taskchannel : ""
-      );
-      this.$set(
-        this.form,
-        "otherchannel",
-        row.channel ? row.channel.otherchannel : []
-      );
-      this.$set(
-        this.form,
-        "storageStrategy",
-        row.channel ? row.channel.storageStrategy : ""
-      );
-      this.form.netType = row.netType;
-      this.form.devType = row.devType;
-      this.form.categoryname = row.category ? row.category.name : "";
-      this.form.productSecret = row.productSecret;
-      this.form.nodeType = row.nodeType;
-      if (row.icon) {
-        this.imageUrl = row.icon;
-      }
-
-      // this.form.relationApp = this.currentDepartment.name
-      console.log("row", row);
-      dgiotlog.log("form", this.form);
-    },
-    async categorytree() {
-      const parsms = {
-        order: "createdAt",
-        keys: "count(*)",
-        where: { level: { $in: [0, 1] } }
-      };
-      const { results } = await queryCategory(parsms);
-      this.categoryList = results;
-      dgiotlog.log("this", this.categoryList);
-    },
-    handleCateSearch(objectId) {
-      this.queryForm.category = objectId;
-      this.showcateTree = !this.showcateTree;
-      if (objectId == "a60a85475a") {
-        this.queryprodut({});
-      } else {
-        let params = {
-          keys: "objectId",
-          where: {
-            parent: {
-              className: "Category",
-              objectId: objectId,
-              __type: "Pointer"
-            }
-          }
-        };
-        queryCategory(params).then((res) => {
-          const ids = [];
-          ids.push(objectId);
-          res.results.forEach((result) => {
-            ids.push(result.objectId);
-          });
-          dgiotlog.log("ids", ids);
-          this.queryprodut({ categorys: ids });
-        });
-      }
-    },
-    submitForm() {
-      var initparams = {
-        name: this.form.name,
-        nodeType: this.form.nodeType,
-        netType: this.form.netType,
-        icon: this.imageUrl,
-        devType: this.form.devType,
-        desc: this.form.desc,
-        thing: this.form.thing ? this.form.thing : {},
-        category: {
-          objectId:
-            Number(this.form.type) == 0 ? "5ca6049839" : this.form.categoryid,
-          __type: "Pointer",
-          className: "Category"
-        },
-        producttemplet: {
-          objectId:
-            Number(this.form.type) == 0 ? "0" : this.form.producttempid,
-          __type: "Pointer",
-          className: "ProductTemplet"
-        },
-        channel: {
-          type: this.form.type,
-          tdchannel: this.form.tdchannel,
-          taskchannel: this.form.taskchannel,
-          otherchannel: this.form.otherchannel,
-          storageStrategy: this.form.storageStrategy
+        } = this.productInfo
+        config.basedate = row
+        const params = {
+          config: config,
         }
-      };
-      this.$refs.form.validate((valid) => {
-        // 判断是新增产品还是修改
-        if (valid) {
-          if (this.custom_status === "add") {
-            var ranNum = Math.ceil(Math.random() * 25);
-            var productSecret = Base64.encode(
-              String.fromCharCode(65 + ranNum) +
-              Math.ceil(Math.random() * 10000000) +
-              Number(new Date())
-            );
-            const aclKey = "role" + ":" + this.form.relationApp;
-            const setAcl = {};
-            setAcl[aclKey] = {
-              read: true,
-              write: true
-            };
-            setAcl["*"] = {
-              read: true
-            };
-            console.clear();
-            console.log("this.form", this.form);
-            console.log(this.form.config.checkList, "this.form.config.checkList");
-            const addparams = {
-                productSecret: productSecret,
-                ACL: setAcl,
-                topics: [],
-                decoder: {},
-                config: {
-                  checkList: this.form.config.checkList,
-                  konva: {
-                    Stage: this.defaultKonva
-                  }
-                }
-              },
-              params = _.merge(initparams, addparams);
-            dgiotlog.log("createProduct", params);
-            this.createProduct(params);
-          } else {
-            console.log("editProduct", initparams);
-            delete initparams.category;
-            delete initparams.producttemplet;
-            delete initparams.thing; // 修改产品时 不修改物模型
-            this.editProduct(initparams);
-          }
+        const { updatedAt } = await putProduct(editDictId, params)
+        if (updatedAt != undefined) {
+          this.dictVisible = false
+          this.$message({
+            type: 'success',
+            message: '字典数据更新成功',
+          })
         } else {
-          this.$message("必填项未填");
+          this.$message({
+            type: 'error',
+            message: '字典数据更新失败',
+          })
         }
-      });
-    },
-    async doUpload(event) {
-      const parseFile = event.target.files[0];
-      const loading = this.$baseColorfullLoading(3);
-      try {
-        const res = await ImportParse("Product", parseFile);
-        loading.close();
-        dgiotlog.log("eresresrror", res);
+      },
+      submitFormTempDict() {
+        this.submitEnum()
+        this.edit_dict_temp_dialog = false
+        if (this.editIndexId != undefined) {
+          this.dictTempForm.params[this.editIndexId] = this.tempparams
+          this.$message({
+            type: 'success',
+            message: '编辑成功',
+          })
+        } else {
+          this.dictTempForm.params.push(this.tempparams)
+          this.$message({
+            type: 'success',
+            message: '新增成功',
+          })
+        }
+      },
+      opendialog(name) {
+        this.$nextTick(() => {
+          this.$refs[name].clearValidate()
+        })
+      },
+      tempTypeChange(value) {
+        if (value == 'bool') {
+          this.tempparams.default = true
+          this.tempparams.default = true
+        } else if (value == 'int') {
+          this.tempparams.default = 0
+        } else {
+          this.tempparams.default = undefined
+        }
+      },
+      addRow(tabs) {
+        this.editIndexId = undefined
+        this.title_dict_edit_dialog = '新增字典数据'
+        this.edit_dict_temp_dialog = true
+        this.tempparams = {
+          name: '',
+          identifier: '',
+          type: '',
+          order: 0,
+          address: '',
+          bytes: '',
+          registersnumber: '',
+          default: 0,
+          required: false,
+          isshow: false,
+          readonly: true,
+          specs: [
+            {
+              attribute: '',
+              attributevalue: '',
+            },
+          ],
+          struct: {},
+          collection: '%s',
+          setting: '%s',
+          unit: '',
+        }
+      },
+      onError() {
+        this.$message('非Json数据类型')
+      },
+      selectApp(val) {
+        if (!val) {
+          return
+        }
+        getServer(val).then((resultes) => {
+          if (resultes) {
+            this.fileServer = resultes.file
+            this.access_token = resultes.access_token
+          }
+        })
+      },
+      treeData(paramData) {
+        const cloneData = JSON.parse(JSON.stringify(paramData)) // 对源数据深度克隆
+        return cloneData.filter((father) => {
+          const branchArr = cloneData.filter(
+            (child) => father.objectId == child.parent.objectId
+          ) // 返回每一项的子级数组
+          branchArr.length > 0 ? (father.children = branchArr) : '' // 如果存在子级，则给父级添加一个children属性，并赋值
+          return father.parent.objectId == 0 // 返回第一层
+        })
+      },
+      deleteImgsrc() {
+        // event.stopPropagation()
+        this.imageUrl = ''
+      },
+      dataURItoBlob(dataURI) {
+        // base64 解码
+        var byteString = atob(dataURI.split(',')[1])
+        var mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0]
+        var ab = new ArrayBuffer(byteString.length)
+        var ia = new Uint8Array(ab)
+        for (var i = 0; i < byteString.length; i++) {
+          ia[i] = byteString.charCodeAt(i)
+        }
+        return new Blob([ab], {
+          type: mimeString,
+        })
+      },
+      submitUpload() {
+        // this.uploadAction = Cookies.get('apiserver') + '/product?appid=' + Cookies.get("appids");
+
+        this.uploadAction = '/product'
+        // this.uploadAction = 'http://cad.iotn2n.com:5080/product?appid=' + Cookies.get("appids");
+
+        this.$nextTick(() => {
+          // dgiotlog.log('uploadHeaders',this.uploadHeaders);
+
+          this.uploadData.appid = Cookies.get('appids')
+          // this.uploadData.key = "key";
+          this.$refs.fileUpload.submit()
+        })
+      },
+      handleUploadSuccess(response, file, fileList) {
+        // dgiotlog.log('### Success response', response)
+        this.$message({
+          type: 'success',
+          message: '产品导入成功',
+        })
+        this.importDialogShow = false
+        this.$refs['uploadProForm'].resetFields()
+        this.searchProduct()
+      },
+      handleUploadError(err, file, fileList) {
         this.$message({
           showClose: true,
-          message: this.$translateTitle(
-            "user.Save the template successfully"
-          ),
-          type: "success"
-        });
-      } catch (error) {
-        loading.close();
-        dgiotlog.log("error", error);
-        this.$message.error(`${error}`);
-      }
-      this.$dgiotBus.$emit("reload-router-view");
-    },
-    async createProduct(params) {
-      const res = await postProduct(params);
-      dgiotlogger.info("postProduct：", res);
-      if (res.objectId) {
-        this.initQuery("产品创建成功", "success");
-        this.dialogFormVisible = false;
-        this.searchProduct();
-      } else {
-        this.$message({
-          type: "error",
-          message: res.error || res,
-          showClose: true
-        });
-      }
-    },
-    async editProduct(data) {
-      const res = await this.$update_object(
-        "Product",
-        this.custom_row.objectId,
-        data
-      );
-      if (res.updatedAt) {
-        this.initQuery("产品修改成功", "success");
-      } else {
-        this.$message({
-          type: "error",
-          message: res.error
-        });
-      }
-    },
-    initQuery(msg, type) {
-      this.$message({
-        type: type || "info",
-        message: msg,
-        showClose: true,
-        duration: 2000
-      });
-      this.dialogFormVisible = false;
-      this.resetProductForm();
-      this.$refs["form"].resetFields();
-      this.searchProduct();
-    },
-    resetProductForm() {
-      this.form = {
-        name: "",
-        category: "",
-        nodeType: 3,
-        desc: "",
-        netType: "",
-        devType: "",
-        productSecret: "",
-        roles: [],
-        relationApp: "",
-        config: {
-          checkList: []
+          message: err,
+        })
+      },
+      handleChange(file, fileList) {
+        if (fileList.length > 0) {
+          this.fileList = [fileList[fileList.length - 1]] // 展示最后一次选择的文件
         }
-      };
-      this.imageUrl = "";
-    },
-    deviceToDetail(row) {
-      this.$router.push({
-        path: "/roles/detailproduct",
-        query: {
-          id: row.objectId
-        }
-      });
-    },
-    GoTodevices(row) {
-      this.$router.push({
-        path: "/roles/thing",
-        query: {
-          productid: row.objectId
-        }
-      });
-    },
-    /* el-popover点击关闭*/
-    makeSure(row, index) {
-      const params = {
-        count: "objectId",
-        skip: 0,
-        limit: 1,
-        where: {
-          product: row.objectId
-        }
-      };
-      this.$baseConfirm("你确定要删除当前项吗", null, async () => {
-        await queryDevice(params).then((results) => {
-          if (results.count > 0) {
-            this.$message("请先删除该产品下设备");
-            return;
-          } else {
-            delProduct(row.objectId).then((response) => {
-              if (response) {
-                this.$message({
-                  type: "success",
-                  message: "删除成功"
-                });
-                // row._self.$refs[`popover-${index}`].doClose()
-                this.searchProduct();
-              }
-            });
-          }
-        });
-        this.$baseMessage(
-          this.$translateTitle("Maintenance.successfully deleted"),
-          "success",
-          "dgiot-hey-message-success"
-        );
-      });
+      },
+      utc2beijing(utc_datetime) {
+        // 转为正常的时间格式 年-月-日 时:分:秒
+        var date = new Date(+new Date(utc_datetime) + 8 * 3600 * 1000)
+          .toISOString()
+          .replace(/T/g, ' ')
+          .replace(/\.[\d]{3}Z/, '')
+        return date // 2017-03-31 16:02:06
+      },
+      async searchProduct(start) {
+        try {
+          this.listLoading = true
+          if (start == 0) this.start = 0
 
-    },
-    // productSizeChange(val) {
-    //   this.length = val;
-    //   this.searchProduct();
-    // },
-    // productCurrentChange(val) {
-    //   this.start = (val - 1) * this.length;
-    //   this.searchProduct();
-    // },
-    async blackDict(hashkey, data) {
-      const params = {
-        data: data,
-        key: hashkey,
-        type: "Product"
-      };
-      const res = await postDict(params);
-      if (res) {
+          var category = []
+          // 优化下查询条件,新增忽略字段
+          const parsms = {
+            count: 'objectId',
+            order: '-updatedAt',
+            skip: this.queryForm.skip,
+            limit: this.queryForm.limit,
+            excludeKeys:
+              'children,thing,decoder,topics,productSecret,desc,view,category,producttemplet',
+            include: '',
+            where: {
+              name: this.formInline.productname.length
+                ? { $regex: this.formInline.productname }
+                : { $ne: null },
+            },
+          }
+          const { results = [], count = 0 } = await this.$query_object(
+            'Product',
+            parsms
+          )
+          // dgiotlog.log("results", results)
+          if (results) {
+            results.map((items) => {
+              if (
+                items.category != '' &&
+                items.category &&
+                items.devType != 'report'
+              ) {
+                category.push(items.category)
+              }
+            })
+            this.listLoading = false
+            this.proTableData = results
+            this.total = count
+          }
+        } catch (error) {
+          this.listLoading = false
+          dgiotlog.log(error)
+          this.$baseMessage(
+            this.$translateTitle('alert.Data request error') + `${error}`,
+            'error',
+            'dgiot-hey-message-error'
+          )
+        }
+      },
+      handleClose() {
+        this.dialogFormVisible = false
+      },
+      // 选择产品模板
+      async chooseTemplate(row) {
+        const res = await this.getcategoryname(row.category)
+        this.selectedRow = row
+        this.$set(this.form, 'categoryid', row.category.objectId)
+        this.$set(this.form, 'categoryname', res + '/' + row.name)
+        this.$set(this.form, 'producttempid', row.objectId)
+        this.form.thing = row.thing ? row.thing : {}
+        this.cascaderDrawer = !this.cascaderDrawer
+        console.log('select', row)
+      },
+      async getcategoryname(category) {
+        const { name } = await getCategory(category.parent.objectId)
+        const returnName =
+          name == '所有领域' ? category.name : name + '/' + category.name
+        return returnName
+      },
+      // 关闭dialog 事件
+      handleCloseDialogForm() {
+        this.dialogFormVisible = false
+        // 重置表单
+        this.$nextTick(() => {
+          this.$refs['form'].resetFields()
+        })
+      },
+      properties(things, type = 'things') {
+        this.descriptions.tableLoading = true
+        dgiotlog.log(things)
+        this.descriptions.things = things
+        this.descriptions.tableType = type
+        setTimeout(() => (this.descriptions.tableLoading = false), 1200)
+      },
+      // 添加产品弹窗
+      addproduct() {
+        this.custom_status = 'add'
+        // return false
+        this.moduleTitle = this.$translateTitle('product.createproduct')
+        this.imageUrl = ''
+        this.form = {
+          name: '',
+          type: 1,
+          category: '',
+          nodeType: 3,
+          desc: '',
+          netType: ' ',
+          devType: '',
+          productSecret: '',
+          relationApp: this.currentDepartment.name,
+          roles: [],
+          categoryname: '',
+          config: { checkList: ['konva', 'amis'] },
+        }
+        this.productid = moment(new Date()).valueOf().toString()
+        this.dialogFormVisible = true
+      },
+      getParent(id, origin, returnarr) {
+        origin.map((item) => {
+          if (id == item.id) {
+            returnarr.unshift(item.value)
+            this.getParent(item.parentid, origin, returnarr)
+          } else if (item.parentid == 0 && item.id == id) {
+            returnarr.unshift(item.value)
+          }
+        })
+        this.form.category = returnarr[0]
+        return returnarr
+      },
+      // 查找Industry父级
+      getIndustryParent(type, originarr) {
+        originarr.map((item) => {
+          if (item.value == type) {
+            this.getParent(item.id, originarr, [])
+          }
+        })
+      },
+      async editorParser(ObjectId) {
+        this.parserFromId = ObjectId
+        try {
+          const {
+            config = {
+              parser: [],
+            },
+            thing = {},
+          } = await getProduct(ObjectId)
+          this.parserTableList = config
+          dgiotlog.log(this.parserTableList)
+          this.parserDict = _.merge(thing, config)
+        } catch (e) {
+          this.parserTableList = { parser: [] }
+          dgiotlog.log('eeeeeeeeeeeee', e)
+        }
+        this.parserTable = true
+      },
+      editParse(index, row) {
+        this.formConfig = row
+        this.editIndex = index
+        this.dialogVisible = true
+      },
+      async saveParse(list, type = -1) {
+        if (type + 2 > 0) {
+          this.parserTableList.parser[type] = _.merge({}, list)
+        }
+        try {
+          const res = await putProduct(this.parserFromId, {
+            config: type + 2 > 0 ? this.parserTableList : list,
+          })
+          this.$message({
+            showClose: true,
+            message: this.$translateTitle(
+              'user.Save the template successfully'
+            ),
+            type: 'success',
+          })
+          this.dialogVisible = false
+          this.parserTable = false
+        } catch (e) {
+          this.$message.error(
+            this.$translateTitle('user.Save the template error') + `${e}`
+          )
+          dgiotlog.log(e, 'eeee')
+        }
+        dgiotlog.log(list)
+      },
+      previewParse(row) {
+        this.parserView = true
+        this.formConfig = row
+        dgiotlog.log('previewParse', row)
+      },
+      addParse(row) {
+        row['parser'].push({
+          name: uuid(6),
+          enname: uuid(6),
+          config: {},
+        })
+      },
+      deleteParse(index, rows) {
+        rows.splice(index, 1)
+      },
+      async editorDict(ObjectId) {
+        // const loading = this.$baseColorfullLoading()
+        this.getAllunit()
+        const row = await getProduct(ObjectId)
+        // loading.close()
+        const { config = { basedate: {} } } = row
+        this.productInfo = row
+        dgiotlog.log(' this.parserDict', this.parserDict)
+        this.editDictTempId = ObjectId
+        this.dictTempForm = {
+          name: '',
+          cType: '',
+          enable: '1',
+          description: '',
+          params: [],
+        }
+        this.title_temp_dialog = '创建字典模板'
+        dgiotlog.log(config)
+        if (config.basedate && config.basedate.name) {
+          this.title_temp_dialog = '修改字典模板'
+          this.dictTempForm = config.basedate
+        }
+        this.rule = {
+          name: [
+            {
+              required: true,
+              message: '请输入字典模板名称',
+              trigger: 'blur',
+            },
+          ],
+          cType: [
+            {
+              required: true,
+              message: '请输入字典模板类型',
+              trigger: 'blur',
+            },
+          ],
+          enable: [
+            {
+              required: true,
+              message: '请选择状态',
+              trigger: 'change',
+            },
+          ],
+        }
+        dgiotlog.log(this.dictTempForm, 'config')
+        this.dictVisible = true
+      },
+      async editorProduct(editorProductid) {
+        const loading = this.$baseColorfullLoading()
+        const row = await getProduct(editorProductid)
+        this.form = row
+        loading.close()
+        this.product = row
+        this.imageUrl = ''
+        this.moduleTitle = this.$translateTitle('product.editproduct')
+        this.custom_status = 'edit'
+        this.custom_row = row
+        this.dialogFormVisible = true
+        this.productid = row.objectId
+        this.form.desc = row.desc
+        this.form.category = row.category
+        this.form.producttemplet = row.producttemplet
+        this.form.config = _.merge(row.config, { checkList: [] })
+        this.form.name = row.name
+        this.form.nodeType = row.nodeType
+        this.$set(this.form, 'type', row.channel ? row.channel.type : '')
+        this.$set(
+          this.form,
+          'tdchannel',
+          row.channel ? row.channel.tdchannel : ''
+        )
+        this.$set(
+          this.form,
+          'taskchannel',
+          row.channel ? row.channel.taskchannel : ''
+        )
+        this.$set(
+          this.form,
+          'otherchannel',
+          row.channel ? row.channel.otherchannel : []
+        )
+        this.$set(
+          this.form,
+          'storageStrategy',
+          row.channel ? row.channel.storageStrategy : ''
+        )
+        this.form.netType = row.netType
+        this.form.devType = row.devType
+        this.form.categoryname = row.category ? row.category.name : ''
+        this.form.productSecret = row.productSecret
+        this.form.nodeType = row.nodeType
+        if (row.icon) {
+          this.imageUrl = row.icon
+        }
+
+        // this.form.relationApp = this.currentDepartment.name
+        console.log('row', row)
+        dgiotlog.log('form', this.form)
+      },
+      async categorytree() {
+        const parsms = {
+          order: 'createdAt',
+          keys: 'count(*)',
+          where: { level: { $in: [0, 1] } },
+        }
+        const { results } = await queryCategory(parsms)
+        this.categoryList = results
+        dgiotlog.log('this', this.categoryList)
+      },
+      handleCateSearch(objectId) {
+        this.queryForm.category = objectId
+        this.showcateTree = !this.showcateTree
+        if (objectId == 'a60a85475a') {
+          this.queryprodut({})
+        } else {
+          let params = {
+            keys: 'objectId',
+            where: {
+              parent: {
+                className: 'Category',
+                objectId: objectId,
+                __type: 'Pointer',
+              },
+            },
+          }
+          queryCategory(params).then((res) => {
+            const ids = []
+            ids.push(objectId)
+            res.results.forEach((result) => {
+              ids.push(result.objectId)
+            })
+            dgiotlog.log('ids', ids)
+            this.queryprodut({ categorys: ids })
+          })
+        }
+      },
+      submitForm() {
+        var initparams = {
+          name: this.form.name,
+          nodeType: this.form.nodeType,
+          netType: this.form.netType,
+          icon: this.imageUrl,
+          devType: this.form.devType,
+          desc: this.form.desc,
+          thing: this.form.thing ? this.form.thing : {},
+          category: {
+            objectId:
+              Number(this.form.type) == 0 ? '5ca6049839' : this.form.categoryid,
+            __type: 'Pointer',
+            className: 'Category',
+          },
+          producttemplet: {
+            objectId:
+              Number(this.form.type) == 0 ? '0' : this.form.producttempid,
+            __type: 'Pointer',
+            className: 'ProductTemplet',
+          },
+          channel: {
+            type: this.form.type,
+            tdchannel: this.form.tdchannel,
+            taskchannel: this.form.taskchannel,
+            otherchannel: this.form.otherchannel,
+            storageStrategy: this.form.storageStrategy,
+          },
+        }
+        this.$refs.form.validate((valid) => {
+          // 判断是新增产品还是修改
+          if (valid) {
+            if (this.custom_status === 'add') {
+              var ranNum = Math.ceil(Math.random() * 25)
+              var productSecret = Base64.encode(
+                String.fromCharCode(65 + ranNum) +
+                  Math.ceil(Math.random() * 10000000) +
+                  Number(new Date())
+              )
+              const aclKey = 'role' + ':' + this.form.relationApp
+              const setAcl = {}
+              setAcl[aclKey] = {
+                read: true,
+                write: true,
+              }
+              setAcl['*'] = {
+                read: true,
+              }
+              console.clear()
+              console.log('this.form', this.form)
+              console.log(
+                this.form.config.checkList,
+                'this.form.config.checkList'
+              )
+              const addparams = {
+                  productSecret: productSecret,
+                  ACL: setAcl,
+                  topics: [],
+                  decoder: {},
+                  config: {
+                    checkList: this.form.config.checkList,
+                  },
+                },
+                params = _.merge(initparams, addparams)
+              dgiotlog.log('createProduct', params)
+              this.createProduct(params)
+            } else {
+              console.log('editProduct', initparams)
+              delete initparams.category
+              delete initparams.producttemplet
+              delete initparams.thing // 修改产品时 不修改物模型
+              this.editProduct(initparams)
+            }
+          } else {
+            this.$message('必填项未填')
+          }
+        })
+      },
+      async doUpload(event) {
+        const parseFile = event.target.files[0]
+        const loading = this.$baseColorfullLoading(3)
+        try {
+          const res = await ImportParse('Product', parseFile)
+          loading.close()
+          dgiotlog.log('eresresrror', res)
+          this.$message({
+            showClose: true,
+            message: this.$translateTitle(
+              'user.Save the template successfully'
+            ),
+            type: 'success',
+          })
+        } catch (error) {
+          loading.close()
+          dgiotlog.log('error', error)
+          this.$message.error(`${error}`)
+        }
+        this.$dgiotBus.$emit('reload-router-view')
+      },
+      async createProduct(params) {
+        const res = await postProduct(params)
+        dgiotlogger.info('postProduct：', res)
+        if (res.objectId) {
+          this.initQuery('产品创建成功', 'success')
+          this.dialogFormVisible = false
+          this.searchProduct()
+        } else {
+          this.$message({
+            type: 'error',
+            message: res.error || res,
+            showClose: true,
+          })
+        }
+      },
+      async editProduct(data) {
+        const res = await this.$update_object(
+          'Product',
+          this.custom_row.objectId,
+          data
+        )
+        if (res.updatedAt) {
+          this.initQuery('产品修改成功', 'success')
+        } else {
+          this.$message({
+            type: 'error',
+            message: res.error,
+          })
+        }
+      },
+      initQuery(msg, type) {
         this.$message({
-          type: "success",
-          message: "备份成功"
-        });
-      } else {
-        this.$message({
-          type: "error",
-          message: `备份失败`
-        });
-      }
+          type: type || 'info',
+          message: msg,
+          showClose: true,
+          duration: 2000,
+        })
+        this.dialogFormVisible = false
+        this.resetProductForm()
+        this.$refs['form'].resetFields()
+        this.searchProduct()
+      },
+      resetProductForm() {
+        this.form = {
+          name: '',
+          category: '',
+          nodeType: 3,
+          desc: '',
+          netType: '',
+          devType: '',
+          productSecret: '',
+          roles: [],
+          relationApp: '',
+          config: {
+            checkList: [],
+          },
+        }
+        this.imageUrl = ''
+      },
+      deviceToDetail(row) {
+        this.$router.push({
+          path: '/roles/detailproduct',
+          query: {
+            id: row.objectId,
+          },
+        })
+      },
+      GoTodevices(row) {
+        this.$router.push({
+          path: '/roles/thing',
+          query: {
+            productid: row.objectId,
+          },
+        })
+      },
+      /* el-popover点击关闭*/
+      makeSure(row, index) {
+        const params = {
+          count: 'objectId',
+          skip: 0,
+          limit: 1,
+          where: {
+            product: row.objectId,
+          },
+        }
+        this.$baseConfirm('你确定要删除当前项吗', null, async () => {
+          await queryDevice(params).then((results) => {
+            if (results.count > 0) {
+              this.$message('请先删除该产品下设备')
+              return
+            } else {
+              delProduct(row.objectId).then((response) => {
+                if (response) {
+                  this.$message({
+                    type: 'success',
+                    message: '删除成功',
+                  })
+                  // row._self.$refs[`popover-${index}`].doClose()
+                  this.searchProduct()
+                }
+              })
+            }
+          })
+          this.$baseMessage(
+            this.$translateTitle('Maintenance.successfully deleted'),
+            'success',
+            'dgiot-hey-message-success'
+          )
+        })
+      },
+      // productSizeChange(val) {
+      //   this.length = val;
+      //   this.searchProduct();
+      // },
+      // productCurrentChange(val) {
+      //   this.start = (val - 1) * this.length;
+      //   this.searchProduct();
+      // },
+      async blackDict(hashkey, data) {
+        const params = {
+          data: data,
+          key: hashkey,
+          type: 'Product',
+        }
+        const res = await postDict(params)
+        if (res) {
+          this.$message({
+            type: 'success',
+            message: '备份成功',
+          })
+        } else {
+          this.$message({
+            type: 'error',
+            message: `备份失败`,
+          })
+        }
+      },
+      async CloneData(row) {
+        const data = {
+          category: row.attributes.category,
+          devType: row.attributes.devType,
+          name: row.attributes.name,
+          thing: row.attributes.thing,
+        }
+        const { objectId, code } = await getHashClass('Product', data)
+        if (code == 200) {
+          this.blackDict(objectId, data)
+        }
+      },
+      // 克隆组态
+      proudctClone(row) {
+        row.attributes.config.cloneState = true
+        row.attributes.config.cloneState = true
+        const config = row
+        const res = putProduct(row.id, config)
+        if (res) {
+          this.CloneData(row)
+        }
+      },
+      // 编辑组态
+      proudctEdit(row) {
+        var topoUrl = window.location.origin + '/spa'
+        const { NODE_ENV } = process.env
+        if (NODE_ENV == 'development') {
+          topoUrl = this.$globalConfig.localTopoUrl
+        } else {
+          topoUrl = window.location.origin + '/spa'
+        }
+        // 为了兼容性,暂时传两个相同的值
+        var url = `${topoUrl}/#?drawProudctid=${row.objectId}&proudctid=${row.objectId}`
+        localStorage.setItem('rowId', row.objectId)
+        window.open(url, '__blank')
+      },
+      proudctView(row) {
+        var topoUrl = window.location.origin + '/spa'
+        const { NODE_ENV } = process.env
+        if (NODE_ENV == 'development') {
+          topoUrl = this.$globalConfig.localTopoUrl
+        } else {
+          topoUrl = window.location.origin + '/spa'
+        }
+        // 为了兼容性,暂时传两个相同的值
+        var url = `${topoUrl}/#/views/${row.objectId}`
+        window.open(url, '__blank')
+      },
+      // 跳转到组态大屏
+      goTopoview() {
+        var topoUrl = window.location.origin + '/spa'
+        const { NODE_ENV } = process.env
+        if (NODE_ENV == 'development') {
+          topoUrl = this.$globalConfig.localTopoUrl
+        } else {
+          topoUrl = window.location.origin + '/spa'
+        }
+        var url = `${topoUrl}/#/view`
+        window.open(url, '__blank')
+      },
+      async handleImport() {
+        await this.$refs.uploader.click()
+      },
+      // 导出
+      async exportpro() {
+        const loading = this.$baseColorfullLoading(2)
+        try {
+          const res = await ExportParse('Product', {})
+          loading.close()
+          this.$convertRes2Blob(res)
+          // this.$message.success(`${res}`)
+        } catch (error) {
+          loading.close()
+          this.$message.error(`${error}`)
+        }
+      },
     },
-    async CloneData(row) {
-      const data = {
-        category: row.attributes.category,
-        devType: row.attributes.devType,
-        name: row.attributes.name,
-        thing: row.attributes.thing
-      };
-      const { objectId, code } = await getHashClass("Product", data);
-      if (code == 200) {
-        this.blackDict(objectId, data);
-      }
-    },
-    // 克隆组态
-    proudctClone(row) {
-      row.attributes.config.cloneState = true;
-      row.attributes.config.cloneState = true;
-      const config = row;
-      const res = putProduct(row.id, config);
-      if (res) {
-        this.CloneData(row);
-      }
-    },
-    // 编辑组态
-    proudctEdit(row) {
-      var topoUrl = window.location.origin + "/spa";
-      const { NODE_ENV } = process.env;
-      if (NODE_ENV == "development") {
-        topoUrl = this.$globalConfig.localTopoUrl;
-      } else {
-        topoUrl = window.location.origin + "/spa";
-      }
-      // 为了兼容性,暂时传两个相同的值
-      var url = `${topoUrl}/#?drawProudctid=${row.objectId}&proudctid=${row.objectId}`;
-      localStorage.setItem("rowId", row.objectId);
-      window.open(url, "__blank");
-    },
-    proudctView(row) {
-      var topoUrl = window.location.origin + "/spa";
-      const { NODE_ENV } = process.env;
-      if (NODE_ENV == "development") {
-        topoUrl = this.$globalConfig.localTopoUrl;
-      } else {
-        topoUrl = window.location.origin + "/spa";
-      }
-      // 为了兼容性,暂时传两个相同的值
-      var url = `${topoUrl}/#/views/${row.objectId}`;
-      window.open(url, "__blank");
-    },
-    // 跳转到组态大屏
-    goTopoview() {
-      var topoUrl = window.location.origin + "/spa";
-      const { NODE_ENV } = process.env;
-      if (NODE_ENV == "development") {
-        topoUrl = this.$globalConfig.localTopoUrl;
-      } else {
-        topoUrl = window.location.origin + "/spa";
-      }
-      var url = `${topoUrl}/#/view`;
-      window.open(url, "__blank");
-    },
-    async handleImport() {
-      await this.$refs.uploader.click();
-    },
-    // 导出
-    async exportpro() {
-      const loading = this.$baseColorfullLoading(2);
-      try {
-        const res = await ExportParse("Product", {});
-        loading.close();
-        this.$convertRes2Blob(res);
-        // this.$message.success(`${res}`)
-      } catch (error) {
-        loading.close();
-        this.$message.error(`${error}`);
-      }
-    }
   }
-};
 </script>
 <style lang="scss">
+  .ant-card-actions {
+    height: 46px !important;
+  }
+
   .el-row {
     margin-bottom: 20px;
     display: flex;

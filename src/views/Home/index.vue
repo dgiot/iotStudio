@@ -830,13 +830,8 @@
     watch: {
       treeFlag: {
         handler: function (newVal) {
-          if (newVal) {
-            this.mapHeight = window.innerHeight * 0.8 + 'px'
-            this.mapWidth = window.innerWidth * 0.77 + 'px'
-          } else {
-            this.mapHeight = window.innerHeight * 0.8 + 'px'
-            this.mapWidth = window.innerWidth * 0.98 + 'px'
-          }
+          if (newVal) this.mapWidth = window.innerWidth * 0.77 + 'px'
+          else this.mapWidth = window.innerWidth * 0.98 + 'px'
         },
         deep: true,
         limit: true,
@@ -882,7 +877,7 @@
       this.initDgiotMqtt()
       window.onresize = () => {
         return (() => {
-          this.mapHeight = window.innerHeight * 0.8 + 'px'
+          this.mapHeight = window.innerHeight * 0.7 + 'px'
           this.mapWidth = window.innerWidth * 0.98 + 'px'
         })()
       }
@@ -896,7 +891,7 @@
     },
     methods: {
       initMapHeight() {
-        this.mapHeight = window.innerHeight * 0.8 + 'px'
+        this.mapHeight = window.innerHeight * 0.7 + 'px'
         this.mapWidth = window.innerWidth * 0.98 + 'px'
       },
       /**
