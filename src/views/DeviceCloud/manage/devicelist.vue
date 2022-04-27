@@ -375,7 +375,11 @@
         width="140"
       >
         <template #default="{ row }">
-          {{ getTime(row.detail.expirationTime, row) }}
+          {{
+            row.detail.expirationTime
+              ? getTime(row.detail.expirationTime, row)
+              : ''
+          }}
         </template>
       </el-table-column>
       <el-table-column

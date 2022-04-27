@@ -1,8 +1,8 @@
 <template>
   <div class="topic-metrics">
     <div class="page-title">
-      {{ $t('analysis.topicMetrics') }}
-      <span class="sub-tip">{{ $t('analysis.metricsTip') }}</span>
+      {{ $translateTitle('analysis.topicMetrics') }}
+      <span class="sub-tip">{{ $translateTitle('analysis.metricsTip') }}</span>
       <el-button
         v-if="!modClosed"
         class="confirm-btn"
@@ -15,7 +15,7 @@
         type="success"
         @click="handleOperation"
       >
-        {{ $t('rule.create') }}
+        {{ $translateTitle('rule.create') }}
       </el-button>
       <el-button
         v-else
@@ -28,7 +28,7 @@
         type="success"
         @click="handleModLoad"
       >
-        {{ $t('modules.enable') }}
+        {{ $translateTitle('modules.enable') }}
       </el-button>
     </div>
     <el-table
@@ -43,7 +43,7 @@
       <el-table-column type="expand">
         <template slot-scope="props">
           <div class="expand-header">
-            {{ $t('analysis.details') }}
+            {{ $translateTitle('analysis.details') }}
             <el-radio-group
               v-model="topicQos"
               class="topic-qos-radio"
@@ -51,7 +51,7 @@
               size="mini"
             >
               <el-radio-button label="all">
-                {{ $t('analysis.all') }}
+                {{ $translateTitle('analysis.all') }}
               </el-radio-button>
               <el-radio-button label="qos0">QoS 0</el-radio-button>
               <el-radio-button label="qos1">QoS 1</el-radio-button>
@@ -62,14 +62,14 @@
             <el-col :span="8">
               <div class="message-card in">
                 <div>
-                  {{ $t('analysis.messageIn') }}
+                  {{ $translateTitle('analysis.messageIn') }}
                   <span class="message-rate">
                     {{
-                      $t('analysis.rateItem', [
+                      $translateTitle('analysis.rateItem', [
                         getCurrentTopicData('in', 'rate'),
                       ])
                     }}
-                    {{ $t('analysis.rate') }}
+                    {{ $translateTitle('analysis.rate') }}
                   </span>
                 </div>
                 <div class="message-card--body">
@@ -80,14 +80,14 @@
             <el-col :span="8">
               <div class="message-card out">
                 <div>
-                  {{ $t('analysis.messageOut') }}
+                  {{ $translateTitle('analysis.messageOut') }}
                   <span class="message-rate">
                     {{
-                      $t('analysis.rateItem', [
+                      $translateTitle('analysis.rateItem', [
                         getCurrentTopicData('out', 'rate'),
                       ])
                     }}
-                    {{ $t('analysis.rate') }}
+                    {{ $translateTitle('analysis.rate') }}
                   </span>
                 </div>
                 <div class="message-card--body">
@@ -98,16 +98,16 @@
             <el-col :span="8">
               <div class="message-card drop">
                 <div>
-                  {{ $t('analysis.messageDrop') }}
+                  {{ $translateTitle('analysis.messageDrop') }}
                   <span class="message-rate">
                     {{
-                      $t('analysis.rateItem', [
+                      $translateTitle('analysis.rateItem', [
                         getCurrentTopicDropRate(
                           currentTopic['messages.dropped.rate']
                         ),
                       ])
                     }}
-                    {{ $t('analysis.rate') }}
+                    {{ $translateTitle('analysis.rate') }}
                   </span>
                 </div>
                 <div class="message-card--body">
@@ -118,11 +118,20 @@
           </el-row>
         </template>
       </el-table-column>
-      <el-table-column :label="$t('topics.topic')" prop="topic" />
-      <el-table-column :label="$t('analysis.messageIn')" prop="messageIn" />
-      <el-table-column :label="$t('analysis.messageOut')" prop="messageOut" />
-      <el-table-column :label="$t('analysis.messageDrop')" prop="messageDrop" />
-      <el-table-column :label="$t('oper.oper')" width="180px">
+      <el-table-column :label="$translateTitle('topics.topic')" prop="topic" />
+      <el-table-column
+        :label="$translateTitle('analysis.messageIn')"
+        prop="messageIn"
+      />
+      <el-table-column
+        :label="$translateTitle('analysis.messageOut')"
+        prop="messageOut"
+      />
+      <el-table-column
+        :label="$translateTitle('analysis.messageDrop')"
+        prop="messageDrop"
+      />
+      <el-table-column :label="$translateTitle('oper.oper')" width="180px">
         <template slot-scope="props">
           <el-button
             plain
@@ -130,10 +139,10 @@
             type="success"
             @click="viewTopicDetails(props.row, props.$index)"
           >
-            {{ $t('oper.view') }}
+            {{ $translateTitle('oper.view') }}
           </el-button>
           <el-popover placement="right" trigger="click" :value="popoverVisible">
-            <p>{{ $t('oper.confirmDelete') }}</p>
+            <p>{{ $translateTitle('oper.confirmDelete') }}</p>
             <div style="text-align: right">
               <el-button
                 class="cache-btn"
@@ -141,18 +150,18 @@
                 type="text"
                 @click="hidePopover"
               >
-                {{ $t('oper.cancel') }}
+                {{ $translateTitle('oper.cancel') }}
               </el-button>
               <el-button
                 size="mini"
                 type="success"
                 @click="deleteTopicMetric(props.row)"
               >
-                {{ $t('oper.confirm') }}
+                {{ $translateTitle('oper.confirm') }}
               </el-button>
             </div>
             <el-button slot="reference" plain size="mini" type="danger">
-              {{ $t('oper.delete') }}
+              {{ $translateTitle('oper.delete') }}
             </el-button>
           </el-popover>
         </template>
@@ -162,7 +171,7 @@
     <el-dialog
       :append-to-body="true"
       class="create-subscribe"
-      :title="$t('analysis.addTopic')"
+      :title="$translateTitle('analysis.addTopic')"
       :visible.sync="addVisible"
       width="400px"
       @keyup.enter.native="handleAdd"
@@ -175,14 +184,17 @@
         :rules="rules"
         size="small"
       >
-        <el-form-item :label="$t('subscriptions.topic')" prop="topic">
+        <el-form-item
+          :label="$translateTitle('subscriptions.topic')"
+          prop="topic"
+        >
           <el-input v-model="record.topic" placeholder="Topic" />
         </el-form-item>
       </el-form>
 
       <div slot="footer">
         <el-button class="cache-btn" type="text" @click="handleClose">
-          {{ $t('oper.cancel') }}
+          {{ $translateTitle('oper.cancel') }}
         </el-button>
         <el-button
           class="confirm-btn"
@@ -190,7 +202,7 @@
           type="success"
           @click="handleAdd"
         >
-          {{ $t('oper.add') }}
+          {{ $translateTitle('oper.add') }}
         </el-button>
       </div>
     </el-dialog>
@@ -221,7 +233,7 @@
         rules: {
           topic: {
             required: true,
-            message: this.$t('oper.pleaseEnter'),
+            message: this.$translateTitle('oper.pleaseEnter'),
           },
         },
       }
@@ -260,7 +272,9 @@
             this.modClosed = false
           })
           .catch((error) => {
-            this.$message.warning(this.$t(`error.${error.message}`))
+            this.$message.warning(
+              this.$translateTitle(`error.${error.message}`)
+            )
             this.modClosed = true
           })
       },
@@ -285,7 +299,9 @@
             this.modClosed = false
           })
           .catch((error) => {
-            this.$message.error(error || this.$t('error.networkError'))
+            this.$message.error(
+              error || this.$translateTitle('error.networkError')
+            )
           })
       },
       deleteTopicMetric(row) {
@@ -295,7 +311,9 @@
             this.hidePopover()
           })
           .catch((error) => {
-            this.$message.error(error || this.$t('error.networkError'))
+            this.$message.error(
+              error || this.$translateTitle('error.networkError')
+            )
           })
       },
       handleAdd() {

@@ -197,12 +197,38 @@
                     v-model="onlinedevices"
                     clearable
                     style="width: 100px"
+                    @change="getDevices()"
                   >
                     <!-- <el-option value="在线" /> -->
                     <el-option :value="$translateTitle('zetadevices.online')" />
                     <!-- <el-option value="离线" /> -->
                     <el-option
                       :value="$translateTitle('zetadevices.offline')"
+                    />
+                  </el-select>
+                </el-form-item>
+                <el-form-item
+                  :label="
+                    $translateTitle('developer.enable') +
+                    '/' +
+                    $translateTitle('developer.prohibit')
+                  "
+                >
+                  <el-select
+                    v-model="statusdevices"
+                    clearable
+                    style="width: 100px"
+                    @change="getDevices()"
+                  >
+                    <!-- <el-option value="在线" /> -->
+                    <el-option
+                      :label="$translateTitle('developer.enable')"
+                      value="true"
+                    />
+                    <!-- <el-option value="离线" /> -->
+                    <el-option
+                      :label="$translateTitle('developer.prohibit')"
+                      value="false"
                     />
                   </el-select>
                 </el-form-item>
@@ -1345,6 +1371,7 @@
   } from '@/api/Device'
   import { getToken } from '@/api/Menu'
   import { secret } from '@/config/secret.config'
+
   export default {
     components: {
       BmScale,
@@ -1551,6 +1578,7 @@
         cities: [],
         selectdevice: '',
         onlinedevices: '',
+        statusdevices: '',
         deviceinput: '',
         devicenumber: '',
         multipleTable: [],
@@ -2002,6 +2030,9 @@
               params.where.status = 'OFFLINE'
             }
           }
+          if (this.statusdevices != '')
+            params.where.isEnable = this.statusdevices
+
           if (this.devicenumber != '') {
             params.where.devaddr = this.devicenumber
           }
@@ -2439,6 +2470,7 @@
               : this.onlinedevices == '离线'
               ? 'OFFLINE'
               : { $ne: null },
+          isEnable: this.statusdevices ? this.statusdevices : { $ne: null },
         }
         if (this.equvalue != 0) {
           // params.where.product = this.equvalue

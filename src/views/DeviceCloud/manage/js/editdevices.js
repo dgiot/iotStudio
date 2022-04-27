@@ -941,7 +941,7 @@ export default {
       await this.delVisitedRoute(this.$route.path)
       this.activeName = 'first'
       this.$router.push({ path: this.$route.path, query })
-      this.getDeviceInfo(deviceid)
+      this.getDeviceInfo(query.deviceid)
       this.setTreeFlag(false)
       this.params.style = this.chartType[0].type
       console.log(' this.params.style', this.params.style)
@@ -1076,25 +1076,33 @@ export default {
     },
     /* el-popover点击关闭*/
     makeSure(row, $index) {
-      // 可以在这里执行删除数据的回调操作.......删除操作.....
-      const objRoute = JSON.parse(JSON.stringify(row.route))
-      const routeKey = this.deviceInfo.devaddr
-      // 删除key为上级设备地址值
-      delete objRoute[routeKey]
-      const params = {
-        parentId: null,
-        route: objRoute,
-      }
-      this.$putDevice(row.objectId, params).then((response) => {
-        if (response) {
-          this.$message({
-            type: 'success',
-            message: '解除关联成功',
-          })
-          // row._self.$refs[`popover-${$index}`].doClose()
-          this.getDevices()
-        }
+      this.$confirm('此操作将解除设备间的关系, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning',
       })
+        .then(() => {
+          // 可以在这里执行删除数据的回调操作.......删除操作.....
+          const objRoute = JSON.parse(JSON.stringify(row.route))
+          const routeKey = this.deviceInfo.devaddr
+          // 删除key为上级设备地址值
+          delete objRoute[routeKey]
+          const params = {
+            parentId: null,
+            route: objRoute,
+          }
+          this.$putDevice(row.objectId, params).then((response) => {
+            if (response) {
+              this.$message({
+                type: 'success',
+                message: '解除关联成功',
+              })
+              // row._self.$refs[`popover-${$index}`].doClose()
+              this.getDevices()
+            }
+          })
+        })
+        .catch(() => {})
     },
     handelUpdate(event, row, index) {
       var newData1 = {}

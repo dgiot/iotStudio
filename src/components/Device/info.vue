@@ -26,10 +26,10 @@
         <td class="cloumn">
           {{ $translateTitle('equipment.state') + ':' }}
         </td>
-        <!-- <td  :class="devicedetail.status"  v-if="devicedetail.status=='ACTIVE'">{{$t('product.active')}}</td>
-         <td  :class="devicedetail.status" v-else-if="devicedetail.status=='UNACTIVE'">{{$t('product.unactive')}}</td>
-         <td  :class="devicedetail.status" v-else-if="devicedetail.status=='ONLINE'">{{$t('product.online')}}</td>
-        <td  :class="devicedetail.status"  v-else>{{$t('product.offline')}}</td>-->
+        <!-- <td  :class="devicedetail.status"  v-if="devicedetail.status=='ACTIVE'">{{$translateTitle('product.active')}}</td>
+         <td  :class="devicedetail.status" v-else-if="devicedetail.status=='UNACTIVE'">{{$translateTitle('product.unactive')}}</td>
+         <td  :class="devicedetail.status" v-else-if="devicedetail.status=='ONLINE'">{{$translateTitle('product.online')}}</td>
+        <td  :class="devicedetail.status"  v-else>{{$translateTitle('product.offline')}}</td>-->
         <td class="ACTIVE">
           {{ $translateTitle('product.active') }}
         </td>
@@ -63,7 +63,7 @@
         </td>
       </tr>
       <tr>
-        <!-- <td class="cloumn">{{$t('equipment.subordinatenode')+':'}}</td>
+        <!-- <td class="cloumn">{{$translateTitle('equipment.subordinatenode')+':'}}</td>
         <td>{{devicedetail.node}}</td>-->
 
         <td class="cloumn">
