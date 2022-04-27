@@ -113,5 +113,6 @@ router.afterEach((to) => {
       .getDgiotlog('src/dgiot/plugins/permissions.js')
       .info('router ->', routecInfo)
   window.router = dgiot.router = routecInfo
+  window.routerConfig = to
   if (DgiotProgress.status) DgiotProgress.done()
 })
