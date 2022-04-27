@@ -296,7 +296,7 @@
                   :center="center"
                   class="baidu_map"
                   :scroll-wheel-zoom="true"
-                  style="height: 600px"
+                  :style="{ height: mapHeight, width: mapWidth }"
                   :zoom="sizeZoom"
                 >
                   <bm-control>
@@ -688,6 +688,8 @@
       }
 
       return {
+        mapHeight: '800px',
+        mapWidth: '800px',
         polyline: {
           editing: false,
           paths: [],
@@ -698,9 +700,9 @@
           longitude: '120.260545',
           zoom: 15,
         },
-        mapType: window.name == 'dgiot_iframe' ? 'tencent' : 'baidu',
+        mapType: 'baidu',
         isShow: true,
-        ak: secret.baidu.map ?? 't9A84QM5lt6a3SMumuQOQtvM2spIQQ2A',
+        ak: secret.baidu.map ?? 'WpeAb6pL4tsX2ZVd56GHbO9Ut6c4HZhG',
         // ak: 'oW2UEhdth2tRbEE4FUpF9E5YVDCIPYih',
         // center:{ lng: 120.187273, lat: 30.334877 },
         center: { lng: 120.260545, lat: 31.551162 },
@@ -822,9 +824,23 @@
         _role: 'acl/role',
         _mimg: 'dashboard/_mimg',
         mqttInfo: 'mqttDB/mqttInfo',
+        treeFlag: 'settings/treeFlag',
       }),
     },
     watch: {
+      treeFlag: {
+        handler: function (newVal) {
+          if (newVal) {
+            this.mapHeight = window.innerHeight * 0.8 + 'px'
+            this.mapWidth = window.innerWidth * 0.77 + 'px'
+          } else {
+            this.mapHeight = window.innerHeight * 0.8 + 'px'
+            this.mapWidth = window.innerWidth * 0.98 + 'px'
+          }
+        },
+        deep: true,
+        limit: true,
+      },
       topicKey: {
         handler: function (newVal) {
           this.$dgiotBus.$off(newVal)
@@ -848,6 +864,7 @@
     },
     created() {},
     mounted() {
+      this.initMapHeight()
       setTimeout(() => {
         queryParams.forEach((e) => {
           let key = e.vuekey
@@ -863,6 +880,12 @@
       this.queryForm.account =
         this.language == 'zh' ? '全部产品' : 'All Products'
       this.initDgiotMqtt()
+      window.onresize = () => {
+        return (() => {
+          this.mapHeight = window.innerHeight * 0.8 + 'px'
+          this.mapWidth = window.innerWidth * 0.98 + 'px'
+        })()
+      }
     },
     activated() {
       // dgiotlog.log('keep-alive生效')
@@ -872,6 +895,10 @@
       this.resizeTheChart()
     },
     methods: {
+      initMapHeight() {
+        this.mapHeight = window.innerHeight * 0.8 + 'px'
+        this.mapWidth = window.innerWidth * 0.98 + 'px'
+      },
       /**
        *
        * @param BMap
@@ -1467,7 +1494,9 @@
       }
 
       .baidu_map {
-        height: calc(78vh - 20px);
+        height: calc(98vh - 20px);
+        width: 100%;
+        display: block;
       }
 
       margin: 8px;

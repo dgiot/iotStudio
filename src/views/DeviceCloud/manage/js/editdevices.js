@@ -949,7 +949,7 @@ export default {
       this.router = this.$dgiotBus.router(location.href + this.$route.fullPath)
       this.topicKey = this.$dgiotBus.topicKey(this.router, this.subtopic) // dgiot-mqtt topicKey 唯一标识
       // if (this.$route.query.deviceid) {
-      this.deviceid = deviceid
+      this.deviceid = query.deviceid
       this.subRealtimedata()
       this.initChart()
       window.addEventListener('resize', this.resizeTheChart)
