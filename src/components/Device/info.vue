@@ -21,7 +21,7 @@
           {{ $translateTitle('equipment.installationlocation') + ':' }}
         </td>
         <td>
-          {{ devicedetail.detail ? devicedetail.detail.address : '' }}
+          {{ devicedetail.address ? devicedetail.address : '' }}
         </td>
         <td class="cloumn">
           {{ $translateTitle('equipment.state') + ':' }}

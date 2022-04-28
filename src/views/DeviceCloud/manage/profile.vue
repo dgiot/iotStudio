@@ -135,7 +135,7 @@
           </el-form>
 
           <el-button
-            v-show="!$loadsh.isEmpty(productDetail)"
+            v-show="!$lodash.isEmpty(productDetail)"
             size="mini"
             type="primary"
             @click="isFullscreen = !isFullscreen"

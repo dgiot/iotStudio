@@ -1801,8 +1801,8 @@
             this.$router.push({
               path: '/dashboard/devicelist',
               query: {
-                productid: product.objectId,
-                line: 'online',
+                product: product.objectId,
+                status: 'ONLINE',
               },
             })
             break
@@ -1810,8 +1810,8 @@
             this.$router.push({
               path: '/dashboard/devicelist',
               query: {
-                productid: product.objectId,
-                line: 'offline',
+                product: product.objectId,
+                status: 'OFFLINE',
               },
             })
             break

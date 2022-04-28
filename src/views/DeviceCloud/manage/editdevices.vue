@@ -78,7 +78,7 @@
                           <div class="ta">
                             <span class="fontSize">
                               {{
-                                $translateTitle("equipment.updatetime") + ":"
+                                $translateTitle('equipment.updatetime') + ':'
                               }}
                             </span>
                             <span class="fontSize" @click="print(machinelist)">
@@ -100,7 +100,7 @@
           name="third"
         >
           <div
-            v-loading=loading
+            v-loading="loading"
             style="box-sizing: border-box; padding: 10px; background: #ffffff"
           >
             <!-- <h4>设备信息</h4> -->
@@ -207,7 +207,7 @@
                         type="primary"
                         @click="queryChart"
                       >
-                        {{ $translateTitle("developer.search") }}
+                        {{ $translateTitle('developer.search') }}
                       </el-button>
                     </el-form-item>
                   </el-form>
@@ -318,7 +318,7 @@
               </el-form-item>
               <el-form-item>
                 <el-button type="primary" @click.native="getDevices(0)">
-                  {{ $translateTitle("developer.search") }}
+                  {{ $translateTitle('developer.search') }}
                 </el-button>
               </el-form-item>
               <el-form-item>
@@ -327,30 +327,30 @@
                   type="primary"
                   @click="deleteDevcie"
                 >
-                  {{ $translateTitle("equipment.RelievingAssociation") }}
+                  {{ $translateTitle('equipment.RelievingAssociation') }}
                 </el-button>
                 <el-button
                   :disabled="multipleTable.length == 0"
                   type="primary"
                   @click="unactiveDevice"
                 >
-                  {{ $translateTitle("developer.prohibit") }}
+                  {{ $translateTitle('developer.prohibit') }}
                 </el-button>
                 <el-button
                   :disabled="multipleTable.length == 0"
                   type="primary"
                   @click="activeDevice"
                 >
-                  {{ $translateTitle("developer.enable") }}
+                  {{ $translateTitle('developer.enable') }}
                 </el-button>
               </el-form-item>
               <el-form-item>
                 <el-button plain type="info" @click.native="getDevices(0)">
-                  {{ $translateTitle("equipment.Refresh") }}
+                  {{ $translateTitle('equipment.Refresh') }}
                 </el-button>
                 <!-- 添加子设备按钮  -->
                 <el-button type="primary" @click.native="childDialog = true">
-                  {{ $translateTitle("equipment.addchilddevice") }}
+                  {{ $translateTitle('equipment.addchilddevice') }}
                 </el-button>
               </el-form-item>
             </el-form>
@@ -395,7 +395,7 @@
                     <span>
                       {{
                         row.route == undefined
-                          ? ""
+                          ? ''
                           : row.route[deviceInfo.devaddr]
                       }}
                     </span>
@@ -450,7 +450,7 @@
                       type="primary"
                       @click="deviceToDetail(row)"
                     >
-                      {{ $translateTitle("equipment.see") }}
+                      {{ $translateTitle('equipment.see') }}
                     </el-button>
 
                     <el-button
@@ -458,7 +458,7 @@
                       type="primary"
                       @click="makeSure(row, $index)"
                     >
-                      {{ $translateTitle("equipment.RelievingAssociation") }}
+                      {{ $translateTitle('equipment.RelievingAssociation') }}
                     </el-button>
                   </template>
                 </el-table-column>
@@ -556,13 +556,13 @@
             </div>
             <span slot="footer" class="dialog-footer">
               <el-button @click="childDialog = false">
-                {{ $translateTitle("developer.cancel") }}
+                {{ $translateTitle('developer.cancel') }}
               </el-button>
               <el-button
                 type="primary"
                 @click.native="submitDevice('childrenForm')"
               >
-                {{ $translateTitle("developer.determine") }}
+                {{ $translateTitle('developer.determine') }}
               </el-button>
             </span>
           </el-dialog>
@@ -572,9 +572,17 @@
           :label="$translateTitle('device.instruct')"
           name="instruct"
         >
-          <Instruct v-loading="loading" :devices-id="deviceid" :product-id="productid" />
+          <Instruct
+            v-loading="loading"
+            :devices-id="deviceid"
+            :product-id="productid"
+          />
         </el-tab-pane>
-        <el-tab-pane v-show="activeName == 'task'" :label="$translateTitle('device.trace')" name="task">
+        <el-tab-pane
+          v-show="activeName == 'task'"
+          :label="$translateTitle('device.trace')"
+          name="task"
+        >
           <scene-log
             v-if="activeName == 'task'"
             ref="SceneLog"
@@ -592,9 +600,64 @@
           />
         </el-tab-pane>
 
-        <!--        <el-tab-pane :label="$translateTitle('device.alert')" name="alert">-->
-        <!--          <dgiot-empty/>-->
-        <!--        </el-tab-pane>-->
+        <el-tab-pane label="可视化" name="view">
+          <el-row :gutter="24" style="margin: 0 !important">
+            <el-col :span="22">
+              <el-alert
+                title="可视化控制表单"
+                type="info"
+                description="信息可视化是利用人的视觉能力，将信息通过图形图像设计的方式视觉呈现，使枯燥的信息数据变得更为直观，更易于被接受，从而提升信息的传播速度和准确度。"
+                show-icon
+              />
+            </el-col>
+            <el-col :span="2">
+              <el-button
+                type="primary"
+                @click.native="
+                  $router.push({
+                    path: `/design`,
+                    query: {
+                      type: 'amis',
+                      _class: 'Product',
+                      key: productId,
+                    },
+                  })
+                "
+              >
+                前往配置
+              </el-button>
+            </el-col>
+          </el-row>
+
+          <el-tabs v-model="amisTable" type="border-card">
+            <el-tab-pane
+              v-for="(item, index) in commandInfo.data"
+              :key="index"
+              :label="item.title"
+              :name="index"
+            >
+              <dgiot-amis :schema="item.data" :show-help="false" />
+            </el-tab-pane>
+          </el-tabs>
+        </el-tab-pane>
+        <el-tab-pane label="视频监控" name="video">
+          <dgiot-aliplayer
+            ref="dgiotPlayer"
+            autoplay="true"
+            height="76vh"
+            :playsource="
+              deviceInfo.detail && deviceInfo.detail.videoSrc
+                ? deviceInfo.detail.videoSrc
+                : 'https://media.w3.org/2010/05/sintel/trailer.mp4'
+            "
+            :type="
+              deviceInfo.detail && deviceInfo.detail.videoType
+                ? deviceInfo.detail.videoType
+                : 'mp4'
+            "
+            width="100%"
+          />
+        </el-tab-pane>
       </el-tabs>
     </div>
   </div>

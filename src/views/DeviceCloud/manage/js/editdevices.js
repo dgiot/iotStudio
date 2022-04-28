@@ -5,6 +5,7 @@ import { mapGetters, mapActions } from 'vuex'
 import { getCardDevice, getDabDevice, getDevice } from '@/api/Device/index.js'
 import Instruct from '@/views/DeviceCloud/category/instruct_manage'
 import chartType from '@/api/Mock/Chart'
+import { queryView } from '@/api/View'
 
 const columns = [
   {
@@ -134,6 +135,11 @@ export default {
       },
     }
     return {
+      commandInfo: {
+        dialog: false,
+        data: {},
+      },
+      amisTable: 0,
       bmLabel: false,
       mapLabel: {
         content: '我爱北京天安门',
@@ -736,11 +742,13 @@ export default {
     print(item) {
       console.log(item)
     },
-    tabHandleClick(tab) {
+    async tabHandleClick(tab) {
+      localStorage.removeItem('parse_objectid')
+      localStorage.setItem('parse_objectid', this.productId)
       this.$dgiotBus.$emit('MqttUnbscribe', this.topicKey, this.subtopic)
       switch (tab.name) {
         case 'ninth':
-          this.$router.push({
+          await this.$router.push({
             path: '/roles/onlinetest',
             query: {
               deviceid: this.devicedevaddr,
@@ -749,7 +757,7 @@ export default {
           })
           break
         case 'children':
-          this.getDevices()
+          await this.getDevices()
           this.loading = true
           setTimeout(() => {
             this.loading = false
@@ -762,21 +770,38 @@ export default {
           }, 300)
           break
         case 'third':
-          this.queryChart()
+          await this.queryChart()
           break
         case 'right':
-          this.toggleClass('rightrow')
+          await this.toggleClass('rightrow')
           this.loading = true
           setTimeout(() => {
             this.loading = false
           }, 300)
           break
         case 'task':
-          this.$refs.SceneLog.get_topic()
+          await this.$refs.SceneLog.get_topic()
+          break
+        case 'view':
+          const { results = [] } = await queryView({
+            where: {
+              class: 'Product',
+              type: 'amis',
+              title: { $ne: null },
+              key: this.productId,
+              objectId: { $ne: null },
+            },
+          })
+          if (_.isEmpty(results)) {
+            return false
+          } else {
+            this.commandInfo.data = results
+            localStorage.setItem('parse_objectid', this.productId)
+          }
           break
         case 'first1':
-          this.subRealtimedata()
-          this.getCardDevice()
+          await this.subRealtimedata()
+          await this.getCardDevice()
           break
       }
     },

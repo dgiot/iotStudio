@@ -215,7 +215,7 @@ const configure = {
     'react-dom': 'ReactDOM',
     bcrypt: 'bcrypt',
     'be-full': 'BeFull',
-    loadsh: '_',
+    lodash: '_',
     JSONEditor: 'JSONEditor',
     AMap: 'VueAMap',
     konva: 'Konva',

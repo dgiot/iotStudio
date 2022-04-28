@@ -20,10 +20,10 @@
               v-model="queryForm.searchDate"
               class="item-time-picker"
               :end-placeholder="$translateTitle('Maintenance.end time')"
-              format="yyyy-MM-dd"
+              format="yyyy-MM-DD HH:mm:ss.SSSSSS"
               :start-placeholder="$translateTitle('Maintenance.start time')"
-              type="daterange"
-              value-format="yyyy-MM-dd"
+              type="datetimerange"
+              value-format="yyyy-MM-DD HH:mm:ss.SSSSSS"
             />
           </el-form-item>
           <el-form-item label="level">
@@ -221,8 +221,8 @@
           topic: '',
           domain: '',
           searchDate: [
-            moment().subtract('days', 7).format('YYYY-MM-DD'),
-            moment(new Date()).format('YYYY-MM-DD'),
+            moment().subtract('days', 7).format('yyyy-MM-DD HH:mm:ss.SSSSSS'),
+            moment(new Date()).format('yyyy-MM-DD HH:mm:ss.SSSSSS'),
           ],
           order: '-createdAt',
           keys: 'count(*)',
@@ -355,18 +355,19 @@
                     $options: 'i',
                   }
                 : { $ne: '3333' },
-              createdAt: {
-                $gte: {
-                  __type: 'Date',
-                  iso: `${this.queryForm.searchDate[0]}T00:00:00.000Z`,
-                },
-                $lte: {
-                  __type: 'Date',
-                  iso: `${this.queryForm.searchDate[1]}T23:59:59.000Z`,
-                },
-              },
+              // time: {
+              //   $get: moment(this.queryForm.searchDate[0]).format('SSS'),
+              //   $lte: moment(this.queryForm.searchDate[1]).format('SSS'),
+              // },
             },
           }
+          console.log(this.queryForm.searchDate)
+          console.log({
+            time: {
+              $get: moment(this.queryForm.searchDate[0]).format('x'),
+              // $lte: moment(this.queryForm.searchDate[1]).format('x'),
+            },
+          })
           const { results = [], count: total = 0 } = await queryLog(params)
           results.forEach((item) => {
             item.time = this.$moment(

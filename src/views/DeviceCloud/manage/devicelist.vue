@@ -162,7 +162,7 @@
         class="map_dialog"
         title="设备位置"
         :visible.sync="dialog_device"
-        width="60%"
+        width="50%"
       >
         <el-card>
           <dgiot-baidu-map

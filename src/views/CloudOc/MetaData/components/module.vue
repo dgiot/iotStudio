@@ -128,7 +128,7 @@
             >
               <template #default="{ row }">
                 <el-switch
-                  v-if="$loadsh.isBoolean(row[item.prop])"
+                  v-if="$lodash.isBoolean(row[item.prop])"
                   v-model="row[item.prop]"
                 />
                 <el-select

@@ -6,7 +6,7 @@
     <dgiot-query-form>
       <dgiot-query-form-top-panel>
         <el-form
-          v-if="!$loadsh.isEmpty(queryForm)"
+          v-if="!$lodash.isEmpty(queryForm)"
           ref="form"
           :inline="true"
           label-width="80px"
