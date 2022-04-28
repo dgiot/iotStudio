@@ -26,7 +26,7 @@
           <el-form
             :key="properties.objectId"
             ref="form"
-            label-width="80px"
+            label-width="auto"
             status-icon
           >
             <el-form-item
@@ -60,6 +60,7 @@
               v-for="i in list"
               :key="i.objectId"
               class="infinite-list-item"
+              style="width: 90%"
               @click="queryItem(i)"
             >
               <el-col :span="18">
