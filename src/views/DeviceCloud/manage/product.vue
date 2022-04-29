@@ -244,14 +244,18 @@
                 :label="$translateTitle('home.dev_count')"
                 :title="o.objectId"
               >
-                <el-tag @click.native="goLink(o,'device')">{{ o.channel.alarms || 0 }}</el-tag>
+                <el-link type="primary" @click.native="goLink(o, 'device')">
+                  {{ o.device_counts || 0 }}
+                </el-link>
               </el-descriptions-item>
               <el-descriptions-item
                 :contentStyle="{ 'text-align': 'center' }"
                 :label="$translateTitle('home.dev_online')"
                 :title="o.objectId"
               >
-                <el-tag @click.native="goLink(o,'online')">{{ o.channel.online || 0 }}</el-tag>
+                <el-link type="success" @click.native="goLink(o, 'online')">
+                  {{ o.online_counts || 0 }}
+                </el-link>
               </el-descriptions-item>
 
               <el-descriptions-item
@@ -259,7 +263,9 @@
                 :label="$translateTitle('home.dev_unline')"
                 :title="o.objectId"
               >
-                <el-tag @click.native="goLink(o,'offline')">{{ o.channel.offline || 0 }}</el-tag>
+                <el-link type="warning" @click.native="goLink(o, 'offline')">
+                  {{ o.offline_counts || 0 }}
+                </el-link>
               </el-descriptions-item>
               <!--              <el-descriptions-item :label="$translateTitle('product.addingtime')" :title="o.updatedAt">-->
               <!--                {{ $moment(o.createdAt).format("YYYY-MM-DD") }}-->
@@ -1792,9 +1798,9 @@
       this.projectName = ''
     },
     methods: {
-      goLink(product,type){
+      goLink(product, type) {
         // 根据不同的type跳到不同的页面
-        switch (type){
+        switch (type) {
           case 'online':
             this.$router.push({
               path: '/dashboard/devicelist',
@@ -1823,7 +1829,7 @@
             break
         }
 
-        console.log(product,type)
+        console.log(product, type)
       },
       handleSizeChange(val) {
         this.queryForm.limit = val
