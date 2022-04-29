@@ -786,7 +786,7 @@ export default {
           const { results = [] } = await queryView({
             where: {
               class: 'Product',
-              type: 'amis',
+              type: { $ne: 'topo' },
               title: { $ne: null },
               key: this.productId,
               objectId: { $ne: null },

@@ -2621,7 +2621,10 @@
         if (res.objectId) {
           this.initQuery('产品创建成功', 'success')
           this.dialogFormVisible = false
-          this.searchProduct()
+          setTimeout(() => {
+            this.queryForm.skip = 0
+            this.searchProduct()
+          }, 1200)
         } else {
           this.$message({
             type: 'error',
@@ -2713,16 +2716,21 @@
                     message: '删除成功',
                   })
                   // row._self.$refs[`popover-${index}`].doClose()
-                  this.searchProduct()
+                  setTimeout(() => {
+                    this.searchProduct()
+                  }, 1000)
                 }
               })
             }
           })
-          this.$baseMessage(
-            this.$translateTitle('Maintenance.successfully deleted'),
-            'success',
-            'dgiot-hey-message-success'
-          )
+          setTimeout(() => {
+            this.searchProduct()
+          }, 1000)
+          // this.$baseMessage(
+          //   this.$translateTitle('Maintenance.successfully deleted'),
+          //   'success',
+          //   'dgiot-hey-message-success'
+          // )
         })
       },
       // productSizeChange(val) {

@@ -24,7 +24,7 @@ export async function createArticle(params) {
           write: false,
         },
       },
-      timestamp: moment(new Date()).valueOf(),
+      // timestamp: moment(new Date()).valueOf(),
     })
   )
 }
