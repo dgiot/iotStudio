@@ -366,6 +366,7 @@
               class: 'metaData',
               title: this.ruleForm.name,
               key: this.ruleForm.name,
+              parent: { __type: 'Pointer', className: 'Dict', objectId: '0' },
             }
             delete postParams.data.objectId
             if (this.$route.query.objectId)

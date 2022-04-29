@@ -744,7 +744,7 @@ export default {
     },
     async tabHandleClick(tab) {
       localStorage.removeItem('parse_objectid')
-      localStorage.setItem('parse_objectid', this.productId)
+      localStorage.setItem('parse_objectid', this.deviceid)
       this.$dgiotBus.$emit('MqttUnbscribe', this.topicKey, this.subtopic)
       switch (tab.name) {
         case 'ninth':
@@ -796,7 +796,7 @@ export default {
             return false
           } else {
             this.commandInfo.data = results
-            localStorage.setItem('parse_objectid', this.productId)
+            localStorage.setItem('parse_objectid', this.deviceid)
           }
           break
         case 'first1':

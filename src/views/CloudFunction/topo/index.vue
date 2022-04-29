@@ -83,7 +83,7 @@
   import requiremodule from '@/utils/file/requiremodule'
   import { mapGetters, mapMutations } from 'vuex'
   import { _getTopo } from '@/api/Topo'
-  import { putProduct, queryProduct } from '@/api/Product'
+  import { putProduct, queryProduct, getProduct } from '@/api/Product'
   import { putView, getView } from '@/api/View'
   import { isBase64 } from '@/utils'
 
@@ -298,10 +298,10 @@
           }
           const { message = '', data = {} } = await _getTopo(params)
           // 绘制前不光需要获取到组态数据，还需要获取产品数据
-          const { results = [] } = await queryProduct({
-            where: { objectId: _this.$route.query.productid },
-          })
-          _this.productconfig = results[0]
+          const { results = [] } = await getProduct(
+            _this.$route.query.productid
+          )
+          _this.productconfig = results
           // console.log(_this.productconfig)
           console.groupCollapsed(
             '%c productconfig',
@@ -342,19 +342,20 @@
               id: 'kevCurrent',
             })
           } else {
-            this.$message.info('暂无组态。显示默认组态')
+            _this.$message.info('暂无组态。显示默认组态')
             console.log(
               'topo info msg 请求数据没有组态 就设置这个组态为默认',
-              this.Stage
+              _this.Stage
             )
             await _this.initKonva({
-              data: this.Stage,
+              // data: _this.Stage,
+              data: _this.initKonva,
               id: 'kevCurrent',
             })
           }
           loading.close()
         } catch (e) {
-          await this.initKonva({
+          await _this.initKonva({
             data: this.Stage,
             id: 'kevCurrent',
           })
@@ -367,15 +368,15 @@
             type: 'delete',
             path: 'M23,8c0,1.1-0.9,2-2,2c-0.18,0-0.35-0.02-0.51-0.07l-3.56,3.55C16.98,13.64,17,13.82,17,14c0,1.1-0.9,2-2,2s-2-0.9-2-2 c0-0.18,0.02-0.36,0.07-0.52l-2.55-2.55C10.36,10.98,10.18,11,10,11s-0.36-0.02-0.52-0.07l-4.55,4.56C4.98,15.65,5,15.82,5,16 c0,1.1-0.9,2-2,2s-2-0.9-2-2s0.9-2,2-2c0.18,0,0.35,0.02,0.51,0.07l4.56-4.55C8.02,9.36,8,9.18,8,9c0-1.1,0.9-2,2-2s2,0.9,2,2 c0,0.18-0.02,0.36-0.07,0.52l2.55,2.55C14.64,12.02,14.82,12,15,12s0.36,0.02,0.52,0.07l3.55-3.56C19.02,8.35,19,8.18,19,8 c0-1.1,0.9-2,2-2S23,6.9,23,8z',
           }
-          this.createdEvidence(
+          _this.createdEvidence(
             _.merge(icon, {
               index: 7,
               // blue表示取证阶段，黄色表示审核阶段，绿色标识审核通过，红色标识审核不过
               fill: 'orange',
-              productid: this.$route.query.productid,
+              productid: _this.$route.query.productid,
             })
           )
-          this.deleteTopo(window.deletePath)
+          _this.deleteTopo(window.deletePath)
         }, 1000)
         _this.subtopic = `thing/${_this.productid}/post`
         _this.topicKey = _this.$dgiotBus.topicKey(_this.router, _this.subtopic)

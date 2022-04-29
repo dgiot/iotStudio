@@ -241,10 +241,10 @@
             >
               <el-descriptions-item
                 :contentStyle="{ 'text-align': 'center' }"
-                :label="$translateTitle('equipment.Total number of alarms')"
+                :label="$translateTitle('home.dev_count')"
                 :title="o.objectId"
               >
-                <el-tag @click.native="goLink(o,'alarms')">{{ o.channel.alarms || 0 }}</el-tag>
+                <el-tag @click.native="goLink(o,'device')">{{ o.channel.alarms || 0 }}</el-tag>
               </el-descriptions-item>
               <el-descriptions-item
                 :contentStyle="{ 'text-align': 'center' }"
@@ -1786,8 +1786,6 @@
     mounted() {
       const { project = '' } = this.$route.query
       this.formInline.productname = project
-      this.Get_Re_Channel()
-      this.queryprodut({})
       this.searchProduct(0)
     },
     beforeDestroy() {
@@ -1815,11 +1813,11 @@
               },
             })
             break
-          case 'alarms':
+          case 'device':
             this.$router.push({
-              path: '/CloudOt/alarm',
+              path: '/dashboard/devicelist',
               query: {
-                productid: product.objectId,
+                product: product.objectId,
               },
             })
             break
@@ -2269,6 +2267,8 @@
       },
       // 添加产品弹窗
       addproduct() {
+        this.Get_Re_Channel()
+        this.queryprodut({})
         this.custom_status = 'add'
         // return false
         this.moduleTitle = this.$translateTitle('product.createproduct')

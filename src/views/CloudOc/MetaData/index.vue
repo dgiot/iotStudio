@@ -235,6 +235,7 @@
           order: '-createdAt',
           excludeKeys: '',
           where: {
+            parent: '0',
             type: 'metaData',
             title: this.queryForm.name
               ? { $regex: this.queryForm.name }

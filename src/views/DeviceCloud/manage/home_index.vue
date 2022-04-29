@@ -847,7 +847,8 @@
       getAcl(ACL) {
         let name = []
         for (let a in ACL) {
-          name.push(a.split(':')[1])
+          if (a == '*') delete ACL[a]
+          if (a.split(':')[1]) name.push(a.split(':')[1])
         }
         return name
       },

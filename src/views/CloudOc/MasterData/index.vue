@@ -241,6 +241,7 @@
 <script>
   import TableEdit from '@/views/DeviceCloud/empty/tableEdit'
   import { queryDict, getDict, delDict, putDict, postDict } from '@/api/Dict'
+  import { post_tree } from '@/api/Logs'
 
   export default {
     name: 'Index',
@@ -476,7 +477,17 @@
         this.queryForm.limit = 20
         this.fetchData()
       },
+      async masterTree() {
+        const params = {
+          class: 'Dict',
+          filter: '{"keys":["parent","title"],"where":{"class":["metaData"]}}',
+          parent: 'parent',
+        }
+        const results = await post_tree(params)
+        console.log(results)
+      },
       async fetchData() {
+        this.masterTree()
         const params = {
           count: 'objectId',
           order: '-createdAt',
