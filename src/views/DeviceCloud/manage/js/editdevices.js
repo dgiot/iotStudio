@@ -139,7 +139,7 @@ export default {
         dialog: false,
         data: {},
       },
-      amisTable: 0,
+      amisTable: '0_j',
       bmLabel: false,
       mapLabel: {
         content: '我爱北京天安门',

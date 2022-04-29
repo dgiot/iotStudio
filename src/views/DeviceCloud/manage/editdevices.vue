@@ -632,9 +632,9 @@
           <el-tabs v-model="amisTable" type="border-card">
             <el-tab-pane
               v-for="(item, index) in commandInfo.data"
-              :key="index"
+              :key="index+'_j'"
               :label="item.title"
-              :name="index"
+              :name="index+'_j'"
             >
               <dgiot-amis :schema="item.data" :show-help="false" />
             </el-tab-pane>
@@ -643,7 +643,6 @@
         <el-tab-pane label="视频监控" name="video">
           <dgiot-aliplayer
             ref="dgiotPlayer"
-            autoplay="true"
             height="76vh"
             :playsource="
               deviceInfo.detail && deviceInfo.detail.videoSrc
