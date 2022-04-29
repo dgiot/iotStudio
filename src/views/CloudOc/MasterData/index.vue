@@ -375,7 +375,7 @@
           count: 'objectId',
           order: '-createdAt',
           where: {
-            dict: item.objectId,
+            parent: item.objectId,
           },
         })
         console.log(results)

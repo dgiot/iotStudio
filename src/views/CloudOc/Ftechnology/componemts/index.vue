@@ -556,7 +556,7 @@
 </template>
 
 <script>
-  import { getDict, delDict, putDict } from '@/api/Dict'
+  import { getDict, delDict, putDict, postDict } from '@/api/Dict'
   import { getList } from '@/api/Mock/table'
   import { queryView } from '@/api/View'
   import { delDevice } from '@/api/Device'
@@ -728,7 +728,16 @@
               this.dialog[type].form
             )
             this.resetForm(formName)
-            this.detail.data[formName].push(this.dialog[type].form)
+            // this.detail.data[formName].push(this.dialog[type].form)
+            // 走创建接口。
+            const childDict = {
+              name: this.dialog[type].form.name,
+              code: this.dialog[type].form.code,
+              description: this.dialog[type].form.description,
+              classe: '',
+              title: this.detail.data.title,
+            }
+            const res = await postDict(childDict)
             this.dialog[type].visible = false
             await putDict(this.detail.objectId, { data: this.detail.data })
           } else {
