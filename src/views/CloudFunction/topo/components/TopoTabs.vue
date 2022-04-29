@@ -41,7 +41,7 @@
             })
           "
         >
-          {{ $translateTitle('product.physicalmodel') }}
+          实时数据
         </el-button>
         <el-divider />
         <el-button
@@ -55,7 +55,7 @@
             })
           "
         >
-          低代码
+          数据下发
         </el-button>
         <el-divider />
         <!--        <el-button-->
