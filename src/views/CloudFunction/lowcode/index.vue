@@ -31,7 +31,22 @@
             <el-input v-model="queryForm.title" />
           </el-form-item>
           <el-form-item :label="$translateTitle('rule.Type')">
-            <el-input v-model="queryForm.type" />
+            <el-select
+              v-model="queryForm.type"
+              allow-create
+              clearable
+              default-first-option
+              filterable
+              style="width: 100%"
+              @change="fetchData()"
+            >
+              <el-option
+                v-for="item in Types"
+                :key="item"
+                :label="item"
+                :value="item"
+              />
+            </el-select>
           </el-form-item>
           <el-form-item label="key">
             <el-select
@@ -282,6 +297,7 @@
     },
     data() {
       return {
+        Types: ['amis', 'topo'],
         DbaTable: [],
         keys: [],
         lowcodeId: '',
@@ -413,6 +429,7 @@
        * @Description:
        */
       async changeClass(_class) {
+        if (!_class) return false
         try {
           console.log(_class)
           //  根据下拉的表,查到对应表数据

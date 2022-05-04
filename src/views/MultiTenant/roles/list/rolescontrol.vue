@@ -229,15 +229,15 @@
         dgiotlog.log(args)
         this.listLoading = true
         this.data = []
-        const { results, count } = await queryPermission({
+        const params = {
           count: 'objectId',
           limit: args.limit ? args.limit : this.queryForm.limit,
           order: this.queryForm.order,
           skip: args.skip ? args.skip : this.queryForm.skip,
-          where: {
-            name: args.name ? { $regex: args.name } : { $ne: null },
-          },
-        })
+          where: {},
+        }
+        args.name ? (params.where.name = { $regex: args.name }) : ''
+        const { results, count } = await queryPermission(params)
         this.listLoading = false
         if (results) {
           results.map((items) => {

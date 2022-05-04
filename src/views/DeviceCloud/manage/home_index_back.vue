@@ -2009,7 +2009,6 @@
             count: 'objectId',
             include: 'product,name',
             where: {
-              product: { $ne: null },
               name: {
                 $ne: null,
                 $exists: true,
@@ -2407,7 +2406,6 @@
           keys: 'name',
           where: {
             status: 'ONLINE',
-            product: { $ne: null },
             name: {
               $ne: null,
               $exists: true,
@@ -2452,7 +2450,6 @@
           'channel,children,config,thing,decoder,data,basedata,content'
         this.queryPayload.include = 'product.name,name'
         this.queryPayload.where = {
-          product: { $ne: null },
           name:
             this.selectdevice === '设备名称' && this.deviceinput
               ? { $regex: this.deviceinput }

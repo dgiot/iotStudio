@@ -1943,15 +1943,10 @@
           keys: args.keys,
           include: 'category',
           where: {
-            category: categorys ? { $in: categorys } : { $ne: null },
-            name: args.name
-              ? {
-                  $regex: args.name,
-                  $options: 'i',
-                }
-              : { $ne: null },
           },
         }
+        args.name?params.where.name = { $regex: args.name } :''
+        categorys?params.where.category = { $in: categorys } :''
         try {
           const { results = [], count = 0 } = await queryProductTemplet(params)
           // loading.close()

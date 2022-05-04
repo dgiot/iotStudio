@@ -562,16 +562,10 @@
           order: args.order,
           skip: args.skip,
           keys: args.keys,
-          where: {
-            category: categorys ? { $in: categorys } : { $ne: null },
-            name: args.name
-              ? {
-                  $regex: args.name,
-                  $options: 'i',
-                }
-              : { $ne: null },
-          },
+          where: {},
         }
+        args.name ? (params.where.name = { $regex: args.name }) : ''
+        categorys ? (params.where.category = { $in: categorys }) : ''
         dgiotlog.log('params', params)
         try {
           const { results = [], count = 0 } = await queryProductTemplet(params)
@@ -827,12 +821,11 @@
             order: '-updatedAt',
             limit: this.length,
             skip: this.start,
-            where: {
-              name: this.formInline.productname.length
-                ? { $regex: this.formInline.productname }
-                : { $ne: null },
-            },
+            where: {},
           }
+          this.formInline.productname
+            ? (parsms.where.name = { $regex: this.formInline.productname })
+            : ''
           const { results = [], count = 0 } = await this.$query_object(
             'Product',
             parsms

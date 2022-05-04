@@ -210,10 +210,16 @@
         // console.log('save', value)
         await this.$dgiotBus.$emit('monaco-save', value)
       },
-      // getValue() {
-      //   console.log('getValue', this.$refs.monacoEditor.$refs)
-      //   return this.$refs.monacoEditor.$refs
-      // },
+      getValue() {
+        console.log('getValue', this.$refs.monacoEditor.$refs)
+        return this.$refs.monacoEditor.$refs
+      },
+      setValue(value) {
+        console.log(value)
+        // eslint-disable-next-line vue/no-mutating-props
+        // this.$refs.monacoEditor.content = value
+        console.log(this.$refs.monacoEditor)
+      },
     },
   }
 </script>

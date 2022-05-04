@@ -896,21 +896,7 @@
           order: args.order,
           skip: args.skip,
           keys: args.keys,
-          where: {
-            'info.receiveuseid':
-              this.Assigned % 2 == 0 ? { $ne: '99' } : this.objectid,
-            // 'info.createdname': this.username,
-            // number: this.queryForm.number.length
-            //   ? { $regex: this.queryForm.number }
-            //   : { $ne: null },
-            // status: 0,
-            // 'info.productid': this.queryForm.product.length
-            //   ? this.queryForm.product
-            //   : { $ne: '99' },
-            // type: this.queryForm.type.length
-            //   ? { $regex: this.queryForm.type }
-            //   : { $ne: null },
-          },
+          where: {},
         }
         this.Assigned % 2 == 0
           ? (params.where['info.receiveuseid'] = this.objectid)

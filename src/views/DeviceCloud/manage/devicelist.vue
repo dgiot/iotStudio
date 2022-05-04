@@ -945,9 +945,7 @@
           where: {
             class: 'Product',
             type: 'amis',
-            title: { $ne: null },
             key: row.product.objectId,
-            objectId: { $ne: null },
           },
         })
         if (_.isEmpty(results)) {
