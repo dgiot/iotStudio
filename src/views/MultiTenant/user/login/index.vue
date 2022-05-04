@@ -124,6 +124,10 @@
   import { mapActions, mapGetters, mapMutations } from 'vuex'
   import { isPassword } from '@/utils/data/validate'
   import { SiteDefault } from '@/api/License'
+  import { queryProduct } from '@/api/Product'
+  import { Roletree } from '@/api/Menu'
+  import { Permission } from '@/api/Permission'
+
   export default {
     name: 'Login',
     directives: {
@@ -246,6 +250,9 @@
         setTitle: 'settings/setTitle',
         setCopyright: 'acl/setCopyright',
         setDefault: 'acl/setDefault',
+        set_Product: 'user/set_Product',
+        setRoleTree: 'user/setRoleTree',
+        setPermission: 'user/setPermission',
       }),
       /**
        * @Author: dext7r
@@ -319,10 +326,27 @@
        */
       async routeDgiot() {
         try {
-          await setTimeout(() => {
+          const params = {
+            count: 'objectId',
+            order: '-updatedAt',
+            excludeKeys:
+              'children,thing,decoder,topics,productSecret,desc,view,category,producttemplet',
+            where: {
+              // category: 'IotHub',
+            },
+          }
+          await setTimeout(async () => {
             if (this.objectId) {
               console.log('userid', this.objectId)
               document.querySelector('.el-tree-node__content').click()
+              const { results: permission = [] } = await Permission()
+              this.setPermission(permission)
+              let { results: product = [] } = await queryProduct(params)
+              product.unshift({
+                name: language == 'zh' ? '全部产品' : 'All Products',
+                objectId: '0',
+              })
+              this.set_Product(product)
             }
           }, 1200)
         } catch (error) {
@@ -412,7 +436,7 @@
         login: 'user/login',
         queryAll: 'user/queryAll',
         jwtlogin: 'user/jwtlogin',
-        // getDefault: 'user/getDefault',
+        // getDefault: 'user/getDefault'
       }),
       getCategory(key) {
         let name = ''
@@ -473,6 +497,8 @@
           this.interval = setInterval(async () => {
             if (Cookies.get('handleRoute') != '') {
               console.log('handleRoute 存在，跳转页面')
+              const { results: Tree = [] } = await Roletree()
+              this.setRoleTree(Tree)
               await this.$router.push(this.handleRoute())
               await this.routeDgiot()
               clearInterval(this.interval)
