@@ -494,11 +494,11 @@
           excludeKeys: '',
           where: {
             type: 'metaData',
-            title: this.queryForm.name
-              ? { $regex: this.queryForm.name }
-              : { $ne: null },
           },
         }
+        this.queryForm.name
+          ? (params.where.title = { $regex: this.queryForm.name })
+          : ''
         console.info(params)
         const { results } = await queryDict(params)
         this.list = results

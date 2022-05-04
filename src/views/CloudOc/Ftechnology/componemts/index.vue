@@ -825,9 +825,9 @@
           where: {
             class: 'Ftechnology',
             type: 'amis',
-            title: { $ne: null },
+            // title: { $ne: null },
             // key: objectId,
-            objectId: { $ne: null },
+            // objectId: { $ne: null },
           },
         }
         try {

@@ -237,11 +237,14 @@
           where: {
             parent: '0',
             type: 'metaData',
-            title: this.queryForm.name
-              ? { $regex: this.queryForm.name }
-              : { $ne: null },
+            // title: this.queryForm.name
+            //   ? { $regex: this.queryForm.name }
+            //   : { $ne: null },
           },
         }
+        this.queryForm.name
+          ? (params.where.title = { $regex: this.queryForm.name })
+          : ''
         console.info(params)
         this.listLoading = true
         const { results, count } = await queryDict(params)

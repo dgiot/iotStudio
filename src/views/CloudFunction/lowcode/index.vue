@@ -514,23 +514,24 @@
       },
       async fetchData(params) {
         if (_.isEmpty(params)) params = this.queryPayload
-        this.queryPayload.where = {
-          class: this.queryForm.class
-            ? { $regex: this.queryForm.class }
-            : { $ne: null },
-          type: this.queryForm.type
-            ? { $regex: this.queryForm.type }
-            : { $ne: null },
-          title: this.queryForm.title
-            ? { $regex: this.queryForm.title }
-            : { $ne: null },
-          key: this.queryForm.key
-            ? { $regex: this.queryForm.key }
-            : { $ne: null },
-          objectId: this.queryForm.objectId
-            ? { $regex: this.queryForm.objectId }
-            : { $ne: null },
-        }
+        this.queryPayload.where = {}
+        this.queryForm.class
+          ? (this.queryPayload.where.class = { $regex: this.queryForm.class })
+          : ''
+        this.queryForm.type
+          ? (this.queryPayload.where.type = { $regex: this.queryForm.type })
+          : ''
+        this.queryForm.title
+          ? (this.queryPayload.where.title = { $regex: this.queryForm.title })
+          : ''
+        this.queryForm.key
+          ? (this.queryPayload.where.key = { $regex: this.queryForm.key })
+          : ''
+        this.queryForm.objectId
+          ? (this.queryPayload.where.objectId = {
+              $regex: this.queryForm.objectId,
+            })
+          : ''
         const { count, order, excludeKeys, limit, skip, where } = params
         console.log(this.queryForm)
         this.listLoading = true
