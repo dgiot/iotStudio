@@ -1020,7 +1020,7 @@
         if (this.queryForm.type)
           params.where[this.queryForm.type] = this.queryForm.search.length
             ? { $regex: this.queryForm.search }
-            : { $ne: '！' }
+            : (params.where = {})
         console.info(params)
         this.listLoading = listLoading
         const { results, count } = await querycompanyDevice(params)

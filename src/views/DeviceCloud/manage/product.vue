@@ -241,15 +241,6 @@
             >
               <el-descriptions-item
                 :contentStyle="{ 'text-align': 'center' }"
-                :label="$translateTitle('home.dev_count')"
-                :title="o.objectId"
-              >
-                <el-link type="primary" @click.native="goLink(o, 'device')">
-                  {{ o.device_counts || 0 }}
-                </el-link>
-              </el-descriptions-item>
-              <el-descriptions-item
-                :contentStyle="{ 'text-align': 'center' }"
                 :label="$translateTitle('home.dev_online')"
                 :title="o.objectId"
               >
@@ -265,6 +256,24 @@
               >
                 <el-link type="warning" @click.native="goLink(o, 'offline')">
                   {{ o.offline_counts || 0 }}
+                </el-link>
+              </el-descriptions-item>
+              <el-descriptions-item
+                :contentStyle="{ 'text-align': 'center' }"
+                :label="$translateTitle('device.poweron')"
+                :title="o.objectId"
+              >
+                <el-link type="success" @click.native="goLink(o, 'poweron')">
+                  {{ o.poweron_counts || 0 }}
+                </el-link>
+              </el-descriptions-item>
+              <el-descriptions-item
+                :contentStyle="{ 'text-align': 'center' }"
+                :label="$translateTitle('device.poweroff')"
+                :title="o.objectId"
+              >
+                <el-link type="primary" @click.native="goLink(o, 'poweroff')">
+                  {{ o.poweroff_counts || 0 }}
                 </el-link>
               </el-descriptions-item>
               <!--              <el-descriptions-item :label="$translateTitle('product.addingtime')" :title="o.updatedAt">-->
@@ -1819,6 +1828,24 @@
               },
             })
             break
+          case 'poweron':
+            this.$router.push({
+              path: '/dashboard/devicelist',
+              query: {
+                product: product.objectId,
+                isEnable: true,
+              },
+            })
+            break
+          case 'poweroff':
+            this.$router.push({
+              path: '/dashboard/devicelist',
+              query: {
+                product: product.objectId,
+                isEnable: false,
+              },
+            })
+            break
           case 'device':
             this.$router.push({
               path: '/dashboard/devicelist',
@@ -2193,23 +2220,21 @@
 
           var category = []
           // 优化下查询条件,新增忽略字段
-          const parsms = {
+          let params = {
             count: 'objectId',
             order: '-updatedAt',
             skip: this.queryForm.skip,
             limit: this.queryForm.limit,
+            where:{},
             excludeKeys:
               'children,thing,decoder,topics,productSecret,desc,view,category,producttemplet',
-            include: '',
-            where: {
-              name: this.formInline.productname.length
-                ? { $regex: this.formInline.productname }
-                : { $ne: null },
-            },
           }
+          this.formInline.productname
+            ? params.where.name = { $regex: this.formInline.productname }
+            : ''
           const { results = [], count = 0 } = await this.$query_object(
             'Product',
-            parsms
+            params
           )
           // dgiotlog.log("results", results)
           if (results) {

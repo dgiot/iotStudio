@@ -577,7 +577,7 @@
         },
         product: [],
         editRow: {},
-        fold: this.$lodash.isEmpty(this.$route.query) ? true : false,
+        fold: false,
         height: this.$baseTableHeight(0),
         imgShow: true,
         list: [],
@@ -593,7 +593,9 @@
           product: this.$route.query.product ? this.$route.query.product : '',
           title: '',
           name: '',
-          isEnable: '',
+          isEnable: this.$route.query.isEnable
+            ? this.$route.query.isEnable
+            : '',
           devaddr: '',
           status: this.$route.query.status ? this.$route.query.status : '',
           skip: 0,
@@ -982,37 +984,32 @@
       async fetchData() {
         console.log(this.queryForm)
         this.listLoading = true
-        const params = {
+        let params = {
           skip: this.queryForm.skip,
           limit: this.queryForm.limit,
           excludeKeys: this.queryForm.excludeKeys,
           // include: this.queryForm.include,
           order: '-createdAt',
           count: 'objectId',
-          where: {
-            name: this.queryForm.name
-              ? { $regex: this.queryForm.name }
-              : {
-                  $ne: null,
-                  $exists: true,
-                },
-            product: this.queryForm.product
-              ? this.queryForm.product
-              : {
-                  $ne: '-product-',
-                },
-            devaddr: this.queryForm.devaddr
-              ? this.queryForm.devaddr
-              : {
-                  $ne: '-devaddr-',
-                },
-            status: this.queryForm.status
-              ? this.queryForm.status
-              : {
-                  $ne: '-status-',
-                },
-          },
+          where: {},
         }
+        console.log(this.$route.query)
+        this.queryForm.name
+          ? (params.where.name = { $regex: this.queryForm.name })
+          : ''
+        this.queryForm.product
+          ? (params.where.product = this.queryForm.product)
+          : ''
+        this.queryForm.devaddr
+          ? (params.where.devaddr = { $regex: this.queryForm.devaddr })
+          : ''
+        this.queryForm.status
+          ? (params.where.status = this.queryForm.status)
+          : ''
+        this.queryForm.isEnable
+          ? (params.where.isEnable =
+              this.queryForm.isEnable == 'true' ? true : false)
+          : ''
         const { results: list = [], count: total = 0 } =
           await querycompanyDevice(params, this.token)
         this.list = list

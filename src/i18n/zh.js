@@ -231,6 +231,8 @@ export default {
       userinfo: '个人信息',
     },
     device: {
+      poweroff: '关机数',
+      poweron: '开机数',
       level: '等级',
       action: '动作',
       stop: '停止',

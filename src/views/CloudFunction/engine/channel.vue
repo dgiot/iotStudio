@@ -1246,12 +1246,11 @@
           limit: this.length,
           order: '-createdAt',
           keys: 'count(*)',
-          where: {
-            name: this.channelformsearch.name.length
-              ? { $regex: this.channelformsearch.name }
-              : { $ne: null },
-          },
+          where: {},
         }
+        this.channelformsearch.name
+          ? (params.where.name = { $regex: this.channelformsearch.name })
+          : ''
         const { count, results } = await queryChannel(params)
         this.total = count
         this.tableData = results
