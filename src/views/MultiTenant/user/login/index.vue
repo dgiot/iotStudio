@@ -127,7 +127,7 @@
   import { queryProduct } from '@/api/Product'
   import { Roletree } from '@/api/Menu'
   import { Permission } from '@/api/Permission'
-
+  import { getProtocol } from '@/api/Protocol/index'
   export default {
     name: 'Login',
     directives: {
@@ -253,6 +253,7 @@
         set_Product: 'user/set_Product',
         setRoleTree: 'user/setRoleTree',
         setPermission: 'user/setPermission',
+        setProtocol: 'product/setProtocol',
       }),
       /**
        * @Author: dext7r
@@ -325,6 +326,8 @@
        * @Description:
        */
       async routeDgiot() {
+        clearInterval(this.interval)
+        window.clearInterval(this.interval)
         try {
           const params = {
             count: 'objectId',
@@ -337,15 +340,13 @@
           }
           await setTimeout(async () => {
             if (this.objectId) {
-              console.log('userid', this.objectId)
               document.querySelector('.el-tree-node__content').click()
+              console.log('userid', this.objectId)
               const { results: permission = [] } = await Permission()
               this.setPermission(permission)
+              const protocol = await getProtocol()
+              this.setProtocol(protocol)
               let { results: product = [] } = await queryProduct(params)
-              product.unshift({
-                name: language == 'zh' ? '全部产品' : 'All Products',
-                objectId: '0',
-              })
               this.set_Product(product)
             }
           }, 1200)
@@ -501,8 +502,6 @@
               this.setRoleTree(Tree)
               await this.$router.push(this.handleRoute())
               await this.routeDgiot()
-              clearInterval(this.interval)
-              window.clearInterval(this.interval)
             }
           }, 1500)
         } catch (error) {

@@ -23,7 +23,7 @@
           :label="$translateTitle('equipment.realTime data')"
           name="first1"
         >
-          <div v-loading="loading">
+          <div v-loading="loading" style="overflow: scroll">
             <div class="thirdtb">
               <!--运行状态卡片-->
               <el-row :key="thirdtbKey">
@@ -450,7 +450,7 @@
                       type="primary"
                       @click="deviceToDetail(row)"
                     >
-                      {{ $translateTitle("equipment.see") }}
+                      {{ $translateTitle('equipment.see') }}
                     </el-button>
 
                     <el-button
@@ -458,7 +458,7 @@
                       type="primary"
                       @click="makeSure(row, $index)"
                     >
-                      {{ $translateTitle("equipment.RelievingAssociation") }}
+                      {{ $translateTitle('equipment.RelievingAssociation') }}
                     </el-button>
                   </template>
                 </el-table-column>
@@ -632,9 +632,9 @@
           <el-tabs v-model="amisTable" type="border-card">
             <el-tab-pane
               v-for="(item, index) in commandInfo.data"
-              :key="index+'_j'"
+              :key="index + '_j'"
               :label="item.title"
-              :name="index+'_j'"
+              :name="index + '_j'"
             >
               <dgiot-amis :schema="item.data" :show-help="false" />
             </el-tab-pane>
@@ -642,7 +642,7 @@
         </el-tab-pane>
         <el-tab-pane label="视频监控" name="video">
           <dgiot-aliplayer
-            v-if="activeName==='video'"
+            v-if="activeName === 'video'"
             ref="dgiotPlayer"
             height="76vh"
             :playsource="

@@ -2442,7 +2442,7 @@ export default {
       this.setSizeForm(obj)
       //调用子组件的下拉事件
       this.$nextTick(async () => {
-        // await this.$refs["sizeForm"].queryResource();
+        this.$refs['sizeForm'].queryResource()
         // 保证子组件已经挂载完成）
         // if (this.$refs['sizeForm'])
         this.$refs['sizeForm'].resource.value = rowData.dataForm.protocol
@@ -2920,9 +2920,9 @@ export default {
           type: { $regex: 'notification' },
         },
       }
-      info.where[key] = this.$route.query.id
-        ? { $regex: this.$route.query.id }
-        : { $ne: '！' }
+      this.$route.query.id
+        ? (info.where.key = { $regex: this.$route.query.id })
+        : ''
       const { results } = await queryView(info)
       this.amisproductInfo = results
     },

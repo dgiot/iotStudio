@@ -479,8 +479,9 @@ export default {
           console.log('Base64.decode(payload):', Base64.decode(mqttMsg.payload))
           console.groupEnd()
           const { data = [] } = JSON.parse(Base64.decode(mqttMsg.payload))
+          this.renderCard(data)
           if (data) {
-            this.renderCard(data)
+            // this.renderCard(data)
           } else {
             this.getCardDevice()
           }

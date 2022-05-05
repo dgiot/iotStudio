@@ -70,9 +70,8 @@ const actions = {
     let routes = [...asyncRoutes]
     // 设置后端路由(不需要可以删除)
     const { results } = await getRouterList()
-    // if (!Vue.prototype.$lodash.isEmpty(Cookies.get('dgiot_auth_token')))
-    //   return false
-    if (!results) {
+    const cookie = Cookies.get('dgiot_auth_token') !== 'undefined'
+    if (!results && cookie) {
       Vue.prototype.$baseMessage(
         '路由未正常返回！',
         'error',

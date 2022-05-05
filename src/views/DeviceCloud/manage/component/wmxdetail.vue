@@ -991,7 +991,6 @@
 
   // dgiotlog.log('dataType', mockModules)
   import { delDict, getAllunit } from '@/api/Dict/index'
-  import { getProtocol } from '@/api/Protocol/index'
   import { mapGetters, mapMutations } from 'vuex'
   import defaultLogo from '../../../../../public/assets/images/logo/logo.png'
 
@@ -1246,6 +1245,7 @@
     computed: {
       ...mapGetters({
         sizeForm: 'konva/sizeForm',
+        protocol: 'product/protocol',
       }),
       showNewItem() {
         if (this.sizeForm && this.sizeForm.protocol == 'modbus') {
@@ -1268,7 +1268,7 @@
       /**
        * @description 查询资源通道
        */
-      await this.queryResource()
+      // await this.queryResource()
     },
     mounted() {},
     beforeCreate() {}, //生命周期 - 创建之前
@@ -1393,90 +1393,9 @@
         //  修改子组件el-form 后 修改父组件的uPKey
         // })
       },
-      async queryResource() {
-        this.resource.data = (await getProtocol()) ?? [
-          {
-            app: 'dgiot_meter',
-            cType: 'DLT376',
-            colum: 10,
-            description: {
-              zh: 'DLT376协议',
-            },
-            mod: 'dlt376_decoder',
-            params: {
-              afn: {
-                default: '00',
-                description: {
-                  zh: '功能码',
-                },
-                order: 1,
-                required: true,
-                title: {
-                  zh: '功能码',
-                },
-                type: 'string',
-              },
-              di: {
-                default: '0000',
-                description: {
-                  zh: '信息标识',
-                },
-                order: 2,
-                required: true,
-                title: {
-                  zh: '信息标识',
-                },
-                type: 'string',
-              },
-              ico: {
-                default:
-                  'http://dgiot-1253666439.cos.ap-shanghai-fsi.myqcloud.com/shuwa_tech/zh/product/dgiot/channel/MQTT.png',
-                description: {
-                  en: 'protocol ICO',
-                  zh: '协议ICO',
-                },
-                order: 102,
-                required: false,
-                title: {
-                  en: 'protocol ICO',
-                  zh: '协议ICO',
-                },
-                type: 'string',
-              },
-              length: {
-                default: 'byte',
-                description: {
-                  zh: '长度',
-                },
-                enum: ['byte', 'little', 'bit'],
-                order: 4,
-                required: true,
-                title: {
-                  zh: '长度',
-                },
-                type: 'integer',
-              },
-              type: {
-                default: 'byte',
-                description: {
-                  zh: '数据类型',
-                },
-                enum: ['byte', 'little', 'bit'],
-                order: 3,
-                required: true,
-                title: {
-                  zh: '数据类型',
-                },
-                type: 'string',
-              },
-            },
-            title: {
-              zh: 'DLT376协议',
-            },
-            type: 'energy',
-            vsn: [52, 46, 51, 46, 48],
-          },
-        ]
+      queryResource() {
+        this.resource.data = this.protocol
+        console.error(this.resource.data)
         this.resource.data.forEach((item, index) => {
           this.resource.data[index].arr = []
           this.resource.data[index].obj = {}
