@@ -3,6 +3,7 @@
 
 ### Bug Fixes
 
+* action ([b72124f](https://github.com/dgiot/dgiot-dashboard/commit/b72124f100c005a8db5794cff91786658e8649cd))
 * **action:** fix dgiot-dashboard/settings#git-gc ([10c32cb](https://github.com/dgiot/dgiot-dashboard/commit/10c32cba4ccc03cc813839ce1545eb0f34f7e09b))
 * **axios:** repair request parameter return logic ([6183d9e](https://github.com/dgiot/dgiot-dashboard/commit/6183d9e8ad9119e046a4401464203875194db257))
 * del dist.rar ([279c2f3](https://github.com/dgiot/dgiot-dashboard/commit/279c2f3d063047b000f3ad03a79d4727431826ea))
@@ -58,6 +59,7 @@
 
 ### Performance Improvements
 
+* **:bookmark::** dgiot-dashboard v4.5.3 ([d5e39d1](https://github.com/dgiot/dgiot-dashboard/commit/d5e39d151ab2cabe51f7eec743abd7005a566644))
 * **cloudoc:** complete process path static page ([1963665](https://github.com/dgiot/dgiot-dashboard/commit/19636658e5c93f3dd931e41b1d6a49e6a72aea14))
 * **dependencies:** delete vite schema ([946ad83](https://github.com/dgiot/dgiot-dashboard/commit/946ad83f46e084d9ac6f57a8db10c7adbba98861))
 * **proxy:** replace remote proxy with local server ([aff0922](https://github.com/dgiot/dgiot-dashboard/commit/aff0922e95b42386f127531c6f1a5ba31c3fcaee))

@@ -35,10 +35,12 @@ const Base64 = require('js-base64').Base64
 var setdata = ''
 var isallchannel = false
 var isupdatetrue = ''
+import dgiotViews from '@/views/CloudFunction/lowcode'
 
 export default {
   components: {
     mqttLog,
+    dgiotViews,
     'dgiot-wmx': wmxdetail,
     'dgiot-profile': profile,
     'thing-form': thingForm,
@@ -140,6 +142,51 @@ export default {
       }
     }
     return {
+      viewForm: {
+        class: 'Product',
+        type: 'amis',
+        key: this.$route.query.id || '',
+        title: '',
+        disabled: true,
+        data: {
+          type: 'page',
+          initApi: {
+            url: 'iotapi/classes/Device/parse_objectid',
+            method: 'get',
+            adaptor:
+              'return {\r\n  "status":0,\r\n  "msg":"",\r\n  "data":response.data.basedata\r\n  }',
+            headers: {
+              store: 'localStorage',
+              dgiotReplace: 'parse_objectid',
+            },
+            dataType: 'json',
+          },
+          body: [
+            {
+              type: 'form',
+              api: {
+                method: 'put',
+                url: 'iotapi/classes/Device/parse_objectid',
+                headers: {
+                  store: 'localStorage',
+                  dgiotReplace: 'parse_objectid',
+                },
+                dataType: 'json',
+                requestAdaptor:
+                  'return {\r\n    ...api,\r\n    data: {\r\n        basedata:{ ...api.data}\r\n    }\r\n}',
+              },
+              body: [
+                {
+                  type: 'input-text',
+                  label: '设备名称',
+                  name: 'name',
+                },
+              ],
+            },
+          ],
+        },
+        hiddenRow: [],
+      },
       dlinkUnit: [],
       dlinkTopic: { basic: [], thing: [] },
       mergeObj: { basic: [], thing: [] },
@@ -795,6 +842,7 @@ export default {
     },
   },
   mounted() {
+    this.getAllunit()
     this.getDefaultTopic()
     this.$nextTick(() => {
       this.$refs._tabs.$children[0].$refs.tabs[3].style.display = 'none'

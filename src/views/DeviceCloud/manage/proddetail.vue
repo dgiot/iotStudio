@@ -2872,14 +2872,9 @@
             </pre>
         </div>-->
         <!-- </el-tab-pane> -->
-
-        <!--   告警模板     -->
-        <!--        <el-tab-pane-->
-        <!--          :label="$translateTitle('product.matteranalysis')"-->
-        <!--          name="alarm"-->
-        <!--        >-->
-        <!--          -->
-        <!--        </el-tab-pane>-->
+        <el-tab-pane label="可视化" name="view">
+          <dgiot-views :view-form="viewForm" />
+        </el-tab-pane>
       </el-tabs>
     </div>
 

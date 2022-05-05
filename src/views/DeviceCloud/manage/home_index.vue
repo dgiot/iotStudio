@@ -166,7 +166,11 @@
             <el-input v-model="form.name" placeholder="请输入设备名称" />
           </el-form-item>
           <el-form-item label="设备编号" prop="devaddr">
-            <el-input v-model="form.devaddr" placeholder="请输入设备编号" />
+            <el-input
+              v-model="form.devaddr"
+              :disabled="form.type == 'edit' ? true : false"
+              placeholder="请输入设备编号"
+            />
           </el-form-item>
           <el-form-item label="资产编号" prop="detail.assetNum">
             <el-input

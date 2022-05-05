@@ -43,7 +43,6 @@
       :border="border"
       :data="categoryList"
       :default-sort="{ prop: 'order', order: 'ascending' }"
-      :height="height"
       row-key="objectId"
       :size="lineHeight"
       :stripe="stripe"

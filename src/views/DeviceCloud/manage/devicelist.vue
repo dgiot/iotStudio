@@ -366,22 +366,22 @@
           {{ $moment(row.createdAt).format('YYYY-MM-DD') || '' }}
         </template>
       </el-table-column>
-      <el-table-column
-        align="center"
-        label="到期时间"
-        prop="detail.expirationTime"
-        show-overflow-tooltip
-        sortable
-        width="140"
-      >
-        <template #default="{ row }">
-          {{
-            row.detail.expirationTime
-              ? getTime(row.detail.expirationTime, row)
-              : ''
-          }}
-        </template>
-      </el-table-column>
+      <!--      <el-table-column-->
+      <!--        align="center"-->
+      <!--        label="到期时间"-->
+      <!--        prop="detail.expirationTime"-->
+      <!--        show-overflow-tooltip-->
+      <!--        sortable-->
+      <!--        width="140"-->
+      <!--      >-->
+      <!--        <template #default="{ row }">-->
+      <!--          {{-->
+      <!--            row.detail.expirationTime-->
+      <!--              ? getTime(row.detail.expirationTime, row)-->
+      <!--              : ''-->
+      <!--          }}-->
+      <!--        </template>-->
+      <!--      </el-table-column>-->
       <el-table-column
         align="center"
         label="设备地址"
@@ -391,12 +391,12 @@
       >
         <template slot-scope="scope">
           <el-button
-            v-if="scope.row.detail.address"
+            v-if="scope.row.detail.address || scope.row.address"
             class="el-icon-location"
             type="text"
             @click="clickRow(scope.row.location, scope.row.name)"
           >
-            {{ scope.row.detail.address || '暂无' }}
+            {{ scope.row.detail.address || scope.row.address }}
           </el-button>
 
           <span v-else></span>
@@ -412,6 +412,9 @@
         <template #default="{ row }">
           <el-button plain size="mini" type="info" @click="command(row)">
             控制
+          </el-button>
+          <el-button plain size="mini" @click="konvaDevice(row)">
+            {{ $translateTitle('concentrator.konva') }}
           </el-button>
           <el-button plain size="mini" type="success" @click="move(row)">
             迁移
@@ -980,6 +983,18 @@
           console.log(e)
           this.$message.error('查询新马赫运行统计时间出错' + e)
         }
+      },
+      // 组态
+      konvaDevice(row) {
+        this.$router.push({
+          path: '/Topo',
+          query: {
+            productid: row.product.objectId,
+            devaddr: row.devaddr,
+            deviceid: row.objectId,
+            type: 'device',
+          },
+        })
       },
       move(row) {
         console.log(row)

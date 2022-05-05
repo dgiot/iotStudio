@@ -1801,6 +1801,7 @@
       }),
     },
     mounted() {
+      this.getAllunit()
       const { project = '' } = this.$route.query
       this.formInline.productname = project
       this.searchProduct(0)
