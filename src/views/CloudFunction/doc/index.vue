@@ -168,15 +168,17 @@
       async queryDoc() {
         this.HomePageForDetails = []
         try {
-          const loading = this.$baseColorfullLoading()
-          const { results = [] } = await queryArticle({
+          const params = {
             where: {
               parent: 'article',
-              name: this.queryForm.name.length
-                ? { $regex: this.queryForm.name }
-                : { $ne: null },
             },
-          })
+          }
+
+          this.queryForm.name
+            ? (params.where.name = { $regex: this.queryForm.name })
+            : ''
+          const loading = this.$baseColorfullLoading()
+          const { results = [] } = await queryArticle(params)
           this.HomePageForDetails = results
           loading.close()
         } catch (error) {

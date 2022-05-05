@@ -62,6 +62,11 @@
    * @document https://github.com/langyuxiansheng/vue-aliplayer-v2#31-%E9%85%8D%E7%BD%AE%E9%A1%B9-options-%E5%B1%9E%E6%80%A7
    */
   const VueAliplayerV2 = window['vue-aliplayer-v2'].default
+  Vue.use(VueAliplayerV2, {
+    cssLink:
+      'https://g.alicdn.com/de/prismplayer/2.8.2/skins/default/aliplayer-min.css',
+    // scriptSrc: 'https://g.alicdn.com/de/prismplayer/2.8.2/aliplayer-min.js',
+  })
   // dgiotlog.log('VueAliplayerV2', VueAliplayerV2)
   // import VueAliplayerV2 from 'vue-aliplayer-v2'
   export default {
@@ -73,9 +78,9 @@
        * @param {*} source 视频地址
        */
       playsource: {
-        required: true,
+        required: false,
         type: String,
-        default: '',
+        default: 'http://resource.wangdaodao.com/402670506.mp4',
       },
       /**
        * @param {*} autoplay 是否自动播放

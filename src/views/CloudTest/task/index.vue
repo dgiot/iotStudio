@@ -452,7 +452,7 @@
       >
         <template #default="{ row }">
           <el-button
-            v-show="row.profile.step == 0 && $loadsh.isEmpty(row.basedata)"
+            v-show="row.profile.step == 0 && $lodash.isEmpty(row.basedata)"
             size="mini"
             type="success"
             @click.native="handleManagement(row)"
@@ -460,7 +460,7 @@
             {{ $translateTitle(`task.Configuration`) }}
           </el-button>
           <el-button
-            v-show="row.profile.step == 0 && !$loadsh.isEmpty(row.basedata)"
+            v-show="row.profile.step == 0 && !$lodash.isEmpty(row.basedata)"
             size="mini"
             type="info"
             @click.native="taskStart(row)"

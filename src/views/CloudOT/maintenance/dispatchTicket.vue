@@ -900,20 +900,22 @@
           keys: args.keys,
           where: {
             status: 0,
-            'info.receiveuseid':
-              this.Assigned % 2 == 0 ? { $ne: '99' } : this.objectid,
-            // 'info.createdname': this.username,
-            number: this.queryForm.number.length
-              ? { $regex: this.queryForm.number }
-              : { $ne: null },
-            'info.productid': this.queryForm.product.length
-              ? this.queryForm.product
-              : { $ne: '99' },
-            type: this.queryForm.type.length
-              ? { $regex: this.queryForm.type }
-              : { $ne: null },
           },
         }
+        this.Assigned % 2 == 0
+          ? (params.where['info.receiveuseid'] = this.objectid)
+          : ''
+        this.queryForm.number
+          ? (params.where.number = { $regex: this.queryForm.number })
+          : ''
+        this.queryForm.product
+          ? (params.where['info.productid'] = {
+              $regex: this.queryForm.product,
+            })
+          : ''
+        this.queryForm.type
+          ? (params.where.type = { $regex: this.queryForm.type })
+          : ''
         if (this.queryForm.searchDate?.length) {
           params.where['createdAt'] = {
             $gt: {

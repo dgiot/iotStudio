@@ -396,17 +396,6 @@
       handleNodeClick() {
         this.fetchData()
       },
-      getRole() {
-        queryMenu({}).then((res) => {
-          res.results.map((item) => {
-            var obj = {}
-            obj.objectId = item.objectId
-            obj.alias = item.alias
-            obj.name = item.name
-            this.options.push(obj)
-          })
-        })
-      },
       SelectTopmenu(val) {
         dgiotlog.log(val)
       },
@@ -564,7 +553,13 @@
         this.data = []
         this.listLoading = true
         const { results } = await queryMenu({})
-
+        results.map((item) => {
+          var obj = {}
+          obj.objectId = item.objectId
+          obj.alias = item.alias
+          obj.name = item.name
+          this.options.push(obj)
+        })
         results.map((items) => {
           const {
             meta = {},

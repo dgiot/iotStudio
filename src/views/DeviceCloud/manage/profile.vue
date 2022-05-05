@@ -63,8 +63,8 @@
           <label id="plug-name" />
         </div>
         <pre id="editor1" class="ace_editor" style="min-height: 400px"><textarea
-          class="ace_text-input"
-          style="overflow:scroll"
+          class='ace_text-input'
+          style='overflow:scroll'
         /></pre>
       </div>
       <span slot="footer" class="dialog-footer" style="height: 30px">
@@ -135,7 +135,7 @@
           </el-form>
 
           <el-button
-            v-show="!$loadsh.isEmpty(productDetail)"
+            v-show="!$lodash.isEmpty(productDetail)"
             size="mini"
             type="primary"
             @click="isFullscreen = !isFullscreen"
@@ -387,6 +387,7 @@
   import { setTimeout } from 'timers'
   import { post_tree } from '@/api/Logs'
   import dgiotViews from '@/views/CloudFunction/lowcode'
+
   const context = require.context('./component/profile', true, /\.vue$/)
   let res_components = {}
   context.keys().forEach((fileName) => {
@@ -612,7 +613,7 @@
     watch: {
       productDetail: {
         handler(productDetail) {
-          this.$nextTick(function () {
+          this.$nextTick(function() {
             productDetail?.thing?.properties
               ? this.properties(productDetail.thing.properties)
               : ''
@@ -639,7 +640,7 @@
           this.parserType = type
           this.productConfig = _.merge({ basedate: { params: {} } }, config)
           this.editorParser(config, type, flag)
-        }
+        },
       )
       this.$baseEventBus.$off('profileAmisDialog')
       this.$baseEventBus.$on('profileAmisDialog', ({ config, productInfo }) => {
@@ -723,7 +724,7 @@
           this.$message({
             showClose: true,
             message: this.$translateTitle(
-              'user.Save the template successfully'
+              'user.Save the template successfully',
             ),
             type: 'success',
           })
@@ -770,7 +771,7 @@
           this.$baseMessage(
             this.$translateTitle('alert.Data request successfully'),
             'success',
-            'dgiot-hey-message-success'
+            'dgiot-hey-message-success',
           )
           if (isLoading) loading.close()
         } catch (error) {
@@ -778,7 +779,7 @@
           this.$baseMessage(
             this.$translateTitle('alert.Data request error') + `${error}`,
             'error',
-            'dgiot-hey-message-error'
+            'dgiot-hey-message-error',
           )
         }
         // console.clear()
@@ -851,12 +852,12 @@
         this.$set(
           this.form,
           'categoryname',
-          row.category ? row.category.name : ''
+          row.category ? row.category.name : '',
         )
         this.$set(
           this.form,
           'categoryid',
-          row.category ? row.category.objectId : ''
+          row.category ? row.category.objectId : '',
         )
         this.dialogFormVisible = true
       },
@@ -902,21 +903,17 @@
           order: '-createdAt',
           keys: 'count(*)',
           include: 'category,name',
-          where: {
-            name: this.queryForm.name
-              ? {
-                  $regex: this.queryForm.name,
-                  $options: 'i',
-                }
-              : { $ne: null },
-          },
+          where: {},
         }
-        if (args.category) {
+        this.queryForm.name ? params.where.name = {
+          $regex: this.queryForm.name,
+        } : ''
+        args.category ?
           params.where.category = args.category
-        }
-        if (args.categorys) {
+          : ''
+        args.categorys ?
           params.where.category = args.categorys
-        }
+          : ''
         try {
           const { results = [], count = 0 } = await queryProductTemplet(params)
           // loading.close()
@@ -991,7 +988,7 @@
           'this.parserTableList',
           this.parserTableList,
           this.parserTables,
-          this.tableType
+          this.tableType,
         )
         if (this.productDetail?.basedate?.params?.length) {
           this.productDetail.basedate.params.forEach((_dict) => {
@@ -1031,7 +1028,7 @@
           this.$message({
             showClose: true,
             message: this.$translateTitle(
-              'user.Save the template successfully'
+              'user.Save the template successfully',
             ),
             type: 'success',
           })
@@ -1042,7 +1039,7 @@
           }
         } catch (e) {
           this.$message.error(
-            this.$translateTitle('user.Save the template error') + `${e}`
+            this.$translateTitle('user.Save the template error') + `${e}`,
           )
           dgiotlog.log(e, 'eeee')
         }
@@ -1063,7 +1060,7 @@
         this.loading = true
         // 触发子组件的点击事件
         this.$refs['uploadFinish'].$refs.uploader.dispatchEvent(
-          new MouseEvent('click')
+          new MouseEvent('click'),
         )
         this.inputParams = {
           file: '',

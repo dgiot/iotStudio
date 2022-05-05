@@ -10,14 +10,14 @@
         >
           <el-col :span="12">
             <div class="card-subtitle">
-              {{ $t('clients.connectInfo') }}
+              {{ $translateTitle('clients.connectInfo') }}
             </div>
-            <el-form-item :label="$t('clients.node')" prop="node">
+            <el-form-item :label="$translateTitle('clients.node')" prop="node">
               <span>{{ record.node }}</span>
             </el-form-item>
             <el-form-item
               v-if="record.clientid"
-              :label="$t('clients.clientId')"
+              :label="$translateTitle('clients.clientId')"
               prop="clientid"
             >
               <el-popover
@@ -32,10 +32,13 @@
               </el-popover>
               <span v-else>{{ record.clientid }}</span>
             </el-form-item>
-            <el-form-item :label="$t('clients.username')" prop="username">
+            <el-form-item
+              :label="$translateTitle('clients.username')"
+              prop="username"
+            >
               <span>{{ record.username }}</span>
             </el-form-item>
-            <el-form-item :label="$t('clients.protoType')">
+            <el-form-item :label="$translateTitle('clients.protoType')">
               <template v-if="record.proto_name === 'MQTT'">
                 <span>
                   {{ record.proto_name }} {{ mqttVersionMap[record.proto_ver] }}
@@ -48,38 +51,50 @@
                 </span>
               </template>
             </el-form-item>
-            <el-form-item :label="$t('clients.ipAddr')" prop="ip_address">
+            <el-form-item
+              :label="$translateTitle('clients.ipAddr')"
+              prop="ip_address"
+            >
               <span>{{ record.ip_address }}</span>
             </el-form-item>
-            <el-form-item :label="$t('clients.port')" prop="port">
+            <el-form-item :label="$translateTitle('clients.port')" prop="port">
               <span>{{ record.port }}</span>
             </el-form-item>
-            <el-form-item :label="$t('clients.keepalive')" prop="keepalive">
+            <el-form-item
+              :label="$translateTitle('clients.keepalive')"
+              prop="keepalive"
+            >
               <span>{{ record.keepalive }}</span>
             </el-form-item>
-            <el-form-item :label="$t('clients.isBridge')" prop="is_bridge">
+            <el-form-item
+              :label="$translateTitle('clients.isBridge')"
+              prop="is_bridge"
+            >
               <span>{{ record.is_bridge }}</span>
             </el-form-item>
             <el-form-item
               v-if="record.connected"
-              :label="$t('clients.connectedAt')"
+              :label="$translateTitle('clients.connectedAt')"
               prop="connected_at"
             >
               <span>{{ record.connected_at }}</span>
             </el-form-item>
             <el-form-item
               v-if="!record.connected"
-              :label="$t('clients.disconnectAt')"
+              :label="$translateTitle('clients.disconnectAt')"
               prop="disconnected_at"
             >
               <span>{{ record.disconnected_at }}</span>
             </el-form-item>
-            <el-form-item :label="$t('clients.connected')" prop="connected">
+            <el-form-item
+              :label="$translateTitle('clients.connected')"
+              prop="connected"
+            >
               <span :class="record.connected ? 'connected' : 'disconnected'">
                 {{
                   record.connected
-                    ? $t('websocket.connected')
-                    : $t('websocket.disconnected')
+                    ? $translateTitle('websocket.connected')
+                    : $translateTitle('websocket.disconnected')
                 }}
               </span>
             </el-form-item>
@@ -90,7 +105,7 @@
 
           <el-col :span="12">
             <div class="card-subtitle">
-              {{ $t('clients.session') }}
+              {{ $translateTitle('clients.session') }}
             </div>
             <el-form-item
               :label="record.proto_ver === 5 ? 'Clean Start' : 'Clean Session'"
@@ -99,49 +114,60 @@
               <span>{{ record.clean_start }}</span>
             </el-form-item>
             <el-form-item
-              :label="$t('clients.expiryInterval')"
+              :label="$translateTitle('clients.expiryInterval')"
               prop="expiry_interval"
             >
               <span>{{ record.expiry_interval }}</span>
             </el-form-item>
-            <el-form-item :label="$t('clients.createdAt')" prop="created_at">
+            <el-form-item
+              :label="$translateTitle('clients.createdAt')"
+              prop="created_at"
+            >
               <span>{{ record.created_at }}</span>
             </el-form-item>
-            <el-form-item :label="$t('clients.subscriptions')">
+            <el-form-item :label="$translateTitle('clients.subscriptions')">
               <span>
                 {{ record.subscriptions_cnt }} /
                 {{ record.max_subscriptions | transToUnlimit }}
               </span>
             </el-form-item>
             <el-form-item
-              :label="`${$t('clients.max')} ${$t('clients.subscriptions')}`"
+              :label="`${$translateTitle('clients.max')} ${$translateTitle(
+                'clients.subscriptions'
+              )}`"
             >
               <span>{{ record.max_subscriptions | transToUnlimit }}</span>
             </el-form-item>
-            <el-form-item :label="$t('clients.inflight')">
+            <el-form-item :label="$translateTitle('clients.inflight')">
               <span>{{ record.inflight }} / {{ record.max_inflight }}</span>
             </el-form-item>
             <el-form-item
-              :label="`${$t('clients.max')} ${$t('clients.inflight')}`"
+              :label="`${$translateTitle('clients.max')} ${$translateTitle(
+                'clients.inflight'
+              )}`"
             >
               <span>{{ record.max_inflight }}</span>
             </el-form-item>
-            <el-form-item :label="$t('clients.mqueue')">
+            <el-form-item :label="$translateTitle('clients.mqueue')">
               <span>{{ record.mqueue_len }} / {{ record.max_mqueue }}</span>
             </el-form-item>
             <el-form-item
-              :label="`${$t('clients.max')} ${$t('clients.mqueue')}`"
+              :label="`${$translateTitle('clients.max')} ${$translateTitle(
+                'clients.mqueue'
+              )}`"
             >
               <span>{{ record.max_mqueue }}</span>
             </el-form-item>
             <el-form-item
-              :label="$t('clients.awaiting_rel')"
+              :label="$translateTitle('clients.awaiting_rel')"
               prop="awaiting_rel"
             >
               <span>{{ record.awaiting_rel }}</span>
             </el-form-item>
             <el-form-item
-              :label="`${$t('clients.max')} ${$t('clients.awaiting_rel')}`"
+              :label="`${$translateTitle('clients.max')} ${$translateTitle(
+                'clients.awaiting_rel'
+              )}`"
               prop="max_awaiting_rel"
             >
               <span>{{ record.max_awaiting_rel }}</span>
@@ -152,7 +178,11 @@
 
       <div class="view-more">
         <a href="javascript:;" @click="showMore = !showMore">
-          {{ showMore ? $t('oper.collapse') : $t('oper.viewMore') }}
+          {{
+            showMore
+              ? $translateTitle('oper.collapse')
+              : $translateTitle('oper.viewMore')
+          }}
           <i :class="showMore ? 'el-icon-arrow-up' : 'el-icon-arrow-down'"></i>
         </a>
       </div>
@@ -168,25 +198,25 @@
           <el-row>
             <el-col :span="12">
               <el-form-item
-                :label="$t('clients.recv_cnt_desc')"
+                :label="$translateTitle('clients.recv_cnt_desc')"
                 prop="recv_cnt"
               >
                 <span>{{ record.recv_cnt }}</span>
               </el-form-item>
               <el-form-item
-                :label="$t('clients.recv_msg_desc')"
+                :label="$translateTitle('clients.recv_msg_desc')"
                 prop="recv_msg"
               >
                 <span>{{ record.recv_msg }}</span>
               </el-form-item>
               <el-form-item
-                :label="$t('clients.recv_oct_desc')"
+                :label="$translateTitle('clients.recv_oct_desc')"
                 prop="recv_oct"
               >
                 <span>{{ record.recv_oct }}</span>
               </el-form-item>
               <el-form-item
-                :label="$t('clients.recv_pkt_desc')"
+                :label="$translateTitle('clients.recv_pkt_desc')"
                 prop="recv_pkt"
               >
                 <span>{{ record.recv_pkt }}</span>
@@ -194,25 +224,25 @@
             </el-col>
             <el-col :span="12">
               <el-form-item
-                :label="$t('clients.send_cnt_desc')"
+                :label="$translateTitle('clients.send_cnt_desc')"
                 prop="send_cnt"
               >
                 <span>{{ record.send_cnt }}</span>
               </el-form-item>
               <el-form-item
-                :label="$t('clients.send_msg_desc')"
+                :label="$translateTitle('clients.send_msg_desc')"
                 prop="send_msg"
               >
                 <span>{{ record.send_msg }}</span>
               </el-form-item>
               <el-form-item
-                :label="$t('clients.send_oct_desc')"
+                :label="$translateTitle('clients.send_oct_desc')"
                 prop="send_oct"
               >
                 <span>{{ record.send_oct }}</span>
               </el-form-item>
               <el-form-item
-                :label="$t('clients.send_pkt_desc')"
+                :label="$translateTitle('clients.send_pkt_desc')"
                 prop="send_pkt"
               >
                 <span>{{ record.send_pkt }}</span>

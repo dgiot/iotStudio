@@ -548,7 +548,7 @@
     mounted() {
       this.isEvent = false
       this.searchAllOption()
-      this.userFordepartment()
+      // this.userFordepartment()
       this.$dgiotBus.$on('dialogHide2', (depobjectId) => {
         dgiotlog.log(depobjectId)
         if (depobjectId?.length) {

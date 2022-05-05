@@ -46,32 +46,6 @@
           </el-form-item>
         </el-form>
       </dgiot-query-form-left-panel>
-      <dgiot-query-form-right-panel>
-        <el-button
-          style="margin: 0 10px 10px 0 !important"
-          type="primary"
-          @click="clickFullScreen"
-        >
-          <dgiot-icon
-            :icon="isFullscreen ? 'fullscreen-exit-fill' : 'fullscreen-fill'"
-          />
-          表格全屏
-        </el-button>
-        <el-popover popper-class="custom-table-checkbox" trigger="hover">
-          <el-checkbox-group v-model="checkList">
-            <dgiot-draggable :list="columns" />
-          </el-checkbox-group>
-          <template #reference>
-            <el-button
-              icon="el-icon-setting"
-              style="margin: 0 0 10px 0 !important"
-              type="primary"
-            >
-              可拖拽列设置
-            </el-button>
-          </template>
-        </el-popover>
-      </dgiot-query-form-right-panel>
     </dgiot-query-form>
 
     <el-table
@@ -96,22 +70,25 @@
         </template>
       </el-table-column>
       <el-table-column
-        v-for="(item, index) in finallyColumns"
-        :key="index"
         align="center"
-        :label="item.label"
-        :prop="item.label"
+        label="元数据名称"
+        prop="title"
         sortable
-        :width="item.width"
+        width="auto"
+      />
+      <el-table-column
+        align="center"
+        label="多版本管理"
+        prop="data.multiVersion"
+        sortable
+        width="auto"
       >
         <template #default="{ row }">
-          <span v-if="item.prop !== 'multiVersion'">{{ row[item.prop] }}</span>
-          <span v-else>
-            {{ row[item.prop] == '0' ? '是' : '否' }}
+          <span>
+            {{ row.data.multiVersion == '0' ? '是' : '否' }}
           </span>
         </template>
       </el-table-column>
-
       <el-table-column
         align="center"
         label="操作"
@@ -159,14 +136,8 @@
 </template>
 
 <script>
-  import { doDelete, getList } from '@/api/Mock/table'
   import TableEdit from '@/views/DeviceCloud/empty/tableEdit'
-  import {
-    queryMetaData,
-    getMetaData,
-    delMetaData,
-    putMetaData,
-  } from '@/api/MetaData'
+  import { queryDict, delDict } from '@/api/Dict'
 
   export default {
     name: 'Index',
@@ -184,27 +155,6 @@
         stripe: true,
         lineHeight: 'mini',
         checkList: ['元数据名称', '多版本管理', '描述'],
-        columns: [
-          {
-            label: '元数据名称',
-            width: '160',
-            prop: 'name',
-            sortable: true,
-            disableCheck: true,
-          },
-          {
-            label: '多版本管理',
-            width: '120',
-            prop: 'multiVersion',
-            sortable: true,
-          },
-          {
-            label: '描述',
-            width: 'auto',
-            prop: 'description',
-            sortable: true,
-          },
-        ],
         list: [],
         imageList: [],
         listLoading: true,
@@ -224,11 +174,6 @@
           animation: 600,
           group: 'description',
         }
-      },
-      finallyColumns() {
-        return this.columns.filter((item) =>
-          this.checkList.includes(item.label)
-        )
       },
     },
     watch: {},
@@ -260,7 +205,7 @@
       },
       handleDelete(row) {
         this.$baseConfirm('你确定要删除当前项吗', null, async () => {
-          await delMetaData(row.objectId)
+          await delDict(row.objectId)
           this.$baseMessage(
             this.$translateTitle('Maintenance.successfully deleted'),
             'success',
@@ -288,16 +233,18 @@
           limit: this.queryForm.limit,
           count: 'objectId',
           order: '-createdAt',
-          excludeKeys: 'properties',
+          excludeKeys: '',
           where: {
-            name: this.queryForm.name
-              ? { $regex: this.queryForm.name }
-              : { $ne: null },
+            parent: '0',
+            type: 'metaData',
           },
         }
+        this.queryForm.name
+          ? (params.where.title = { $regex: this.queryForm.name })
+          : ''
         console.info(params)
         this.listLoading = true
-        const { results, count } = await queryMetaData(params)
+        const { results, count } = await queryDict(params)
         this.list = results
         this.total = count
         this.listLoading = false

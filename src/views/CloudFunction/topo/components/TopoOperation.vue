@@ -34,7 +34,7 @@
           <el-form-item :label="$translateTitle(`konva.${key}`)">
             <!--            判断不同的数据类型,显示不同的控件-->
             <el-input
-              v-if="$loadsh.isString(Shapeconfig.attrs[key])"
+              v-if="$lodash.isString(Shapeconfig.attrs[key])"
               v-model="Shapeconfig.attrs[key]"
               :disabled="disableKey.includes(key)"
             >
@@ -48,12 +48,12 @@
             </el-input>
 
             <el-input-number
-              v-if="$loadsh.isNumber(Shapeconfig.attrs[key])"
+              v-if="$lodash.isNumber(Shapeconfig.attrs[key])"
               v-model="Shapeconfig.attrs[key]"
               style="width: 100%"
             />
             <el-switch
-              v-if="$loadsh.isBoolean(Shapeconfig.attrs[key])"
+              v-if="$lodash.isBoolean(Shapeconfig.attrs[key])"
               v-model="Shapeconfig.attrs[key]"
               :active-text="$translateTitle(`konva.draggable`)"
               :inactive-text="$translateTitle(`konva.undraggable`)"

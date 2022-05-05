@@ -521,7 +521,7 @@ export default {
     Vue.prototype.$aclObj = aclObj
     Vue.prototype.$deepClone = deepClone
     Vue.prototype.$ajax = ajax
-    Vue.prototype.$loadsh = _
+    Vue.prototype.$lodash = _
     Vue.prototype.$convertRes2Blob = convertRes2Blob
     Vue.prototype.$bus = Bus
     Vue.prototype.$o2Log = o2Log

@@ -3,7 +3,7 @@
     <el-card class="el-card--self tabs-card">
       <el-row>
         <el-col class="card-subtitle" :span="12">
-          {{ $t('clients.currentSubs') }}
+          {{ $translateTitle('clients.currentSubs') }}
         </el-col>
 
         <el-col class="oper-btn-group" :span="12">
@@ -14,7 +14,7 @@
             type="success"
             @click="reload"
           >
-            {{ $t('oper.refresh') }}
+            {{ $translateTitle('oper.refresh') }}
           </el-button>
           <el-button
             icon="el-icon-plus"
@@ -23,7 +23,7 @@
             type="success"
             @click="open"
           >
-            {{ $t('clients.addSubs') }}
+            {{ $translateTitle('clients.addSubs') }}
           </el-button>
         </el-col>
       </el-row>
@@ -34,9 +34,15 @@
         class="client-sub-table"
         :data="tableData"
       >
-        <el-table-column :label="$t('subscriptions.topic')" prop="topic" />
-        <el-table-column :label="$t('subscriptions.qoS')" prop="qos" />
-        <el-table-column :label="$t('oper.oper')" width="120px">
+        <el-table-column
+          :label="$translateTitle('subscriptions.topic')"
+          prop="topic"
+        />
+        <el-table-column
+          :label="$translateTitle('subscriptions.qoS')"
+          prop="qos"
+        />
+        <el-table-column :label="$translateTitle('oper.oper')" width="120px">
           <template slot-scope="{ row }">
             <el-button
               plain
@@ -44,7 +50,7 @@
               type="danger"
               @click="handleUnsub(row)"
             >
-              {{ $t('oper.unsubscribe') }}
+              {{ $translateTitle('oper.unsubscribe') }}
             </el-button>
           </template>
         </el-table-column>
@@ -54,7 +60,7 @@
     <el-dialog
       :append-to-body="true"
       class="create-subscribe"
-      :title="$t('clients.addSubs')"
+      :title="$translateTitle('clients.addSubs')"
       :visible.sync="addVisible"
       width="400px"
       @keyup.enter.native="handleAdd"
@@ -67,7 +73,10 @@
         :rules="rules"
         size="small"
       >
-        <el-form-item :label="$t('subscriptions.topic')" prop="topic">
+        <el-form-item
+          :label="$translateTitle('subscriptions.topic')"
+          prop="topic"
+        >
           <el-input v-model="record.topic" placeholder="Topic" />
         </el-form-item>
         <el-form-item label="QoS" prop="qos">
@@ -83,7 +92,7 @@
 
       <div slot="footer">
         <el-button class="cache-btn" type="text" @click="handleClose">
-          {{ $t('oper.cancel') }}
+          {{ $translateTitle('oper.cancel') }}
         </el-button>
         <el-button
           class="confirm-btn"
@@ -91,7 +100,7 @@
           type="success"
           @click="handleAdd"
         >
-          {{ $t('oper.add') }}
+          {{ $translateTitle('oper.add') }}
         </el-button>
       </div>
     </el-dialog>
@@ -130,11 +139,11 @@
         rules: {
           clientid: {
             required: true,
-            message: this.$t('oper.pleaseEnter'),
+            message: this.$translateTitle('oper.pleaseEnter'),
           },
           topic: {
             required: true,
-            message: this.$t('oper.pleaseEnter'),
+            message: this.$translateTitle('oper.pleaseEnter'),
           },
         },
       }
@@ -143,8 +152,8 @@
       handleUnsub(row) {
         this.$msgbox
           .confirm(
-            this.$t('oper.unsubscribeConfirm'),
-            this.$t('oper.warning'),
+            this.$translateTitle('oper.unsubscribeConfirm'),
+            this.$translateTitle('oper.warning'),
             {
               type: 'warning',
             }

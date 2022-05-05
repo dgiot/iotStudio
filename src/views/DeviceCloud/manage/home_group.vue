@@ -969,11 +969,11 @@
           include: 'category',
           where: {
             nodeType: '2',
-            name: this.formInline.productname.length
-              ? { $regex: this.formInline.productname }
-              : { $ne: null },
           },
         }
+        this.formInline.productname
+          ? (params.where.name = { $regex: this.formInline.productname })
+          : ''
         const { results } = await queryProduct(params)
         dgiotlogger.log('results', results)
         this.groupData = results

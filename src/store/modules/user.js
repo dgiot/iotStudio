@@ -52,36 +52,14 @@ async function queryAllMsg(commit, dispatch, data, type) {
   commit('setObejectId', objectId)
   await commit('_setToken', { sessionToken, expires_in })
   await commit('setDepartmentToken', { sessionToken, expires_in })
-  const params = {
-    count: 'objectId',
-    order: '-updatedAt',
-    // keys: 'name',
-    where: {
-      // category: 'IotHub',
-    },
-  }
+
   try {
-    const res = await Promise.all([
-      queryProduct(params),
-      queryMenu({}),
-      Permission(),
-      Roletree(),
-    ])
+    const userMenu = await Promise.all([queryMenu({})])
     const promiseRes = {
-      Product: res?.[0]?.results
-        ? res[0].results.unshift({
-            name: language == 'zh' ? '全部产品' : 'All Products',
-            objectId: '0',
-          })
-        : [],
-      Menu: res?.[1]?.results ?? [],
-      Permission: res?.[2]?.results ?? [],
-      Tree: res?.[3]?.results ?? [],
+      Menu: userMenu?.[0]?.results ?? [],
     }
-    commit('set_Product', promiseRes.Product)
     commit('setMenu', promiseRes.Menu)
-    commit('setPermission', promiseRes.Permission)
-    commit('setRoleTree', promiseRes.Tree)
+    // commit('setPermission', promiseRes.Permission)
     // 登录后设置当前部门
     const hour = new Date().getHours()
     const thisTime =
@@ -157,11 +135,9 @@ import {
 
 import { getUserInfo, login, logout, socialLogin, jwtlogin } from '@/api/User'
 import { queryMenu } from '@/api/Menu/index'
-import { Permission } from '@/api/Permission/index'
 import { clearCookie, getToken, removeToken, setToken } from '@/utils/vue'
 import { resetRouter } from '@/router'
-import { Roletree } from '@/api/Menu'
-import { queryProduct } from '@/api/Product'
+
 import { license } from '@/api/License'
 import { isJson } from '@/utils/data/validate'
 import { tickTime } from '@/utils/time/index'
@@ -348,6 +324,12 @@ const actions = {
   },
   setCurrentDepartment({ commit, department }) {
     commit('setCurrentDepartment', department)
+  },
+  setRoleTree({ commit, tree }) {
+    commit('setRoleTree', tree)
+  },
+  set_Product({ commit, product }) {
+    commit('set_Product', product)
   },
   setTreeKey({ commit, key }) {
     commit('setTreeKey', key)

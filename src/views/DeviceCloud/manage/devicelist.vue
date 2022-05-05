@@ -162,7 +162,7 @@
         class="map_dialog"
         title="设备位置"
         :visible.sync="dialog_device"
-        width="60%"
+        width="50%"
       >
         <el-card>
           <dgiot-baidu-map
@@ -375,7 +375,11 @@
         width="140"
       >
         <template #default="{ row }">
-          {{ getTime(row.detail.expirationTime, row) }}
+          {{
+            row.detail.expirationTime
+              ? getTime(row.detail.expirationTime, row)
+              : ''
+          }}
         </template>
       </el-table-column>
       <el-table-column
@@ -941,9 +945,7 @@
           where: {
             class: 'Product',
             type: 'amis',
-            title: { $ne: null },
             key: row.product.objectId,
-            objectId: { $ne: null },
           },
         })
         if (_.isEmpty(results)) {
@@ -1016,7 +1018,7 @@
         if (this.queryForm.type)
           params.where[this.queryForm.type] = this.queryForm.search.length
             ? { $regex: this.queryForm.search }
-            : { $ne: '！' }
+            : (params.where = {})
         console.info(params)
         this.listLoading = listLoading
         const { results, count } = await querycompanyDevice(params)

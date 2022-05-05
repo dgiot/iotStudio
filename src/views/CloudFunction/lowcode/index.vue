@@ -31,7 +31,22 @@
             <el-input v-model="queryForm.title" />
           </el-form-item>
           <el-form-item :label="$translateTitle('rule.Type')">
-            <el-input v-model="queryForm.type" />
+            <el-select
+              v-model="queryForm.type"
+              allow-create
+              clearable
+              default-first-option
+              filterable
+              style="width: 100%"
+              @change="fetchData()"
+            >
+              <el-option
+                v-for="item in Types"
+                :key="item"
+                :label="item"
+                :value="item"
+              />
+            </el-select>
           </el-form-item>
           <el-form-item label="key">
             <el-select
@@ -282,6 +297,7 @@
     },
     data() {
       return {
+        Types: ['amis', 'topo'],
         DbaTable: [],
         keys: [],
         lowcodeId: '',
@@ -413,6 +429,7 @@
        * @Description:
        */
       async changeClass(_class) {
+        if (!_class) return false
         try {
           console.log(_class)
           //  根据下拉的表,查到对应表数据
@@ -514,23 +531,24 @@
       },
       async fetchData(params) {
         if (_.isEmpty(params)) params = this.queryPayload
-        this.queryPayload.where = {
-          class: this.queryForm.class
-            ? { $regex: this.queryForm.class }
-            : { $ne: null },
-          type: this.queryForm.type
-            ? { $regex: this.queryForm.type }
-            : { $ne: null },
-          title: this.queryForm.title
-            ? { $regex: this.queryForm.title }
-            : { $ne: null },
-          key: this.queryForm.key
-            ? { $regex: this.queryForm.key }
-            : { $ne: null },
-          objectId: this.queryForm.objectId
-            ? { $regex: this.queryForm.objectId }
-            : { $ne: null },
-        }
+        this.queryPayload.where = {}
+        this.queryForm.class
+          ? (this.queryPayload.where.class = { $regex: this.queryForm.class })
+          : ''
+        this.queryForm.type
+          ? (this.queryPayload.where.type = { $regex: this.queryForm.type })
+          : ''
+        this.queryForm.title
+          ? (this.queryPayload.where.title = { $regex: this.queryForm.title })
+          : ''
+        this.queryForm.key
+          ? (this.queryPayload.where.key = { $regex: this.queryForm.key })
+          : ''
+        this.queryForm.objectId
+          ? (this.queryPayload.where.objectId = {
+              $regex: this.queryForm.objectId,
+            })
+          : ''
         const { count, order, excludeKeys, limit, skip, where } = params
         console.log(this.queryForm)
         this.listLoading = true

@@ -278,7 +278,7 @@
                 show-checkbox
               >
                 <!-- eslint-disable-next-line -->
-                <span slot-scope="{ node, data }" class="custom-tree-node">
+                <span slot-scope='{ node, data }' class='custom-tree-node'>
                   {{ data.title ? data.title : node.label }}
                 </span>
               </el-tree>
@@ -474,722 +474,722 @@
       permissionTreeData() {
         const cloneData = JSON.parse(JSON.stringify(this.dataPermissions))
         return cloneData.filter((father) => {
-        /* eslint-disable */
-        const branchArr = cloneData.filter(
-          (child) => father.objectId == child.parentId
-        ); // 返回每一项的子级数组
-        branchArr.length > 0 ? (father.children = branchArr) : ""; // 如果存在子级，则给父级添加一个children属性，并赋值
-        return father.parentId == 0; // 返回第一层
-        /* eslint-disable */
-      });
-    },
-    menuTreeData() {
-      const cloneData = JSON.parse(JSON.stringify(this.dataMenus));
-
-      const res = cloneData.filter((father) => {
-        father.title =
-          father.meta && father.meta.title ? father.meta.title : "";
-        /* eslint-disable */
-        const branchArr = cloneData.filter(
-          (child) => father.objectId == child.parentId
-        );
-        branchArr.length > 0 ? (father.children = branchArr) : "";
-        return father.parentId == 0;
-        /* eslint-disable */
-      });
-      return res;
-    }
-  },
-  components: {
-    addroles
-  },
-  mounted() {
-    this.getRoleschema();
-    this.getMenu();
-    this.getRolesList();
-    this.$dgiotBus.$on("dialogHide", () => {
-      this.centerDialogRole = false;
-      this.getMenu();
-    });
-  },
-
-  methods: {
-    expand(tree, isExpand) {
-      // 展开/折叠
-      this[isExpand] = !this[isExpand];
-      dgiotlog.log(
-        "src/views/MultiTenant/roles/list/roles.vue",
-        "tree",
-        tree,
-        this.$refs[tree],
-        isExpand
-      );
-      const nodes = this.$refs[tree].store._getAllNodes();
-      dgiotlog.log("src/views/MultiTenant/roles/list/roles.vue", nodes);
-      // 或者方法二
-      // const nodes = this.$refs.tree.store.nodesMap
-      for (let i in nodes) {
-        nodes[i].expanded = this[isExpand];
-      }
-    },
-    checkAll(tree, data) {
-      // 全选
-      this.$refs[tree].setCheckedNodes(this[data]);
-    },
-    inverse(tree, data) {
-      let res = this.$refs[tree];
-      let nodes = res.getCheckedNodes(true, true);
-      this.batchSelect(this[data], res, true, nodes);
-    },
-    checkNot(tree) {
-      // 全不选
-      this.$refs[tree].setCheckedKeys([]);
-    },
-    // 全选处理方法
-    batchSelect(nodes, refs, flag, seleteds) {
-      if (typeof nodes != "undefined") {
-        nodes.forEach((element) => {
-          refs.setChecked(element, flag, true);
-        });
-      }
-      if (typeof seleteds != "undefined") {
-        seleteds.forEach((node) => {
-          refs.setChecked(node, !flag, true);
-        });
-      }
-    },
-    ...mapMutations({}),
-    change(e) {
-      dgiotlog.log("src/views/MultiTenant/roles/list/roles.vue", e);
-      if (e) {
-        $(".el-tree").css({
-          height: "300px",
-          display: "block",
-          "overflow-x": "auto"
-        });
-      }
-    },
-    getMenu() {
-      dgiotlog.log(
-        "src/views/MultiTenant/roles/list/roles.vue",
-        "this.Menu",
-        this.Menu
-      );
-      this.menusTreeloading = true;
-      this.data = [];
-      this.dataMenus = [];
-      if (this.Menu) {
-        const results = this.Menu;
-        results.map((items) => {
-          var obj = {};
-          obj.label = items.name;
-          obj.meta = items.meta;
-          obj.objectId = items.objectId;
-          obj.parentId = items.parent.objectId;
-          obj.createtime = new Date(items.createdAt).toLocaleDateString();
-          this.data.push(obj);
-          this.dataMenus.push(obj);
-        });
-        dgiotlog.log(
-          "src/views/MultiTenant/roles/list/roles.vue",
-          "this.dataMenus",
-          this.dataMenus
-        );
-        this.handleNodeClick(this.roleTree[0]);
-      }
-      this.menusTreeloading = false;
-    },
-    diguiquchu(datas, arr, v, needdelarr) {
-      // 递归找出半选中的数据
-      arr.map((item) => {
-        //dgiotlog.log('src/views/MultiTenant/roles/list/roles.vue',item.key, v, "----------");
-        if (item.key == v && item.children.length > 0) {
-          // datas.splice(i, 1);//因为每次截取会改变原数组，所以不能这样
-          needdelarr.push(v);
-          this.diguiquchu(datas, item.children, v, needdelarr);
-        } else if (item.key != v && item.children.length > 0) {
-          this.diguiquchu(datas, item.children, v, needdelarr);
-        }
-      });
-    },
-    add() {
-      this.$router.push({
-        path: "roles/editroles",
-        query: {
-          insert: 0
-        }
-      });
-    },
-    handleSelectionChange(val) {
-      this.multipleSelection = val;
-    },
-    //给role添加acl权限
-    addacl() {
-      this.$get_object("_Role", this.objectId).then((object) => {
-      });
-    },
-    //关闭菜单弹窗
-    handleClose() {
-      this.dialogVisible = false;
-    },
-    //删除角色
-    async handleDelete(row) {
-      const params = {
-        name: row.name
-      };
-      const { users } = await queryRoledepartment(params);
-      if (users.length > 0) {
-        this.$message({
-          type: "warning",
-          message: "请先删除该角色下的用户"
-        });
-        return;
-      } else {
-        this.$confirm(
-          this.$translateTitle(
-            "user.This operation will permanently delete this role, do you want to continue?"
-          ),
-          this.$translateTitle("user.prompt"),
-          {
-            confirmButtonText: this.$translateTitle("developer.determine"),
-            cancelButtonText: this.$translateTitle("developer.cancel"),
-            type: "warning"
-          }
-        )
-          .then(() => {
-            this.delConfirm(row.objectId);
-          })
-          .catch(() => {
-          });
-      }
-    },
-    // 二次确认删除
-    async delConfirm(objectId) {
-      let res = await delRole(objectId);
-      if (res) {
-        this.$message({
-          showClose: true,
-          message: `${this.$translateTitle("user.successfully deleted")}`,
-          type: "success"
-        });
-        this.getRolesList();
-        this.$dgiotBus.$emit("asyncTreeData");
-        this.getMenu();
-      }
-    },
-    //增加菜单
-    addmenu(row) {
-      //dgiotlog.log('src/views/MultiTenant/roles/list/roles.vue',row)
-      this.rolename = row.attributes.name;
-
-      // this.dialogVisible = true;
-      this.getMenu();
-      this.$dgiotBus.$emit("asyncTreeData");
-    },
-    tableRowClassName({ row, rowIndex }) {
-      //把每一行的索引放进row
-
-      row.index = rowIndex;
-    },
-    selectedHighlight({ row, rowIndex }) {
-      if (this.currentSelectIndex === rowIndex) {
-        return {
-          // "background-color": "#409EFF",
-          color: "#409EFF",
-          "font-weight": "bold"
-          // border: "5px solid black"
-        };
-      }
-    },
-    async getDetailmenu(row, column, event, cell) {
-      this.roleList.forEach((roles) => {
-        roles.disabled = true;
-      });
-      row.disabled = false;
-      if (column && column.label == "操作") {
-        return;
-      }
-
-      this.loadingService = this.$loading({
-        lock: true,
-        text: this.$translateTitle("developer.Data is loading") + "...",
-        spinner: "el-icon-loading",
-        background: "rgba(0, 0, 0, 0.6)"
-      });
-
-      this.currentSelectIndex = row.index;
-      const { menus, rules, roles, users, objectId } = await roleMenu(
-        row.name
-      );
-      this.roleItem = {
-        menus: menus,
-        rules: rules,
-        users: users,
-        roles: roles,
-        objectId: objectId
-      };
-      dgiotlog.log(
-        "src/views/MultiTenant/roles/list/roles.vue",
-        " this.roleItem",
-        this.roleItem
-      );
-      this.loadingService.close();
-      if (menus && rules) {
-        this.checkMenus = menus;
-        this.checkRoles = rules;
-        this.hashKey = row.objectId;
-        this.roleMenuList = [];
-        this.rolePermissonList = [];
-
-        this.Menu.map((items) => {
-          this.checkMenus.map((mentItem) => {
-            if (items.name == mentItem.name)
-              // this.roleMenuList.push(items.objectId)
-              this.$nextTick(() => {
-                this.$refs.menusTree.setChecked(items.objectId, true, false);
-              });
-          });
-        });
-        this.Permission.map((items) => {
-          this.checkRoles.map((mentItem) => {
-            if (items.name === mentItem.name)
-              this.$nextTick(() => {
-                this.$refs.permissionTree.setChecked(
-                  items.objectId,
-                  true,
-                  false
-                );
-              });
-          });
-        });
-        // this.$refs.menusTree.setCheckedKeys([]);
-        // this.$refs.permissionTree.setCheckedKeys([]);
-        //
-        // this.doSetChecked(this.roleMenuList, this.rolePermissonList)
-      } else {
-        this.$message({
-          type: "warning",
-          message: "获取角色菜单失败"
-        });
-      }
-    },
-    doSetChecked(checkMenus, checkRoles) {
-      //dgiotlog.log('src/views/MultiTenant/roles/list/roles.vue',"this.Menu", this.Menu)
-      //dgiotlog.log('src/views/MultiTenant/roles/list/roles.vue',"this.checkMenus", this.checkMenus)
-      //dgiotlog.log('src/views/MultiTenant/roles/list/roles.vue',"this.roleMenuList", this.roleMenuList)
-      // set ###
-      // this.$refs.menusTree.setCheckedKeys(this.roleMenuList)
-
-      checkMenus.forEach((value) => {
-        console.error(this.roleMenuList);
-        this.$refs.menusTree.setChecked(value, true, false);
-      });
-      // set ###
-      // this.$refs.permissionTree.setCheckedKeys(this.rolePermissonList)
-      checkRoles.forEach((value) => {
-        this.$refs.permissionTree.setChecked(value, true, false);
-      });
-    },
-
-    //初始化权限列表
-    async getRolesList(start, dataR) {
-      if (start == 0) {
-        this.start = 0;
-      }
-      // fix https://gitee.com/dgiiot/dgiot/issues/I4TRI7
-      let where = {
-        name: this.search ? { $regex: this.search } : { $ne: null }
-      };
-
-      if (dataR && dataR.name != "admin") {
-        where.objectId = dataR.objectId;
-      }
-      const loading = this.$loading({
-        background: "rgba(0, 0, 0, 0.5)"
-      });
-      let params = {
-        skip: this.start,
-        limit: this.pagesize,
-        order: "-createdAt",
-        where: where,
-        count: "objectId"
-      };
-      let { results, count } = await queryRole(params);
-      results.forEach((role) => {
-        role.disable = true;
-      });
-      if (results) {
-        loading.close();
-        this.roleList = results;
-        this.total = count;
-      }
-    },
-    handleSizeChange(val) {
-      this.pagesize = val;
-      this.getRolesList();
-    },
-    handleCurrentChange(val) {
-      this.start = Number(val - 1) * Number(this.pagesize);
-      this.getRolesList();
-    },
-    handleCheckChange(data, checked) {
-      dgiotlog.log(
-        "src/views/MultiTenant/roles/list/roles.vue",
-        data,
-        checked
-      );
-    },
-    // 获取权限
-    getRoleschema() {
-      dgiotlog.log(
-        "src/views/MultiTenant/roles/list/roles.vue",
-        "this.Permission",
-        this.Permission
-      );
-      this.permissionTreeloading = true;
-      this.dataPermissions = [];
-      if (this.Permission) {
-        const results = this.Permission;
-        results.map((items) => {
-          var obj = {};
-          obj.label = items.alias;
-          obj.alias = items.name;
-          obj.objectId = items.objectId;
-          obj.parentId = items.parent.objectId;
-          obj.createtime = new Date(items.createdAt).toLocaleDateString();
-          this.dataPermissions.push(obj);
-        });
-      }
-      this.permissionTreeloading = false;
-    },
-    getCheckedKeys(data, keys, key) {
-      var res = [];
-      recursion(data, false);
-      return res;
-
-      // arr -> 树形总数据
-      // keys -> getCheckedKeys获取到的选中key值
-      // isChild -> 用来判断是否是子节点
-      function recursion(arr, isChild) {
-        var aCheck = [];
-        for (var i = 0; i < arr.length; i++) {
-          var obj = arr[i];
-          aCheck[i] = false;
-
-          if (obj.children) {
-            aCheck[i] = recursion(obj.children, true) ? true : aCheck[i];
-            if (aCheck[i]) {
-              res.push(obj);
-            }
-          }
-
-          for (var j = 0; j < keys.length; j++) {
-            if (obj[key] == keys[j]) {
-              aCheck[i] = true;
-              if (res.indexOf(obj[key]) == -1) {
-                res.push(obj);
-              }
-              break;
-            }
-          }
-        }
-        if (isChild) {
-          return aCheck.indexOf(true) != -1;
-        }
-      }
-    },
-    // 修改角色权限
-    async exportRolerole(row) {
-      let checkmenu = [];
-      let selectMenu = this.getCheckedKeys(
-        this.menuTreeData,
-        this.$refs.menusTree.getCheckedKeys(),
-        "objectId"
-      ); // 选中子级时选中父级
-      // let selectMenu = this.$refs.menusTree.getCheckedNodes()  // 只选中子级
-      let usersList = [];
-      let rolesList = [];
-      let checkrole = [];
-      let selectRermission = this.$refs.permissionTree.getCheckedNodes();
-      let rolesData = this.roleItem.roles;
-      let usersData = this.roleItem.users;
-
-      if (!usersData || !rolesData) {
-        this.$message.error(
-          `${this.$translateTitle(
-            "user.The correct role permissions and menus are not selected"
-          )}`
-        );
-
-        return false;
-      }
-      usersData.forEach((item) => {
-        usersList.push(item.username);
-      });
-      rolesData.forEach((item) => {
-        dgiotlog.log(
-          "src/views/MultiTenant/roles/list/roles.vue",
-          "loadsh",
-          _.assign(...rolesData)
-        );
-        dgiotlog.log(
-          "src/views/MultiTenant/roles/list/roles.vue",
-          "item",
-          item
-        );
-        rolesList.push(item.name);
-      });
-      if (selectMenu && selectRermission) {
-        selectMenu.forEach((item) => {
-          checkmenu.push(item.label);
-        });
-        dgiotlog.log(
-          "src/views/MultiTenant/roles/list/roles.vue",
-          "selectMenu",
-          checkmenu
-        );
-        selectRermission.forEach((item) => {
-          checkrole.push(item.alias);
-        });
-        dgiotlog.log(
-          "src/views/MultiTenant/roles/list/roles.vue",
-          "selectRermission",
-          checkrole
-        );
-        dgiotlog.log(
-          "src/views/MultiTenant/roles/list/roles.vue",
-          row,
-          "row",
-          row
-        );
-        dgiotlog.log(
-          "src/views/MultiTenant/roles/list/roles.vue",
-          _.uniq(checkrole)
-        );
-        if (_.uniq(checkrole).length == 0 || _.uniq(checkmenu) == 0) {
-          this.$message.warning(
-            `${this.$translateTitle(
-              "user.It is forbidden to set permissions/menus to empty"
-            )}`
-          );
-          return false;
-        }
-        // loadsh uniq 去重，否则则报错 https://blog.csdn.net/qq_38519358/article/details/103330249
-        await saveRole({
-          objectId: this.roleItem.objectId,
-          rules: _.uniq(checkrole),
-          menus: _.uniq(checkmenu)
+          /* eslint-disable */
+          const branchArr = cloneData.filter(
+            (child) => father.objectId == child.parentId,
+          ) // 返回每一项的子级数组
+          branchArr.length > 0 ? (father.children = branchArr) : '' // 如果存在子级，则给父级添加一个children属性，并赋值
+          return father.parentId == 0 // 返回第一层
+          /* eslint-disable */
         })
-          .then((res) => {
-            if (res) {
-              this.$message({
-                showClose: true,
-                message: `${this.$translateTitle(
-                  "user.Role information updated successfully"
-                )}`,
-                type: "success"
-              });
-            } else {
+      },
+      menuTreeData() {
+        const cloneData = JSON.parse(JSON.stringify(this.dataMenus))
+
+        const res = cloneData.filter((father) => {
+          father.title =
+            father.meta && father.meta.title ? father.meta.title : ''
+          /* eslint-disable */
+          const branchArr = cloneData.filter(
+            (child) => father.objectId == child.parentId,
+          )
+          branchArr.length > 0 ? (father.children = branchArr) : ''
+          return father.parentId == 0
+          /* eslint-disable */
+        })
+        return res
+      },
+    },
+    components: {
+      addroles,
+    },
+    mounted() {
+      this.getRoleschema()
+      this.getMenu()
+      this.getRolesList()
+      this.$dgiotBus.$on('dialogHide', () => {
+        this.centerDialogRole = false
+        this.getMenu()
+      })
+    },
+
+    methods: {
+      expand(tree, isExpand) {
+        // 展开/折叠
+        this[isExpand] = !this[isExpand]
+        dgiotlog.log(
+          'src/views/MultiTenant/roles/list/roles.vue',
+          'tree',
+          tree,
+          this.$refs[tree],
+          isExpand,
+        )
+        const nodes = this.$refs[tree].store._getAllNodes()
+        dgiotlog.log('src/views/MultiTenant/roles/list/roles.vue', nodes)
+        // 或者方法二
+        // const nodes = this.$refs.tree.store.nodesMap
+        for (let i in nodes) {
+          nodes[i].expanded = this[isExpand]
+        }
+      },
+      checkAll(tree, data) {
+        // 全选
+        this.$refs[tree].setCheckedNodes(this[data])
+      },
+      inverse(tree, data) {
+        let res = this.$refs[tree]
+        let nodes = res.getCheckedNodes(true, true)
+        this.batchSelect(this[data], res, true, nodes)
+      },
+      checkNot(tree) {
+        // 全不选
+        this.$refs[tree].setCheckedKeys([])
+      },
+      // 全选处理方法
+      batchSelect(nodes, refs, flag, seleteds) {
+        if (typeof nodes != 'undefined') {
+          nodes.forEach((element) => {
+            refs.setChecked(element, flag, true)
+          })
+        }
+        if (typeof seleteds != 'undefined') {
+          seleteds.forEach((node) => {
+            refs.setChecked(node, !flag, true)
+          })
+        }
+      },
+      ...mapMutations({}),
+      change(e) {
+        dgiotlog.log('src/views/MultiTenant/roles/list/roles.vue', e)
+        if (e) {
+          $('.el-tree').css({
+            height: '300px',
+            display: 'block',
+            'overflow-x': 'auto',
+          })
+        }
+      },
+      getMenu() {
+        dgiotlog.log(
+          'src/views/MultiTenant/roles/list/roles.vue',
+          'this.Menu',
+          this.Menu,
+        )
+        this.menusTreeloading = true
+        this.data = []
+        this.dataMenus = []
+        if (this.Menu) {
+          const results = this.Menu
+          results.map((items) => {
+            var obj = {}
+            obj.label = items.name
+            obj.meta = items.meta
+            obj.objectId = items.objectId
+            obj.parentId = items.parent.objectId
+            obj.createtime = new Date(items.createdAt).toLocaleDateString()
+            this.data.push(obj)
+            this.dataMenus.push(obj)
+          })
+          dgiotlog.log(
+            'src/views/MultiTenant/roles/list/roles.vue',
+            'this.dataMenus',
+            this.dataMenus,
+          )
+          this.handleNodeClick(this.roleTree[0])
+        }
+        this.menusTreeloading = false
+      },
+      diguiquchu(datas, arr, v, needdelarr) {
+        // 递归找出半选中的数据
+        arr.map((item) => {
+          //dgiotlog.log('src/views/MultiTenant/roles/list/roles.vue',item.key, v, "----------");
+          if (item.key == v && item.children.length > 0) {
+            // datas.splice(i, 1);//因为每次截取会改变原数组，所以不能这样
+            needdelarr.push(v)
+            this.diguiquchu(datas, item.children, v, needdelarr)
+          } else if (item.key != v && item.children.length > 0) {
+            this.diguiquchu(datas, item.children, v, needdelarr)
+          }
+        })
+      },
+      add() {
+        this.$router.push({
+          path: 'roles/editroles',
+          query: {
+            insert: 0,
+          },
+        })
+      },
+      handleSelectionChange(val) {
+        this.multipleSelection = val
+      },
+      //给role添加acl权限
+      addacl() {
+        this.$get_object('_Role', this.objectId).then((object) => {
+        })
+      },
+      //关闭菜单弹窗
+      handleClose() {
+        this.dialogVisible = false
+      },
+      //删除角色
+      async handleDelete(row) {
+        const params = {
+          name: row.name,
+        }
+        const { users } = await queryRoledepartment(params)
+        if (users.length > 0) {
+          this.$message({
+            type: 'warning',
+            message: '请先删除该角色下的用户',
+          })
+          return
+        } else {
+          this.$confirm(
+            this.$translateTitle(
+              'user.This operation will permanently delete this role, do you want to continue?',
+            ),
+            this.$translateTitle('user.prompt'),
+            {
+              confirmButtonText: this.$translateTitle('developer.determine'),
+              cancelButtonText: this.$translateTitle('developer.cancel'),
+              type: 'warning',
+            },
+          )
+            .then(() => {
+              this.delConfirm(row.objectId)
+            })
+            .catch(() => {
+            })
+        }
+      },
+      // 二次确认删除
+      async delConfirm(objectId) {
+        let res = await delRole(objectId)
+        if (res) {
+          this.$message({
+            showClose: true,
+            message: `${this.$translateTitle('user.successfully deleted')}`,
+            type: 'success',
+          })
+          this.getRolesList()
+          this.$dgiotBus.$emit('asyncTreeData')
+          this.getMenu()
+        }
+      },
+      //增加菜单
+      addmenu(row) {
+        //dgiotlog.log('src/views/MultiTenant/roles/list/roles.vue',row)
+        this.rolename = row.attributes.name
+
+        // this.dialogVisible = true;
+        this.getMenu()
+        this.$dgiotBus.$emit('asyncTreeData')
+      },
+      tableRowClassName({ row, rowIndex }) {
+        //把每一行的索引放进row
+
+        row.index = rowIndex
+      },
+      selectedHighlight({ row, rowIndex }) {
+        if (this.currentSelectIndex === rowIndex) {
+          return {
+            // "background-color": "#409EFF",
+            color: '#409EFF',
+            'font-weight': 'bold',
+            // border: "5px solid black"
+          }
+        }
+      },
+      async getDetailmenu(row, column, event, cell) {
+        this.roleList.forEach((roles) => {
+          roles.disabled = true
+        })
+        row.disabled = false
+        if (column && column.label == '操作') {
+          return
+        }
+
+        this.loadingService = this.$loading({
+          lock: true,
+          text: this.$translateTitle('developer.Data is loading') + '...',
+          spinner: 'el-icon-loading',
+          background: 'rgba(0, 0, 0, 0.6)',
+        })
+
+        this.currentSelectIndex = row.index
+        const { menus, rules, roles, users, objectId } = await roleMenu(
+          row.name,
+        )
+        this.roleItem = {
+          menus: menus,
+          rules: rules,
+          users: users,
+          roles: roles,
+          objectId: objectId,
+        }
+        dgiotlog.log(
+          'src/views/MultiTenant/roles/list/roles.vue',
+          ' this.roleItem',
+          this.roleItem,
+        )
+        this.loadingService.close()
+        if (menus && rules) {
+          this.checkMenus = menus
+          this.checkRoles = rules
+          this.hashKey = row.objectId
+          this.roleMenuList = []
+          this.rolePermissonList = []
+
+          this.Menu.map((items) => {
+            this.checkMenus.map((mentItem) => {
+              if (items.name == mentItem.name)
+                // this.roleMenuList.push(items.objectId)
+                this.$nextTick(() => {
+                  this.$refs.menusTree.setChecked(items.objectId, true, false)
+                })
+            })
+          })
+          this.Permission.map((items) => {
+            this.checkRoles.map((mentItem) => {
+              if (items.name === mentItem.name)
+                this.$nextTick(() => {
+                  this.$refs.permissionTree.setChecked(
+                    items.objectId,
+                    true,
+                    false,
+                  )
+                })
+            })
+          })
+          // this.$refs.menusTree.setCheckedKeys([]);
+          // this.$refs.permissionTree.setCheckedKeys([]);
+          //
+          // this.doSetChecked(this.roleMenuList, this.rolePermissonList)
+        } else {
+          this.$message({
+            type: 'warning',
+            message: '获取角色菜单失败',
+          })
+        }
+      },
+      doSetChecked(checkMenus, checkRoles) {
+        //dgiotlog.log('src/views/MultiTenant/roles/list/roles.vue',"this.Menu", this.Menu)
+        //dgiotlog.log('src/views/MultiTenant/roles/list/roles.vue',"this.checkMenus", this.checkMenus)
+        //dgiotlog.log('src/views/MultiTenant/roles/list/roles.vue',"this.roleMenuList", this.roleMenuList)
+        // set ###
+        // this.$refs.menusTree.setCheckedKeys(this.roleMenuList)
+
+        checkMenus.forEach((value) => {
+          console.error(this.roleMenuList)
+          this.$refs.menusTree.setChecked(value, true, false)
+        })
+        // set ###
+        // this.$refs.permissionTree.setCheckedKeys(this.rolePermissonList)
+        checkRoles.forEach((value) => {
+          this.$refs.permissionTree.setChecked(value, true, false)
+        })
+      },
+
+      //初始化权限列表
+      async getRolesList(start, dataR) {
+        if (start == 0) {
+          this.start = 0
+        }
+        // fix https://gitee.com/dgiiot/dgiot/issues/I4TRI7
+        let where = {}
+        this.search ? where.name = { $regex: this.search } : ''
+        if (dataR && dataR.name != 'admin') {
+          where.objectId = dataR.objectId
+        }
+        const loading = this.$loading({
+          background: 'rgba(0, 0, 0, 0.5)',
+        })
+        let params = {
+          skip: this.start,
+          limit: this.pagesize,
+          order: '-createdAt',
+          keys: 'name,objectId,alias',
+          excludeKeys: 'menus,rules,users,roles,dict',
+          where: where,
+          count: 'objectId',
+        }
+        let { results, count } = await queryRole(params)
+        results.forEach((role) => {
+          role.disable = true
+        })
+        if (results) {
+          loading.close()
+          this.roleList = results
+          this.total = count
+        }
+      },
+      handleSizeChange(val) {
+        this.pagesize = val
+        this.getRolesList()
+      },
+      handleCurrentChange(val) {
+        this.start = Number(val - 1) * Number(this.pagesize)
+        this.getRolesList()
+      },
+      handleCheckChange(data, checked) {
+        dgiotlog.log(
+          'src/views/MultiTenant/roles/list/roles.vue',
+          data,
+          checked,
+        )
+      },
+      // 获取权限
+      getRoleschema() {
+        dgiotlog.log(
+          'src/views/MultiTenant/roles/list/roles.vue',
+          'this.Permission',
+          this.Permission,
+        )
+        this.permissionTreeloading = true
+        this.dataPermissions = []
+        if (this.Permission) {
+          const results = this.Permission
+          results.map((items) => {
+            var obj = {}
+            obj.label = items.alias
+            obj.alias = items.name
+            obj.objectId = items.objectId
+            obj.parentId = items.parent.objectId
+            obj.createtime = new Date(items.createdAt).toLocaleDateString()
+            this.dataPermissions.push(obj)
+          })
+        }
+        this.permissionTreeloading = false
+      },
+      getCheckedKeys(data, keys, key) {
+        var res = []
+        recursion(data, false)
+        return res
+
+        // arr -> 树形总数据
+        // keys -> getCheckedKeys获取到的选中key值
+        // isChild -> 用来判断是否是子节点
+        function recursion(arr, isChild) {
+          var aCheck = []
+          for (var i = 0; i < arr.length; i++) {
+            var obj = arr[i]
+            aCheck[i] = false
+
+            if (obj.children) {
+              aCheck[i] = recursion(obj.children, true) ? true : aCheck[i]
+              if (aCheck[i]) {
+                res.push(obj)
+              }
+            }
+
+            for (var j = 0; j < keys.length; j++) {
+              if (obj[key] == keys[j]) {
+                aCheck[i] = true
+                if (res.indexOf(obj[key]) == -1) {
+                  res.push(obj)
+                }
+                break
+              }
+            }
+          }
+          if (isChild) {
+            return aCheck.indexOf(true) != -1
+          }
+        }
+      },
+      // 修改角色权限
+      async exportRolerole(row) {
+        let checkmenu = []
+        let selectMenu = this.getCheckedKeys(
+          this.menuTreeData,
+          this.$refs.menusTree.getCheckedKeys(),
+          'objectId',
+        ) // 选中子级时选中父级
+        // let selectMenu = this.$refs.menusTree.getCheckedNodes()  // 只选中子级
+        let usersList = []
+        let rolesList = []
+        let checkrole = []
+        let selectRermission = this.$refs.permissionTree.getCheckedNodes()
+        let rolesData = this.roleItem.roles
+        let usersData = this.roleItem.users
+
+        if (!usersData || !rolesData) {
+          this.$message.error(
+            `${this.$translateTitle(
+              'user.The correct role permissions and menus are not selected',
+            )}`,
+          )
+
+          return false
+        }
+        usersData.forEach((item) => {
+          usersList.push(item.username)
+        })
+        rolesData.forEach((item) => {
+          dgiotlog.log(
+            'src/views/MultiTenant/roles/list/roles.vue',
+            'lodash',
+            _.assign(...rolesData),
+          )
+          dgiotlog.log(
+            'src/views/MultiTenant/roles/list/roles.vue',
+            'item',
+            item,
+          )
+          rolesList.push(item.name)
+        })
+        if (selectMenu && selectRermission) {
+          selectMenu.forEach((item) => {
+            checkmenu.push(item.label)
+          })
+          dgiotlog.log(
+            'src/views/MultiTenant/roles/list/roles.vue',
+            'selectMenu',
+            checkmenu,
+          )
+          selectRermission.forEach((item) => {
+            checkrole.push(item.alias)
+          })
+          dgiotlog.log(
+            'src/views/MultiTenant/roles/list/roles.vue',
+            'selectRermission',
+            checkrole,
+          )
+          dgiotlog.log(
+            'src/views/MultiTenant/roles/list/roles.vue',
+            row,
+            'row',
+            row,
+          )
+          dgiotlog.log(
+            'src/views/MultiTenant/roles/list/roles.vue',
+            _.uniq(checkrole),
+          )
+          if (_.uniq(checkrole).length == 0 || _.uniq(checkmenu) == 0) {
+            this.$message.warning(
+              `${this.$translateTitle(
+                'user.It is forbidden to set permissions/menus to empty',
+              )}`,
+            )
+            return false
+          }
+          // lodash uniq 去重，否则则报错 https://blog.csdn.net/qq_38519358/article/details/103330249
+          await saveRole({
+            objectId: this.roleItem.objectId,
+            rules: _.uniq(checkrole),
+            menus: _.uniq(checkmenu),
+          })
+            .then((res) => {
+              if (res) {
+                this.$message({
+                  showClose: true,
+                  message: `${this.$translateTitle(
+                    'user.Role information updated successfully',
+                  )}`,
+                  type: 'success',
+                })
+              } else {
+                this.$message.error(
+                  `${this.$translateTitle(
+                    'user.Role information updated failed',
+                  )}`,
+                )
+              }
+            })
+            .catch((e) => {
               this.$message.error(
                 `${this.$translateTitle(
-                  "user.Role information updated failed"
-                )}`
-              );
-            }
+                  'user.Role information updated successfully',
+                )}` + `${e}`,
+              )
+            })
+        } else {
+          this.$message.info(
+            `${this.$translateTitle(
+              'user.Please select the menu list and permission list',
+            )}`,
+          )
+        }
+      },
+      // 保存模板
+      async exportRoletemp(row) {
+        const res = await saveRoletemp(row.name)
+        if (res) {
+          this.$message({
+            showClose: true,
+            message: `${this.$translateTitle(
+              'user.Save the template successfully',
+            )}`,
+            type: 'success',
           })
-          .catch((e) => {
-            this.$message.error(
-              `${this.$translateTitle(
-                "user.Role information updated successfully"
-              )}` + `${e}`
-            );
-          });
-      } else {
-        this.$message.info(
-          `${this.$translateTitle(
-            "user.Please select the menu list and permission list"
-          )}`
-        );
+        }
+      },
+      updaterole() {
+        const params = {
+          alias: this.form.alias,
+          desc: this.form.desc,
+        }
+        this.$update_object(this.editroleid, params).then((res) => {
+          this.$message({
+            showClose: true,
+            message: `${this.$translateTitle('user.update completed')}`,
+            type: 'success',
+          })
+          this.roleEdit = false
+          this.getRolesList()
+        })
+      },
+      handleNodeClick(data) {
+        this.treeDataValue = data.label
+        this.queryForm.workGroupName = data.label
+        $('.workGroup').css({
+          height: '0px',
+          display: 'none',
+          'overflow-x': 'auto',
+        })
+        $('.el-select-dropdown').css({ display: 'none' })
+        this.curDepartmentId = data.objectId
+
+        // 清除选中的角色
+
+        this.currentSelectIndex = null
+        this.getRolesList(0, data)
+        // 清除菜单树
+
+        // this.dataMenus = []
+      },
+      // 添加子节点
+      appendChildTree(data) {
+        dgiotlog.log(
+          'src/views/MultiTenant/roles/list/roles.vue',
+          data,
+          '添加子节点',
+        )
+      },
+      // renderContent(h, { node, data, store }) {
+      //   return (
+      //     <span class="custom-tree-node">
+      //       <span>{node.label}</span>
+      //       <span>
+      //         <el-button
+      //           size="mini"
+      //           type="text"
+      //           on-click={() => this.appendChildTree(data)}
+      //         >
+      //           <i class="el-icon-plus" />
+      //         </el-button>
+      //       </span>
+      //     </span>
+      //   )
+      // },
+      // 显示弹窗
+      setDialogRole(data) {
+        this.deptData = data
+        // this.$store.commit("set_DeptObj", data);
+        // this.$dgiotBus.$emit("set_DeptObj", data)
+        this.centerDialogRole = true
+        // this.$nextTick(() => {
+        //   this.$refs['addRoleRef'].getData(data)
+        // })
+      },
+      closeDialogRole() {
+        this.centerDialogRole = false
+      },
+    },
+  }
+</script>
+<style lang='scss' scoped>
+  .roles {
+    background: #ffffff;
+
+    .top span {
+      width: 100px;
+      margin: 0 auto;
+      text-align: center;
+    }
+
+    ::v-deep .el-table__body tr.current-row > td {
+      color: #f19944;
+      background-color: #fdf3ea;
+    }
+
+    .rightTable {
+      max-height: calc(100vh - #{$base-top-bar-height} * 4 - 25px);
+      overflow-x: hidden;
+      overflow-y: scroll;
+
+      .search {
+        text-align: center;
       }
-    },
-    // 保存模板
-    async exportRoletemp(row) {
-      const res = await saveRoletemp(row.name);
-      if (res) {
-        this.$message({
-          showClose: true,
-          message: `${this.$translateTitle(
-            "user.Save the template successfully"
-          )}`,
-          type: "success"
-        });
+
+      .rightPagination {
+        margin: 10px;
+        text-align: center;
       }
-    },
-    updaterole() {
-      const params = {
-        alias: this.form.alias,
-        desc: this.form.desc
-      };
-      this.$update_object(this.editroleid, params).then((res) => {
-        this.$message({
-          showClose: true,
-          message: `${this.$translateTitle("user.update completed")}`,
-          type: "success"
-        });
-        this.roleEdit = false;
-        this.getRolesList();
-      });
-    },
-    handleNodeClick(data) {
-      this.treeDataValue = data.label;
-      this.queryForm.workGroupName = data.label;
-      $(".workGroup").css({
-        height: "0px",
-        display: "none",
-        "overflow-x": "auto"
-      });
-      $(".el-select-dropdown").css({ display: "none" });
-      this.curDepartmentId = data.objectId;
-
-      // 清除选中的角色
-
-      this.currentSelectIndex = null;
-      this.getRolesList(0, data);
-      // 清除菜单树
-
-      // this.dataMenus = []
-    },
-    // 添加子节点
-    appendChildTree(data) {
-      dgiotlog.log(
-        "src/views/MultiTenant/roles/list/roles.vue",
-        data,
-        "添加子节点"
-      );
-    },
-    // renderContent(h, { node, data, store }) {
-    //   return (
-    //     <span class="custom-tree-node">
-    //       <span>{node.label}</span>
-    //       <span>
-    //         <el-button
-    //           size="mini"
-    //           type="text"
-    //           on-click={() => this.appendChildTree(data)}
-    //         >
-    //           <i class="el-icon-plus" />
-    //         </el-button>
-    //       </span>
-    //     </span>
-    //   )
-    // },
-    // 显示弹窗
-    setDialogRole(data) {
-      this.deptData = data;
-      // this.$store.commit("set_DeptObj", data);
-      // this.$dgiotBus.$emit("set_DeptObj", data)
-      this.centerDialogRole = true;
-      // this.$nextTick(() => {
-      //   this.$refs['addRoleRef'].getData(data)
-      // })
-    },
-    closeDialogRole() {
-      this.centerDialogRole = false;
     }
   }
-};
-</script>
-<style lang="scss" scoped>
-.roles {
-  background: #ffffff;
 
-  .top span {
-    width: 100px;
-    margin: 0 auto;
-    text-align: center;
+  .rolefooter {
+    display: flex;
+    width: 100%;
+    height: calc(100vh - #{$base-top-bar-height} * 4 - 25px);
+    //height: auto;
+    margin-top: 10px;
+    overflow-x: hidden;
+    overflow-y: scroll;
   }
 
-  ::v-deep .el-table__body tr.current-row > td {
-    color: #f19944;
-    background-color: #fdf3ea;
+  .footerleft,
+  .footerright {
+    box-sizing: border-box;
+    width: 45%;
+    height: calc(100vh - #{$base-top-bar-height} * 4 - 25px);
+    padding: 10px;
+    overflow-x: hidden;
+    overflow-y: scroll;
+    border: 1px solid #cccccc;
   }
 
-  .rightTable {
-    max-height: calc(100vh - #{$base-top-bar-height} * 4 - 25px);
+  .footerright {
+    margin-left: 5%;
+  }
+
+  .rolefooter .top {
+    height: 50px;
+    border-bottom: 1px solid #cccccc;
+  }
+
+  .rolefooter .top span {
+    float: left;
+    line-height: 50px;
+  }
+
+  .rolefooter .top button {
+    float: right;
+  }
+</style>
+<style lang='scss'>
+  .roles .search .el-input {
+    width: 200px;
+  }
+
+  .leftTree {
+    height: calc(100vh - #{$base-top-bar-height} * 4 - 25px);
     overflow-x: hidden;
     overflow-y: scroll;
 
-    .search {
-      text-align: center;
+    span.selected {
+      font-weight: bold;
+      color: #409eff;
     }
 
-    .rightPagination {
-      margin: 10px;
-      text-align: center;
+    .el-tree-node {
+      margin-top: 5px;
+    }
+
+    .custom-tree-node .el-icon-circle-plus-outline:hover {
+      color: #409eff;
     }
   }
-}
-
-.rolefooter {
-  display: flex;
-  width: 100%;
-  height: calc(100vh - #{$base-top-bar-height} * 4 - 25px);
-  //height: auto;
-  margin-top: 10px;
-  overflow-x: hidden;
-  overflow-y: scroll;
-}
-
-.footerleft,
-.footerright {
-  box-sizing: border-box;
-  width: 45%;
-  height: calc(100vh - #{$base-top-bar-height} * 4 - 25px);
-  padding: 10px;
-  overflow-x: hidden;
-  overflow-y: scroll;
-  border: 1px solid #cccccc;
-}
-
-.footerright {
-  margin-left: 5%;
-}
-
-.rolefooter .top {
-  height: 50px;
-  border-bottom: 1px solid #cccccc;
-}
-
-.rolefooter .top span {
-  float: left;
-  line-height: 50px;
-}
-
-.rolefooter .top button {
-  float: right;
-}
-</style>
-<style lang="scss">
-.roles .search .el-input {
-  width: 200px;
-}
-
-.leftTree {
-  height: calc(100vh - #{$base-top-bar-height} * 4 - 25px);
-  overflow-x: hidden;
-  overflow-y: scroll;
-
-  span.selected {
-    font-weight: bold;
-    color: #409eff;
-  }
-
-  .el-tree-node {
-    margin-top: 5px;
-  }
-
-  .custom-tree-node .el-icon-circle-plus-outline:hover {
-    color: #409eff;
-  }
-}
 </style>

@@ -128,7 +128,7 @@
             >
               <template #default="{ row }">
                 <el-switch
-                  v-if="$loadsh.isBoolean(row[item.prop])"
+                  v-if="$lodash.isBoolean(row[item.prop])"
                   v-model="row[item.prop]"
                 />
                 <el-select
@@ -176,13 +176,7 @@
 
 <script>
   import { mapActions, mapGetters } from 'vuex'
-  import {
-    queryMetaData,
-    getMetaData,
-    delMetaData,
-    putMetaData,
-    postMetaData,
-  } from '@/api/MetaData'
+  import { getDict, delDict, putDict, postDict } from '@/api/Dict'
   import TableEdit from './tableEdit'
   import { getDlinkJson } from '@/api/Dlink'
 
@@ -366,11 +360,20 @@
         this.$refs[formName].validate(async (valid) => {
           if (valid) {
             const from = this[formName]
-            delete from.objectId
+            const postParams = {
+              data: from,
+              type: 'metaData',
+              class: 'metaData',
+              title: this.ruleForm.name,
+              key: this.ruleForm.name,
+              parent: { __type: 'Pointer', className: 'Dict', objectId: '0' },
+            }
+            delete postParams.data.objectId
             if (this.$route.query.objectId)
-              await putMetaData(this.$route.query.objectId, from)
-            else await postMetaData(from)
-            this.$router.push('/oc/MetaData')
+              await putDict(this.$route.query.objectId, postParams)
+            else await postDict(postParams)
+            // this.$router.push('/oc/MetaData')
+            this.$router.go(-1)
           } else {
             console.log('error submit!!')
             return false
@@ -381,11 +384,11 @@
         const objectId = this.$route.query.objectId
         document.title = document.title.replace('新建', '修改')
         const loading = this.$baseColorfullLoading(2)
-        const ruleForm = await getMetaData(objectId)
+        const ruleForm = await getDict(objectId)
         loading.close()
         delete ruleForm.createdAt
         delete ruleForm.updatedAt
-        this.ruleForm = ruleForm
+        this.ruleForm = ruleForm.data
       },
       async handleDelete(index, rows) {
         this.$baseConfirm('你确定要删除当前项吗', null, async () => {

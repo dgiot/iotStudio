@@ -37,7 +37,7 @@
       },
       title: {
         type: String,
-        default: '提示',
+        default: '',
       },
       appendToBody: {
         // Dialog 自身是否插入至 body 元素上。嵌套的 Dialog 必须指定该属性并赋值为 true

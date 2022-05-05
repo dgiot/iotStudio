@@ -7,7 +7,7 @@
           :label="$translateTitle('equipment.deviceinformation')"
           name="first"
         >
-          <info :devicedetail="deviceInfo"/>
+          <info :devicedetail="deviceInfo" />
           <el-card>
             <dgiot-baidu-map
               ref="map"
@@ -100,7 +100,7 @@
           name="third"
         >
           <div
-            v-loading=loading
+            v-loading="loading"
             style="box-sizing: border-box; padding: 10px; background: #ffffff"
           >
             <!-- <h4>设备信息</h4> -->
@@ -246,7 +246,7 @@
                           style="float: right; padding: 3px 0"
                           type="text"
                         >
-                          <el-button icon="el-icon-warning-outline"/>
+                          <el-button icon="el-icon-warning-outline" />
                           <el-button
                             icon="el-icon-full-screen"
                             @click="toggleCardRow(index, xs, sm, md, xl)"
@@ -271,7 +271,7 @@
                     </el-card>
                   </el-col>
                   <el-col v-show="!chartData.child" :span="24">
-                    <dgiot-empty/>
+                    <dgiot-empty />
                   </el-col>
                 </el-row>
               </div>
@@ -362,7 +362,7 @@
                 :height="$baseTableHeight(0) - 120"
                 @selection-change="DevicesSelectionChange"
               >
-                <el-table-column align="center" type="selection" width="55"/>
+                <el-table-column align="center" type="selection" width="55" />
                 <el-table-column
                   :label="$translateTitle('equipment.devicenumber')"
                   align="center"
@@ -442,49 +442,24 @@
                 <el-table-column
                   :label="$translateTitle('developer.operation')"
                   align="center"
+                  width="220"
                 >
                   <template slot-scope="{ row, $index }">
-                    <el-link
-                      :underline="false"
-                      icon="el-icon-view"
+                    <el-button
+                      size="mini"
                       type="primary"
                       @click="deviceToDetail(row)"
                     >
                       {{ $translateTitle("equipment.see") }}
-                    </el-link>
+                    </el-button>
 
-                    <el-popover
-                      :ref="`popover-${$index}`"
-                      placement="top"
-                      width="300"
+                    <el-button
+                      size="mini"
+                      type="primary"
+                      @click="makeSure(row, $index)"
                     >
-                      <p>确定解除这个{{ row.name }}设备关联吗？</p>
-                      <div style="margin: 0; text-align: right">
-                        <el-button
-                          size="mini"
-                          @click="
-                            row._self.$refs[`popover-${$index}`].doClose()
-                          "
-                        >
-                          {{ $translateTitle("developer.cancel") }}
-                        </el-button>
-                        <el-button
-                          size="mini"
-                          type="primary"
-                          @click="makeSure(row, $index)"
-                        >
-                          {{ $translateTitle("developer.determine") }}
-                        </el-button>
-                      </div>
-                      <el-link
-                        slot="reference"
-                        :underline="false"
-                        icon="el-icon-delete"
-                        type="danger"
-                      >
-                        {{ $translateTitle("equipment.RelievingAssociation") }}
-                      </el-link>
-                    </el-popover>
+                      {{ $translateTitle("equipment.RelievingAssociation") }}
+                    </el-button>
                   </template>
                 </el-table-column>
               </el-table>
@@ -506,24 +481,27 @@
             :close-on-click-modal="false"
             :title="$translateTitle('equipment.addchilddevice')"
             :visible.sync="childDialog"
-            width="30%"
+            width="40%"
           >
             <div class="childdialog">
               <el-form
+                label-position="left"
                 ref="childrenForm"
                 :model="childrenForm"
+                label-width="120px"
                 class="demo-form-inline"
               >
                 <el-form-item
-                  :label="$translateTitle('equipment.products')"
+                  :label="$translateTitle('equipment.Products')"
                   :rules="[
                     { required: true, message: '选择产品', trigger: 'change' },
                   ]"
                   prop="product"
                 >
                   <el-select
+                    style="width: 100%"
                     v-model="childrenForm.product"
-                    :placeholder="$t('equipment.products')"
+                    :placeholder="$translateTitle('equipment.products')"
                     @change="checkProduct"
                   >
                     <el-option
@@ -543,10 +521,11 @@
                   prop="device"
                 >
                   <el-select
+                    style="width: 100%"
                     v-model="childrenForm.device"
                     v-el-select-loadmore="loadmore"
                     :disabled="!ischange"
-                    :placeholder="$t('product.equipment')"
+                    :placeholder="$translateTitle('product.equipment')"
                   >
                     <el-option
                       v-for="(item, index) in productDevices"
@@ -568,6 +547,7 @@
                   prop="route"
                 >
                   <el-input
+                    style="width: 100%"
                     v-model="childrenForm.route"
                     placeholder="子网地址"
                   />
@@ -592,9 +572,17 @@
           :label="$translateTitle('device.instruct')"
           name="instruct"
         >
-          <Instruct v-loading="loading" :devices-id="deviceid" :product-id="productid"/>
+          <Instruct
+            v-loading="loading"
+            :devices-id="deviceid"
+            :product-id="productid"
+          />
         </el-tab-pane>
-        <el-tab-pane v-show="activeName == 'task'" :label="$translateTitle('device.trace')" name="task">
+        <el-tab-pane
+          v-show="activeName == 'task'"
+          :label="$translateTitle('device.trace')"
+          name="task"
+        >
           <scene-log
             v-if="activeName == 'task'"
             ref="SceneLog"
@@ -612,9 +600,64 @@
           />
         </el-tab-pane>
 
-<!--        <el-tab-pane :label="$translateTitle('device.alert')" name="alert">-->
-<!--          <dgiot-empty/>-->
-<!--        </el-tab-pane>-->
+        <el-tab-pane label="可视化" name="view">
+          <el-row :gutter="24" style="margin: 0 !important">
+            <el-col :span="22">
+              <el-alert
+                title="可视化控制表单"
+                type="info"
+                description="信息可视化是利用人的视觉能力，将信息通过图形图像设计的方式视觉呈现，使枯燥的信息数据变得更为直观，更易于被接受，从而提升信息的传播速度和准确度。"
+                show-icon
+              />
+            </el-col>
+            <el-col :span="2">
+              <el-button
+                type="primary"
+                @click.native="
+                  $router.push({
+                    path: `/design`,
+                    query: {
+                      type: 'amis',
+                      _class: 'Product',
+                      key: productId,
+                    },
+                  })
+                "
+              >
+                前往配置
+              </el-button>
+            </el-col>
+          </el-row>
+
+          <el-tabs v-model="amisTable" type="border-card">
+            <el-tab-pane
+              v-for="(item, index) in commandInfo.data"
+              :key="index+'_j'"
+              :label="item.title"
+              :name="index+'_j'"
+            >
+              <dgiot-amis :schema="item.data" :show-help="false" />
+            </el-tab-pane>
+          </el-tabs>
+        </el-tab-pane>
+        <el-tab-pane label="视频监控" name="video">
+          <dgiot-aliplayer
+            v-if="activeName==='video'"
+            ref="dgiotPlayer"
+            height="76vh"
+            :playsource="
+              deviceInfo.detail && deviceInfo.detail.videoSrc
+                ? deviceInfo.detail.videoSrc
+                : 'https://media.w3.org/2010/05/sintel/trailer.mp4'
+            "
+            :type="
+              deviceInfo.detail && deviceInfo.detail.videoType
+                ? deviceInfo.detail.videoType
+                : 'mp4'
+            "
+            width="100%"
+          />
+        </el-tab-pane>
       </el-tabs>
     </div>
   </div>

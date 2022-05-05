@@ -294,7 +294,7 @@
       }),
     },
     mounted() {
-      this.queryRouter()
+      // this.queryRouter()
     },
     methods: {
       async queryRouter() {

@@ -13,6 +13,12 @@ import {
 } from '@/api/Parse'
 import request from '@/utils/request/request'
 
+/**
+ * @description: 获取类树
+ * @docsLink: http://localhost:5080/dgiot_swagger/#/Data/post_tree
+ * @param params
+ * @returns {Promise<*>}
+ */
 export async function post_tree(params) {
   return request({
     url: 'tree',

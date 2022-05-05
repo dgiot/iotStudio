@@ -12,12 +12,12 @@ let systemStatic = {
     'lint.css',
     'vditor.css',
     'xterm.css',
+    'aliplayer-min.css',
     'amis/lib/themes/cxd.css',
     'amis/lib/helper.css',
     'amis/lib/themes/antd.css',
   ],
   js: [
-    'aliplayer-min.css',
     'vue.js',
     'mqttws31.js',
     'vue-router.min.js',

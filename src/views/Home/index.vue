@@ -105,11 +105,14 @@
                 <el-col :span="12">
                   <dgiot-icon icon="device-recover-fill" />
                 </el-col>
-                <el-col class="card-right" :span="12">
-                  <router-link to="/dashboard/devicelistlist">
-                    <p>{{ $translateTitle('home.dev_count') }}</p>
-                    <p>{{ _dev_count }}</p>
-                  </router-link>
+                <el-col
+                  class="card-right"
+                  :span="12"
+                  style="cursor: pointer"
+                  @click.native="goDevice()"
+                >
+                  <p>{{ $translateTitle('home.dev_count') }}</p>
+                  <p>{{ _dev_count }}</p>
                 </el-col>
               </el-card>
             </el-col>
@@ -143,115 +146,12 @@
             </el-col>
           </el-row>
         </div>
-        <dgiot-query-form>
-          <dgiot-query-form-top-panel>
-            <el-form
-              :inline="true"
-              label-width="100px"
-              :model="queryForm"
-              @submit.native.prevent
-            >
-              <el-form-item :label="$translateTitle('equipment.products')">
-                <el-select
-                  v-model="queryForm.account"
-                  class="selectdetail"
-                  size="small"
-                  @change="selectProdChange"
-                >
-                  <el-option
-                    v-for="(item, index) in _Product"
-                    :key="index"
-                    :label="item.name"
-                    :value="item.objectId"
-                  />
-                </el-select>
-              </el-form-item>
-              <el-form-item :label="$translateTitle('home.updatedAt')">
-                <el-date-picker
-                  v-model="queryForm.searchDate"
-                  end-placeholder="结束日期"
-                  format="yyyy-MM-dd"
-                  start-placeholder="开始日期"
-                  type="daterange"
-                  value-format="yyyy-MM-dd"
-                />
-              </el-form-item>
-              <el-form-item>
-                <el-button
-                  icon="el-icon-search"
-                  type="primary"
-                  @click="queryData"
-                >
-                  {{ $translateTitle('concentrator.search') }}
-                </el-button>
-                <!--              <el-button-->
-                <!--                :icon="leftWidth != '0px' ? 'el-icon-back' : 'el-icon-right'"-->
-                <!--                type="primary"-->
-                <!--                @click="toggleLeftWidth(leftWidth)"-->
-                <!--              >-->
-                <!--                {{-->
-                <!--                  leftWidth != '0px'-->
-                <!--                    ? $translateTitle('konva.hide')-->
-                <!--                    : $translateTitle('konva.show')-->
-                <!--                }}-->
-                <!--                {{ $translateTitle('konva.left') }}-->
-                <!--              </el-button>-->
-                <!--              <el-button-->
-                <!--                :icon="-->
-                <!--                  fixedPaddingTop != '0px' ? 'el-icon-top' : 'el-icon-bottom'-->
-                <!--                "-->
-                <!--                type="primary"-->
-                <!--                @click="setPadding(fixedPaddingTop)"-->
-                <!--              >-->
-                <!--                {{-->
-                <!--                  fixedPaddingTop != '0px'-->
-                <!--                    ? $translateTitle('konva.hide')-->
-                <!--                    : $translateTitle('konva.show')-->
-                <!--                }}-->
-                <!--                {{ $translateTitle('konva.top') }}-->
-                <!--              </el-button>-->
-                <el-button
-                  type="primary"
-                  @click="leftRow == 20 ? (leftRow = 24) : (leftRow = 20)"
-                >
-                  {{
-                    leftRow == 20
-                      ? $translateTitle('konva.hide')
-                      : $translateTitle('konva.show')
-                  }}
-                  {{ $translateTitle('konva.right') }}
-                </el-button>
-                <el-button
-                  type="primary"
-                  @click.native="toggleCard(cardHeight)"
-                >
-                  {{
-                    cardHeight != '0px'
-                      ? $translateTitle('konva.hide')
-                      : $translateTitle('konva.show')
-                  }}
-                  {{ $translateTitle('konva.card') }}
-                </el-button>
-              </el-form-item>
-            </el-form>
-          </dgiot-query-form-top-panel>
-        </dgiot-query-form>
       </div>
       <el-card shadow="hover">
-        <el-radio-group v-model="mapType" size="mini" @change="queryData()">
-          <el-radio-button label="tencent">腾讯地图</el-radio-button>
-          <el-radio-button label="baidu">百度地图</el-radio-button>
-        </el-radio-group>
-        <dgiot-qq-map
-          v-show="mapType == 'tencent'"
-          ref="qqmap"
-          :list="list"
-          style="height: 80vh"
-        />
         <el-row v-show="mapType == 'baidu'" :row="24">
           <el-col :span="leftRow" :xs="24">
             <el-row :span="24">
-              <div class="chart_map" style="position: relative">
+              <div id="chart_map" class="chart_map" style="position: relative">
                 <div v-show="false" class="card_left">
                   <el-row class="card_left-row" :gutter="24">
                     <el-col class="card_left-row-col" :span="6">
@@ -396,6 +296,7 @@
                   :center="center"
                   class="baidu_map"
                   :scroll-wheel-zoom="true"
+                  :style="{ height: mapHeight, width: mapWidth }"
                   :zoom="sizeZoom"
                 >
                   <bm-control>
@@ -426,137 +327,69 @@
                       :offset="{ width: 400, height: 0 }"
                     />
                   </bm-control>
+                  <!--                  <div-->
+                  <!--                    v-for="position in getPosition(_tableData)"-->
+                  <!--                    v-show="sizeZoom <= 8"-->
+                  <!--                    :key="position.objectId"-->
+                  <!--                  >-->
+                  <!--                    <bm-point-collection-->
+                  <!--                      v-if="sizeZoom <= 8"-->
+                  <!--                      color="red"-->
+                  <!--                      :points="[position]"-->
+                  <!--                      :shape="-->
+                  <!--                        position.icon == 1-->
+                  <!--                          ? 'BMAP_POINT_SHAPE_STAR'-->
+                  <!--                          : 'BMAP_POINT_SHAPE_WATERDROP'-->
+                  <!--                      "-->
+                  <!--                      size="BMAP_POINT_SIZE_SMALL"-->
+                  <!--                      @click="_goDevice(position)"-->
+                  <!--                    />-->
+                  <!--                  </div>-->
                   <bml-marker-clusterer :average-center="true">
                     <div v-for="(item, index) in _tableData" :key="index">
                       <bm-marker
-                        :ref="'bm_info' + index"
+                        animation="BMAP_ANIMATION_BOUNCE"
+                        :dragging="true"
                         :icon="{
                           url:
                             item.icon == 1
                               ? icoPath.icoPath1
                               : icoPath.icoPath2,
-                          size: { width: 100, height: 100 },
+                          size: { width: 70, height: 70 },
                         }"
                         :position="{
                           lng: item.location.longitude,
                           lat: item.location.latitude,
                         }"
-                        @click="showDeatils(item, index)"
                       >
-                        <bm-info-window
-                          :key="index"
-                          :position="{
-                            lng: item.location.longitude,
-                            lat: item.location.latitude,
-                          }"
-                          :show="item.show"
-                          style="display: none"
-                          @close="closeInfo(item, index)"
-                        >
-                          <div
-                            v-show="deviceInfo"
-                            class="deviceInfo"
-                            style="width: 400px"
-                          >
-                            <el-row :gutter="24">
-                              <el-col :span="8">
-                                <el-image
-                                  :preview-src-list="[`${productIco}`]"
-                                  :src="productIco"
-                                  style="width: 120px; height: 120px"
-                                >
-                                  <div slot="error" class="image-slot">
-                                    <i
-                                      class="el-icon-picture-outline empty"
-                                      style="width: 100px; height: 100px"
-                                    ></i>
-                                  </div>
-                                </el-image>
-                              </el-col>
-                              <el-col :span="14">
-                                <p :title="deviceInfo.name">
-                                  <el-link type="primary">
-                                    {{
-                                      $translateTitle('equipment.devicename')
-                                    }}
-                                  </el-link>
-                                  :{{ deviceInfo.name }}
-                                </p>
-                                <p>
-                                  <el-link type="primary">
-                                    {{ $translateTitle('equipment.address') }}
-                                  </el-link>
-                                  :
-                                  {{
-                                    deviceInfo.detail &&
-                                    deviceInfo.detail.address
-                                      ? deviceInfo.detail.address
-                                      : ''
-                                  }}
-                                </p>
-                                <p>
-                                  <el-link type="primary">
-                                    {{
-                                      $translateTitle(
-                                        'zetadevices.devicestatus'
-                                      )
-                                    }}
-                                  </el-link>
-                                  ：
-                                  <el-link
-                                    :type="
-                                      deviceInfo.status === 'ONLINE'
-                                        ? 'success'
-                                        : 'warning'
-                                    "
-                                    :underline="false"
-                                  >
-                                    {{
-                                      deviceInfo.status === 'ONLINE'
-                                        ? $translateTitle('zetadevices.online')
-                                        : $translateTitle('zetadevices.offline')
-                                    }}
-                                  </el-link>
-                                </p>
-                                <el-divider />
-                                <el-row :gutter="24">
-                                  <el-col :span="8">
-                                    <el-link
-                                      type="primary"
-                                      @click="goLink('real-time', item)"
-                                    >
-                                      {{
-                                        $translateTitle('equipment.real-Time')
-                                      }}
-                                    </el-link>
-                                  </el-col>
-                                  <el-col :span="6">
-                                    <el-link
-                                      type="primary"
-                                      @click="goLink('konva', item)"
-                                    >
-                                      {{
-                                        $translateTitle('concentrator.konva')
-                                      }}
-                                    </el-link>
-                                  </el-col>
-                                  <el-col :span="6">
-                                    <el-link
-                                      type="primary"
-                                      @click="goLink('video', item)"
-                                    >
-                                      {{
-                                        $translateTitle('concentrator.video')
-                                      }}
-                                    </el-link>
-                                  </el-col>
-                                </el-row>
-                              </el-col>
-                            </el-row>
-                            <!--                        <info :devicedetail="deviceInfo" />-->
-                          </div>
-                        </bm-info-window>
+                        <bm-label
+                          :content="item.name"
+                          :label-style="{ color: 'red', fontSize: '12px' }"
+                          :offset="{ width: 15, height: 6 }"
+                          @click="_goDevice(item, index)"
+                        />
                       </bm-marker>
+                      <!--                    <bm-marker-->
+                      <!--                      :ref="'bm_info' + index"-->
+                      <!--                      :icon="{-->
+                      <!--                          url:-->
+                      <!--                            item.icon == 1-->
+                      <!--                              ? icoPath.icoPath1-->
+                      <!--                              : icoPath.icoPath2,-->
+                      <!--                          size: { width: 100, height: 100 },-->
+                      <!--                        }"-->
+                      <!--                      :position="{-->
+                      <!--                          lng: item.location.longitude,-->
+                      <!--                          lat: item.location.latitude,-->
+                      <!--                        }"-->
+                      <!--                      @click="showDeatils(item, index)"-->
+                      <!--                    >-->
+                      <!--                      <bm-label-->
+                      <!--                        :content="item.name"-->
+                      <!--                        :label-style="{ color: 'red', fontSize: '24px' }"-->
+                      <!--                        :offset="{ width: -35, height: 30 }"-->
+                      <!--                      />-->
+                      <!--                    </bm-marker>-->
                     </div>
                   </bml-marker-clusterer>
                   <bm-navigation anchor="BMAP_ANCHOR_TOP_RIGHT" />
@@ -564,6 +397,7 @@
                     anchor="BMAP_ANCHOR_BOTTOM_RIGHT"
                     :auto-location="true"
                     :show-address-bar="true"
+                    :show-zoom-info="true"
                   />
                 </baidu-map>
               </div>
@@ -791,7 +625,7 @@
 <script>
   import icoPath1 from '../../../public/assets/images/Device/1.png'
   import icoPath2 from '../../../public/assets/images/Device/2.png'
-  import { queryProduct } from '@/api/Product'
+  // import { queryProduct } from '@/api/Product'
   import { getDevice } from '@/api/Device'
   import { mapGetters, mapMutations } from 'vuex'
   import { getToken } from '@/api/Menu'
@@ -812,6 +646,8 @@
     BmOverviewMap,
     BmPanorama,
     BmScale,
+    BmLabel,
+    BmPointCollection,
   } from 'vue-baidu-map'
   import { secret } from '@/config/secret.config'
 
@@ -819,6 +655,7 @@
   export default {
     name: 'Home',
     components: {
+      BmPointCollection,
       BmInfoWindow,
       info,
       BmScale,
@@ -826,7 +663,7 @@
       BmOverviewMap,
       BmPanorama,
       BmControl,
-      // BmLabel,
+      BmLabel,
       BaiduMap,
       BmNavigation,
       BmGeolocation,
@@ -851,18 +688,24 @@
       }
 
       return {
+        mapHeight: '800px',
+        mapWidth: '800px',
+        polyline: {
+          editing: false,
+          paths: [],
+        },
         list: {
           toolbar: false,
-          latitude: '28.475997',
-          longitude: '121.331121',
+          latitude: '31.551162',
+          longitude: '120.260545',
           zoom: 15,
         },
-        mapType: window.name == 'dgiot_iframe' ? 'tencent' : 'baidu',
+        mapType: 'baidu',
         isShow: true,
-        ak: secret.baidu.map ?? 't9A84QM5lt6a3SMumuQOQtvM2spIQQ2A',
+        ak: secret.baidu.map ?? 'WpeAb6pL4tsX2ZVd56GHbO9Ut6c4HZhG',
         // ak: 'oW2UEhdth2tRbEE4FUpF9E5YVDCIPYih',
         // center:{ lng: 120.187273, lat: 30.334877 },
-        center: { lng: 121.337516, lat: 28.48195 },
+        center: { lng: 120.260545, lat: 31.551162 },
         icoPath: {
           icoPath1: icoPath1,
           icoPath2: icoPath2,
@@ -928,7 +771,8 @@
         deptTreeData: [],
         show: false,
         // sizeZoom: 6,
-        sizeZoom: 19,
+        // https://img-blog.csdnimg.cn/20200429215931435.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L0dhYnJpZWxfd2Vp,size_16,color_FFFFFF,t_70
+        sizeZoom: 5,
         tableData: [],
         offlineData: [],
         onlineData: [],
@@ -980,13 +824,24 @@
         _role: 'acl/role',
         _mimg: 'dashboard/_mimg',
         mqttInfo: 'mqttDB/mqttInfo',
+        treeFlag: 'settings/treeFlag',
       }),
     },
     watch: {
+      treeFlag: {
+        handler: function (newVal) {
+          if (newVal) this.mapWidth = window.innerWidth * 0.77 + 'px'
+          else this.mapWidth = window.innerWidth * 0.98 + 'px'
+        },
+        deep: true,
+        limit: true,
+      },
       topicKey: {
         handler: function (newVal) {
           this.$dgiotBus.$off(newVal)
           this.$dgiotBus.$on(newVal, (res) => {
+            console.log('payload')
+            console.log(newVal)
             const { payload } = res
             this.mqttMsg(payload)
           })
@@ -994,9 +849,23 @@
         deep: true,
         limit: true,
       },
+      sizeZoom: {
+        handler: function (zoom) {
+          console.log(`当前sizeZoom 为 ${zoom}`)
+        },
+        deep: true,
+        limit: true,
+      },
     },
     created() {},
     mounted() {
+      this.initMapHeight()
+      setTimeout(() => {
+        queryParams.forEach((e) => {
+          let key = e.vuekey
+          this.loadingConfig[`${key}`] = false
+        })
+      }, 1240)
       this.router = this.$dgiotBus.router(this.$route.fullPath)
       this.$dgiotBus.$off('qqMapClcik')
       this.$dgiotBus.$on('qqMapClcik', (ev) => {
@@ -1006,6 +875,12 @@
       this.queryForm.account =
         this.language == 'zh' ? '全部产品' : 'All Products'
       this.initDgiotMqtt()
+      window.onresize = () => {
+        return (() => {
+          this.mapHeight = window.innerHeight * 0.7 + 'px'
+          this.mapWidth = window.innerWidth * 0.98 + 'px'
+        })()
+      }
     },
     activated() {
       // dgiotlog.log('keep-alive生效')
@@ -1015,6 +890,35 @@
       this.resizeTheChart()
     },
     methods: {
+      initMapHeight() {
+        this.mapHeight = window.innerHeight * 0.7 + 'px'
+        this.mapWidth = window.innerWidth * 0.98 + 'px'
+      },
+      /**
+       *
+       * @param BMap
+       * @param map
+       */
+      handler({ BMap, map }) {
+        console.log(BMap, map)
+        // 自动获取展示的比例
+        // var view = map.getViewport(eval(this._tableData))
+        // this.sizeZoom = view.zoom;
+        // this.center = view.center;
+      },
+      /**
+       *
+       * @param position
+       * @returns {*}
+       */
+      getPosition(position) {
+        position.forEach((p) => {
+          p.lng = p.location.longitude
+          p.lat = p.location.latitude
+        })
+        console.log(position)
+        return position
+      },
       /**
        *
        * @param
@@ -1023,7 +927,7 @@
       initDgiotMqtt() {
         // 页面加载完cdn 资源后执行。
         this.$nextTick(async () => {
-          await this.getProduct()
+          // await this.getProduct()
           await this.queryData()
           await this.setTreeFlag(true)
         })
@@ -1127,29 +1031,29 @@
         // this.$forceUpdate()
       },
       async showDeatils(row, index) {
-        const loading = this.$baseColorfullLoading(0)
-        this.productIco = ''
-        this.deviceInfo = await getDevice(row.objectId)
-        const { results = [{ icon: '' }] } = await queryProduct({
-          count: 'objectId',
-          order: '-updatedAt',
-          keys: 'icon',
-          where: {
-            objectId: this.deviceInfo.product.objectId,
-          },
-        })
-        this.productIco = results[0].icon
-        row.show = true
-
-        // dgiotlog.log(this.productIco, row, row.show, index, this.deviceInfo)
-        // 延时加载
-        setTimeout(() => {
-          loading.close()
-          dgiotlog.info(this.$refs[`bm_info${index}`])
-          this.$refs[`bm_info${index}`][0].$children[0].show = true
-          // this.set_tableData(_.merge([], this._tableData))
-          // this.$forceUpdate()
-        }, 1000)
+        // const loading = this.$baseColorfullLoading(0)
+        // this.productIco = ''
+        // this.deviceInfo = await getDevice(row.objectId)
+        // const { results = [{ icon: '' }] } = await queryProduct({
+        //   count: 'objectId',
+        //   order: '-updatedAt',
+        //   keys: 'icon',
+        //   where: {
+        //     objectId: this.deviceInfo.product.objectId,
+        //   },
+        // })
+        // this.productIco = results[0].icon
+        // row.show = true
+        //
+        // // dgiotlog.log(this.productIco, row, row.show, index, this.deviceInfo)
+        // // 延时加载
+        // setTimeout(() => {
+        //   loading.close()
+        //   dgiotlog.info(this.$refs[`bm_info${index}`])
+        //   this.$refs[`bm_info${index}`][0].$children[0].show = true
+        //   // this.set_tableData(_.merge([], this._tableData))
+        //   // this.$forceUpdate()
+        // }, 1000)
       },
       async showInfo(objectId) {
         this.deviceInfo = await getDevice(objectId)
@@ -1175,12 +1079,20 @@
           : (this.deviceInfo.topicData = _toppic)
         this.deviceFlag = true
       },
+      printQueryInfo(value, mqttMsg) {
+        // queryParams.forEach((e) => {
+        //   if (e.vuekey)
+        //     console.log(`收到订阅${value}的消息${mqttMsg},查询参数为${mqttMsg}`)
+        // })
+      },
       mqttMsg(e) {
         let mqttMsg = isBase64(e) ? Base64.decode(e) : e
+        console.log(mqttMsg, '收到消息')
         // // dgiotlog.log(destinationName, mqttMsg, 'mqttMsg')
         let mqttMsgValue = JSON.parse(mqttMsg).value
         let key = JSON.parse(mqttMsg).vuekey
-        this.loadingConfig[`${key}`] = true
+        this.printQueryInfo(mqttMsgValue, mqttMsg)
+        // this.loadingConfig[`${key}`] = true
         // this.$baseNotify(
         //   '',
         //   `${this.$translateTitle('websocket.messages')}${key}`
@@ -1276,6 +1188,24 @@
         // dgiotlog.log(objectId)
       },
       async queryData() {
+        // https://lbsyun.baidu.com/cms/jsapi/class/jsapi_reference.html#a3b22
+        setTimeout(() => {
+          queryParams.forEach((e) => {
+            let key = e.vuekey
+            this.loadingConfig[`${key}`] = true
+          })
+        }, 1240)
+        const Startdashboardid = 'dgiot-dashboard'
+        this.subtopic = `$dg/dashboard/${Startdashboardid}/report`
+        this.topicKey = this.$dgiotBus.topicKey(this.router, this.subtopic)
+        this.$dgiotBus.$emit('MqttSubscribe', {
+          router: this.router,
+          topic: this.subtopic,
+          qos: 0,
+          ttl: 1000 * 60 * 60 * 3,
+        })
+        await Startdashboard(queryParams, Startdashboardid)
+        // 本地mqtt 存在问题,在请求4秒后手动关闭所有loading
         this.$nextTick(() => {
           if (this.mapType == 'tencent') {
             this.setTreeFlag(false)
@@ -1310,23 +1240,6 @@
             }
           }
         })
-        const Startdashboardid = 'dgiot'
-        this.subtopic = `dashboard/${Startdashboardid}/post`
-        this.topicKey = this.$dgiotBus.topicKey(this.router, this.subtopic)
-        this.$dgiotBus.$emit('MqttSubscribe', {
-          router: this.router,
-          topic: this.subtopic,
-          qos: 0,
-          ttl: 1000 * 60 * 60 * 3,
-        })
-        const res = await Startdashboard(queryParams, Startdashboardid)
-        // 本地mqtt 存在问题,在请求4秒后手动关闭所有loading
-        setTimeout(() => {
-          queryParams.forEach((e) => {
-            let key = e.vuekey
-            this.loadingConfig[`${key}`] = true
-          })
-        }, 3000)
       },
       async getProduct() {
         const { results } = await queryProduct({
@@ -1393,19 +1306,35 @@
       },
       goDevice(name) {
         this.$router.push({
-          path: '/dashboard/devicelistlist',
+          path: '/dashboard/device',
           query: {
             product: name,
           },
         })
+        console.log(window.errRoute)
+        if (window?.errRoute?.name)
+          this.$router.push({
+            path: '/dashboard/devicelist',
+            query: {
+              product: name,
+            },
+          })
       },
-      _goDevice(type) {
+      _goDevice(item) {
         this.$router.push({
-          path: '/dashboard/devicelistlist',
+          path: 'dashboard/device',
           query: {
-            deciceType: type,
+            devicename: item.name,
           },
         })
+        console.log(window.errRoute)
+        if (window?.errRoute?.name)
+          this.$router.push({
+            path: '/dashboard/devicelist',
+            query: {
+              devicename: item.name,
+            },
+          })
       },
       goLink(type, item) {
         switch (type) {
@@ -1560,7 +1489,9 @@
       }
 
       .baidu_map {
-        height: calc(78vh - 20px);
+        height: calc(98vh - 20px);
+        width: 100%;
+        display: block;
       }
 
       margin: 8px;

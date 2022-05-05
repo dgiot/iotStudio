@@ -130,138 +130,309 @@
           </el-button>
         </el-form-item>
       </el-form>
-      <el-table
+      <!--      <el-tabs v-model="tabs">-->
+      <!--        <el-tab-pane label="卡片模式" name="card">-->
+      <el-row
         v-loading="listLoading"
-        :cell-style="{ 'text-align': 'center' }"
-        :data="proTableData"
-        :header-cell-style="{ 'text-align': 'center' }"
-        :height="height"
-        border
-        size="mini"
-        style="width: 100%"
+        class="box-card"
+        element-loading-background="rgba(0, 0, 0, 0.8)"
+        element-loading-spinner="el-icon-loading"
+        :element-loading-text="$translateTitle('developer.Waitingtoreturn')"
+        :gutter="20"
       >
-        <el-table-column
-          label="ProductID"
-          prop="objectId"
-          width="auto"
-          show-overflow-tooltip
-          sortable
-        />
-        <el-table-column
-          width="auto"
-          show-overflow-tooltip
-          sortable
-          prop="name"
-          :label="$translateTitle('product.productname')"
-        />
-        <el-table-column
-          show-overflow-tooltip
-          sortable
-          prop="nodeType"
-          width="auto"
-          :label="$translateTitle('product.nodetype')"
+        <el-col
+          v-for="(o, index) in proTableData"
+          :key="index"
+          :lg="6"
+          :md="8"
+          :sm="12"
+          :xl="6"
+          :xs="24"
         >
-          <template #default="{ row }">
-            <span v-if="row.nodeType == 3">
-              {{ $translateTitle('product.direct') }}
-            </span>
-            <span v-if="row.nodeType == 1">
-              {{ $translateTitle('product.gateway') }}
-            </span>
-            <span v-if="row.nodeType == 2">
-              {{ $translateTitle('product.groupgateway') }}
-            </span>
-            <span v-else-if="row.nodeType == 0">
-              {{ $translateTitle('product.equipment') }}
-            </span>
-          </template>
-        </el-table-column>
-        <el-table-column
-          show-overflow-tooltip
-          sortable
-          prop="nodeType"
-          width="auto"
-          :label="$translateTitle('product.classification')"
-        >
-          <template #default="{ row }">
-            <span>
-              {{ row.category ? row.category.name : '' }}
-            </span>
-          </template>
-        </el-table-column>
-        <!--          <el-table-column :label="$translateTitle('product.producttemplet')">-->
-        <!--            <template #default="{ row }">-->
-        <!--              <span>-->
-        <!--                {{ row.producttemplet ? row.producttemplet.name : '' }}-->
-        <!--              </span>-->
-        <!--            </template>-->
-        <!--          </el-table-column>-->
-        <el-table-column
-          show-overflow-tooltip
-          sortable
-          prop="createdAt"
-          width="auto"
-          :label="$translateTitle('product.addingtime')"
-        >
-          <template #default="{ row }">
-            <span>{{ utc2beijing(row.createdAt) }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column
-          ref="rightCol"
-          :label="$translateTitle('developer.operation')"
-          fixed="right"
-          width="auto"
-          min-width="280"
-        >
-          <template #default="{ row, $index }">
-            <el-button
-              :underline="false"
-              size="mini"
-              type="primary"
-              style="margin-left: 10px"
-              @click="deviceToDetail(row)"
-            >
-              {{ $translateTitle('product.config') }}
-            </el-button>
-            <el-button
-              :underline="false"
-              size="mini"
-              type="warning"
-              @click="editorDict(row.objectId)"
-            >
-              {{ $translateTitle('product.dict') }}
-            </el-button>
+          <a-card hoverable style="margin-bottom: 24px">
+            <template #actions style="height: 44px !important">
+              <el-row :gutter="24">
+                <el-col
+                  :offset="2"
+                  :span="2"
+                  style="text-align: center; margin: 0 auto"
+                >
+                  <dgiot-icon
+                    style="font-size: 24px"
+                    icon="eye-line"
+                    :underline="false"
+                    size="mini"
+                    circle
+                    class="eye-line"
+                    title="产品详情"
+                    @click.native="deviceToDetail(o)"
+                  />
+                </el-col>
+                <el-col :span="2" style="text-align: center; margin: 0 auto">
+                  <dgiot-icon
+                    style="font-size: 24px"
+                    icon="book-3-fill"
+                    @click.native="editorDict(o.objectId)"
+                    :title="$translateTitle('product.dict')"
+                  />
+                </el-col>
+                <el-col :span="2" style="text-align: center; margin: 0 auto">
+                  <dgiot-icon
+                    style="font-size: 24px"
+                    icon="tv-line"
+                    @click.native="goKonva(o.objectId)"
+                    :title="$translateTitle('concentrator.konva')"
+                  />
+                </el-col>
+                <el-col
+                  :offset="1"
+                  style="text-align: center; margin: 0 auto"
+                  :span="2"
+                >
+                  <dgiot-icon
+                    icon="edit-2-fill"
+                    style="font-size: 24px"
+                    @click.native="editorProduct(o.objectId)"
+                    :title="$translateTitle('button.edit')"
+                  />
+                </el-col>
+                <el-col :span="2" style="text-align: center; margin: 0 auto">
+                  <dgiot-icon
+                    style="font-size: 24px"
+                    icon="delete-bin-fill"
+                    @click.native="makeSure(o, index)"
+                    :title="$translateTitle('button.Delete')"
+                  />
+                </el-col>
+              </el-row>
+            </template>
 
-            <el-button size="mini" @click="goKonva(row.objectId)">
-              {{ $translateTitle('concentrator.konva') }}
-            </el-button>
-
-            <el-button
-              :underline="false"
-              size="mini"
-              type="success"
-              @click="editorProduct(row.objectId)"
+            <a-card-meta :title="o.name" :description="o.desc">
+              <template #avatar>
+                <el-image
+                  style="height: 40px"
+                  :key="o.icon + o.objectId"
+                  :src="$FileServe + o.icon"
+                  :preview-src-list="[$FileServe + o.icon]"
+                >
+                  <div
+                    slot="error"
+                    class="image-slot"
+                    style="text-align: center"
+                  >
+                    <i
+                      class="el-icon-picture-outline"
+                      style="font-size: 40px; text-align: center"
+                    ></i>
+                  </div>
+                </el-image>
+              </template>
+              <!--              <template #title>-->
+              <!--                <div>-->
+              <!--                  <span>{{ o.name }}</span>-->
+              <!--                </div>-->
+              <!--              </template>-->
+            </a-card-meta>
+            <el-descriptions
+              :column="4"
+              size="medium"
+              direction="vertical"
+              border
             >
-              {{ $translateTitle('concentrator.edit') }}
-            </el-button>
+              <el-descriptions-item
+                :contentStyle="{ 'text-align': 'center' }"
+                :label="$translateTitle('home.dev_online')"
+                :title="o.objectId"
+              >
+                <el-link type="success" @click.native="goLink(o, 'online')">
+                  {{ o.online_counts || 0 }}
+                </el-link>
+              </el-descriptions-item>
 
-            <el-button size="mini" type="danger" @click="makeSure(row, $index)">
-              {{ $translateTitle('task.Delete') }}
-            </el-button>
-          </template>
-        </el-table-column>
-      </el-table>
-      <div class="elpagination" style="margin-top: 20px">
-        <el-pagination
-          :page-size="length"
-          :page-sizes="[10, 20, 30, 50]"
-          :total="total"
-          layout="total, sizes, prev, pager, next, jumper"
-          @current-change="productCurrentChange"
-          @size-change="productSizeChange"
-        />
-      </div>
+              <el-descriptions-item
+                :contentStyle="{ 'text-align': 'center' }"
+                :label="$translateTitle('home.dev_unline')"
+                :title="o.objectId"
+              >
+                <el-link type="warning" @click.native="goLink(o, 'offline')">
+                  {{ o.offline_counts || 0 }}
+                </el-link>
+              </el-descriptions-item>
+              <el-descriptions-item
+                :contentStyle="{ 'text-align': 'center' }"
+                :label="$translateTitle('device.poweron')"
+                :title="o.objectId"
+              >
+                <el-link type="success" @click.native="goLink(o, 'poweron')">
+                  {{ o.poweron_counts || 0 }}
+                </el-link>
+              </el-descriptions-item>
+              <el-descriptions-item
+                :contentStyle="{ 'text-align': 'center' }"
+                :label="$translateTitle('device.poweroff')"
+                :title="o.objectId"
+              >
+                <el-link type="primary" @click.native="goLink(o, 'poweroff')">
+                  {{ o.poweroff_counts || 0 }}
+                </el-link>
+              </el-descriptions-item>
+              <!--              <el-descriptions-item :label="$translateTitle('product.addingtime')" :title="o.updatedAt">-->
+              <!--                {{ $moment(o.createdAt).format("YYYY-MM-DD") }}-->
+              <!--              </el-descriptions-item>-->
+              <!--              <el-descriptions-item :contentStyle="{'text-align': 'center'}" label="描述" :title="o.desc">-->
+              <!--                {{ o.desc }}-->
+              <!--              </el-descriptions-item>-->
+            </el-descriptions>
+          </a-card>
+        </el-col>
+      </el-row>
+      <!--        </el-tab-pane>-->
+      <!--        <el-tab-pane label="列表模式" name="table">-->
+      <!--          <el-table-->
+      <!--            v-loading="listLoading"-->
+      <!--            :cell-style="{ 'text-align': 'center' }"-->
+      <!--            :data="proTableData"-->
+      <!--            :header-cell-style="{ 'text-align': 'center' }"-->
+      <!--            :height="height"-->
+      <!--            border-->
+      <!--            size="mini"-->
+      <!--            style="width: 100%"-->
+      <!--          >-->
+      <!--            <el-table-column-->
+      <!--              label="ProductID"-->
+      <!--              prop="objectId"-->
+      <!--              width="auto"-->
+      <!--              show-overflow-tooltip-->
+      <!--              sortable-->
+      <!--            />-->
+      <!--            <el-table-column-->
+      <!--              width="auto"-->
+      <!--              show-overflow-tooltip-->
+      <!--              sortable-->
+      <!--              prop="name"-->
+      <!--              :label="$translateTitle('product.productname')"-->
+      <!--            />-->
+      <!--            <el-table-column-->
+      <!--              show-overflow-tooltip-->
+      <!--              sortable-->
+      <!--              prop="nodeType"-->
+      <!--              width="auto"-->
+      <!--              :label="$translateTitle('product.nodetype')"-->
+      <!--            >-->
+      <!--              <template #default="{ row }">-->
+      <!--            <span v-if="row.nodeType == 3">-->
+      <!--              {{ $translateTitle("product.direct") }}-->
+      <!--            </span>-->
+      <!--                <span v-if="row.nodeType == 1">-->
+      <!--              {{ $translateTitle("product.gateway") }}-->
+      <!--            </span>-->
+      <!--                <span v-if="row.nodeType == 2">-->
+      <!--              {{ $translateTitle("product.groupgateway") }}-->
+      <!--            </span>-->
+      <!--                <span v-else-if="row.nodeType == 0">-->
+      <!--              {{ $translateTitle("product.equipment") }}-->
+      <!--            </span>-->
+      <!--              </template>-->
+      <!--            </el-table-column>-->
+      <!--            <el-table-column-->
+      <!--              show-overflow-tooltip-->
+      <!--              sortable-->
+      <!--              prop="nodeType"-->
+      <!--              width="auto"-->
+      <!--              :label="$translateTitle('product.classification')"-->
+      <!--            >-->
+      <!--              <template #default="{ row }">-->
+      <!--            <span>-->
+      <!--              {{ row.category ? row.category.name : "" }}-->
+      <!--            </span>-->
+      <!--              </template>-->
+      <!--            </el-table-column>-->
+      <!--            &lt;!&ndash;          <el-table-column :label="$translateTitle('product.producttemplet')">&ndash;&gt;-->
+      <!--            &lt;!&ndash;            <template #default="{ row }">&ndash;&gt;-->
+      <!--            &lt;!&ndash;              <span>&ndash;&gt;-->
+      <!--            &lt;!&ndash;                {{ row.producttemplet ? row.producttemplet.name : '' }}&ndash;&gt;-->
+      <!--            &lt;!&ndash;              </span>&ndash;&gt;-->
+      <!--            &lt;!&ndash;            </template>&ndash;&gt;-->
+      <!--            &lt;!&ndash;          </el-table-column>&ndash;&gt;-->
+      <!--            <el-table-column-->
+      <!--              show-overflow-tooltip-->
+      <!--              sortable-->
+      <!--              prop="createdAt"-->
+      <!--              width="auto"-->
+      <!--              :label="$translateTitle('product.addingtime')"-->
+      <!--            >-->
+      <!--              <template #default="{ row }">-->
+      <!--                <span>{{ utc2beijing(row.createdAt) }}</span>-->
+      <!--              </template>-->
+      <!--            </el-table-column>-->
+      <!--            <el-table-column-->
+      <!--              ref="rightCol"-->
+      <!--              :label="$translateTitle('developer.operation')"-->
+      <!--              fixed="right"-->
+      <!--              width="auto"-->
+      <!--              min-width="280"-->
+      <!--            >-->
+      <!--              <template #default="{ row, $index }">-->
+      <!--                <el-button-->
+      <!--                  :underline="false"-->
+      <!--                  size="mini"-->
+      <!--                  type="primary"-->
+      <!--                  style="margin-left: 10px"-->
+      <!--                  @click="deviceToDetail(row)"-->
+      <!--                >-->
+      <!--                  {{ $translateTitle("product.config") }}-->
+      <!--                </el-button>-->
+      <!--                <el-button-->
+      <!--                  :underline="false"-->
+      <!--                  size="mini"-->
+      <!--                  type="warning"-->
+      <!--                  @click="editorDict(row.objectId)"-->
+      <!--                >-->
+      <!--                  {{ $translateTitle("product.dict") }}-->
+      <!--                </el-button>-->
+
+      <!--                <el-button size="mini" @click="goKonva(row.objectId)">-->
+      <!--                  {{ $translateTitle("concentrator.konva") }}-->
+      <!--                </el-button>-->
+
+      <!--                <el-button-->
+      <!--                  :underline="false"-->
+      <!--                  size="mini"-->
+      <!--                  type="success"-->
+      <!--                  @click="editorProduct(row.objectId)"-->
+      <!--                >-->
+      <!--                  {{ $translateTitle("concentrator.edit") }}-->
+      <!--                </el-button>-->
+
+      <!--                <el-button size="mini" type="danger" @click="makeSure(row, $index)">-->
+      <!--                  {{ $translateTitle("task.Delete") }}-->
+      <!--                </el-button>-->
+      <!--              </template>-->
+      <!--            </el-table-column>-->
+      <!--          </el-table>-->
+      <!--        </el-tab-pane>-->
+      <!--      </el-tabs>-->
+
+      <el-pagination
+        background
+        :current-page="queryForm.pageSize"
+        layout="total, sizes, prev, pager, next, jumper"
+        :page-size="queryForm.limit"
+        :page-sizes="[8, 16, 32, 64]"
+        :total="total"
+        @current-change="handleCurrentChange"
+        @size-change="handleSizeChange"
+      />
+      <!--      <div class="elpagination" style="margin-top: 20px">-->
+      <!--        <el-pagination-->
+      <!--          :page-size="length"-->
+      <!--          :page-sizes="[8, 16, 24, 48]"-->
+      <!--          :total="total"-->
+      <!--          layout="total, sizes, prev, pager, next, jumper"-->
+      <!--          @current-change="productCurrentChange"-->
+      <!--          @size-change="productSizeChange"-->
+      <!--        />-->
+      <!--      </div>-->
     </div>
     <div class="devproduct-prodialog">
       <!-- 创建产品对话框 ###-->
@@ -272,7 +443,7 @@
         :title="moduleTitle"
         :visible.sync="dialogFormVisible"
         append-to-body
-        size="80%"
+        size="50%"
         top="5vh"
       >
         <el-alert
@@ -572,54 +743,7 @@
                 </dgiot-query-form>
               </el-col>
             </el-row>
-            <el-table
-              :cell-style="{ 'text-align': 'center' }"
-              :data="tableData"
-              :header-cell-style="{ 'text-align': 'center' }"
-              :height="$baseTableHeight(0) + 40"
-              border
-              size="mini"
-              style="width: 100%"
-            >
-              <el-table-column
-                :label="$translateTitle('developer.Templatename')"
-                align="center"
-              >
-                <template #default="{ row }">
-                  {{ row.name }}
-                  <el-popover placement="left" trigger="click" width="800">
-                    <dgiot-profile ref="profile" :is-product="true" />
-                    <i
-                      slot="reference"
-                      class="el-icon-info"
-                      @click="referenceHandle(row)"
-                    ></i>
-                  </el-popover>
-                </template>
-              </el-table-column>
-              <el-table-column
-                :label="$translateTitle('department.category')"
-                prop="categoryname"
-              >
-                <template #default="{ row }">
-                  {{ row.category.name }}
-                </template>
-              </el-table-column>
-              <el-table-column
-                :label="$translateTitle('developer.operation')"
-                align="center"
-              >
-                <template #default="{ row }">
-                  <el-button
-                    size="mini"
-                    type="text"
-                    @click="chooseTemplate(row)"
-                  >
-                    {{ $translateTitle('product.choose') }}
-                  </el-button>
-                </template>
-              </el-table-column>
-            </el-table>
+
             <dgiot-Pagination
               v-show="queryForm.total > 0"
               :limit.sync="queryForm.pageSize"
@@ -1354,7 +1478,7 @@
     postProduct,
   } from '@/api/Product'
   import { getAllunit } from '@/api/Dict/index'
-  import { queryDevice } from '@/api/Device/index'
+  import { delDevice, queryDevice } from '@/api/Device/index'
   import { getServer } from '@/api/Role/index'
   import { postDict } from '@/api/Dict'
   import { getHashClass } from '@/api/Hash'
@@ -1416,9 +1540,9 @@
           productId: '',
           productFlag: false,
           pageNo: 1,
-          pageSize: 20,
+          pageSize: 1,
           searchDate: [],
-          limt: 10,
+          limit: 8,
           skip: 0,
           total: 0,
           order: '-createdAt',
@@ -1465,6 +1589,7 @@
           dt: '',
           afn: '',
         },
+        tabs: 'card',
         elactiveName: 'Table',
         elactiveName1: 'Table1',
         editDictTempId: '',
@@ -1496,6 +1621,7 @@
         importDialogShow: false,
         cType: '',
         form: {
+          config: { checkList: ['konva', 'amis'] },
           type: 1,
           storageStrategy: '',
           name: '',
@@ -1675,14 +1801,71 @@
     mounted() {
       const { project = '' } = this.$route.query
       this.formInline.productname = project
-      this.Get_Re_Channel()
-      this.queryprodut({})
       this.searchProduct(0)
     },
     beforeDestroy() {
       this.projectName = ''
     },
     methods: {
+      goLink(product, type) {
+        // 根据不同的type跳到不同的页面
+        switch (type) {
+          case 'online':
+            this.$router.push({
+              path: '/dashboard/devicelist',
+              query: {
+                product: product.objectId,
+                status: 'ONLINE',
+              },
+            })
+            break
+          case 'offline':
+            this.$router.push({
+              path: '/dashboard/devicelist',
+              query: {
+                product: product.objectId,
+                status: 'OFFLINE',
+              },
+            })
+            break
+          case 'poweron':
+            this.$router.push({
+              path: '/dashboard/devicelist',
+              query: {
+                product: product.objectId,
+                isEnable: true,
+              },
+            })
+            break
+          case 'poweroff':
+            this.$router.push({
+              path: '/dashboard/devicelist',
+              query: {
+                product: product.objectId,
+                isEnable: false,
+              },
+            })
+            break
+          case 'device':
+            this.$router.push({
+              path: '/dashboard/devicelist',
+              query: {
+                product: product.objectId,
+              },
+            })
+            break
+        }
+
+        console.log(product, type)
+      },
+      handleSizeChange(val) {
+        this.queryForm.limit = val
+        this.searchProduct()
+      },
+      handleCurrentChange(val) {
+        this.queryForm.skip = Number(val - 1) * Number(this.queryForm.limit)
+        this.searchProduct()
+      },
       async handleIconClick(ev) {
         this.dialogProfile = !this.dialogProfile
         await this.$refs.dialogProfile.StepsListRowClick(this.selectedRow)
@@ -1755,21 +1938,15 @@
           args = this.queryForm
         }
         let params = {
-          limit: args.limit,
-          order: args.order,
-          skip: args.skip,
+          skip: this.queryForm.skip,
+          limit: this.queryForm.limit,
           keys: args.keys,
           include: 'category',
           where: {
-            category: categorys ? { $in: categorys } : { $ne: null },
-            name: args.name
-              ? {
-                  $regex: args.name,
-                  $options: 'i',
-                }
-              : { $ne: null },
           },
         }
+        args.name?params.where.name = { $regex: args.name } :''
+        categorys?params.where.category = { $in: categorys } :''
         try {
           const { results = [], count = 0 } = await queryProductTemplet(params)
           // loading.close()
@@ -2038,22 +2215,21 @@
 
           var category = []
           // 优化下查询条件,新增忽略字段
-          const parsms = {
+          let params = {
             count: 'objectId',
             order: '-updatedAt',
-            limit: this.length,
-            skip: this.start,
-            excludeKeys: 'channel,children,config,thing,decoder',
-            include: 'category,producttemplet',
-            where: {
-              name: this.formInline.productname.length
-                ? { $regex: this.formInline.productname }
-                : { $ne: null },
-            },
+            skip: this.queryForm.skip,
+            limit: this.queryForm.limit,
+            where:{},
+            excludeKeys:
+              'children,thing,decoder,topics,productSecret,desc,view,category,producttemplet',
           }
+          this.formInline.productname
+            ? params.where.name = { $regex: this.formInline.productname }
+            : ''
           const { results = [], count = 0 } = await this.$query_object(
             'Product',
-            parsms
+            params
           )
           // dgiotlog.log("results", results)
           if (results) {
@@ -2117,6 +2293,8 @@
       },
       // 添加产品弹窗
       addproduct() {
+        this.Get_Re_Channel()
+        this.queryprodut({})
         this.custom_status = 'add'
         // return false
         this.moduleTitle = this.$translateTitle('product.createproduct')
@@ -2133,6 +2311,7 @@
           relationApp: this.currentDepartment.name,
           roles: [],
           categoryname: '',
+          config: { checkList: ['konva', 'amis'] },
         }
         this.productid = moment(new Date()).valueOf().toString()
         this.dialogFormVisible = true
@@ -2283,7 +2462,7 @@
         this.form.desc = row.desc
         this.form.category = row.category
         this.form.producttemplet = row.producttemplet
-        this.form.config = row.config
+        this.form.config = _.merge(row.config, { checkList: [] })
         this.form.name = row.name
         this.form.nodeType = row.nodeType
         this.$set(this.form, 'type', row.channel ? row.channel.type : '')
@@ -2405,15 +2584,19 @@
               setAcl['*'] = {
                 read: true,
               }
+              console.clear()
+              console.log('this.form', this.form)
+              console.log(
+                this.form.config.checkList,
+                'this.form.config.checkList'
+              )
               const addparams = {
                   productSecret: productSecret,
                   ACL: setAcl,
                   topics: [],
                   decoder: {},
                   config: {
-                    konva: {
-                      Stage: this.defaultKonva,
-                    },
+                    checkList: this.form.config.checkList,
                   },
                 },
                 params = _.merge(initparams, addparams)
@@ -2457,6 +2640,11 @@
         dgiotlogger.info('postProduct：', res)
         if (res.objectId) {
           this.initQuery('产品创建成功', 'success')
+          this.dialogFormVisible = false
+          setTimeout(() => {
+            this.queryForm.skip = 0
+            this.searchProduct()
+          }, 1200)
         } else {
           this.$message({
             type: 'error',
@@ -2485,7 +2673,7 @@
           type: type || 'info',
           message: msg,
           showClose: true,
-          duration:2000
+          duration: 2000,
         })
         this.dialogFormVisible = false
         this.resetProductForm()
@@ -2503,6 +2691,9 @@
           productSecret: '',
           roles: [],
           relationApp: '',
+          config: {
+            checkList: [],
+          },
         }
         this.imageUrl = ''
       },
@@ -2532,32 +2723,44 @@
             product: row.objectId,
           },
         }
-        queryDevice(params).then((results) => {
-          if (results.count > 0) {
-            this.$message('请先删除该产品下设备')
-            return
-          } else {
-            delProduct(row.objectId).then((response) => {
-              if (response) {
-                this.$message({
-                  type: 'success',
-                  message: '删除成功',
-                })
-                // row._self.$refs[`popover-${index}`].doClose()
-                this.searchProduct()
-              }
-            })
-          }
+        this.$baseConfirm('你确定要删除当前项吗', null, async () => {
+          await queryDevice(params).then((results) => {
+            if (results.count > 0) {
+              this.$message('请先删除该产品下设备')
+              return
+            } else {
+              delProduct(row.objectId).then((response) => {
+                if (response) {
+                  this.$message({
+                    type: 'success',
+                    message: '删除成功',
+                  })
+                  // row._self.$refs[`popover-${index}`].doClose()
+                  setTimeout(() => {
+                    this.searchProduct()
+                  }, 1000)
+                }
+              })
+            }
+          })
+          setTimeout(() => {
+            this.searchProduct()
+          }, 1000)
+          // this.$baseMessage(
+          //   this.$translateTitle('Maintenance.successfully deleted'),
+          //   'success',
+          //   'dgiot-hey-message-success'
+          // )
         })
       },
-      productSizeChange(val) {
-        this.length = val
-        this.searchProduct()
-      },
-      productCurrentChange(val) {
-        this.start = (val - 1) * this.length
-        this.searchProduct()
-      },
+      // productSizeChange(val) {
+      //   this.length = val;
+      //   this.searchProduct();
+      // },
+      // productCurrentChange(val) {
+      //   this.start = (val - 1) * this.length;
+      //   this.searchProduct();
+      // },
       async blackDict(hashkey, data) {
         const params = {
           data: data,
@@ -2657,6 +2860,28 @@
   }
 </script>
 <style lang="scss">
+  .ant-card-actions {
+    height: 46px !important;
+  }
+
+  .el-row {
+    margin-bottom: 20px;
+    display: flex;
+    flex-wrap: wrap;
+  }
+
+  .el-row .el-card {
+    min-width: 100%;
+    height: 100%;
+    margin-right: 20px;
+    transition: all 0.5s;
+  }
+
+  .el-card__body,
+  .el-card__header {
+    padding: 6px !important;
+  }
+
   .avatar-uploader .el-upload:hover {
     border-color: #409eff;
   }
@@ -2683,6 +2908,43 @@
       width: 500px;
     }
   }
+
+  .box-card {
+    .card {
+      margin: 10px;
+
+      //.box {
+      //  margin: 5px 0 0 0;
+      //  display: flex;
+      //  justify-content: space-between;
+      //
+      //  .left {
+      //    text-align: center;
+      //    flex: 1;
+      //  }
+      //
+      //  .right {
+      //    flex: 3;
+      //    white-space: nowrap;
+      //    text-overflow: ellipsis;
+      //    overflow: hidden;
+      //    margin-left: 10px;
+      //  }
+      //}
+    }
+
+    .time {
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      overflow: hidden;
+    }
+
+    .image {
+      width: 100px;
+      height: 100px;
+    }
+  }
+
   .devproduct {
     box-sizing: border-box;
     width: 100%;

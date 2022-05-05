@@ -5,6 +5,7 @@ import { mapGetters, mapActions } from 'vuex'
 import { getCardDevice, getDabDevice, getDevice } from '@/api/Device/index.js'
 import Instruct from '@/views/DeviceCloud/category/instruct_manage'
 import chartType from '@/api/Mock/Chart'
+import { queryView } from '@/api/View'
 
 const columns = [
   {
@@ -134,6 +135,11 @@ export default {
       },
     }
     return {
+      commandInfo: {
+        dialog: false,
+        data: {},
+      },
+      amisTable: '0_j',
       bmLabel: false,
       mapLabel: {
         content: '我爱北京天安门',
@@ -736,11 +742,13 @@ export default {
     print(item) {
       console.log(item)
     },
-    tabHandleClick(tab) {
+    async tabHandleClick(tab) {
+      localStorage.removeItem('parse_objectid')
+      localStorage.setItem('parse_objectid', this.deviceid)
       this.$dgiotBus.$emit('MqttUnbscribe', this.topicKey, this.subtopic)
       switch (tab.name) {
         case 'ninth':
-          this.$router.push({
+          await this.$router.push({
             path: '/roles/onlinetest',
             query: {
               deviceid: this.devicedevaddr,
@@ -749,7 +757,7 @@ export default {
           })
           break
         case 'children':
-          this.getDevices()
+          await this.getDevices()
           this.loading = true
           setTimeout(() => {
             this.loading = false
@@ -762,21 +770,38 @@ export default {
           }, 300)
           break
         case 'third':
-          this.queryChart()
+          await this.queryChart()
           break
         case 'right':
-          this.toggleClass('rightrow')
+          await this.toggleClass('rightrow')
           this.loading = true
           setTimeout(() => {
             this.loading = false
           }, 300)
           break
         case 'task':
-          this.$refs.SceneLog.get_topic()
+          await this.$refs.SceneLog.get_topic()
+          break
+        case 'view':
+          const { results = [] } = await queryView({
+            where: {
+              class: 'Product',
+              type: { $ne: 'topo' },
+              title: { $ne: null },
+              key: this.productId,
+              objectId: { $ne: null },
+            },
+          })
+          if (_.isEmpty(results)) {
+            return false
+          } else {
+            this.commandInfo.data = results
+            localStorage.setItem('parse_objectid', this.deviceid)
+          }
           break
         case 'first1':
-          this.subRealtimedata()
-          this.getCardDevice()
+          await this.subRealtimedata()
+          await this.getCardDevice()
           break
       }
     },
@@ -941,7 +966,7 @@ export default {
       await this.delVisitedRoute(this.$route.path)
       this.activeName = 'first'
       this.$router.push({ path: this.$route.path, query })
-      this.getDeviceInfo(deviceid)
+      this.getDeviceInfo(query.deviceid)
       this.setTreeFlag(false)
       this.params.style = this.chartType[0].type
       console.log(' this.params.style', this.params.style)
@@ -949,7 +974,7 @@ export default {
       this.router = this.$dgiotBus.router(location.href + this.$route.fullPath)
       this.topicKey = this.$dgiotBus.topicKey(this.router, this.subtopic) // dgiot-mqtt topicKey 唯一标识
       // if (this.$route.query.deviceid) {
-      this.deviceid = deviceid
+      this.deviceid = query.deviceid
       this.subRealtimedata()
       this.initChart()
       window.addEventListener('resize', this.resizeTheChart)
@@ -1076,25 +1101,33 @@ export default {
     },
     /* el-popover点击关闭*/
     makeSure(row, $index) {
-      // 可以在这里执行删除数据的回调操作.......删除操作.....
-      const objRoute = JSON.parse(JSON.stringify(row.route))
-      const routeKey = this.deviceInfo.devaddr
-      // 删除key为上级设备地址值
-      delete objRoute[routeKey]
-      const params = {
-        parentId: null,
-        route: objRoute,
-      }
-      this.$putDevice(row.objectId, params).then((response) => {
-        if (response) {
-          this.$message({
-            type: 'success',
-            message: '解除关联成功',
-          })
-          // row._self.$refs[`popover-${$index}`].doClose()
-          this.getDevices()
-        }
+      this.$confirm('此操作将解除设备间的关系, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning',
       })
+        .then(() => {
+          // 可以在这里执行删除数据的回调操作.......删除操作.....
+          const objRoute = JSON.parse(JSON.stringify(row.route))
+          const routeKey = this.deviceInfo.devaddr
+          // 删除key为上级设备地址值
+          delete objRoute[routeKey]
+          const params = {
+            parentId: null,
+            route: objRoute,
+          }
+          this.$putDevice(row.objectId, params).then((response) => {
+            if (response) {
+              this.$message({
+                type: 'success',
+                message: '解除关联成功',
+              })
+              // row._self.$refs[`popover-${$index}`].doClose()
+              this.getDevices()
+            }
+          })
+        })
+        .catch(() => {})
     },
     handelUpdate(event, row, index) {
       var newData1 = {}
