@@ -48,9 +48,11 @@ jobs:
         uses: pnpm/action-setup@v2.2.1
         with:
           version: ${{ matrix.pnpm-version }}
-          run_install: true
+          run_install: false
       - name: Pnpm script 🚀
         run: |
+          rm -rf .npmrc
+          pnpm install
           pnpm build
     needs: sync
   deploy:
