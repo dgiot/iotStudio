@@ -711,7 +711,7 @@
             obj.protocol = konvathing.dataForm.protocol
             this.setSizeForm(obj)
             this.$nextTick(async () => {
-              await this.$refs['sizeForm'].queryResource()
+              this.$refs['sizeForm'].queryResource()
               // 保证子组件已经挂载完成）
               // if (this.$refs['sizeForm'])
               this.$refs['sizeForm'].resource.value =

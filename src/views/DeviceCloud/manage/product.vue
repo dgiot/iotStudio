@@ -226,6 +226,8 @@
                     ></i>
                   </div>
                 </el-image>
+                <br />
+                {{ o.objectId }}
               </template>
               <!--              <template #title>-->
               <!--                <div>-->
@@ -1942,11 +1944,11 @@
           limit: this.queryForm.limit,
           keys: args.keys,
           include: 'category',
-          where: {
-          },
+          where: {},
         }
-        args.name?params.where.name = { $regex: args.name } :''
-        categorys?params.where.category = { $in: categorys } :''
+        args.name ? (params.where.name = { $regex: args.name }) : ''
+        categorys ? (params.where.category = { $in: categorys }) : ''
+        categorys ? (params.where.category = { $in: categorys }) : ''
         try {
           const { results = [], count = 0 } = await queryProductTemplet(params)
           // loading.close()
@@ -2220,12 +2222,12 @@
             order: '-updatedAt',
             skip: this.queryForm.skip,
             limit: this.queryForm.limit,
-            where:{},
+            where: {},
             excludeKeys:
-              'children,thing,decoder,topics,productSecret,desc,view,category,producttemplet',
+              'children,thing,decoder,topics,productSecret,view,category,producttemplet',
           }
           this.formInline.productname
-            ? params.where.name = { $regex: this.formInline.productname }
+            ? (params.where.name = { $regex: this.formInline.productname })
             : ''
           const { results = [], count = 0 } = await this.$query_object(
             'Product',
@@ -2448,6 +2450,7 @@
         this.dictVisible = true
       },
       async editorProduct(editorProductid) {
+        this.Get_Re_Channel()
         const loading = this.$baseColorfullLoading()
         const row = await getProduct(editorProductid)
         this.form = row
@@ -2903,6 +2906,10 @@
   }
 </style>
 <style lang="scss" scoped>
+  .devproduct ::v-deep .ant-card-meta-avatar {
+    text-align: center;
+    margin: 0 auto;
+  }
   @media screen and(max-width: 600px) {
     .devproduct {
       width: 500px;

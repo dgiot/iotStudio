@@ -1376,7 +1376,7 @@
         this.resource.changeData = {}
         // this.resource.arrlist = []
         // this.$nextTick(async () => {
-        await this.$refs['sizeForm'].clearValidate()
+        await this.clearValidate()
         await this.resource.data.forEach((resource) => {
           if (resource.cType == val) {
             this.resource.changeData = resource
@@ -1465,6 +1465,7 @@
         setSizeForm: 'konva/setSizeForm',
       }),
       changeThing(item) {
+        console.error(item)
         let that = this
         dgiotlog.log('this.sizeFormaaa', that.$refs.sizeForm.model.name)
         dgiotlog.log('item', item)
@@ -1883,15 +1884,52 @@
             isread: item.accessMode,
             isaccumulate: item.isaccumulate,
             isshow: item.isshow,
-            isaccumulate: item.isaccumulate,
             identifier: item.identifier,
           }
         }
+        obj.editdatatype = true
         obj.nobound = that.sizeForm.nobound
         obj.dis = item.dataForm.address
         obj.isdis = that.sizeForm.isdis
         dgiotlogger.log('obj', obj)
         that.setSizeForm(obj)
+        this.$nextTick(async () => {
+          this.queryResource()
+          // 保证子组件已经挂载完成）
+          // if (this)
+          this.resource.value = item.dataForm.protocol
+          this.resource.disabled = item.dataForm.protocol.length ? true : false
+          // this.changeResource(this.resource.value)
+
+          this.resource.arrlist = item.dataSource
+          this.$nextTick(() => {
+            this.resource.data.forEach((resource, index) => {
+              // resource[index].arr = []
+              // resource[index].obj = {}
+              if (this.resource.value === resource.cType) {
+                console.info(resource, 'success cType')
+                resource.arr.forEach((i) => {
+                  if (i.allowCreate) {
+                    this.dynamicTable(i, '回显', item.dataSource[i.showname])
+                  }
+                })
+                console.info(item.dataSource, 'item.dataSource')
+                for (var o in item.dataSource) {
+                  for (var j in resource.obj) {
+                    if (o === j) resource.obj[o] = item.dataSource[j]
+                  }
+                }
+                console.info(resource.obj, 'set resource.obj')
+                this.resource.addchannel = resource.obj
+              }
+              this.resource.changeData = item.dataSource
+              if (resource.cType == item.dataForm.protocol) {
+                console.log(resource, 'success')
+              }
+            })
+          })
+          console.log('refs sizeForm', this) // 子组件的实例
+        })
       },
       wmxCurrentChange(val) {
         console.log(this.wmxData)
