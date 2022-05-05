@@ -1,3 +1,69 @@
+## [4.5.3](https://github.com/dgiot/dgiot-dashboard/compare/v4.5.2...v4.5.3) (2022-05-05)
+
+
+### Bug Fixes
+
+* **action:** fix dgiot-dashboard/settings#git-gc ([10c32cb](https://github.com/dgiot/dgiot-dashboard/commit/10c32cba4ccc03cc813839ce1545eb0f34f7e09b))
+* **axios:** repair request parameter return logic ([6183d9e](https://github.com/dgiot/dgiot-dashboard/commit/6183d9e8ad9119e046a4401464203875194db257))
+* del dist.rar ([279c2f3](https://github.com/dgiot/dgiot-dashboard/commit/279c2f3d063047b000f3ad03a79d4727431826ea))
+* device table ([a2c51c6](https://github.com/dgiot/dgiot-dashboard/commit/a2c51c6ff901dd4977fcc18b5675388414357a64))
+* **device:** fix the problem of confusion when modifying equipment parameters ([4c1b7a7](https://github.com/dgiot/dgiot-dashboard/commit/4c1b7a7a9ab6612526990a90c81212515a79cbc3))
+* **dlink:** protocol ([b285cae](https://github.com/dgiot/dgiot-dashboard/commit/b285caea95910a9a907d149f496a53f13fd33c9d))
+* doc router ([3576180](https://github.com/dgiot/dgiot-dashboard/commit/35761803856512b5bd84bad202d757d2a9c06e08))
+* **icon:** fix the problem that some icons cannot be displayed because of the wrong name ([a7a1fab](https://github.com/dgiot/dgiot-dashboard/commit/a7a1fabcf7221a3dd71c9b9a9c04f7dbd17f4214))
+* **map:** fix the problem that Baidu map on the home page is not displayed ([371d4b2](https://github.com/dgiot/dgiot-dashboard/commit/371d4b2a76777b68acc827cbde089ac9f9549f2d))
+* parse_objectid ([6e8eaad](https://github.com/dgiot/dgiot-dashboard/commit/6e8eaadd697f06fcd5c2e860f312df708a1da225))
+* **pnpm-version:** pnpm-version ([a53d94f](https://github.com/dgiot/dgiot-dashboard/commit/a53d94f6f6581a6180ba81739c4c052818e17f67))
+* **query:** optimize query requests ([9c21da3](https://github.com/dgiot/dgiot-dashboard/commit/9c21da30c760c9f9126722b9ae0e460d8157152a))
+* rename ([7597b5a](https://github.com/dgiot/dgiot-dashboard/commit/7597b5a1b8ba7bef62acf48a9d6d7501097ade02))
+* **request:** optimize query requests ([f682c5d](https://github.com/dgiot/dgiot-dashboard/commit/f682c5dc89e1fe43534658f9125fa320f7911ec5))
+* **router:** fix sub device route jump error ([9c62fc3](https://github.com/dgiot/dgiot-dashboard/commit/9c62fc3d5e78e469e99a96737d209b2fe411d687))
+* **router:** fix the problem that the home device list cannot jump ([1c16b44](https://github.com/dgiot/dgiot-dashboard/commit/1c16b4439583d95afb0d5179f4b4abd4ccef8e6b))
+* **router:** route jump repair ([e64daaf](https://github.com/dgiot/dgiot-dashboard/commit/e64daaf9de33ae73f14d62a3f5f15c65c8e57703))
+* **sync:** sync gitee ([468d997](https://github.com/dgiot/dgiot-dashboard/commit/468d997b2c5bd61299c7b82bc5fc3de1a4172743))
+
+
+### Features
+
+* (message) Lightweight Tips ([4d0c608](https://github.com/dgiot/dgiot-dashboard/commit/4d0c608ce097c4c00f177674c58f1b3d31db9c92))
+* add plant modal ([3425782](https://github.com/dgiot/dgiot-dashboard/commit/34257829b6c45ad1017c7def5c5c9c3a319991d5))
+* **api:** replace API interface ([04593e7](https://github.com/dgiot/dgiot-dashboard/commit/04593e7de3175de1d218d7b343ba8dc483488a46))
+* create factory ([811ebc9](https://github.com/dgiot/dgiot-dashboard/commit/811ebc9edbc7234c5422ebdeeab509b85dcbcc98))
+* **device:** rewrite device list interface ([0fdb3c8](https://github.com/dgiot/dgiot-dashboard/commit/0fdb3c8182ba074466d4fa5e33bf2bfab9014696))
+* **device:** rewrite device management interface ([85ad1b0](https://github.com/dgiot/dgiot-dashboard/commit/85ad1b072954fba850f9d0de27a280e6187e03de))
+* devicesDetailLite.vue ([78109fa](https://github.com/dgiot/dgiot-dashboard/commit/78109fa7bb9e248174167aff1509db6be94685a0))
+* disable key ([fe3ebd6](https://github.com/dgiot/dgiot-dashboard/commit/fe3ebd665ef346eb66cb2c06a6e3d25b56609ede))
+* factory details display page ([8d7cbc9](https://github.com/dgiot/dgiot-dashboard/commit/8d7cbc95a1a892c63827673c56fcf79d919a5460))
+* **ftechnology:** complete the process path details page ([b00af1c](https://github.com/dgiot/dgiot-dashboard/commit/b00af1c516985790dc76c44462eafda1e34ccd81))
+* **ftechnology:** ftechnology amis ([b02abb3](https://github.com/dgiot/dgiot-dashboard/commit/b02abb3277236ecf76df3f94934ca306212b0a54))
+* **ftechnology:** operation and attribute table ([8b787c7](https://github.com/dgiot/dgiot-dashboard/commit/8b787c7a4a2b0c48338de52aaf2ed46954e3fb3d))
+* **i18n:** product card field translation ([d39f60b](https://github.com/dgiot/dgiot-dashboard/commit/d39f60ba108367105d92a659307fa32ba7a62d2a))
+* **konva:** button ([f7ef915](https://github.com/dgiot/dgiot-dashboard/commit/f7ef915fea917695b917881436c3f259b57e225b))
+* list ([6181d08](https://github.com/dgiot/dgiot-dashboard/commit/6181d086b0c49ced39e6c857d4fc592cb5ec9c3a))
+* location ([85d6fe4](https://github.com/dgiot/dgiot-dashboard/commit/85d6fe408c73fbd64d58da1bab85d67273451219))
+* **login:** optimize query requests at login ([1b11ef6](https://github.com/dgiot/dgiot-dashboard/commit/1b11ef6dca47173cb3ccd4cf6497db6c1dd6f798))
+* **lowcode:** access Amis low code ([d550def](https://github.com/dgiot/dgiot-dashboard/commit/d550def6b6d0048eb77c055b14134da1f14cd8d2))
+* map ([0c13f4f](https://github.com/dgiot/dgiot-dashboard/commit/0c13f4fe563f2c917b99bf160b9ef8c291ceffec))
+* **npmrc:** registry ([1d54924](https://github.com/dgiot/dgiot-dashboard/commit/1d549244ac2ef6e2d6f6d6877744df500f077e03))
+* **product:** modify product interface mode ([27a2805](https://github.com/dgiot/dgiot-dashboard/commit/27a2805f1803b47e90eeeeca5147ee042cdc40b2))
+* **product:** numbe ([90554b7](https://github.com/dgiot/dgiot-dashboard/commit/90554b7ba2a55fd3c620b5d723c213997922844e))
+* **product:** prodcutID ([d73fb26](https://github.com/dgiot/dgiot-dashboard/commit/d73fb26f688f8ac2104d63a1de5798e5c5178e99))
+* query ([486d204](https://github.com/dgiot/dgiot-dashboard/commit/486d204c1f3908b5340786e500956ba19f0ebd96))
+* shamefully-hoist ([5dac908](https://github.com/dgiot/dgiot-dashboard/commit/5dac908d21b1e59468fa3a9433dbe7c551f0c17c))
+* **src\views\cloudoc\modeling\index.vue:** add factory modeling ([b0cf77a](https://github.com/dgiot/dgiot-dashboard/commit/b0cf77ae7a4aca3198529ee68953804a06491f3a))
+* **style:** master data management style adjustment ([fbb44ea](https://github.com/dgiot/dgiot-dashboard/commit/fbb44ea7e805b76163d4da115190a8870973c35a))
+* sync ([5a65626](https://github.com/dgiot/dgiot-dashboard/commit/5a656261ada676219f733d716052c5a77b1acee6))
+* **views:** empty ([81cfe07](https://github.com/dgiot/dgiot-dashboard/commit/81cfe079be4ac6933ac3184131a7d3cbefe84957))
+
+
+### Performance Improvements
+
+* **cloudoc:** complete process path static page ([1963665](https://github.com/dgiot/dgiot-dashboard/commit/19636658e5c93f3dd931e41b1d6a49e6a72aea14))
+* **dependencies:** delete vite schema ([946ad83](https://github.com/dgiot/dgiot-dashboard/commit/946ad83f46e084d9ac6f57a8db10c7adbba98861))
+* **proxy:** replace remote proxy with local server ([aff0922](https://github.com/dgiot/dgiot-dashboard/commit/aff0922e95b42386f127531c6f1a5ba31c3fcaee))
+
+
+
 ## [4.5.2](https://github.com/dgiot/dgiot-dashboard/compare/v4.5.1...v4.5.2) (2022-04-13)
 
 
