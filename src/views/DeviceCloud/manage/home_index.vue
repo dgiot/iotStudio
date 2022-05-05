@@ -447,6 +447,9 @@
           >
             {{ $translateTitle('equipment.move') }}
           </el-button>
+          <el-button size="mini" type="text" @click="konvaDevice(row)">
+            {{ $translateTitle('concentrator.konva') }}
+          </el-button>
           <el-button
             size="mini"
             type="text"
