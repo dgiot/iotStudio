@@ -450,7 +450,7 @@
                       type="primary"
                       @click="deviceToDetail(row)"
                     >
-                      {{ $translateTitle('equipment.see') }}
+                      {{ $translateTitle("equipment.see") }}
                     </el-button>
 
                     <el-button
@@ -458,7 +458,7 @@
                       type="primary"
                       @click="makeSure(row, $index)"
                     >
-                      {{ $translateTitle('equipment.RelievingAssociation') }}
+                      {{ $translateTitle("equipment.RelievingAssociation") }}
                     </el-button>
                   </template>
                 </el-table-column>
@@ -642,6 +642,7 @@
         </el-tab-pane>
         <el-tab-pane label="视频监控" name="video">
           <dgiot-aliplayer
+            v-if="activeName==='video'"
             ref="dgiotPlayer"
             height="76vh"
             :playsource="

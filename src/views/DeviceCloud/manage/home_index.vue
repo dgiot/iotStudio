@@ -69,7 +69,13 @@
           <div v-if="false" slot="title"></div>
           <label>
             关键词：
-            <el-input v-model="map.keyword" />
+            <el-input v-model="map.keyword">
+              <i
+                slot="suffix"
+                class="el-input__icon el-icon-search"
+                style="cursor: pointer"
+              ></i>
+            </el-input>
           </label>
           <!--          <label>-->
           <!--            地区：-->
@@ -77,7 +83,14 @@
           <!--          </label>-->
           <label>
             安装位置：
-            <el-input v-model="form.address" disabled />
+            <el-input v-model="form.address">
+              <i
+                slot="suffix"
+                class="el-icon-s-promotion"
+                style="cursor: pointer"
+                @click="form.sync = !form.sync"
+              ></i>
+            </el-input>
           </label>
           <baidu-map
             v-if="map.innerVisible"
@@ -166,7 +179,13 @@
               v-model="form.address"
               placeholder="请选择安装位置"
               @focus="map.innerVisible = !map.innerVisible"
-            />
+            >
+              <i
+                slot="suffix"
+                class="el-icon-s-promotion"
+                style="cursor: pointer"
+              ></i>
+            </el-input>
           </el-form-item>
           <el-form-item style="text-align: center">
             <el-button type="primary" @click="submitForm('form', form.type)">
@@ -721,6 +740,7 @@
         const geocoder = new BMap.Geocoder() // 创建地址解析器的实例
         //  let Marker = new BMap.Marker()
         geocoder.getLocation(e.point, (rs) => {
+          console.log(rs)
           this.form.address = rs.address
           // this.add.site = rs.address;
           //  Marker.closeInfoWindow()

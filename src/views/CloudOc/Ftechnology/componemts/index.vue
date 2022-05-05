@@ -22,30 +22,27 @@
             :model="dialog.processes.form"
             :rules="processes"
           >
-            <el-form-item label="工序名称" prop="name">
-              <el-input v-model="dialog.processes.form.name" />
+            <el-form-item label="工序名称" prop="title">
+              <el-input v-model="dialog.processes.form.title" />
             </el-form-item>
-            <el-form-item label="工序编码" prop="code">
-              <el-input v-model="dialog.processes.form.code" />
+            <el-form-item label="工序编码" prop="type">
+              <el-input v-model="dialog.processes.form.type" />
             </el-form-item>
-            <el-form-item label="工序描述" prop="description">
-              <el-input
-                v-model="dialog.processes.form.description"
-                type="textarea"
-              />
+            <el-form-item label="工序描述" prop="key">
+              <el-input v-model="dialog.processes.form.key" type="textarea" />
             </el-form-item>
             <el-form-item label-width="0" style="text-align: center">
               <el-button
                 v-if="dialog.isAdd == true"
                 type="primary"
-                @click="submitForm('processes', 'processes')"
+                @click="submitForm('processes', 'processes', 'submit')"
               >
                 立即创建
               </el-button>
               <el-button
                 v-if="dialog.isAdd === false"
                 type="primary"
-                @click="submitForm('processes', 'processes')"
+                @click="submitForm('processes', 'processes', 'edit')"
               >
                 修改
               </el-button>
@@ -66,30 +63,27 @@
             :model="dialog.properties.form"
             :rules="properties"
           >
-            <el-form-item label="工艺路径属性名称" prop="name">
-              <el-input v-model="dialog.properties.form.name" />
+            <el-form-item label="工艺路径属性名称" prop="title">
+              <el-input v-model="dialog.properties.form.title" />
             </el-form-item>
-            <el-form-item label="工艺路径属性标识" prop="code">
-              <el-input v-model="dialog.properties.form.code" />
+            <el-form-item label="工艺路径属性标识" prop="type">
+              <el-input v-model="dialog.properties.form.type" />
             </el-form-item>
-            <el-form-item label="工艺路径属性值" prop="value">
-              <el-input
-                v-model="dialog.properties.form.value"
-                type="textarea"
-              />
+            <el-form-item label="工艺路径属性值" prop="key">
+              <el-input v-model="dialog.properties.form.key" type="textarea" />
             </el-form-item>
             <el-form-item label-width="0" style="text-align: center">
               <el-button
                 v-if="dialog.isAdd == true"
                 type="primary"
-                @click="submitForm('properties', 'properties')"
+                @click="submitForm('properties', 'properties', 'submit')"
               >
                 立即创建
               </el-button>
               <el-button
                 v-if="dialog.isAdd === false"
                 type="primary"
-                @click="submitForm('properties', 'properties')"
+                @click="submitForm('properties', 'properties', 'edit')"
               >
                 修改
               </el-button>
@@ -240,7 +234,7 @@
             ref="tableSort"
             v-loading="listLoading"
             :border="border"
-            :data="detail.data.processes"
+            :data="amis.processes"
             :height="height"
             :size="lineHeight"
             :stripe="stripe"
@@ -248,14 +242,14 @@
             <el-table-column
               align="center"
               label="工序名称"
-              prop="name"
+              prop="title"
               sortable
               width="auto"
             />
             <el-table-column
               align="center"
               label="工序编码"
-              prop="code"
+              prop="type"
               sortable
               width="auto"
             />
@@ -269,7 +263,7 @@
             <el-table-column
               align="center"
               label="工序描述"
-              prop="description"
+              prop="key"
               sortable
               width="auto"
             />
@@ -283,21 +277,14 @@
               <template #default="{ row, $index }">
                 <el-button
                   type="text"
-                  @click="
-                    handleEdit(row, $index, detail.data.processes, 'processes')
-                  "
+                  @click="handleEdit(row, $index, amis.processes, 'processes')"
                 >
                   编辑
                 </el-button>
                 <el-button
                   type="text"
                   @click="
-                    handleDelete(
-                      row,
-                      $index,
-                      detail.data.processes,
-                      'processes'
-                    )
+                    handleDelete(row, $index, amis.processes, 'processes')
                   "
                 >
                   删除
@@ -361,7 +348,7 @@
             ref="tableSort"
             v-loading="listLoading"
             :border="border"
-            :data="detail.data.properties"
+            :data="amis.properties"
             :height="height"
             :size="lineHeight"
             :stripe="stripe"
@@ -369,21 +356,21 @@
             <el-table-column
               align="center"
               label="属性名称"
-              prop="name"
+              prop="title"
               sortable
               width="auto"
             />
             <el-table-column
               align="center"
               label="属性标识"
-              prop="code"
+              prop="key"
               sortable
               width="auto"
             />
             <el-table-column
               align="center"
               label="属性值"
-              prop="value"
+              prop="key"
               sortable
               width="auto"
             />
@@ -406,12 +393,7 @@
                 <el-button
                   type="text"
                   @click="
-                    handleEdit(
-                      row,
-                      $index,
-                      detail.data.properties,
-                      'properties'
-                    )
+                    handleEdit(row, $index, amis.properties, 'properties')
                   "
                 >
                   编辑
@@ -419,12 +401,7 @@
                 <el-button
                   type="text"
                   @click="
-                    handleDelete(
-                      row,
-                      $index,
-                      detail.data.properties,
-                      'properties'
-                    )
+                    handleDelete(row, $index, amis.properties, 'properties')
                   "
                 >
                   删除
@@ -556,7 +533,7 @@
 </template>
 
 <script>
-  import { getDict, delDict, putDict, postDict } from '@/api/Dict'
+  import { getDict, delDict, putDict, postDict, queryDict } from '@/api/Dict'
   import { getList } from '@/api/Mock/table'
   import { queryView } from '@/api/View'
   import { delDevice } from '@/api/Device'
@@ -566,25 +543,29 @@
     components: {},
     data() {
       return {
-        amis: [],
+        amis: {
+          processes: [],
+          properties: [],
+        },
         detail: {},
         activeName: 'first',
         properties: {
-          name: [
+          title: [
             {
               required: true,
               message: '请输入工艺路径属性名称',
               trigger: 'blur',
             },
           ],
-          code: [
+          type: [
             {
               required: true,
               message: '请输入工艺路径属性标识',
               trigger: 'blur',
             },
           ],
-          value: [
+
+          key: [
             {
               required: true,
               message: '请输入工艺路径属性值',
@@ -605,7 +586,13 @@
           code: [
             { required: true, message: '请输入工序编码', trigger: 'blur' },
           ],
-          description: [
+          title: [
+            { required: true, message: '请输入工序名称', trigger: 'blur' },
+          ],
+          type: [
+            { required: true, message: '请输入工序编码', trigger: 'blur' },
+          ],
+          key: [
             { required: false, message: '请输入工序描述', trigger: 'blur' },
             {
               min: 0,
@@ -718,28 +705,31 @@
     destroyed() {}, //生命周期 - 销毁完成
     activated() {},
     methods: {
-      submitForm(formName, type) {
+      submitForm(formName, type, module) {
         this.$refs[formName].validate(async (valid) => {
           if (valid) {
-            console.log(
-              type,
-              this.detail.data,
-              this.detail,
-              this.dialog[type].form
-            )
-            this.resetForm(formName)
             // this.detail.data[formName].push(this.dialog[type].form)
-            // 走创建接口。
             const childDict = {
-              name: this.dialog[type].form.name,
-              code: this.dialog[type].form.code,
-              description: this.dialog[type].form.description,
-              classe: '',
-              title: this.detail.data.title,
+              // name: this.dialog[type].form.name,
+              // code: this.dialog[type].form.code,
+              // description: this.dialog[type].form.description,
+              // classe: '',
+              title: this.dialog[type].form.title,
+              data: {},
+              type: this.dialog[type].form.type,
+              class: type,
+              key: this.dialog[type].form.key,
+              parent: {
+                __type: 'Pointer',
+                className: 'Dict',
+                objectId: this.$route.query.objectId,
+              },
             }
-            const res = await postDict(childDict)
+            if (module == 'submit') await postDict(childDict)
+            else await putDict(this.editRow.row.objectId, childDict)
             this.dialog[type].visible = false
-            await putDict(this.detail.objectId, { data: this.detail.data })
+            this.queryAmisDeatil(this.$route.query.objectId)
+            this.resetForm(formName)
           } else {
             console.log('error submit!!')
             return false
@@ -804,7 +794,7 @@
       handleDelete(row, index, list, type) {
         this.$baseConfirm('你确定要删除当前项吗', null, async () => {
           list.splice(index, 1)
-          await putDict(this.detail.objectId, { data: this.detail.data })
+          await delDict(row.objectId)
           this.$baseMessage(
             this.$translateTitle('Maintenance.successfully deleted'),
             'success',
@@ -821,15 +811,23 @@
        * @Description:
        */
       async queryAmisDeatil(objectId) {
-        const query = {
+        const queryprocesses = {
           where: {
-            class: 'Ftechnology',
-            type: 'amis',
+            parent: objectId,
+            class: 'processes',
+          },
+        }
+        const queryproperties = {
+          where: {
+            parent: objectId,
+            class: 'properties',
           },
         }
         try {
-          const { results = [] } = await queryView(query)
-          this.amis = results
+          const { results: processes = [] } = await queryDict(queryprocesses)
+          const { results: properties = [] } = await queryDict(queryproperties)
+          this.amis.processes = processes
+          this.amis.properties = properties
         } catch (error) {
           console.log(error)
           this.$baseMessage(
