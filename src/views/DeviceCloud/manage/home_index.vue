@@ -88,7 +88,7 @@
                 slot="suffix"
                 class="el-icon-s-promotion"
                 style="cursor: pointer"
-                @click="form.sync = !form.sync"
+                @click="map.innerVisible = !map.innerVisible"
               ></i>
             </el-input>
           </label>
