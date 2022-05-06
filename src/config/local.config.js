@@ -12,7 +12,7 @@ let systemStatic = {
     'lint.css',
     'vditor.css',
     'xterm.css',
-    'aliplayer-min.css',
+    // 'aliplayer-min.css',
     'amis/lib/themes/cxd.css',
     'amis/lib/helper.css',
     'amis/lib/themes/antd.css',

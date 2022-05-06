@@ -23,7 +23,7 @@
           :label="$translateTitle('equipment.realTime data')"
           name="first1"
         >
-          <div v-loading="loading">
+          <div v-loading="loading" style="overflow: scroll">
             <div class="thirdtb">
               <!--运行状态卡片-->
               <el-row :key="thirdtbKey">
@@ -78,7 +78,7 @@
                           <div class="ta">
                             <span class="fontSize">
                               {{
-                                $translateTitle("equipment.updatetime") + ":"
+                                $translateTitle('equipment.updatetime') + ':'
                               }}
                             </span>
                             <span class="fontSize" @click="print(machinelist)">
@@ -100,7 +100,7 @@
           name="third"
         >
           <div
-            v-loading=loading
+            v-loading="loading"
             style="box-sizing: border-box; padding: 10px; background: #ffffff"
           >
             <!-- <h4>设备信息</h4> -->
@@ -207,7 +207,7 @@
                         type="primary"
                         @click="queryChart"
                       >
-                        {{ $translateTitle("developer.search") }}
+                        {{ $translateTitle('developer.search') }}
                       </el-button>
                     </el-form-item>
                   </el-form>
