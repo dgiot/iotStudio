@@ -1268,8 +1268,7 @@
       /**
        * @description 查询资源通道
        */
-      // await this.queryResource()
-      this.resource.data = this.protocol
+      await this.queryResource()
     },
     mounted() {},
     beforeCreate() {}, //生命周期 - 创建之前

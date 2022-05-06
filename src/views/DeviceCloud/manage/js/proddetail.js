@@ -1294,14 +1294,8 @@ export default {
     },
     async getAllunit() {
       this.allunit = []
-      const { results } = await getAllunit('unit', 200)
-      this.allunit = results.concat([])
-      this.allunit.unshift({
-        data: {
-          Name: '无',
-          Symbol: '',
-        },
-      })
+      const { UnifyUnitSpecsDTO = [] } = await getDlinkJson('Unit')
+      this.allunit = UnifyUnitSpecsDTO
     },
     getTopic() {
       const topics = []
@@ -3119,7 +3113,7 @@ export default {
         this.setSizeForm(this.getFormOrginalData())
         this.$refs['sizeForm'].resource.disabled = false
         await this.handleChildClick(this.tabsChild)
-        await this.$refs['sizeForm'].queryResource()
+        if (this.$refs['sizeForm']) await this.$refs['sizeForm'].queryResource()
       } else {
         this.wmxdialogVisible = false
       }

@@ -2062,8 +2062,8 @@
                       <el-option
                         v-for="(item, index) in allunit"
                         :key="index"
-                        :label="item.data.Name + '/' + item.data.Symbol"
-                        :value="item.data.Symbol"
+                        :label="item.Name + '/' + item.Symbol"
+                        :value="item.Symbol"
                       />
                     </el-select>
                   </el-form-item>

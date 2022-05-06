@@ -992,8 +992,8 @@
                   <el-option
                     v-for="(item, index) in allunit"
                     :key="index"
-                    :label="item.data.Name + '/' + item.data.Symbol"
-                    :value="item.data.Symbol"
+                    :label="item.Name + '/' + item.Symbol"
+                    :value="item.Symbol"
                   />
                 </el-select>
               </el-form-item>
@@ -1487,6 +1487,7 @@
   import { ExportParse, ImportParse } from '@/api/Export'
   import { queryProductTemplet } from '@/api/ProductTemplet'
   import { getCategory, queryCategory } from '@/api/Category'
+  import { getDlinkJson } from "@/api/Dlink";
 
   const context = require.context('./component/profile', true, /\.vue$/)
   let res_components = {}
@@ -1993,8 +1994,8 @@
       },
       async getAllunit() {
         this.allunit = []
-        const { results } = await getAllunit('unit', 200)
-        this.allunit = results.concat([])
+        const { UnifyUnitSpecsDTO = [] } = await getDlinkJson('Unit')
+        this.allunit = UnifyUnitSpecsDTO
       },
       submitEnum() {
         if (this.tempparams.type == 'Enum') {
