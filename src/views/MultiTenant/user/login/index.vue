@@ -503,7 +503,7 @@
               await this.$router.push(this.handleRoute())
               await this.routeDgiot()
             }
-          }, 1500)
+          }, 800)
         } catch (error) {
           console.log(error)
           this.$baseMessage(
