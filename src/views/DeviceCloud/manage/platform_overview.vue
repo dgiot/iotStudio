@@ -858,10 +858,6 @@
         limit: true,
       },
     },
-    async created() {
-      const { dashboard = {} } = await getDlinkJson('Dashboard')
-      this.queryParams = dashboard
-    },
     mounted() {
       this.initMapHeight()
       setTimeout(() => {
@@ -894,7 +890,7 @@
       this.resizeTheChart()
     },
     methods: {
-      initMapHeight() {
+      async initMapHeight() {
         this.mapHeight = window.innerHeight * 0.7 + 'px'
         this.mapWidth = window.innerWidth * 0.98 + 'px'
       },
@@ -1192,6 +1188,8 @@
         // dgiotlog.log(objectId)
       },
       async queryData() {
+        const { dashboard = {} } = await getDlinkJson('Dashboard')
+        this.queryParams = dashboard
         // https://lbsyun.baidu.com/cms/jsapi/class/jsapi_reference.html#a3b22
         setTimeout(() => {
           this.queryParams.forEach((e) => {
@@ -1208,6 +1206,7 @@
           qos: 0,
           ttl: 1000 * 60 * 60 * 3,
         })
+        console.log(this.queryParams, 'queryParams')
         await Startdashboard(this.queryParams, Startdashboardid)
         // 本地mqtt 存在问题,在请求4秒后手动关闭所有loading
         this.$nextTick(() => {

@@ -16,7 +16,7 @@ const checkNeed = () => {
 if (checkNeed()) {
   Vue.config.errorHandler = (err, vm, info) => {
     // eslint-disable-next-line no-console
-    dgiotlog.warn('错误拦截:', err, vm, info)
+    console.warn('错误拦截:', err, vm, info)
     const url = window.location.href
     Vue.nextTick(() => {
       store

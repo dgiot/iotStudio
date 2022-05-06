@@ -1194,6 +1194,8 @@
         // dgiotlog.log(objectId)
       },
       async queryData() {
+        const { dashboard = {} } = await getDlinkJson('Dashboard')
+        this.queryParams = dashboard
         // https://lbsyun.baidu.com/cms/jsapi/class/jsapi_reference.html#a3b22
         setTimeout(() => {
           this.queryParams.forEach((e) => {
