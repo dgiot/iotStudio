@@ -17,6 +17,7 @@
 * **map:** fix the problem that Baidu map on the home page is not displayed ([371d4b2](https://github.com/dgiot/dgiot-dashboard/commit/371d4b2a76777b68acc827cbde089ac9f9549f2d))
 * parse_objectid ([6e8eaad](https://github.com/dgiot/dgiot-dashboard/commit/6e8eaadd697f06fcd5c2e860f312df708a1da225))
 * **pnpm-version:** pnpm-version ([a53d94f](https://github.com/dgiot/dgiot-dashboard/commit/a53d94f6f6581a6180ba81739c4c052818e17f67))
+* productid ([8babbfa](https://github.com/dgiot/dgiot-dashboard/commit/8babbfaf14680af974f179edff2d6d6a65dc68ec))
 * **query:** optimize query requests ([9c21da3](https://github.com/dgiot/dgiot-dashboard/commit/9c21da30c760c9f9126722b9ae0e460d8157152a))
 * rename ([7597b5a](https://github.com/dgiot/dgiot-dashboard/commit/7597b5a1b8ba7bef62acf48a9d6d7501097ade02))
 * **request:** optimize query requests ([f682c5d](https://github.com/dgiot/dgiot-dashboard/commit/f682c5dc89e1fe43534658f9125fa320f7911ec5))

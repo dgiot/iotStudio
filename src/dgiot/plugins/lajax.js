@@ -426,10 +426,10 @@ class Lajax {
               if (this.readyState === XMLHttpRequest.DONE) {
                 // 这里将发送接口请求的日志打印到控制台和添加到队列分开执行
                 if (console && console.group && that.stylize) {
-                  console.group(
-                    '%cajax请求',
-                    `color: ${Lajax.colorEnum.ajaxGroup};`
-                  )
+                  // console.group(
+                  //   '%cajax请求',
+                  //   `color: ${Lajax.colorEnum.ajaxGroup};`
+                  // )
                 }
                 that._printConsole(
                   startTime,

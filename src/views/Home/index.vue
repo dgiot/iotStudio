@@ -632,7 +632,7 @@
   import { Startdashboard } from '@/api/System/index'
   import { isBase64 } from '@/utils'
   import info from '@/components/Device/info'
-  import queryParams from '@/api/Mock/dashboard'
+  // import queryParams from '@/api/Mock/dashboard'
   import {
     BaiduMap,
     BmCityList,
@@ -650,6 +650,8 @@
     BmPointCollection,
   } from 'vue-baidu-map'
   import { secret } from '@/config/secret.config'
+  // import queryParams from '@/api/Mock/dashboard'
+  import { getDlinkJson } from '@/api/Dlink'
 
   window.dgiot.dgiotEnv = process.env
   export default {
@@ -688,6 +690,7 @@
       }
 
       return {
+        queryParams: {},
         mapHeight: '800px',
         mapWidth: '800px',
         polyline: {
@@ -857,11 +860,14 @@
         limit: true,
       },
     },
-    created() {},
+    async created() {
+      const { dashboard = {} } = await getDlinkJson('Dashboard')
+      this.queryParams = dashboard
+    },
     mounted() {
       this.initMapHeight()
       setTimeout(() => {
-        queryParams.forEach((e) => {
+        this.queryParams.forEach((e) => {
           let key = e.vuekey
           this.loadingConfig[`${key}`] = false
         })
@@ -1190,7 +1196,7 @@
       async queryData() {
         // https://lbsyun.baidu.com/cms/jsapi/class/jsapi_reference.html#a3b22
         setTimeout(() => {
-          queryParams.forEach((e) => {
+          this.queryParams.forEach((e) => {
             let key = e.vuekey
             this.loadingConfig[`${key}`] = true
           })
@@ -1204,7 +1210,7 @@
           qos: 0,
           ttl: 1000 * 60 * 60 * 3,
         })
-        await Startdashboard(queryParams, Startdashboardid)
+        await Startdashboard(this.queryParams, Startdashboardid)
         // 本地mqtt 存在问题,在请求4秒后手动关闭所有loading
         this.$nextTick(() => {
           if (this.mapType == 'tencent') {
