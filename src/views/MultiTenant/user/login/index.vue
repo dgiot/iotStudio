@@ -128,6 +128,7 @@
   import { Roletree } from '@/api/Menu'
   import { Permission } from '@/api/Permission'
   import { getProtocol } from '@/api/Protocol/index'
+
   export default {
     name: 'Login',
     directives: {
@@ -204,6 +205,7 @@
         logo: 'user/logo',
         objectId: 'user/objectId',
         backgroundimage: 'user/backgroundimage',
+        currentDepartment: 'user/currentDepartment',
       }),
     },
     watch: {
@@ -340,7 +342,6 @@
           }
           await setTimeout(async () => {
             if (this.objectId) {
-              document.querySelector('.el-tree-node__content').click()
               console.log('userid', this.objectId)
               const { results: permission = [] } = await Permission()
               this.setPermission(permission)

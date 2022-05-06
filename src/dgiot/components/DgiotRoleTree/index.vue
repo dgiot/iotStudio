@@ -128,6 +128,7 @@
     },
     data() {
       return {
+        firstChild: false,
         updateKey: 1,
         // 在需要对节点进行过滤时，调用 Tree 实例的filter方法，参数为关键字。
         filterText: '',
@@ -157,6 +158,12 @@
     watch: {},
     created() {
       this.$nextTick(() => {
+        // 确保只有获取不到currentDepartment 再点击
+        console.error(this.currentDepartment, 'this.currentDepartment')
+        if (!this.currentDepartment?.objectId) {
+          document.querySelector('.el-tree-node__content').click()
+          this.firstChild = true
+        }
         this.$refs.tree.setCurrentKey(this.currentDepartment.objectId)
       })
     },
@@ -246,14 +253,15 @@
             .getDgiotlog('src/dgiot/components/DgiotRoleTree/index.vue')
             .info('DgiotRoleTree ->', data, checked)
           console.groupEnd()
-          this.$baseNotify(
-            this.$translateTitle('message.Department has been switched to') +
-              data.depname,
-            this.$translateTitle('message.Tips'),
-            'success',
-            '',
-            5000
-          )
+          if (!this.firstChild)
+            this.$baseNotify(
+              this.$translateTitle('message.Department has been switched to') +
+                data.depname,
+              this.$translateTitle('message.Tips'),
+              'success',
+              '',
+              5000
+            )
         } catch (error) {
           dgiotlog.log(error)
           this.$baseMessage(
@@ -262,6 +270,7 @@
             'dgiot-hey-message-error'
           )
         }
+        this.firstChild = false
       },
       handleCheckClick(data, checked) {
         console.groupCollapsed(

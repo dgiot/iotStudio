@@ -1,5 +1,6 @@
 <!-- Language: vue -->
 <!-- Path: src/views/DeviceCloud/manage/component/task.vue -->
+
 <template>
   <div class="task-con-container">{{ productid }}</div>
 </template>
