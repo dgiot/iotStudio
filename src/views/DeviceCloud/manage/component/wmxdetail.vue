@@ -1269,6 +1269,7 @@
        * @description 查询资源通道
        */
       // await this.queryResource()
+      this.resource.data = this.protocol
     },
     mounted() {},
     beforeCreate() {}, //生命周期 - 创建之前
@@ -1376,7 +1377,7 @@
         this.resource.changeData = {}
         // this.resource.arrlist = []
         // this.$nextTick(async () => {
-        await this.clearValidate()
+        // await this.clearValidate()
         await this.resource.data.forEach((resource) => {
           if (resource.cType == val) {
             this.resource.changeData = resource
