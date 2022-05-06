@@ -124,10 +124,7 @@
   import { mapActions, mapGetters, mapMutations } from 'vuex'
   import { isPassword } from '@/utils/data/validate'
   import { SiteDefault } from '@/api/License'
-  import { queryProduct } from '@/api/Product'
   import { Roletree } from '@/api/Menu'
-  import { Permission } from '@/api/Permission'
-  import { getProtocol } from '@/api/Protocol/index'
 
   export default {
     name: 'Login',
@@ -252,10 +249,7 @@
         setTitle: 'settings/setTitle',
         setCopyright: 'acl/setCopyright',
         setDefault: 'acl/setDefault',
-        set_Product: 'user/set_Product',
         setRoleTree: 'user/setRoleTree',
-        setPermission: 'user/setPermission',
-        setProtocol: 'product/setProtocol',
       }),
       /**
        * @Author: dext7r
@@ -310,47 +304,6 @@
           //   console.groupEnd()
           //   Cookies.set('handleRoute', 'true', { expires: 60 * 1000 * 30 })
           // }
-        } catch (error) {
-          console.log(error)
-          this.$baseMessage(
-            this.$translateTitle('alert.Data request error') + `${error}`,
-            'error',
-            'dgiot-hey-message-error'
-          )
-        }
-      },
-      /**
-       * @Author: dext7r
-       * @Date: 2021-12-28 19:39:28
-       * @LastEditors:
-       * @param
-       * @return {Promise<void>}
-       * @Description:
-       */
-      async routeDgiot() {
-        clearInterval(this.interval)
-        window.clearInterval(this.interval)
-        try {
-          const params = {
-            count: 'objectId',
-            order: '-updatedAt',
-            excludeKeys:
-              'children,thing,decoder,topics,productSecret,desc,view,category,producttemplet',
-            where: {
-              // category: 'IotHub',
-            },
-          }
-          await setTimeout(async () => {
-            if (this.objectId) {
-              console.log('userid', this.objectId)
-              const { results: permission = [] } = await Permission()
-              this.setPermission(permission)
-              const protocol = await getProtocol()
-              this.setProtocol(protocol)
-              let { results: product = [] } = await queryProduct(params)
-              this.set_Product(product)
-            }
-          }, 1200)
         } catch (error) {
           console.log(error)
           this.$baseMessage(
@@ -502,7 +455,8 @@
               const { results: Tree = [] } = await Roletree()
               this.setRoleTree(Tree)
               await this.$router.push(this.handleRoute())
-              await this.routeDgiot()
+              clearInterval(this.interval)
+              window.clearInterval(this.interval)
             }
           }, 800)
         } catch (error) {

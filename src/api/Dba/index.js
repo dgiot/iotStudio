@@ -10,7 +10,7 @@ import request from '@/utils/request/request'
 
 export async function getTable() {
   return request({
-    url: '/table',
+    url: '/dlinkjson?type=Table',
     method: 'get',
   })
 }

@@ -44,6 +44,9 @@
   import { mapGetters, mapMutations } from 'vuex'
   import { departmentToken } from '@/api/Role'
   import { noReloadRouter } from '@/config'
+  import { Permission } from '@/api/Permission'
+  import { getProtocol } from '@/api/Protocol'
+  import { queryProduct } from '@/api/Product'
   export default {
     name: 'DgiotRoleTree',
     /**
@@ -157,14 +160,12 @@
     },
     watch: {},
     created() {
-      this.$nextTick(() => {
-        // 确保只有获取不到currentDepartment 再点击
-        console.error(this.currentDepartment, 'this.currentDepartment')
-        if (!this.currentDepartment?.objectId) {
-          document.querySelector('.el-tree-node__content').click()
-          this.firstChild = true
-        }
-        this.$refs.tree.setCurrentKey(this.currentDepartment.objectId)
+      this.$nextTick(async () => {
+        /**
+         * @description 用户登录时,默认请求一次的接口
+         */
+        if (!this.currentDepartment?.objectId) await this.disposable()
+        await this.$refs.tree.setCurrentKey(this.currentDepartment.objectId)
       })
     },
     mounted() {
@@ -185,7 +186,33 @@
         setRoleTree: 'user/setRoleTree',
         setDepartmentToken: 'user/setDepartmentToken',
         setCurrentDepartment: 'user/setCurrentDepartment',
+        set_Product: 'user/set_Product',
+        setPermission: 'user/setPermission',
+        setProtocol: 'product/setProtocol',
       }),
+      /**
+       * @description 用户登录后，只请求一次的接口，存储到vuex中
+       * @returns {Promise<void>}
+       */
+      async disposable() {
+        const params = {
+          count: 'objectId',
+          order: '-updatedAt',
+          excludeKeys:
+            'children,thing,decoder,topics,productSecret,view,category,producttemplet',
+          where: {
+            // category: 'IotHub',
+          },
+        }
+        const { results: permission = [] } = await Permission()
+        this.setPermission(permission)
+        const protocol = await getProtocol()
+        this.setProtocol(protocol)
+        let { results: product = [] } = await queryProduct(params)
+        this.set_Product(product)
+        document.querySelector('.el-tree-node__content').click()
+        this.firstChild = true
+      },
       /**
        * @Author: h7ml
        * @Date: 2021-12-13 10:43:48
