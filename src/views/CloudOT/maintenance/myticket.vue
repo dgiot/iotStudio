@@ -892,7 +892,9 @@
           order: args.order,
           skip: args.skip,
           keys: args.keys,
-          where: {},
+          where: {
+            info: {},
+          },
         }
         this.Assigned % 2 == 0
           ? (params.where['info.receiveuseid'] = this.objectid)

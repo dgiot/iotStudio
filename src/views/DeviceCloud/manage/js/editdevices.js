@@ -1,5 +1,6 @@
 import info from '@/components/Device/info'
 import SceneLog from '@/views/DeviceCloud/manage/component/SceneLog'
+import task from '@/views/DeviceCloud/manage/component/task'
 import deviceLog from '@/views/CloudSystem/logs/device'
 import { mapGetters, mapActions } from 'vuex'
 import { getCardDevice, getDabDevice, getDevice } from '@/api/Device/index.js'
@@ -44,6 +45,7 @@ export default {
     info,
     deviceLog,
     SceneLog,
+    'device-task': task,
   },
   filters: {
     filterVal(val) {
@@ -353,13 +355,13 @@ export default {
       thirdtotal: 0,
       topic: [
         {
-          topic: 'thing/${ProductId}/${DevAddr}/post',
+          topic: '$dg/user/${deviceid}/post',
           type: 'pub',
           desc: '设备上报',
           isdef: true,
         },
         {
-          topic: 'thing/${ProductId}/${DevAddr}',
+          topic: '$dg/thing/${deviceid}/',
           type: 'sub',
           desc: '消息下发',
           isdef: true,
@@ -553,15 +555,16 @@ export default {
 
         var ProductId = resultes.product.objectId ?? ''
         const DevAddr = resultes.devaddr
+        // const deviceid = resultes.objectId
         let _toppic = [
           {
-            topic: `thing/${ProductId}/${DevAddr}/post`,
+            topic: `$dg/thing/${deviceid}/post`,
             type: 'pub',
             desc: '设备上报',
             isdef: true,
           },
           {
-            topic: `thing/${ProductId}/${DevAddr}`,
+            topic: `$dg/thing/${deviceid}/`,
             type: 'sub',
             desc: '消息下发',
             isdef: true,
@@ -799,6 +802,9 @@ export default {
             this.commandInfo.data = results
             localStorage.setItem('parse_objectid', this.deviceid)
           }
+          break
+        case 'devicetask':
+          await this.$refs['device-task'].featchData()
           break
         case 'first1':
           await this.subRealtimedata()

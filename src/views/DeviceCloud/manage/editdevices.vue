@@ -78,7 +78,7 @@
                           <div class="ta">
                             <span class="fontSize">
                               {{
-                                $translateTitle('equipment.updatetime') + ':'
+                                $translateTitle("equipment.updatetime") + ":"
                               }}
                             </span>
                             <span class="fontSize" @click="print(machinelist)">
@@ -207,7 +207,7 @@
                         type="primary"
                         @click="queryChart"
                       >
-                        {{ $translateTitle('developer.search') }}
+                        {{ $translateTitle("developer.search") }}
                       </el-button>
                     </el-form-item>
                   </el-form>
@@ -318,7 +318,7 @@
               </el-form-item>
               <el-form-item>
                 <el-button type="primary" @click.native="getDevices(0)">
-                  {{ $translateTitle('developer.search') }}
+                  {{ $translateTitle("developer.search") }}
                 </el-button>
               </el-form-item>
               <el-form-item>
@@ -327,30 +327,30 @@
                   type="primary"
                   @click="deleteDevcie"
                 >
-                  {{ $translateTitle('equipment.RelievingAssociation') }}
+                  {{ $translateTitle("equipment.RelievingAssociation") }}
                 </el-button>
                 <el-button
                   :disabled="multipleTable.length == 0"
                   type="primary"
                   @click="unactiveDevice"
                 >
-                  {{ $translateTitle('developer.prohibit') }}
+                  {{ $translateTitle("developer.prohibit") }}
                 </el-button>
                 <el-button
                   :disabled="multipleTable.length == 0"
                   type="primary"
                   @click="activeDevice"
                 >
-                  {{ $translateTitle('developer.enable') }}
+                  {{ $translateTitle("developer.enable") }}
                 </el-button>
               </el-form-item>
               <el-form-item>
                 <el-button plain type="info" @click.native="getDevices(0)">
-                  {{ $translateTitle('equipment.Refresh') }}
+                  {{ $translateTitle("equipment.Refresh") }}
                 </el-button>
                 <!-- 添加子设备按钮  -->
                 <el-button type="primary" @click.native="childDialog = true">
-                  {{ $translateTitle('equipment.addchilddevice') }}
+                  {{ $translateTitle("equipment.addchilddevice") }}
                 </el-button>
               </el-form-item>
             </el-form>
@@ -395,7 +395,7 @@
                     <span>
                       {{
                         row.route == undefined
-                          ? ''
+                          ? ""
                           : row.route[deviceInfo.devaddr]
                       }}
                     </span>
@@ -450,7 +450,7 @@
                       type="primary"
                       @click="deviceToDetail(row)"
                     >
-                      {{ $translateTitle('equipment.see') }}
+                      {{ $translateTitle("equipment.see") }}
                     </el-button>
 
                     <el-button
@@ -458,7 +458,7 @@
                       type="primary"
                       @click="makeSure(row, $index)"
                     >
-                      {{ $translateTitle('equipment.RelievingAssociation') }}
+                      {{ $translateTitle("equipment.RelievingAssociation") }}
                     </el-button>
                   </template>
                 </el-table-column>
@@ -556,16 +556,19 @@
             </div>
             <span slot="footer" class="dialog-footer">
               <el-button @click="childDialog = false">
-                {{ $translateTitle('developer.cancel') }}
+                {{ $translateTitle("developer.cancel") }}
               </el-button>
               <el-button
                 type="primary"
                 @click.native="submitDevice('childrenForm')"
               >
-                {{ $translateTitle('developer.determine') }}
+                {{ $translateTitle("developer.determine") }}
               </el-button>
             </span>
           </el-dialog>
+        </el-tab-pane>
+        <el-tab-pane :label="$translateTitle('device.task')" name="devicetask">
+          <device-task ref="device-task" :productid="productId" :deviceid="deviceid" />
         </el-tab-pane>
         <el-tab-pane
           v-if="isshowchild"

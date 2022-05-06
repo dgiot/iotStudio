@@ -44,9 +44,14 @@
               <el-option
                 v-for="(item, index) in producttopic"
                 :key="index"
-                :label="item.topic"
+                :label="item.category + '-' + item.desc"
                 :value="item.topic"
-              />
+              >
+                <span style="float: left">{{ item.topic }}</span>
+                <span style="float: right; color: #8492a6; font-size: 13px">
+                  {{ item.category + '-' + item.desc }}
+                </span>
+              </el-option>
             </el-select>
           </el-form-item>
           <el-form-item
@@ -146,8 +151,9 @@
 </template>
 <!--eslint-disable-->
 <script>
-  import { postTrace } from "@/api/System";
-  import { getProduct } from "@/api/Product";
+  import { postTrace } from '@/api/System'
+  import { getProduct } from '@/api/Product'
+  import { getDlinkJson } from '@/api/Dlink'
 
   export default {
     name: 'SceneLog',
@@ -269,18 +275,36 @@
     destroyed() {}, //生命周期 - 销毁完成
     activated() {},
     methods: {
-      get_topic() {
-        // this.deviceInfo
-        dgiotlog.log('this.deviceInfo', this.deviceInfo)
-        getProduct(this.deviceInfo.product.objectId).then((res) => {
-          this.producttopic = res.topics
+      /**
+       * @description 根据dlink协议中 user 与 device交互，设置deviceid为当前设备id
+       * @doc-api https://gitee.com/dgiiot/dgiot_dlink#topic%E8%AE%BE%E8%AE%A1
+       * @returns {Promise<void>}
+       */
+      async get_topic() {
+        const { basic = [] } = await getDlinkJson('Topic')
+        basic.forEach((item) => {
+          item.topic = item.topic.replace(
+            '${deviceid}',
+            this.deviceInfo.objectId
+          )
         })
+        this.producttopic = basic
+        // 设置默认选中值
+        // this.deviceInfo
+        //  dgiotlog.log('this.deviceInfo', this.deviceInfo)
+        // const {topics = []}  = getProduct(this.deviceInfo.product.objectId)
+        // topics.forEach((item) => {
+        //
+        // })
+        // this.producttopic = topics
+        // 替换topic Deviceid
       },
       sendinstruct() {
-        const pubtopic = this.instructtopic.replace(
-          '${DevAddr}',
-          this.deviceInfo.devaddr
-        )
+        // const pubtopic = this.instructtopic.replace(
+        //   '${DevAddr}',
+        //   this.deviceInfo.devaddr
+        // )
+        const pubtopic = this.instructtopic
         this.$dgiotBus.$emit(`MqttPublish`, pubtopic, this.instruct, 0, false)
       },
       handleHeight() {
@@ -346,8 +370,7 @@
         this.clickItem = ''
         this.queryForm.deviceid = this.deviceInfo.objectId
         if (this.queryForm.action == 'start') {
-          this.subtopic =
-            '$dg/trace/' + this.deviceInfo.objectId + '/#'
+          this.subtopic = '$dg/trace/' + this.deviceInfo.objectId + '/#'
         }
         this.topicKey = this.$dgiotBus.topicKey(this.router, this.subtopic)
         this.$dgiotBus.$emit(`MqttSubscribe`, {

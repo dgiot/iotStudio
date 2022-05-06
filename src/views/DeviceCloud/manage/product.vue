@@ -157,57 +157,57 @@
                   :span="2"
                   style="text-align: center; margin: 0 auto"
                 >
-                  <dgiot-icon
-                    style="font-size: 24px"
-                    icon="eye-line"
-                    :underline="false"
-                    size="mini"
-                    circle
-                    class="eye-line"
+                  <a-icon
+                    style="font-size: 28px"
+                    type="eye"
                     title="产品详情"
                     @click.native="deviceToDetail(o)"
-                  />
+                  ></a-icon>
                 </el-col>
                 <el-col :span="2" style="text-align: center; margin: 0 auto">
-                  <dgiot-icon
+                  <a-icon
                     style="font-size: 24px"
-                    icon="book-3-fill"
+                    type="book"
                     @click.native="editorDict(o.objectId)"
                     :title="$translateTitle('product.dict')"
-                  />
+                  ></a-icon>
                 </el-col>
                 <el-col :span="2" style="text-align: center; margin: 0 auto">
-                  <dgiot-icon
+                  <a-icon
                     style="font-size: 24px"
-                    icon="tv-line"
+                    type="video-camera"
                     @click.native="goKonva(o.objectId)"
                     :title="$translateTitle('concentrator.konva')"
-                  />
+                  ></a-icon>
                 </el-col>
                 <el-col
                   :offset="1"
                   style="text-align: center; margin: 0 auto"
-                  :span="2"
+                  :span="1"
                 >
-                  <dgiot-icon
-                    icon="edit-2-fill"
+                  <a-icon
                     style="font-size: 24px"
+                    type="edit"
                     @click.native="editorProduct(o.objectId)"
                     :title="$translateTitle('button.edit')"
-                  />
+                  ></a-icon>
                 </el-col>
-                <el-col :span="2" style="text-align: center; margin: 0 auto">
-                  <dgiot-icon
+                <el-col :span="3" style="text-align: center; margin: 0 auto">
+                  <a-icon
                     style="font-size: 24px"
-                    icon="delete-bin-fill"
+                    type="delete"
                     @click.native="makeSure(o, index)"
                     :title="$translateTitle('button.Delete')"
-                  />
+                  ></a-icon>
                 </el-col>
               </el-row>
             </template>
 
-            <a-card-meta :title="o.name" :description="o.desc">
+            <a-card-meta
+              :title="o.name"
+              @click.native="deviceToDetail(o)"
+              :description="o.desc"
+            >
               <template #avatar>
                 <el-image
                   style="height: 40px"
@@ -1487,7 +1487,7 @@
   import { ExportParse, ImportParse } from '@/api/Export'
   import { queryProductTemplet } from '@/api/ProductTemplet'
   import { getCategory, queryCategory } from '@/api/Category'
-  import { getDlinkJson } from "@/api/Dlink";
+  import { getDlinkJson } from '@/api/Dlink'
 
   const context = require.context('./component/profile', true, /\.vue$/)
   let res_components = {}
@@ -2912,6 +2912,7 @@
     text-align: center;
     margin: 0 auto;
   }
+
   @media screen and(max-width: 600px) {
     .devproduct {
       width: 500px;

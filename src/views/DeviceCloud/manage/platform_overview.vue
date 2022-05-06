@@ -1080,10 +1080,10 @@
         this.deviceFlag = true
       },
       printQueryInfo(value, mqttMsg) {
-        // queryParams.forEach((e) => {
-        //   if (e.vuekey)
-        //     console.log(`收到订阅${value}的消息${mqttMsg},查询参数为${mqttMsg}`)
-        // })
+        this.queryParams.forEach((e) => {
+          if (e.vuekey)
+            console.log(`收到订阅${value}的消息${mqttMsg},查询参数为${mqttMsg}`)
+        })
       },
       mqttMsg(e) {
         let mqttMsg = isBase64(e) ? Base64.decode(e) : e
@@ -1091,7 +1091,7 @@
         // // dgiotlog.log(destinationName, mqttMsg, 'mqttMsg')
         let mqttMsgValue = JSON.parse(mqttMsg).value
         let key = JSON.parse(mqttMsg).vuekey
-        this.printQueryInfo(mqttMsgValue, mqttMsg)
+        // this.printQueryInfo(mqttMsgValue, mqttMsg)
         // this.loadingConfig[`${key}`] = true
         // this.$baseNotify(
         //   '',
@@ -1122,6 +1122,7 @@
             this.set_onlineData(this.onlineData)
             break
           case 'dev_off_count':
+            console.error(mqttMsgValue, 'mqttMsgValue')
             this.dev_off_count = mqttMsgValue.count
             this.offlineData = mqttMsgValue.results
             this.set_dev_off_count(this.dev_off_count)
