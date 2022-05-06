@@ -584,7 +584,7 @@
           name="task"
         >
           <scene-log
-            v-if="activeName == 'task'"
+            v-show="activeName == 'task'"
             ref="SceneLog"
             :device-info="deviceInfo"
             :name="activeName"
@@ -592,7 +592,7 @@
         </el-tab-pane>
         <el-tab-pane :label="$translateTitle('device.log')" name="trace">
           <device-log
-            v-if="activeName == 'trace'"
+            v-show="activeName == 'trace'"
             :devaddr="devicedevaddr"
             :deviceid="deviceid"
             :is-device-info="true"
