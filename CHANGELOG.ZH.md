@@ -6,6 +6,7 @@
 * action ([b72124f](https://github.com/dgiot/dgiot-dashboard/commit/b72124f100c005a8db5794cff91786658e8649cd))
 * **action:** fix dgiot-dashboard/settings#git-gc ([10c32cb](https://github.com/dgiot/dgiot-dashboard/commit/10c32cba4ccc03cc813839ce1545eb0f34f7e09b))
 * **axios:** repair request parameter return logic ([6183d9e](https://github.com/dgiot/dgiot-dashboard/commit/6183d9e8ad9119e046a4401464203875194db257))
+* clear console ([05876ed](https://github.com/dgiot/dgiot-dashboard/commit/05876ed85293de06cfbda2d46f064d72ea743848))
 * del dist.rar ([279c2f3](https://github.com/dgiot/dgiot-dashboard/commit/279c2f3d063047b000f3ad03a79d4727431826ea))
 * device table ([a2c51c6](https://github.com/dgiot/dgiot-dashboard/commit/a2c51c6ff901dd4977fcc18b5675388414357a64))
 * **device:** device info ([bb6b438](https://github.com/dgiot/dgiot-dashboard/commit/bb6b43810e3ae00e0f8956e04561c73bb54db104))
@@ -23,6 +24,7 @@
 * **router:** fix the problem that the home device list cannot jump ([1c16b44](https://github.com/dgiot/dgiot-dashboard/commit/1c16b4439583d95afb0d5179f4b4abd4ccef8e6b))
 * **router:** route jump repair ([e64daaf](https://github.com/dgiot/dgiot-dashboard/commit/e64daaf9de33ae73f14d62a3f5f15c65c8e57703))
 * **sync:** sync gitee ([468d997](https://github.com/dgiot/dgiot-dashboard/commit/468d997b2c5bd61299c7b82bc5fc3de1a4172743))
+* unit ([8b7a045](https://github.com/dgiot/dgiot-dashboard/commit/8b7a0452d94eea4f1f3f3f7d5a5c12d3b4a8c911))
 
 
 ### Features

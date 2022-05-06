@@ -963,6 +963,7 @@ export default {
         deviceid: row.objectId,
         nodeType: row.nodeType,
         ischildren: 'false',
+        productid: this.productId,
       }
       await this.delVisitedRoute(this.$route.path)
       this.activeName = 'first'
