@@ -1,4 +1,4 @@
-## [4.5.3](https://github.com/dgiot/dgiot-dashboard/compare/v4.5.2...v4.5.3) (2022-05-06)
+## [4.5.3](https://github.com/dgiot/dgiot-dashboard/compare/v4.5.2...v4.5.3) (2022-05-07)
 
 
 ### Bug Fixes
@@ -73,6 +73,7 @@
 * **cloudoc:** complete process path static page ([1963665](https://github.com/dgiot/dgiot-dashboard/commit/19636658e5c93f3dd931e41b1d6a49e6a72aea14))
 * **dependencies:** delete vite schema ([946ad83](https://github.com/dgiot/dgiot-dashboard/commit/946ad83f46e084d9ac6f57a8db10c7adbba98861))
 * **proxy:** replace remote proxy with local server ([aff0922](https://github.com/dgiot/dgiot-dashboard/commit/aff0922e95b42386f127531c6f1a5ba31c3fcaee))
+* **query:** optimize login logic and store data that is only requested once globally ([f3b2b95](https://github.com/dgiot/dgiot-dashboard/commit/f3b2b957794b9b9d8b3dc794868d3e91dc223ae1))
 
 
 

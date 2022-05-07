@@ -143,9 +143,10 @@ export default {
     }
     return {
       viewForm: {
+        showRow: true,
         class: 'Product',
-        type: 'amis',
-        key: this.$route.query.id || '',
+        type: 'notification',
+        key: this.$route.query.id,
         title: '',
         disabled: true,
         data: {
@@ -185,7 +186,7 @@ export default {
             },
           ],
         },
-        hiddenRow: [],
+        hiddenRow: ['class', 'key', 'createdAt'],
       },
       dlinkUnit: [],
       dlinkTopic: { basic: [], thing: [] },
@@ -642,7 +643,7 @@ export default {
           isdef: true,
         },
       ],
-      isshow: false,
+      isshow: true,
       isaccumulate: false,
       addRules: {
         name: [
@@ -746,6 +747,7 @@ export default {
         resource: '',
         desc: '',
       },
+      amisShow: true,
       rules: {
         name: [
           { required: true, message: '请输入活动名称', trigger: 'blur' },
@@ -842,6 +844,7 @@ export default {
     },
   },
   mounted() {
+    this.query_notification()
     this.getAllunit()
     this.getDefaultTopic()
     this.$nextTick(() => {
@@ -1138,13 +1141,60 @@ export default {
       })
       // this.codeFlag = false
     },
-    feateditorAmis(config) {
-      let productInfo = this.productInfo
-      this.$baseEventBus.$emit('profileAmisDialog', {
-        config,
-        productInfo,
-      })
-    },
+    // feateditorAmis(config) {
+    //   // let productInfo = this.productInfo
+    //   // this.$baseEventBus.$emit('profileAmisDialog', {
+    //   //   config,
+    //   //   productInfo,
+    //   // })
+    //   this.viewForm = {
+    //     showRow: true,
+    //     class: 'Product',
+    //     type: 'notification',
+    //     key: this.$route.query.id,
+    //     title: '',
+    //     disabled: true,
+    //     data: {
+    //       type: 'page',
+    //       initApi: {
+    //         url: 'iotapi/classes/Device/parse_objectid',
+    //         method: 'get',
+    //         adaptor:
+    //           'return {\r\n  "status":0,\r\n  "msg":"",\r\n  "data":response.data.basedata\r\n  }',
+    //         headers: {
+    //           store: 'localStorage',
+    //           dgiotReplace: 'parse_objectid',
+    //         },
+    //         dataType: 'json',
+    //       },
+    //       body: [
+    //         {
+    //           type: 'form',
+    //           api: {
+    //             method: 'put',
+    //             url: 'iotapi/classes/Device/parse_objectid',
+    //             headers: {
+    //               store: 'localStorage',
+    //               dgiotReplace: 'parse_objectid',
+    //             },
+    //             dataType: 'json',
+    //             requestAdaptor:
+    //               'return {\r\n    ...api,\r\n    data: {\r\n        basedata:{ ...api.data}\r\n    }\r\n}',
+    //           },
+    //           body: [
+    //             {
+    //               type: 'input-text',
+    //               label: '设备名称',
+    //               name: 'name',
+    //             },
+    //           ],
+    //         },
+    //       ],
+    //     },
+    //     hiddenRow: ['class', 'key', 'createdAt'],
+    //   }
+    //   this.amisShow = !this.amisShow
+    // },
     ...mapMutations({
       setSizeForm: 'konva/setSizeForm',
     }),
@@ -1250,6 +1300,7 @@ export default {
         services = [],
         tags = [],
       } = this.productObj.thing
+      console.log(this.tabsChild, e)
       console.log(e.name, this.productObj.thing, this.productObj.thing[e.name])
       switch (e.name) {
         case 'properties':
@@ -1270,26 +1321,121 @@ export default {
       dgiotlogger.info(this.modules.data)
     },
     handleClick(val) {
-      if (val.name == 'fourth') {
-        // this.$router.push({
-        //   path: '/roles/thingsParse',
-        //   query: {
-        //     id: this.$route.query.id
-        //   }
-        // })
-      } else if (val.name == 'fiveth') {
-        this.getProductChannel()
-      } else if (val.name == 'second') {
-        this.getTopic()
-      } else if (val.name == 'seven') {
-        this.getResourceChannel()
-      } else if (val.name == 'sixeth') {
-        this.orginRule()
-      } else if (val.name == 'eighth') {
-        this.isreload++
-      } else if (val.name != 'fourth') {
-        window.clearInterval(this.subtimer)
-        this.subtimer = null
+      switch (val.name) {
+        case 'view':
+          this.viewForm = {
+            class: 'Product',
+            type: 'amis',
+            key: this.$route.query.id || '',
+            title: '',
+            disabled: true,
+            data: {
+              type: 'page',
+              initApi: {
+                url: 'iotapi/classes/Device/parse_objectid',
+                method: 'get',
+                adaptor:
+                  'return {\r\n  "status":0,\r\n  "msg":"",\r\n  "data":response.data.basedata\r\n  }',
+                headers: {
+                  store: 'localStorage',
+                  dgiotReplace: 'parse_objectid',
+                },
+                dataType: 'json',
+              },
+              body: [
+                {
+                  type: 'form',
+                  api: {
+                    method: 'put',
+                    url: 'iotapi/classes/Device/parse_objectid',
+                    headers: {
+                      store: 'localStorage',
+                      dgiotReplace: 'parse_objectid',
+                    },
+                    dataType: 'json',
+                    requestAdaptor:
+                      'return {\r\n    ...api,\r\n    data: {\r\n        basedata:{ ...api.data}\r\n    }\r\n}',
+                  },
+                  body: [
+                    {
+                      type: 'input-text',
+                      label: '设备名称',
+                      name: 'name',
+                    },
+                  ],
+                },
+              ],
+            },
+            hiddenRow: [],
+          }
+          break
+        case 'first':
+          this.viewForm = {
+            showRow: true,
+            class: 'Product',
+            type: 'notification',
+            key: this.$route.query.id,
+            title: '',
+            disabled: true,
+            data: {
+              type: 'page',
+              initApi: {
+                url: 'iotapi/classes/Device/parse_objectid',
+                method: 'get',
+                adaptor:
+                  'return {\r\n  "status":0,\r\n  "msg":"",\r\n  "data":response.data.basedata\r\n  }',
+                headers: {
+                  store: 'localStorage',
+                  dgiotReplace: 'parse_objectid',
+                },
+                dataType: 'json',
+              },
+              body: [
+                {
+                  type: 'form',
+                  api: {
+                    method: 'put',
+                    url: 'iotapi/classes/Device/parse_objectid',
+                    headers: {
+                      store: 'localStorage',
+                      dgiotReplace: 'parse_objectid',
+                    },
+                    dataType: 'json',
+                    requestAdaptor:
+                      'return {\r\n    ...api,\r\n    data: {\r\n        basedata:{ ...api.data}\r\n    }\r\n}',
+                  },
+                  body: [
+                    {
+                      type: 'input-text',
+                      label: '设备名称',
+                      name: 'name',
+                    },
+                  ],
+                },
+              ],
+            },
+            hiddenRow: ['class', 'key', 'createdAt'],
+          }
+          break
+        case 'fiveth':
+          this.getProductChannel()
+          break
+        case 'second':
+          this.getTopic()
+          break
+        case 'seven':
+          this.getResourceChannel()
+          break
+        case 'sixeth':
+          this.orginRule()
+          break
+        case 'eighth':
+          this.isreload++
+          break
+        default:
+          window.clearInterval(this.subtimer)
+          this.subtimer = null
+          break
       }
     },
     async getAllunit() {
@@ -2957,6 +3103,7 @@ export default {
     },
     async query_notification() {
       let info = {
+        count: 'objectId',
         where: {
           key: { $regex: this.$route.query.id },
           type: { $regex: 'notification' },
@@ -2965,7 +3112,8 @@ export default {
       this.$route.query.id
         ? (info.where.key = { $regex: this.$route.query.id })
         : ''
-      const { results } = await queryView(info)
+      const { results, count = 0 } = await queryView(info)
+      this.amisShow = count > 0 ? true : false
       this.amisproductInfo = results
     },
     // 得到产品详情

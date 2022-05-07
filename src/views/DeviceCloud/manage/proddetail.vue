@@ -181,18 +181,14 @@
                   <template slot="label">
                     <el-link
                       type="success"
-                      @click.native="
-                        feateditorAmis(amisproductInfo, 'parser', true)
-                      "
+                      @click.native="amisShow = !amisShow"
                     >
                       {{ $translateTitle('product.parser') }}
                     </el-link>
                   </template>
                   <el-link
                     :type="amisproductInfo.length ? 'success' : 'default'"
-                    @click.native="
-                      feateditorAmis(amisproductInfo, 'parser', false)
-                    "
+                    @click.native="amisShow = !amisShow"
                   >
                     {{ amisproductInfo.length || 0 }}
                   </el-link>
@@ -222,6 +218,9 @@
                 <!--                  </el-button>-->
                 <!--                </el-descriptions-item>-->
               </el-descriptions>
+            </div>
+            <div v-show="amisShow" class="amis">
+              <dgiot-views :view-form="viewForm" />
             </div>
           </div>
         </el-tab-pane>
@@ -2473,7 +2472,7 @@
               id="editor"
               class="ace_editor ace-monokai ace_dark"
               style="min-height: 600px; margin-bottom: 0"
-            ><textarea class="ace_text-input"/></pre>
+            ><textarea class="ace_text-input" /></pre>
             <div style="background: #ffffff">
               <label id="plug-name2" />
             </div>
@@ -2491,7 +2490,7 @@
               id="editor2"
               class="ace_editor"
               style="min-height: 300px; margin-top: 0; margin-bottom: 0"
-            ><textarea class="ace_text-input"/></pre>
+            ><textarea class="ace_text-input" /></pre>
           </div>
         </el-tab-pane>
         <!-- </div> -->
@@ -2873,7 +2872,7 @@
         </div>-->
         <!-- </el-tab-pane> -->
         <el-tab-pane label="可视化" name="view">
-          <dgiot-views :view-form="viewForm" />
+          <dgiot-views :key="activeName" :view-form="viewForm" />
         </el-tab-pane>
       </el-tabs>
     </div>
@@ -3214,7 +3213,7 @@
                   :id="item.name"
                   class="ace_editor3"
                   style="min-height: 300px; margin-top: 0; margin-bottom: 0"
-                ><textarea class="ace_text-input"/></pre>
+                ><textarea class="ace_text-input" /></pre>
               </div>
             </el-tab-pane>
           </el-tabs>

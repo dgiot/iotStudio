@@ -707,10 +707,7 @@
             productid: this.$route.query.id,
             uid: row.objectId,
             title: '编辑',
-            type:
-              row.radio == 'start'
-                ? 'Notification_start_ProductId_'
-                : 'Notification_stop_ProductId_',
+            type: 'Notification_'+this.Notification.detail.radio+'_'+this.$route.query.id+'_'
           },
         })
       },
