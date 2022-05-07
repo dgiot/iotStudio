@@ -62,6 +62,7 @@
 * map ([0c13f4f](https://github.com/dgiot/dgiot-dashboard/commit/0c13f4fe563f2c917b99bf160b9ef8c291ceffec))
 * **notification:** notification_ ([db5f2b8](https://github.com/dgiot/dgiot-dashboard/commit/db5f2b8d8b12be3fd04f8dfa901ce8b2403c2bb4))
 * **npmrc:** registry ([1d54924](https://github.com/dgiot/dgiot-dashboard/commit/1d549244ac2ef6e2d6f6d6877744df500f077e03))
+* **product:** enable default dynamic registration when adding products ([3b98e40](https://github.com/dgiot/dgiot-dashboard/commit/3b98e400c6a00b86a8edf167ddda927460a76d05))
 * **product:** modify product interface mode ([27a2805](https://github.com/dgiot/dgiot-dashboard/commit/27a2805f1803b47e90eeeeca5147ee042cdc40b2))
 * **product:** numbe ([90554b7](https://github.com/dgiot/dgiot-dashboard/commit/90554b7ba2a55fd3c620b5d723c213997922844e))
 * **product:** prodcutID ([d73fb26](https://github.com/dgiot/dgiot-dashboard/commit/d73fb26f688f8ac2104d63a1de5798e5c5178e99))
