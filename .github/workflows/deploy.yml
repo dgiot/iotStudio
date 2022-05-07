@@ -110,7 +110,7 @@ jobs:
       - name: Deploy to github gh-pages 🚀
         uses: JamesIves/github-pages-deploy-action@releases/v3
         with:
-          GITHUB_TOKEN: ${{ secrets.GIT_TOKEN }}
+          ACCESS_TOKEN: ${{ secrets.GIT_TOKEN }}
           BRANCH: gh-pages
           FOLDER: dist
 #      - name: Deploy to Netlify  🚀
