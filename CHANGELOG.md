@@ -10,6 +10,7 @@
 * **build:** fix build dependencies typescript versions ([040b851](https://github.com/dgiot/dgiot-dashboard/commit/040b8514b0dc3991fddd8ccb26953b2baf002031))
 * clear console ([05876ed](https://github.com/dgiot/dgiot-dashboard/commit/05876ed85293de06cfbda2d46f064d72ea743848))
 * del dist.rar ([279c2f3](https://github.com/dgiot/dgiot-dashboard/commit/279c2f3d063047b000f3ad03a79d4727431826ea))
+* **devdependencies:** babel-plugin-dynamic-import-node ([34f78fe](https://github.com/dgiot/dgiot-dashboard/commit/34f78fe28760e5b9dfd70adc6ca4426dc66bd720))
 * device table ([a2c51c6](https://github.com/dgiot/dgiot-dashboard/commit/a2c51c6ff901dd4977fcc18b5675388414357a64))
 * **device:** device info ([bb6b438](https://github.com/dgiot/dgiot-dashboard/commit/bb6b43810e3ae00e0f8956e04561c73bb54db104))
 * **device:** fix the problem of confusion when modifying equipment parameters ([4c1b7a7](https://github.com/dgiot/dgiot-dashboard/commit/4c1b7a7a9ab6612526990a90c81212515a79cbc3))
