@@ -1648,7 +1648,7 @@
           tdchannel: '7b290e5a0a',
           category: '',
           taskchannel: '6c48effac2',
-          otherchannel: [],
+          otherchannel: '',
           nodeType: 3,
           desc: '',
           netType: '',
@@ -2502,7 +2502,7 @@
         this.$set(
           this.form,
           'otherchannel',
-          row.channel ? row.channel.otherchannel : []
+          row.channel ? row.channel.otherchannel : ''
         )
         this.$set(
           this.form,
