@@ -4,6 +4,7 @@
 ### Bug Fixes
 
 * action ([b72124f](https://github.com/dgiot/dgiot-dashboard/commit/b72124f100c005a8db5794cff91786658e8649cd))
+* **action:** fix build error ([1811f81](https://github.com/dgiot/dgiot-dashboard/commit/1811f813c1b327c20ca99476c77eaced10d4c5f1))
 * **action:** fix dgiot-dashboard/settings#git-gc ([10c32cb](https://github.com/dgiot/dgiot-dashboard/commit/10c32cba4ccc03cc813839ce1545eb0f34f7e09b))
 * **axios:** repair request parameter return logic ([6183d9e](https://github.com/dgiot/dgiot-dashboard/commit/6183d9e8ad9119e046a4401464203875194db257))
 * clear console ([05876ed](https://github.com/dgiot/dgiot-dashboard/commit/05876ed85293de06cfbda2d46f064d72ea743848))
