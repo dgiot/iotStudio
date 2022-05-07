@@ -1203,7 +1203,7 @@
             this.loadingConfig[`${key}`] = true
           })
         }, 1240)
-        const Startdashboardid = 'dgiot-dashboard'
+        const Startdashboardid = '32511dbfe5'
         this.subtopic = `$dg/dashboard/${Startdashboardid}/report`
         this.topicKey = this.$dgiotBus.topicKey(this.router, this.subtopic)
         this.$dgiotBus.$emit('MqttSubscribe', {
