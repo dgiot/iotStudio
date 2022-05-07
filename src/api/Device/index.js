@@ -92,7 +92,7 @@ export async function getDabDevice(objectId, params) {
 // 获取卡片实时数据
 export async function getCardDevice(objectId) {
   return request({
-    url: `app/${objectId}`,
+    url: `devicecard/${objectId}`,
     method: 'get',
   })
 }

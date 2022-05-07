@@ -707,7 +707,7 @@
             productid: this.$route.query.id,
             uid: row.objectId,
             title: '编辑',
-            type: 'Notification_'+this.Notification.detail.radio+'_'+this.$route.query.id+'_'
+            type: 'Notification_'+this.Notification.detail.radio+'_'+this.$route.query.id
           },
         })
       },
