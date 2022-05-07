@@ -7,6 +7,7 @@
 * **action:** fix build error ([1811f81](https://github.com/dgiot/dgiot-dashboard/commit/1811f813c1b327c20ca99476c77eaced10d4c5f1))
 * **action:** fix dgiot-dashboard/settings#git-gc ([10c32cb](https://github.com/dgiot/dgiot-dashboard/commit/10c32cba4ccc03cc813839ce1545eb0f34f7e09b))
 * **axios:** repair request parameter return logic ([6183d9e](https://github.com/dgiot/dgiot-dashboard/commit/6183d9e8ad9119e046a4401464203875194db257))
+* **build:** fix build dependencies typescript versions ([040b851](https://github.com/dgiot/dgiot-dashboard/commit/040b8514b0dc3991fddd8ccb26953b2baf002031))
 * clear console ([05876ed](https://github.com/dgiot/dgiot-dashboard/commit/05876ed85293de06cfbda2d46f064d72ea743848))
 * del dist.rar ([279c2f3](https://github.com/dgiot/dgiot-dashboard/commit/279c2f3d063047b000f3ad03a79d4727431826ea))
 * device table ([a2c51c6](https://github.com/dgiot/dgiot-dashboard/commit/a2c51c6ff901dd4977fcc18b5675388414357a64))
