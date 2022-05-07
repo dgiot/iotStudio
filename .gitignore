@@ -28,7 +28,7 @@ pnpm-debug.log*
 *.tar.gz
 
 # Lock files
-# pnpm-lock.yaml
+pnpm-lock.yaml
 pack-lock.json
 # Yarn v2
 .pnp.*

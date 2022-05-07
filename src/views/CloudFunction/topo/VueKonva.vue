@@ -459,7 +459,7 @@
       handleMqttMsg(subdialogid) {
         let _this = this
         const router = _this.$dgiotBus.router(this.$route.fullPath)
-        var channeltopic = new RegExp('$dg/konva/' + subdialogid + '/properties/report')
+        var channeltopic = new RegExp('$dg/user/' + subdialogid + '/konva/report')
         _this.topicKey = _this.$dgiotBus.topicKey(router, channeltopic)
         _this.$dgiotBus.$emit('MqttSubscribe', {
           router: router,
@@ -581,7 +581,7 @@
         _this.stop_Mqtt = true
         var text0 = JSON.stringify({ action: 'stop_logger' })
         var sendInfo = {
-          topic: '$dg/konva/' + _this.productid + '/properties/report',
+          topic: '$dg/user/' + _this.productid + '/konva/report',
           text: text0,
           retained: true,
           qos: 2,

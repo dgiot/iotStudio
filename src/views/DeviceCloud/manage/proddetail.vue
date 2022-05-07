@@ -107,9 +107,13 @@
                 </el-descriptions-item>
                 <el-descriptions-item
                   :label="$translateTitle('product.addingtime')"
-                  :span="2"
                 >
                   {{ productdetail.createdAt }}
+                </el-descriptions-item>
+                <el-descriptions-item
+                  :label="$translateTitle('deviceLog.productid')"
+                >
+                  {{ productdetail.objectId }}
                 </el-descriptions-item>
                 <el-descriptions-item
                   :label="$translateTitle('product.classification')"

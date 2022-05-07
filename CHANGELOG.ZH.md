@@ -43,6 +43,7 @@
 * **dashboardid:** jump to dashboard with fixed ID ([65d09b4](https://github.com/dgiot/dgiot-dashboard/commit/65d09b47f1ed25fef34993575e0a97662472a3bb))
 * **devdependencies:** action ([cbbe08f](https://github.com/dgiot/dgiot-dashboard/commit/cbbe08f5a69bcb237d9923a2247fe11a5789ccc6))
 * device(task) ([153b249](https://github.com/dgiot/dgiot-dashboard/commit/153b249658a2a15f38aaa0584f5795a55aa7ff6b))
+* **device:** 修正不正确的字段（所属厂家修为所属部门） ([a793bce](https://github.com/dgiot/dgiot-dashboard/commit/a793bcec1a8c433ef5a6afdd19ddb5f3bd31d790))
 * **device:** rewrite device list interface ([0fdb3c8](https://github.com/dgiot/dgiot-dashboard/commit/0fdb3c8182ba074466d4fa5e33bf2bfab9014696))
 * **device:** rewrite device management interface ([85ad1b0](https://github.com/dgiot/dgiot-dashboard/commit/85ad1b072954fba850f9d0de27a280e6187e03de))
 * devicesDetailLite.vue ([78109fa](https://github.com/dgiot/dgiot-dashboard/commit/78109fa7bb9e248174167aff1509db6be94685a0))
