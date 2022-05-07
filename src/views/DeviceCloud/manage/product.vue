@@ -535,6 +535,23 @@
                 <span v-else>{{ product.category.name }}</span>
               </el-form-item>
               <el-form-item
+                :label="$translateTitle('product.dynamicregistration')"
+                prop="netType"
+              >
+                <el-tooltip
+                  :content="$translateTitle('product.text1')"
+                  placement="top"
+                >
+                  <el-switch
+                    v-model="form.dynamicregistration"
+                    active-text="开启动态注册"
+                    inactive-text="关闭动态注册"
+                    active-color="#13ce66"
+                    inactive-color="#ff4949"
+                  ></el-switch>
+                </el-tooltip>
+              </el-form-item>
+              <el-form-item
                 :label="$translateTitle('product.Storage channel')"
                 prop="tdchannel"
               >
@@ -1624,6 +1641,7 @@
         importDialogShow: false,
         cType: '',
         form: {
+          dynamicregistration: true,
           config: { checkList: ['konva', 'amis'] },
           type: 1,
           storageStrategy: '',
@@ -2304,6 +2322,7 @@
         this.moduleTitle = this.$translateTitle('product.createproduct')
         this.imageUrl = ''
         this.form = {
+          dynamicregistration: true,
           name: '',
           type: 1,
           category: '',
@@ -2543,6 +2562,7 @@
       },
       submitForm() {
         var initparams = {
+          dynamicregistration: this.form.dynamicregistration,
           name: this.form.name,
           nodeType: this.form.nodeType,
           netType: this.form.netType,
@@ -2687,6 +2707,7 @@
       },
       resetProductForm() {
         this.form = {
+          dynamicregistration: true,
           name: '',
           category: '',
           nodeType: 3,

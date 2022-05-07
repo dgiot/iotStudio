@@ -40,6 +40,7 @@
 * create factory ([811ebc9](https://github.com/dgiot/dgiot-dashboard/commit/811ebc9edbc7234c5422ebdeeab509b85dcbcc98))
 * dashboard json ([5476603](https://github.com/dgiot/dgiot-dashboard/commit/5476603dad0ac1230ef13407f2055f58e6a75927))
 * **dashboardid:** jump to dashboard with fixed ID ([65d09b4](https://github.com/dgiot/dgiot-dashboard/commit/65d09b47f1ed25fef34993575e0a97662472a3bb))
+* **devdependencies:** action ([cbbe08f](https://github.com/dgiot/dgiot-dashboard/commit/cbbe08f5a69bcb237d9923a2247fe11a5789ccc6))
 * device(task) ([153b249](https://github.com/dgiot/dgiot-dashboard/commit/153b249658a2a15f38aaa0584f5795a55aa7ff6b))
 * **device:** rewrite device list interface ([0fdb3c8](https://github.com/dgiot/dgiot-dashboard/commit/0fdb3c8182ba074466d4fa5e33bf2bfab9014696))
 * **device:** rewrite device management interface ([85ad1b0](https://github.com/dgiot/dgiot-dashboard/commit/85ad1b072954fba850f9d0de27a280e6187e03de))
