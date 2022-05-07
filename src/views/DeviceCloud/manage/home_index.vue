@@ -342,7 +342,7 @@
       </el-table-column>
       <el-table-column
         align="center"
-        label="所属厂家"
+        label="所属部门"
         prop="ACL"
         show-overflow-tooltip
         sortable

@@ -53,6 +53,7 @@
 * **ftechnology:** ftechnology amis ([b02abb3](https://github.com/dgiot/dgiot-dashboard/commit/b02abb3277236ecf76df3f94934ca306212b0a54))
 * **ftechnology:** operation and attribute table ([8b787c7](https://github.com/dgiot/dgiot-dashboard/commit/8b787c7a4a2b0c48338de52aaf2ed46954e3fb3d))
 * **i18n:** product card field translation ([d39f60b](https://github.com/dgiot/dgiot-dashboard/commit/d39f60ba108367105d92a659307fa32ba7a62d2a))
+* **ignore:** lock-yml ([4d964c4](https://github.com/dgiot/dgiot-dashboard/commit/4d964c42d22cbe2b73503d90639460d9fe6e4c03))
 * iotapi(devicecard) ([351ecec](https://github.com/dgiot/dgiot-dashboard/commit/351ecec7b1599fd128439aba5b31db5714e71b7f))
 * **konva:** button ([f7ef915](https://github.com/dgiot/dgiot-dashboard/commit/f7ef915fea917695b917881436c3f259b57e225b))
 * list ([6181d08](https://github.com/dgiot/dgiot-dashboard/commit/6181d086b0c49ced39e6c857d4fc592cb5ec9c3a))

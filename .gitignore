@@ -15,7 +15,6 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
-#pnpm-lock.yaml
 *.idea
 *-lock.json
 
@@ -29,7 +28,7 @@ pnpm-debug.log*
 *.tar.gz
 
 # Lock files
-pnpm-lock.yaml
+# pnpm-lock.yaml
 pack-lock.json
 # Yarn v2
 .pnp.*
