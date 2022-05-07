@@ -593,7 +593,6 @@
                 <el-select
                   v-model="form.otherchannel"
                   :placeholder="$translateTitle('task.Select')"
-                  multiple
                   style="width: 100%"
                   value-key="objectId"
                 >
