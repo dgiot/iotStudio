@@ -56,6 +56,10 @@
     "url": "git+https://github.com/dgiot/dgiot-dashboard.git"
   },
   "dependencies": {
+    "vue": "^2.5.17",
+    "react": "16.8.0",
+    "react-dom": "17.0.0",
+    "typescript": "2.7.0",
     "@dgiot/dgiot-component": "0.0.3",
     "@dgiot/dgiot-icons": "0.0.19",
     "@dgiot/dgiot-monaco": "^0.2.2",
