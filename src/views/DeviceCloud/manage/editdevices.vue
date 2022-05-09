@@ -567,9 +567,9 @@
             </span>
           </el-dialog>
         </el-tab-pane>
-        <el-tab-pane :label="$translateTitle('device.task')" name="devicetask">
-          <device-task ref="device-task" :productid="productId" :deviceid="deviceid" />
-        </el-tab-pane>
+<!--        <el-tab-pane :label="$translateTitle('device.task')" name="devicetask">-->
+<!--          <device-task ref="device-task" :productid="productId" :deviceid="deviceid" />-->
+<!--        </el-tab-pane>-->
         <el-tab-pane
           v-if="isshowchild"
           :label="$translateTitle('device.instruct')"

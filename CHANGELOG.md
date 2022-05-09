@@ -44,6 +44,7 @@
 * create factory ([811ebc9](https://github.com/dgiot/dgiot-dashboard/commit/811ebc9edbc7234c5422ebdeeab509b85dcbcc98))
 * dashboard json ([5476603](https://github.com/dgiot/dgiot-dashboard/commit/5476603dad0ac1230ef13407f2055f58e6a75927))
 * **dashboardid:** jump to dashboard with fixed ID ([65d09b4](https://github.com/dgiot/dgiot-dashboard/commit/65d09b47f1ed25fef34993575e0a97662472a3bb))
+* **default:** default dlink ([9ee9cde](https://github.com/dgiot/dgiot-dashboard/commit/9ee9cdea0bced110b9c68b769b1fe7bae55b723b))
 * **devdependencies:** action ([cbbe08f](https://github.com/dgiot/dgiot-dashboard/commit/cbbe08f5a69bcb237d9923a2247fe11a5789ccc6))
 * device(task) ([153b249](https://github.com/dgiot/dgiot-dashboard/commit/153b249658a2a15f38aaa0584f5795a55aa7ff6b))
 * **device:** 修正不正确的字段（所属厂家修为所属部门） ([a793bce](https://github.com/dgiot/dgiot-dashboard/commit/a793bcec1a8c433ef5a6afdd19ddb5f3bd31d790))
