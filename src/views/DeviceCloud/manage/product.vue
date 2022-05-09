@@ -543,7 +543,7 @@
                   placement="top"
                 >
                   <el-switch
-                    v-model="form.dynamicregistration"
+                    v-model="form.dynamicReg"
                     active-text="开启动态注册"
                     inactive-text="关闭动态注册"
                     active-color="#13ce66"
@@ -1640,7 +1640,7 @@
         importDialogShow: false,
         cType: '',
         form: {
-          dynamicregistration: true,
+          dynamicReg: true,
           config: { checkList: ['konva', 'amis'] },
           type: 1,
           storageStrategy: '',
@@ -2321,7 +2321,7 @@
         this.moduleTitle = this.$translateTitle('product.createproduct')
         this.imageUrl = ''
         this.form = {
-          dynamicregistration: true,
+          dynamicReg: true,
           name: '',
           type: 1,
           category: '',
@@ -2488,6 +2488,7 @@
         this.form.config = _.merge(row.config, { checkList: [] })
         this.form.name = row.name
         this.form.nodeType = row.nodeType
+        this.form.dynamicReg = row.dynamicReg
         this.$set(this.form, 'type', row.channel ? row.channel.type : '')
         this.$set(
           this.form,
@@ -2561,7 +2562,7 @@
       },
       submitForm() {
         var initparams = {
-          dynamicregistration: this.form.dynamicregistration,
+          dynamicReg: this.form.dynamicReg,
           name: this.form.name,
           nodeType: this.form.nodeType,
           netType: this.form.netType,
@@ -2706,7 +2707,7 @@
       },
       resetProductForm() {
         this.form = {
-          dynamicregistration: true,
+          dynamicReg: true,
           name: '',
           category: '',
           nodeType: 3,
