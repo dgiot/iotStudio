@@ -45,7 +45,7 @@ export function license() {
 
 export function SiteDefault() {
   return request({
-    url: '/classes/Site/default',
+    url: '/dlinkjson?type=default',
     method: 'get',
     params: {},
   })

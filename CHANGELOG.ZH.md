@@ -82,6 +82,7 @@
 * shamefully-hoist ([5dac908](https://github.com/dgiot/dgiot-dashboard/commit/5dac908d21b1e59468fa3a9433dbe7c551f0c17c))
 * **sql:** rulesql ([e7adc44](https://github.com/dgiot/dgiot-dashboard/commit/e7adc448132f3b7ba196d523231032304bf47cb7))
 * **src\views\cloudoc\modeling\index.vue:** add factory modeling ([b0cf77a](https://github.com/dgiot/dgiot-dashboard/commit/b0cf77ae7a4aca3198529ee68953804a06491f3a))
+* **statistics:** statistics ([9732329](https://github.com/dgiot/dgiot-dashboard/commit/9732329ed93000b69d75912239506bd6c4b4f045))
 * **style:** master data management style adjustment ([fbb44ea](https://github.com/dgiot/dgiot-dashboard/commit/fbb44ea7e805b76163d4da115190a8870973c35a))
 * sync ([5a65626](https://github.com/dgiot/dgiot-dashboard/commit/5a656261ada676219f733d716052c5a77b1acee6))
 * **views:** empty ([81cfe07](https://github.com/dgiot/dgiot-dashboard/commit/81cfe079be4ac6933ac3184131a7d3cbefe84957))
