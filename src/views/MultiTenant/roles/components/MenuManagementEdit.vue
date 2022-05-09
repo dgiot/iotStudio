@@ -459,6 +459,8 @@
           params.parent.objectId = '0'
           const res = await postMenu(params)
           this.$message({
+            showClose: true,
+            duration: 2000,
             message: '新增成功',
             type: 'success',
           })
@@ -468,6 +470,8 @@
 
           const res = await postMenu(params)
           this.$message({
+            showClose: true,
+            duration: 2000,
             message: '新增成功',
             type: 'success',
           })

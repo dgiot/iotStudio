@@ -404,6 +404,7 @@
               this.dataform.params[this.editIndexId] = this.param
               this.$message({
                 showClose: true,
+                duration: 2000,
                 message: '编辑成功',
                 type: 'success',
               })
@@ -411,6 +412,7 @@
               this.dataform.params.push(this.param)
               this.$message({
                 showClose: true,
+                duration: 2000,
                 message: '新增成功',
                 type: 'success',
               })

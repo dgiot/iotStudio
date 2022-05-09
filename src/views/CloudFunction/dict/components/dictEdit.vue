@@ -141,6 +141,7 @@
               )
               this.$message({
                 showClose: true,
+                duration: 2000,
                 message: `${this.$translateTitle(
                   'user.Save the template successfully'
                 )}`,

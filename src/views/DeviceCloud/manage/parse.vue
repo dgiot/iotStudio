@@ -139,6 +139,7 @@
           dgiotlog.log('eresresrror', res)
           this.$message({
             showClose: true,
+            duration: 2000,
             message: this.$translateTitle('user.update completed'),
             type: 'success',
           })

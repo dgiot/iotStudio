@@ -2110,11 +2110,15 @@ export default {
         this.dictVisible = false;
         this.$message({
           type: "success",
+          showClose: true,
+          duration: 2000,
           message: "字典数据更新成功"
         });
       } else {
         this.$message({
           type: "error",
+          showClose: true,
+          duration: 2000,
           message: "字典数据更新失败"
         });
       }
@@ -2126,13 +2130,17 @@ export default {
         this.dictTempForm.params[this.editIndexId] = this.tempparams;
         this.$message({
           type: "success",
-          message: "编辑成功"
+          message: "编辑成功",
+          showClose: true,
+          duration: 2000,
         });
       } else {
         this.dictTempForm.params.push(this.tempparams);
         this.$message({
           type: "success",
-          message: "新增成功"
+          message: "新增成功",
+          showClose: true,
+          duration: 2000,
         });
       }
     },
@@ -2238,7 +2246,9 @@ export default {
       // dgiotlog.log('### Success response', response)
       this.$message({
         type: "success",
-        message: "产品导入成功"
+        message: "产品导入成功",
+        showClose: true,
+        duration: 2000,
       });
       this.importDialogShow = false;
       this.$refs["uploadProForm"].resetFields();
@@ -2246,8 +2256,9 @@ export default {
     },
     handleUploadError(err, file, fileList) {
       this.$message({
+        message: err,
         showClose: true,
-        message: err
+        duration: 2000,
       });
     },
     handleChange(file, fileList) {
@@ -2428,6 +2439,7 @@ export default {
           message: this.$translateTitle(
             "user.Save the template successfully"
           ),
+          duration: 2000,
           type: "success"
         });
         this.dialogVisible = false;
@@ -2685,6 +2697,7 @@ export default {
           message: this.$translateTitle(
             "user.Save the template successfully"
           ),
+          duration: 2000,
           type: "success"
         });
       } catch (error) {
@@ -2708,7 +2721,8 @@ export default {
         this.$message({
           type: "error",
           message: res.error || res,
-          showClose: true
+          showClose: true,
+          duration: 2000,
         });
       }
     },
@@ -2722,6 +2736,8 @@ export default {
         this.initQuery("产品修改成功", "success");
       } else {
         this.$message({
+          showClose: true,
+          duration: 2000,
           type: "error",
           message: res.error
         });
@@ -2792,6 +2808,8 @@ export default {
             delProduct(row.objectId).then((response) => {
               if (response) {
                 this.$message({
+                  showClose: true,
+                  duration: 2000,
                   type: "success",
                   message: "删除成功"
                 });
@@ -2830,11 +2848,15 @@ export default {
       const res = await postDict(params);
       if (res) {
         this.$message({
+          showClose: true,
+          duration: 2000,
           type: "success",
           message: "备份成功"
         });
       } else {
         this.$message({
+          showClose: true,
+          duration: 2000,
           type: "error",
           message: `备份失败`
         });

@@ -808,11 +808,15 @@
               if (res.updatedAt) {
                 this.popoverVisible = false
                 this.$message({
+                  showClose: true,
+                  duration: 2000,
                   type: 'success',
                   message: this.$translateTitle(`迁移成功`),
                 })
               } else {
                 this.$message({
+                  showClose: true,
+                  duration: 2000,
                   type: 'success',
                   message: this.$translateTitle(`迁移成功`),
                 })

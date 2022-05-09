@@ -782,6 +782,8 @@
           if (!extension) {
             // 将图片img转化为base64
             this.$message({
+              showClose: true,
+              duration: 2000,
               message: '请上传图片',
               type: 'error',
             })
@@ -852,6 +854,8 @@
       handleUploadSuccess(response, file, fileList) {
         dgiotlog.log('### Success response', response)
         this.$message({
+          showClose: true,
+          duration: 2000,
           type: 'success',
           message: '产品导入成功',
         })
@@ -861,6 +865,8 @@
       },
       handleUploadError(err, file, fileList) {
         this.$message({
+          showClose: true,
+          duration: 2000,
           showClose: true,
           message: err,
         })
@@ -1018,6 +1024,8 @@
         const res = await putProduct(productid, params)
         if (res) {
           this.$message({
+            showClose: true,
+            duration: 2000,
             type: 'success',
             message: `编辑成功`,
           })
@@ -1102,6 +1110,8 @@
                     .then((response) => {
                       if (response) {
                         this.$message({
+                          showClose: true,
+                          duration: 2000,
                           type: 'success',
                           message: '删除成功',
                         })
@@ -1162,6 +1172,8 @@
           export_txt_to_zip(JSON.stringify(this.allTableDate), 'Dict', 'Dict')
         } else {
           this.$message({
+            showClose: true,
+            duration: 2000,
             type: 'warning',
             message: '数据为空,无法导出',
           })

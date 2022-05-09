@@ -1196,6 +1196,8 @@
         await postChannel(data).then((results) => {
           if (results) {
             this.$message({
+              showClose: true,
+              duration: 2000,
               type: 'success',
               message: this.channelupdated == '编辑' ? '编辑成功' : '创建成功',
             })
@@ -1299,6 +1301,7 @@
           if (updatedAt) {
             this.$message({
               showClose: true,
+              duration: 2000,
               message:
                 this.$translateTitle(`developer.${action}`) +
                 '' +
@@ -1349,6 +1352,8 @@
         const res = await putChannel(channeld, data)
         if (res.updatedAt) {
           this.$message({
+            showClose: true,
+            duration: 2000,
             type: 'success',
             message: '编辑成功',
           })
@@ -1368,6 +1373,8 @@
         delChannel(row.objectId)
           .then((results) => {
             this.$message({
+              showClose: true,
+              duration: 2000,
               type: 'success',
               message: '删除成功',
             })

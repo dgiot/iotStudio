@@ -441,6 +441,8 @@
         this.inputDOM = this.$refs.inputer
         if (!/\.zip$/.test(this.inputDOM.files[0].name)) {
           this.$message({
+            showClose: true,
+            duration: 2000,
             type: 'warning',
             message: '仅支持zip文件',
           })
@@ -520,6 +522,8 @@
               })
             } else {
               this.$message({
+                showClose: true,
+                duration: 2000,
                 type: 'success',
                 message: '删除成功!',
               })

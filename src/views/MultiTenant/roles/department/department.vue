@@ -578,6 +578,8 @@
         const res = await delDict(objectId)
         if (res) {
           this.$message({
+            showClose: true,
+            duration: 2000,
             type: 'success',
             message: '删除成功',
           }),
@@ -615,7 +617,9 @@
                 checkrole.push(item.name)
               })
             } else {
-              this.$message({ mesaage: '数据为空' })
+              this.$message({ mesaage: '数据为空',
+                showClose: true,
+                duration: 2000, })
               return
             }
 
@@ -636,7 +640,9 @@
             if (res) {
               loading.close()
               if (res) {
-                this.$message({ message: '更新成功' })
+                this.$message({ message: '更新成功',
+                  showClose: true,
+                  duration: 2000, })
               }
             } else {
               loading.close()

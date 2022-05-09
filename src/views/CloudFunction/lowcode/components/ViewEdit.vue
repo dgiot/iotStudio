@@ -252,6 +252,7 @@
               const res = await postView(params)
               this.$message({
                 showClose: true,
+                duration: 2000,
                 message: `${this.$translateTitle(
                   'user.Save the template successfully'
                 )}`,
@@ -261,6 +262,7 @@
               const { msg } = await putView(this.viewId, params)
               this.$message({
                 showClose: true,
+                duration: 2000,
                 message: `${this.$translateTitle(
                   'user.Save the template successfully'
                 )}`,

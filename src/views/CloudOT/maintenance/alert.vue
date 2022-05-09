@@ -459,6 +459,7 @@
           dgiotlog.log(res)
           this.$message({
             showClose: true,
+            duration: 2000,
             message: '处理成功',
             type: 'success',
           })
@@ -518,6 +519,7 @@
         if (res == {}) {
           this.$message({
             showClose: true,
+            duration: 2000,
             message:
               this.$translateTitle('Maintenance.delete') +
               $translateTitle('message.success'),

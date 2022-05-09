@@ -973,6 +973,8 @@ export default {
             (resultes) => {
               if (resultes) {
                 this.$message({
+                  showClose: true,
+                  duration: 2000,
                   type: 'success',
                   message: '添加成功',
                 })
@@ -1000,12 +1002,16 @@ export default {
         .then((data) => {
           if (data && data.length != 0) {
             this.$message({
+              showClose: true,
+              duration: 2000,
               message: '解除关联成功',
               type: 'success',
             })
             this.getDevices()
           } else {
             this.$message({
+              showClose: true,
+              duration: 2000,
               message: '解除关联失败',
               type: 'error',
             })
@@ -1028,6 +1034,8 @@ export default {
         .then((data) => {
           if (data && data.length != 0) {
             this.$message({
+              showClose: true,
+              duration: 2000,
               message: '禁用成功',
               type: 'success',
             })
@@ -1055,12 +1063,16 @@ export default {
         .then((data) => {
           if (data && data.length != 0) {
             this.$message({
+              showClose: true,
+              duration: 2000,
               message: '启用成功',
               type: 'success',
             })
             this.getDevices()
           } else {
             this.$message({
+              showClose: true,
+              duration: 2000,
               message: '启用失败',
               type: 'error',
             })
@@ -1089,6 +1101,8 @@ export default {
         if (response) {
           this.$message({
             type: 'success',
+            showClose: true,
+            duration: 2000,
             message: '解除关联成功',
           })
           // row._self.$refs[`popover-${$index}`].doClose()
@@ -1119,6 +1133,8 @@ export default {
           }
           this.$putDevice(row.objectId, params).then((resultes) => {
             this.$message({
+              showClose: true,
+              duration: 2000,
               type: 'success',
               message: '状态修改成功',
             })
@@ -1128,6 +1144,8 @@ export default {
         .catch(() => {
           this.$message({
             type: 'info',
+            showClose: true,
+            duration: 2000,
             message: '已取消修改',
           })
           const newData = row

@@ -774,6 +774,7 @@
           this.$convertRes2Blob(res)
           this.$message({
             showClose: true,
+            duration: 2000,
             message: this.$translateTitle('node.export success'),
             type: 'success',
           })

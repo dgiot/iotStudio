@@ -784,6 +784,8 @@
       handleUploadSuccess(response, file, fileList) {
         // dgiotlog.log('### Success response', response)
         this.$message({
+          showClose: true,
+          duration: 2000,
           type: 'success',
           message: '产品导入成功',
         })
@@ -793,6 +795,8 @@
       },
       handleUploadError(err, file, fileList) {
         this.$message({
+          showClose: true,
+          duration: 2000,
           showClose: true,
           message: err,
         })
@@ -961,6 +965,7 @@
           })
           this.$message({
             showClose: true,
+            duration: 2000,
             message: this.$translateTitle(
               'user.Save the template successfully'
             ),
@@ -1149,6 +1154,7 @@
           dgiotlog.log('eresresrror', res)
           this.$message({
             showClose: true,
+            duration: 2000,
             message: this.$translateTitle(
               'user.Save the template successfully'
             ),
@@ -1169,6 +1175,8 @@
           this.$message({
             type: 'error',
             message: res.error,
+            showClose: true,
+            duration: 2000,
           })
         }
       },
@@ -1184,6 +1192,8 @@
           this.$message({
             type: 'error',
             message: res.error,
+            showClose: true,
+            duration: 2000,
           })
         }
       },
@@ -1191,6 +1201,8 @@
         this.$message({
           type: type || 'info',
           message: msg,
+          showClose: true,
+          duration: 2000,
         })
         this.dialogFormVisible = false
         this.resetProductForm()
@@ -1247,6 +1259,8 @@
                 this.$message({
                   type: 'success',
                   message: '删除成功',
+                  showClose: true,
+                  duration: 2000,
                 })
                 scope._self.$refs[`popover-${$index}`].doClose()
                 this.searchProduct()
@@ -1274,9 +1288,13 @@
           this.$message({
             type: 'success',
             message: '备份成功',
+            showClose: true,
+            duration: 2000,
           })
         } else {
           this.$message({
+            showClose: true,
+            duration: 2000,
             type: 'error',
             message: `备份失败`,
           })

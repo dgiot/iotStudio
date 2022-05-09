@@ -114,6 +114,7 @@
               .then(() => {
                 this.$message({
                   showClose: true,
+                  duration: 2000,
                   message: this.$translateTitle('oper.disconnectSuccess'),
                   type: 'success',
                 })

@@ -316,6 +316,8 @@
                 this.$message({
                   message: '新增成功',
                   type: 'success',
+                  showClose: true,
+                  duration: 2000,
                 })
                 this.$dgiotBus.$emit('asyncTreeData')
                 this.$dgiotBus.$emit('dialogHide')
@@ -325,12 +327,16 @@
                 this.$message({
                   message: `角色添加出錯${res}`,
                   type: 'error',
+                  showClose: true,
+                  duration: 2000,
                 })
               }
             } catch (_error) {
               this.$message({
                 message: `角色添加出錯${_error}`,
                 type: 'error',
+                showClose: true,
+                duration: 2000,
               })
               dgiotlog.log(_error, '_error')
             }

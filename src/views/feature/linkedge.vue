@@ -1124,6 +1124,8 @@
           this.formInline.from.where.length
         ) {
           this.$message({
+            showClose: true,
+            duration: 2000,
             message: `最多只能添加${
               this.formInline.data[this.formInline.from.method].length
             }个比较参数`,
@@ -1502,6 +1504,8 @@
                     this.formInline.result
                   )
                   this.$message({
+                    showClose: true,
+                    duration: 2000,
                     message: 'sql测试成功',
                     type: 'success',
                   })

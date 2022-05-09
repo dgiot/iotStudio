@@ -237,12 +237,16 @@
             addGroup(this.numberValidateForm.name)
               .then((res) => {
                 this.$message({
+                  showClose: true,
+                  duration: 2000,
                   message: '新建设备分组成功',
                   type: 'success',
                 })
               })
               .catch((e) => {
                 this.$message({
+                  showClose: true,
+                  duration: 2000,
                   message: '新建设备分组失败' + e.computed,
                   type: 'error',
                 })
@@ -276,12 +280,16 @@
               .then((res) => {
                 this.getTree()
                 this.$message({
+                  showClose: true,
+                  duration: 2000,
                   type: 'success',
                   message: '删除成功!',
                 })
               })
               .catch((e) => {
                 this.$message({
+                  showClose: true,
+                  duration: 2000,
                   type: 'error',
                   message: '删除失败' + e.error,
                 })
@@ -289,6 +297,8 @@
           })
           .catch(() => {
             this.$message({
+              showClose: true,
+              duration: 2000,
               type: 'info',
               message: '已取消删除',
             })
@@ -303,6 +313,8 @@
           putRole(data.objectId, this.editLabel)
             .then((res) => {
               this.$message({
+                showClose: true,
+                duration: 2000,
                 type: 'success',
                 message: '编辑成功',
               })

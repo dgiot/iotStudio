@@ -233,12 +233,16 @@
         this.listLoading = true
         if (info.url) {
           this.$message({
+            showClose: true,
+            duration: 2000,
             type: 'success',
             message: '上传成功',
           })
           this.get_filelist(this.parentfile)
         } else {
           this.$message({
+            showClose: true,
+            duration: 2000,
             type: 'error',
             message: '上传失败',
           })
@@ -281,12 +285,16 @@
               .then((res) => {
                 if (res.status == 'ok') {
                   this.$message({
+                    showClose: true,
+                    duration: 2000,
                     type: 'success',
                     message: '删除成功',
                   })
                   this.get_filelist(row.path)
                 } else {
                   this.$message({
+                    showClose: true,
+                    duration: 2000,
                     type: 'error',
                     message: res.message,
                   })
@@ -294,6 +302,8 @@
               })
               .catch(() => {
                 this.$message({
+                  showClose: true,
+                  duration: 2000,
                   type: 'error',
                   message: '删除失败',
                 })
@@ -301,6 +311,8 @@
           })
           .catch(() => {
             this.$message({
+              showClose: true,
+              duration: 2000,
               type: 'info',
               message: '已取消删除',
             })

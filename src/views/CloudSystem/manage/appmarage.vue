@@ -266,6 +266,8 @@
           })
           .catch((error) => {
             this.$message({
+              showClose: true,
+              duration: 2000,
               type: 'error',
               message: error.error,
             })
@@ -332,6 +334,8 @@
           .then((response) => {
             if (response) {
               this.$message({
+                showClose: true,
+                duration: 2000,
                 message: '启动成功',
                 type: 'success',
               })
@@ -348,6 +352,8 @@
           .then((response) => {
             if (response) {
               this.$message({
+                showClose: true,
+                duration: 2000,
                 message: '停止成功',
                 type: 'success',
               })
@@ -364,11 +370,15 @@
             if (response) {
               if (response.length == 0) {
                 this.$message({
+                  showClose: true,
+                  duration: 2000,
                   message: '当前无更新',
                   type: 'warning',
                 })
               } else {
                 this.$message({
+                  showClose: true,
+                  duration: 2000,
                   message: '已更新模块' + response,
                   type: 'success',
                 })
@@ -380,11 +390,15 @@
             if (response) {
               if (response.length == 0) {
                 this.$message({
+                  showClose: true,
+                  duration: 2000,
                   message: '当前无更新',
                   type: 'warning',
                 })
               } else {
                 this.$message({
+                  showClose: true,
+                  duration: 2000,
                   message: '已更新模块' + response,
                   type: 'success',
                 })

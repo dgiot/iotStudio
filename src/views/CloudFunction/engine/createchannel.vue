@@ -739,6 +739,8 @@
         await postChannel(data).then((results) => {
           if (results) {
             this.$message({
+              showClose: true,
+              duration: 2000,
               type: 'success',
               message: this.channelupdated == '编辑' ? '编辑成功' : '创建成功',
             })

@@ -587,6 +587,8 @@
       handleSuccess(response, file, fileList) {
         this.form.img = response.path
         this.$message({
+          showClose: true,
+          duration: 2000,
           message: '上传成功！',
           type: 'success',
         })
@@ -599,6 +601,8 @@
       // 上传失败
       handleError(err, file, fileList) {
         this.$message({
+          showClose: true,
+          duration: 2000,
           message: '上传失败！',
           type: 'error',
         })
@@ -619,6 +623,8 @@
       handleSuccess1(response, file, fileList) {
         this.form.img1 = response.path
         this.$message({
+          showClose: true,
+          duration: 2000,
           message: '上传成功！',
           type: 'success',
         })
@@ -674,6 +680,8 @@
         })
         if (res) {
           this.$message({
+            showClose: true,
+            duration: 2000,
             message: '添加部署成功！',
             type: 'success',
           })
@@ -714,6 +722,8 @@
         const res = await putProduct(this.argu.objectId, params)
         if (res) {
           this.$message({
+            showClose: true,
+            duration: 2000,
             message: '修改成功！',
             type: 'success',
           })

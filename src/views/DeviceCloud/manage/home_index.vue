@@ -806,6 +806,7 @@
                   type: 'error',
                   message: error,
                   showClose: true,
+                  duration: 2000,
                 })
                 return false
               } else {
@@ -813,6 +814,7 @@
                   type: 'success',
                   message: '设备添加成功',
                   showClose: true,
+                  duration: 2000,
                 })
                 this.form.sync = false
                 this.resetForm(formName)
@@ -835,6 +837,7 @@
                   type: 'error',
                   message: error,
                   showClose: true,
+                  duration: 2000,
                 })
                 return false
               } else {
@@ -842,6 +845,7 @@
                   type: 'success',
                   message: '设备信息修改成功',
                   showClose: true,
+                  duration: 2000,
                 })
                 this.form.sync = false
                 this.resetForm(formName)

@@ -629,6 +629,8 @@
         await putRole(objectId, tag)
           .then((res) => {
             this.$message({
+              showClose: true,
+              duration: 2000,
               type: 'success',
               message: '应用修改成功',
             })
@@ -637,6 +639,8 @@
           })
           .catch((e) => {
             this.$message({
+              showClose: true,
+              duration: 2000,
               type: 'error',
               message: '应用修改失败' + e.error,
             })

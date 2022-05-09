@@ -702,6 +702,8 @@
           const res = await EmployeesHired(params)
           if (res) {
             this.$message({
+              showClose: true,
+              duration: 2000,
               message: '用户添加成功！',
               type: 'success',
             })
@@ -781,6 +783,8 @@
         ]).then((data) => {
           if (data.length != 0) {
             this.$message({
+              showClose: true,
+              duration: 2000,
               type: 'success',
               message: '分配成功',
             })
@@ -896,11 +900,15 @@
           if (res != undefined) {
             if (emailVerified) {
               this.$message({
+                showClose: true,
+                duration: 2000,
                 type: 'success',
                 message: '启用成功!',
               })
             } else {
               this.$message({
+                showClose: true,
+                duration: 2000,
                 type: 'success',
                 message: '禁用成功!',
               })
@@ -999,6 +1007,8 @@
             // this.$dgiotBus.$emit('asyncTreeData')
             if (res) {
               this.$message({
+                showClose: true,
+                duration: 2000,
                 type: 'success',
                 message: '删除成功!',
               })

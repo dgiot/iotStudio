@@ -692,8 +692,9 @@
             addGroup(this.addGroup.name)
               .then((res) => {
                 this.$message({
+                  showClose: true,
+                  duration: 2000,
                   message: '新建设备分组成功',
-
                   type: 'success',
                 })
                 this.searchProduct()
@@ -701,6 +702,8 @@
               })
               .catch((e) => {
                 this.$message({
+                  showClose: true,
+                  duration: 2000,
                   message: '新建设备分组失败' + e.computed,
                   type: 'error',
                 })
@@ -852,6 +855,8 @@
           if (!extension) {
             // 将图片img转化为base64
             this.$message({
+              showClose: true,
+              duration: 2000,
               message: '请上传图片',
               type: 'error',
             })
@@ -922,6 +927,8 @@
       handleUploadSuccess(response, file, fileList) {
         this.$message({
           type: 'success',
+          showClose: true,
+          duration: 2000,
           message: '产品导入成功',
         })
         this.importDialogShow = false
@@ -931,6 +938,7 @@
       handleUploadError(err, file, fileList) {
         this.$message({
           showClose: true,
+          duration: 2000,
           message: err,
         })
       },
@@ -1121,6 +1129,8 @@
                     .then((response) => {
                       if (response) {
                         this.$message({
+                          showClose: true,
+                          duration: 2000,
                           type: 'success',
                           message: '删除成功',
                         })
@@ -1157,11 +1167,15 @@
         const res = await postDict(params)
         if (res) {
           this.$message({
+            showClose: true,
+            duration: 2000,
             type: 'success',
             message: '备份成功',
           })
         } else {
           this.$message({
+            showClose: true,
+            duration: 2000,
             type: 'error',
             message: `备份失败`,
           })
@@ -1221,6 +1235,8 @@
         } else {
           this.$message({
             type: 'warning',
+            showClose: true,
+            duration: 2000,
             message: '数据为空,无法导出',
           })
         }

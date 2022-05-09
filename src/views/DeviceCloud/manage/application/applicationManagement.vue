@@ -312,6 +312,8 @@
                     .then((response) => {
                       if (response) {
                         this.$message({
+                          showClose: true,
+                          duration: 2000,
                           type: 'success',
                           message: '删除成功',
                         })

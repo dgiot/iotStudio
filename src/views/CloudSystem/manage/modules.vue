@@ -299,6 +299,8 @@
         const res = await postDict(params)
         if (res) {
           this.$message({
+            showClose: true,
+            duration: 2000,
             type: 'success',
             message: '新建物模型成功',
           })
@@ -307,6 +309,8 @@
         } else {
           this.$message({
             type: 'error',
+            showClose: true,
+            duration: 2000,
             message: `新建物模型失败`,
           })
         }
@@ -384,11 +388,15 @@
         if (res) {
           rows.splice(index, 1)
           this.$message({
+            showClose: true,
+            duration: 2000,
             type: 'success',
             message: '删除成功',
           })
         } else {
           this.$message({
+            showClose: true,
+            duration: 2000,
             type: 'error',
             message: `删除失败`,
           })

@@ -277,6 +277,8 @@
           this.$message({
             type: 'success',
             message: '更新成功',
+            showClose: true,
+            duration: 2000,
           })
         }
         this.roleEdit = false

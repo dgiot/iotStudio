@@ -468,6 +468,8 @@
               (res) => {
                 if (this.issub == false) {
                   this.$message({
+                    showClose: true,
+                    duration: 2000,
                     type: 'success',
                     message: '保存成功',
                   })
@@ -482,6 +484,8 @@
             )
           } else {
             this.$message({
+              showClose: true,
+              duration: 2000,
               type: 'warning',
               message: '输入格式有误',
             })
@@ -519,11 +523,15 @@
                       .then((resultes) => {
                         if (resultes.error) {
                           this.$message({
+                            showClose: true,
+                            duration: 2000,
                             type: 'error',
                             message: resultes.error,
                           })
                         } else {
                           this.$message({
+                            showClose: true,
+                            duration: 2000,
                             type: 'success',
                             message: '保存到公共协议库成功',
                           })
@@ -538,6 +546,8 @@
             })
           } else {
             this.$message({
+              showClose: true,
+              duration: 2000,
               type: 'warning',
               message: '输入格式有误',
             })
@@ -575,6 +585,8 @@
           Promise.all(arr)
             .then((data) => {
               this.$message({
+                showClose: true,
+                duration: 2000,
                 message: '热加载成功',
                 type: 'success',
               })
@@ -584,6 +596,8 @@
             })
             .catch((error) => {
               this.$message({
+                showClose: true,
+                duration: 2000,
                 message: error,
                 type: 'error',
               })
@@ -665,6 +679,8 @@
           .then((res) => {
             if (res) {
               this.$message({
+                showClose: true,
+                duration: 2000,
                 type: 'success',
                 message: '编译成功',
               })

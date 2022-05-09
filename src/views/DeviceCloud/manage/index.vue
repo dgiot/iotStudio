@@ -1214,6 +1214,8 @@
             this.$message({
               type: 'info',
               message: '已取消修改',
+              showClose: true,
+              duration: 2000,
             })
             const newData = row
             newData.isEnable = newData.isEnable != true
@@ -1324,6 +1326,8 @@
         this.$message({
           type: type || 'info',
           message: msg,
+          showClose: true,
+          duration: 2000,
         })
       },
       /* @param deviceSizeChange 设备列表分页*/
@@ -1579,6 +1583,8 @@
                 if (!res.error) {
                   this.$message({
                     message: '新增成功',
+                    showClose: true,
+                    duration: 2000,
                     type: 'success',
                   })
                   this.$refs[formName].resetFields()
@@ -1586,6 +1592,8 @@
                 } else {
                   this.$message({
                     message: `新增失败${res.error}`,
+                    showClose: true,
+                    duration: 2000,
                     type: 'error',
                   })
                 }

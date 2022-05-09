@@ -105,6 +105,8 @@
           this.$message({
             message: '更改成功',
             type: 'success',
+            showClose: true,
+            duration: 2000,
           })
         } else {
           this.$message({

@@ -1044,12 +1044,14 @@ export default {
           type: 'success',
           message: '更新成功',
           showClose: true,
+          duration: 2000,
         })
       } else {
         this.$message({
           type: 'warning',
           message: '更新失败' + res.msg,
           showClose: true,
+          duration: 2000,
         })
       }
     },
@@ -1109,11 +1111,15 @@ export default {
           })
           if (res.updatedAt) {
             this.$message({
+              showClose: true,
+              duration: 2000,
               type: 'success',
               message: '新增成功',
             })
           } else {
             this.$message({
+              showClose: true,
+              duration: 2000,
               type: 'warning',
               message: '新增失败' + res.msg,
             })
@@ -1704,6 +1710,8 @@ export default {
         Promise.all(arr)
           .then((data) => {
             this.$message({
+              showClose: true,
+              duration: 2000,
               message: '热加载成功',
               type: 'success',
             })
@@ -1713,6 +1721,8 @@ export default {
           })
           .catch((error) => {
             this.$message({
+              showClose: true,
+              duration: 2000,
               message: error,
               type: 'error',
             })
@@ -1846,6 +1856,8 @@ export default {
       const res = await saveChanne(id, params)
       if (res) {
         this.$message({
+          showClose: true,
+          duration: 2000,
           type: 'success',
           message: '添加成功',
         })
@@ -1875,6 +1887,8 @@ export default {
       saveChanne(row.objectId, params).then((res) => {
         if (res) {
           this.$message({
+            showClose: true,
+            duration: 2000,
             type: 'success',
             message: '移除成功',
           })
@@ -2183,6 +2197,8 @@ export default {
           dgiotlog.log('新增', res)
           if (res.code == 200) {
             this.$message({
+              showClose: true,
+              duration: 2000,
               type: 'success',
               message: '新增成功',
             })
@@ -2199,12 +2215,16 @@ export default {
           dgiotlog.log('编辑', res)
           if (res.code == 200) {
             this.$message({
+              showClose: true,
+              duration: 2000,
               type: 'success',
               message: '编辑成功',
             })
             this.getProDetail()
           } else {
             this.$message({
+              showClose: true,
+              duration: 2000,
               type: 'warning',
               message: '编辑失败' + res.msg,
             })
@@ -2851,6 +2871,8 @@ export default {
         .then((resultes) => {
           if (resultes) {
             this.$message({
+              showClose: true,
+              duration: 2000,
               type: 'success',
               message: '添加成功',
             })
@@ -3055,6 +3077,8 @@ export default {
         .then((resultes) => {
           if (resultes) {
             this.$message({
+              showClose: true,
+              duration: 2000,
               type: 'success',
               message: '添加成功',
             })
@@ -3243,6 +3267,8 @@ export default {
         .then((resultes) => {
           if (resultes) {
             this.$message({
+              showClose: true,
+              duration: 2000,
               type: 'success',
               message: '修改成功',
             })
@@ -3273,6 +3299,8 @@ export default {
         .then((res) => {
           if (res) {
             this.$message({
+              showClose: true,
+              duration: 2000,
               type: 'success',
               message: '编译成功',
             })
@@ -3330,6 +3358,8 @@ export default {
             .then((res) => {
               if (this.issub == false) {
                 this.$message({
+                  showClose: true,
+                  duration: 2000,
                   type: 'success',
                   message: '保存成功',
                 })
@@ -3388,6 +3418,8 @@ export default {
                           })
                         } else {
                           this.$message({
+                            showClose: true,
+                            duration: 2000,
                             type: 'success',
                             message: '保存到公共协议库成功',
                           })
@@ -3405,6 +3437,8 @@ export default {
             })
         } else {
           this.$message({
+            showClose: true,
+            duration: 2000,
             type: 'warning',
             message: '输入格式有误',
           })
@@ -3640,6 +3674,8 @@ export default {
             .then((resultes) => {
               if (resultes) {
                 this.$message({
+                  showClose: true,
+                  duration: 2000,
                   type: 'success',
                   message: '添加成功',
                 })
@@ -3806,6 +3842,8 @@ export default {
               .then((response) => {
                 if (response) {
                   this.$message({
+                    showClose: true,
+                    duration: 2000,
                     type: 'success',
                     message: '成功',
                   })
@@ -3858,6 +3896,8 @@ export default {
         )
         // dgiotlog.log($update_object)
         this.$message({
+          showClose: true,
+          duration: 2000,
           type: 'success',
           message: '删除成功',
         })

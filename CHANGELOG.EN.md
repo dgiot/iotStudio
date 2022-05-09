@@ -76,6 +76,7 @@
 * **product:** numbe ([90554b7](https://github.com/dgiot/dgiot-dashboard/commit/90554b7ba2a55fd3c620b5d723c213997922844e))
 * **product:** prodcutID ([d73fb26](https://github.com/dgiot/dgiot-dashboard/commit/d73fb26f688f8ac2104d63a1de5798e5c5178e99))
 * query ([486d204](https://github.com/dgiot/dgiot-dashboard/commit/486d204c1f3908b5340786e500956ba19f0ebd96))
+* **roles:** roles amis ([48e7a62](https://github.com/dgiot/dgiot-dashboard/commit/48e7a62d41bcd46df231280431a86aa3610b767a))
 * **rule:** optimize SQL and support the selection of all devices ([62a18d4](https://github.com/dgiot/dgiot-dashboard/commit/62a18d4a8b0a12f534c03de964426bf322779d6b))
 * shamefully-hoist ([5dac908](https://github.com/dgiot/dgiot-dashboard/commit/5dac908d21b1e59468fa3a9433dbe7c551f0c17c))
 * **sql:** rulesql ([e7adc44](https://github.com/dgiot/dgiot-dashboard/commit/e7adc448132f3b7ba196d523231032304bf47cb7))

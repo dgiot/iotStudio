@@ -205,6 +205,8 @@
           .then((resultes) => {
             if (resultes) {
               this.$message({
+                showClose: true,
+                duration: 2000,
                 type: 'success',
                 message: '加入成功',
               })
@@ -221,6 +223,8 @@
         console.error(error, 'error')
         if (!error) {
           this.$message({
+            showClose: true,
+            duration: 2000,
             type: 'success',
             message: '移除成功',
           })

@@ -724,6 +724,8 @@
         const { users } = await queryRoledepartment(params)
         if (users.length > 0) {
           this.$message({
+            showClose: true,
+            duration: 2000,
             type: 'warning',
             message: '请先删除该角色下的用户',
           })
@@ -752,6 +754,7 @@
         if (res) {
           this.$message({
             showClose: true,
+            duration: 2000,
             message: `${this.$translateTitle('user.successfully deleted')}`,
             type: 'success',
           })
@@ -851,6 +854,8 @@
           // this.doSetChecked(this.roleMenuList, this.rolePermissonList)
         } else {
           this.$message({
+            showClose: true,
+            duration: 2000,
             type: 'warning',
             message: '获取角色菜单失败',
           })
@@ -1067,6 +1072,7 @@
               if (res) {
                 this.$message({
                   showClose: true,
+                  duration: 2000,
                   message: `${this.$translateTitle(
                     'user.Role information updated successfully'
                   )}`,
@@ -1101,6 +1107,7 @@
         if (res) {
           this.$message({
             showClose: true,
+            duration: 2000,
             message: `${this.$translateTitle(
               'user.Save the template successfully'
             )}`,
@@ -1116,6 +1123,7 @@
         this.$update_object(this.editroleid, params).then((res) => {
           this.$message({
             showClose: true,
+            duration: 2000,
             message: `${this.$translateTitle('user.update completed')}`,
             type: 'success',
           })

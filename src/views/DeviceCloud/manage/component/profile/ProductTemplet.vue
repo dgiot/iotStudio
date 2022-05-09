@@ -227,6 +227,7 @@
           dgiotlog.log(res)
           this.$message({
             showClose: true,
+            duration: 2000,
             message: this.$translateTitle('user.successfully deleted'),
             type: 'success',
           })

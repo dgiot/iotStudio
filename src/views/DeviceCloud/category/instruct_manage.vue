@@ -526,6 +526,8 @@
             }
             if (res.objectId) {
               this.$message({
+                showClose: true,
+                duration: 2000,
                 type: 'success',
                 message: `${this.dialogTitle}成功`,
               })
@@ -586,6 +588,8 @@
             const res = await delIndustry(id)
             if (res) {
               this.$message({
+                showClose: true,
+                duration: 2000,
                 type: 'success',
                 message: '删除成功!',
               })
@@ -606,6 +610,8 @@
       async deleteAll(val) {
         if (this.multipleTable.length == 0) {
           this.$message({
+            showClose: true,
+            duration: 2000,
             message: '请挑选要删除的指令',
             type: 'warning',
           })
@@ -625,12 +631,16 @@
           const result = await this.$shuwa_batch(params)
           if (!result.error) {
             this.$message({
+              showClose: true,
+              duration: 2000,
               message: '删除成功',
               type: 'success',
             })
             this.Instruct()
           } else {
             this.$message({
+              showClose: true,
+              duration: 2000,
               message: `删除失败${result.error}`,
               type: 'error',
             })

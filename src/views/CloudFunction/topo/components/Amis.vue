@@ -191,6 +191,7 @@
         })
         this.$message({
           showClose: true,
+          duration: 2000,
           message: '绑定成功',
           type: 'success',
         })
@@ -289,6 +290,8 @@
             console.log('编辑', res)
             if (res.code == 200) {
               this.$message({
+                showClose: true,
+                duration: 2000,
                 type: 'success',
                 message: '编辑成功',
               })
@@ -305,6 +308,8 @@
               this.wmxhandleClose()
             } else {
               this.$message({
+                showClose: true,
+                duration: 2000,
                 type: 'warning',
                 message: '编辑失败' + res.msg,
               })
@@ -315,6 +320,8 @@
             console.log('编辑', res)
             if (res.code == 200) {
               this.$message({
+                showClose: true,
+                duration: 2000,
                 type: 'success',
                 message: '编辑成功',
               })
@@ -331,6 +338,8 @@
               this.wmxhandleClose()
             } else {
               this.$message({
+                showClose: true,
+                duration: 2000,
                 type: 'warning',
                 message: '编辑失败' + res.msg,
               })
@@ -362,6 +371,7 @@
           }
           this.$message({
             showClose: true,
+            duration: 2000,
             message: this.$translateTitle('user.update completed'),
             type: 'success',
           })

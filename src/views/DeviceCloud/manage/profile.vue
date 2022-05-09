@@ -720,6 +720,7 @@
           dgiotlog.log('eresresrror', res)
           this.$message({
             showClose: true,
+            duration: 2000,
             message: this.$translateTitle(
               'user.Save the template successfully',
             ),
@@ -862,11 +863,15 @@
         delProductTemplet(row.objectId).then((res) => {
           if (res) {
             this.$message({
+              showClose: true,
+              duration: 2000,
               type: 'success',
               message: '产品模板删除成功',
             })
           } else {
             this.$message({
+              showClose: true,
+              duration: 2000,
               type: 'error',
               message: '产品模板删除失败',
             })
@@ -1024,6 +1029,7 @@
           })
           this.$message({
             showClose: true,
+            duration: 2000,
             message: this.$translateTitle(
               'user.Save the template successfully',
             ),
@@ -1248,10 +1254,14 @@
                 if (res.objectId) {
                   this.$message({
                     type: 'success',
+                    showClose: true,
+                    duration: 2000,
                     message: '产品模板创建成功',
                   })
                 } else {
                   this.$message({
+                    showClose: true,
+                    duration: 2000,
                     type: 'error',
                     message: '产品模板创建失败',
                   })
@@ -1264,11 +1274,15 @@
                 dgiotlog.log('resresresres', res)
                 if (res.updatedAt) {
                   this.$message({
+                    showClose: true,
+                    duration: 2000,
                     type: 'success',
                     message: '产品模板修改成功',
                   })
                 } else {
                   this.$message({
+                    showClose: true,
+                    duration: 2000,
                     type: 'error',
                     message: '产品模板修改失败',
                   })
@@ -1299,11 +1313,15 @@
         const res = await postDict(params)
         if (res) {
           this.$message({
+            showClose: true,
+            duration: 2000,
             type: 'success',
             message: '备份成功',
           })
         } else {
           this.$message({
+            showClose: true,
+            duration: 2000,
             type: 'error',
             message: `备份失败`,
           })
@@ -1380,6 +1398,8 @@
           export_txt_to_zip(JSON.stringify(this.allTableDate), 'Dict', 'Dict')
         } else {
           this.$message({
+            showClose: true,
+            duration: 2000,
             type: 'warning',
             message: '数据为空,无法导出',
           })
@@ -1471,11 +1491,15 @@
             if (res.updatedAt) {
               this.$message({
                 type: 'success',
+                showClose: true,
+                duration: 2000,
                 message: '删除成功',
               })
             } else {
               this.$message({
                 type: 'warning',
+                showClose: true,
+                duration: 2000,
                 message: '删除失败',
               })
             }
@@ -2035,12 +2059,16 @@
           if (res.updatedAt) {
             this.$message({
               type: 'success',
+              showClose: true,
+              duration: 2000,
               message: this.wmxSituation + '成功',
             })
             // this.getProDetail()
           } else {
             this.$message({
               type: 'warning',
+              showClose: true,
+              duration: 2000,
               message: this.wmxSituation + '失败',
             })
           }
@@ -2070,6 +2098,8 @@
         putProductTemplet(this.producttempId, params).then((res) => {
           this.$message({
             type: 'success',
+            showClose: true,
+            duration: 2000,
             message: this.wmxSituation + '成功',
           })
         })

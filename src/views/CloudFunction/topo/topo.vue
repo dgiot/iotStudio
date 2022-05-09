@@ -278,6 +278,7 @@
             if (productid) {
               this.$message({
                 showClose: true,
+                duration: 2000,
                 message: this.$translateTitle('产品组态更新成功'),
                 type: 'success',
               })

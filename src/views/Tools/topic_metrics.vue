@@ -292,6 +292,7 @@
           .then(() => {
             this.$message({
               showClose: true,
+              duration: 2000,
               message: this.$translateTitle('oper.enableSuccess'),
               type: 'success',
             })

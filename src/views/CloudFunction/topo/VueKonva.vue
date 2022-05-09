@@ -380,6 +380,7 @@
           case 'search':
             this.$message({
               showClose: true,
+              duration: 2000,
               message: '开发中',
               type: 'success'
             });
@@ -414,6 +415,7 @@
           if (res) {
             this.$message({
               showClose: true,
+              duration: 2000,
               message:  this.$translateTitle('组态背景更新成功'),
               type: 'success'
             });
@@ -447,6 +449,7 @@
             // this.handleCloseSub()
             this.$message({
               showClose: true,
+              duration: 2000,
               message:  this.$translateTitle('产品组态更新成功'),
               type: 'success'
             });
