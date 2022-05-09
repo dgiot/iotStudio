@@ -28,41 +28,14 @@
         width="50vh"
       >
         <el-form>
-          <el-form-item label="设备名称" label-width="200">
+          <el-form-item label="产品名称" label-width="200">
+            <span>{{ editRow.productname }}</span>
+          </el-form-item>
+          <el-form-item label="设备编号" label-width="200">
             <span>{{ devicename }}</span>
           </el-form-item>
         </el-form>
-        <el-form
-          v-for="item in dynamicformInfo"
-          :key="item.key"
-          ref="dynamicformInfo"
-        >
-          <el-form-item :label="item.key">
-            <el-link type="success">
-              {{ item.value }}
-            </el-link>
-          </el-form-item>
-        </el-form>
-        <span slot="footer" class="dialog-footer">
-          <el-form>
-            <el-form-item :label="$translateTitle('alert.Alarm status')">
-              <el-radio v-model="status" label="1">已处理</el-radio>
-              <el-radio v-model="status" label="2">误报</el-radio>
-            </el-form-item>
-            <el-form-item
-              :label="$translateTitle('alert.Alarm handling')"
-              label-width="200"
-            >
-              <el-input v-model="process" type="textarea" />
-            </el-form-item>
-          </el-form>
-          <el-button @click="dynamicformView = false">
-            {{ $translateTitle('button.cancel') }}
-          </el-button>
-          <el-button type="primary" @click.native="submitAlert(alertId)">
-            {{ $translateTitle('button.submit') }}
-          </el-button>
-        </span>
+        <dgiot-amis :schema="amisData" :show-help="false" />
       </el-dialog>
     </div>
     <dgiot-query-form class="query-form">
@@ -165,8 +138,8 @@
       />
       <el-table-column
         align="center"
-        :label="$translateTitle('alert.devicename')"
-        prop="devicename"
+        :label="$translateTitle('equipment.devicenumber')"
+        prop="devaddr"
         show-overflow-tooltip
         sortable
       />
@@ -188,7 +161,10 @@
         sortable
       >
         <template #default="{ row }">
-          <el-tag effect="dark" :type="row.alertstatus ? 'danger' : 'success'">
+          <el-tag
+            effect="dark"
+            :type="row.content.alertstatus ? 'danger' : 'success'"
+          >
             {{
               row.alertstatus
                 ? $translateTitle('alert.start')
@@ -229,20 +205,7 @@
         show-overflow-tooltip
       >
         <template #default="{ row }">
-          <el-button
-            size="mini"
-            type="primary"
-            @click="
-              showdynamicform(
-                row.objectId,
-                row.Public,
-                row.dynamicform,
-                row.process,
-                row.status,
-                row.devicename
-              )
-            "
-          >
+          <el-button size="mini" type="primary" @click="showdynamicform(row)">
             {{ $translateTitle('Maintenance.View') }}
           </el-button>
           <!--          <el-button-->
@@ -302,12 +265,14 @@
   import { getProduct } from '@/api/Product'
   import { mapGetters } from 'vuex'
   import { Promise } from 'q'
-
+  import { getView } from '@/api/View'
   export default {
     name: 'Index',
     components: {},
     data() {
       return {
+        editRow: {},
+        amisData: {},
         paginations: { layout: 'total, sizes, prev, pager, next, jumper' },
         queryPayload: {
           excludeKeys: 'dynamicform',
@@ -504,27 +469,15 @@
         this.fetchData()
         this.dynamicformView = false
       },
-      showdynamicform(alertId, flag, dynamicform, process, status, devicename) {
-        this.alertId = alertId
-        this.isDisable = flag
-        this.process = process
-        this.status = String(status)
-        this.devicename = devicename
-        let dFrom = []
-        dgiotlog.log(dynamicform)
-        for (let d in dynamicform) {
-          for (let j in dynamicform[d]) {
-            dgiotlog.log(j, dynamicform[d][j])
-            let arr = {
-              key: j,
-              value: dynamicform[d][j],
-            }
-            dFrom.push(arr)
-          }
-        }
-        this.dynamicformInfo = dFrom
-        dgiotlog.log(this.dynamicformInfo)
+      async showdynamicform(row) {
+        localStorage.setItem('parse_objectid', row.deviceid)
+        localStorage.setItem('parse_notificationid', row.objectId)
+        this.amisData = {}
+        this.devicename = row.devaddr
+        this.editRow = row
         this.dynamicformView = true
+        const { data } = await getView(row.content._viewid)
+        this.amisData = data
       },
       async showInfo(type, content, alertId) {
         const Loading = this.$baseColorfullLoading(4)
@@ -580,32 +533,46 @@
 
         this.listLoading = false
         const loading = this.$baseColorfullLoading(3)
-        this.queryPayload = {
-          limit: args.limit,
-          order: args.order,
-          skip: args.skip,
-          count: args.keys,
-          // productid: this.queryForm.productName
-          //   ? this.queryForm.productName
-          //   : 'all',
-          // isprocess: this.queryForm.isprocess,
-          include: '',
-          where: {
-            // content: {
-            //   _productid: { $ne: 'dgiot' },
-            // },
-          },
+
+        if (this.queryForm.productName) {
+          this.queryPayload = {
+            limit: args.limit,
+            order: args.order,
+            skip: args.skip,
+            count: args.keys,
+            // productid: this.queryForm.productName
+            //   ? this.queryForm.productName
+            //   : 'all',
+            isprocess: this.queryForm.isprocess,
+            include: '',
+            where: {
+              'content._productid': {
+                $regex: this.queryForm.productName,
+              },
+            },
+          }
+        } else {
+          this.queryPayload = {
+            limit: args.limit,
+            order: args.order,
+            skip: args.skip,
+            count: args.keys,
+            // productid: this.queryForm.productName
+            //   ? this.queryForm.productName
+            //   : 'all',
+            include: '',
+            where: {},
+          }
         }
+        // this.queryForm.productName
+        //   ? (this.queryPayload.where.content['_productid'] = )
+        //   : 'all'
+
         this.queryForm.isprocess
           ? (this.queryPayload.where['process'] = {
               $regex: this.queryForm.isprocess,
             })
           : ''
-        // this.queryForm.productName
-        //   ? (this.queryPayload.where.content['_productid'] = {
-        //       $regex: this.queryForm.productName,
-        //     })
-        //   : 'all'
         if (this.queryForm.searchDate.length) {
           this.queryPayload.where['createdAt'] = {
             $gt: {

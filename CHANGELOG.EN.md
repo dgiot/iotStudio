@@ -38,6 +38,7 @@
 
 * (message) Lightweight Tips ([4d0c608](https://github.com/dgiot/dgiot-dashboard/commit/4d0c608ce097c4c00f177674c58f1b3d31db9c92))
 * add plant modal ([3425782](https://github.com/dgiot/dgiot-dashboard/commit/34257829b6c45ad1017c7def5c5c9c3a319991d5))
+* **alarm:** query list ([52100ea](https://github.com/dgiot/dgiot-dashboard/commit/52100ea9b1fb992daf544a33ad013ff739f635be))
 * **api:** replace API interface ([04593e7](https://github.com/dgiot/dgiot-dashboard/commit/04593e7de3175de1d218d7b343ba8dc483488a46))
 * **channel:** adaptive acquisition channel single selection ([81469c0](https://github.com/dgiot/dgiot-dashboard/commit/81469c032bbc4b1d2885eb27816b6cbcd24707cf))
 * create factory ([811ebc9](https://github.com/dgiot/dgiot-dashboard/commit/811ebc9edbc7234c5422ebdeeab509b85dcbcc98))
