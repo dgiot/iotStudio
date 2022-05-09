@@ -1,7 +1,23 @@
 <!--eslint-disable-->
 <template>
   <div class="DynamicForms">
-    <el-form class="form" ref="form" label-width="80px" :model="ruleContent" size="mini">
+    <el-form
+      class="form"
+      ref="form"
+      label-width="80px"
+      :model="ruleContent"
+      size="mini"
+    >
+      <el-form-item :label="$translateTitle('rule.rule Id')">
+        <el-input
+          v-model="formInline.ruleId"
+          :readonly="$route.query.title == '编辑'"
+          type="text"
+        />
+      </el-form-item>
+      <el-form-item :label="$translateTitle('rule.Remarks')">
+        <el-input v-model="formInline.remarks" type="text" />
+      </el-form-item>
       <el-divider content-position="left">触发器(Trigger)</el-divider>
       <el-row :gutter="24">
         <el-col
@@ -11,12 +27,19 @@
         >
           <el-row :gutter="24">
             <el-col :lg="4" :md="6" :sm="8" :xl="8" :xs="8">
-              <el-form-item label-width="60px" :label="'方式' + (Number(index)+1)" :prop="item+'.uri'"
-                            :rules="[{ required: true, message: '请选择触发方式', trigger: 'change' }]">
-                <el-select
-                  v-model="item.uri"
-                  placeholder="请选择触发方式"
-                >
+              <el-form-item
+                label-width="60px"
+                :label="'方式' + (Number(index) + 1)"
+                :prop="item + '.uri'"
+                :rules="[
+                  {
+                    required: true,
+                    message: '请选择触发方式',
+                    trigger: 'change',
+                  },
+                ]"
+              >
+                <el-select v-model="item.uri" placeholder="请选择触发方式">
                   <el-option
                     v-for="item in options.Trigger"
                     :key="item.value"
@@ -29,10 +52,23 @@
             <!-- 定时触发-->
             <el-col
               v-if="item.uri === 'trigger/timer'"
-              :lg="6" :md="8" :sm="10" :xl="10" :xs="10"
+              :lg="6"
+              :md="8"
+              :sm="10"
+              :xl="10"
+              :xs="10"
             >
-              <el-form-item label="触发时间" :prop="item+'.params.cron'"
-                            :rules="[{ required: true, message: '请填写触发时间', trigger: 'blur' }]">
+              <el-form-item
+                label="触发时间"
+                :prop="item + '.params.cron'"
+                :rules="[
+                  {
+                    required: true,
+                    message: '请填写触发时间',
+                    trigger: 'blur',
+                  },
+                ]"
+              >
                 <el-input
                   v-model="item.params.cron"
                   placeholder="请填写触发时间"
@@ -43,10 +79,23 @@
             <!--mqtt事件触发-->
             <el-col
               v-if="item.uri == 'trigger/mqtt/event'"
-              :lg="4" :md="6" :sm="8" :xl="8" :xs="8"
+              :lg="4"
+              :md="6"
+              :sm="8"
+              :xl="8"
+              :xs="8"
             >
-              <el-form-item label="mqtt事件" :prop="item+'.params.mqtt'"
-                            :rules="[{ required: true, message: '请选择mqtt事件', trigger: 'change' }]">
+              <el-form-item
+                label="mqtt事件"
+                :prop="item + '.params.mqtt'"
+                :rules="[
+                  {
+                    required: true,
+                    message: '请选择mqtt事件',
+                    trigger: 'change',
+                  },
+                ]"
+              >
                 <el-select
                   v-model="item.params.mqtt"
                   placeholder="请选择mqtt事件"
@@ -62,11 +111,27 @@
             </el-col>
             <!--设备事件触发-->
             <el-col
-              v-if="item.uri === 'trigger/product/event' || item.uri === 'trigger/mqtt/event'"
-              :lg="4" :md="6" :sm="8" :xl="8" :xs="8"
+              v-if="
+                item.uri === 'trigger/product/event' ||
+                item.uri === 'trigger/mqtt/event'
+              "
+              :lg="4"
+              :md="6"
+              :sm="8"
+              :xl="8"
+              :xs="8"
             >
-              <el-form-item label="产品信息" :prop="item+'.params.productKey'"
-                            :rules="[{ required: true, message: '请选择产品信息', trigger: 'change' }]">
+              <el-form-item
+                label="产品信息"
+                :prop="item + '.params.productKey'"
+                :rules="[
+                  {
+                    required: true,
+                    message: '请选择产品信息',
+                    trigger: 'change',
+                  },
+                ]"
+              >
                 <el-select
                   v-model="item.params.productKey"
                   placeholder="请选择产品信息"
@@ -81,18 +146,26 @@
               </el-form-item>
             </el-col>
             <el-col
-              v-if="item.uri === 'trigger/product/event'||item.uri === 'trigger/mqtt/event'"
-              :lg="4" :md="6" :sm="8" :xl="8" :xs="8"
+              v-if="
+                item.uri === 'trigger/product/event' ||
+                item.uri === 'trigger/mqtt/event'
+              "
+              :lg="4"
+              :md="6"
+              :sm="8"
+              :xl="8"
+              :xs="8"
             >
-              <el-form-item label="设备信息" :prop="item+'.params.deviceName'">
+              <el-form-item
+                label="设备信息"
+                :prop="item + '.params.deviceName'"
+              >
                 <el-select
                   v-model="item.params.deviceName"
                   placeholder="请选择设备信息"
                 >
                   <el-option
-                    v-for="deviceName in filtersDevice(
-                      item.params.productKey
-                    )"
+                    v-for="deviceName in filtersDevice(item.params.productKey)"
                     :key="deviceName.objectId"
                     :label="deviceName.name"
                     :value="deviceName.objectId"
@@ -101,11 +174,28 @@
               </el-form-item>
             </el-col>
             <el-col
-              v-if="item.uri === 'trigger/product/event' ||item.uri === 'trigger/mqtt/event'"
-              :lg="4" :md="6" :sm="8" :xl="8" :xs="8"
+              v-if="
+                item.uri === 'trigger/product/event' ||
+                item.uri === 'trigger/mqtt/event'
+              "
+              :lg="4"
+              :md="6"
+              :sm="8"
+              :xl="8"
+              :xs="8"
             >
-              <el-form-item label="事件" :prop="item+'.params.propertyName'"
-                            :rules="[{ required: true, message: '请选择物模型事件', trigger: 'change' }]" label-width="80px">
+              <el-form-item
+                label="事件"
+                :prop="item + '.params.propertyName'"
+                :rules="[
+                  {
+                    required: true,
+                    message: '请选择物模型事件',
+                    trigger: 'change',
+                  },
+                ]"
+                label-width="80px"
+              >
                 <el-select
                   v-model="item.params.propertyName"
                   placeholder="请选择物模型事件"
@@ -127,10 +217,23 @@
             <!--设备属性触发-->
             <el-col
               v-if="item.uri == 'trigger/product/property'"
-              :lg="4" :md="6" :sm="8" :xl="8" :xs="8"
+              :lg="4"
+              :md="6"
+              :sm="8"
+              :xl="8"
+              :xs="8"
             >
-              <el-form-item label="产品信息" :prop="item+'.params.productKey'"
-                            :rules="[{ required: true, message: '请选择产品信息', trigger: 'change' }]">
+              <el-form-item
+                label="产品信息"
+                :prop="item + '.params.productKey'"
+                :rules="[
+                  {
+                    required: true,
+                    message: '请选择产品信息',
+                    trigger: 'change',
+                  },
+                ]"
+              >
                 <el-select
                   v-model="item.params.productKey"
                   placeholder="请选择产品信息"
@@ -146,18 +249,29 @@
             </el-col>
             <el-col
               v-if="item.uri == 'trigger/product/property'"
-              :lg="4" :md="6" :sm="8" :xl="8" :xs="8"
+              :lg="4"
+              :md="6"
+              :sm="8"
+              :xl="8"
+              :xs="8"
             >
-              <el-form-item label="设备信息" :prop="item+'.params.deviceName'"
-                            :rules="[{ required: true, message: '请选择设备信息', trigger: 'change' }]">
+              <el-form-item
+                label="设备信息"
+                :prop="item + '.params.deviceName'"
+                :rules="[
+                  {
+                    required: true,
+                    message: '请选择设备信息',
+                    trigger: 'change',
+                  },
+                ]"
+              >
                 <el-select
                   v-model="item.params.deviceName"
                   placeholder="请选择设备信息"
                 >
                   <el-option
-                    v-for="device in filtersDevice(
-                      item.params.productKey
-                    )"
+                    v-for="device in filtersDevice(item.params.productKey)"
                     :key="device.objectId"
                     :label="device.name"
                     :value="device.objectId"
@@ -167,19 +281,31 @@
             </el-col>
             <el-col
               v-if="item.uri === 'trigger/product/property'"
-              :lg="4" :md="6" :sm="8" :xl="8" :xs="8"
+              :lg="4"
+              :md="6"
+              :sm="8"
+              :xl="8"
+              :xs="8"
             >
-              <el-form-item label="属性" label-width="80px" :prop="item+'.params.propertyName'"
-                            :rules="[{ required: true, message: '请选择物模型属性', trigger: 'change' }]">
+              <el-form-item
+                label="属性"
+                label-width="80px"
+                :prop="item + '.params.propertyName'"
+                :rules="[
+                  {
+                    required: true,
+                    message: '请选择物模型属性',
+                    trigger: 'change',
+                  },
+                ]"
+              >
                 <el-select
                   v-model="item.params.propertyName"
                   placeholder="请选择物模型属性"
                   style="width: 100%"
                 >
                   <el-option
-                    v-for="propert in filtersProperty(
-                      item.params.productKey
-                    )"
+                    v-for="propert in filtersProperty(item.params.productKey)"
                     :key="propert.identifier"
                     :label="propert.name"
                     style="width: 100%"
@@ -191,10 +317,24 @@
 
             <el-col
               v-if="item.uri === 'trigger/product/property'"
-              :lg="4" :md="6" :sm="8" :xl="8" :xs="8"
+              :lg="4"
+              :md="6"
+              :sm="8"
+              :xl="8"
+              :xs="8"
             >
-              <el-form-item label="条件" label-width="80px" :prop="item+'.params.compareType'"
-                            :rules="[{ required: true, message: '请选择比较条件', trigger: 'change' }]">
+              <el-form-item
+                label="条件"
+                label-width="80px"
+                :prop="item + '.params.compareType'"
+                :rules="[
+                  {
+                    required: true,
+                    message: '请选择比较条件',
+                    trigger: 'change',
+                  },
+                ]"
+              >
                 <el-select
                   v-model="item.params.compareType"
                   placeholder="请选择比较条件"
@@ -212,10 +352,24 @@
 
             <el-col
               v-if="item.uri === 'trigger/product/property'"
-              :lg="4" :md="6" :sm="8" :xl="8" :xs="8"
+              :lg="4"
+              :md="6"
+              :sm="8"
+              :xl="8"
+              :xs="8"
             >
-              <el-form-item label="值" label-width="80px" :prop="item+'.params.compareValue'"
-                            :rules="[{ required: true, message: '请输入物模型比较值', trigger: 'blur' }]">
+              <el-form-item
+                label="值"
+                label-width="80px"
+                :prop="item + '.params.compareValue'"
+                :rules="[
+                  {
+                    required: true,
+                    message: '请输入物模型比较值',
+                    trigger: 'blur',
+                  },
+                ]"
+              >
                 <el-input
                   v-model="item.params.compareValue"
                   placeholder="物模型比较值"
@@ -269,12 +423,19 @@
         >
           <el-row :gutter="24">
             <el-col :lg="4" :md="6" :sm="8" :xl="8" :xs="8">
-              <el-form-item label-width="60px" :label="'条件' + (Number(_index)+1)" :prop="condition+'.uri'"
-                            :rules="[{ required: true, message: '请选择执行条件', trigger: 'change' }]">
-                <el-select
-                  v-model="condition.uri"
-                  placeholder="请选择执行条件"
-                >
+              <el-form-item
+                label-width="60px"
+                :label="'条件' + (Number(_index) + 1)"
+                :prop="condition + '.uri'"
+                :rules="[
+                  {
+                    required: true,
+                    message: '请选择执行条件',
+                    trigger: 'change',
+                  },
+                ]"
+              >
+                <el-select v-model="condition.uri" placeholder="请选择执行条件">
                   <el-option
                     v-for="item in options.Condition"
                     :key="item.value"
@@ -285,9 +446,25 @@
               </el-form-item>
             </el-col>
             <!--            状态持续时长判断-->
-            <el-col :lg="4" :md="6" :sm="8" :xl="8" :xs="8" v-if="condition.uri=='condition/device/stateContinue'">
-              <el-form-item label="设备状态" :prop="condition+'.params.state'"
-                            :rules="[{ required: true, message: '请选择设备状态', trigger: 'change' }]">
+            <el-col
+              :lg="4"
+              :md="6"
+              :sm="8"
+              :xl="8"
+              :xs="8"
+              v-if="condition.uri == 'condition/device/stateContinue'"
+            >
+              <el-form-item
+                label="设备状态"
+                :prop="condition + '.params.state'"
+                :rules="[
+                  {
+                    required: true,
+                    message: '请选择设备状态',
+                    trigger: 'change',
+                  },
+                ]"
+              >
                 <el-select
                   v-model="condition.params.state"
                   placeholder="请选择设备状态"
@@ -302,25 +479,52 @@
               </el-form-item>
             </el-col>
             <!--            状态持续时长判断-->
-            <el-col :lg="4" :md="6" :sm="8" :xl="8" :xs="8"
-                    v-if="condition.uri=='condition/device/stateContinue'">
-              <el-form-item label="持续时长" :prop="condition+'.params.times'"
-                            :rules="[{ required: true, message: '请选择设备状态', trigger: 'change' }]">
+            <el-col
+              :lg="4"
+              :md="6"
+              :sm="8"
+              :xl="8"
+              :xs="8"
+              v-if="condition.uri == 'condition/device/stateContinue'"
+            >
+              <el-form-item
+                label="持续时长"
+                :prop="condition + '.params.times'"
+                :rules="[
+                  {
+                    required: true,
+                    message: '请选择设备状态',
+                    trigger: 'change',
+                  },
+                ]"
+              >
                 <el-input
                   v-model="condition.params.times"
                   placeholder="请选择"
-                >
-                </el-input>
+                ></el-input>
               </el-form-item>
             </el-col>
 
             <!--设备状态-->
             <el-col
               v-if="condition.uri == 'condition/device/deviceState'"
-              :lg="4" :md="6" :sm="8" :xl="8" :xs="8"
+              :lg="4"
+              :md="6"
+              :sm="8"
+              :xl="8"
+              :xs="8"
             >
-              <el-form-item label="产品信息" :prop="condition+'.params.productKey'"
-                            :rules="[{ required: true, message: '请选择产品信息', trigger: 'change' }]">
+              <el-form-item
+                label="产品信息"
+                :prop="condition + '.params.productKey'"
+                :rules="[
+                  {
+                    required: true,
+                    message: '请选择产品信息',
+                    trigger: 'change',
+                  },
+                ]"
+              >
                 <el-select
                   v-model="condition.params.productKey"
                   placeholder="请选择产品信息"
@@ -337,18 +541,29 @@
             <!--设备状态-->
             <el-col
               v-if="condition.uri == 'condition/device/deviceState'"
-              :lg="4" :md="6" :sm="8" :xl="8" :xs="8"
+              :lg="4"
+              :md="6"
+              :sm="8"
+              :xl="8"
+              :xs="8"
             >
-              <el-form-item label="设备信息" :prop="condition+'.params.deviceName'"
-                            :rules="[{ required: false, message: '请选择设备信息', trigger: 'change' }]">
+              <el-form-item
+                label="设备信息"
+                :prop="condition + '.params.deviceName'"
+                :rules="[
+                  {
+                    required: false,
+                    message: '请选择设备信息',
+                    trigger: 'change',
+                  },
+                ]"
+              >
                 <el-select
                   v-model="condition.params.deviceName"
                   placeholder="请选择设备信息"
                 >
                   <el-option
-                    v-for="item in filtersDevice(
-                      condition.params.productKey
-                    )"
+                    v-for="item in filtersDevice(condition.params.productKey)"
                     :key="item.objectId"
                     :label="item.name"
                     :value="item.objectId"
@@ -359,19 +574,31 @@
             <!--设备状态-->
             <el-col
               v-if="condition.uri === 'condition/device/deviceState'"
-              :lg="4" :md="6" :sm="8" :xl="8" :xs="8"
+              :lg="4"
+              :md="6"
+              :sm="8"
+              :xl="8"
+              :xs="8"
             >
-              <el-form-item label="属性" :prop="condition+'.params.propertyName'"
-                            :rules="[{ required: true, message: '请选择设备属性', trigger: 'change' }]" label-width="80px">
+              <el-form-item
+                label="属性"
+                :prop="condition + '.params.propertyName'"
+                :rules="[
+                  {
+                    required: true,
+                    message: '请选择设备属性',
+                    trigger: 'change',
+                  },
+                ]"
+                label-width="80px"
+              >
                 <el-select
                   v-model="condition.params.propertyName"
                   placeholder="请选择设备属性"
                   style="width: 100%"
                 >
                   <el-option
-                    v-for="item in filtersProperty(
-                     condition.params.productKey
-                    )"
+                    v-for="item in filtersProperty(condition.params.productKey)"
                     :key="item.identifier"
                     :label="item.name"
                     style="width: 100%"
@@ -383,10 +610,20 @@
             <!--设备状态-->
             <el-col
               v-if="condition.uri === 'condition/device/deviceState'"
-              :lg="4" :md="6" :sm="8" :xl="8" :xs="8"
+              :lg="4"
+              :md="6"
+              :sm="8"
+              :xl="8"
+              :xs="8"
             >
-              <el-form-item label="条件" :prop="condition+'.params.compareType'"
-                            :rules="[{ required: true, message: '请选择条件', trigger: 'change' }]" label-width="80px">
+              <el-form-item
+                label="条件"
+                :prop="condition + '.params.compareType'"
+                :rules="[
+                  { required: true, message: '请选择条件', trigger: 'change' },
+                ]"
+                label-width="80px"
+              >
                 <el-select
                   v-model="condition.params.compareType"
                   placeholder="请选择条件"
@@ -404,10 +641,24 @@
             <!--设备状态-->
             <el-col
               v-if="condition.uri === 'condition/device/deviceState'"
-              :lg="4" :md="6" :sm="8" :xl="8" :xs="8"
+              :lg="4"
+              :md="6"
+              :sm="8"
+              :xl="8"
+              :xs="8"
             >
-              <el-form-item label="值" :prop="condition+'.params.compareValue'"
-                            :rules="[{ required: true, message: '请选择物模型比较值', trigger: 'change' }]" label-width="80px">
+              <el-form-item
+                label="值"
+                :prop="condition + '.params.compareValue'"
+                :rules="[
+                  {
+                    required: true,
+                    message: '请选择物模型比较值',
+                    trigger: 'change',
+                  },
+                ]"
+                label-width="80px"
+              >
                 <el-input
                   v-model="condition.params.compareValue"
                   placeholder="物模型比较值"
@@ -418,22 +669,34 @@
             <!--时间范围-->
             <el-col
               v-if="condition.uri === 'condition/device/time'"
-              :lg="4" :md="6" :sm="8" :xl="8" :xs="8"
+              :lg="4"
+              :md="6"
+              :sm="8"
+              :xl="8"
+              :xs="8"
             >
-              <el-form-item label="起止时间" :prop="condition+'.params.compareValue'"
-                            :rules="[{ required: true, message: '请选择起止时间', trigger: 'change' }]" label-width="80px">
+              <el-form-item
+                label="起止时间"
+                :prop="condition + '.params.compareValue'"
+                :rules="[
+                  {
+                    required: true,
+                    message: '请选择起止时间',
+                    trigger: 'change',
+                  },
+                ]"
+                label-width="80px"
+              >
                 <el-date-picker
                   v-model="condition.params.time"
                   value-format="timestamp"
                   type="datetimerange"
                   range-separator="至"
                   start-placeholder="开始日期"
-                  end-placeholder="结束日期">
-                </el-date-picker>
-
+                  end-placeholder="结束日期"
+                ></el-date-picker>
               </el-form-item>
             </el-col>
-
 
             <el-col>
               <el-button
@@ -441,7 +704,9 @@
                 size="mini"
                 style="margin-left: 10px"
                 type="success"
-                @click.native="ruleContent.condition.items.push({uri: '', params: {}})"
+                @click.native="
+                  ruleContent.condition.items.push({ uri: '', params: {} })
+                "
               >
                 新增执行条件
               </el-button>
@@ -451,7 +716,11 @@
                 style="margin-left: 10px"
                 type="danger"
                 @click.native="
-                  removeTriggerItem(ruleContent.condition.items, _index, condition)
+                  removeTriggerItem(
+                    ruleContent.condition.items,
+                    _index,
+                    condition
+                  )
                 "
               >
                 删除执行条件
@@ -481,6 +750,12 @@
       //someComponent
     },
     props: {
+      formInline: {
+        type: Object,
+        default() {
+          return {}
+        },
+      },
       ruleContent: {
         type: Object,
         default() {
@@ -590,9 +865,14 @@
       async onSubmit() {
         console.log(this.ruleContent)
         console.log('submit!')
-        const res = await sqlTpl(this.ruleContent)
+        const res = await sqlTpl(
+          _.merge(this.ruleContent, {
+            description: this.formInline.remarks,
+            ruleid: this.formInline.ruleId,
+          })
+        )
         this.$emit('childByValue', res.template || res, this.ruleContent)
-        console.log(res)
+        this.$router.go(-1)
       },
     },
   }

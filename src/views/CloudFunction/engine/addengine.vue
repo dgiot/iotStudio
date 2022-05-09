@@ -2,8 +2,14 @@
   <div class="addengine">
     <div class="addcontent">
       <el-card class="box-card">
-        <dynamic-forms :rule-content="ruleContent" @childByValue="childValue" />
+        <dynamic-forms
+          v-show="$route.query.productid"
+          :form-inline="formInline"
+          :rule-content="ruleContent"
+          @childByValue="childValue"
+        />
         <el-form
+          v-show="!$route.query.type"
           ref="formInline"
           label-width="80px"
           :model="formInline"
@@ -708,6 +714,8 @@
         console.log(res, ruleContent)
         this.ruleContent = ruleContent
         editor1.setValue(res)
+        //  直接创建rule
+        // this.$router.go(-1)
       },
       // 规则选择
       selectRegion(val) {

@@ -67,6 +67,7 @@
 * **lowcode:** access Amis low code ([d550def](https://github.com/dgiot/dgiot-dashboard/commit/d550def6b6d0048eb77c055b14134da1f14cd8d2))
 * map ([0c13f4f](https://github.com/dgiot/dgiot-dashboard/commit/0c13f4fe563f2c917b99bf160b9ef8c291ceffec))
 * **mtqq:** topic ([8622115](https://github.com/dgiot/dgiot-dashboard/commit/8622115be15a4779f977c9cb052ea28ab2b573a1))
+* **nothing:** parse_notificationid ([963c365](https://github.com/dgiot/dgiot-dashboard/commit/963c3652a3c7ae61b79f8724526b3df8f81eba6b))
 * **notification:** notification_ ([db5f2b8](https://github.com/dgiot/dgiot-dashboard/commit/db5f2b8d8b12be3fd04f8dfa901ce8b2403c2bb4))
 * **npmrc:** registry ([1d54924](https://github.com/dgiot/dgiot-dashboard/commit/1d549244ac2ef6e2d6f6d6877744df500f077e03))
 * **product:** [core] ([6267261](https://github.com/dgiot/dgiot-dashboard/commit/62672618d42bed72bd04517496f7da6c71d27a09))

@@ -171,7 +171,7 @@
           limit: args.limit,
           order: args.order,
           skip: args.skip,
-          keys: args.keys,
+          keys: 'objectId',
         }
         try {
           const loading = this.$baseColorfullLoading()
