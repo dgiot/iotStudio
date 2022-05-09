@@ -1121,7 +1121,11 @@ export default {
           // 删除key为上级设备地址值
           delete objRoute[routeKey]
           const params = {
-            parentId: null,
+            parentId: {
+              __type: 'Pointer',
+              className: 'Device',
+              objectId: 0,
+            },
             route: objRoute,
           }
           this.$putDevice(row.objectId, params).then((response) => {

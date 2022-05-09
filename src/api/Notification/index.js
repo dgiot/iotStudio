@@ -19,7 +19,7 @@ import {
 
 export async function queryNotification(params) {
   return request({
-    url: `notification`,
+    url: `classes/Notification`,
     method: 'get',
     params: params,
   })

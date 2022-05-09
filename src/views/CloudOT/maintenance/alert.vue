@@ -392,7 +392,7 @@
           limit: 10,
           skip: 0,
           order: '-createdAt',
-          keys: 'count(*)',
+          keys: 'objectId',
         },
       }
     },
@@ -584,18 +584,28 @@
           limit: args.limit,
           order: args.order,
           skip: args.skip,
-          keys: args.keys,
-          productid: this.queryForm.productName
-            ? this.queryForm.productName
-            : 'all',
-          isprocess: this.queryForm.isprocess,
+          count: args.keys,
+          // productid: this.queryForm.productName
+          //   ? this.queryForm.productName
+          //   : 'all',
+          // isprocess: this.queryForm.isprocess,
           include: '',
           where: {
-            objectId: this.queryForm.number.length
-              ? { $regex: this.queryForm.number }
-              : { $ne: null },
+            // content: {
+            //   _productid: { $ne: 'dgiot' },
+            // },
           },
         }
+        this.queryForm.isprocess
+          ? (this.queryPayload.where['process'] = {
+              $regex: this.queryForm.isprocess,
+            })
+          : ''
+        // this.queryForm.productName
+        //   ? (this.queryPayload.where.content['_productid'] = {
+        //       $regex: this.queryForm.productName,
+        //     })
+        //   : 'all'
         if (this.queryForm.searchDate.length) {
           this.queryPayload.where['createdAt'] = {
             $gt: {
