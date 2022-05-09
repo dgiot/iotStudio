@@ -10,7 +10,7 @@ import dgiotStore from '@dgiot/dgiot-mqtt-dashboard/src/store'
 import '@/dgiot'
 window.dgiotlogger =
   process.env.NODE_ENV !== 'development' && clearConsole
-    ? new Lajax(`${location.origin}/iotapi/classes/Site/default`)
+    ? new Lajax(`${location.origin}/iotapi/protocol`)
     : console
 dgiotlogger.info('dgiot-dashboard环境变量：', dgiot)
 dgiotlogger.info('dgiotlogger.queue：', dgiotlogger.queue)
