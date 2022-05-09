@@ -133,6 +133,24 @@
         >
           <el-table-column
             align="center"
+            label="插件名称"
+            prop="app"
+            sortable
+          />
+          <el-table-column
+            align="center"
+            :label="$translateTitle('plugins.modulename')"
+            prop="path"
+            sortable
+          />
+          <el-table-column
+            align="center"
+            label="插件版本"
+            prop="version"
+            sortable
+          />
+          <el-table-column
+            align="center"
             :label="$translateTitle('plugins.modulename')"
             prop="path"
             sortable
@@ -150,7 +168,7 @@
                 :effect="row.is_changed ? 'plain' : 'dark'"
                 :type="row.is_changed ? '' : 'info'"
               >
-                {{ row.is_changed ? '未修改' : '已修改' }}
+                {{ row.is_changed ? '已修改' : '未修改' }}
               </el-tag>
             </template>
           </el-table-column>

@@ -1028,6 +1028,7 @@
           where: {
             objectId: this.currentDepartment.objectId,
           },
+          include: true,
           limit: 10,
         }
         const { results } = await getRoleuser(params)

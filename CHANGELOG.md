@@ -78,6 +78,7 @@
 * query ([486d204](https://github.com/dgiot/dgiot-dashboard/commit/486d204c1f3908b5340786e500956ba19f0ebd96))
 * **rule:** optimize SQL and support the selection of all devices ([62a18d4](https://github.com/dgiot/dgiot-dashboard/commit/62a18d4a8b0a12f534c03de964426bf322779d6b))
 * shamefully-hoist ([5dac908](https://github.com/dgiot/dgiot-dashboard/commit/5dac908d21b1e59468fa3a9433dbe7c551f0c17c))
+* **sql:** rulesql ([e7adc44](https://github.com/dgiot/dgiot-dashboard/commit/e7adc448132f3b7ba196d523231032304bf47cb7))
 * **src\views\cloudoc\modeling\index.vue:** add factory modeling ([b0cf77a](https://github.com/dgiot/dgiot-dashboard/commit/b0cf77ae7a4aca3198529ee68953804a06491f3a))
 * **style:** master data management style adjustment ([fbb44ea](https://github.com/dgiot/dgiot-dashboard/commit/fbb44ea7e805b76163d4da115190a8870973c35a))
 * sync ([5a65626](https://github.com/dgiot/dgiot-dashboard/commit/5a656261ada676219f733d716052c5a77b1acee6))

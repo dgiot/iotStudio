@@ -68,11 +68,11 @@
               <el-table-column
                 align="center"
                 :label="$translateTitle('user.rolename')"
-              >
-                <template #default="{ row }">
-                  <span>{{ row.name }}</span>
-                </template>
-              </el-table-column>
+                prop="name"
+                show-overflow-tooltip
+                sortable
+                width="200"
+              />
               <!--         <el-table-column :label=" $translateTitle('developer.describe')" align="center">
                 <template #default="{ row }">
                   <span>{{ row.desc }}</span>
@@ -81,19 +81,23 @@
               <el-table-column
                 align="center"
                 :label="$translateTitle('user.Remarks')"
-              >
-                <template #default="{ row }">
-                  <span>{{ row.alias }}</span>
-                </template>
-              </el-table-column>
-              <el-table-column align="center" label="ID">
-                <template #default="{ row }">
-                  <span>{{ row.objectId }}</span>
-                </template>
-              </el-table-column>
+                prop="alias"
+                show-overflow-tooltip
+                sortable
+                width="180"
+              />
+              <el-table-column
+                align="center"
+                label="ID"
+                prop="objectId"
+                show-overflow-tooltip
+                sortable
+                width="100"
+              />
               <el-table-column
                 align="center"
                 :label="$translateTitle('developer.operation')"
+                width="auto"
               >
                 <template #default="{ row }">
                   <!-- <el-button size="mini" type="primary" @click.native="handleEdit(row)">分配权限</el-button> -->
@@ -104,12 +108,13 @@
                     :disabled="row.disabled"
                     size="mini"
                     split-button
+                    style="margin-right: 5px"
                     type="primary"
                     @click="exportRolerole(row)"
                   >
                     <span class="el-dropdown-link">
                       <!-- 修改 -->
-                      {{ $translateTitle('product.modify') }}
+                      {{ $translateTitle('product.Post operation') }}
                     </span>
                     <el-dropdown-menu slot="dropdown">
                       <el-dropdown-item
@@ -132,6 +137,16 @@
                       <!-- <el-dropdown-item @click.native="taskDetail(row.objectId,row.test_bed.id)">详情</el-dropdown-item> -->
                     </el-dropdown-menu>
                   </el-dropdown>
+                  <el-button
+                    size="mini"
+                    type="success"
+                    @click.native="dynamicForm(row)"
+                  >
+                    <span class="el-dropdown-link">
+                      <!-- 低代码 -->
+                      {{ $translateTitle('product.dynamic form') }}
+                    </span>
+                  </el-button>
                 </template>
               </el-table-column>
             </el-table>
@@ -278,7 +293,7 @@
                 show-checkbox
               >
                 <!-- eslint-disable-next-line -->
-                <span slot-scope='{ node, data }' class='custom-tree-node'>
+                <span slot-scope="{ node, data }" class="custom-tree-node">
                   {{ data.title ? data.title : node.label }}
                 </span>
               </el-tree>
@@ -287,6 +302,14 @@
         </div>
       </el-col>
     </el-row>
+    <el-drawer
+      append-to-body
+      size="80%"
+      title="我是标题"
+      :visible.sync="dynamicform.visible"
+    >
+      <dgiot-views ref="dgiotView" :view-form="viewForm" />
+    </el-drawer>
 
     <a-modal
       :footer="null"
@@ -407,11 +430,62 @@
   } from '@/api/Role/index'
   import { mapGetters, mapMutations } from 'vuex'
   import addroles from '@/views/MultiTenant/roles/list/addroles'
-
+  import dgiotViews from '@/views/CloudFunction/lowcode'
   export default {
     name: 'Role',
     data() {
       return {
+        viewForm: {
+          showRow: true,
+          class: '_Role',
+          type: 'amis',
+          key: this.$route.query.id,
+          title: '',
+          disabled: true,
+          data: {
+            type: 'page',
+            initApi: {
+              url: 'iotapi/classes/Device/parse_objectid',
+              method: 'get',
+              adaptor:
+                'return {\r\n  "status":0,\r\n  "msg":"",\r\n  "data":response.data.basedata\r\n  }',
+              headers: {
+                store: 'localStorage',
+                dgiotReplace: 'parse_objectid',
+              },
+              dataType: 'json',
+            },
+            body: [
+              {
+                type: 'form',
+                api: {
+                  method: 'put',
+                  url: 'iotapi/classes/Device/parse_objectid',
+                  headers: {
+                    store: 'localStorage',
+                    dgiotReplace: 'parse_objectid',
+                  },
+                  dataType: 'json',
+                  requestAdaptor:
+                    'return {\r\n    ...api,\r\n    data: {\r\n        basedata:{ ...api.data}\r\n    }\r\n}',
+                },
+                body: [
+                  {
+                    type: 'input-text',
+                    label: '设备名称',
+                    name: 'name',
+                  },
+                ],
+              },
+            ],
+          },
+          hiddenRow: ['class', 'key', 'createdAt'],
+        },
+        dynamicform: {
+          visible: false,
+          activeName: '0',
+          data: [],
+        },
         hashKey: '',
         tableHeight: this.$baseTableHeight(2),
         isExpand: false,
@@ -476,7 +550,7 @@
         return cloneData.filter((father) => {
           /* eslint-disable */
           const branchArr = cloneData.filter(
-            (child) => father.objectId == child.parentId,
+            (child) => father.objectId == child.parentId
           ) // 返回每一项的子级数组
           branchArr.length > 0 ? (father.children = branchArr) : '' // 如果存在子级，则给父级添加一个children属性，并赋值
           return father.parentId == 0 // 返回第一层
@@ -491,7 +565,7 @@
             father.meta && father.meta.title ? father.meta.title : ''
           /* eslint-disable */
           const branchArr = cloneData.filter(
-            (child) => father.objectId == child.parentId,
+            (child) => father.objectId == child.parentId
           )
           branchArr.length > 0 ? (father.children = branchArr) : ''
           return father.parentId == 0
@@ -502,6 +576,7 @@
     },
     components: {
       addroles,
+      dgiotViews,
     },
     mounted() {
       this.getRoleschema()
@@ -514,6 +589,16 @@
     },
 
     methods: {
+      dynamicForm(form) {
+        // 查找view类型id为当前角色id的
+        console.log(form)
+        this.viewForm.key = form.objectId
+        this.dynamicform.visible = true
+        this.$nextTick(() => {
+          this.$refs.dgiotView.fetchData()
+          console.log(this.$refs.dgiotView)
+        })
+      },
       expand(tree, isExpand) {
         // 展开/折叠
         this[isExpand] = !this[isExpand]
@@ -522,7 +607,7 @@
           'tree',
           tree,
           this.$refs[tree],
-          isExpand,
+          isExpand
         )
         const nodes = this.$refs[tree].store._getAllNodes()
         dgiotlog.log('src/views/MultiTenant/roles/list/roles.vue', nodes)
@@ -573,7 +658,7 @@
         dgiotlog.log(
           'src/views/MultiTenant/roles/list/roles.vue',
           'this.Menu',
-          this.Menu,
+          this.Menu
         )
         this.menusTreeloading = true
         this.data = []
@@ -593,7 +678,7 @@
           dgiotlog.log(
             'src/views/MultiTenant/roles/list/roles.vue',
             'this.dataMenus',
-            this.dataMenus,
+            this.dataMenus
           )
           this.handleNodeClick(this.roleTree[0])
         }
@@ -625,8 +710,7 @@
       },
       //给role添加acl权限
       addacl() {
-        this.$get_object('_Role', this.objectId).then((object) => {
-        })
+        this.$get_object('_Role', this.objectId).then((object) => {})
       },
       //关闭菜单弹窗
       handleClose() {
@@ -647,20 +731,19 @@
         } else {
           this.$confirm(
             this.$translateTitle(
-              'user.This operation will permanently delete this role, do you want to continue?',
+              'user.This operation will permanently delete this role, do you want to continue?'
             ),
             this.$translateTitle('user.prompt'),
             {
               confirmButtonText: this.$translateTitle('developer.determine'),
               cancelButtonText: this.$translateTitle('developer.cancel'),
               type: 'warning',
-            },
+            }
           )
             .then(() => {
               this.delConfirm(row.objectId)
             })
-            .catch(() => {
-            })
+            .catch(() => {})
         }
       },
       // 二次确认删除
@@ -719,7 +802,7 @@
 
         this.currentSelectIndex = row.index
         const { menus, rules, roles, users, objectId } = await roleMenu(
-          row.name,
+          row.name
         )
         this.roleItem = {
           menus: menus,
@@ -731,7 +814,7 @@
         dgiotlog.log(
           'src/views/MultiTenant/roles/list/roles.vue',
           ' this.roleItem',
-          this.roleItem,
+          this.roleItem
         )
         this.loadingService.close()
         if (menus && rules) {
@@ -757,7 +840,7 @@
                   this.$refs.permissionTree.setChecked(
                     items.objectId,
                     true,
-                    false,
+                    false
                   )
                 })
             })
@@ -798,7 +881,7 @@
         }
         // fix https://gitee.com/dgiiot/dgiot/issues/I4TRI7
         let where = {}
-        this.search ? where.name = { $regex: this.search } : ''
+        this.search ? (where.name = { $regex: this.search }) : ''
         if (dataR && dataR.name != 'admin') {
           where.objectId = dataR.objectId
         }
@@ -836,7 +919,7 @@
         dgiotlog.log(
           'src/views/MultiTenant/roles/list/roles.vue',
           data,
-          checked,
+          checked
         )
       },
       // 获取权限
@@ -844,7 +927,7 @@
         dgiotlog.log(
           'src/views/MultiTenant/roles/list/roles.vue',
           'this.Permission',
-          this.Permission,
+          this.Permission
         )
         this.permissionTreeloading = true
         this.dataPermissions = []
@@ -904,7 +987,7 @@
         let selectMenu = this.getCheckedKeys(
           this.menuTreeData,
           this.$refs.menusTree.getCheckedKeys(),
-          'objectId',
+          'objectId'
         ) // 选中子级时选中父级
         // let selectMenu = this.$refs.menusTree.getCheckedNodes()  // 只选中子级
         let usersList = []
@@ -917,8 +1000,8 @@
         if (!usersData || !rolesData) {
           this.$message.error(
             `${this.$translateTitle(
-              'user.The correct role permissions and menus are not selected',
-            )}`,
+              'user.The correct role permissions and menus are not selected'
+            )}`
           )
 
           return false
@@ -930,12 +1013,12 @@
           dgiotlog.log(
             'src/views/MultiTenant/roles/list/roles.vue',
             'lodash',
-            _.assign(...rolesData),
+            _.assign(...rolesData)
           )
           dgiotlog.log(
             'src/views/MultiTenant/roles/list/roles.vue',
             'item',
-            item,
+            item
           )
           rolesList.push(item.name)
         })
@@ -946,7 +1029,7 @@
           dgiotlog.log(
             'src/views/MultiTenant/roles/list/roles.vue',
             'selectMenu',
-            checkmenu,
+            checkmenu
           )
           selectRermission.forEach((item) => {
             checkrole.push(item.alias)
@@ -954,23 +1037,23 @@
           dgiotlog.log(
             'src/views/MultiTenant/roles/list/roles.vue',
             'selectRermission',
-            checkrole,
+            checkrole
           )
           dgiotlog.log(
             'src/views/MultiTenant/roles/list/roles.vue',
             row,
             'row',
-            row,
+            row
           )
           dgiotlog.log(
             'src/views/MultiTenant/roles/list/roles.vue',
-            _.uniq(checkrole),
+            _.uniq(checkrole)
           )
           if (_.uniq(checkrole).length == 0 || _.uniq(checkmenu) == 0) {
             this.$message.warning(
               `${this.$translateTitle(
-                'user.It is forbidden to set permissions/menus to empty',
-              )}`,
+                'user.It is forbidden to set permissions/menus to empty'
+              )}`
             )
             return false
           }
@@ -985,30 +1068,30 @@
                 this.$message({
                   showClose: true,
                   message: `${this.$translateTitle(
-                    'user.Role information updated successfully',
+                    'user.Role information updated successfully'
                   )}`,
                   type: 'success',
                 })
               } else {
                 this.$message.error(
                   `${this.$translateTitle(
-                    'user.Role information updated failed',
-                  )}`,
+                    'user.Role information updated failed'
+                  )}`
                 )
               }
             })
             .catch((e) => {
               this.$message.error(
                 `${this.$translateTitle(
-                  'user.Role information updated successfully',
-                )}` + `${e}`,
+                  'user.Role information updated successfully'
+                )}` + `${e}`
               )
             })
         } else {
           this.$message.info(
             `${this.$translateTitle(
-              'user.Please select the menu list and permission list',
-            )}`,
+              'user.Please select the menu list and permission list'
+            )}`
           )
         }
       },
@@ -1019,7 +1102,7 @@
           this.$message({
             showClose: true,
             message: `${this.$translateTitle(
-              'user.Save the template successfully',
+              'user.Save the template successfully'
             )}`,
             type: 'success',
           })
@@ -1064,7 +1147,7 @@
         dgiotlog.log(
           'src/views/MultiTenant/roles/list/roles.vue',
           data,
-          '添加子节点',
+          '添加子节点'
         )
       },
       // renderContent(h, { node, data, store }) {
@@ -1099,7 +1182,7 @@
     },
   }
 </script>
-<style lang='scss' scoped>
+<style lang="scss" scoped>
   .roles {
     background: #ffffff;
 
@@ -1169,7 +1252,7 @@
     float: right;
   }
 </style>
-<style lang='scss'>
+<style lang="scss">
   .roles .search .el-input {
     width: 200px;
   }
