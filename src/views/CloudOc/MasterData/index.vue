@@ -334,6 +334,11 @@
               className: 'Dict',
               objectId: this.properties.objectId,
             },
+            parent: {
+              __type: 'Pointer',
+              className: 'Dict',
+              objectId: this.properties.objectId,
+            },
           })
           this.total = this.total + 1
         }

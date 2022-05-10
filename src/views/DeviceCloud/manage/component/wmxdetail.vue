@@ -102,7 +102,10 @@
                   <!--少个@change=selectStruct-->
                   <el-select
                     v-model="sizeForm.type"
+                    allow-create
+                    clearable
                     :disabled="sizeForm.editdatatype"
+                    filterable
                     style="width: 100%"
                     @change="changeGroup"
                   >
@@ -196,7 +199,6 @@
                   </el-radio-group>
                 </el-form-item>
               </el-col>
-              {{ sizeForm.type }}
               <el-col
                 v-if="
                   moduletype == 'properties' &&
@@ -272,6 +274,8 @@
                 <el-form-item :label="$translateTitle('product.unit')">
                   <el-select
                     v-model="sizeForm.unit"
+                    allow-create
+                    clearable
                     filterable
                     :placeholder="$translateTitle('product.unit')"
                     style="width: 100%"
@@ -990,7 +994,6 @@
 
 <script>
   import { getDlinkJson } from '@/api/Dlink'
-  import { delDict, getAllunit } from '@/api/Dict/index'
   import { mapGetters, mapMutations } from 'vuex'
   import defaultLogo from '../../../../../public/assets/images/logo/logo.png'
 
@@ -1942,17 +1945,6 @@
         console.log(this.wmxData)
         this.wmxstart = 1
         this.wmxPageSize = val
-      },
-      async getAllunit() {
-        this.allunit = []
-        const { results } = await getAllunit('unit', 200)
-        this.allunit = results.concat([])
-        this.allunit.unshift({
-          data: {
-            Name: '无',
-            Symbol: '',
-          },
-        })
       },
       // 删除枚举型
       removeDomain(item) {
