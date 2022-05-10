@@ -196,11 +196,13 @@
                   </el-radio-group>
                 </el-form-item>
               </el-col>
+              {{ sizeForm.type }}
               <el-col
                 v-if="
                   moduletype == 'properties' &&
                   sizeForm.type !== 'enum' &&
-                  sizeForm.type !== 'text'
+                  sizeForm.type !== 'text' &&
+                  sizeForm.type !== 'bool'
                 "
                 :span="8"
               >

@@ -168,7 +168,8 @@
                 :effect="row.is_changed ? 'plain' : 'dark'"
                 :type="row.is_changed ? '' : 'info'"
               >
-                {{ row.is_changed ? '已修改' : '未修改' }}
+                {{ row.is_changed }}
+                <!--                {{ row.is_changed ? '已修改' : '未修改' }}-->
               </el-tag>
             </template>
           </el-table-column>

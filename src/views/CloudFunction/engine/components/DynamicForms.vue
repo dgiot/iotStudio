@@ -872,7 +872,7 @@
           })
         )
         this.$emit('childByValue', res.template || res, this.ruleContent)
-        this.$router.go(-1)
+        if (!this.$route.query.debug == true) this.$router.go(-1)
       },
     },
   }

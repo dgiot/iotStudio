@@ -166,7 +166,7 @@
             :type="row.content.alertstatus ? 'danger' : 'success'"
           >
             {{
-              row.alertstatus
+              row.content.alertstatus
                 ? $translateTitle('alert.start')
                 : $translateTitle('alert.stop')
             }}
