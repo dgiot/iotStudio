@@ -989,9 +989,7 @@
 </template>
 
 <script>
-  import mockModules from '@/api/Mock/Modules'
-
-  // dgiotlog.log('dataType', mockModules)
+  import { getDlinkJson } from '@/api/Dlink'
   import { delDict, getAllunit } from '@/api/Dict/index'
   import { mapGetters, mapMutations } from 'vuex'
   import defaultLogo from '../../../../../public/assets/images/logo/logo.png'
@@ -1082,7 +1080,7 @@
         value: '',
         inputParams: {},
         dataList: [{}],
-        dataType: mockModules.mockModules.dataType,
+        dataType: [],
         options: [
           {
             value: 'all',
@@ -1098,7 +1096,7 @@
           },
         ],
         wmxData: [],
-        allunit: mockModules.mockModules.dataNnit,
+        allunit: [],
         sizerule: {
           step: [
             {
@@ -1395,7 +1393,10 @@
         //  修改子组件el-form 后 修改父组件的uPKey
         // })
       },
-      queryResource() {
+      async queryResource() {
+        const { dataType = [], dataNnit = [] } = await getDlinkJson('ThingUnit')
+        this.allunit = dataNnit
+        this.dataType = dataType
         this.resource.data = this.protocol
         console.error(this.resource.data)
         this.resource.data.forEach((item, index) => {

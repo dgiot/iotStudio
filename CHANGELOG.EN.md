@@ -31,6 +31,7 @@
 * **router:** fix the problem that the home device list cannot jump ([1c16b44](https://github.com/dgiot/dgiot-dashboard/commit/1c16b4439583d95afb0d5179f4b4abd4ccef8e6b))
 * **router:** route jump repair ([e64daaf](https://github.com/dgiot/dgiot-dashboard/commit/e64daaf9de33ae73f14d62a3f5f15c65c8e57703))
 * **sync:** sync gitee ([468d997](https://github.com/dgiot/dgiot-dashboard/commit/468d997b2c5bd61299c7b82bc5fc3de1a4172743))
+* **thing:** fix the problem that Boolean types cannot be saved ([f62edd7](https://github.com/dgiot/dgiot-dashboard/commit/f62edd7b81c0e683c33cc4a994b69401acd140c3))
 * unit ([8b7a045](https://github.com/dgiot/dgiot-dashboard/commit/8b7a0452d94eea4f1f3f3f7d5a5c12d3b4a8c911))
 
 
