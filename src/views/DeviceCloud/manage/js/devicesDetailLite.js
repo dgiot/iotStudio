@@ -2,7 +2,6 @@ import info from '@/components/Device/info'
 import { mapGetters, mapActions } from 'vuex'
 import { getCardDevice, getDabDevice, getDevice } from '@/api/Device/index.js'
 import Instruct from '@/views/DeviceCloud/category/instruct_manage'
-import chartType from '@/api/Mock/Chart'
 
 const columns = [
   {
@@ -294,7 +293,6 @@ export default {
         'tree',
         'gauge',
       ],
-      chartType: chartType,
       options: [
         {
           value: '选项1',
@@ -393,6 +391,7 @@ export default {
   computed: {
     ...mapGetters({
       Device: 'settings/device',
+      chartType: 'product/chartType',
     }),
   },
   watch: {

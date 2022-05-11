@@ -126,7 +126,7 @@
 </template>
 
 <script>
-  import chartType from '@/api/Mock/Chart'
+  import { mapGetters } from 'vuex'
   import { getDevice, getDabDevice } from '@/api/Device'
   import { postDrawxnqx } from '@/api/Evidence'
   export default {
@@ -227,7 +227,12 @@
         infoData: {},
       }
     },
-    computed: {},
+    computed: {
+      ...mapGetters({
+        Device: 'settings/device',
+        chartType: 'product/chartType',
+      }),
+    },
     mounted() {
       this.params.style = chartType[0].type
       // this.evidence(this.evidenceId)

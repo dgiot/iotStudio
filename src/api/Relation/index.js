@@ -8,10 +8,34 @@
  */
 import request from '@/utils/request/request'
 
-export async function postRelation(params) {
+export async function postRelation(data) {
   return request({
     url: 'relation',
     method: 'post',
+    headers: {
+      accept: 'application/json',
+      'Content-Type': 'application/json',
+    },
+    data: data,
+  })
+}
+
+export async function delRelation(data) {
+  return request({
+    url: 'relation',
+    method: 'delete',
+    headers: {
+      accept: 'application/json',
+      'Content-Type': 'application/json',
+    },
+    data: data,
+  })
+}
+
+export async function queryRelation(params) {
+  return request({
+    url: 'relation',
+    method: 'get',
     headers: {
       accept: 'application/json',
       'Content-Type': 'application/json',

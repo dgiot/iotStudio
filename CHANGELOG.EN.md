@@ -1,4 +1,4 @@
-## [4.5.3](https://github.com/dgiot/dgiot-dashboard/compare/v4.5.2...v4.5.3) (2022-05-10)
+## [4.5.3](https://github.com/dgiot/dgiot-dashboard/compare/v4.5.2...v4.5.3) (2022-05-11)
 
 
 ### Bug Fixes
@@ -88,6 +88,7 @@
 * **statistics:** statistics ([9732329](https://github.com/dgiot/dgiot-dashboard/commit/9732329ed93000b69d75912239506bd6c4b4f045))
 * **style:** master data management style adjustment ([fbb44ea](https://github.com/dgiot/dgiot-dashboard/commit/fbb44ea7e805b76163d4da115190a8870973c35a))
 * sync ([5a65626](https://github.com/dgiot/dgiot-dashboard/commit/5a656261ada676219f733d716052c5a77b1acee6))
+* **thing unit:** users can create model units themselves ([34c0c2f](https://github.com/dgiot/dgiot-dashboard/commit/34c0c2f3eba4842d8291e340433f1a127d8e95ed))
 * **thing:** user defined object model units are supported ([5a35d60](https://github.com/dgiot/dgiot-dashboard/commit/5a35d60299905efd8f380a43ea779b63d601d488)), closes [/gitee.com/dgiiot/dgiot/issues/I4RB2R#note_10203658](https://github.com//gitee.com/dgiiot/dgiot/issues/I4RB2R/issues/note_10203658)
 * **views:** empty ([81cfe07](https://github.com/dgiot/dgiot-dashboard/commit/81cfe079be4ac6933ac3184131a7d3cbefe84957))
 

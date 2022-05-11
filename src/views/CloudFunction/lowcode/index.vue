@@ -15,6 +15,7 @@
               allow-create
               clearable
               default-first-option
+              :disabled="classDisable"
               filterable
               size="mini"
               @change="changeClass"
@@ -189,6 +190,13 @@
           >
             关联
           </el-button>
+          <el-button
+            v-show="type === 'role'"
+            type="text"
+            @click="handleRelation(row, setRowState(selectRow, row))"
+          >
+            {{ setRowState(selectRow, row) }}
+          </el-button>
           <el-button type="text" @click="handleLowCode(row.objectId)">
             {{ $translateTitle('application.preview') }}
           </el-button>
@@ -289,15 +297,35 @@
       },
     },
     props: {
+      classDisable: {
+        required: false,
+        type: Boolean,
+        default: () => false,
+      },
+      type: {
+        required: false,
+        type: String,
+        default: () => '',
+      },
       viewForm: {
         required: false,
         type: Object,
         default: () => defaultQuery,
       },
+      editRow: {
+        required: false,
+        type: Object,
+        default: () => {},
+      },
+      selectRow: {
+        required: false,
+        type: Array,
+        default: () => {},
+      },
     },
     data() {
       return {
-        Types: ['amis', 'topo'],
+        Types: ['amis', 'topo', 'notification'],
         DbaTable: [],
         keys: [],
         lowcodeId: '',
@@ -407,6 +435,20 @@
         set_amisJson: 'amis/set_amisJson',
         setTreeFlag: 'settings/setTreeFlag',
       }),
+      setRowState(role, col) {
+        let text = '关联'
+        if (_.isEmpty(role)) text = '关联'
+        else {
+          role.forEach((e) => {
+            if (e.objectId == col.objectId) text = '解除关联'
+          })
+        }
+        return text
+      },
+      handleRelation(row, type) {
+        this.$emit('BusRole', { row, type })
+        // 将这个id带给父组件,触发父组件的关联事件
+      },
       async blurEvent(row) {
         row.isEdit = !row.isEdit
         if (row.title !== row.oldTitle)

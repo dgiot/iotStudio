@@ -10,11 +10,17 @@ import { getToken, setToken } from '@/utils/vue'
 
 const state = () => ({
   protocol: getToken('protocol') || [],
+  chartType: getToken('chartType') || [],
 })
 const getters = {
   protocol: (state) => state.protocol,
+  chartType: (state) => state.chartType,
 }
 const mutations = {
+  setChartType(state, chart) {
+    state.protocol = chart
+    setToken('chartType', chart)
+  },
   setProtocol(state, protocol) {
     state.protocol = protocol
     setToken('protocol', protocol)
@@ -23,6 +29,9 @@ const mutations = {
 const actions = {
   setProtocol({ commit }, protocol) {
     commit('setProtocol', protocol)
+  },
+  setChartType({ commit }, chart) {
+    commit('setChartType', chart)
   },
 }
 export default {

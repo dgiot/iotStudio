@@ -1,5 +1,5 @@
 module.exports = {
-  isPwa: false,
+  isPwa: true,
   pwaConfig: {
     workboxOptions: {
       skipWaiting: true,
@@ -10,7 +10,7 @@ module.exports = {
     appleMobileWebAppCapable: 'yes',
     appleMobileWebAppStatusBarStyle: 'black',
     manifestOptions: {
-      author: 'h7ml',
+      author: 'h7ml <h7ml@qq.com>',
       dateTime: new Date(),
       name: 'dgiot-dashboard',
       short_name: 'dgiot-dashboard',

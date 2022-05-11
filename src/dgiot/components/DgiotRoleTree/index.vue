@@ -47,6 +47,8 @@
   import { Permission } from '@/api/Permission'
   import { getProtocol } from '@/api/Protocol'
   import { queryProduct } from '@/api/Product'
+  import { getDlinkJson } from '@/api/Dlink'
+
   export default {
     name: 'DgiotRoleTree',
     /**
@@ -189,6 +191,7 @@
         set_Product: 'user/set_Product',
         setPermission: 'user/setPermission',
         setProtocol: 'product/setProtocol',
+        setChartType: 'product/setChartType',
       }),
       /**
        * @description 用户登录后，只请求一次的接口，存储到vuex中
@@ -205,9 +208,11 @@
           },
         }
         const { results: permission = [] } = await Permission()
+        const chart = await getDlinkJson('ChartType')
         this.setPermission(permission)
         const protocol = await getProtocol()
         this.setProtocol(protocol)
+        this.setChartType(chart)
         let { results: product = [] } = await queryProduct(params)
         this.set_Product(product)
         document.querySelector('.el-tree-node__content').click()

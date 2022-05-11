@@ -5,7 +5,6 @@ import deviceLog from '@/views/CloudSystem/logs/device'
 import { mapGetters, mapActions } from 'vuex'
 import { getCardDevice, getDabDevice, getDevice } from '@/api/Device/index.js'
 import Instruct from '@/views/DeviceCloud/category/instruct_manage'
-import chartType from '@/api/Mock/Chart'
 import { queryView } from '@/api/View'
 
 const columns = [
@@ -306,7 +305,6 @@ export default {
         'tree',
         'gauge',
       ],
-      chartType: chartType,
       options: [
         {
           value: '选项1',
@@ -405,6 +403,7 @@ export default {
   computed: {
     ...mapGetters({
       Device: 'settings/device',
+      chartType: 'product/chartType',
     }),
   },
   watch: {
@@ -892,21 +891,18 @@ export default {
     },
     //渲染卡片
     renderCard(resData) {
+      item.devicetype = item.devicetype === '' ? 'default' : item.devicetype
       var vm = this
       let array = []
       resData.forEach((item) => {
-        if (item.devicetype) {
-          array.push(item.devicetype)
-        }
+        if (item.devicetype) array.push(item.devicetype)
       })
       array = _.uniqBy(array)
       let machine = {}
       array.forEach((item) => {
         let arr = []
         resData.forEach((item1) => {
-          if (item == item1.devicetype) {
-            arr.push(item1)
-          }
+          if (item == item1.devicetype) arr.push(item1)
         })
         machine[item] = arr
       })
