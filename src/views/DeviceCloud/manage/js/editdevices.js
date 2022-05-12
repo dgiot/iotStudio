@@ -894,10 +894,10 @@ export default {
     },
     //渲染卡片
     renderCard(resData) {
-      item.devicetype = item.devicetype === '' ? 'default' : item.devicetype
       var vm = this
       let array = []
       resData.forEach((item) => {
+        item.devicetype = item.devicetype === '' ? 'default' : item.devicetype
         if (item.devicetype) array.push(item.devicetype)
       })
       array = _.uniqBy(array)

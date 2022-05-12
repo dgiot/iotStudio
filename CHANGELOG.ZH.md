@@ -54,6 +54,7 @@
 * devicesDetailLite.vue ([78109fa](https://github.com/dgiot/dgiot-dashboard/commit/78109fa7bb9e248174167aff1509db6be94685a0))
 * **device:** task hidden ([a47151a](https://github.com/dgiot/dgiot-dashboard/commit/a47151a7c74839517699d106c4c7288a05ed56aa))
 * disable key ([fe3ebd6](https://github.com/dgiot/dgiot-dashboard/commit/fe3ebd665ef346eb66cb2c06a6e3d25b56609ede))
+* **disposable:** disposable ([8a36459](https://github.com/dgiot/dgiot-dashboard/commit/8a36459f2af6aac1e3ee649ab089e4d6d25c9cda))
 * el-tabs ([a533430](https://github.com/dgiot/dgiot-dashboard/commit/a533430d77a5c9f4c8838b0844ac5850e982ae65))
 * factory details display page ([8d7cbc9](https://github.com/dgiot/dgiot-dashboard/commit/8d7cbc95a1a892c63827673c56fcf79d919a5460))
 * **ftechnology:** complete the process path details page ([b00af1c](https://github.com/dgiot/dgiot-dashboard/commit/b00af1c516985790dc76c44462eafda1e34ccd81))
