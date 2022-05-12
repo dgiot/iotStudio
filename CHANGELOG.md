@@ -79,6 +79,7 @@
 * **product:** modify product interface mode ([27a2805](https://github.com/dgiot/dgiot-dashboard/commit/27a2805f1803b47e90eeeeca5147ee042cdc40b2))
 * **product:** numbe ([90554b7](https://github.com/dgiot/dgiot-dashboard/commit/90554b7ba2a55fd3c620b5d723c213997922844e))
 * **product:** prodcutID ([d73fb26](https://github.com/dgiot/dgiot-dashboard/commit/d73fb26f688f8ac2104d63a1de5798e5c5178e99))
+* **product:** select product ([7db287f](https://github.com/dgiot/dgiot-dashboard/commit/7db287f34ad06d376b095adff2b07b1d613f75e4))
 * query ([486d204](https://github.com/dgiot/dgiot-dashboard/commit/486d204c1f3908b5340786e500956ba19f0ebd96))
 * **roles:** roles amis ([48e7a62](https://github.com/dgiot/dgiot-dashboard/commit/48e7a62d41bcd46df231280431a86aa3610b767a))
 * **roles:** roles Relation ([6c7bd25](https://github.com/dgiot/dgiot-dashboard/commit/6c7bd25aa3c043761c752abafc5594c8e7797113))
