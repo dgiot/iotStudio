@@ -159,14 +159,14 @@
         columns: [
           {
             label: '压测任务',
-            width: '200',
+            width: 'auto',
             prop: 'name',
             sortable: true,
             disableCheck: true,
           },
           {
             label: '开始时间',
-            width: 'auto',
+            width: '200',
             prop: 'createdAt',
             sortable: true,
           },
@@ -178,7 +178,7 @@
           },
           {
             label: '压测任务状态',
-            width: 'auto',
+            width: '200',
             prop: 'isEnable',
             sortable: true,
           },

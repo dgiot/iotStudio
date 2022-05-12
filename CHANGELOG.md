@@ -44,6 +44,7 @@
 * **alarm:** query list ([52100ea](https://github.com/dgiot/dgiot-dashboard/commit/52100ea9b1fb992daf544a33ad013ff739f635be))
 * **api:** replace API interface ([04593e7](https://github.com/dgiot/dgiot-dashboard/commit/04593e7de3175de1d218d7b343ba8dc483488a46))
 * **channel:** adaptive acquisition channel single selection ([81469c0](https://github.com/dgiot/dgiot-dashboard/commit/81469c032bbc4b1d2885eb27816b6cbcd24707cf))
+* **cloudpressure:** cloudPressure page ([b3a0a58](https://github.com/dgiot/dgiot-dashboard/commit/b3a0a5805c090f62810702450a6f7bb1432f28ab))
 * create factory ([811ebc9](https://github.com/dgiot/dgiot-dashboard/commit/811ebc9edbc7234c5422ebdeeab509b85dcbcc98))
 * dashboard json ([5476603](https://github.com/dgiot/dgiot-dashboard/commit/5476603dad0ac1230ef13407f2055f58e6a75927))
 * **dashboardid:** jump to dashboard with fixed ID ([65d09b4](https://github.com/dgiot/dgiot-dashboard/commit/65d09b47f1ed25fef34993575e0a97662472a3bb))
