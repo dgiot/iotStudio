@@ -14,6 +14,7 @@
 * device table ([a2c51c6](https://github.com/dgiot/dgiot-dashboard/commit/a2c51c6ff901dd4977fcc18b5675388414357a64))
 * **device:** device info ([bb6b438](https://github.com/dgiot/dgiot-dashboard/commit/bb6b43810e3ae00e0f8956e04561c73bb54db104))
 * **device:** fix the problem of confusion when modifying equipment parameters ([4c1b7a7](https://github.com/dgiot/dgiot-dashboard/commit/4c1b7a7a9ab6612526990a90c81212515a79cbc3))
+* **device:** product ([ba98f01](https://github.com/dgiot/dgiot-dashboard/commit/ba98f01a28fe4ef49b958bc4d4d662bdb2e7c2e4))
 * **devicetype:** devicetype default ([2a423c7](https://github.com/dgiot/dgiot-dashboard/commit/2a423c7e1a0b31f52e31d19c0f31ba02aa0e0b56))
 * **dlink:** protocol ([b285cae](https://github.com/dgiot/dgiot-dashboard/commit/b285caea95910a9a907d149f496a53f13fd33c9d))
 * doc router ([3576180](https://github.com/dgiot/dgiot-dashboard/commit/35761803856512b5bd84bad202d757d2a9c06e08))

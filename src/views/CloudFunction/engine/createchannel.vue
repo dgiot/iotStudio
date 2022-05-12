@@ -120,22 +120,24 @@
             </el-col>
           </el-row>
         </el-col>
-        <el-form-item v-if="active == 2" label="通道类型" prop="region">
-          <el-select
-            v-model="addchannel.region"
-            placeholder="通道类型"
-            style="display: block"
-            @change="removeauto"
-          >
-            <el-option
-              v-for="(item, index) in channelregion"
-              :key="index"
-              :label="item.title.zh"
+        <el-col v-if="active == 2" :span="12">
+          <el-form-item v-if="active == 2" label="通道类型" prop="region">
+            <el-select
+              v-model="addchannel.region"
+              placeholder="通道类型"
               style="display: block"
-              :value="item.cType"
-            />
-          </el-select>
-        </el-form-item>
+              @change="removeauto"
+            >
+              <el-option
+                v-for="(item, index) in channelregion"
+                :key="index"
+                :label="item.title.zh"
+                style="display: block"
+                :value="item.cType"
+              />
+            </el-select>
+          </el-form-item>
+        </el-col>
         <el-col v-if="active == 2" :span="12">
           <el-form-item
             :label="$translateTitle('developer.channelname')"
@@ -601,12 +603,12 @@
           object[key].showname = key
           arr.push(object[key])
         }
-        return arr
+        const sortBy = _.sortBy(arr, ['order'])
+        return sortBy
       },
       removeauto(val) {
         this.active = 2
         this.viewShow = true
-        console.log(val)
         var obj = {}
         var obj1 = {
           applicationtText: [
@@ -668,6 +670,9 @@
                 }
               })
               console.log('arr', this.arrlist)
+              const sortBy = _.sortBy(this.arrlist, ['order'])
+              console.log(sortBy)
+              console.log('sortBy')
               obj.region = val
               obj.desc = ''
               obj.name = ''
