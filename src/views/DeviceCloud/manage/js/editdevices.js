@@ -484,7 +484,7 @@ export default {
           if (data) {
             // this.renderCard(data)
           } else {
-            this.getCardDevice()
+            this.CardDevice()
           }
         })
       } catch (error) {
@@ -502,9 +502,12 @@ export default {
       addVisitedRoute: 'tabs/addVisitedRoute',
     }),
     Unbscribe() {
+      console.log('Unbscribe all topic')
       const subtopic = '$dg/trace/' + this.deviceInfo.objectId + '/#'
       const topicKey = this.$dgiotBus.topicKey(this.router, subtopic)
       this.$dgiotBus.$emit('MqttUnbscribe', topicKey, subtopic)
+      this.subtopic = `$dg/user/${this.$route.query.deviceid}/realtimecard/report` // 设备实时数据topic
+      this.topicKey = this.$dgiotBus.topicKey(this.router, this.subtopic) // dgiot-mqtt topicKey 唯一标识
       this.$dgiotBus.$emit('MqttUnbscribe', this.topicKey, this.subtopic)
     },
     /**
@@ -807,7 +810,7 @@ export default {
           break
         case 'first1':
           await this.subRealtimedata()
-          await this.getCardDevice()
+          await this.CardDevice()
           break
       }
     },
@@ -873,7 +876,7 @@ export default {
           this.$baseMessage('请求出错11', err.error, 3000)
         })
     },
-    getCardDevice() {
+    CardDevice() {
       var vm = this
       vm.loading = true
       getCardDevice(vm.deviceid)
@@ -982,7 +985,7 @@ export default {
       this.subRealtimedata()
       this.initChart()
       window.addEventListener('resize', this.resizeTheChart)
-      this.getCardDevice()
+      this.CardDevice()
     },
     loadmore() {
       this.dirstart++

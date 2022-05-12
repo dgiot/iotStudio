@@ -707,6 +707,7 @@
         </div>
         <!-- 分类对话框 ###-->
         <el-drawer
+          v-drawerDrag
           :append-to-body="true"
           :visible.sync="cascaderDrawer"
           size="40%"
@@ -743,7 +744,7 @@
                         :label="$translateTitle('developer.Templatename')"
                       >
                         <el-input
-                          v-model="queryForm.name"
+                          v-model="v.name"
                           clearable
                           placeholder="请输入模板名称"
                         />
@@ -778,8 +779,7 @@
                     sortable
                     prop="name"
                     width="auto"
-                  >
-                  </el-table-column>
+                  ></el-table-column>
                   <el-table-column
                     align="center"
                     label="id"
@@ -787,18 +787,44 @@
                     sortable
                     width="auto"
                     prop="objectId"
+                  ></el-table-column>
+                  <el-table-column
+                    align="center"
+                    fixed="right"
+                    label="操作"
+                    show-overflow-tooltip
+                    width="100px"
                   >
+                    <template #default="{ row }">
+                      <el-button
+                        plain
+                        size="mini"
+                        type="info"
+                        @click="chooseTemplate(row)"
+                      >
+                        选择
+                      </el-button>
+                    </template>
                   </el-table-column>
                 </el-table>
               </el-col>
             </el-row>
 
-            <dgiot-Pagination
-              v-show="queryForm.total > 0"
-              :limit.sync="queryForm.pageSize"
-              :page.sync="queryForm.pageNo"
-              :total="queryForm.total"
-              @pagination="categorytree"
+            <!--            <dgiot-Pagination-->
+            <!--              v-show="queryForm.total > 0"-->
+            <!--              :limit.sync="queryForm.pageSize"-->
+            <!--              :page.sync="queryForm.pageNo"-->
+            <!--              :total="queryForm.total"-->
+            <!--              @pagination="queryprodut()"-->
+            <!--            />-->
+            <el-pagination
+              background
+              :current-page="v.size"
+              :layout="v.layout"
+              :page-size="v.limit"
+              :total="v.total"
+              @current-change="vhandleCurrentChange"
+              @size-change="vhandleSizeChange"
             />
           </div>
         </el-drawer>
@@ -1550,6 +1576,14 @@ export default {
   },
   data() {
     return {
+      v: {
+        skip: 0,
+        layout: "total, sizes, prev, pager, next, jumper",
+        limit: 10,
+        name: "",
+        search: "",
+        type: "name"
+      },
       inputParams: {},
       storageArr: [
         "默认-行式存储",
@@ -1860,6 +1894,18 @@ export default {
     this.projectName = "";
   },
   methods: {
+    vhandleSizeChange(val) {
+      this.v.limit = val;
+      this.queryprodut();
+    },
+    vhandleCurrentChange(val) {
+      this.v.skip = Number(val - 1) * Number(this.queryForm.limit);
+      this.queryprodut();
+    },
+    handleQuery() {
+      this.v.limit = 20;
+      this.queryprodut();
+    },
     goLink(product, type) {
       // 根据不同的type跳到不同的页面
       switch (type) {
@@ -1984,28 +2030,23 @@ export default {
       await this.$refs.profile.StepsListRowClick(row);
     },
     async queryprodut(args) {
-      const categorys = args.categorys;
-
-      // const loading = this.$baseColorfullLoading()
-      if (!args.limit) {
-        args = this.queryForm;
-      }
       let params = {
-        skip: this.queryForm.skip,
-        limit: this.queryForm.limit,
-        keys: args.keys,
+        skip: this.v.skip,
+        limit: this.v.limit,
+        // keys: args.keys,
         include: "category",
         count: "objectId",
         where: {}
       };
-      args.name ? (params.where.name = { $regex: args.name }) : "";
-      categorys ? (params.where.category = { $in: categorys }) : "";
-      categorys ? (params.where.category = { $in: categorys }) : "";
+      this.v.name ? (params.where.name = { $regex: this.v.name }) : "";
+      args?.categorys ? (params.where.category = { $in: args.categorys }) : "";
+      console.log(params);
+      console.log("params");
       try {
         const { results = [], count = 0 } = await queryProductTemplet(params);
         // loading.close()
         this.tableData = results;
-        this.queryForm.total = count;
+        this.v.total = count;
       } catch (error) {
         // loading.close()
         dgiotlog.log(error);
@@ -2132,7 +2173,7 @@ export default {
           type: "success",
           message: "编辑成功",
           showClose: true,
-          duration: 2000,
+          duration: 2000
         });
       } else {
         this.dictTempForm.params.push(this.tempparams);
@@ -2140,7 +2181,7 @@ export default {
           type: "success",
           message: "新增成功",
           showClose: true,
-          duration: 2000,
+          duration: 2000
         });
       }
     },
@@ -2248,7 +2289,7 @@ export default {
         type: "success",
         message: "产品导入成功",
         showClose: true,
-        duration: 2000,
+        duration: 2000
       });
       this.importDialogShow = false;
       this.$refs["uploadProForm"].resetFields();
@@ -2258,7 +2299,7 @@ export default {
       this.$message({
         message: err,
         showClose: true,
-        duration: 2000,
+        duration: 2000
       });
     },
     handleChange(file, fileList) {
@@ -2327,12 +2368,27 @@ export default {
     },
     // 选择产品模板
     async chooseTemplate(row) {
-      const res = await this.getcategoryname(row.category);
       this.selectedRow = row;
-      this.$set(this.form, "categoryid", row.category.objectId);
-      this.$set(this.form, "categoryname", res + "/" + row.name);
+      console.log(row);
+      // const res = await this.getcategoryname(row.category)
+      this.$set(this.form, "categoryid", row?.category?.objectId ? row.category.objectId : "0");
+      this.$set(
+        this.form,
+        "categoryname",
+        row?.category?.name ? row.category.name + "/" + row.name : row.name
+      );
       this.$set(this.form, "producttempid", row.objectId);
       this.form.thing = row.thing ? row.thing : {};
+      // try {
+      //   const res = await this.getcategoryname(row.category)
+      // }catch (e) {
+      //   console.log(e)
+      //   this.$message({
+      //     type:'error',
+      //     message:e,
+      //     duration:true,
+      //   })
+      // }
       this.cascaderDrawer = !this.cascaderDrawer;
       console.log("select", row);
     },
@@ -2576,6 +2632,7 @@ export default {
         where: { level: { $in: [0, 1] } }
       };
       const { results } = await queryCategory(parsms);
+      this.queryprodut({});
       this.categoryList = results;
       dgiotlog.log("this", this.categoryList);
     },
@@ -2722,7 +2779,7 @@ export default {
           type: "error",
           message: res.error || res,
           showClose: true,
-          duration: 2000,
+          duration: 2000
         });
       }
     },

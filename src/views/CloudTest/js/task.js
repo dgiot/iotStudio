@@ -222,7 +222,7 @@ export default {
           break
       }
     },
-    getCardDevice(deviceid) {
+    CardDevice(deviceid) {
       var vm = this
       getCardDevice(deviceid)
         .then((response) => {
@@ -272,7 +272,7 @@ export default {
           if (data) {
             this.renderCard(data)
           } else {
-            this.getCardDevice()
+            this.CardDevice()
           }
         })
       } catch (error) {
@@ -791,7 +791,7 @@ export default {
     async visibleInfo(params) {
       let _this = this
       _this.collectionInfo = params
-      _this.getCardDevice(params.parentId.objectId)
+      _this.CardDevice(params.parentId.objectId)
       _this.subRealtimedata(params)
       try {
         const thingcolumns = {}

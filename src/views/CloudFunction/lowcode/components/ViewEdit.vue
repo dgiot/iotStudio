@@ -140,6 +140,7 @@
         codes: '{}',
         viewId: '',
         form: {
+          class: 'Product',
           title: '',
           author: '',
         },
@@ -166,7 +167,9 @@
         deep: true,
       },
     },
-    created() {},
+    created() {
+      this.changeClass('Product')
+    },
     methods: {
       ...mapMutations({
         set_amisJson: 'amis/set_amisJson',

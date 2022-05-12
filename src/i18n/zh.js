@@ -628,6 +628,7 @@ export default {
       'task management': '取证管理',
       'Set as template': '设为模板',
       'Update template': '更新模板',
+      'Update Acl': '更新权限',
       'View template': '查看模板',
       'Delete template': '删除模板',
       tag: '标签',

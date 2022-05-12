@@ -471,7 +471,7 @@ export default {
           if (data) {
             this.renderCard(data)
           } else {
-            this.getCardDevice()
+            this.CardDevice()
           }
         })
       } catch (error) {
@@ -771,7 +771,7 @@ export default {
           break
         case 'first1':
           this.subRealtimedata()
-          this.getCardDevice()
+          this.CardDevice()
           break
       }
     },
@@ -837,7 +837,7 @@ export default {
           this.$baseMessage('请求出错11', err.error, 3000)
         })
     },
-    getCardDevice() {
+    CardDevice() {
       var vm = this
       vm.loading = true
       getCardDevice(vm.deviceid)
@@ -948,7 +948,7 @@ export default {
       this.subRealtimedata()
       this.initChart()
       window.addEventListener('resize', this.resizeTheChart)
-      this.getCardDevice()
+      this.CardDevice()
     },
     loadmore() {
       this.dirstart++

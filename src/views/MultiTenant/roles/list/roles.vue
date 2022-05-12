@@ -114,7 +114,7 @@
                   >
                     <span class="el-dropdown-link">
                       <!-- 修改 -->
-                      {{ $translateTitle('product.Post operation') }}
+                      {{ $translateTitle('product.Update Acl') }}
                     </span>
                     <el-dropdown-menu slot="dropdown">
                       <el-dropdown-item
@@ -303,9 +303,9 @@
       </el-col>
     </el-row>
     <el-drawer
+      v-drawerDrag
       append-to-body
       size="80%"
-      title="我是标题"
       :visible.sync="dynamicform.visible"
     >
       <dgiot-views
