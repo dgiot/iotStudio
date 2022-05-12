@@ -403,7 +403,7 @@
       >
         <template #default="{ row }">
           <el-link type="success" @click.native="showAdddress(row)">
-            {{ row.address }}
+            {{ row.address || row.detail.address }}
           </el-link>
         </template>
       </el-table-column>
