@@ -326,67 +326,60 @@
               :value="item.cType"
             />
           </el-select>
-          <el-row
-            :gutter="24"
-            style="
-              width: 100%;
-              min-height: 0;
-              max-height: 100px;
-              margin-top: 20px;
-              text-align: center;
-            "
-          >
-            <el-col
-              v-for="(item, index) in channelregion"
-              :key="index"
-              :span="24"
-              style="cursor: pointer"
-            >
-              <!--              <el-card-->
-              <!--                v-if="item.params.ico && item.params.ico.default"-->
-              <!--                v-show="addchannel.region == item.cType"-->
-              <!--                class="box-card"-->
-              <!--                :shadow="addchannel.region == item.cType ? 'always' : 'hover'"-->
-              <!--                size="mini"-->
-              <!--                :style="{-->
-              <!--                  display: addchannel.region == item.cType ? 'block' : 'none',-->
-              <!--                  color:-->
-              <!--                    addchannel.region == item.cType ? '#00bad0' : '#c0c4cc',-->
-              <!--                }"-->
-              <!--              >-->
-              <!--                <div slot="header" class="clearfix">-->
-              <!--                  <span>{{ item.title.zh }}</span>-->
-              <!--                  <el-button-->
-              <!--                    :disabled="resourceid != ''"-->
-              <!--                    size="mini"-->
-              <!--                    style="float: right"-->
-              <!--                    type="success"-->
-              <!--                    @click="setCard(item.cType)"-->
-              <!--                  >-->
-              <!--                    &lt;!&ndash; 已选 &ndash;&gt;-->
-              <!--                    {{ $translateTitle('product.selected') }}-->
-              <!--                  </el-button>-->
-              <!--                </div>-->
-              <!--                <div class="text item">-->
-              <!--                  <el-row :gutter="24">-->
-              <!--                    <el-col :span="12">-->
-              <!--                      <img-->
-              <!--                        class="image"-->
-              <!--                        :src="-->
-              <!--                          item.params.ico.default ? item.params.ico.default : ''-->
-              <!--                        "-->
-              <!--                        style="width: 50px; height: 50px"-->
-              <!--                      />-->
-              <!--                    </el-col>-->
-              <!--                    <el-col :span="12">-->
-              <!--                      <el-tag>{{ item.cType }}</el-tag>-->
-              <!--                    </el-col>-->
-              <!--                  </el-row>-->
-              <!--                </div>-->
-              <!--              </el-card>-->
-            </el-col>
-          </el-row>
         </el-form-item>
+        <!--        <el-form-item>-->
+        <!--          <el-row :gutter="24">-->
+        <!--            <el-col-->
+        <!--              v-for="(item, index) in channelregion"-->
+        <!--              :key="index"-->
+        <!--              :span="24"-->
+        <!--              style="cursor: pointer"-->
+        <!--            >-->
+        <!--              <el-card-->
+        <!--                v-if="item.params.ico && item.params.ico.default"-->
+        <!--                v-show="addchannel.region == item.cType"-->
+        <!--                class="box-card"-->
+        <!--                :shadow="addchannel.region == item.cType ? 'always' : 'hover'"-->
+        <!--                size="mini"-->
+        <!--                :style="{-->
+        <!--                  display: addchannel.region == item.cType ? 'block' : 'none',-->
+        <!--                  color:-->
+        <!--                    addchannel.region == item.cType ? '#00bad0' : '#c0c4cc',-->
+        <!--                }"-->
+        <!--              >-->
+        <!--                <div slot="header" class="clearfix">-->
+        <!--                  <span>{{ item.title.zh }}</span>-->
+        <!--                  &lt;!&ndash;                                  <el-button&ndash;&gt;-->
+        <!--                  &lt;!&ndash;                                    :disabled="resourceid != ''"&ndash;&gt;-->
+        <!--                  &lt;!&ndash;                                    size="mini"&ndash;&gt;-->
+        <!--                  &lt;!&ndash;                                    style="float: right"&ndash;&gt;-->
+        <!--                  &lt;!&ndash;                                    type="success"&ndash;&gt;-->
+        <!--                  &lt;!&ndash;                                    @click="setCard(item.cType)"&ndash;&gt;-->
+        <!--                  &lt;!&ndash;                                  >&ndash;&gt;-->
+        <!--                  &lt;!&ndash;                                    &lt;!&ndash; 已选 &ndash;&gt;&ndash;&gt;-->
+        <!--                  &lt;!&ndash;                                    {{ $translateTitle('product.selected') }}&ndash;&gt;-->
+        <!--                  &lt;!&ndash;                                  </el-button>&ndash;&gt;-->
+        <!--                </div>-->
+        <!--                <div class="text item">-->
+        <!--                  <el-row :gutter="24">-->
+        <!--                    <el-col :span="12">-->
+        <!--                      <img-->
+        <!--                        class="image"-->
+        <!--                        :src="-->
+        <!--                          item.params.ico.default ? item.params.ico.default : ''-->
+        <!--                        "-->
+        <!--                        style="width: 50px; height: 50px"-->
+        <!--                      />-->
+        <!--                    </el-col>-->
+        <!--                    <el-col :span="12">-->
+        <!--                      <el-tag>{{ item.cType }}</el-tag>-->
+        <!--                    </el-col>-->
+        <!--                  </el-row>-->
+        <!--                </div>-->
+        <!--              </el-card>-->
+        <!--            </el-col>-->
+        <!--          </el-row>-->
+        <!--        </el-form-item>-->
         <el-form-item
           :label="$translateTitle('developer.channelname')"
           prop="name"
@@ -450,20 +443,24 @@
               v-model="addchannel[item.showname]"
               style="width: 96%"
             />
-            <el-input
-              v-else-if="item.title.zh == '通道ICO'"
+            <el-image
+              v-else-if="item.showname == 'ico'"
               v-show="item.title.zh == '通道ICO'"
-              v-model.number="addchannel[item.showname]"
-              style="width: 96%"
+              :preview-src-list="[$FileServe + item.default]"
+              :src="$FileServe + addchannel[item.default]"
+              style="width: 26px; height: 26px"
             >
-              <el-button
-                slot="append"
-                icon="el-icon-upload"
-                @click="
-                  uploadCkick(addchannel[item.showname], index, 'arrlist')
-                "
-              />
-            </el-input>
+              <div slot="error" class="image-slot">
+                {{ addchannel[item.showname] }}
+                <i class="el-icon-picture-outline"></i>
+              </div>
+            </el-image>
+            <!--            <el-button-->
+            <!--              v-else-if="item.showname == 'ico'"-->
+            <!--              slot="append"-->
+            <!--              icon="el-icon-upload"-->
+            <!--              @click="uploadCkick(addchannel[item.showname], index, 'arrlist')"-->
+            <!--            />-->
             <el-input
               v-else-if="item.type == 'integer'"
               v-model.number="addchannel[item.showname]"
@@ -1441,12 +1438,16 @@
           object[key].showname = key
           arr.push(object[key])
         }
-        return arr.sort(this.arrSort)
+        const sortBy = _.sortBy(arr, ['order'])
+        return sortBy
+        console.log(sortBy)
+        // return arr.sort(this.arrSort)
       },
       setCard(item) {
         this.removeauto(item)
       },
       removeauto(val) {
+        console.log(val)
         var obj = {}
         var obj1 = {
           applicationtText: [
@@ -1530,6 +1531,9 @@
             this.selectregion = item
             this.$forceUpdate()
             this.arrlist = this.orderObject(this.selectregion.params)
+            const sortBy = _.sortBy(this.arrlist, ['order'])
+            this.arrlist = sortBy
+            console.log(this.arrlist)
             this.arrlist.map((item) => {
               for (var key in this.channelrow.config) {
                 if (item.showname == key) {
@@ -1580,6 +1584,7 @@
           }
         }
         this.addchannel = obj
+        console.log(this.addchannel)
         this.addchannel.region = val
         this.addrules = obj1
       },

@@ -1382,6 +1382,9 @@
         // await this.clearValidate()
         await this.resource.data.forEach((resource) => {
           if (resource.cType == val) {
+            for (let k in resource.params) {
+              console.log(resource.params[k])
+            }
             this.resource.changeData = resource
             this.resource.arrlist = resource.arr
             this.resource.addchannel = resource.obj
@@ -1419,6 +1422,11 @@
               }
             }
             this.resource.data[index].arr.push(item.params[key])
+            this.resource.data[index].arr = _.sortBy(
+              this.resource.data[index].arr,
+              ['order']
+            )
+            console.log(this.resource.data[index].arr)
           }
           this.resource.data[index].arr.map((_item) => {
             this.resource.data[index].obj[_item.showname] = _item?.default
@@ -1434,6 +1442,11 @@
               // 设置默认值
               dgiotlogger.info(_item.type, _item.enum, _item, 'set select')
           })
+          this.resource.data[index].arr = _.sortBy(
+            this.resource.data[index].arr,
+            ['order']
+          )
+          console.log(this.resource.data[index].arr)
         })
         console.info('this.resource.data', this.resource.data)
       },

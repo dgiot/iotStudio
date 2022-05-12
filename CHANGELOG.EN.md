@@ -84,6 +84,7 @@
 * **product:** prodcutID ([d73fb26](https://github.com/dgiot/dgiot-dashboard/commit/d73fb26f688f8ac2104d63a1de5798e5c5178e99))
 * **product:** select product ([7db287f](https://github.com/dgiot/dgiot-dashboard/commit/7db287f34ad06d376b095adff2b07b1d613f75e4))
 * query ([486d204](https://github.com/dgiot/dgiot-dashboard/commit/486d204c1f3908b5340786e500956ba19f0ebd96))
+* **resource_types:** sortBy ([c30e361](https://github.com/dgiot/dgiot-dashboard/commit/c30e3618730d6a09db7c5648c54536f168bc6b3c))
 * **roles:** roles amis ([48e7a62](https://github.com/dgiot/dgiot-dashboard/commit/48e7a62d41bcd46df231280431a86aa3610b767a))
 * **roles:** roles Relation ([6c7bd25](https://github.com/dgiot/dgiot-dashboard/commit/6c7bd25aa3c043761c752abafc5594c8e7797113))
 * **rule:** optimize SQL and support the selection of all devices ([62a18d4](https://github.com/dgiot/dgiot-dashboard/commit/62a18d4a8b0a12f534c03de964426bf322779d6b))

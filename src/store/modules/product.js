@@ -18,7 +18,7 @@ const getters = {
 }
 const mutations = {
   setChartType(state, chart) {
-    state.protocol = chart
+    state.chartType = chart
     setToken('chartType', chart)
   },
   setProtocol(state, protocol) {

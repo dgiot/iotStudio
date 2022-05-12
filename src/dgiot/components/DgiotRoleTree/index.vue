@@ -212,6 +212,10 @@
         const chart = await getDlinkJson('ChartType')
         this.setPermission(permission)
         const protocol = await getProtocol()
+        // protocol做排序处理
+        protocol.forEach((p) => {
+          for (let j in p.params) p.params = _.sortBy(p.params, ['order'])
+        })
         this.setProtocol(protocol)
         this.setChartType(chart)
         let { results: product = [] } = await queryProduct(params)
@@ -329,6 +333,7 @@
     color: rgb(64, 158, 255);
     background: rgb(48, 65, 86);
   }
+
   ///* 点击后的当前节点的子节点的背景颜色 */
   //.el-tree > .el-tree-node.is-current {
   //  background: #1f2d3d;
@@ -337,15 +342,19 @@
   .el-tree-node__content:hover {
     background: #baf !important;
   }
+
   .role-tree {
     &-header {
       margin: 10px 0;
     }
+
     overflow: auto;
+
     .role-tree-select {
       margin-top: 12px;
       overflow: auto;
     }
+
     .el-checkbox__input.is-disabled.is-checked .el-checkbox__inner {
       background-color: #409eff;
       border-color: #409eff;
