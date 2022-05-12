@@ -879,7 +879,7 @@ export default {
     CardDevice() {
       var vm = this
       vm.loading = true
-      getCardDevice(vm.deviceid)
+      getCardDevice(vm.$route.query.deviceid)
         .then((response) => {
           if (response?.data) {
             vm.renderCard(response.data)
