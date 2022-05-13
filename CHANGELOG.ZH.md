@@ -1,4 +1,4 @@
-## [4.5.3](https://github.com/dgiot/dgiot-dashboard/compare/v4.5.2...v4.5.3) (2022-05-12)
+## [4.5.3](https://github.com/dgiot/dgiot-dashboard/compare/v4.5.2...v4.5.3) (2022-05-13)
 
 
 ### Bug Fixes
@@ -24,6 +24,7 @@
 * **map:** fix the problem that Baidu map on the home page is not displayed ([371d4b2](https://github.com/dgiot/dgiot-dashboard/commit/371d4b2a76777b68acc827cbde089ac9f9549f2d))
 * parse_objectid ([6e8eaad](https://github.com/dgiot/dgiot-dashboard/commit/6e8eaadd697f06fcd5c2e860f312df708a1da225))
 * **pnpm-version:** pnpm-version ([a53d94f](https://github.com/dgiot/dgiot-dashboard/commit/a53d94f6f6581a6180ba81739c4c052818e17f67))
+* **pressure:** repair the automatic lifting of pressure measurement interface ([759ee87](https://github.com/dgiot/dgiot-dashboard/commit/759ee87255dcaee706567acaab4014aa87ede0da))
 * **product:** fix incorrect device registration field ([c1672ae](https://github.com/dgiot/dgiot-dashboard/commit/c1672ae63a7ff922f16ca0a5fa0aa1cb521e0514))
 * productid ([8babbfa](https://github.com/dgiot/dgiot-dashboard/commit/8babbfaf14680af974f179edff2d6d6a65dc68ec))
 * **query:** optimize query requests ([9c21da3](https://github.com/dgiot/dgiot-dashboard/commit/9c21da30c760c9f9126722b9ae0e460d8157152a))

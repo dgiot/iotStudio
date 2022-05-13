@@ -423,7 +423,8 @@
                   },
                   dataType: 'json',
                   requestAdaptor:
-                    'return {\r\n    ...api,\r\n    data: {\r\n        basedata:{ ...api.data}\r\n    }\r\n}',
+                    'return {\r\n    ' +
+                    '...api,\r\n    data: {\r\n        basedata:{ ...api.data}\r\n    }\r\n}',
                 },
                 body: [
                   {

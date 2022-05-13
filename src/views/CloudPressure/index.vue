@@ -15,6 +15,41 @@
     class="pressure-container"
     :class="{ 'dgiot-fullscreen': isFullscreen }"
   >
+    <div class="draw">
+      <a-drawer
+        :body-style="{ paddingBottom: '80px' }"
+        :footer-style="{ textAlign: 'right' }"
+        :visible="commandInfo.dialog"
+        :width="960"
+        @close="onClose"
+      >
+        <el-tabs v-model="activeName">
+          <el-tab-pane
+            v-for="(item, index) in commandInfo.data"
+            :key="index"
+            :label="item.title"
+            :name="index + ''"
+          >
+            <dgiot-amis :schema="item.data" :show-help="false" />
+          </el-tab-pane>
+        </el-tabs>
+        <div
+          :style="{
+            position: 'absolute',
+            right: 0,
+            bottom: 0,
+            width: '100%',
+            borderTop: '1px solid #e9e9e9',
+            padding: '10px 16px',
+            background: '#fff',
+            textAlign: 'right',
+            zIndex: 1,
+          }"
+        >
+          <a-button style="margin-right: 8px" @click="onClose">关闭</a-button>
+        </div>
+      </a-drawer>
+    </div>
     <dgiot-query-form>
       <dgiot-query-form-left-panel>
         <el-form
@@ -139,6 +174,7 @@
 <script>
   import { queryDevice, getDevice, delDevice, postDevice } from '@/api/Device'
   import TableEdit from '@/views/DeviceCloud/empty/tableEdit'
+  import { queryView } from '@/api/View'
 
   export default {
     name: 'Pressure',
@@ -148,6 +184,12 @@
     props: {},
     data() {
       return {
+        commandInfo: {
+          dialog: false,
+          data: {},
+        },
+        activeName: '0',
+        form: {},
         activeKey: 'task',
         infoData: 'Empty',
         isFullscreen: false,
@@ -212,7 +254,9 @@
       },
     },
     watch: {},
-    mounted() {},
+    mounted() {
+      this.fetchData()
+    },
     created() {
       this.fetchData()
     },
@@ -224,14 +268,33 @@
       handleEdit(row) {
         this.$refs['edit'].showEdit(row)
       },
+      async command(row) {
+        localStorage.setItem('parse_objectid', row.objectId)
+        const { results = [] } = await queryView({
+          where: {
+            class: 'Product',
+            type: 'amis',
+            key: row.product.objectId,
+          },
+        })
+        if (_.isEmpty(results)) {
+          localStorage.removeItem('parse_objectid')
+          this.$message.info('暂未配置下发控制表单')
+          return false
+        } else {
+          this.commandInfo.dialog = true
+          this.commandInfo.data = results
+        }
+      },
+      onClose() {
+        this.commandInfo.data = []
+        this.commandInfo.dialog = !this.commandInfo.dialog
+        localStorage.removeItem('parse_objectid')
+      },
       handleClick(col, type) {
         switch (type) {
           case 'setting':
-            this.$message({
-              type: 'success',
-              message: '你的弹出配置事件',
-              showClose: true,
-            })
+            this.command(col)
             break
           case 'edit':
             this.$message({
