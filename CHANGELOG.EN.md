@@ -87,6 +87,7 @@
 * **product:** numbe ([90554b7](https://github.com/dgiot/dgiot-dashboard/commit/90554b7ba2a55fd3c620b5d723c213997922844e))
 * **product:** prodcutID ([d73fb26](https://github.com/dgiot/dgiot-dashboard/commit/d73fb26f688f8ac2104d63a1de5798e5c5178e99))
 * **product:** select product ([7db287f](https://github.com/dgiot/dgiot-dashboard/commit/7db287f34ad06d376b095adff2b07b1d613f75e4))
+* **protocol:** cache Protocol ([7569680](https://github.com/dgiot/dgiot-dashboard/commit/7569680d8371019a9715503e75c3be50354ef5a9))
 * **protocol:** protocol sortBy ([08ca519](https://github.com/dgiot/dgiot-dashboard/commit/08ca51913db2f19d047f6cbf914a0b24324ccb29))
 * query ([486d204](https://github.com/dgiot/dgiot-dashboard/commit/486d204c1f3908b5340786e500956ba19f0ebd96))
 * **resource_types:** sortBy ([c30e361](https://github.com/dgiot/dgiot-dashboard/commit/c30e3618730d6a09db7c5648c54536f168bc6b3c))

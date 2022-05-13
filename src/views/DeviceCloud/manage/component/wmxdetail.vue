@@ -1432,10 +1432,6 @@
               }
             }
             this.resource.data[index].arr.push(item.params[key])
-            this.resource.data[index].arr = _.sortBy(
-              this.resource.data[index].arr,
-              ['order']
-            )
             console.log(this.resource.data[index].arr)
           }
           this.resource.data[index].arr.map((_item) => {
@@ -1452,10 +1448,6 @@
               // 设置默认值
               dgiotlogger.info(_item.type, _item.enum, _item, 'set select')
           })
-          this.resource.data[index].arr = _.sortBy(
-            this.resource.data[index].arr,
-            ['order']
-          )
           console.log(this.resource.data[index].arr)
         })
         console.info('this.resource.data', this.resource.data)
