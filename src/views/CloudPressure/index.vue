@@ -9,12 +9,236 @@
 * @github: https://github.com/dgiot/dgiot-dashboard.git
 * @name: index
 -->
+<!-- eslint-disable  -->
 <template>
   <div
     ref="pressure-table"
     class="pressure-container"
     :class="{ 'dgiot-fullscreen': isFullscreen }"
   >
+    <el-dialog :visible.sync="showAddress" append-to-body width="60%">
+      <div class="list">
+        <baidu-map
+          class="map"
+          :center="{
+            lat: Number(taskform.location && taskform.location.longitude),
+            lng: Number(taskform.location && taskform.location.latitude),
+          }"
+          :zoom="15"
+          :scroll-wheel-zoom="true"
+          @click="getClickInfo"
+        >
+          <bm-marker
+            :position="{
+              lat: Number(taskform.location && taskform.location.longitude),
+              lng: Number(taskform.location && taskform.location.latitude),
+            }"
+            :dragging="true"
+            animation="BMAP_ANIMATION_BOUNCE"
+          >
+            -
+            <bm-label
+              :content="`
+                当前位置${taskform.location && taskform.location.addressText}
+            `"
+              :label-style="{ color: 'red', fontSize: '12px' }"
+            />
+          </bm-marker>
+          <bm-circle
+            :center="{
+              lat: Number(taskform.location && taskform.location.longitude),
+              lng: Number(taskform.location && taskform.location.latitude),
+            }"
+            :radius="taskform.location && taskform.location.radius"
+            stroke-color="blue"
+            :stroke-opacity="0.5"
+            :stroke-weight="2"
+            :editing="true"
+            @lineupdate="updateCirclePath"
+          ></bm-circle>
+
+          <bm-navigation
+            class="navigation"
+            anchor="BMAP_ANCHOR_TOP_RIGHT"
+          ></bm-navigation>
+          <bm-overview-map
+            class="overview"
+            anchor="BMAP_ANCHOR_BOTTOM_RIGHT"
+            :is-open="true"
+          ></bm-overview-map>
+          <bm-geolocation
+            class="geolocation"
+            anchor="BMAP_ANCHOR_BOTTOM_RIGHT"
+            :show-address-bar="true"
+            :auto-location="true"
+          ></bm-geolocation>
+          <!-- <bm-panorama :offset="{ width: 80, height: 8 }"></bm-panorama> -->
+
+          <bm-map-type
+            :map-types="['BMAP_NORMAL_MAP', 'BMAP_HYBRID_MAP']"
+            anchor="BMAP_ANCHOR_TOP_LEFT"
+          ></bm-map-type>
+        </baidu-map>
+        <el-divider><i class="el-icon-map-location"></i></el-divider>
+        <p>
+          当前选择的地址是
+          {{ taskform.location && taskform.location.addressText }}
+        </p>
+        <p>半径范围{{ taskform.location && taskform.location.radius }}</p>
+        <p>
+          地理经纬度逆解析{{
+            (taskform.location && taskform.location.latitude) +
+            ',' +
+            (taskform.location && taskform.location.longitude)
+          }}
+        </p>
+      </div>
+    </el-dialog>
+    <div class="dialog">
+      <el-dialog title="添加压测任务" append-to-body :visible.sync="addVisible">
+        <el-form :model="form">
+          <el-row style="width: 96%; margin: 0 2% 0 0">
+            <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12">
+              <el-form-item label="名称" prop="name">
+                <el-input
+                  v-model="addDate.name"
+                  autocomplete="off"
+                  placeholder="请输入名称"
+                ></el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12">
+              <el-form-item label="备注信息">
+                <el-input
+                  v-model="addDate.remarks"
+                  autocomplete="off"
+                  placeholder="请输入备注信息"
+                ></el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12">
+              <el-form-item label="开始时间">
+                <el-date-picker
+                  v-model="addDate.startTime"
+                  type="datetime"
+                  placeholder="请选择开始时间"
+                  value-format="timestamp"
+                  style="width: 100%"
+                ></el-date-picker>
+              </el-form-item>
+            </el-col>
+            <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12">
+              <el-form-item label="结束时间">
+                <el-date-picker
+                  v-model="addDate.endTime"
+                  type="datetime"
+                  placeholder="请选择结束时间"
+                  value-format="timestamp"
+                  style="width: 100%"
+                ></el-date-picker>
+              </el-form-item>
+            </el-col>
+            <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12">
+              <el-form-item label="压测服务器">
+                <el-select
+                  v-model="addDate.server"
+                  style="width: 100%"
+                  placeholder="请选择压测服务器"
+                >
+                  <el-option
+                    v-for="(item, index) in serveObj"
+                    :key="item.objectId"
+                    :label="item.name"
+                    :value="item.name"
+                    :data-index="index"
+                  ></el-option>
+                </el-select>
+              </el-form-item>
+            </el-col>
+            <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12">
+              <el-form-item label="版本号">
+                <el-select
+                  v-model="addDate.version"
+                  style="width: 100%"
+                  placeholder="请选择压测版本号"
+                >
+                  <el-option
+                    v-for="(item, index) in versionObj"
+                    :key="item && item.objectId"
+                    :label="item && item.name"
+                    :value="item && item.name"
+                    :data-index="index"
+                  ></el-option>
+                </el-select>
+              </el-form-item>
+            </el-col>
+            <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12">
+              <el-form-item label="压测指标">
+                <el-select
+                  v-model="addDate.version"
+                  style="width: 100%"
+                  placeholder="请选择压测指标"
+                >
+                  <el-option
+                    v-for="(item, index) in bechObj"
+                    :key="item && item.objectId"
+                    :label="item && item.name"
+                    :value="item && item.name"
+                    :data-index="index"
+                  ></el-option>
+                </el-select>
+              </el-form-item>
+            </el-col>
+            <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12">
+              <el-form-item label="压测目标">
+                <el-select
+                  v-model="addDate.version"
+                  style="width: 100%"
+                  placeholder="请选择压测目标"
+                >
+                  <el-option
+                    v-for="(item, index) in bechIndex"
+                    :key="item && item.objectId"
+                    :label="item && item.name"
+                    :value="item && item.name"
+                    :data-index="index"
+                  ></el-option>
+                </el-select>
+              </el-form-item>
+            </el-col>
+            <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12">
+              <el-form-item label="地址位置">
+                <el-input
+                  v-model="addDate.addressText"
+                  placeholder="请选择地理位置信息"
+                >
+                  <template slot="append">
+                    <el-button
+                      class="el-icon-map-location"
+                      @click="showAddress = true"
+                    >
+                      选择地理位置
+                    </el-button>
+                  </template>
+                </el-input>
+              </el-form-item>
+            </el-col>
+            <el-col :xs="24" :sm="12" :md="12" :lg="12" :xl="12">
+              <el-form-item label="是否运行删除">
+                <el-radio-group v-model="addDate.isTemp">
+                  <el-radio border :label="true">允许</el-radio>
+                  <el-radio border :label="false">不允许</el-radio>
+                </el-radio-group>
+              </el-form-item>
+            </el-col>
+          </el-row>
+        </el-form>
+        <div slot="footer" class="dialog-footer">
+          <el-button @click="dialogFormVisible = false">取 消</el-button>
+          <el-button type="primary" @click="sendDate">确 定</el-button>
+        </div>
+      </el-dialog>
+    </div>
     <div class="draw">
       <a-drawer
         :body-style="{ paddingBottom: '80px' }"
@@ -74,7 +298,7 @@
             <el-button
               icon="el-icon-plus"
               type="primary"
-              @click.native="handleAdd"
+              @click="addVisible = true"
             >
               添加
             </el-button>
@@ -167,23 +391,33 @@
         <dgiot-empty />
       </a-tab-pane>
     </a-tabs>
-    <table-edit ref="edit" @fetch-data="fetchData" />
   </div>
 </template>
 
 <script>
   import { queryDevice, getDevice, delDevice, postDevice } from '@/api/Device'
-  import TableEdit from '@/views/DeviceCloud/empty/tableEdit'
   import { queryView } from '@/api/View'
 
   export default {
     name: 'Pressure',
-    components: {
-      TableEdit,
-    },
+    components: {},
     props: {},
     data() {
       return {
+        addDate: {
+          name: '',
+          version: '',
+          remarks: '',
+          server: '',
+          startTime: '',
+          endTime: '',
+          addressText: '',
+          isTemp: false,
+        },
+        taskform: {},
+        formLabelWidth: '50%',
+        addVisible: false,
+        showAddress: false,
         commandInfo: {
           dialog: false,
           data: {},
@@ -238,6 +472,10 @@
           search: '',
           type: 'name',
         },
+        versionObj: [],
+        serveObj: [],
+        bechObj: [],
+        bechIndex: [],
       }
     },
     computed: {
@@ -262,7 +500,28 @@
     },
     destroyed() {},
     methods: {
+      async sendDate() {
+        console.log(this.addDate)
+        //api
+        let res = await postDevice(this.addDate)
+        console.log(this.addDate)
+        //   if (res.data.code>=200 && res.data.code <300) {
+        //     this.$message({
+        //       type: 'success',
+        //       message: '添加成功',
+        //       showClose: true,
+        //     })
+        //     this.dialogFormVisible = false
+        //   } else {
+        //     this.$message({
+        //       type: 'success',
+        //       message: `添加失败，${res.data.message}`,
+        //       showClose: true,
+        //     })
+        //   }
+      },
       handleAdd() {
+        this.addVisible = true
         this.$refs['edit'].showEdit()
       },
       handleEdit(row) {
@@ -292,6 +551,7 @@
         localStorage.removeItem('parse_objectid')
       },
       handleClick(col, type) {
+        this.taskform = col
         switch (type) {
           case 'setting':
             this.command(col)
