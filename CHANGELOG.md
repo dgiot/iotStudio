@@ -64,6 +64,7 @@
 * **ftechnology:** complete the process path details page ([b00af1c](https://github.com/dgiot/dgiot-dashboard/commit/b00af1c516985790dc76c44462eafda1e34ccd81))
 * **ftechnology:** ftechnology amis ([b02abb3](https://github.com/dgiot/dgiot-dashboard/commit/b02abb3277236ecf76df3f94934ca306212b0a54))
 * **ftechnology:** operation and attribute table ([8b787c7](https://github.com/dgiot/dgiot-dashboard/commit/8b787c7a4a2b0c48338de52aaf2ed46954e3fb3d))
+* **grafana:** grafana iframe ([5874069](https://github.com/dgiot/dgiot-dashboard/commit/5874069065d645802263214cbf018d5f3a2c337c))
 * **i18n:** product card field translation ([d39f60b](https://github.com/dgiot/dgiot-dashboard/commit/d39f60ba108367105d92a659307fa32ba7a62d2a))
 * **ignore:** lock-yml ([4d964c4](https://github.com/dgiot/dgiot-dashboard/commit/4d964c42d22cbe2b73503d90639460d9fe6e4c03))
 * iotapi(devicecard) ([351ecec](https://github.com/dgiot/dgiot-dashboard/commit/351ecec7b1599fd128439aba5b31db5714e71b7f))
