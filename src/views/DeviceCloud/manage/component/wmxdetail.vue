@@ -1285,12 +1285,12 @@
     methods: {
       async queryProtocol() {
         const protocol = await getProtocol()
-        console.log(protocol)
-        // protocol做排序处理
-        // protocol.forEach((p) => {
-        //   for (let j in p.params) p.params = _.sortBy(p.params, ['order'])
-        // })
-        console.log(protocol)
+        // console.log(protocol)
+        // // protocol做排序处理
+        // // protocol.forEach((p) => {
+        // //   for (let j in p.params) p.params = _.sortBy(p.params, ['order'])
+        // // })
+        // console.log(protocol)
         this.setProtocol(protocol)
       },
       handleClick(tab) {

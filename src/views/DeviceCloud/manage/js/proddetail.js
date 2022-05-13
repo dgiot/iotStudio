@@ -36,6 +36,7 @@ var setdata = ''
 var isallchannel = false
 var isupdatetrue = ''
 import dgiotViews from '@/views/CloudFunction/lowcode'
+import { getProtocol } from '@/api/Protocol'
 
 export default {
   components: {
@@ -2263,6 +2264,10 @@ export default {
     },
     // 物模型修改submitForm
     async wmxDataFill(rowData, index, moduletype) {
+      this.$nextTick(() => {
+        this.$refs['sizeForm'].queryResource()
+        this.$refs['sizeForm'].queryProtocol()
+      })
       this.moduletype = moduletype
       this.modules.type = moduletype
       this.wmxSituation = '编辑'
@@ -2651,6 +2656,7 @@ export default {
       //调用子组件的下拉事件
       this.$nextTick(async () => {
         this.$refs['sizeForm'].queryResource()
+        this.$refs['sizeForm'].queryProtocol()
         // 保证子组件已经挂载完成）
         // if (this.$refs['sizeForm'])
         this.$refs['sizeForm'].resource.value = rowData.dataForm.protocol
@@ -2661,12 +2667,13 @@ export default {
         // this.$refs['sizeForm'].changeResource(this.$refs['sizeForm'].resource.value)
 
         this.$refs['sizeForm'].resource.arrlist = rowData.dataSource
+        const protocol = await getProtocol()
         this.$nextTick(() => {
           this.$refs['sizeForm'].resource.data.forEach((resource, index) => {
             // resource[index].arr = []
             // resource[index].obj = {}
             if (this.$refs['sizeForm'].resource.value === resource.cType) {
-              console.info(resource, 'success cType')
+              console.info(resource, '物模型回显事件')
               resource.arr.forEach((i) => {
                 if (i.allowCreate) {
                   this.$refs['sizeForm'].dynamicTable(
