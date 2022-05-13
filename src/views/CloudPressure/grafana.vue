@@ -11,7 +11,9 @@
 -->
 <template>
   <div class="grafana-container">
-    <div class="grafana">grafana</div>
+    <div class="grafana">
+      <iframe frameborder="0" src="http://101.32.99.133:3000/login"></iframe>
+    </div>
   </div>
 </template>
 
@@ -36,5 +38,12 @@
   .grafana-container {
     width: 100%;
     heigth: 100%;
+    iframe {
+      display: block; /* iframes are inline by default */
+      background: #000;
+      border: none; /* Reset default border */
+      height: 100vh; /* Viewport-relative units */
+      width: 100vw;
+    }
   }
 </style>

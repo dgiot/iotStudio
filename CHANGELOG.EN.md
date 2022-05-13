@@ -79,6 +79,7 @@
 * **nothing:** parse_notificationid ([963c365](https://github.com/dgiot/dgiot-dashboard/commit/963c3652a3c7ae61b79f8724526b3df8f81eba6b))
 * **notification:** notification_ ([db5f2b8](https://github.com/dgiot/dgiot-dashboard/commit/db5f2b8d8b12be3fd04f8dfa901ce8b2403c2bb4))
 * **npmrc:** registry ([1d54924](https://github.com/dgiot/dgiot-dashboard/commit/1d549244ac2ef6e2d6f6d6877744df500f077e03))
+* **pressure:** draw ([0451ee9](https://github.com/dgiot/dgiot-dashboard/commit/0451ee9b0250368a072ae05528b8ac2138fb93cc))
 * **product:** [core] ([6267261](https://github.com/dgiot/dgiot-dashboard/commit/62672618d42bed72bd04517496f7da6c71d27a09))
 * **product:** enable default dynamic registration when adding products ([3b98e40](https://github.com/dgiot/dgiot-dashboard/commit/3b98e400c6a00b86a8edf167ddda927460a76d05))
 * **product:** modify product interface mode ([27a2805](https://github.com/dgiot/dgiot-dashboard/commit/27a2805f1803b47e90eeeeca5147ee042cdc40b2))
