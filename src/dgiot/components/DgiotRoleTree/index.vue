@@ -213,9 +213,9 @@
         this.setPermission(permission)
         const protocol = await getProtocol()
         // protocol做排序处理
-        protocol.forEach((p) => {
-          for (let j in p.params) p.params = _.sortBy(p.params, ['order'])
-        })
+        // protocol.forEach((p) => {
+        //   for (let j in p.params) p.params = _.sortBy(p.params, ['order'])
+        // })
         this.setProtocol(protocol)
         this.setChartType(chart)
         let { results: product = [] } = await queryProduct(params)
