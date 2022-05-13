@@ -996,6 +996,7 @@
   import { getDlinkJson } from '@/api/Dlink'
   import { mapGetters, mapMutations } from 'vuex'
   import defaultLogo from '../../../../../public/assets/images/logo/logo.png'
+  import { getProtocol } from '@/api/Protocol'
 
   export default {
     name: 'Wmxdetail',
@@ -1268,6 +1269,7 @@
       },
     },
     async created() {
+      await this.queryProtocol()
       /**
        * @description 查询资源通道
        */
@@ -1281,6 +1283,16 @@
     beforeDestroy() {}, //生命周期 - 销毁之前
     activated() {},
     methods: {
+      async queryProtocol() {
+        const protocol = await getProtocol()
+        console.log(protocol)
+        // protocol做排序处理
+        // protocol.forEach((p) => {
+        //   for (let j in p.params) p.params = _.sortBy(p.params, ['order'])
+        // })
+        console.log(protocol)
+        this.setProtocol(protocol)
+      },
       handleClick(tab) {
         console.log(tab)
       },
@@ -1422,10 +1434,6 @@
               }
             }
             this.resource.data[index].arr.push(item.params[key])
-            this.resource.data[index].arr = _.sortBy(
-              this.resource.data[index].arr,
-              ['order']
-            )
             console.log(this.resource.data[index].arr)
           }
           this.resource.data[index].arr.map((_item) => {
@@ -1442,10 +1450,6 @@
               // 设置默认值
               dgiotlogger.info(_item.type, _item.enum, _item, 'set select')
           })
-          this.resource.data[index].arr = _.sortBy(
-            this.resource.data[index].arr,
-            ['order']
-          )
           console.log(this.resource.data[index].arr)
         })
         console.info('this.resource.data', this.resource.data)
@@ -1482,6 +1486,7 @@
       },
       ...mapMutations({
         setSizeForm: 'konva/setSizeForm',
+        setProtocol: 'product/setProtocol',
       }),
       changeThing(item) {
         console.error(item)
