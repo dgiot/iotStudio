@@ -1,0 +1,35 @@
+{
+  "rewrites": [
+    {
+      "source": "/iotapi/(.*)",
+      "destination": "/api/iotapi"
+    },
+    {
+      "source": "/dgiot_dashboard/(.*)",
+      "destination": "/api/iotapi"
+    },
+    {
+      "source": "/dgiot_swagger/(.*)",
+      "destination": "/api/iotapi"
+    },
+    {
+      "source": "/dgiot_file/(.*)",
+      "destination": "/api/iotapi"
+    },
+    {
+      "source": "/dgiot-amis-dashboard/(.*)",
+      "destination": "/api/iotapi"
+    }
+  ],
+  "headers": [
+    {
+      "source": "/(.*).(ttf|otf|woff2|woff|eot|json)",
+      "headers" : [
+        {
+          "key" : "Cache-Control",
+          "value" : "public, max-age=31536000, immutable"
+        }
+      ]
+    }
+  ]
+}

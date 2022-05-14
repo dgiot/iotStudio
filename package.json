@@ -77,6 +77,7 @@
     "vuera": "^0.2.7"
   },
   "devDependencies": {
+    "http-proxy-middleware": "^2.0.6",
     "@babel/core": "^7.0.0",
     "@babel/helper-define-polyfill-provider": "^0.3.1",
     "@babel/helper-plugin-utils": "7.14.5",
