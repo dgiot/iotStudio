@@ -23,76 +23,7 @@
           :label="$translateTitle('equipment.realTime data')"
           name="first1"
         >
-          <div v-loading="loading" style="overflow: scroll">
-            <div class="thirdtb">
-              <!--运行状态卡片-->
-              <el-row :key="thirdtbKey">
-                <el-col
-                  v-for="(value, key, index) in machinelist"
-                  :key="index"
-                  :span="24"
-                >
-                  <el-card :body-style="{ padding: '0px' }" shadow="never">
-                    <div style="padding: 14px">
-                      <span style="font-size: 30px">{{ key }}</span>
-                      <ul
-                        v-if="value.length"
-                        style="display: flex; flex-wrap: wrap"
-                      >
-                        <li
-                          v-for="(item, index) in value"
-                          :key="index"
-                          class="updatedtable"
-                        >
-                          <div style="height: 70px">
-                            <span style="font-size: 16px">{{ item.name }}</span>
-                            <span
-                              style="
-                                float: right;
-                                margin-top: 10px;
-                                margin-right: 15px;
-                              "
-                            >
-                              <el-image
-                                :src="item.imgurl"
-                                style="width: 60px; height: 60px"
-                              >
-                                <div
-                                  slot="error"
-                                  class="image-slot"
-                                  style="width: 60px; height: 60px"
-                                >
-                                  <i class="el-icon-picture-outline"></i>
-                                </div>
-                              </el-image>
-                            </span>
-                          </div>
-                          <div class="stla">
-                            <span :title="item.number | filterVal">
-                              {{ item.number | filterVal }}
-                            </span>
-                            <span v-if="item.unit" :title="item.unit">
-                              {{ item.unit }}
-                            </span>
-                          </div>
-                          <div class="ta">
-                            <span class="fontSize">
-                              {{
-                                $translateTitle("equipment.updatetime") + ":"
-                              }}
-                            </span>
-                            <span class="fontSize" @click="print(machinelist)">
-                              {{ item.time }}
-                            </span>
-                          </div>
-                        </li>
-                      </ul>
-                    </div>
-                  </el-card>
-                </el-col>
-              </el-row>
-            </div>
-          </div>
+          <running-state :loading="loading" :thirdtbKey="thirdtbKey" :machinelist="machinelist"/>
         </el-tab-pane>
         <!-- 历史数据 -->
         <el-tab-pane
@@ -727,7 +658,7 @@
   }
 
   .thirdtb {
-    width: 100vh;
+    //width: 100vh;
     height: 76vh;
     background: #f4f4f4;
   }

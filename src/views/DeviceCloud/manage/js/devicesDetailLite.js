@@ -2,7 +2,7 @@ import info from '@/components/Device/info'
 import { mapGetters, mapActions } from 'vuex'
 import { getCardDevice, getDabDevice, getDevice } from '@/api/Device/index.js'
 import Instruct from '@/views/DeviceCloud/category/instruct_manage'
-
+import runningState from '@/views/DeviceCloud/manage/component/Device/runningState'
 const columns = [
   {
     title: '图片',
@@ -38,6 +38,7 @@ export default {
   components: {
     Instruct,
     info,
+    runningState,
   },
   filters: {
     filterVal(val) {
@@ -867,6 +868,7 @@ export default {
       array.forEach((item) => {
         let arr = []
         resData.forEach((item1) => {
+          item1.module = 'card'
           if (item == item1.devicetype) {
             arr.push(item1)
           }

@@ -141,16 +141,11 @@
                     style="width: 100%"
                   >
                     <el-option
-                      v-for="item in viewData"
-                      :key="item.objectId"
-                      :label="item.title"
-                      :value="item.objectId"
-                    >
-                      <span style="float: left">{{ item.title }}</span>
-                      <span style="float: right; color: #8492a6">
-                        {{ item.objectId }}
-                      </span>
-                    </el-option>
+                      v-for="item in Object.keys(viewData)"
+                      :key="item"
+                      :label="item"
+                      :value="item"
+                    />
                   </el-select>
                 </el-form-item>
               </el-col>
@@ -1022,7 +1017,7 @@
   import { mapGetters, mapMutations } from 'vuex'
   import defaultLogo from '../../../../../public/assets/images/logo/logo.png'
   import { getProtocol } from '@/api/Protocol'
-  import { queryView } from '@/api/View'
+  import { getProduct } from '@/api/Product'
   export default {
     name: 'Wmxdetail',
     components: {},
@@ -1439,14 +1434,8 @@
         // })
       },
       async queryViewInfo() {
-        const { results = [] } = await queryView({
-          where: {
-            class: 'Product',
-            type: 'profile',
-            key: this.$route.query.id || '',
-          },
-        })
-        this.viewData = results
+        const { profile = {} } = await getProduct(this.$route.query.id)
+        this.viewData = profile
       },
       async queryResource() {
         const { dataType = [], dataNnit = [] } = await getDlinkJson('ThingUnit')

@@ -6,7 +6,7 @@ import { mapGetters, mapActions } from 'vuex'
 import { getCardDevice, getDabDevice, getDevice } from '@/api/Device/index.js'
 import Instruct from '@/views/DeviceCloud/category/instruct_manage'
 import { queryView } from '@/api/View'
-
+import runningState from '@/views/DeviceCloud/manage/component/Device/runningState'
 const columns = [
   {
     title: '图片',
@@ -45,16 +45,9 @@ export default {
     deviceLog,
     SceneLog,
     'device-task': task,
+    runningState,
   },
-  filters: {
-    filterVal(val) {
-      if (val || val == 0) {
-        return val
-      } else {
-        return '--'
-      }
-    },
-  },
+
   directives: {
     'el-select-loadmore': {
       bind(el, binding) {
@@ -905,6 +898,7 @@ export default {
       array.forEach((item) => {
         let arr = []
         resData.forEach((item1) => {
+          item1.module = 'card'
           if (item == item1.devicetype) arr.push(item1)
         })
         machine[item] = arr
