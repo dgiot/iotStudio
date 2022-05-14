@@ -79,6 +79,7 @@
   "devDependencies": {
     "http-proxy-middleware": "^2.0.6",
     "@babel/core": "^7.0.0",
+    "vue": "^3.2.13",
     "@babel/helper-define-polyfill-provider": "^0.3.1",
     "@babel/helper-plugin-utils": "7.14.5",
     "@babel/plugin-transform-runtime": "^7.17.10",
@@ -90,6 +91,8 @@
     "@vue/cli-plugin-router": "^4.5.15",
     "@vue/cli-plugin-vuex": "^4.5.15",
     "@vue/cli-service": "^4.5.15",
+    "vue-loader": "^15.9.2",
+    "css-loader": "^3.5.3",
     "@vue/eslint-config-prettier": "6.0.0",
     "babel-plugin-dynamic-import-node": "^2.3.3",
     "babel-plugin-polyfill-corejs2": "^0.3.1",
