@@ -107,7 +107,7 @@
       </el-table-column>
       <el-table-column
         align="center"
-        label="objectId"
+        label="视图ID"
         prop="objectId"
         show-overflow-tooltip
         width="auto"
@@ -156,7 +156,7 @@
       />
       <el-table-column
         align="center"
-        label="key"
+        label="表名Id"
         prop="key"
         show-overflow-tooltip
         width="auto"

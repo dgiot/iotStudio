@@ -129,6 +129,31 @@
                   </el-select>
                 </el-form-item>
               </el-col>
+              <el-col v-if="sizeForm.isread == 'rw'" :span="8">
+                <el-form-item label="关联控制指令">
+                  <!--少个@change=selectStruct-->
+                  <el-select
+                    v-model="sizeForm.profile"
+                    allow-create
+                    clearable
+                    :disabled="sizeForm.editdatatype"
+                    filterable
+                    style="width: 100%"
+                  >
+                    <el-option
+                      v-for="item in viewData"
+                      :key="item.objectId"
+                      :label="item.title"
+                      :value="item.objectId"
+                    >
+                      <span style="float: left">{{ item.title }}</span>
+                      <span style="float: right; color: #8492a6">
+                        {{ item.objectId }}
+                      </span>
+                    </el-option>
+                  </el-select>
+                </el-form-item>
+              </el-col>
             </el-row>
             <el-row :gutter="24">
               <el-col
@@ -997,7 +1022,7 @@
   import { mapGetters, mapMutations } from 'vuex'
   import defaultLogo from '../../../../../public/assets/images/logo/logo.png'
   import { getProtocol } from '@/api/Protocol'
-
+  import { queryView } from '@/api/View'
   export default {
     name: 'Wmxdetail',
     components: {},
@@ -1064,6 +1089,7 @@
         }
       }
       return {
+        viewData: [],
         colCum: {},
         dybaneucForms: [],
         tableName: '',
@@ -1274,6 +1300,7 @@
        * @description 查询资源通道
        */
       await this.queryResource()
+      await this.queryViewInfo()
     },
     mounted() {},
     beforeCreate() {}, //生命周期 - 创建之前
@@ -1410,6 +1437,16 @@
         })
         //  修改子组件el-form 后 修改父组件的uPKey
         // })
+      },
+      async queryViewInfo() {
+        const { results = [] } = await queryView({
+          where: {
+            class: 'Product',
+            type: 'profile',
+            key: this.$route.query.id || '',
+          },
+        })
+        this.viewData = results
       },
       async queryResource() {
         const { dataType = [], dataNnit = [] } = await getDlinkJson('ThingUnit')
@@ -1912,6 +1949,7 @@
           }
         }
         obj.editdatatype = true
+        obj.profile = that.sizeForm.profile
         obj.nobound = that.sizeForm.nobound
         obj.dis = item.dataForm.address
         obj.isdis = that.sizeForm.isdis
@@ -1989,6 +2027,7 @@
         })
       },
       submitForm(formName) {
+        console.log(this.$refs.sizeForm, this.sizeForm)
         const table = this.dictParse(this.dybaneucForms, this.tableTitle)
         console.log(table)
         this.$refs[formName].validate((valid) => {

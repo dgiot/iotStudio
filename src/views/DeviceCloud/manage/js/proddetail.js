@@ -2652,6 +2652,7 @@ export default {
       dgiotlog.log('editrowData', rowData)
       // 处理动态协议类型的数据展示
       obj.protocol = rowData.dataForm.protocol
+      obj.profile = rowData.profile
       this.setSizeForm(obj)
       //调用子组件的下拉事件
       this.$nextTick(async () => {
