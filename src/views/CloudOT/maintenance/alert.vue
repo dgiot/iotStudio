@@ -433,7 +433,7 @@
         } catch (error) {
           dgiotlog.log(error)
           loading.close()
-          this.$message.error(`${error}`)
+          this.$baseMessage(error, 'error', 'dgiot-hey-message-error')
         }
         this.$nextTick(() => {
           this.parserView = false
@@ -465,7 +465,7 @@
           })
         } catch (error) {
           dgiotlog.log(error)
-          this.$message.error('处理失败')
+          this.$baseMessage('处理失败', 'error', 'dgiot-hey-message-error')
         }
         this.fetchData()
         this.dynamicformView = false
@@ -506,7 +506,7 @@
         } catch (error) {
           dgiotlog.log(error)
           Loading.close()
-          this.$message.error(`${error}`)
+          this.$baseMessage(error, 'error', 'dgiot-hey-message-error')
         }
         this.formConfig = _.merge(content, this.formConfig)
         dgiotlog.log('_profileConfig', this.formConfig)
@@ -522,7 +522,7 @@
             duration: 2000,
             message:
               this.$translateTitle('Maintenance.delete') +
-              $translateTitle('message.success'),
+              this.$translateTitle('message.success'),
             type: 'success',
           })
         }

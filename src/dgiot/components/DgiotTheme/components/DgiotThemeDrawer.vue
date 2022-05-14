@@ -331,18 +331,22 @@
         await putUser(this.objectId, params)
           .then((res) => {
             dgiotlog.log(res)
-            this.$message.success(
+            this.$baseMessage(
               this.$translateTitle(
                 'title.Theme configuration saved successfully'
-              )
+              ),
+              'success',
+              'dgiot-hey-message-success'
             )
           })
           .catch((e) => {
             dgiotlog.log(e)
-            this.$message.success(
+            this.$baseMessage(
               this.$translateTitle(
                 'title.Theme configuration saved error' + e.error
-              )
+              ),
+              'success',
+              'dgiot-hey-message-success'
             )
           })
         await this.saveTheme(theme)

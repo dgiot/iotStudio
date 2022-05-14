@@ -914,10 +914,18 @@
             })
             break
           case 'file':
-            this.$message.success('归档成功')
+            this.$baseMessage(
+              '归档成功',
+              'success',
+              'dgiot-hey-message-success'
+            )
             break
           case 'release':
-            this.$message.success('发布成功')
+            this.$baseMessage(
+              '发布成功',
+              'success',
+              'dgiot-hey-message-success'
+            )
             break
           case 'delete':
             // 二次删除确认
@@ -946,7 +954,11 @@
               })
             break
           case 'edit':
-            this.$message.success('编辑成功')
+            this.$baseMessage(
+              '编辑成功',
+              'success',
+              'dgiot-hey-message-success'
+            )
             break
           default:
             break

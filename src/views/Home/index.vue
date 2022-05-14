@@ -962,7 +962,7 @@
           // this.$message.success(`${res}`)
         } catch (error) {
           // dgiotlog.log(error)
-          this.$message.error(`${error}`)
+          this.$baseMessage(error, 'error', 'dgiot-hey-message-error')
         }
       },
       toggleFull(e) {
@@ -1378,10 +1378,12 @@
                 },
               })
             } else {
-              this.$message.info(
+              this.$baseMessage(
                 this.$translateTitle(
                   'equipment.The device is not bound to the video address yet'
-                )
+                ),
+                'info',
+                'dgiot-hey-message-error'
               )
               return false
             }

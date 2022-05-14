@@ -191,7 +191,11 @@
               this.set_deviceStep(-1)
             }
           } else {
-            this.$message.error('请选择分配人员')
+            this.$baseMessage(
+              '请选择分配人员',
+              'error',
+              'dgiot-hey-message-error'
+            )
             dgiotlog.log('error submit!!')
             return false
           }

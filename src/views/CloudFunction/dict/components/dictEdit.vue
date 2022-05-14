@@ -135,10 +135,7 @@
               key,
             }
             if (this.type == 'add') {
-              const res = await postDict(params)
-              this.$message.success(
-                `${this.$translateTitle('user.Save the template successfully')}`
-              )
+              await postDict(params)
               this.$message({
                 showClose: true,
                 duration: 2000,
@@ -148,9 +145,13 @@
                 type: 'success',
               })
             } else {
-              const { msg } = await putDict(this.dictId, params)
-              this.$message.success(
-                `${this.$translateTitle('user.Save the template successfully')}`
+              await putDict(this.dictId, params)
+              this.$baseMessage(
+                `${this.$translateTitle(
+                  'user.Save the template successfully'
+                )}`,
+                'success',
+                'dgiot-hey-message-success'
               )
             }
             this.$emit('fetch-data')

@@ -71,8 +71,10 @@
             this.loadListeners()
           })
           .catch((error) => {
-            this.$message.error(
-              error || this.$translateTitle('error.networkError')
+            this.$baseMessage(
+              error || this.$translateTitle('error.networkError'),
+              'error',
+              'dgiot-hey-message-error'
             )
           })
       },
@@ -83,8 +85,10 @@
             this.listeners = response.data
           })
           .catch((error) => {
-            this.$message.error(
-              error || this.$translateTitle('error.networkError')
+            this.$baseMessage(
+              error || this.$translateTitle('error.networkError'),
+              'error',
+              'dgiot-hey-message-error'
             )
           })
       },

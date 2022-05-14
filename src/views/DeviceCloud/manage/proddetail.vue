@@ -424,11 +424,7 @@
               <div class="topicform">
                 <el-form ref="topicform" :model="topicform" :rules="topicrule">
                   <el-form-item label="Topic类：" prop="topic">
-                    <el-input v-model="topicform.topic">
-                      <template slot="prepend">
-                        {{ '$dg/' }}
-                      </template>
-                    </el-input>
+                    <el-input v-model="topicform.topic" />
                     <dgiot-help
                       src="https://gitee.com/dgiiot/dgiot_dlink"
                       style="width: 60px"
@@ -447,6 +443,7 @@
                           'product.selectdeviceoperationpermission'
                         )
                       "
+                      style="width: 100%"
                     >
                       <el-option
                         :label="$translateTitle('product.sub')"

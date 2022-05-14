@@ -40,7 +40,15 @@
     data() {
       return {
         withHeader: true,
-        types: ['amis', 'amis_view', 'topo', 'notification'],
+        types: [
+          'amis',
+          'amis_view',
+          'topo',
+          'profile',
+          'content',
+          'notification',
+          'reportFrom',
+        ],
         code: {},
         objectId: '',
         flag: false,

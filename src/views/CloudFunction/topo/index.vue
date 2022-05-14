@@ -273,7 +273,11 @@
             // ),
             data: this.viewInfo.data,
           })
-          this.$message.success(this.$translateTitle('user.update completed'))
+          this.$baseMessage(
+            this.$translateTitle('user.update completed'),
+            'success',
+            'dgiot-hey-message-success'
+          )
           console.error('this.viewInfo.data', this.viewInfo.data)
         } catch (e) {
           console.log(e)
@@ -342,7 +346,11 @@
               id: 'kevCurrent',
             })
           } else {
-            _this.$message.info('暂无组态。显示默认组态')
+            _this.$baseMessage(
+              '暂无组态。显示默认组态',
+              'info',
+              'dgiot-hey-message-error'
+            )
             console.log(
               'topo info msg 请求数据没有组态 就设置这个组态为默认',
               _this.Stage

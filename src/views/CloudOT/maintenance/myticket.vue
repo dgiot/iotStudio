@@ -773,8 +773,10 @@
           })
         } catch (error) {
           console.log(error)
-          this.$message.error(
-            this.$translateTitle('node.export error') + `${error}`
+          this.$baseMessage(
+            this.$translateTitle('node.export error') + `${error}`,
+            'error',
+            'dgiot-hey-message-error'
           )
         }
       },
@@ -942,7 +944,7 @@
             loading.close()
           })
           .catch((e) => {
-            this.$message.error(`${e}`)
+            this.$baseMessage(e, 'error', 'dgiot-hey-message-error')
             loading.close()
           })
         console.log(this.list, 'this.list')

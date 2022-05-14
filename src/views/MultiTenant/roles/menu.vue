@@ -432,7 +432,7 @@
           // this.$message.success(`${res}`)
         } catch (error) {
           loading.close()
-          this.$message.error(`${error}`)
+          this.$baseMessage(error, 'error', 'dgiot-hey-message-error')
         }
         loading.close()
       },
@@ -473,7 +473,7 @@
               message: '菜单导入失败' + error,
             })
             dgiotlog.log('error', error)
-            this.$message.error(`${error}`)
+            this.$baseMessage(error, 'error', 'dgiot-hey-message-error')
           }
           loading.close()
         }

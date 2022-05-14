@@ -913,13 +913,17 @@
                     this.formInline.result
                   )
                 } else {
-                  this.$message.error('SQL Not Match')
+                  this.$baseMessage(
+                    'SQL Not Match',
+                    'error',
+                    'dgiot-hey-message-error'
+                  )
                   console.log('error response', response)
                 }
               })
               .catch((error) => {
                 console.log(error)
-                this.$message.error(error)
+                this.$baseMessage(error, 'error', 'dgiot-hey-message-error')
               })
           }
         })
@@ -1014,7 +1018,11 @@
               })
               .catch((e) => {
                 console.log(e)
-                this.$message.error(e.error)
+                this.$baseMessage(
+                  e?.error ? e.error : e,
+                  'error',
+                  'dgiot-hey-message-error'
+                )
               })
           } else {
             this.$message('有必填项未填写')
@@ -1063,7 +1071,11 @@
               }
             })
           } else {
-            this.$message.error('error submit!!')
+            this.$baseMessage(
+              'error submit!!',
+              'error',
+              'dgiot-hey-message-error'
+            )
             return false
           }
         })

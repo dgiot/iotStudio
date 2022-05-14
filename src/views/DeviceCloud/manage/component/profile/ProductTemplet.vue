@@ -182,7 +182,7 @@
           this.queryForm.total = count
         } catch (error) {
           dgiotlog.log(error)
-          this.$message.error(`${error}`)
+          this.$baseMessage(error, 'error', 'dgiot-hey-message-error')
         }
       },
 
@@ -234,8 +234,10 @@
           this.Industry()
         } catch (error) {
           dgiotlog.log(error)
-          this.$message.error(
-            this.$translateTitle('user.error deleted') + `${error}`
+          this.$baseMessage(
+            this.$translateTitle('user.error deleted') + `${error}`,
+            'error',
+            'dgiot-hey-message-error'
           )
         }
       },

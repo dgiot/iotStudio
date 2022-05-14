@@ -300,8 +300,10 @@
             this.modClosed = false
           })
           .catch((error) => {
-            this.$message.error(
-              error || this.$translateTitle('error.networkError')
+            this.$baseMessage(
+              error || this.$translateTitle('error.networkError'),
+              'error',
+              'dgiot-hey-message-error'
             )
           })
       },
@@ -312,8 +314,10 @@
             this.hidePopover()
           })
           .catch((error) => {
-            this.$message.error(
-              error || this.$translateTitle('error.networkError')
+            this.$baseMessage(
+              error || this.$translateTitle('error.networkError'),
+              'error',
+              'dgiot-hey-message-error'
             )
           })
       },

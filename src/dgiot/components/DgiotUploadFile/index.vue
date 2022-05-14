@@ -116,7 +116,7 @@
           this.tips = '正在上传中。。。'
           this.$refs.upload.submit()
         } else {
-          this.$message.error('请先上传图片')
+          this.$baseMessage('请先上传图片', 'error', 'dgiot-hey-message-error')
           return
         }
       },

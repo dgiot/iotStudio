@@ -1805,10 +1805,12 @@
             },
           })
         } else {
-          this.$message.info(
+          this.$baseMessage(
             this.$translateTitle(
               'equipment.The device is not bound to the video address yet'
-            )
+            ),
+            'info',
+            'dgiot-hey-message-error'
           )
           return false
         }
@@ -1863,7 +1865,7 @@
           })
         } catch (error) {
           dgiotlog.log(error)
-          this.$message.error(`${error}`)
+          this.$baseMessage(error, 'error', 'dgiot-hey-message-error')
         }
       },
       ...mapMutations({
@@ -1884,11 +1886,19 @@
             if (this.queryInfo) {
               this.updateParse(item.table, item.field, this.deviceId, item)
             } else {
-              this.$message.error(`${item.table} no field ${item.field}`)
+              this.$baseMessage(
+                `${item.table} no field ${item.field}`,
+                'error',
+                'dgiot-hey-message-error'
+              )
             }
           })
         } else {
-          this.$message.error(`${item.table} no field ${item.field}`)
+          this.$baseMessage(
+            `${item.table} no field ${item.field}`,
+            'error',
+            'dgiot-hey-message-error'
+          )
         }
       },
       changeBox(val) {
@@ -2190,7 +2200,11 @@
           this.center.lng = longitude
           this.center.lat = latitude
         } else {
-          this.$message.error('位置信息获取失败')
+          this.$baseMessage(
+            `位置信息获取失败`,
+            'error',
+            'dgiot-hey-message-error'
+          )
         }
       },
       // 迁移设备
@@ -2438,7 +2452,7 @@
           // this.$message.success(`${res}`)
         } catch (error) {
           dgiotlog.log(error)
-          this.$message.error(`${error}`)
+          this.$baseMessage(error, 'error', 'dgiot-hey-message-error')
         }
       },
       async getDevices(args = {}) {
@@ -2517,7 +2531,7 @@
           // loading.close()
           this.tableData = []
           this.devicetotal = 0
-          this.$message.error(`${error}`)
+          this.$baseMessage(error, 'error', 'dgiot-hey-message-error')
         }
       },
 

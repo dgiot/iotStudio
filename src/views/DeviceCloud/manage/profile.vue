@@ -729,7 +729,7 @@
         } catch (error) {
           loading.close()
           dgiotlog.log('error', error)
-          this.$message.error(`${error}`)
+          this.$baseMessage(error, 'error', 'dgiot-hey-message-error')
         }
         this.$dgiotBus.$emit('reload-router-view')
       },
@@ -924,7 +924,7 @@
         } catch (error) {
           // loading.close()
           dgiotlog.log(error)
-          this.$message.error(`${error}`)
+          this.$baseMessage(error, 'error', 'dgiot-hey-message-error')
         }
       },
       properties(things, type = 'things') {
@@ -1041,9 +1041,7 @@
             this.queryProduttemp({})
           }
         } catch (e) {
-          this.$message.error(
-            this.$translateTitle('user.Save the template error') + `${e}`,
-          )
+          this.$baseMessage(this.$translateTitle('user.Save the template error') + `${e}`, 'error', 'dgiot-hey-message-error')
           dgiotlog.log(e, 'eeee')
         }
         dgiotlog.log(list)
@@ -1055,7 +1053,7 @@
           this.DbaTable = table
         } catch (error) {
           dgiotlog.log(error)
-          this.$message.error(`${error}`)
+          this.$baseMessage(error, 'error', 'dgiot-hey-message-error')
         }
         // dgiotlog.log(this.DbaTable)
       },
@@ -1244,6 +1242,9 @@
           },
           icon: this.imageUrl ? this.imageUrl : '',
           desc: this.form.desc ? this.form.desc : '',
+          content:{},
+          profile:{},
+          // 以上两个参数加了可能会出错。出错请在数据库自己加
         }
         this.$refs.form.validate((valid) => {
           if (valid) {

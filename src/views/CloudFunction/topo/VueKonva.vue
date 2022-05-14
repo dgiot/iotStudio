@@ -421,7 +421,11 @@
             });
           }
         } else {
-          this.$message.error(this.$translateTitle('非图片类型'))
+          this.$baseMessage(
+            this.$translateTitle('非图片类型'),
+            'error',
+            'dgiot-hey-message-error'
+          )
         }
       },
       // 更新产品
@@ -455,7 +459,11 @@
             });
           })
           .catch((e) => {
-            this.$message.error(this.$translateTitle(`${e.error}`))
+            this.$baseMessage(
+              this.$translateTitle(`${e.error}`),
+              'error',
+              'dgiot-hey-message-error'
+            )
           })
       },
       // 处理mqtt信息

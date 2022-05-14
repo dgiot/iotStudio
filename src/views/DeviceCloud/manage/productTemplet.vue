@@ -575,7 +575,7 @@
         } catch (error) {
           loading.close()
           dgiotlog.log(error)
-          this.$message.error(`${error}`)
+          this.$baseMessage(error, 'error', 'dgiot-hey-message-error')
         }
       },
       goKonva(id) {
@@ -974,8 +974,10 @@
           this.dialogVisible = false
           this.parserTable = false
         } catch (e) {
-          this.$message.error(
-            this.$translateTitle('user.Save the template error') + `${e}`
+          this.$baseMessage(
+            this.$translateTitle('user.Save the template error') + `${e}`,
+            'error',
+            'dgiot-hey-message-error'
           )
           dgiotlog.log(e, 'eeee')
         }
@@ -1163,7 +1165,7 @@
         } catch (error) {
           loading.close()
           dgiotlog.log('error', error)
-          this.$message.error(`${error}`)
+          this.$baseMessage(error, 'error', 'dgiot-hey-message-error')
         }
         this.$dgiotBus.$emit('reload-router-view')
       },
@@ -1373,7 +1375,7 @@
           // this.$message.success(`${res}`)
         } catch (error) {
           loading.close()
-          this.$message.error(`${error}`)
+          this.$baseMessage(error, 'error', 'dgiot-hey-message-error')
         }
       },
     },

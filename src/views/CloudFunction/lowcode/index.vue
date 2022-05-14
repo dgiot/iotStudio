@@ -325,7 +325,15 @@
     },
     data() {
       return {
-        Types: ['amis', 'topo', 'notification'],
+        Types: [
+          'amis',
+          'amis_view',
+          'topo',
+          'profile',
+          'content',
+          'notification',
+          'reportFrom',
+        ],
         DbaTable: [],
         keys: [],
         lowcodeId: '',

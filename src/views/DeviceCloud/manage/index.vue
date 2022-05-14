@@ -1650,7 +1650,7 @@
           // this.$message.success(`${error}`)
         } catch (error) {
           dgiotlog.log(error)
-          this.$message.error(`${error}`)
+          this.$baseMessage(error, 'error', 'dgiot-hey-message-error')
         }
       },
 

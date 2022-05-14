@@ -330,7 +330,7 @@
           })
           this.product = results
         } catch (e) {
-          this.$message.error(e)
+          this.$baseMessage(e, 'error', 'dgiot-hey-message-error')
         }
       },
       clickFullScreen() {

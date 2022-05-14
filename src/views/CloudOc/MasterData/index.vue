@@ -367,7 +367,12 @@
           })
           console.log(this.properties.data.properties)
           this.formDialog = true
-        } else await this.$message.info('元数据暂无配置信息')
+        } else
+          await this.$baseMessage(
+            '元数据暂无配置信息',
+            'info',
+            'dgiot-hey-message-error'
+          )
       },
       async queryItem(item, loading = true) {
         this.clickItem = item

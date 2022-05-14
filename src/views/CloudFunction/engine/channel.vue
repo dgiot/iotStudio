@@ -1293,7 +1293,11 @@
       async switchEnable(objectId, action) {
         action = action ? 'enable' : 'disable'
         try {
-          const { updatedAt } = await subupadte(objectId, action)
+          const {
+            updatedAt,
+            message = '',
+            type = '',
+          } = await subupadte(objectId, action)
           console.log(updatedAt)
           if (updatedAt) {
             this.$message({
@@ -1306,12 +1310,18 @@
               type: 'success',
             })
             this.Get_Re_Channel(this.start)
+          } else {
+            this.$message({
+              type: type,
+              message: message,
+              showClose: true,
+            })
           }
 
           // this.$message.success(`${res}`)
         } catch (error) {
           console.log(error)
-          this.$message.error(`${error}`)
+          this.$baseMessage(error, 'error', 'dgiot-hey-message-error')
         }
         // this.$message(error.error)
       },

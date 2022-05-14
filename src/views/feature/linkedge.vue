@@ -1616,7 +1616,11 @@
               })
               .catch((e) => {
                 console.log(e)
-                this.$message.error(e.error)
+                this.$baseMessage(
+                  `${e.error}`,
+                  'error',
+                  'dgiot-hey-message-error'
+                )
               })
           } else {
             this.$message('有必填项未填写')
@@ -1665,7 +1669,11 @@
               }
             })
           } else {
-            this.$message.error('error submit!!')
+            this.$baseMessage(
+              `error submit!!`,
+              'error',
+              'dgiot-hey-message-error'
+            )
             return false
           }
         })

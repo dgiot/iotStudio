@@ -1059,12 +1059,9 @@
       let usersData = this.roleItem.users;
 
       if (!usersData || !rolesData) {
-        this.$message.error(
-          `${this.$translateTitle(
-            "user.The correct role permissions and menus are not selected"
-          )}`
-        );
-
+        this.$baseMessage(`${this.$translateTitle(
+          "user.The correct role permissions and menus are not selected"
+        )}`, "error", "dgiot-hey-message-error");
         return false;
       }
       usersData.forEach((item) => {
@@ -1135,26 +1132,33 @@
                 type: "success"
               });
             } else {
-              this.$message.error(
-                `${this.$translateTitle(
-                  "user.Role information updated failed"
-                )}`
-              );
+              this.$baseMessage(
+               `${this.$translateTitle(
+                 "user.Role information updated failed"
+               )}`,
+                'error',
+                'dgiot-hey-message-error'
+              )
             }
           })
           .catch((e) => {
-            this.$message.error(
+
+            this.$baseMessage(
               `${this.$translateTitle(
                 "user.Role information updated successfully"
-              )}` + `${e}`
-            );
+              )}` + `${e}`,
+              'error',
+              'dgiot-hey-message-error'
+            )
           });
       } else {
-        this.$message.info(
+        this.$baseMessage(
           `${this.$translateTitle(
             "user.Please select the menu list and permission list"
-          )}`
-        );
+          )}`,
+          'info',
+          'dgiot-hey-message-error'
+        )
       }
     },
     // 保存模板

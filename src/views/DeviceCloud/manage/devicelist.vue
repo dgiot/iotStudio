@@ -956,7 +956,11 @@
           },
         })
         if (_.isEmpty(results)) {
-          this.$message.info('暂未配置下发控制表单')
+          this.$baseMessage(
+            '暂未配置下发控制表单',
+            'info',
+            'dgiot-hey-message-error'
+          )
           return false
         } else {
           this.commandInfo.dialog = true
@@ -967,26 +971,6 @@
       setting(row) {
         this.settingInfo.dialog = true
         console.log(row)
-      },
-      async statistics(row) {
-        const params = {
-          productid: '389a16cda1',
-          devaddr: 'BasicInformation_22100027',
-          timeint: 30,
-        }
-        // const params = {
-        //   productid: row.product.objectId,
-        //   devaddr: row.devaddr,
-        // }
-        try {
-          const { results = '' } = await getStatistics(params)
-          console.log(results)
-          this.statisticsInfo.dialog = true
-          console.log(row)
-        } catch (e) {
-          console.log(e)
-          this.$message.error('查询新马赫运行统计时间出错' + e)
-        }
       },
       // 组态
       konvaDevice(row) {

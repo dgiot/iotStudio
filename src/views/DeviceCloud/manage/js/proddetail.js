@@ -3830,7 +3830,7 @@ export default {
 
           this.$get_object('Product', this.productId).then((resultes) => {
             var addTopic = {
-              topic: Topic,
+              topic: this.topicform.topic,
               type: this.topicform.type,
               desc: this.topicform.desc,
             }

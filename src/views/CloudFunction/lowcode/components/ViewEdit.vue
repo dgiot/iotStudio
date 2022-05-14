@@ -132,7 +132,15 @@
       return {
         upKey: new Date().getMilliseconds(),
         DbaTable: [],
-        Types: ['amis', 'topo', 'notification'],
+        Types: [
+          'amis',
+          'amis_view',
+          'topo',
+          'profile',
+          'content',
+          'notification',
+          'reportFrom',
+        ],
         keys: [],
         activeName: 'first',
         amisKey: moment(new Date()).format('X'),

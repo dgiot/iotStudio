@@ -190,7 +190,7 @@ export default {
       } catch (error) {
         loading.close()
         dgiotlog.log(error)
-        this.$message.error(`${error}`)
+        this.$baseMessage(error, 'error', 'dgiot-hey-message-error')
       }
     },
     handleCateSearch(objectId) {
@@ -259,10 +259,18 @@ export default {
       const isIMAGE = docxType.includes(file.type)
       const isLt30M = file.size / 1024 / 1024 < 30
       if (!isIMAGE) {
-        this.$message.error('上传文件只能是doc/docx格式!')
+        this.$baseMessage(
+          '上传文件只能是doc/docx格式!',
+          'error',
+          'dgiot-hey-message-error'
+        )
       }
       if (!isLt30M) {
-        this.$message.error('上传文件大小不能超过 30MB!')
+        this.$baseMessage(
+          '上传文件大小不能超过 30MB!',
+          'error',
+          'dgiot-hey-message-error'
+        )
       }
       this.momentKey = moment(new Date()).valueOf()
       return isIMAGE && isLt30M
@@ -305,14 +313,18 @@ export default {
           try {
             const { result } = await postReportFile(formData)
             dgiotlog.log(result)
-            this.$message.success(
-              this.$translateTitle('cloudTest.Template created successfully')
+            this.$baseMessage(
+              this.$translateTitle('cloudTest.Template created successfully'),
+              'success',
+              'dgiot-hey-message-success'
             )
             this.activePopShow = false
             this.fetchData()
           } catch (e) {
-            this.$message.error(
-              this.$translateTitle('cloudTest.Template creation failed')
+            this.$baseMessage(
+              this.$translateTitle('cloudTest.Template creation failed'),
+              'error',
+              'dgiot-hey-message-error'
             )
           }
           loading.close()

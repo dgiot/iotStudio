@@ -2050,7 +2050,7 @@ export default {
       } catch (error) {
         // loading.close()
         dgiotlog.log(error);
-        this.$message.error(`${error}`);
+        this.$baseMessage(error, 'error', 'dgiot-hey-message-error')
       }
     },
     goKonva(id) {
@@ -2501,9 +2501,7 @@ export default {
         this.dialogVisible = false;
         this.parserTable = false;
       } catch (e) {
-        this.$message.error(
-          this.$translateTitle("user.Save the template error") + `${e}`
-        );
+        this.$baseMessage(this.$translateTitle("user.Save the template error") + `${e}`, 'error', 'dgiot-hey-message-error')
         dgiotlog.log(e, "eeee");
       }
       dgiotlog.log(list);
@@ -2665,6 +2663,9 @@ export default {
     },
     submitForm() {
       var initparams = {
+        content:{},
+        profile:{},
+        // 以上两个参数加了可能会出错。出错请在数据库自己加
         dynamicReg: this.form.dynamicReg,
         name: this.form.name,
         nodeType: this.form.nodeType,
@@ -2760,7 +2761,7 @@ export default {
       } catch (error) {
         loading.close();
         dgiotlog.log("error", error);
-        this.$message.error(`${error}`);
+        this.$baseMessage(error, 'error', 'dgiot-hey-message-error')
       }
       this.$dgiotBus.$emit("reload-router-view");
     },
@@ -2992,7 +2993,7 @@ export default {
         // this.$message.success(`${res}`)
       } catch (error) {
         loading.close();
-        this.$message.error(`${error}`);
+        this.$baseMessage(error, 'error', 'dgiot-hey-message-error')
       }
     }
   }

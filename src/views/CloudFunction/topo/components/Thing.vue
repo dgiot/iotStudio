@@ -232,7 +232,11 @@
           ),
         })
         loading.close()
-        this.$message.success(this.$translateTitle('user.update completed'))
+        this.$baseMessage(
+          this.$translateTitle('user.update completed'),
+          'success',
+          'dgiot-hey-message-success'
+        )
         // const loading = this.$baseLoading()
         // try {
         //   localStorage.setItem('konvaStale', canvas.stage.toJSON())

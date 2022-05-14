@@ -211,8 +211,10 @@
           })
           .catch((error) => {
             this.loading = false
-            this.$message.error(
-              error || this.$translateTitle('error.networkError')
+            this.$baseMessage(
+              error || this.$translateTitle('error.networkError'),
+              'error',
+              'dgiot-hey-message-error'
             )
           })
       },
@@ -236,8 +238,10 @@
             this.loadData()
           })
           .catch((error) => {
-            this.$message.error(
-              error || this.$translateTitle('error.networkError')
+            this.$baseMessage(
+              error || this.$translateTitle('error.networkError'),
+              'error',
+              'dgiot-hey-message-error'
             )
           })
       },
@@ -257,8 +261,10 @@
                 this.loadData()
               })
               .catch((error) => {
-                this.$message.error(
-                  error || this.$translateTitle('error.networkError')
+                this.$baseMessage(
+                  error || this.$translateTitle('error.networkError'),
+                  'error',
+                  'dgiot-hey-message-error'
                 )
               })
           })

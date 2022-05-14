@@ -381,7 +381,11 @@
           })
         } else {
           dgiotlog.log(e)
-          this.$message.error('api有错误,请检查')
+          this.$baseMessage(
+            'api有错误,请检查',
+            'error',
+            'dgiot-hey-message-error'
+          )
         }
       },
 
@@ -402,7 +406,11 @@
             type: 'success',
           })
         } else {
-          this.$message.error('api有错误,请检查')
+          this.$baseMessage(
+            'api有错误,请检查',
+            'error',
+            'dgiot-hey-message-error'
+          )
         }
       },
       /**

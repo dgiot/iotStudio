@@ -291,7 +291,7 @@
         if (this.graphNow) {
           this.$dgiotBus.$emit('removeShape', this.graphNow)
         } else {
-          this.$message.error('请选择图形')
+          this.$baseMessage('请选择图形', 'error', 'dgiot-hey-message-error')
         }
       },
       showImageTable(type) {

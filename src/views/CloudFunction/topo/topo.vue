@@ -285,7 +285,11 @@
             }
           })
           .catch((e) => {
-            this.$message.error(this.$translateTitle(`${e.error}`))
+            this.$baseMessage(
+              this.$translateTitle(`${e.error}`),
+              'error',
+              'dgiot-hey-message-error'
+            )
           })
       },
       // saveKonvaitem
