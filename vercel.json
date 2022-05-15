@@ -2,23 +2,23 @@
   "rewrites": [
     {
       "source": "/iotapi/(.*)",
-      "destination": "/api/iotapi"
+      "destination": "/api/proxy"
     },
     {
       "source": "/dgiot_dashboard/(.*)",
-      "destination": "/api/iotapi"
+      "destination": "/api/proxy"
     },
     {
       "source": "/dgiot_swagger/(.*)",
-      "destination": "/api/iotapi"
+      "destination": "/api/proxy"
     },
     {
       "source": "/dgiot_file/(.*)",
-      "destination": "/api/iotapi"
+      "destination": "/api/proxy"
     },
     {
       "source": "/dgiot-amis-dashboard/(.*)",
-      "destination": "/api/iotapi"
+      "destination": "/api/proxy"
     }
   ],
   "headers": [

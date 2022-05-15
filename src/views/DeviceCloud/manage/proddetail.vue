@@ -310,6 +310,7 @@
                         </span>
                       </template>
                     </el-table-column>
+                    <el-table-column align="left" label="value" prop="value" />
                     <el-table-column
                       align="center"
                       :label="$translateTitle('product.operationauthority')"
@@ -337,7 +338,7 @@
                           v-if="!row.isdef"
                           size="mini"
                           type="primary"
-                          @click.native="updatetopic($index)"
+                          @click.native="updatetopic(row, $index)"
                         >
                           {{ $translateTitle('developer.edit') }}
                         </el-button>
@@ -423,13 +424,22 @@
               </div>
               <div class="topicform">
                 <el-form ref="topicform" :model="topicform" :rules="topicrule">
-                  <el-form-item label="Topic类：" prop="topic">
-                    <el-input v-model="topicform.topic" />
+                  <el-form-item label="官方 Topic：" prop="topic">
+                    <el-input
+                      v-model="topicform.topic"
+                      style="width: 91%; float: left"
+                    />
                     <dgiot-help
                       src="https://gitee.com/dgiiot/dgiot_dlink"
-                      style="width: 60px"
+                      style="width: 60px; margin-top: 24px"
                       title="产品下的所有设备都会继承该产品的 Topic 类"
                       trigger="click"
+                    />
+                  </el-form-item>
+                  <el-form-item label="Topic value：" prop="topic">
+                    <el-input
+                      v-model="topicform.value"
+                      style="width: 100%; float: left"
                     />
                   </el-form-item>
                   <el-form-item
