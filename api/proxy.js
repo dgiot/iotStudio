@@ -11,31 +11,21 @@ const startsWith = [
 module.exports = (req, res) => {
   let target = ''
   // 判断 res.url 开头是否包含startsWith
-  // startsWith.forEach((item) => {
-  //   if (req.url.startsWith(item)) {
-  //     target = targetUrl
-  //   }
-  // })
-  if (
-    req.url.startsWith('/iotapi') ||
-    req.url.startsWith('/dgiot_dashboard') ||
-    req.url.startsWith('/dgiot_swagger') ||
-    req.url.startsWith('/dgiot_file') ||
-    req.url.startsWith('/dgiot-amis-dashboard')
-  ) {
-    target = targetUrl
-  }
-
+  startsWith.forEach((item) => {
+    if (req.url.startsWith(item)) {
+      target = targetUrl
+    }
+  })
   // 创建代理对象并转发请求
   createProxyMiddleware({
     target,
     changeOrigin: true,
     pathRewrite: {
-      '^/iotapi/': '/',
-      '^/dgiot_dashboard/': '/',
-      '^/dgiot_swagger/': '/',
-      '^/dgiot_file/': '/',
-      '^/dgiot-amis-dashboard/': '/',
+      '^/iotapi/': '/iotapi',
+      '^/dgiot_dashboard/': '/dgiot_dashboard',
+      '^/dgiot_swagger/': '/dgiot_swagger',
+      '^/dgiot_file/': '/dgiot_file',
+      '^/dgiot-amis-dashboard/': '/dgiot-amis-dashboard',
     },
   })(req, res)
 }
