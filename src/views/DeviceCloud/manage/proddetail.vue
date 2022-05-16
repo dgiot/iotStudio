@@ -247,7 +247,10 @@
                   <!--                  <el-table-column label="操作权限" prop="isdef" />-->
                   <el-table-column label="topic" prop="topic" />
                   <el-table-column label="描述" prop="desc" />
-                  <el-table-column label="描述" prop="type" />
+                  <el-table-column label="唯一标识" prop="id" />
+                  <el-table-column label="发布者" prop="publisher" />
+                  <el-table-column label="订阅者" prop="subscribe" />
+                  <el-table-column label="类型" prop="type" />
                 </el-table>
               </a-tab-pane>
               <a-tab-pane key="thing" tab="物模型通信Topic">
@@ -294,40 +297,82 @@
                     </dgiot-query-form-right-panel>
                   </dgiot-query-form>
                   <el-table
-                    :data="
-                      topicData.slice(
-                        (topicstart - 1) * topiclength,
-                        topicstart * topiclength
-                      )
-                    "
+                    :data="topicData"
                     :height="$baseTableHeight(0) - 60"
                     style="width: 100%; text-align: center"
                   >
-                    <el-table-column align="left" label="Topic">
-                      <template #default="{ row }">
-                        <span>
-                          {{ row.topic.replace('\$\{ProductId\}', productId) }}
-                        </span>
-                      </template>
-                    </el-table-column>
-                    <el-table-column align="left" label="value" prop="value" />
                     <el-table-column
                       align="center"
-                      :label="$translateTitle('product.operationauthority')"
-                    >
-                      <template #default="{ row }">
-                        <span v-if="row.type == 'pub'">
-                          {{ $translateTitle('product.pub') }}
-                        </span>
-                        <span v-if="row.type == 'sub'">
-                          {{ $translateTitle('product.sub') }}
-                        </span>
-                      </template>
-                    </el-table-column>
+                      label="name"
+                      prop="name"
+                      show-overflow-tooltip
+                      sortable
+                      width="auto"
+                    />
                     <el-table-column
                       align="center"
-                      :label="$translateTitle('developer.describe')"
+                      label="value"
+                      prop="value"
+                      show-overflow-tooltip
+                      sortable
+                      width="auto"
+                    />
+                    <!--                  <el-table-column label="操作权限" prop="isdef" />-->
+                    <el-table-column
+                      align="center"
+                      label="topic"
+                      prop="topic"
+                      show-overflow-tooltip
+                      sortable
+                      width="auto"
+                    />
+                    <el-table-column
+                      align="center"
+                      label="描述"
                       prop="desc"
+                      show-overflow-tooltip
+                      sortable
+                      width="auto"
+                    />
+                    <el-table-column
+                      align="center"
+                      label="唯一标识"
+                      prop="id"
+                      show-overflow-tooltip
+                      sortable
+                      width="auto"
+                    />
+                    <el-table-column
+                      align="center"
+                      label="发布者"
+                      prop="publisher"
+                      show-overflow-tooltip
+                      sortable
+                      width="100"
+                    />
+                    <el-table-column
+                      align="center"
+                      label="订阅者"
+                      prop="subscribe"
+                      show-overflow-tooltip
+                      sortable
+                      width="100"
+                    />
+                    <el-table-column
+                      align="center"
+                      label="订阅类型"
+                      prop="type"
+                      show-overflow-tooltip
+                      sortable
+                      width="100"
+                    />
+                    <el-table-column
+                      align="center"
+                      label="所属类型"
+                      prop="info"
+                      show-overflow-tooltip
+                      sortable
+                      width="100"
                     />
                     <el-table-column
                       align="center"
@@ -335,7 +380,6 @@
                     >
                       <template #default="{ row, $index }">
                         <el-button
-                          v-if="!row.isdef"
                           size="mini"
                           type="primary"
                           @click.native="updatetopic(row, $index)"
@@ -367,11 +411,10 @@
                         <!--                      >-->
                         <!--                  </div>-->
                         <el-button
-                          v-if="!row.isdef"
                           slot="reference"
                           size="mini"
                           type="danger"
-                          @click.native="deletetopic(row, $index)"
+                          @click.native="deletetopic(topicData, row, $index)"
                         >
                           {{ $translateTitle('developer.delete') }}
                         </el-button>
@@ -387,16 +430,16 @@
                       />
                     </template>
                   </el-table>
-                  <div class="elpagination" style="margin-top: 20px">
-                    <el-pagination
-                      layout="total, sizes, prev, pager, next, jumper"
-                      :page-size="topiclength"
-                      :page-sizes="[10, 20, 30, 50]"
-                      :total="topicData.length"
-                      @current-change="topicCurrentChange"
-                      @size-change="topicSizeChange"
-                    />
-                  </div>
+                  <!--                  <div class="elpagination" style="margin-top: 20px">-->
+                  <!--                    <el-pagination-->
+                  <!--                      layout="total, sizes, prev, pager, next, jumper"-->
+                  <!--                      :page-size="topiclength"-->
+                  <!--                      :page-sizes="[10, 20, 30, 50]"-->
+                  <!--                      :total="topicData.length"-->
+                  <!--                      @current-change="topicCurrentChange"-->
+                  <!--                      @size-change="topicSizeChange"-->
+                  <!--                    />-->
+                  <!--                  </div>-->
                 </div>
               </a-tab-pane>
             </a-tabs>
@@ -424,11 +467,34 @@
               </div>
               <div class="topicform">
                 <el-form ref="topicform" :model="topicform" :rules="topicrule">
+                  <el-form-item label="所属类型：" prop="info">
+                    <el-radio-group v-model="topicform.info">
+                      <el-radio :label="'basic'">基础通信</el-radio>
+                      <el-radio :label="'thing'">物模型通信</el-radio>
+                    </el-radio-group>
+                  </el-form-item>
                   <el-form-item label="官方 Topic：" prop="topic">
-                    <el-input
+                    <el-select
                       v-model="topicform.topic"
+                      allow-create
+                      filterable
+                      placeholder="请选择活动区域"
                       style="width: 91%; float: left"
-                    />
+                    >
+                      <el-option
+                        v-for="(item, index) in dlinkTopic[topicform.info]"
+                        :key="index"
+                        :label="item.topic"
+                        :value="item.id"
+                      >
+                        <span style="float: left">{{ item.topic }}</span>
+                        <span
+                          style="float: right; color: #8492a6; font-size: 13px"
+                        >
+                          {{ item.id }}
+                        </span>
+                      </el-option>
+                    </el-select>
                     <dgiot-help
                       src="https://gitee.com/dgiiot/dgiot_dlink"
                       style="width: 60px; margin-top: 24px"
@@ -442,32 +508,32 @@
                       style="width: 100%; float: left"
                     />
                   </el-form-item>
-                  <el-form-item
-                    :label="$translateTitle('product.operationauthority')"
-                    prop="type"
-                  >
-                    <el-select
-                      v-model="topicform.type"
-                      :placeholder="
-                        $translateTitle(
-                          'product.selectdeviceoperationpermission'
-                        )
-                      "
-                      style="width: 100%"
-                    >
-                      <el-option
-                        :label="$translateTitle('product.sub')"
-                        value="sub"
-                      />
-                      <el-option
-                        :label="$translateTitle('product.pub')"
-                        value="pub"
-                      />
-                    </el-select>
-                  </el-form-item>
-                  <el-form-item :label="$translateTitle('developer.describe')">
-                    <el-input v-model="topicform.desc" type="textarea" />
-                  </el-form-item>
+                  <!--                  <el-form-item-->
+                  <!--                    :label="$translateTitle('product.operationauthority')"-->
+                  <!--                    prop="type"-->
+                  <!--                  >-->
+                  <!--                    <el-select-->
+                  <!--                      v-model="topicform.type"-->
+                  <!--                      :placeholder="-->
+                  <!--                        $translateTitle(-->
+                  <!--                          'product.selectdeviceoperationpermission'-->
+                  <!--                        )-->
+                  <!--                      "-->
+                  <!--                      style="width: 100%"-->
+                  <!--                    >-->
+                  <!--                      <el-option-->
+                  <!--                        :label="$translateTitle('product.sub')"-->
+                  <!--                        value="sub"-->
+                  <!--                      />-->
+                  <!--                      <el-option-->
+                  <!--                        :label="$translateTitle('product.pub')"-->
+                  <!--                        value="pub"-->
+                  <!--                      />-->
+                  <!--                    </el-select>-->
+                  <!--                  </el-form-item>-->
+                  <!--                  <el-form-item :label="$translateTitle('developer.describe')">-->
+                  <!--                    <el-input v-model="topicform.desc" type="textarea" />-->
+                  <!--                  </el-form-item>-->
                 </el-form>
               </div>
             </div>

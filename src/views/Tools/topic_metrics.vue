@@ -226,7 +226,7 @@
         modClosed: false,
         topicQos: 'all',
         timer: 0,
-        topics: [],
+        topics: {},
         currentExpandRow: {},
         currentTopic: {},
         record: {},

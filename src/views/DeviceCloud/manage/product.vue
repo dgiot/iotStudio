@@ -2722,7 +2722,7 @@ export default {
             const addparams = {
                 productSecret: productSecret,
                 ACL: setAcl,
-                topics: [],
+                topics: {},
                 decoder: {},
                 config: {
                   checkList: this.form.config.checkList

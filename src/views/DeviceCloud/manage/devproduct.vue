@@ -1019,7 +1019,7 @@
           name: this.form.name,
           devType: this.form.devType,
           desc: this.form.desc,
-          topics: [],
+          topics: {},
         }
         const res = await putProduct(productid, params)
         if (res) {

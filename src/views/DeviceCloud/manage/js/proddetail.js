@@ -3,7 +3,7 @@ import mqttLog from "@/views/CloudFunction/engine/components/mqttLog.vue";
 import thingForm from "@/views/DeviceCloud/manage/component/Thing/form";
 import { getDlinkJson } from "@/api/Dlink";
 import { mapGetters, mapMutations } from "vuex";
-import { getDeviceCountByProduct } from "@/api/Device/index";
+import { delDevice, getDeviceCountByProduct } from "@/api/Device/index";
 import {
   deleteThing,
   postThing,
@@ -337,6 +337,7 @@ export default {
         type: "",
         desc: "",
         value: "",
+        info: "basic",
         isupdated: -1
       },
       exportDialogShow: false,
@@ -349,6 +350,9 @@ export default {
       rightCollection: "",
       decoderlength: 10,
       topicrule: {
+        info: [
+          { required: true, message: "请选择topic所属类型", trigger: "change" }
+        ],
         topic: [
           {
             required: true,
@@ -632,6 +636,7 @@ export default {
         thing: { properties: [], events: [], services: [], tags: [] }
       },
       topicData: [],
+      topicDefault: {},
       topic: [
         {
           topic: "$dg/user/${deviceid}/post",
@@ -1452,24 +1457,30 @@ export default {
       const { UnifyUnitSpecsDTO = [] } = await getDlinkJson("Unit");
       this.allunit = UnifyUnitSpecsDTO;
     },
-    getTopic() {
-      const topics = [];
-      this.$get_object("Product", this.productId)
-        .then((resultes) => {
-          if (resultes?.topics) {
-            resultes.topics.forEach((topic) => {
-              if (topic) {
-                topics.push(topic);
-              }
-            });
-            dgiotlog.log("resultes", resultes.topics);
-            dgiotlog.log("topics", topics);
-            this.topicData = topics.concat(this.topic);
+    async getTopic() {
+      this.topicData = [];
+      this.topicDefault = {};
+      const { topics = {} } = await getProduct(this.productId);
+      this.topicDefault = topics;
+      for (let i in topics) {
+        let obj = {};
+        for (let j in this.dlinkTopic.basic) {
+          this.dlinkTopic.basic[j].info = "basic";
+          if (this.dlinkTopic.basic[j].id === i) {
+            obj = this.dlinkTopic.basic[j];
           }
-        })
-        .catch((err) => {
-          this.$baseMessage("请求出错", err.error, 3000);
-        });
+        }
+        for (let j in this.dlinkTopic.thing) {
+          this.dlinkTopic.thing[j].info = "thing";
+          if (this.dlinkTopic.thing[j].id === i) {
+            obj = this.dlinkTopic.thing[j];
+          }
+        }
+        obj.name = i;
+        obj.value = topics[i];
+        this.topicData.push(obj);
+      }
+      console.log(this.topicData);
     },
     /**
      * @description 导出产品
@@ -3828,52 +3839,38 @@ export default {
     stopsub(value) {
     }, // topic增加
     subTopic(formName, isupdated) {
-      this.$refs[formName].validate((valid) => {
+      this.$refs[formName].validate(async (valid) => {
+        console.log(this.topicDefault, isupdated);
         if (valid) {
-          var Topic =
-            "thing/" + this.productId + "/${DevAddr}/" + this.topicform.topic;
-
-          this.$get_object("Product", this.productId).then((resultes) => {
-            var addTopic = {
-              topic: this.topicform.topic,
-              type: this.topicform.type,
-              desc: this.topicform.desc,
-              value: this.topicform.value,
-              profile: this.topicform.topic
-            };
-            var arr = [];
-            arr.push(addTopic);
-            const params = {};
-            if (isupdated == -1) {
-              arr = arr.concat(resultes.topics);
-              params.topics = arr;
-            } else {
-              var topicupdated = resultes.topics.concat([]);
-              topicupdated[isupdated] = addTopic;
-              params.topics = topicupdated;
-            }
-            this.$update_object("Product", this.productId, params)
-              .then((response) => {
-                if (response) {
-                  this.$message({
-                    showClose: true,
-                    duration: 2000,
-                    type: "success",
-                    message: "成功"
-                  });
-                  this.topicdialogVisible = false;
-                  this.$refs[formName].resetFields()
-                  ;(this.topicform.isupdated = -1), (this.topicform.topic = "");
-                  this.topicform.desc = "";
-                  this.handleClick({
-                    name: "second"
-                  });
-                }
-              })
-              .catch((e) => {
-                dgiotlog.log(e);
-              });
+          let message = "";
+          if (isupdated != -1) {
+            //  修改
+            this.topicDefault[this.topicform.id] = this.topicform.value;
+            message = "修改topic成功";
+          } else {
+            this.topicDefault[this.topicform.topic] = this.topicform.value;
+            message = "添加自定义topic成功";
+          }
+          console.log(this.topicDefault);
+          await putProduct(this.productId, {
+            topics: this.topicDefault
           });
+          this.$message({
+            showClose: true,
+            duration: 2000,
+            type: "success",
+            message: message
+          });
+          this.topicform = {
+            isupdated: -1,
+            value: "",
+            info: "basic"
+          };
+          this.handleClick({
+            name: "second"
+          });
+          this.topicdialogVisible = false;
+          this.$refs[formName].resetFields();
         } else {
           dgiotlog.log("error submit!!");
           return false;
@@ -3889,38 +3886,35 @@ export default {
     },
     updatetopic(row, index) {
       console.log(row);
-      this.topicform.topic = row.topic;
-      this.topicform.profile = row.topic;
-      this.topicform.type = row.type;
-      this.topicform.desc = row.desc;
-      this.topicform.value = row.value;
+      this.topicform = row;
+      // this.topicform.profile = row.topic;
+      // this.topicform.type = row.type;
+      // this.topicform.desc = row.desc;
+      // this.topicform.value = row.value;
       this.topicdialogVisible = true;
       this.topicform.isupdated = index;
     },
-    async deletetopic(scope, index) {
-      const { topics } = await this.$get_object("Product", this.productId);
-      if (topics) {
-        // scope._self.$refs[`popover-${$index}`].doClose();
-        var topic = topics.concat([]);
-        topic.splice(index, 1);
-        const params = {
+    deletetopic(topicData, scope, index) {
+      this.$baseConfirm("你确定要删除当前项topic吗", null, async () => {
+        const topic = {};
+        topicData.splice(index, 1);
+        topicData.forEach(i => {
+          topic[i.id] = i.value;
+        });
+        console.log(this.topicDefault);
+        await putProduct(this.productId, {
           topics: topic
-        };
-        const $update_object = this.$update_object(
-          "Product",
-          this.productId,
-          params
-        );
-        // dgiotlog.log($update_object)
+        });
         this.$message({
           showClose: true,
           duration: 2000,
           type: "success",
           message: "删除成功"
         });
-      }
-      this.getTopic();
-      this.queryProductInfo(this.$route.query.id);
+      });
+
+      // this.getTopic();
+      // this.queryProductInfo(this.$route.query.id);
     },
     // 规则tab显示
     orginRule() {
