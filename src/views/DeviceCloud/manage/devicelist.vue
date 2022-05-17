@@ -105,7 +105,7 @@
             v-for="(item, index) in commandInfo.data"
             :key="index"
             :label="item.title"
-            :name="index"
+            :name="index + ''"
           >
             <dgiot-amis :schema="item.data" :show-help="false" />
           </el-tab-pane>
@@ -277,7 +277,6 @@
         :label="item.label"
         :prop="item.label"
         sortable
-        :width="item.width"
       >
         <template #default="{ row }">
           <span v-if="typeof row[item.prop] == 'string'">
@@ -292,7 +291,6 @@
         prop="detail.assetNum"
         show-overflow-tooltip
         sortable
-        width="120"
       >
         <template #default="{ row }">
           {{ row.detail.assetNum }}
@@ -360,34 +358,45 @@
         prop="createdAt"
         show-overflow-tooltip
         sortable
-        width="180"
+        width="120"
       >
         <template #default="{ row }">
           {{ $moment(row.createdAt).format('YYYY-MM-DD') || '' }}
         </template>
       </el-table-column>
-      <!--      <el-table-column-->
-      <!--        align="center"-->
-      <!--        label="到期时间"-->
-      <!--        prop="detail.expirationTime"-->
-      <!--        show-overflow-tooltip-->
-      <!--        sortable-->
-      <!--        width="140"-->
-      <!--      >-->
-      <!--        <template #default="{ row }">-->
-      <!--          {{-->
-      <!--            row.detail.expirationTime-->
-      <!--              ? getTime(row.detail.expirationTime, row)-->
-      <!--              : ''-->
-      <!--          }}-->
-      <!--        </template>-->
-      <!--      </el-table-column>-->
+      <el-table-column
+        align="center"
+        label="到期时间"
+        prop="detail.expirationTime"
+        show-overflow-tooltip
+        sortable
+        width="120"
+      >
+        <template #default="{ row }">
+          {{
+            row.detail.expirationTime
+              ? getTime(row.detail.expirationTime, row)
+              : ''
+          }}
+        </template>
+      </el-table-column>
+      <el-table-column
+        align="center"
+        label="最后在线时间"
+        prop="lastOnlineTime"
+        show-overflow-tooltip
+        sortable
+        width="160"
+      >
+        <template #default="{ row }">
+          {{ row.lastOnlineTime | dateUnix }}
+        </template>
+      </el-table-column>
       <el-table-column
         align="center"
         label="设备地址"
         prop="createdAt"
         sortable
-        width="auto"
       >
         <template slot-scope="scope">
           <el-button
@@ -407,24 +416,20 @@
         fixed="right"
         label="操作"
         show-overflow-tooltip
-        width="320px"
+        width="380px"
       >
         <template #default="{ row }">
-          <el-button plain size="mini" type="info" @click="command(row)">
+          <el-button size="mini" type="text" @click="konvaDevice(row)">
+            实时数据
+          </el-button>
+          <el-button size="mini" type="text" @click="info(row)">
+            设备信息
+          </el-button>
+          <el-button size="mini" type="text" @click="command(row)">
             控制
           </el-button>
-          <el-button plain size="mini" @click="konvaDevice(row)">
-            {{ $translateTitle('concentrator.konva') }}
-          </el-button>
-          <el-button plain size="mini" type="success" @click="move(row)">
-            迁移
-          </el-button>
-          <el-button
-            plain
-            size="mini"
-            type="primary"
-            @click="deviceToDetail(row)"
-          >
+          <el-button size="mini" type="text" @click="move(row)">迁移</el-button>
+          <el-button size="mini" type="text" @click="deviceToDetail(row)">
             详情
           </el-button>
           <!--          <el-button plain size="mini" type="info" @click="handleDelete(row)">-->
@@ -946,8 +951,29 @@
           await this.fetchData()
         })
       },
+      async info(row) {
+        localStorage.setItem('parse_objectid', row.objectId)
+        const { results = [] } = await queryView({
+          where: {
+            class: 'Product',
+            type: 'deviceInfo',
+            key: row.product.objectId,
+          },
+        })
+        if (_.isEmpty(results)) {
+          this.$baseMessage(
+            '暂未配置下发控制表单',
+            'info',
+            'dgiot-hey-message-error'
+          )
+          return false
+        } else {
+          this.commandInfo.dialog = true
+          this.commandInfo.data = results
+        }
+      },
       async command(row) {
-        localStorage.removeItem('parse_objectid')
+        localStorage.setItem('parse_objectid', row.objectId)
         const { results = [] } = await queryView({
           where: {
             class: 'Product',
@@ -965,7 +991,6 @@
         } else {
           this.commandInfo.dialog = true
           this.commandInfo.data = results
-          localStorage.setItem('parse_objectid', row.objectId)
         }
       },
       setting(row) {

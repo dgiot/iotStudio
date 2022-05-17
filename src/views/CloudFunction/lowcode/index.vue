@@ -327,6 +327,7 @@
       return {
         Types: [
           'amis',
+          'deviceInfo',
           'amis_view',
           'topo',
           'profile',

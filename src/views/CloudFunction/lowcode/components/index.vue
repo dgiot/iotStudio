@@ -42,6 +42,7 @@
         withHeader: true,
         types: [
           'amis',
+          'deviceInfo',
           'amis_view',
           'topo',
           'profile',

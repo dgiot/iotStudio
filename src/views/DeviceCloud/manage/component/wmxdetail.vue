@@ -136,7 +136,6 @@
                     v-model="sizeForm.profile"
                     allow-create
                     clearable
-                    :disabled="sizeForm.editdatatype"
                     filterable
                     style="width: 100%"
                   >
@@ -1018,6 +1017,7 @@
   import defaultLogo from '../../../../../public/assets/images/logo/logo.png'
   import { getProtocol } from '@/api/Protocol'
   import { getProduct } from '@/api/Product'
+
   export default {
     name: 'Wmxdetail',
     components: {},
@@ -1942,7 +1942,7 @@
         obj.nobound = that.sizeForm.nobound
         obj.dis = item.dataForm.address
         obj.isdis = that.sizeForm.isdis
-        dgiotlogger.log('obj', obj)
+        console.log('obj 1944', obj)
         that.setSizeForm(obj)
         this.$nextTick(async () => {
           this.queryResource()
@@ -2185,10 +2185,12 @@
             obj.moduleType = this.moduletype
             // 物模型 创建、更新时间戳(排序用)
             obj.updateAt = moment(new Date()).format('x')
+            // 添加profile 关联属性
+            obj.profile = this.sizeForm.profile
             // 删除掉icon 属性
             delete obj.dataForm.ico
-            dgiotlog.log('submitForm obj', obj)
-            dgiotlog.log('resource.arrlist', this.resource)
+            console.log('submitForm obj', obj)
+            // console.log('resource.arrlist', this.resource)
             this.$emit('submitForm', obj)
             // this.$refs[formName].resetFields()
           } else {

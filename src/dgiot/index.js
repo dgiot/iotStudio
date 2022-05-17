@@ -3,13 +3,14 @@ import '@dgiot/dgiot-icons/lib/dgiot-icons.css'
 import '@dgiot/dgiot-component'
 import utilwen from '@/utils/utilwen'
 import Directives from './directives/index.js'
+import dgiotFilters from '@/dgiot/filters'
 import VueContextMenu from 'vue-contextmenu'
 Vue.component('DgiotIcon', DgiotIcon)
+Vue.use(dgiotFilters)
 Vue.use(Directives)
 Vue.use(utilwen)
 Vue.use(VueContextMenu)
 Vue.use(Vuetify)
-
 // 加载主题
 const requireTheme = require.context('./styles/themes', false, /\.scss$/)
 requireTheme.keys().forEach((fileName) => {
