@@ -19,7 +19,7 @@
     name: 'AmisRender',
     props: {
       // eslint-disable-next-line
-      schema: {
+    schema: {
         type: Object,
       },
       updateLocation: {
@@ -159,7 +159,7 @@
                       : store === 'sessionStorage'
                       ? sessionStorage.getItem(h)
                       : Cookies.get(h)
-                  if (replaceArr[h] && url.indexOf(h) !== -1) {
+                  if (replaceArr[h] !== 'undefined' && url.indexOf(h) !== -1) {
                     console.groupCollapsed(
                       `%caxios dgiotReplace logs \n${h}`,
                       'color:#009a61; font-size: 28px; font-weight: 300'
@@ -208,12 +208,18 @@
               ? toast[type](msg, type === 'error' ? '系统错误' : '系统消息')
               : console.warn('[Notify]', type, msg)
             console.log('[notify]', type, msg)
-            this.$message({
-              type: type,
-              message: msg,
-              duration: 2000,
-              showClose: true,
-            })
+            //   当前页面路由router
+            const { path } = this.$route
+            // 解决设计界面弹出提示问题
+            if (!path.indexOf('design')) {
+              console.log(path.indexOf('design'), path)
+              this.$message({
+                type: type,
+                message: msg,
+                duration: 2000,
+                showClose: true,
+              })
+            }
           },
           confirm,
           copy: (contents, options = {}) => {

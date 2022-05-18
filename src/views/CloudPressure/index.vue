@@ -39,12 +39,21 @@
     <div class="draw">
       <a-drawer
         :body-style="{ paddingBottom: '80px' }"
-        title="添加压测任务"
+        title=""
         :visible="draw.form.visibility"
         :width="720"
         @close="onClose"
       >
-        <dgiot-amis :schema="taskData" :show-help="false" />
+        <Tabs size="small">
+          <TabPane
+            v-for="(item, index) in draw.settings.data"
+            :key="index"
+            :label="item.title"
+            :name="item.title"
+          >
+            <dgiot-amis :schema="item.data" :show-help="false" />
+          </TabPane>
+        </Tabs>
       </a-drawer>
     </div>
     <dgiot-query-form>
@@ -292,15 +301,16 @@
     destroyed() {},
     methods: {
       async handleView(col, type) {
-        const { results = [] } = await queryView({
+        col.objectId ? localStorage.setItem('parse_objectid', col.objectId) : ''
+        let params = {
           where: {
             class: 'Product',
             type: type,
-            key: col?.product?.objectId ? col.product.objectId : '',
           },
-        })
+        }
+        col?.product?.objectId ? (params.where[key] = col.product.objectId) : ''
+        const { results = [] } = await queryView(params)
         if (_.isEmpty(results)) {
-          localStorage.removeItem('parse_objectid')
           this.$message({
             type: 'info',
             message: `暂未配置${type}表单`,
@@ -312,7 +322,6 @@
           col === '_'
             ? (this.draw.form.visibility = true)
             : (this.draw.settings.visibility = true)
-          if (col.objectId) localStorage.setItem('parse_objectid', col.objectId)
         }
       },
       async handleClone(device) {
