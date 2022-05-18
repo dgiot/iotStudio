@@ -308,7 +308,7 @@
             type: type,
           },
         }
-        col?.product?.objectId ? (params.where[key] = col.product.objectId) : ''
+        // col?.product?.objectId ? (params.where[key] = col.product.objectId) : ''
         const { results = [] } = await queryView(params)
         if (_.isEmpty(results)) {
           this.$message({

@@ -211,15 +211,15 @@
             //   当前页面路由router
             const { path } = this.$route
             // 解决设计界面弹出提示问题
-            if (!path.indexOf('design')) {
-              console.log(path.indexOf('design'), path)
-              this.$message({
-                type: type,
-                message: msg,
-                duration: 2000,
-                showClose: true,
-              })
-            }
+            // if (!path.indexOf('design')) {
+            console.log(path.indexOf('design'), path)
+            this.$message({
+              type: type,
+              message: msg,
+              duration: 2000,
+              showClose: true,
+            })
+            // }
           },
           confirm,
           copy: (contents, options = {}) => {
