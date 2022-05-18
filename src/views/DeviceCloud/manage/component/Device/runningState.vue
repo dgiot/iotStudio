@@ -12,8 +12,12 @@
 <template>
   <div class="runningState-container">
     <div class="runningState">
-      <div v-loading="loading" style="overflow: scroll">
-        <div v-for="(value, key, index) in machinelist" :key="index">
+      <div v-loading="loading" style="overflow: scroll; height: 80vh">
+        <div
+          v-for="(value, key, index) in machinelist"
+          :key="index"
+          style="height: 250px"
+        >
           <!--              <el-card :body-style="{ padding: '0px' }" shadow="never">-->
           <!--                <div style="padding: 14px">-->
           <!--                  <span style="font-size: 30px">{{ key }}</span>-->
@@ -99,7 +103,7 @@
                 </div>
                 <div v-if="j.module == 'card'">
                   <a-card-meta
-                    :description="j.number | filterVal"
+                    :description="(j.number + j.unit) | filterVal"
                     :title="j.name"
                   >
                     <template #avatar>
@@ -170,6 +174,12 @@
 <style lang="scss" scoped>
   .runningState-container {
     width: 100%;
-    heigth: 100%;
+    height: 100%;
+  }
+</style>
+<style lang="scss">
+  .ant-card-meta-description {
+    font-size: 26px;
+    color: #1e49c5;
   }
 </style>

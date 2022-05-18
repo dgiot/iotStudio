@@ -4,7 +4,7 @@
 // * @LastEditTime: 2021-12-13 11:06:54
 // * @Description: 用于平台相关机密应用信息配置。建议开发者申请对应的key后替换
 // * @FilePath: src\config\secret.config.js
-// * @DocumentLink: http://prod.iotn2n.com/
+// * @DocumentLink: http://127.0.0.1:5080/
 
 module.exports = {
   secret: {

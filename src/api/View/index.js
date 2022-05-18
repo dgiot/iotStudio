@@ -4,7 +4,7 @@
 // * @LastEditTime: 2021-11-16 12:31:49
 // * @Description: View 视图管理
 // * @FilePath: src\api\View\index.js
-// * @DocumentLink: http://prod.iotn2n.com/swagger/#/View
+// * @DocumentLink: http://127.0.0.1:5080/swagger/#/View
 import {
   create_object,
   del_object,
@@ -18,7 +18,7 @@ export async function queryView(params) {
 }
 
 /**
- * @doc-api http://prod.iotn2n.com/swagger/#/View/get_classes_view_id
+ * @doc-api http://127.0.0.1:5080/swagger/#/View/get_classes_view_id
  * @description 获取视图详情
  * @param ObjectId
  * @return {Promise<*|ElMessageComponent>}
@@ -28,7 +28,7 @@ export async function getView(ObjectId) {
 }
 
 /**
- * @docs-api http://prod.iotn2n.com/swagger/#/View/delete_classes_view_id
+ * @docs-api http://127.0.0.1:5080/swagger/#/View/delete_classes_view_id
  * @description 删除视图管理
  * @param ObjectId
  * @return {Promise<*|ElMessageComponent>}
@@ -38,7 +38,7 @@ export async function delView(ObjectId) {
 }
 
 /**
- * @doc-api http://prod.iotn2n.com/swagger/#/View/put_classes_view_id
+ * @doc-api http://127.0.0.1:5080/swagger/#/View/put_classes_view_id
  * @description 更新视图管理
  * @param ObjectId
  * @param params
@@ -49,7 +49,7 @@ export async function putView(ObjectId, params) {
 }
 
 /**
- * @doc-api http://prod.iotn2n.com/swagger/#/View/post_classes_view
+ * @doc-api http://127.0.0.1:5080/swagger/#/View/post_classes_view
  * @description 新增识图管理
  * @param params
  * @return {Promise<*|ElMessageComponent>}

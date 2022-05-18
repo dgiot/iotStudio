@@ -56,7 +56,7 @@ export async function postEvidence(id, params) {
 }
 
 /**
- * @doc-api http://prod.iotn2n.com/dgiot_swagger/#/Evidence/post_generatereport
+ * @doc-api http://127.0.0.1:5080/dgiot_swagger/#/Evidence/post_generatereport
  * @param params
  * @return {Promise<*|ElMessageComponent>}
  */
@@ -68,7 +68,7 @@ export async function generatereport(id) {
 }
 
 /**
- * @doc-api http://prod.iotn2n.com/dgiot_swagger/#/Evidence/post_drawxnqx
+ * @doc-api http://127.0.0.1:5080/dgiot_swagger/#/Evidence/post_drawxnqx
  * @param params
  * @return {Promise<*|ElMessageComponent>}
  * @description 生成性能曲线图
