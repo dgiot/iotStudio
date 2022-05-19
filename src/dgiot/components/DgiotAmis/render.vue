@@ -140,7 +140,13 @@
             }
             data && (config.data = data)
             // amis headers 拦截扩展
-            // 请求url变量替换
+            // 请求url变量替换。因为目前已知需要替换parse_objectid。所以不需要其他的替换配置
+            localStorage.getItem('parse_objectid')
+              ? url.replaceAll(
+                  'parse_objectid',
+                  localStorage.getItem('parse_objectid')
+                )
+              : ''
             if (headers?.dgiotReplace?.length) {
               const dgiotReplace = headers['dgiotReplace'].split(',') // 将dgiotReplace参数string格式转化为对象格式
               const { store = 'localStorage' } = headers // token 存储方式 默认存储在localStorage中

@@ -18,7 +18,7 @@
           :key="index"
           style="overflow: scroll; height: auto"
         >
-          <el-tag>{{ key }}</el-tag>
+          <h2>{{ key }}</h2>
           <el-row type="flex">
             <el-col
               v-for="(j, index) in value"
