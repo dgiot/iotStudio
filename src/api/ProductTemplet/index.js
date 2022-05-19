@@ -4,7 +4,7 @@
 // * @LastEditTime: 2021-08-17 12:09:24
 // * @Description: api ProductTemplet
 // * @FilePath: src\api\ProductTemplet\index.js
-// * @DocumentLink: http://60.205.104.205/swagger/#/ProductTemplet
+// * @DocumentLink: http://prod.iotn2n.com/swagger/#/ProductTemplet
 import request from '@/utils/request/request'
 import {
   create_object,

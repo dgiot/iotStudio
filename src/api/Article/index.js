@@ -4,7 +4,7 @@
 // * @LastEditTime: 2021-08-23 18:12:12
 // * @Description: dgiot doc api
 // * @FilePath: src\api\Article\index.js
-// * @DocumentLink: http://60.205.104.205/swagger/#/Article
+// * @DocumentLink: http://prod.iotn2n.com/swagger/#/Article
 import {
   create_object,
   del_object,

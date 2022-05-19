@@ -1532,7 +1532,7 @@ export default {
      * @Description: 设为产品模板
      * @param productInfo
      * @return {Promise<void>}
-     * @document http://60.205.104.205/swagger/#/ProductTemplet/post_classes_producttemplet
+     * @document http://prod.iotn2n.com/swagger/#/ProductTemplet/post_classes_producttemplet
      */
     async setTemplate(productInfo) {
       const loading = this.$baseColorfullLoading();

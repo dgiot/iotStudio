@@ -4,11 +4,11 @@
 // * @LastEditTime: 2021-12-16 21:35:04
 // * @Description:
 // * @FilePath: src\api\Opc\index.js
-// * @DocumentLink: http://60.205.104.205/dgiot_swagger/#/OPC
+// * @DocumentLink: http://prod.iotn2n.com/dgiot_swagger/#/OPC
 import request from '@/utils/request/request'
 
 /**
- * @docs-api http://60.205.104.205/dgiot_swagger/#/OPC/post_head
+ * @docs-api http://prod.iotn2n.com/dgiot_swagger/#/OPC/post_head
  * @param data
  * @return {Promise<*>}
  * @description 获取表头

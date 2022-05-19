@@ -4,7 +4,7 @@
 // * @LastEditTime: 2021-8-26 17:51:56
 // * @Description:
 // * @FilePath: src\api\LogLevel\index.js
-// * @DocumentLink: http://60.205.104.205/swagger/#/LogLevel
+// * @DocumentLink: http://prod.iotn2n.com/swagger/#/LogLevel
 import {
   create_object,
   del_object,
@@ -28,7 +28,7 @@ export async function post_tree(params) {
 }
 
 /**
- * @document http://60.205.104.205/swagger/#/System/get_log_level
+ * @document http://prod.iotn2n.com/swagger/#/System/get_log_level
  * @param params
  * @return {Promise<*>}
  */
@@ -41,7 +41,7 @@ export async function getLogLevel(params) {
 }
 
 /**
- * @document http://60.205.104.205/swagger/#/System/put_log_level
+ * @document http://prod.iotn2n.com/swagger/#/System/put_log_level
  * @param params
  * @return {Promise<*>}
  */

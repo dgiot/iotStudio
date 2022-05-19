@@ -4,7 +4,7 @@
 // * @LastEditTime: 2021-08-16 12:07:36
 // * @Description: Category api
 // * @FilePath: src\api\Category\index.js
-// * @DocumentLink: http://60.205.104.205/swagger/#/category
+// * @DocumentLink: http://prod.iotn2n.com/swagger/#/category
 import request from '@/utils/request/request'
 import {
   create_object,
