@@ -94,7 +94,7 @@
                     </ListItem>
                   </List>
                 </div>
-                <div v-if="j.module == 'card'">
+                <div v-if="j.module == 'card'" class="fixdescription">
                   <a-card-meta :description="(j.number + j.unit) | filterVal">
                     <template #avatar>
                       <a-avatar :src="j.imgurl" />
@@ -167,10 +167,10 @@
   }
 </style>
 <style lang="scss">
-  .ant-card-meta-description {
-    font-size: 26px;
-    color: #1e49c5;
-    text-align: center;
+  .fixdescription .ant-card-meta-description {
+    font-size: 26px !important;
+    color: #1e49c5 !important;
+    text-align: center !important;
   }
   .el-link--inner {
     display: block;
