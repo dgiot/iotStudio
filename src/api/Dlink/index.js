@@ -3,7 +3,7 @@
  * @FilePath: src/api/Dlink/index.js
  */
 // https://docs.parseplatform.org/rest/guide/#batch-operations
-// http://127.0.0.1:5080/dgiot_swagger/#/Dlink/get_topic
+// http://60.205.104.205/dgiot_swagger/#/Dlink/get_topic
 import {
   create_object,
   del_object,
