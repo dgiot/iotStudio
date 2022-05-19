@@ -888,6 +888,7 @@ export default {
     //渲染卡片
     renderCard(resData) {
       var vm = this
+      // vm.machinelist = {}
       let array = []
       resData.forEach((item) => {
         item.devicetype = item.devicetype === '' ? 'default' : item.devicetype

@@ -16,57 +16,9 @@
         <div
           v-for="(value, key, index) in machinelist"
           :key="index"
-          style="height: 250px"
+          style="overflow: scroll; height: auto"
         >
-          <!-- <el-card :body-style="{ padding: '0px' }" shadow="never">
-            <div style="padding: 14px">
-              <span style="font-size: 30px">{{ key }}</span>
-              <ul v-if="value.length" style="display: flex; flex-wrap: wrap">
-                <li
-                  v-for="(item, index) in value"
-                  :key="index"
-                  class="updatedtable"
-                >
-                  <div style="height: 70px">
-                    <span style="font-size: 16px">{{ item.name }}</span>
-                    <span
-                      style="float: right; margin-top: 10px; margin-right: 15px"
-                    >
-                      <el-image
-                        :src="item.imgurl"
-                        style="width: 60px; height: 60px"
-                      >
-                        <div
-                          slot="error"
-                          class="image-slot"
-                          style="width: 60px; height: 60px"
-                        >
-                          <i class="el-icon-picture-outline"></i>
-                        </div>
-                      </el-image>
-                    </span>
-                  </div>
-                  <div class="stla">
-                    <span :title="item.number | filterVal">
-                      {{ item.number | filterVal }}
-                    </span>
-                    <span v-if="item.unit" :title="item.unit">
-                      {{ item.unit }}
-                    </span>
-                  </div>
-                  <div class="ta">
-                    <span class="fontSize">
-                      {{ $translateTitle('equipment.updatetime') + ':' }}
-                    </span>
-                    <span class="fontSize" @click="print(machinelist)">
-                      {{ item.time }}
-                    </span>
-                  </div>
-                </li>
-              </ul>
-            </div>
-          </el-card> -->
-          <h3>{{ key }}</h3>
+          <el-tag>{{ key }}</el-tag>
           <el-row type="flex">
             <el-col
               v-for="(j, index) in value"
@@ -172,6 +124,7 @@
     color: #1e49c5 !important;
     text-align: center !important;
   }
+
   .el-link--inner {
     display: block;
     margin-top: 20px;
