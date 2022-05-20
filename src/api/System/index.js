@@ -96,6 +96,13 @@ export function Compile(code) {
   })
 }
 
+export function updateall() {
+  return request({
+    url: 'update',
+    method: 'get',
+  })
+}
+
 export function subupadte(channelId, action) {
   return request({
     url: `control/channel`,

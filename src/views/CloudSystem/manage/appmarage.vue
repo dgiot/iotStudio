@@ -2,7 +2,10 @@
   <div class="appmarage appmarage-container">
     <div class="header">
       <el-button size="small" type="primary" @click="checkupdateall">
-        {{ $translateTitle('plugins.checkupdate') }}
+        api更新
+      </el-button>
+      <el-button size="small" type="primary" @click="updateallFiled">
+        字段升级
       </el-button>
     </div>
     <div class="block" style="margin-top: 10px">
@@ -211,6 +214,7 @@
     GetReload,
     Getstart,
     Getstop,
+    updateall,
   } from '@/api/System/index'
 
   var table = []
@@ -365,6 +369,15 @@
             dgiotlog.log(error)
           })
       },
+      async updateallFiled() {
+        await updateall()
+        this.$message({
+          showClose: true,
+          duration: 2000,
+          message: '字段升级成功',
+          type: 'success',
+        })
+      },
       reupload() {
         if (this.app == '') {
           GetReload('all').then((response) => {
@@ -400,7 +413,7 @@
                 this.$message({
                   showClose: true,
                   duration: 2000,
-                  message: '已更新模块' + response,
+                  message: '已更新模块',
                   type: 'success',
                 })
               }

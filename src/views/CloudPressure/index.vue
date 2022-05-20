@@ -188,6 +188,8 @@
     postDevice,
     putDevice,
   } from '@/api/Device'
+  import { queryProduct } from '@/api/Product'
+  import { queryProductTemplet } from '@/api/ProductTemplet'
   import TableEdit from '@/views/DeviceCloud/empty/tableEdit'
   import { queryView } from '@/api/View'
 
@@ -200,6 +202,7 @@
     data() {
       return {
         taskData: {},
+        product: '',
         form: {
           name: '',
           url: '',
@@ -294,14 +297,22 @@
       },
     },
     watch: {},
-    mounted() {
-      this.fetchData()
+    async mounted() {
+      await this.queryZetaProduct()
     },
-    created() {},
     destroyed() {},
     methods: {
+      async queryZetaProduct() {
+        const { results = [] } = await queryProductTemplet({
+          where: { name: 'zeta压测报告' },
+        })
+        results?.[0]?.objectId ? (this.product = results?.[0]?.objectId) : ''
+        this.product ? this.fetchData() : ''
+      },
       async handleView(col, type) {
-        col.objectId ? localStorage.setItem('parse_objectid', col.objectId) : ''
+        col.objectId
+          ? localStorage.setItem('parse_objectid', col.objectId)
+          : localStorage.removeItem('parse_objectid')
         let params = {
           where: {
             class: 'Product',
@@ -399,7 +410,9 @@
           count: 'objectId',
           order: '-createdAt',
           excludeKeys: 'properties',
-          where: {},
+          where: {
+            product: this.product,
+          },
         }
         this.queryForm.name
           ? (params.where.name = { $regex: this.queryForm.name })
