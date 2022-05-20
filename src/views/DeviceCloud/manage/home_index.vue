@@ -4,7 +4,7 @@
       <el-dialog
         append-to-body
         class="map_dialog"
-        title="设备位置"
+        title="安装位置"
         :visible.sync="dialog_device"
         width="60%"
       >
@@ -395,7 +395,7 @@
       </el-table-column>
       <el-table-column
         align="center"
-        label="设备位置"
+        label="安装位置"
         prop="address"
         show-overflow-tooltip
         sortable

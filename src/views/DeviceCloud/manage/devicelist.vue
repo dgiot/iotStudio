@@ -160,7 +160,7 @@
         append-to-body
         :before-close="handleClosedevice"
         class="map_dialog"
-        title="设备位置"
+        title="安装位置"
         :visible.sync="dialog_device"
         width="50%"
       >
@@ -394,7 +394,7 @@
       </el-table-column>
       <el-table-column
         align="center"
-        label="设备地址"
+        label="安装位置"
         prop="createdAt"
         sortable
       >
@@ -611,7 +611,7 @@
           // '通讯状态',
           // '到期时间',
           // '添加时间',
-          '设备地址',
+          '安装位置',
         ],
         columns: [
           {

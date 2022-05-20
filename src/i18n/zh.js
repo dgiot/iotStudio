@@ -130,7 +130,7 @@ export default {
     equipment: {
       lists: '列表',
       info: '信息',
-      address: '设备地址',
+      address: '安装位置',
       Department: '所属部门',
       'Equipment Overview': '设备概况',
       'device status': '设备状态',
@@ -257,7 +257,7 @@ export default {
       domain: '日志类型',
       msg: '日志消息',
       productid: '产品Id',
-      devaddr: '设备地址',
+      devaddr: '安装位置',
       clientid: '子设备Id',
       objectId: '设备Id',
       ACL: '角色权限',

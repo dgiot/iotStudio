@@ -1416,10 +1416,10 @@
       const CheckDevaddr = function (rule, value, callback) {
         var reg = /[0-9A-Za-z]$/
         if (value == '') {
-          callback(new Error('设备地址不能为空'))
+          callback(new Error('安装位置不能为空'))
         } else {
           if (!reg.test(value)) {
-            callback(new Error('设备地址必须为大小写字母数字'))
+            callback(new Error('安装位置必须为大小写字母数字'))
           } else {
             callback()
           }
