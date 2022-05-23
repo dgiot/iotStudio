@@ -2887,29 +2887,24 @@ export default {
     deleteStruct(index) {
       this.sizeForm.struct.splice(index, 1);
     },
-    preserve(type) {
+    async preserve(type) {
       const message = type === "json" ? "物模型修改成功" : "物模型状态更新成功";
       const params = type === "json" ? {
         thing: JSON.parse(editor1.getValue())
-      } : { thing:this.productdetail.thing }
-      this.$update_object("Product", this.productId, params)
-        .then((resultes) => {
-          if (resultes) {
-            this.$message({
-              showClose: true,
-              duration: 2000,
-              type: "success",
-              message: message
-            });
-            this.schemadialogVisible = false;
-            this.handleChildClick(this.tabsChild);
-            // 手动更新完物模型后，再去查询一下当前页面的物模型
-            this.getProDetail();
-          }
-        })
-        .catch((e) => {
-          dgiotlog.log(e);
+      } : { thing: this.productdetail.thing };
+      await putProduct(this.productId, params);
+      setTimeout(() => {
+        this.$message({
+          showClose: true,
+          duration: 2000,
+          type: "success",
+          message: message
         });
+        this.schemadialogVisible = false;
+        this.handleChildClick(this.tabsChild);
+        // 手动更新完物模型后，再去查询一下当前页面的物模型
+        this.getProDetail();
+      }, 1000);
     },
     async Industry() {
       this.option = [];
