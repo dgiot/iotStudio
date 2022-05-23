@@ -2161,6 +2161,7 @@ export default {
     },
     closeWuDialog() {
       this.resourcedialogFormVisible = false;
+
       this.resourcechannelid = "";
     },
     // 删除枚举型
@@ -2900,10 +2901,12 @@ export default {
           type: "success",
           message: message
         });
+      if(type === "json"){
         this.schemadialogVisible = false;
         this.handleChildClick(this.tabsChild);
         // 手动更新完物模型后，再去查询一下当前页面的物模型
         this.getProDetail();
+      }
       }, 1000);
     },
     async Industry() {
