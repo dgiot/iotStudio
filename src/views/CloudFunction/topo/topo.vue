@@ -871,7 +871,10 @@
           _this.stage.toJSON(),
           moment(new Date()).valueOf()
         )
+        // https://gitee.com/dgiiot/dgiot_dlink/wikis/dgiot-dashboard%20toppic%20%E5%AF%B9%E6%8E%A5dgiot_dlink
         _this.subtopic = `thing/${_this.productid}/post`
+        // const deviceId = _this?.$route?.query?.deviceid || 'test'
+        // _this.subtopic = `$dg/konva/${deviceId}/properties/report`
         _this.topicKey = _this.$dgiotBus.topicKey(_this.router, _this.subtopic)
         //
         console.warn('订阅mqtt')
