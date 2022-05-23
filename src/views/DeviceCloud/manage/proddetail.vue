@@ -1288,7 +1288,7 @@
                           <el-button
                             size="mini"
                             type="danger"
-                            @click.native="deletewmx(row)"
+                            @click.native="deletewmx(row, $index)"
                           >
                             {{ $translateTitle('developer.delete') }}
                           </el-button>
@@ -1451,7 +1451,7 @@
                     <el-button
                       size="mini"
                       type="danger"
-                      @click.native="deletewmx(row)"
+                      @click.native="deletewmx(row, $index)"
                     >
                       {{ $translateTitle('developer.delete') }}
                     </el-button>
@@ -1655,7 +1655,7 @@
                     <el-button
                       size="mini"
                       type="danger"
-                      @click.native="deletewmx(row)"
+                      @click.native="deletewmx(row, $index)"
                     >
                       {{ $translateTitle('developer.delete') }}
                     </el-button>
@@ -1799,7 +1799,7 @@
                     <el-button
                       size="mini"
                       type="danger"
-                      @click.native="deletewmx(row)"
+                      @click.native="deletewmx(row, $index)"
                     >
                       {{ $translateTitle('developer.delete') }}
                     </el-button>
