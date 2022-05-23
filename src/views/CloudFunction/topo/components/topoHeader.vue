@@ -186,7 +186,7 @@
     },
     mounted() {
       this.$nextTick(() => {
-        this.codes = canvas.stage.toJSON() ?? ''
+        this.codes = canvas?.stage?.toJSON() ?? ''
         document.onkeydown = (e) => {
           if (e.keyCode == 46) {
             //这是delete健，当然也可以根据自己的需求更改
