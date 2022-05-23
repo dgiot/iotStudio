@@ -1157,60 +1157,23 @@
                       style="width: 100%; margin-top: 10px"
                     >
                       <el-table-column type="expand">
-                        <template
-                          v-if="row.dataType.type == 'struct'"
-                          slot-scope="{ row }"
-                          class="opentable"
-                        >
-                          <el-table
-                            :data="row.dataType.specs"
-                            style="
-                              box-sizing: border-box;
-                              width: 60%;
-                              text-align: center;
-                            "
+                        <template slot-scope="props" class="opentable">
+                          <el-descriptions
+                            border
+                            :column="4"
+                            direction="vertical"
                           >
-                            <el-table-column
-                              align="center"
-                              :label="$translateTitle('product.identifier')"
-                            >
-                              <template slot-scope="scope1">
-                                <span>{{ scope1.row.identifier }}</span>
-                              </template>
-                            </el-table-column>
-                            <el-table-column
-                              align="center"
+                            <el-descriptions-item label="采集轮次">
+                              {{ props.row.dataForm.round }}
+                            </el-descriptions-item>
+                            <el-descriptions-item
                               :label="
                                 $translateTitle('product.functionaltypes')
                               "
                             >
-                              <span>
-                                {{ $translateTitle('product.attribute') }}
-                              </span>
-                            </el-table-column>
-
-                            <el-table-column
-                              align="center"
-                              :label="$translateTitle('product.functionname')"
-                              prop="name"
-                            />
-                            <el-table-column
-                              align="center"
-                              :label="$translateTitle('product.datadefinition')"
-                            >
-                              <template slot-scope="scope2">
-                                <span>{{ scope2.row.dataType.type }}</span>
-                              </template>
-                            </el-table-column>
-                            <template #empty>
-                              <el-image
-                                class="dgiot-data-empty"
-                                :src="
-                                  require('../../../../public/assets/images/platform/assets/empty_images/data_empty.png')
-                                "
-                              />
-                            </template>
-                          </el-table>
+                              {{ $translateTitle('product.attribute') }}
+                            </el-descriptions-item>
+                          </el-descriptions>
                         </template>
                       </el-table-column>
 
@@ -1227,22 +1190,11 @@
                         align="center"
                         :label="$translateTitle('product.devicetype')"
                         prop="devicetype"
-                        width="80"
                       />
-                      <el-table-column
-                        align="center"
-                        :label="$translateTitle('product.Rounds')"
-                        width="60"
-                      >
-                        <template #default="{ row }">
-                          {{ row.dataForm.round }}
-                        </template>
-                      </el-table-column>
 
                       <el-table-column
                         align="center"
                         :label="$translateTitle('product.Strategy')"
-                        width="80"
                       >
                         <template #default="{ row }">
                           {{ row.dataForm.strategy }}
@@ -1252,31 +1204,37 @@
                       <el-table-column
                         align="center"
                         :label="$translateTitle('product.protocol')"
-                        width="80"
                       >
                         <template #default="{ row }">
                           {{ row.dataForm.protocol }}
                         </template>
-                      </el-table-column>
-                      <el-table-column
-                        align="center"
-                        :label="$translateTitle('product.functionaltypes')"
-                        width="90"
-                      >
-                        <span>{{ $translateTitle('product.attribute') }}</span>
                       </el-table-column>
 
                       <el-table-column
                         align="center"
                         :label="$translateTitle('product.identifier')"
                         prop="identifier"
-                        width="100"
                       />
                       <el-table-column
                         align="center"
                         :label="$translateTitle('product.functionname')"
                         prop="name"
                       />
+                      <el-table-column
+                        align="center"
+                        label="是否存储"
+                        prop="name"
+                        width="100"
+                      >
+                        <template #default="{ row }">
+                          <a-switch
+                            :checked="row.isshow"
+                            checked-children="存储"
+                            un-checked-children="不存储"
+                            @click="toggleSwitch(row)"
+                          />
+                        </template>
+                      </el-table-column>
                       <el-table-column
                         align="center"
                         :label="$translateTitle('product.datatype')"
@@ -3015,7 +2973,7 @@
         /></pre>
       </div>
       <span slot="footer" class="dialog-footer" style="height: 30px">
-        <el-button type="primary" @click.native="preserve">
+        <el-button type="primary" @click.native="preserve('json')">
           <!-- 更新 -->
           {{ $translateTitle('equipment.update') }}
         </el-button>

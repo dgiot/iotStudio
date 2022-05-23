@@ -132,7 +132,6 @@
                         />
                       </el-select>
                       <el-button
-                        :disabled="queryFlag"
                         icon="el-icon-search"
                         size="mini"
                         type="primary"

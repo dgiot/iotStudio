@@ -884,8 +884,11 @@ export default {
     this.subdialogtimer = null;
   },
   methods: {
+    toggleSwitch(row) {
+      row.isshow = !row.isshow;
+      this.preserve("isshow");
+    },
     thingParameters(form, index, type) {
-      console.log(type);
       this.editIndex = index;
       console.log(
         "thingParameters",
@@ -2884,10 +2887,11 @@ export default {
     deleteStruct(index) {
       this.sizeForm.struct.splice(index, 1);
     },
-    preserve() {
-      const params = {
+    preserve(type) {
+      const message = type === "json" ? "物模型修改成功" : "物模型状态更新成功";
+      const params = type === "json" ? {
         thing: JSON.parse(editor1.getValue())
-      };
+      } : { thing:this.productdetail.thing }
       this.$update_object("Product", this.productId, params)
         .then((resultes) => {
           if (resultes) {
@@ -2895,7 +2899,7 @@ export default {
               showClose: true,
               duration: 2000,
               type: "success",
-              message: "添加成功"
+              message: message
             });
             this.schemadialogVisible = false;
             this.handleChildClick(this.tabsChild);
