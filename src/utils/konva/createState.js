@@ -63,7 +63,7 @@ function createState(type, offsetX, offsetY, color, params) {
         x: offsetX,
         y: offsetY,
         fill: color,
-        fontSize: 30,
+        fontSize: 15,
         fontFamily: 'Calibri',
         width: 300,
         listening: true,

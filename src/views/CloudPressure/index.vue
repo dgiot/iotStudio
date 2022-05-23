@@ -23,7 +23,7 @@
         :title="draw.row.name"
       >
         <div>
-          <Tabs size="small">
+          <Tabs size="small" :value="defaultTable">
             <TabPane
               v-for="(item, index) in draw.settings.data"
               :key="index"
@@ -44,10 +44,10 @@
         :width="720"
         @close="onClose"
       >
-        <Tabs size="small">
+        <Tabs size="small" :value="defaultTable">
           <TabPane
             v-for="(item, index) in draw.settings.data"
-            :key="index"
+            :key="index + ''"
             :label="item.title"
             :name="item.title"
           >
@@ -128,12 +128,27 @@
           <el-table-column
             align="center"
             fixed="right"
+            label="压测启停"
+            width="120"
+          >
+            <template #default="{ row }">
+              <a-switch
+                :checked="row.isEnable"
+                checked-children="启动"
+                un-checked-children="停止"
+                @click="toggleSwitch(row)"
+              />
+            </template>
+          </el-table-column>
+          <el-table-column
+            align="center"
+            fixed="right"
             label="压测状态"
             width="120"
           >
             <template #default="{ row }">
-              <el-tag dark :type="row.isEnable == false ? 'info' : ''">
-                {{ row.isEnable == false ? '未压测' : '压测中' }}
+              <el-tag dark :type="row.status == 'ONLINE' ? 'info' : ''">
+                {{ row.status == 'ONLINE' ? '压测中' : '未压测' }}
               </el-tag>
             </template>
           </el-table-column>
@@ -229,6 +244,7 @@
             { required: true, message: 'Please enter url description' },
           ],
         },
+        defaultTable: '',
         draw: {
           row: {},
           settings: {
@@ -258,13 +274,13 @@
           {
             label: '开始时间',
             width: '200',
-            prop: 'createdAt',
+            prop: 'startTime',
             sortable: true,
           },
           {
             label: '结束时间',
             width: '200',
-            prop: 'updatedAt',
+            prop: 'endTime',
             sortable: true,
           },
         ],
@@ -302,6 +318,22 @@
     },
     destroyed() {},
     methods: {
+      toggleSwitch(row) {
+        return new Promise((resolve) => {
+          this.$Modal.confirm({
+            title: row.isEnable == true ? '压测任务停止' : '压测任务启动',
+            content: '您确认要手动开始该压测任务吗？',
+            onOk: () => {
+              resolve()
+              row.isEnable = !row.isEnable
+              this.switchTask(row)
+            },
+          })
+        })
+      },
+      async switchTask(row) {
+        await putDevice(row.objectId, { isEnable: row.isEnable })
+      },
       async queryZetaProduct() {
         const { results = [] } = await queryProductTemplet({
           where: { name: 'zeta压测报告' },
@@ -330,9 +362,11 @@
           return false
         } else {
           this.draw.settings.data = results
+          this.defaultTable = results?.[0]?.title || ''
           col === '_'
             ? (this.draw.form.visibility = true)
             : (this.draw.settings.visibility = true)
+          //  设置默认点击事件
         }
       },
       async handleClone(device) {
@@ -419,8 +453,14 @@
           : ''
         const { count = 0, results = [] } = await queryDevice(params)
         results.forEach((i) => {
-          i.createdAt = this.$moment(i.createdAt).format('YYYY-MM-DD HH:mm:ss')
-          i.updatedAt = this.$moment(i.updatedAt).format('YYYY-MM-DD HH:mm:ss')
+          i.startTime = i?.profile?.startTime
+            ? this.$moment
+                .unix(i.profile.startTime)
+                .format('YYYY-MM-DD HH:mm:ss')
+            : '暂未配置'
+          i.endTime = i?.profile?.endTime
+            ? this.$moment.unix(i.profile.endTime).format('YYYY-MM-DD HH:mm:ss')
+            : '暂未配置'
         })
         this.list = results
         this.total = count
