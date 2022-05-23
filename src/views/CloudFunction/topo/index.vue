@@ -10,7 +10,7 @@
         v-show="!isDevice"
         class="konva-container-header hidden-xs-only"
       >
-        <topo-header :noTools="Boolean($route.query.noTools)"/>
+        <topo-header :noTools="Boolean($route.query.noTools)" />
       </el-header>
 
       <el-main class="konva-container-main">
@@ -51,7 +51,7 @@
                   style="position: relative; left: 0"
                   @click.native="nextPage('left')"
                 >
-                  {{ $translateTitle('button.previous') }}
+                  {{ $translateTitle("button.previous") }}
                 </el-button>
                 <el-button
                   :disabled="$route.query.page > $route.query.list.length"
@@ -61,7 +61,7 @@
                   @click.native="nextPage('right')"
                   style="position: fixed; right: 30px"
                 >
-                  {{ $translateTitle('button.next') }}
+                  {{ $translateTitle("button.next") }}
                 </el-button>
               </div>
               <div
@@ -151,6 +151,9 @@
       },
     },
     mounted() {
+      this.$nextTick(() => {
+        this.handleMqtt()
+      })
       this.$dgiotBus.$off('_busUpdata')
       this.$dgiotBus.$on('_busUpdata', async () => {
         if (this.viewInfo.objectId) {
@@ -184,9 +187,6 @@
         ? localStorage.getItem('konvaStale')
         : this.defaultKonva
       this.router = this.$dgiotBus.router(this.$route.fullPath)
-      this.$nextTick(() => {
-        this.handleMqtt()
-      })
       this.setTreeFlag(false)
     },
     destroyed() {
@@ -386,10 +386,13 @@
           )
           _this.deleteTopo(window.deletePath)
         }, 1000)
+        // https://gitee.com/dgiiot/dgiot_dlink/wikis/dgiot-dashboard%20toppic%20%E5%AF%B9%E6%8E%A5dgiot_dlink
         _this.subtopic = `thing/${_this.productid}/post`
+        // const deviceId = this?.$route?.query?.deviceid || 'test'
+        // _this.subtopic = `$dg/konva/${deviceId}/properties/report`
         _this.topicKey = _this.$dgiotBus.topicKey(_this.router, _this.subtopic)
         //
-        console.warn('订阅mqtt')
+        console.warn('订阅mqtt', _this.subtopic)
         // 订阅webscroket
         _this.$dgiotBus.$emit(`MqttSubscribe`, {
           router: this.router,
@@ -415,7 +418,7 @@
               decodeMqtt = JSON.parse(Base64.decode(Msg.payload))
               console.log('消息解密消息', decodeMqtt)
             }
-
+            console.log('decodeMqtt.konva')
             console.log(decodeMqtt.konva)
             const Shape = decodeMqtt.konva
             // apply transition to all nodes in the array
@@ -440,14 +443,12 @@
                       easing: Konva.Easings.ElasticEaseOut,
                     }).play()
                   )
-                } else {
-                  updataId.push(i.id)
-                }
+                } else updataId.push(i.id)
               })
             })
-            if (updataId) {
-              console.log('以下组态id未更新', updataId)
-            }
+
+            updataId ? console.log('以下组态id未更新', updataId) : ''
+
             console.log('konva数据更新成功')
           }
         })

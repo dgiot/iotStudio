@@ -48,7 +48,7 @@ const topoStage = {
         nodeTags.forEach((tag) => {
           info['tag'].push(tag)
           if (location.href.includes('&type=device')) {
-            dgiotlogger.info('dgiotlogger node:', tag)
+            // dgiotlogger.info('dgiotlogger node:', tag)
             tag.setAttrs({
               draggable: false,
             })
@@ -90,9 +90,16 @@ const topoStage = {
       info['Text'] = stage.find('Text')
       if (location.href.includes('&type=device')) {
         dgiotlogger.info('dgiotlogger node:', node)
-        node.setAttrs({
-          draggable: false,
-        })
+        node
+          ? node.setAttrs({
+              draggable: false,
+            })
+          : ''
+        node?.parent
+          ? node.parent.setAttrs({
+              draggable: false,
+            })
+          : ''
         // return false
       }
       if (node.getAttr('hidden') === true) node.hide()
