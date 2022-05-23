@@ -469,7 +469,17 @@
     }, //如果页面有keep-alive缓存功能，这个函数会触发
   }
 </script>
-
+<style>
+  @font-face {
+    font-family: Ionicons;
+    src: url(/fonts/ionicons.woff2?v=3.0.0) format('woff2'),
+      url(/fonts/ionicons.woff?v=3.0.0) format('woff'),
+      url(/fonts/ionicons.ttf?v=3.0.0) format('truetype'),
+      url(/fonts/ionicons.svg?v=3.0.0#Ionicons) format('svg');
+    font-weight: 400;
+    font-style: normal;
+  }
+</style>
 <style lang="scss" scoped>
   .el-row {
     margin-bottom: 0px !important;

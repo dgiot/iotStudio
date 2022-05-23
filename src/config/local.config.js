@@ -71,7 +71,6 @@ let systemStatic = {
 let runTimeStatic = {
   css: [
     'material_icons.css',
-    'iview.css',
     'antd.min.css',
     'google.css',
     'materialdesignicons.min.css',
