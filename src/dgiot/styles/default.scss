@@ -637,8 +637,8 @@ $--background-color-base: $base-color-background;
 }
 
 .el-table__body-wrapper
-.el-table--border.is-scrolling-right
-~ .el-table__fixed-right {
+  .el-table--border.is-scrolling-right
+  ~ .el-table__fixed-right {
   border-left: 1px solid $--border-color-lighter;
 }
 
@@ -1042,7 +1042,7 @@ $--background-color-base: $base-color-background;
 }
 
 .el-time-spinner__wrapper.is-arrow
-.el-time-spinner__item:hover:not(.disabled):not(.active) {
+  .el-time-spinner__item:hover:not(.disabled):not(.active) {
   background: $base-color-white;
 }
 
@@ -1203,8 +1203,8 @@ $--background-color-base: $base-color-background;
 }
 
 .el-form-item.is-required:not(.is-no-asterisk)
-.el-form-item__label-wrap
-> .el-form-item__label:before,
+  .el-form-item__label-wrap
+  > .el-form-item__label:before,
 .el-form-item.is-required:not(.is-no-asterisk) > .el-form-item__label:before {
   color: $base-color-red;
 }
@@ -1306,8 +1306,8 @@ $--background-color-base: $base-color-background;
 }
 
 .el-tabs--border-card
-> .el-tabs__header
-.el-tabs__item:not(.is-disabled):hover {
+  > .el-tabs__header
+  .el-tabs__item:not(.is-disabled):hover {
   color: $base-color-blue;
 }
 
@@ -1570,11 +1570,11 @@ $--background-color-base: $base-color-background;
 }
 
 .el-input-number__decrease:hover:not(.is-disabled)
-~ .el-input
-.el-input__inner:not(.is-disabled),
+  ~ .el-input
+  .el-input__inner:not(.is-disabled),
 .el-input-number__increase:hover:not(.is-disabled)
-~ .el-input
-.el-input__inner:not(.is-disabled) {
+  ~ .el-input
+  .el-input__inner:not(.is-disabled) {
   border-color: $base-color-blue;
 }
 
@@ -1741,29 +1741,29 @@ $--background-color-base: $base-color-background;
 }
 
 .el-slider.is-vertical.el-slider--with-input
-.el-slider__input
-.el-input-number__decrease,
+  .el-slider__input
+  .el-input-number__decrease,
 .el-slider.is-vertical.el-slider--with-input
-.el-slider__input
-.el-input-number__increase {
+  .el-slider__input
+  .el-input-number__increase {
   border: 1px solid $--border-color-base;
 }
 
 .el-slider.is-vertical.el-slider--with-input
-.el-slider__input:hover
-.el-input-number__decrease,
+  .el-slider__input:hover
+  .el-input-number__decrease,
 .el-slider.is-vertical.el-slider--with-input
-.el-slider__input:hover
-.el-input-number__increase {
+  .el-slider__input:hover
+  .el-input-number__increase {
   border-color: $--color-text-placeholder;
 }
 
 .el-slider.is-vertical.el-slider--with-input
-.el-slider__input:active
-.el-input-number__decrease,
+  .el-slider__input:active
+  .el-input-number__decrease,
 .el-slider.is-vertical.el-slider--with-input
-.el-slider__input:active
-.el-input-number__increase {
+  .el-slider__input:active
+  .el-input-number__increase {
   border-color: $base-color-blue;
 }
 
@@ -1903,8 +1903,8 @@ $--background-color-base: $base-color-background;
 }
 
 .el-upload-list--picture
-.el-upload-list__item:hover
-.el-upload-list__item-status-label {
+  .el-upload-list__item:hover
+  .el-upload-list__item-status-label {
   background: 0 0;
 }
 
@@ -2659,26 +2659,26 @@ $--background-color-base: $base-color-background;
 
 .el-color-hue-slider__bar {
   background: -webkit-gradient(
-      linear,
-      left top,
-      right top,
-      from(red),
-      color-stop(17%, #ff0),
-      color-stop(33%, #0f0),
-      color-stop(50%, #0ff),
-      color-stop(67%, #00f),
-      color-stop(83%, #f0f),
-      to(red)
+    linear,
+    left top,
+    right top,
+    from(red),
+    color-stop(17%, #ff0),
+    color-stop(33%, #0f0),
+    color-stop(50%, #0ff),
+    color-stop(67%, #00f),
+    color-stop(83%, #f0f),
+    to(red)
   );
   background: linear-gradient(
-      to right,
-      red 0,
-      #ff0 17%,
-      #0f0 33%,
-      #0ff 50%,
-      #00f 67%,
-      #f0f 83%,
-      red 100%
+    to right,
+    red 0,
+    #ff0 17%,
+    #0f0 33%,
+    #0ff 50%,
+    #00f 67%,
+    #f0f 83%,
+    red 100%
   );
 }
 
@@ -2689,67 +2689,67 @@ $--background-color-base: $base-color-background;
 
 .el-color-hue-slider.is-vertical .el-color-hue-slider__bar {
   background: -webkit-gradient(
-      linear,
-      left top,
-      left bottom,
-      from(red),
-      color-stop(17%, #ff0),
-      color-stop(33%, #0f0),
-      color-stop(50%, #0ff),
-      color-stop(67%, #00f),
-      color-stop(83%, #f0f),
-      to(red)
+    linear,
+    left top,
+    left bottom,
+    from(red),
+    color-stop(17%, #ff0),
+    color-stop(33%, #0f0),
+    color-stop(50%, #0ff),
+    color-stop(67%, #00f),
+    color-stop(83%, #f0f),
+    to(red)
   );
   background: linear-gradient(
-      to bottom,
-      red 0,
-      #ff0 17%,
-      #0f0 33%,
-      #0ff 50%,
-      #00f 67%,
-      #f0f 83%,
-      red 100%
+    to bottom,
+    red 0,
+    #ff0 17%,
+    #0f0 33%,
+    #0ff 50%,
+    #00f 67%,
+    #f0f 83%,
+    red 100%
   );
 }
 
 .el-color-svpanel__white {
   background: -webkit-gradient(
-      linear,
-      left top,
-      right top,
-      from($base-color-white),
-      to(rgba(255, 255, 255, 0))
+    linear,
+    left top,
+    right top,
+    from($base-color-white),
+    to(rgba(255, 255, 255, 0))
   );
   background: linear-gradient(
-      to right,
-      $base-color-white,
-      rgba(255, 255, 255, 0)
+    to right,
+    $base-color-white,
+    rgba(255, 255, 255, 0)
   );
 }
 
 .el-color-svpanel__black {
   background: -webkit-gradient(
-      linear,
-      left bottom,
-      left top,
-      from($base-color-black),
-      to(rgba(0, 0, 0, 0))
+    linear,
+    left bottom,
+    left top,
+    from($base-color-black),
+    to(rgba(0, 0, 0, 0))
   );
   background: linear-gradient(to top, $base-color-black, rgba(0, 0, 0, 0));
 }
 
 .el-color-alpha-slider__bar {
   background: -webkit-gradient(
-      linear,
-      left top,
-      right top,
-      from(rgba(255, 255, 255, 0)),
-      to(white)
+    linear,
+    left top,
+    right top,
+    from(rgba(255, 255, 255, 0)),
+    to(white)
   );
   background: linear-gradient(
-      to right,
-      rgba(255, 255, 255, 0) 0,
-      $base-color-white 100%
+    to right,
+    rgba(255, 255, 255, 0) 0,
+    $base-color-white 100%
   );
 }
 
@@ -2760,16 +2760,16 @@ $--background-color-base: $base-color-background;
 
 .el-color-alpha-slider.is-vertical .el-color-alpha-slider__bar {
   background: -webkit-gradient(
-      linear,
-      left top,
-      left bottom,
-      from(rgba(255, 255, 255, 0)),
-      to(white)
+    linear,
+    left top,
+    left bottom,
+    from(rgba(255, 255, 255, 0)),
+    to(white)
   );
   background: linear-gradient(
-      to bottom,
-      rgba(255, 255, 255, 0) 0,
-      $base-color-white 100%
+    to bottom,
+    rgba(255, 255, 255, 0) 0,
+    $base-color-white 100%
   );
 }
 
@@ -3045,10 +3045,10 @@ $--background-color-base: $base-color-background;
 }
 
 .el-transfer-panel
-.el-transfer-panel__header
-.el-checkbox
-.el-checkbox__label
-span {
+  .el-transfer-panel__header
+  .el-checkbox
+  .el-checkbox__label
+  span {
   color: $base-color-grey;
 }
 

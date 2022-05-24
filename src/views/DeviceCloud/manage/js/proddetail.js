@@ -11,6 +11,7 @@ import {
   putProduct,
   getProduct,
 } from '@/api/Product/index'
+import { putChannel } from '@/api/Channel/index'
 import { downBinary } from '@/api/File/index'
 import { getAllunit, getDictCount } from '@/api/Dict/index'
 import { getChannelCountByProduct, saveChanne } from '@/api/Channel/index'
@@ -37,7 +38,6 @@ var isallchannel = false
 var isupdatetrue = ''
 import dgiotViews from '@/views/CloudFunction/lowcode'
 import { getProtocol } from '@/api/Protocol'
-import fa from 'element-ui/src/locale/lang/fa'
 
 export default {
   components: {
@@ -2139,26 +2139,14 @@ export default {
       })
     },
     // 添加自定义模型
-    addData() {
+    async addData() {
       // dgiotlog.log(channelrow)
       channelrow.datamodel = editorcreate.getValue()
       const params = {
         config: channelrow,
       }
-      this.$update_object(
-        'Channel',
-        this.rproductdetailesourcechannelid,
-        params
-      ).then(
-        (response) => {
-          if (response) {
-            this.$message('添加成功')
-          }
-        },
-        (error) => {
-          returnLogin(error)
-        }
-      )
+      await putChannel(this.rproductdetailesourcechannelid, params)
+      this.$message('添加成功')
     },
     closeWuDialog() {
       this.resourcedialogFormVisible = false
@@ -3093,30 +3081,21 @@ export default {
     },
 
     // 保存
-    onSaveTap(index) {
+    async onSaveTap(index) {
       const leftPos = this.editableTabs[index].leftItemPos
       this.productdetail.thing.properties[leftPos].dataForm.collection =
         this.editorList[index].getValue()
       const params = {
         thing: this.productdetail.thing,
       }
-      this.$update_object('Product', this.productId, params)
-        .then((resultes) => {
-          if (resultes) {
-            this.$message({
-              showClose: true,
-              duration: 2000,
-              type: 'success',
-              message: '添加成功',
-            })
-            this.getProDetail()
-            // this.$refs[formName].resetFields();
-            //  this.wmxdialogVisible = false;
-          }
-        })
-        .catch((e) => {
-          dgiotlog.log(e)
-        })
+      await putProduct(this.productId, params)
+      this.$message({
+        showClose: true,
+        duration: 2000,
+        type: 'success',
+        message: '添加成功',
+      })
+      this.getProDetail()
     },
 
     handleCloseCollecttion(done) {
@@ -3279,7 +3258,7 @@ export default {
       this.form.ProductAll = await getDeviceCountByProduct(productId)
     },
     // 产品修改
-    handelUpdate(event, row) {
+    async handelUpdate(event, row) {
       var isopen
       if (event == true) {
         isopen = false
@@ -3290,21 +3269,14 @@ export default {
       const params = {
         dynamicReg: !isopen,
       }
-      this.$update_object('Product', this.productId, params)
-        .then((resultes) => {
-          if (resultes) {
-            this.$message({
-              showClose: true,
-              duration: 2000,
-              type: 'success',
-              message: '修改成功',
-            })
-            this.dynamicReg = !isopen
-          }
-        })
-        .catch((e) => {
-          dgiotlog.log(e)
-        })
+      await putProduct(this.productId, params)
+      this.$message({
+        showClose: true,
+        duration: 2000,
+        type: 'success',
+        message: '修改成功',
+      })
+      this.dynamicReg = !isopen
     },
     async wmxhandleClose(type) {
       if (type) {
@@ -3370,7 +3342,7 @@ export default {
         })
     },
     subAce(formName, istrue) {
-      this.$refs[formName].validate((valid) => {
+      this.$refs[formName].validate(async (valid) => {
         if (valid) {
           var obj = {
             name: this.formInline.name,
@@ -3381,25 +3353,20 @@ export default {
           const params = {
             decoder: obj,
           }
-          this.$update_object('Product', this.productId, params)
-            .then((res) => {
-              if (this.issub == false) {
-                this.$message({
-                  showClose: true,
-                  duration: 2000,
-                  type: 'success',
-                  message: '保存成功',
-                })
-                if (istrue == true) {
-                  isupdatetrue += '保存成功'
-                  editor2.setValue(isupdatetrue)
-                }
-              }
-              this.issub = true
+          await putProduct(this.productId, params)
+          if (this.issub == false) {
+            this.$message({
+              showClose: true,
+              duration: 2000,
+              type: 'success',
+              message: '保存成功',
             })
-            .catch((e) => {
-              dgiotlog.log(e)
-            })
+            if (istrue == true) {
+              isupdatetrue += '保存成功'
+              editor2.setValue(isupdatetrue)
+            }
+          }
+          this.issub = true
         } else {
           this.$message({
             type: 'warning',
@@ -3687,7 +3654,7 @@ export default {
           'data.key': 'detail',
         },
       }
-      this.$query_object('Dict', params).then((res) => {
+      this.$query_object('Dict', params).then(async (res) => {
         const results = res.results
         if (results && results[0].data.Ability) {
           this.TypeInstall(
@@ -3697,29 +3664,21 @@ export default {
           const params = {
             thing: this.productdetail.thing,
           }
-          this.$update_object('Product', this.productId, params)
-            .then((resultes) => {
-              if (resultes) {
-                this.$message({
-                  showClose: true,
-                  duration: 2000,
-                  type: 'success',
-                  message: '添加成功',
-                })
-                this.getProDetail()
-              }
-            })
-            .catch((e) => {
-              dgiotlog.log(e)
-            })
+          await putProduct(this.productId, params)
+          this.$message({
+            showClose: true,
+            duration: 2000,
+            type: 'success',
+            message: '添加成功',
+          })
+          this.getProDetail()
         } else {
           dgiotlog.log('此选项没有属性功能')
         }
       })
     },
     /* 删除物模型*/
-    deletewmx(row, index) {
-      console.log(row, index)
+    deletewmx(row) {
       this.$baseConfirm(
         this.$translateTitle(
           'Maintenance.Are you sure you want to delete the current item'
@@ -3737,11 +3696,8 @@ export default {
               'success',
               'dgiot-hey-message-success'
             )
-            if (index != '') this.wmxData.splice(index, 1)
-            else {
-              await this.getProDetail()
-              await this.queryProductInfo(this.$route.query.id)
-            }
+            await this.getProDetail()
+            await this.queryProductInfo(this.$route.query.id)
           } else
             this.$baseMessage(
               this.$translateTitle('user.error deleted') + res?.msg
