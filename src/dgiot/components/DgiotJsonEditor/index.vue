@@ -34,7 +34,7 @@
       },
       modes: {
         type: Array,
-        default: function() {
+        default: function () {
           return ['tree', 'code', 'form', 'text', 'view']
         },
       },
@@ -91,7 +91,7 @@
             self.$emit('json-change', json)
             self.internalChange = true
             self.$emit('input', json)
-            self.$nextTick(function() {
+            self.$nextTick(function () {
               self.internalChange = false
             })
           } catch (e) {
@@ -107,7 +107,7 @@
       this.editor = new JSONEditor(
         this.$el.querySelector('.jsoneditor-vue'),
         options,
-        this.json,
+        this.json
       )
     },
     methods: {

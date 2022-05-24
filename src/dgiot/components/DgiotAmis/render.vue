@@ -19,7 +19,7 @@
     name: 'AmisRender',
     props: {
       // eslint-disable-next-line
-    schema: {
+      schema: {
         type: Object,
       },
       updateLocation: {
