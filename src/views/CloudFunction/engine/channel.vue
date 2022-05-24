@@ -635,7 +635,7 @@
       :title="channelname + '日志'"
       :visible="subdialog"
       width="80%"
-      @close="handleCloseSubdialog(pubtopic)"
+      @close="handleCloseSubdialog()"
     >
       <mqtt-log
         :channel-id="channelname"
@@ -893,6 +893,9 @@
       this.Get_Re_Channel(0)
       this.dialogType()
       this.getApplication()
+    },
+    beforeDestroy() {
+      this.$dgiotBus.$emit('MqttUnbscribe', this.topicKey, this.subtopic)
     },
     methods: {
       dybaneucDleform(index, row) {
@@ -1662,8 +1665,9 @@
         subupadte(row.objectId, 'start_logger')
         this.topicKey = this.$dgiotBus.topicKey(this.router, this.subtopic)
       },
-      handleCloseSubdialog(pubtopic) {
+      handleCloseSubdialog() {
         subupadte(this.channelid, 'stop_logger')
+        this.$dgiotBus.$emit('MqttUnbscribe', this.topicKey, this.subtopic)
         this.refreshFlag = moment().format('x')
         this.submessage = ''
         this.msgList = []
