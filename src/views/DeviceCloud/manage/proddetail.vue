@@ -479,7 +479,7 @@
                       allow-create
                       filterable
                       placeholder="请选择活动区域"
-                      style="width: 91%; float: left"
+                      style="float: left; width: 91%"
                     >
                       <el-option
                         v-for="(item, index) in dlinkTopic[topicform.info]"
@@ -489,7 +489,7 @@
                       >
                         <span style="float: left">{{ item.topic }}</span>
                         <span
-                          style="float: right; color: #8492a6; font-size: 13px"
+                          style="float: right; font-size: 13px; color: #8492a6"
                         >
                           {{ item.id }}
                         </span>
@@ -505,7 +505,7 @@
                   <el-form-item label="Topic value：" prop="topic">
                     <el-input
                       v-model="topicform.value"
-                      style="width: 100%; float: left"
+                      style="float: left; width: 100%"
                     />
                   </el-form-item>
                   <!--                  <el-form-item-->
@@ -643,7 +643,7 @@
                     >
                       <span style="float: left">{{ item.name }}</span>
                       <span
-                        style="float: right; color: #8492a6; font-size: 13px"
+                        style="float: right; font-size: 13px; color: #8492a6"
                       >
                         {{ item.name }}
                       </span>
@@ -665,7 +665,7 @@
                     >
                       <span style="float: left">{{ item.name }}</span>
                       <span
-                        style="float: right; color: #8492a6; font-size: 13px"
+                        style="float: right; font-size: 13px; color: #8492a6"
                       >
                         {{ item.identifier }}
                       </span>

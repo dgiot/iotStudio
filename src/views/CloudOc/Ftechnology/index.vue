@@ -175,9 +175,9 @@
               <span
                 style="
                   font-size: 14px;
-                  color: #333;
-                  line-height: 22px;
                   font-weight: 700;
+                  line-height: 22px;
+                  color: #333;
                 "
               >
                 {{ o.data.title }}
@@ -514,29 +514,29 @@
           margin: 10px;
 
           .box {
-            margin: 5px 0 0 0;
             display: flex;
             justify-content: space-between;
+            margin: 5px 0 0 0;
 
             .left {
-              text-align: center;
               flex: 1;
+              text-align: center;
             }
 
             .right {
               flex: 3;
-              white-space: nowrap;
-              text-overflow: ellipsis;
-              overflow: hidden;
               margin-left: 10px;
+              overflow: hidden;
+              text-overflow: ellipsis;
+              white-space: nowrap;
             }
           }
         }
 
         .time {
-          white-space: nowrap;
-          text-overflow: ellipsis;
           overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
         }
 
         .image {

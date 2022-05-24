@@ -66,7 +66,7 @@
                 :value="item.objectId"
               >
                 <span style="float: left">{{ item.objectId }}</span>
-                <span style="float: right; color: #8492a6; font-size: 13px">
+                <span style="float: right; font-size: 13px; color: #8492a6">
                   <!--兼容所有表明的提示-->
                   {{
                     item.description ||
@@ -77,6 +77,24 @@
                   }}
                 </span>
               </el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item :label="$translateTitle('home.language')">
+            <el-select
+              v-model="queryForm.language"
+              allow-create
+              clearable
+              default-first-option
+              filterable
+              style="width: 100%"
+              @change="fetchData()"
+            >
+              <el-option
+                v-for="item in lang"
+                :key="item.value"
+                :label="item.label"
+                :value="item.value"
+              />
             </el-select>
           </el-form-item>
           <el-form-item label="id">
@@ -133,7 +151,7 @@
               />
               <p
                 v-else
-                style="height: 8px; float: left; margin-left: 15px"
+                style="float: left; height: 8px; margin-left: 15px"
                 v-html="row.title"
               />
               <i
@@ -176,6 +194,20 @@
         show-overflow-tooltip
         width="auto"
       />
+      <el-table-column
+        align="center"
+        :label="$translateTitle('home.language')"
+        show-overflow-tooltip
+        width="140"
+      >
+        <template #default="{ row }">
+          <Select v-model="row.language" @on-change="switchlanguage(row)">
+            <Option v-for="item in lang" :key="item.value" :value="item.value">
+              {{ item.label }}
+            </Option>
+          </Select>
+        </template>
+      </el-table-column>
       <el-table-column
         align="center"
         :label="$translateTitle('node.operation')"
@@ -325,6 +357,11 @@
     },
     data() {
       return {
+        lang: [
+          { label: '中文简体', value: 'zh' },
+          { label: 'english', value: 'en' },
+          { label: '日本語', value: 'jp' },
+        ],
         Types: [
           'amis',
           'deviceInfo',
@@ -444,6 +481,14 @@
         set_amisJson: 'amis/set_amisJson',
         setTreeFlag: 'settings/setTreeFlag',
       }),
+      async switchlanguage(v) {
+        await putView(v.objectId, { language: v.language })
+        this.$message({
+          type: 'success',
+          message: '语言类型修改成功',
+          showClose: true,
+        })
+      },
       setRowState(role, col) {
         let text = '关联'
         if (_.isEmpty(role)) text = '关联'
@@ -598,6 +643,11 @@
         this.queryForm.objectId
           ? (this.queryPayload.where.objectId = {
               $regex: this.queryForm.objectId,
+            })
+          : ''
+        this.queryForm.language
+          ? (this.queryPayload.where.language = {
+              $regex: this.queryForm.language,
             })
           : ''
         const { count, order, excludeKeys, limit, skip, where } = params

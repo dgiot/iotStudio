@@ -40,10 +40,10 @@
     heigth: 100%;
     iframe {
       display: block; /* iframes are inline by default */
+      width: 100vw;
+      height: 100vh; /* Viewport-relative units */
       background: #000;
       border: none; /* Reset default border */
-      height: 100vh; /* Viewport-relative units */
-      width: 100vw;
     }
   }
 </style>

@@ -226,7 +226,7 @@
                 :value="item.objectId"
               >
                 <span style="float: left">{{ item.name }}</span>
-                <span style="float: right; color: #8492a6; font-size: 13px">
+                <span style="float: right; font-size: 13px; color: #8492a6">
                   {{ item.objectId }}
                 </span>
               </el-option>
@@ -305,13 +305,11 @@
         width="120"
       >
         <template #default="{ row }">
-          <el-link
-            effect="dark"
-            :type="row.isEnable == true ? 'success' : 'info'"
-            @click="print(row)"
-          >
-            {{ row.isEnable == true ? '开机' : '关机' }}
-          </el-link>
+          <a-switch
+            :checked="row.isEnable"
+            checked-children="开机"
+            un-checked-children="关机"
+          />
         </template>
       </el-table-column>
       <el-table-column
@@ -707,6 +705,31 @@
       ...mapMutations({
         setCurrentDepartment: 'user/setCurrentDepartment',
       }),
+      toggleSwitch(row) {
+        return new Promise((resolve) => {
+          this.$Modal.confirm({
+            title:
+              row.isEnable == true
+                ? '修改设备状态为关机'
+                : '修改设备状态为开机',
+            content: '您确认要手动操作设备开关机吗？',
+            onOk: () => {
+              resolve()
+              row.isEnable = !row.isEnable
+              this.switchTask(row)
+            },
+          })
+        })
+      },
+      async switchTask(row) {
+        await putDevice(row.objectId, { isEnable: row.isEnable })
+        const message = row.isEnable == true ? '该设备已开机' : '该设备已关机'
+        this.$message({
+          type: 'success',
+          message: message,
+          showClose: true,
+        })
+      },
       // 新建设备
       /**
        * @Author: dgiot-fe

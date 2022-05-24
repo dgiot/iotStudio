@@ -53,7 +53,7 @@
           v-infinite-scroll="load"
           class="infinite-list"
           :infinite-scroll-distance="50"
-          style="overflow: scroll; height: 75vh"
+          style="height: 75vh; overflow: scroll"
         >
           <el-row :gutter="24">
             <li
