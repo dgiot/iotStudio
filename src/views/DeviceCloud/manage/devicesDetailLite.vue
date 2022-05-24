@@ -23,7 +23,12 @@
           :label="$translateTitle('equipment.realTime data')"
           name="first1"
         >
-          <running-state v-loading="loading" :loading="loading" :thirdtbKey="thirdtbKey" :machinelist="machinelist" />
+          <running-state
+            v-loading="loading"
+            :loading="loading"
+            :thirdtbKey="thirdtbKey"
+            :machinelist="machinelist"
+          />
         </el-tab-pane>
         <!-- 历史数据 -->
         <el-tab-pane
@@ -137,7 +142,7 @@
                         type="primary"
                         @click="queryChart"
                       >
-                        {{ $translateTitle("developer.search") }}
+                        {{ $translateTitle('developer.search') }}
                       </el-button>
                     </el-form-item>
                   </el-form>

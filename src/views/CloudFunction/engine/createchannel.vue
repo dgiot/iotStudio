@@ -104,9 +104,9 @@
                         </p>
                         <p
                           style="
+                            overflow: hidden;
                             font-size: 12px;
                             text-overflow: ellipsis;
-                            overflow: hidden;
                           "
                           :title="item.title.zh"
                         >

@@ -859,7 +859,7 @@
                     >
                       <span style="float: left">{{ item.title.zh }}</span>
                       <el-link
-                        style="float: right; color: #8492a6; font-size: 13px"
+                        style="float: right; font-size: 13px; color: #8492a6"
                       >
                         协议:{{ item.app }}
                       </el-link>

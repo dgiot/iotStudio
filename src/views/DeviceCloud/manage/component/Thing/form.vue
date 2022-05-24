@@ -13,19 +13,23 @@
       size="mini"
     >
       <el-form-item label="参数名称" prop="name">
-        <el-input v-model="ruleForm.name"/>
+        <el-input v-model="ruleForm.name" />
       </el-form-item>
       <el-form-item label="标识符" prop="identifier">
-        <el-input v-model="ruleForm.identifier"/>
+        <el-input v-model="ruleForm.identifier" />
       </el-form-item>
       <el-form-item label="数据类型" prop="dataType">
-        <el-select v-model="ruleForm.dataType" style="width: 100%" placeholder="请选择数据类型">
+        <el-select
+          v-model="ruleForm.dataType"
+          style="width: 100%"
+          placeholder="请选择数据类型"
+        >
           <el-option
             v-for="item in dataTypes"
             :key="item"
             :label="item"
-            :value="item">
-          </el-option>
+            :value="item"
+          ></el-option>
         </el-select>
       </el-form-item>
       <!--      int32 float double  都有取值（最大值最小值）范围和步长  -->
@@ -36,15 +40,23 @@
       <!--      struct格式为json对象，点击后不可在增加该类型-->
       <!--      array类型为数组格式-->
 
-      <el-row v-if="['int32','float','double'].indexOf(ruleForm.dataType) !=-1">
+      <el-row
+        v-if="['int32', 'float', 'double'].indexOf(ruleForm.dataType) != -1"
+      >
         <el-col :span="12">
           <el-form-item label="取值范围（最小值)" prop="min">
-            <el-input v-model="ruleForm.min" placeholder="取值范围（最小值)"></el-input>
+            <el-input
+              v-model="ruleForm.min"
+              placeholder="取值范围（最小值)"
+            ></el-input>
           </el-form-item>
         </el-col>
         <el-col :span="12">
           <el-form-item label="取值范围（最大值)" prop="max">
-            <el-input v-model="ruleForm.max" placeholder="取值范围（最大值)"></el-input>
+            <el-input
+              v-model="ruleForm.max"
+              placeholder="取值范围（最大值)"
+            ></el-input>
           </el-form-item>
         </el-col>
         <el-col :span="24">
@@ -54,14 +66,22 @@
         </el-col>
       </el-row>
       <el-form-item label="单位" prop="unit">
-        <el-select v-model="ruleForm.unit" filterable placeholder="请选择单位" style="width: 100%">
+        <el-select
+          v-model="ruleForm.unit"
+          filterable
+          placeholder="请选择单位"
+          style="width: 100%"
+        >
           <el-option
             v-for="item in dlinkUnit"
             :key="item.Symbol"
             :label="item.Name"
-            :value="item.Symbol">
+            :value="item.Symbol"
+          >
             <span style="float: left">{{ item.Name }}</span>
-            <span style="float: right; color: #8492a6; font-size: 13px">{{ item.Symbol }}</span>
+            <span style="float: right; font-size: 13px; color: #8492a6">
+              {{ item.Symbol }}
+            </span>
           </el-option>
         </el-select>
       </el-form-item>
@@ -72,7 +92,7 @@
         </el-radio-group>
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" @click="submitForm('ruleForm',eventType)">
+        <el-button type="primary" @click="submitForm('ruleForm', eventType)">
           {{ eventType == 'add' ? '立即创建' : '修改' }}
         </el-button>
         <!--        <el-button v-show="eventType=='add'" @click="resetForm('ruleForm')">重置</el-button>-->

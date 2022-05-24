@@ -1053,8 +1053,8 @@
 <style lang="scss">
   .dialog-map,
   .map {
+    display: block;
     width: 100%;
     height: 300px;
-    display: block;
   }
 </style>

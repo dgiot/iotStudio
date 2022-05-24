@@ -12,11 +12,11 @@
 <template>
   <div class="runningState-container">
     <div class="runningState">
-      <div v-loading="loading" style="overflow: scroll; height: 80vh">
+      <div v-loading="loading" style="height: 80vh; overflow: scroll">
         <div
           v-for="(value, key, index) in machinelist"
           :key="index"
-          style="overflow: scroll; height: auto"
+          style="height: auto; overflow: scroll"
         >
           <h2>{{ key }}</h2>
           <el-row type="flex">

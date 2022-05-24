@@ -59,7 +59,7 @@
             :value="item.objectId"
           >
             <span style="float: left">{{ item.objectId }}</span>
-            <span style="float: right; color: #8492a6; font-size: 13px">
+            <span style="float: right; font-size: 13px; color: #8492a6">
               {{
                 item.description ||
                 item.name ||

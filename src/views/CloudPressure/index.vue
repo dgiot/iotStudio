@@ -207,7 +207,7 @@
   import { queryProductTemplet } from '@/api/ProductTemplet'
   import TableEdit from '@/views/DeviceCloud/empty/tableEdit'
   import { queryView } from '@/api/View'
-
+  import { mapGetters } from 'vuex'
   export default {
     name: 'Pressure',
     components: {
@@ -300,6 +300,9 @@
       }
     },
     computed: {
+      ...mapGetters({
+        language: 'settings/language',
+      }),
       dragOptions() {
         return {
           animation: 600,
@@ -333,6 +336,13 @@
       },
       async switchTask(row) {
         await putDevice(row.objectId, { isEnable: row.isEnable })
+        const message =
+          row.isEnable !== true ? '压测任务已停止' : '压测任务已启动'
+        this.$message({
+          type: 'success',
+          message: message,
+          showClose: true,
+        })
       },
       async queryZetaProduct() {
         const { results = [] } = await queryProductTemplet({
@@ -349,6 +359,7 @@
           where: {
             class: 'Product',
             type: type,
+            language: this.language,
           },
         }
         // col?.product?.objectId ? (params.where[key] = col.product.objectId) : ''
@@ -356,7 +367,7 @@
         if (_.isEmpty(results)) {
           this.$message({
             type: 'info',
-            message: `暂未配置${type}表单`,
+            message: `暂未配置语言类型为${this.language}的${type}表单`,
             showClose: true,
           })
           return false
@@ -472,12 +483,12 @@
 <style>
   @font-face {
     font-family: Ionicons;
+    font-style: normal;
+    font-weight: 400;
     src: url(/fonts/ionicons.woff2?v=3.0.0) format('woff2'),
       url(/fonts/ionicons.woff?v=3.0.0) format('woff'),
       url(/fonts/ionicons.ttf?v=3.0.0) format('truetype'),
       url(/fonts/ionicons.svg?v=3.0.0#Ionicons) format('svg');
-    font-weight: 400;
-    font-style: normal;
   }
 </style>
 <style lang="scss" scoped>
@@ -489,8 +500,8 @@
     height: 100vh !important;
 
     .ant-modal {
-      max-width: 100%;
       top: 0;
+      max-width: 100%;
       padding-bottom: 0;
       margin: 0;
     }

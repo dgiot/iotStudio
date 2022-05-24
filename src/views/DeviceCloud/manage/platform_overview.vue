@@ -1495,9 +1495,9 @@
       }
 
       .baidu_map {
-        height: calc(98vh - 20px);
-        width: 100%;
         display: block;
+        width: 100%;
+        height: calc(98vh - 20px);
       }
 
       margin: 8px;
