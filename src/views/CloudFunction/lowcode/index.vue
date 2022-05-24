@@ -311,23 +311,6 @@
       ViewEdit,
       lowcodeDesign,
     },
-    directives: {
-      focus: {
-        inserted: function (el) {
-          el.querySelector('input').focus()
-        },
-      },
-    },
-    filters: {
-      statusFilter(status) {
-        const statusMap = {
-          published: 'success',
-          draft: 'gray',
-          deleted: 'danger',
-        }
-        return statusMap[status]
-      },
-    },
     props: {
       classDisable: {
         required: false,
@@ -505,16 +488,17 @@
       },
       async blurEvent(row) {
         row.isEdit = !row.isEdit
-        if (row.title !== row.oldTitle)
+        if (row.title !== row.oldTitle) {
           await putView(row.objectId, {
             title: row.title,
           })
-        this.$message({
-          message: '标题修改成功',
-          type: 'success',
-          showClose: true,
-          duration: 1500,
-        })
+          this.$message({
+            message: '标题修改成功',
+            type: 'success',
+            showClose: true,
+            duration: 1500,
+          })
+        }
       },
       /**
        * @Author: dgiot-fe
