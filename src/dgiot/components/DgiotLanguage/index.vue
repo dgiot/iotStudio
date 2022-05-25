@@ -38,6 +38,7 @@
         changeLanguage: 'settings/changeLanguage',
       }),
       handleCommand(command) {
+        console.log(command)
         this.changeLanguage(command)
         this.$i18n.locale = command
         document.title = getPageTitle(this.$route.meta.title)
