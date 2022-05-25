@@ -476,14 +476,14 @@
       </el-table-column>
       <el-table-column
         align="center"
-        label="开关机/设备状态"
+        label="状态"
         prop="status"
         show-overflow-tooltip
         sortable
         width="180"
       >
         <template slot="header">
-          <span>开关机/设备状态</span>
+          <span>状态</span>
           <el-tooltip placement="top" popper-class="tooltip">
             <i class="el-icon-warning-outline"></i>
             <div slot="content" class="tooltip-content">
@@ -1200,6 +1200,10 @@
         const { results: list = [], count: total = 0 } =
           await querycompanyDevice(params, this.token)
         list.forEach((item) => {
+          item.address = item.address == '' ? '---' : item.address
+          item.detail = item?.detail ? item.detail : {}
+          item.detail.address =
+            item?.detail && item?.detail?.address ? item.detail.address : '---'
           item.isEdit = false
           item.oldName = item.name
         })

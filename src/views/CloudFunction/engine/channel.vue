@@ -864,7 +864,7 @@
       roleTree: 'user/roleTree',
     }),
     watch: {
-      topicKey: {
+      subtopic: {
         handler: function (newVal, oldval) {
           console.log('newVal topicKey', newVal)
           console.log('oldval topicKey', oldval)
