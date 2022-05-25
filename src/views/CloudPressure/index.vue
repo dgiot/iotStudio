@@ -66,7 +66,10 @@
           @submit.native.prevent
         >
           <el-form-item>
-            <el-input v-model="queryForm.name" placeholder="请输入压测任务名" />
+            <el-input
+              v-model="queryForm.name"
+              :placeholder="$translateTitle('pressure.请输入压测任务名')"
+            />
           </el-form-item>
           <el-form-item>
             <el-button
@@ -75,14 +78,14 @@
               type="primary"
               @click="handleQuery"
             >
-              查询
+              {{ $translateTitle('concentrator.search') }}
             </el-button>
             <el-button
               icon="el-icon-plus"
               type="primary"
               @click.native="handleView('_', 'reportFrom')"
             >
-              添加
+              {{ $translateTitle('cloudTest.add') }}
             </el-button>
           </el-form-item>
         </el-form>
@@ -90,7 +93,7 @@
     </dgiot-query-form>
 
     <a-tabs v-model="activeKey">
-      <a-tab-pane key="task" tab="压测列表">
+      <a-tab-pane key="task" :tab="$translateTitle('pressure.压测列表')">
         <el-table
           ref="tableSort"
           v-loading="listLoading"
@@ -101,7 +104,7 @@
         >
           <el-table-column
             align="center"
-            label="序号"
+            :label="$translateTitle('cloudTest.number')"
             show-overflow-tooltip
             sortable
             width="95"
@@ -119,7 +122,7 @@
             :width="item.width"
           >
             <template #default="{ row }">
-              <span v-if="item.label === '评级'">
+              <span v-if="item.label === $translateTitle('pressure.评级')">
                 <el-rate v-model="row.rate" disabled />
               </span>
               <span v-else>{{ row[item.prop] }}</span>
@@ -128,14 +131,14 @@
           <el-table-column
             align="center"
             fixed="right"
-            label="压测启停"
+            :label="$translateTitle('pressure.压测启停')"
             width="120"
           >
             <template #default="{ row }">
               <a-switch
                 :checked="row.isEnable"
-                checked-children="启动"
-                un-checked-children="停止"
+                :checked-children="$translateTitle('device.start')"
+                :un-checked-children="$translateTitle('device.stop')"
                 @click="toggleSwitch(row)"
               />
             </template>
@@ -143,28 +146,36 @@
           <el-table-column
             align="center"
             fixed="right"
-            label="压测状态"
+            :label="$translateTitle('pressure.压测状态')"
             width="120"
           >
             <template #default="{ row }">
               <el-tag dark :type="row.status == 'ONLINE' ? 'info' : ''">
-                {{ row.status == 'ONLINE' ? '压测中' : '未压测' }}
+                {{
+                  row.status == 'ONLINE'
+                    ? $translateTitle('pressure.压测中')
+                    : $translateTitle('pressure.未压测')
+                }}
               </el-tag>
             </template>
           </el-table-column>
-          <el-table-column align="center" fixed="right" label="操作">
+          <el-table-column
+            align="center"
+            fixed="right"
+            :label="$translateTitle('pressure.操作')"
+          >
             <template #default="{ row }">
               <el-button type="text" @click="handleClick(row, 'setting')">
-                查看配置
+                {{ $translateTitle('pressure.查看配置') }}
               </el-button>
               <el-button type="text" @click="handleClick(row, 'task')">
-                压测配置
+                {{ $translateTitle('pressure.压测配置') }}
               </el-button>
               <el-button type="text" @click="handleClick(row, 'clone')">
-                克隆任务
+                {{ $translateTitle('pressure.克隆任务') }}
               </el-button>
               <el-button type="text" @click="handleClick(row, 'delete')">
-                删除任务
+                {{ $translateTitle('pressure.删除任务') }}
               </el-button>
             </template>
           </el-table-column>
@@ -325,8 +336,13 @@
       toggleSwitch(row) {
         return new Promise((resolve) => {
           this.$Modal.confirm({
-            title: row.isEnable == true ? '压测任务停止' : '压测任务启动',
-            content: '您确认要手动开始该压测任务吗？',
+            title:
+              row.isEnable == true
+                ? this.$translateTitle('pressure.压测任务停止')
+                : this.$translateTitle('pressure.压测任务启动'),
+            content:
+              this.$translateTitle('pressure.您确认要手动开始该压测任务吗') +
+              '?',
             onOk: () => {
               resolve()
               row.isEnable = !row.isEnable
@@ -338,7 +354,9 @@
       async switchTask(row) {
         await putDevice(row.objectId, { isEnable: row.isEnable })
         const message =
-          row.isEnable !== true ? '压测任务已停止' : '压测任务已启动'
+          row.isEnable !== true
+            ? this.$translateTitle('pressure.压测任务已停止')
+            : this.$translateTitle('pressure.压测任务已启动')
         this.$message({
           type: 'success',
           message: message,
@@ -373,7 +391,11 @@
         if (_.isEmpty(results)) {
           this.$message({
             type: 'info',
-            message: `暂未配置语言类型为${this.language}的${type}表单`,
+            message: `${this.$translateTitle('pressure.暂未配置语言类型为')}${
+              this.language
+            }${this.$translateTitle(
+              'pressure.的'
+            )}${type}${this.$translateTitle('pressure.表单')}`,
             showClose: true,
           })
           return false
@@ -389,7 +411,7 @@
       async handleClone(device) {
         this.$message({
           type: 'success',
-          message: '克隆任务成功',
+          message: this.$translateTitle('pressure.克隆任务成功'),
           showClose: true,
         })
         // 刪除掉一下参数去克隆
@@ -431,15 +453,19 @@
         }
       },
       handleDelete(row) {
-        this.$baseConfirm('你确定要删除当前项吗', null, async () => {
-          await delDevice(row.objectId)
-          this.$baseMessage(
-            '任务删除成功',
-            'success',
-            'dgiot-hey-message-success'
-          )
-          await this.fetchData()
-        })
+        this.$baseConfirm(
+          this.$translateTitle('pressure.你确定要删除当前项吗'),
+          null,
+          async () => {
+            await delDevice(row.objectId)
+            this.$baseMessage(
+              this.$translateTitle('pressure.任务删除成功'),
+              'success',
+              'dgiot-hey-message-success'
+            )
+            await this.fetchData()
+          }
+        )
       },
       handleSizeChange(val) {
         this.queryForm.limit = val
@@ -474,10 +500,10 @@
             ? this.$moment
                 .unix(i.profile.startTime)
                 .format('YYYY-MM-DD HH:mm:ss')
-            : '暂未配置'
+            : this.$translateTitle('pressure.暂未配置')
           i.endTime = i?.profile?.endTime
             ? this.$moment.unix(i.profile.endTime).format('YYYY-MM-DD HH:mm:ss')
-            : '暂未配置'
+            : this.$translateTitle('pressure.暂未配置')
         })
         this.list = results
         this.total = count
