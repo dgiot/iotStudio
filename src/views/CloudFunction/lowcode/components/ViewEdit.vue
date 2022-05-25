@@ -42,6 +42,23 @@
           />
         </el-select>
       </el-form-item>
+      <el-form-item :label="$translateTitle('home.language')">
+        <el-select
+          v-model="form.language"
+          allow-create
+          clearable
+          default-first-option
+          filterable
+          style="width: 100%"
+        >
+          <el-option
+            v-for="item in lang"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value"
+          />
+        </el-select>
+      </el-form-item>
       <el-form-item label="key" prop="key">
         <el-select
           v-model="form.key"
@@ -130,6 +147,11 @@
     name: 'TableEdit',
     data() {
       return {
+        lang: [
+          { label: '中文简体', value: 'zh' },
+          { label: 'english', value: 'en' },
+          { label: '日本語', value: 'jp' },
+        ],
         upKey: new Date().getMilliseconds(),
         DbaTable: [],
         Types: [
@@ -183,6 +205,10 @@
       ...mapMutations({
         set_amisJson: 'amis/set_amisJson',
       }),
+      showEdit(row) {
+        this.form = row
+        this.dialogFormVisible = true
+      },
       /**
        * @Author: dgiot-fe
        * @Date: 2022-05-04 16:00:15

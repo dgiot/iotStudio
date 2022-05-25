@@ -1,5 +1,5 @@
 <template>
-  <div :key="queryForm.key" class="comprehensive-table-container">
+  <div class="comprehensive-table-container">
     <dgiot-query-form>
       <dgiot-query-form-top-panel>
         <el-form
@@ -58,6 +58,7 @@
               filterable
               size="mini"
               style="width: 100%"
+              @change="fetchData()"
             >
               <el-option
                 v-for="item in keys"
@@ -509,6 +510,7 @@
        * @Description:
        */
       async changeClass(_class) {
+        this.fetchData()
         if (!_class) return false
         try {
           console.log(_class)
@@ -550,9 +552,10 @@
       handleAdd() {
         this.$refs['edit'].type = 'add'
         // 解决子组件修改影响父组件的显示问题
-        this.$refs['edit'].DbaTable = this.DbaTable
-        this.$refs['edit'].row = this.queryForm
+        // this.$refs['edit'].DbaTable = this.DbaTable
+        // this.$refs['edit'].row = this.queryForm
         this.$refs['edit'].dialogFormVisible = true
+        this.$refs['edit'].showEdit(this.queryForm)
       },
       async handleEdit(row) {
         const loading = this.$baseLoading(1)
