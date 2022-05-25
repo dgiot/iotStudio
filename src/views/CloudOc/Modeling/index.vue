@@ -238,9 +238,9 @@
       }
       .in_btm {
         .btm_wrap {
-          margin-top: 20px;
           display: flex;
           flex-wrap: wrap;
+          margin-top: 20px;
           .wrap_content {
             // width: 22%;
             height: 220px;
@@ -248,13 +248,13 @@
             margin-bottom: 20px;
             box-shadow: -1px -1px 6px #ccc;
             .ct_top {
-              height: 70%;
-              width: 100%;
               display: flex;
+              width: 100%;
+              height: 70%;
               padding: 30px;
               img {
-                height: 90px;
                 width: 90px;
+                height: 90px;
               }
               .top_right {
                 margin-left: 10px;
@@ -262,23 +262,23 @@
                   margin-top: 10px;
                 }
                 .right_title {
-                  font-weight: 600;
                   font-size: 24px;
+                  font-weight: 600;
                 }
               }
             }
             .ct_btm {
-              height: 30%;
               display: flex;
+              height: 30%;
               margin-left: 30px;
               .btm_left {
-                height: 30px;
                 width: 60px;
+                height: 30px;
               }
               .btm_right {
-                color: #c7c6c0;
-                margin-left: 25px;
                 padding-top: 6px;
+                margin-left: 25px;
+                color: #c7c6c0;
               }
             }
           }

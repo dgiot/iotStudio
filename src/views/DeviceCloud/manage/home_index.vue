@@ -3,27 +3,85 @@
     <div class="dialog">
       <el-dialog
         append-to-body
+        :before-close="closeMap"
         class="map_dialog"
         title="安装位置"
         :visible.sync="dialog_device"
         width="60%"
       >
         <el-card>
-          <dgiot-baidu-map
-            ref="map"
-            :bm-label="bmLabel"
-            :label="mapLabel"
-            :map-center="mapLabel.position"
-            :nav-show="true"
-            :scale-show="true"
+          <div v-if="false" slot="title"></div>
+          <label>
+            关键词：
+            <el-input v-model="map.keyword">
+              <i
+                slot="suffix"
+                class="el-input__icon el-icon-search"
+                style="cursor: pointer"
+              ></i>
+            </el-input>
+          </label>
+          <!--          <label>-->
+          <!--            地区：-->
+          <!--            <el-input v-model="map.location" />-->
+          <!--          </label>-->
+          <label>
+            安装位置：
+            <el-input v-model="form.address">
+              <i
+                slot="suffix"
+                class="el-icon-s-promotion"
+                style="cursor: pointer"
+                @click="map.innerVisible = !map.innerVisible"
+              ></i>
+            </el-input>
+          </label>
+          <baidu-map
+            ak="WpeAb6pL4tsX2ZVd56GHbO9Ut6c4HZhG"
+            :center="{ lng: 116.404, lat: 39.915 }"
+            :map-click="false"
             :scroll-wheel-zoom="true"
-          />
+            style="height: 300px"
+            :style="{ height: mapHeight, width: mapWidth }"
+            :zoom="15"
+            @click="mapClick"
+          >
+            <bm-view class="map" />
+            <bm-local-search
+              :auto-viewport="true"
+              :keyword="map.keyword"
+              :location="map.location"
+            />
+            <bm-control>
+              <bm-panorama
+                anchor="BMAP_ANCHOR_TOP_LEFT"
+                :offset="{ width: 500, height: 0 }"
+              />
+              <bm-overview-map :is-open="true" />
+              <bm-scale :offset="{ width: 260, height: 0 }" />
+              <bm-city-list :offset="{ width: 330, height: 0 }" />
+              <bm-map-type
+                anchor="BMAP_ANCHOR_TOP_LEFT"
+                :map-types="['BMAP_NORMAL_MAP', 'BMAP_HYBRID_MAP']"
+                :offset="{ width: 400, height: 0 }"
+              />
+            </bm-control>
+            <bml-marker-clusterer>
+              <bm-marker>1</bm-marker>
+              <bm-label>1</bm-label>
+            </bml-marker-clusterer>
+            <bm-navigation anchor="BMAP_ANCHOR_TOP_RIGHT" />
+            <bm-geolocation
+              anchor="BMAP_ANCHOR_BOTTOM_RIGHT"
+              :auto-location="true"
+              :show-address-bar="true"
+              :show-zoom-info="true"
+            />
+          </baidu-map>
         </el-card>
         <span slot="footer" class="dialog-footer">
           <el-button @click="dialog_device = false">取 消</el-button>
-          <el-button type="primary" @click="dialog_device = false">
-            确 定
-          </el-button>
+          <el-button type="primary" @click="editMap">确 定</el-button>
         </span>
       </el-dialog>
       <el-dialog
@@ -165,11 +223,11 @@
           <el-form-item label="设备名称" prop="name">
             <el-input v-model="form.name" placeholder="请输入设备名称" />
           </el-form-item>
-          <el-form-item label="设备编号" prop="devaddr">
+          <el-form-item label="设备地址" prop="devaddr">
             <el-input
               v-model="form.devaddr"
               :disabled="form.type == 'edit' ? true : false"
-              placeholder="请输入设备编号"
+              placeholder="请输入设备地址"
             />
           </el-form-item>
           <el-form-item label="资产编号" prop="detail.assetNum">
@@ -232,11 +290,11 @@
               placeholder="请输入设备名称"
             />
           </el-form-item>
-          <el-form-item v-show="!fold" label="设备编号">
+          <el-form-item v-show="!fold" label="设备地址">
             <el-input
               v-model="queryForm.devaddr"
               clearable
-              placeholder="请输入设备编号"
+              placeholder="请输入设备地址"
             />
           </el-form-item>
           <el-form-item v-show="!fold" label="设备状态">
@@ -306,7 +364,7 @@
         label="序号"
         show-overflow-tooltip
         sortable
-        width="70"
+        width="100"
       >
         <template #default="{ $index }">
           {{ $index + 1 }}
@@ -318,23 +376,80 @@
         prop="name"
         show-overflow-tooltip
         sortable
-        width="auto"
-      />
+      >
+        <template slot="header">
+          <span>设备名称</span>
+          <el-tooltip placement="top" popper-class="tooltip">
+            <i class="el-icon-edit-outline"></i>
+            <div slot="content" class="tooltip-content">
+              <div slot="content">点击修改设备名称</div>
+            </div>
+          </el-tooltip>
+        </template>
+        <template #default="{ row }">
+          <el-form :model="row">
+            <el-form-item size="mini" style="margin-bottom: 0">
+              <el-input
+                v-if="row.isEdit"
+                v-model="row.name"
+                v-focus
+                size="mini"
+                style="margin: 0 auto"
+                @blur="blurEvent(row)"
+                @focus="row.oldName = row.name"
+              />
+              <p
+                v-else
+                style="float: left; height: 8px"
+                @click="row.isEdit = !row.isEdit"
+                v-html="row.name"
+              />
+            </el-form-item>
+          </el-form>
+        </template>
+      </el-table-column>
       <el-table-column
         align="center"
-        label="设备编号"
+        label="设备地址"
         prop="devaddr"
         show-overflow-tooltip
         sortable
-        width="160"
+        width="120"
       />
+      <el-table-column
+        align="center"
+        label="安装位置"
+        prop="address"
+        show-overflow-tooltip
+        sortable
+        width="auto"
+      >
+        <template slot="header">
+          <span>安装位置</span>
+          <el-tooltip placement="top" popper-class="tooltip">
+            <i class="el-icon-edit-outline"></i>
+            <div slot="content">
+              <div slot="content">点击修改安装位置</div>
+            </div>
+          </el-tooltip>
+        </template>
+        <template #default="{ row }">
+          <span
+            style="color: #67c23a"
+            type="success"
+            @click="showAdddress(row)"
+          >
+            {{ row.address || row.detail.address || '---' }}
+          </span>
+        </template>
+      </el-table-column>
       <el-table-column
         align="center"
         label="所属产品"
         prop="product.objectId"
         show-overflow-tooltip
         sortable
-        width="180"
+        width="120"
       >
         <template #default="{ row }">
           {{ getProductName(row.product.objectId) }}
@@ -361,70 +476,58 @@
       </el-table-column>
       <el-table-column
         align="center"
-        label="设备状态"
+        label="状态"
         prop="status"
         show-overflow-tooltip
         sortable
-        width="110"
+        width="180"
       >
-        <template #default="{ row }">
+        <template slot="header">
+          <span>状态</span>
+          <el-tooltip placement="top" popper-class="tooltip">
+            <i class="el-icon-warning-outline"></i>
+            <div slot="content" class="tooltip-content">
+              <div slot="content">
+                1. 开机关机属于网关子设备
+                <br />
+                2. 在线离线属于网关网络状态
+              </div>
+            </div>
+          </el-tooltip>
+        </template>
+        <template #default="{ row, $index }">
+          <el-tag :type="row.isEnable ? 'info' : 'danger'">
+            {{ row.isEnable == true ? '开机' : '关机' }}
+          </el-tag>
           <el-tag :type="row.status == 'ONLINE' ? 'success' : 'warning'">
             {{ row.status == 'ONLINE' ? '在线' : '离线' }}
           </el-tag>
         </template>
       </el-table-column>
-
       <el-table-column
         align="center"
-        :label="
-          $translateTitle('developer.prohibit') +
-          '/' +
-          $translateTitle('developer.enable')
-        "
-        prop="isEnable"
-        show-overflow-tooltip
-        sortable
-        width="110"
-      >
-        <template #default="{ row, $index }">
-          <el-switch
-            v-model="row.isEnable"
-            @change="handelUpdate($event, row, $index)"
-          />
-        </template>
-      </el-table-column>
-      <el-table-column
-        align="center"
-        label="安装位置"
-        prop="address"
-        show-overflow-tooltip
-        sortable
-        width="auto"
-      >
-        <template #default="{ row }">
-          <el-link type="success" @click.native="showAdddress(row)">
-            {{ row.address || row.detail.address }}
-          </el-link>
-        </template>
-      </el-table-column>
-      <el-table-column
-        align="center"
-        label="创建时间"
+        label="离线时间"
         show-overflow-tooltip
         sortable
         width="160"
       >
         <template #default="{ row }">
-          {{ $moment(row.createdAt).format('YYYY-MM-DD HH:mm:ss') }}
+          {{
+            row.lastOnlineTime
+              ? $moment.unix(row.lastOnlineTime).format('YYYY-MM-DD HH:mm:ss')
+              : ''
+          }}
         </template>
       </el-table-column>
       <el-table-column
         align="center"
         fixed="right"
         :label="$translateTitle('developer.operation')"
-        width="220"
       >
         <template #default="{ row }">
+          <el-button size="mini" type="text" @click="konvaDevice(row)">
+            {{ $translateTitle('concentrator.konva') }}
+          </el-button>
           <el-button
             size="mini"
             style="margin-left: 10px"
@@ -433,14 +536,14 @@
           >
             {{ $translateTitle('product.details') }}
           </el-button>
-          <el-button
-            size="mini"
-            style="text-align: center"
-            type="text"
-            @click="editorDevice(row)"
-          >
-            {{ $translateTitle('concentrator.edit') }}
-          </el-button>
+          <!--          <el-button-->
+          <!--            size="mini"-->
+          <!--            style="text-align: center"-->
+          <!--            type="text"-->
+          <!--            @click="editorDevice(row)"-->
+          <!--          >-->
+          <!--            {{ $translateTitle('concentrator.edit') }}-->
+          <!--          </el-button>-->
           <!--          <el-button size="mini" type="info" @click="konvaDevice(row)">-->
           <!--            {{ $translateTitle('concentrator.konva') }}-->
           <!--          </el-button>-->
@@ -450,9 +553,6 @@
             @click="showTree(row, row.objectId, row.Company)"
           >
             {{ $translateTitle('equipment.move') }}
-          </el-button>
-          <el-button size="mini" type="text" @click="konvaDevice(row)">
-            {{ $translateTitle('concentrator.konva') }}
           </el-button>
           <el-button
             size="mini"
@@ -514,6 +614,7 @@
     BmPointCollection,
   } from 'vue-baidu-map'
   import info from '@/components/Device/info'
+  import { putView } from '@/api/View'
 
   export default {
     name: 'ComprehensiveTable',
@@ -652,7 +753,57 @@
         set_tableDict: 'global/set_tableDict',
         set_tableParser: 'global/set_tableParser',
       }),
+      async blurEvent(row) {
+        row.isEdit = !row.isEdit
+        if (row.name !== row.oldName) {
+          await putDevice(row.objectId, {
+            name: row.name,
+          })
+          this.$message({
+            message: '设备名称修改成功',
+            type: 'success',
+            showClose: true,
+            duration: 1500,
+          })
+        }
+      },
+      async editMap() {
+        const mapInfo = {
+          location: this.location,
+          address: this.form.address,
+        }
+        await putDevice(this.editRow.objectId, mapInfo)
+        this.dialog_device = false
+        this.$message({
+          message: '设备位置更新成功',
+          showClose: true,
+          type: 'success',
+        })
+      },
+      closeMap() {
+        this.dialog_device = false
+        this.map = {
+          innerVisible: false,
+          keyword: '余杭区良渚平高创业城c1座',
+          location: '杭州',
+        }
+        this.mapLabel = {
+          content: '我爱北京天安门',
+          style: {
+            color: 'red',
+            fontSize: '24px',
+          },
+          position: {
+            lng: 116.404,
+            lat: 39.915,
+          },
+          title: '我爱北京天安门',
+        }
+      },
       showAdddress(item) {
+        this.editRow = item
+        this.map.keyword = item?.address ? item.address : this.map.keyword
+        this.form.address = item?.address ? item.address : this.form.keyword
         const position = {
           lng: Number(item.location.longitude),
           lat: Number(item.location.latitude),
@@ -667,7 +818,6 @@
           title: item.address,
         }
         this.bmLabel = true
-        console.log(this.mapLabel)
         this.dialog_device = true
       },
       // 迁移设备
@@ -747,7 +897,6 @@
         const geocoder = new BMap.Geocoder() // 创建地址解析器的实例
         //  let Marker = new BMap.Marker()
         geocoder.getLocation(e.point, (rs) => {
-          console.log(rs)
           this.form.address = rs.address
           // this.add.site = rs.address;
           //  Marker.closeInfoWindow()
@@ -766,6 +915,10 @@
           // dgiotlog.log(rs.surroundingPois); //附近的POI点(array)
           // dgiotlog.log(rs.business); //商圈字段，代表此点所属的商圈(string)
         })
+        if (this.editRow.objectId) {
+          this.editRow.location = this.location
+          this.editRow.address = this.form.address
+        }
       },
       getProductName(id) {
         let name = ''
@@ -880,8 +1033,11 @@
       getAcl(ACL) {
         let name = []
         for (let a in ACL) {
-          if (a == '*') delete ACL[a]
-          if (a.split(':')[1]) name.push(a.split(':')[1])
+          if (a == '*') {
+            delete ACL[a]
+          } else if (a.split(':')[1]) {
+            name.push(a.split(':')[1])
+          }
         }
         return name
       },
@@ -1043,6 +1199,14 @@
           : ''
         const { results: list = [], count: total = 0 } =
           await querycompanyDevice(params, this.token)
+        list.forEach((item) => {
+          item.address = item.address == '' ? '---' : item.address
+          item.detail = item?.detail ? item.detail : {}
+          item.detail.address =
+            item?.detail && item?.detail?.address ? item.detail.address : '---'
+          item.isEdit = false
+          item.oldName = item.name
+        })
         this.list = list
         this.total = total
         this.listLoading = false
@@ -1053,8 +1217,8 @@
 <style lang="scss">
   .dialog-map,
   .map {
+    display: block;
     width: 100%;
     height: 300px;
-    display: block;
   }
 </style>

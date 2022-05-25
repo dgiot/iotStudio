@@ -51,7 +51,7 @@
                   style="position: relative; left: 0"
                   @click.native="nextPage('left')"
                 >
-                  {{ $translateTitle("button.previous") }}
+                  {{ $translateTitle('button.previous') }}
                 </el-button>
                 <el-button
                   :disabled="$route.query.page > $route.query.list.length"
@@ -61,7 +61,7 @@
                   @click.native="nextPage('right')"
                   style="position: fixed; right: 30px"
                 >
-                  {{ $translateTitle("button.next") }}
+                  {{ $translateTitle('button.next') }}
                 </el-button>
               </div>
               <div

@@ -133,7 +133,7 @@
         </el-table-column>
         <el-table-column align="right">
           <!-- eslint-disable-next-line -->
-          <template slot="header" >
+          <template slot="header">
             <el-input
               v-model="search"
               placeholder="输入关键字搜索"

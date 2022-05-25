@@ -187,7 +187,7 @@
           @size-change="handleSizeChange1"
         />
       </div>
-      <span slot="footer" style="padding: 0 0 20px 0; display: block">
+      <span slot="footer" style="display: block; padding: 0 0 20px 0">
         <el-button
           size="mini"
           style="float: left"

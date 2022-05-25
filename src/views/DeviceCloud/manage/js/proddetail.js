@@ -11,6 +11,7 @@ import {
   putProduct,
   getProduct,
 } from '@/api/Product/index'
+import { putChannel } from '@/api/Channel/index'
 import { downBinary } from '@/api/File/index'
 import { getAllunit, getDictCount } from '@/api/Dict/index'
 import { getChannelCountByProduct, saveChanne } from '@/api/Channel/index'
@@ -2138,29 +2139,18 @@ export default {
       })
     },
     // 添加自定义模型
-    addData() {
+    async addData() {
       // dgiotlog.log(channelrow)
       channelrow.datamodel = editorcreate.getValue()
       const params = {
         config: channelrow,
       }
-      this.$update_object(
-        'Channel',
-        this.rproductdetailesourcechannelid,
-        params
-      ).then(
-        (response) => {
-          if (response) {
-            this.$message('添加成功')
-          }
-        },
-        (error) => {
-          returnLogin(error)
-        }
-      )
+      await putChannel(this.rproductdetailesourcechannelid, params)
+      this.$message('添加成功')
     },
     closeWuDialog() {
       this.resourcedialogFormVisible = false
+
       this.resourcechannelid = ''
     },
     // 删除枚举型
@@ -2903,10 +2893,12 @@ export default {
           type: 'success',
           message: message,
         })
-        this.schemadialogVisible = false
-        this.handleChildClick(this.tabsChild)
-        // 手动更新完物模型后，再去查询一下当前页面的物模型
-        this.getProDetail()
+        if (type === 'json') {
+          this.schemadialogVisible = false
+          this.handleChildClick(this.tabsChild)
+          // 手动更新完物模型后，再去查询一下当前页面的物模型
+          this.getProDetail()
+        }
       }, 1000)
     },
     async Industry() {
@@ -3097,18 +3089,13 @@ export default {
         thing: this.productdetail.thing,
       }
       await putProduct(this.productId, params)
-
-      setTimeout(() => {
-        this.$message({
-          showClose: true,
-          duration: 2000,
-          type: 'success',
-          message: '添加成功',
-        })
-        this.getProDetail()
-        // this.$refs[formName].resetFields();
-        //  this.wmxdialogVisible = false;
-      }, 1000)
+      this.$message({
+        showClose: true,
+        duration: 2000,
+        type: 'success',
+        message: '添加成功',
+      })
+      this.getProDetail()
     },
 
     handleCloseCollecttion(done) {
@@ -3283,15 +3270,13 @@ export default {
         dynamicReg: !isopen,
       }
       await putProduct(this.productId, params)
-      setTimeout(() => {
-        this.$message({
-          showClose: true,
-          duration: 2000,
-          type: 'success',
-          message: '修改成功',
-        })
-        this.dynamicReg = !isopen
-      }, 1000)
+      this.$message({
+        showClose: true,
+        duration: 2000,
+        type: 'success',
+        message: '修改成功',
+      })
+      this.dynamicReg = !isopen
     },
     async wmxhandleClose(type) {
       if (type) {
@@ -3369,21 +3354,19 @@ export default {
             decoder: obj,
           }
           await putProduct(this.productId, params)
-          setTimeout(() => {
-            if (this.issub == false) {
-              this.$message({
-                showClose: true,
-                duration: 2000,
-                type: 'success',
-                message: '保存成功',
-              })
-              if (istrue == true) {
-                isupdatetrue += '保存成功'
-                editor2.setValue(isupdatetrue)
-              }
+          if (this.issub == false) {
+            this.$message({
+              showClose: true,
+              duration: 2000,
+              type: 'success',
+              message: '保存成功',
+            })
+            if (istrue == true) {
+              isupdatetrue += '保存成功'
+              editor2.setValue(isupdatetrue)
             }
-            this.issub = true
-          }, 1000)
+          }
+          this.issub = true
         } else {
           this.$message({
             type: 'warning',
@@ -3682,16 +3665,13 @@ export default {
             thing: this.productdetail.thing,
           }
           await putProduct(this.productId, params)
-
-          setTimeout(() => {
-            this.$message({
-              showClose: true,
-              duration: 2000,
-              type: 'success',
-              message: '添加成功',
-            })
-            this.getProDetail()
-          }, 1000)
+          this.$message({
+            showClose: true,
+            duration: 2000,
+            type: 'success',
+            message: '添加成功',
+          })
+          this.getProDetail()
         } else {
           dgiotlog.log('此选项没有属性功能')
         }
