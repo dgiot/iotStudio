@@ -208,6 +208,7 @@
   import TableEdit from '@/views/DeviceCloud/empty/tableEdit'
   import { queryView } from '@/api/View'
   import { mapGetters } from 'vuex'
+
   export default {
     name: 'Pressure',
     components: {
@@ -286,7 +287,7 @@
         ],
         list: [],
         imageList: [],
-        listLoading: true,
+        listLoading: false,
         layout: 'total, sizes, prev, pager, next, jumper',
         total: 0,
         selectRows: '',
@@ -345,10 +346,15 @@
         })
       },
       async queryZetaProduct() {
-        const { results = [] } = await queryProductTemplet({
+        const { results: zeta = [] } = await queryProductTemplet({
           where: { name: 'zeta压测报告' },
         })
-        results?.[0]?.objectId ? (this.product = results?.[0]?.objectId) : ''
+        const { results: product = [] } = await queryProduct({
+          where: zeta?.[0]?.objectId
+            ? { producttemplet: zeta?.[0]?.objectId }
+            : {},
+        })
+        product?.[0]?.objectId ? (this.product = product?.[0]?.objectId) : ''
         this.product ? this.fetchData() : ''
       },
       async handleView(col, type) {
