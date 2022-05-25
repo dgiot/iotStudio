@@ -147,16 +147,18 @@ function timestampToTime(timestamp, full) {
   }
 }
 
-export function translateTitle(title) {
+export function translateTitle(title, type = '') {
   let pageTitle = ''
   if (i18n.te(`dgiotI18n.${title}`)) {
     pageTitle = i18n.t(`dgiotI18n.${title}`)
   } else {
     pageTitle = title.substr(title.lastIndexOf('.') + 1)
   }
+  if (type === 'debug') console.log(pageTitle)
   return pageTitle
 }
 
+window.translateTitle = translateTitle
 export function aclObj(roles) {
   if (!roles) return
   let aclObj = {}
