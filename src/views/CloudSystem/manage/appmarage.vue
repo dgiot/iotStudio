@@ -2,10 +2,10 @@
   <div class="appmarage appmarage-container">
     <div class="header">
       <el-button size="small" type="primary" @click="checkupdateall">
-        api更新
+        插件升级
       </el-button>
       <el-button size="small" type="primary" @click="updateallFiled">
-        字段升级
+        数据库升级
       </el-button>
     </div>
     <div class="block" style="margin-top: 10px">
