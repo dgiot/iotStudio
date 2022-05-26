@@ -2212,8 +2212,11 @@ export default {
             this.getProDetail()
           } else {
             this.$message({
+              showClose: true,
+              duration: 2000,
               type: 'warning',
-              message: '新增失败' + res.msg,
+              message:
+                res.msg == 'new already existed' ? '该物模型已存在' : res.msg,
             })
           }
         })
@@ -2233,7 +2236,8 @@ export default {
               showClose: true,
               duration: 2000,
               type: 'warning',
-              message: '编辑失败' + res.msg,
+              message:
+                res.msg == 'new already existed' ? '该物模型已存在' : res.msg,
             })
           }
         })
@@ -2244,6 +2248,7 @@ export default {
     createThing(type) {
       this.modules.disabled = false
       this.moduletype = type
+      this.wmxSituation = '新增'
       this.setSizeForm(this.getFormOrginalData())
       switch (type) {
         case 'properties':
@@ -3279,6 +3284,7 @@ export default {
       this.dynamicReg = !isopen
     },
     async wmxhandleClose(type) {
+      this.wmxSituation = '新增'
       if (type) {
         this.wmxdialogVisible = false
         this.$refs['sizeForm'].$refs['sizeForm'].resetFields()
