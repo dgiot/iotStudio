@@ -195,6 +195,7 @@
           v-loading="listLoading"
           :border="border"
           :data="list"
+          :height="$baseTableHeight(0)"
           :size="lineHeight"
           :stripe="stripe"
         >

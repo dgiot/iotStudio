@@ -803,9 +803,6 @@
         },
       }
     },
-    beforeDestroy() {
-      this.$dgiotBus.$emit('MqttUnbscribe', this.topicKey, this.subtopic)
-    },
     computed: {
       ...mapGetters({
         objectId: 'user/objectId',
@@ -884,6 +881,9 @@
           this.mapWidth = window.innerWidth * 0.98 + 'px'
         })()
       }
+    },
+    beforeDestroy() {
+      this.$dgiotBus.$emit('MqttUnbscribe', this.topicKey, this.subtopic)
     },
     activated() {
       // dgiotlog.log('keep-alive生效')
