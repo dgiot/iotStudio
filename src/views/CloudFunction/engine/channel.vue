@@ -708,6 +708,7 @@
   import defaultLogo from '../../../../public/assets/images/logo/logo.png'
   import DgiotInput from '@/dgiot/components/DgiotInput/input'
   import { putView } from '@/api/View'
+  import { isBase64 } from '@/utils'
 
   var subdialog
 
@@ -832,7 +833,7 @@
       roleTree: 'user/roleTree',
     }),
     watch: {
-      subtopic: {
+      topicKey: {
         handler: function (newVal, oldval) {
           console.log('newVal topicKey', newVal)
           console.log('oldval topicKey', oldval)
@@ -842,7 +843,8 @@
             this.$dgiotBus.$on(newVal, (res) => {
               console.error(res)
               const { payload } = res
-              this.mqttMsg(payload)
+              //  过滤登录时候，首页mqtt乱码的情况
+              if (!isBase64(payload)) this.mqttMsg(payload)
             })
           }
           if (oldval) {
@@ -1782,10 +1784,12 @@
     opacity: 1;
     -webkit-transition: all 0.3s;
     transition: all 0.3s;
+
     &:hover {
       right: -4px;
       //background-color: rgba(0, 0, 0, 0.9);
     }
+
     i {
       margin-right: 3px;
       font-size: 12px;

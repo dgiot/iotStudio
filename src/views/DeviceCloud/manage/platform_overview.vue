@@ -803,6 +803,9 @@
         },
       }
     },
+    beforeDestroy() {
+      this.$dgiotBus.$emit('MqttUnbscribe', this.topicKey, this.subtopic)
+    },
     computed: {
       ...mapGetters({
         objectId: 'user/objectId',
