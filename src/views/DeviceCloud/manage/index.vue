@@ -342,31 +342,13 @@
                   >
                     编辑
                   </el-link>
-                  <el-popover
-                    :ref="`popover-${$index}`"
-                    placement="top"
-                    width="300"
+                  <el-button
+                    size="mini"
+                    type="danger"
+                    @click="makeSure(row, $index)"
                   >
-                    <p>确定删除这个{{ row.name }}设备吗？</p>
-                    <div style="margin: 0; text-align: right">
-                      <el-button
-                        size="mini"
-                        @click="row._self.$refs[`popover-${$index}`].doClose()"
-                      >
-                        {{ $translateTitle('developer.cancel') }}
-                      </el-button>
-                      <el-button
-                        size="mini"
-                        type="primary"
-                        @click="makeSure(row, $index)"
-                      >
-                        {{ $translateTitle('developer.determine') }}
-                      </el-button>
-                    </div>
-                    <el-link slot="reference" type="danger" :underline="false">
-                      {{ $translateTitle('developer.delete') }}
-                    </el-link>
-                  </el-popover>
+                    {{ $translateTitle('developer.determine') }}
+                  </el-button>
                   <!--                  <el-link-->
                   <!--                    v-if="row.nodeType != 0"-->
                   <!--                    :underline="false"-->
@@ -1380,12 +1362,12 @@
         }
       },
       /* el-popover点击关闭*/
-      makeSure(row, $index) {
+      makeSure(row, index) {
         // 可以在这里执行删除数据的回调操作.......删除操作.....
         this.$deleteDevice(row.objectId).then((response) => {
           if (!response.error) {
             this.initQuery('删除成功', 'success')
-            this.getDevices()
+            this.tableData.splice(index, 1)
           } else {
             this.initQuery('删除失败', 'error')
           }
