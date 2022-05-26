@@ -305,11 +305,9 @@
         width="120"
       >
         <template #default="{ row }">
-          <a-switch
-            :checked="row.isEnable"
-            checked-children="开机"
-            un-checked-children="关机"
-          />
+          <el-tag :type="row.isEnable ? 'success' : 'danger'">
+            {{ row.isEnable == true ? '开机' : '关机' }}
+          </el-tag>
         </template>
       </el-table-column>
       <el-table-column
