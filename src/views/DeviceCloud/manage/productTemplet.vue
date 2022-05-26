@@ -106,32 +106,13 @@
               >
                 {{ $translateTitle('concentrator.edit') }}
               </el-button>
-              <el-popover
-                :ref="`popover-${$index}`"
-                placement="top"
-                style="margin-left: 10px"
-                width="300"
+              <el-button
+                size="mini"
+                type="danger"
+                @click="makeSure(scope, $index)"
               >
-                <p>确定删除这个{{ row.name }}产品吗？</p>
-                <div style="margin: 0; text-align: right">
-                  <el-button
-                    size="mini"
-                    @click="scope._self.$refs[`popover-${$index}`].doClose()"
-                  >
-                    {{ $translateTitle('developer.cancel') }}
-                  </el-button>
-                  <el-button
-                    size="mini"
-                    type="primary"
-                    @click="makeSure(scope, $index)"
-                  >
-                    {{ $translateTitle('developer.determine') }}
-                  </el-button>
-                </div>
-                <el-button slot="reference" size="mini" type="danger">
-                  {{ $translateTitle('developer.delete') }}
-                </el-button>
-              </el-popover>
+                {{ $translateTitle('developer.determine') }}
+              </el-button>
             </template>
           </el-table-column>
         </el-table>
@@ -319,6 +300,7 @@
   import { queryProductTemplet } from '@/api/ProductTemplet'
   import { queryCategory } from '@/api/Category'
   import { post_tree } from '@/api/Logs'
+  import { delChannel } from '@/api/Channel'
 
   const context = require.context('./component/profile', true, /\.vue$/)
   let res_components = {}
@@ -1242,34 +1224,38 @@
         })
       },
       /* el-popover点击关闭*/
-      makeSure(scope, $index) {
+      makeSure(scope, index) {
         const params = {
           count: 'objectId',
           skip: 0,
           limit: 1,
           where: {
-            product: row.objectId,
+            product: scope.objectId,
           },
         }
-        queryDevice(params).then((results) => {
-          if (results.count > 0) {
-            this.$message('请先删除该产品下设备')
-            return
-          } else {
-            delProduct(row.objectId).then((response) => {
-              if (response) {
-                this.$message({
-                  type: 'success',
-                  message: '删除成功',
-                  showClose: true,
-                  duration: 2000,
-                })
-                scope._self.$refs[`popover-${$index}`].doClose()
-                this.searchProduct()
-              }
-            })
-          }
+        this.$confirm(`此操作将永久删除${scope.name}, 是否继续?`, '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning',
         })
+          .then(async () => {
+            const { count = 0 } = queryDevice(params)
+            if (count > 0) {
+              this.$message('请先删除该产品下设备')
+              return
+            } else {
+              await delProduct(scope.objectId)
+              this.tableData.splice(index, 1)
+            }
+          })
+          .catch(() => {
+            // this.$message({
+            //   showClose: true,
+            //   duration: 2000,
+            //   type: 'info',
+            //   message: '已取消删除',
+            // })
+          })
       },
       productSizeChange(val) {
         this.length = val

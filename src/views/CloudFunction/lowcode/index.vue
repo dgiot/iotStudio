@@ -253,7 +253,6 @@
     <lowcodeDesign ref="lowcodeDesign" @objectId="lowcodeId" />
   </div>
 </template>
-
 <script>
   import { getTable } from '@/api/Dba'
   import { mapMutations } from 'vuex'

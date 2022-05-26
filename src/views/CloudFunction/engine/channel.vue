@@ -226,45 +226,13 @@
               <!-- 编辑 -->
               {{ $translateTitle('task.Edit') }}
             </el-button>
-            <!--            <el-button-->
-            <!--              type="success"-->
-            <!--              size="mini"-->
-            <!--              @click="updateChannel(row)"-->
-            <!--            >-->
-            <!--              &lt;!&ndash; 详情 &ndash;&gt;-->
-            <!--              {{ $translateTitle('product.details') }}-->
-            <!--            </el-button>-->
-            <el-popover
-              :ref="`popover-${$index}`"
-              placement="top"
-              style="margin-left: 10px"
-              width="300"
+            <el-button
+              size="mini"
+              type="danger"
+              @click="delchannelaxios(row, $index)"
             >
-              <!-- <p>确定删除这个{{ row.name }}通道吗？</p> -->
-              <p>
-                {{ $translateTitle('product.qdsczg') }}{{ row.name
-                }}{{ $translateTitle('equipment.channel') }}
-              </p>
-              <div>
-                <el-button
-                  size="mini"
-                  type="text"
-                  @click="row._self.$refs[`popover-${$index}`].doClose()"
-                >
-                  {{ $translateTitle('developer.cancel') }}
-                </el-button>
-                <el-button
-                  size="mini"
-                  type="text"
-                  @click="deleteChannel(row, $index)"
-                >
-                  {{ $translateTitle('developer.determine') }}
-                </el-button>
-              </div>
-              <el-button slot="reference" size="mini" type="danger">
-                {{ $translateTitle('developer.delete') }}
-              </el-button>
-            </el-popover>
+              {{ $translateTitle('developer.delete') }}
+            </el-button>
             <!--            <el-button-->
             <!--              type="goon"-->
             <!--              size="mini"-->
@@ -1374,26 +1342,30 @@
           this.Get_Re_Channel(this.start)
         }
       },
-
-      // 删除通道
-      deleteChannel(row, $index) {
-        this.delchannelaxios(row, $index)
-      },
-      delchannelaxios(row, $index) {
-        delChannel(row.objectId)
-          .then((results) => {
+      // 二次删除确认
+      delchannelaxios(row, index) {
+        this.$confirm(`此操作将永久删除${row.name}, 是否继续?`, '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning',
+        })
+          .then(async () => {
+            await delChannel(row.objectId)
             this.$message({
               showClose: true,
               duration: 2000,
-              type: 'success',
-              message: '删除成功',
+              type: 'info',
+              message: '已删除',
             })
-            row._self.$refs[`popover-${$index}`].doClose()
-            this.Get_Re_Channel(this.start)
+            this.tableData.splice(index, 1)
           })
-          .catch((e) => {
-            console.log(e.error)
-            this.Get_Re_Channel(this.start)
+          .catch(() => {
+            // this.$message({
+            //   showClose: true,
+            //   duration: 2000,
+            //   type: 'info',
+            //   message: '已取消删除',
+            // })
           })
       },
       addchanneltype() {
