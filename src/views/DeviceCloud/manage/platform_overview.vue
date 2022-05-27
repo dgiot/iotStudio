@@ -704,16 +704,18 @@
         },
         mapType: 'baidu',
         isShow: true,
-        ak: secret.baidu.map ?? 'WpeAb6pL4tsX2ZVd56GHbO9Ut6c4HZhG',
+        ak: 'WpeAb6pL4tsX2ZVd56GHbO9Ut6c4HZhG',
         // ak: 'oW2UEhdth2tRbEE4FUpF9E5YVDCIPYih',
         // center:{ lng: 120.187273, lat: 30.334877 },
-        center: { lng: 120.260545, lat: 31.551162 },
+        center: {
+          lng: 120.260545,
+          lat: 31.551162,
+        },
         icoPath: {
           icoPath1: icoPath1,
           icoPath2: icoPath2,
         },
         router: '',
-        topicKey: '',
         loadingConfig: {
           product_count: false,
           app_count: false,
@@ -745,7 +747,9 @@
         loading: true,
         marker: {},
         deviceFlag: false,
-        deviceInfo: { detail: {} },
+        deviceInfo: {
+          detail: {},
+        },
         Product: [],
         imgurl:
           'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg',
@@ -1160,22 +1164,34 @@
       toggleCard(height) {
         // dgiotlog.log('cardHeight', height)
         if (height != '0px') {
-          $('.map_card').css({ height: '0px' })
+          $('.map_card').css({
+            height: '0px',
+          })
           this.cardHeight = '0px'
         } else {
-          $('.map_card').css({ height: '98px' })
+          $('.map_card').css({
+            height: '98px',
+          })
           this.cardHeight = '98px'
         }
       },
       toggleLeftWidth(width) {
         // dgiotlog.log(width, 'width')
         if (width != '0px') {
-          $('.dgiot-side-bar').css({ width: '0px' })
-          $('.dgiot-main').css({ 'margin-left': '0px' })
+          $('.dgiot-side-bar').css({
+            width: '0px',
+          })
+          $('.dgiot-main').css({
+            'margin-left': '0px',
+          })
           this.leftWidth = '0px'
         } else {
-          $('.dgiot-side-bar').css({ width: '200px' })
-          $('.dgiot-main').css({ 'margin-left': '200px' })
+          $('.dgiot-side-bar').css({
+            width: '200px',
+          })
+          $('.dgiot-main').css({
+            'margin-left': '200px',
+          })
           this.leftWidth = '200px'
         }
       },
@@ -1183,16 +1199,15 @@
         // dgiotlog.log(objectId)
       },
       async queryData() {
-        // const { dashboard = {} } = await getDlinkJson('Dashboard')
-        // this.queryParams = dashboard
-        // // https://lbsyun.baidu.com/cms/jsapi/class/jsapi_reference.html#a3b22
-        // setTimeout(() => {
-        //   this.queryParams.forEach((e) => {
-        //     let key = e.vuekey
-        //     this.loadingConfig[`${key}`] = true
-        //   })
-        // }, 1240)
-        this.topicKey = this.$dgiotBus.topicKey(this.router, this.subtopic)
+        const { dashboard = {} } = await getDlinkJson('Dashboard')
+        this.queryParams = dashboard
+        // https://lbsyun.baidu.com/cms/jsapi/class/jsapi_reference.html#a3b22
+        setTimeout(() => {
+          this.queryParams.forEach((e) => {
+            let key = e.vuekey
+            this.loadingConfig[`${key}`] = true
+          })
+        }, 1240)
         // this.$dgiotBus.$emit('MqttSubscribe', {
         //   router: this.router,
         //   topic: this.subtopic,
@@ -1200,19 +1215,21 @@
         //   ttl: 1000 * 60 * 60 * 3,
         // })
         // console.log(this.queryParams, 'queryParams')
-        // await Startdashboard(this.queryParams, Startdashboardid)
-        // 本地mqtt 存在问题,在请求4秒后手动关闭所有loading
         const Startdashboardid = '32511dbfe5'
-        this.subtopic = `$dg/user/dashboard/${Startdashboardid}/report`
+        await Startdashboard(this.queryParams, Startdashboardid)
+        // 本地mqtt 存在问题,在请求4秒后手动关闭所有loading
         // await this.$subscribe(this.subtopic)
         //  改为后端订阅
-        console.log('subtopic', this.subtopic)
-        this.$dgiotBus.$on(this.subtopic, (res) => {
-          const { payloadString } = res
-          console.log('payload')
-          console.log(res)
-          this.mqttMsg(payloadString)
-        })
+
+        this.$dgiotBus.$on(
+          this.$dgiotBus.getTopicKeyBypage('dashboard'),
+          (res) => {
+            const { payloadString } = res
+            console.log('home page topic data', payloadString)
+            console.log(res)
+            this.mqttMsg(payloadString)
+          }
+        )
         this.$nextTick(() => {
           if (this.mapType == 'tencent') {
             this.setTreeFlag(false)
@@ -1282,7 +1299,9 @@
           display: 'none',
           'overflow-x': 'auto',
         })
-        $('.el-select-dropdown').css({ display: 'none' })
+        $('.el-select-dropdown').css({
+          display: 'none',
+        })
         this.queryForm.workGroupName = data.label
         this.treeDataValue = data.label
         // dgiotlog.log(this.treeDataValue)

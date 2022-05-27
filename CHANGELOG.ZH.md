@@ -1,3 +1,82 @@
+## [4.5.4](https://github.com/dgiot/dgiot-dashboard/compare/v4.5.3...v4.5.4) (2022-05-27)
+
+
+### Bug Fixes
+
+* **物模型:** 修复物模型回显时间 ([6d980ce](https://github.com/dgiot/dgiot-dashboard/commit/6d980ceb6f5d9dcf0b0a7fd768cd2274106e823c))
+* 修复打包编译失败 ([539476d](https://github.com/dgiot/dgiot-dashboard/commit/539476d15383c03a1b8a2f999e158b3aca3ebca5))
+* **组态:** 设置组态在预览状态下不可点击 ([8a1b307](https://github.com/dgiot/dgiot-dashboard/commit/8a1b307adf6fe75d3f4e1de8d60c260b2ba6e269))
+* card style ([48eaf9c](https://github.com/dgiot/dgiot-dashboard/commit/48eaf9c82dbad08f881e0cdf9a22f5db844d1985))
+* **channel message:** the channel message and the home mqtt message are strung together ([5453eb8](https://github.com/dgiot/dgiot-dashboard/commit/5453eb8401cd910b6ae676df1e5f751e25cf1885))
+* **ciew:** language ([dc8e6fa](https://github.com/dgiot/dgiot-dashboard/commit/dc8e6fab51febae750735a917fbe329861e30f01))
+* **cloudot:** myticket ([83ab56e](https://github.com/dgiot/dgiot-dashboard/commit/83ab56e6378a50af751db4842db6a2ad3028d444)), closes [/gitee.com/dgiiot/dgiot/issues/I57QG8#note_10356949](https://github.com//gitee.com/dgiiot/dgiot/issues/I57QG8/issues/note_10356949)
+* **delete channel:** channel ([5086514](https://github.com/dgiot/dgiot-dashboard/commit/5086514231766a25c4eb6e760dae7d339010d241))
+* devDependencies ([aa899d9](https://github.com/dgiot/dgiot-dashboard/commit/aa899d94f2585587042efb8feaa0d88a6a845261))
+* **device:** product ([ba98f01](https://github.com/dgiot/dgiot-dashboard/commit/ba98f01a28fe4ef49b958bc4d4d662bdb2e7c2e4))
+* **devicetype:** devicetype default ([2a423c7](https://github.com/dgiot/dgiot-dashboard/commit/2a423c7e1a0b31f52e31d19c0f31ba02aa0e0b56))
+* ignore ([dfe5421](https://github.com/dgiot/dgiot-dashboard/commit/dfe54218fe79379dff4fb46b53f62e7ff7272115))
+* **pressure:** repair the automatic lifting of pressure measurement interface ([759ee87](https://github.com/dgiot/dgiot-dashboard/commit/759ee87255dcaee706567acaab4014aa87ede0da))
+* **table:** table height ([b11fb81](https://github.com/dgiot/dgiot-dashboard/commit/b11fb814f773810457cd30211c9a175f917550ea))
+* **thing:** fix the problem that Boolean types cannot be saved ([f62edd7](https://github.com/dgiot/dgiot-dashboard/commit/f62edd7b81c0e683c33cc4a994b69401acd140c3))
+
+
+### Features
+
+* (i18n) ([631a49f](https://github.com/dgiot/dgiot-dashboard/commit/631a49f2a9654562c7d71baa6fa1cead4c5a5ad8))
+* **设备详情:** 设备详情卡片优化 ([ccaf90c](https://github.com/dgiot/dgiot-dashboard/commit/ccaf90c1fd7707fb7e4cd96aa8e771547c319b6d))
+* 时间格式化过滤器 ([328c573](https://github.com/dgiot/dgiot-dashboard/commit/328c573f33167baaa607eb53c9f5a26e214b6d5e))
+* 添加ivui 字体文件 ([62f7335](https://github.com/dgiot/dgiot-dashboard/commit/62f73357b3036d79c26d908f107f99aeec35ebe0))
+* 物模型关联控制指令 ([3cdfe68](https://github.com/dgiot/dgiot-dashboard/commit/3cdfe682bada3b848819495dfcc76d657168052d))
+* 物模型状态 ([01e3389](https://github.com/dgiot/dgiot-dashboard/commit/01e338939ca61fda4ecbc76ff2cd3524dd49c65b))
+* 用户自定义topic ([2c8ffd0](https://github.com/dgiot/dgiot-dashboard/commit/2c8ffd047f6998c81d4b98b352364eecf2142bc7))
+* 自定义topic ([2941eab](https://github.com/dgiot/dgiot-dashboard/commit/2941eabba120bb507397c2f0bb837935fe9058d6))
+* api ([7275916](https://github.com/dgiot/dgiot-dashboard/commit/727591654a9d27790ff0d72029c77173d9da8386))
+* api promise ([c634c40](https://github.com/dgiot/dgiot-dashboard/commit/c634c403c18d5dc2c5be4865fcf2b5b3de660cf8))
+* **channel:** topic key ([8e93fe6](https://github.com/dgiot/dgiot-dashboard/commit/8e93fe6cd42673b1397a22a2e3c71c6c9ec34cd5))
+* **cloudpressure:** cloudPressure page ([b3a0a58](https://github.com/dgiot/dgiot-dashboard/commit/b3a0a5805c090f62810702450a6f7bb1432f28ab))
+* **device:** device table ([2e79705](https://github.com/dgiot/dgiot-dashboard/commit/2e79705c34a2fe6fca4966fed246664174131263))
+* **disposable:** disposable ([8a36459](https://github.com/dgiot/dgiot-dashboard/commit/8a36459f2af6aac1e3ee649ab089e4d6d25c9cda))
+* **grafana:** grafana iframe ([5874069](https://github.com/dgiot/dgiot-dashboard/commit/5874069065d645802263214cbf018d5f3a2c337c))
+* **home:** topic Back end subscription homepage topic ([d3598c2](https://github.com/dgiot/dgiot-dashboard/commit/d3598c25c2ab913dda0da3d607cb02b8c45988bd))
+* lowcode lanauage ([0988bf1](https://github.com/dgiot/dgiot-dashboard/commit/0988bf12d894f643c8951edca4f0dc687f02a36d))
+* lowcode(from select) ([77b3de2](https://github.com/dgiot/dgiot-dashboard/commit/77b3de292578435370dea1ff5c558538bd53fe2a))
+* **message:** element message to $baseMessage ([ddef342](https://github.com/dgiot/dgiot-dashboard/commit/ddef342ef54e5f8fefc9694efdab52194e58a480))
+* pressure ([6f366cd](https://github.com/dgiot/dgiot-dashboard/commit/6f366cd81c8c5884ffde89195f2677a809b0e746))
+* pressure ([e876f5d](https://github.com/dgiot/dgiot-dashboard/commit/e876f5d715c6d65bb23e7e6a7b8062b0d05136a9))
+* pressure ([a37799e](https://github.com/dgiot/dgiot-dashboard/commit/a37799eff686dbd179720a31a4c138dd43ebb620))
+* **pressure:** add button ([4918e23](https://github.com/dgiot/dgiot-dashboard/commit/4918e2355638745c22f09bd065e1c1acef7b053c))
+* **pressure:** dialog ([00fcd2d](https://github.com/dgiot/dgiot-dashboard/commit/00fcd2d431a7fc3277bad495f8d9a143e41b623c))
+* **pressure:** draw ([0451ee9](https://github.com/dgiot/dgiot-dashboard/commit/0451ee9b0250368a072ae05528b8ac2138fb93cc))
+* **product:** select product ([7db287f](https://github.com/dgiot/dgiot-dashboard/commit/7db287f34ad06d376b095adff2b07b1d613f75e4))
+* **protocol:** _.sortBy ([5cf3c13](https://github.com/dgiot/dgiot-dashboard/commit/5cf3c13e471d9f677e2be49453c8f3b06659d417))
+* **protocol:** cache Protocol ([7569680](https://github.com/dgiot/dgiot-dashboard/commit/7569680d8371019a9715503e75c3be50354ef5a9))
+* **protocol:** protocol sortBy ([08ca519](https://github.com/dgiot/dgiot-dashboard/commit/08ca51913db2f19d047f6cbf914a0b24324ccb29))
+* proxy ([2b212b6](https://github.com/dgiot/dgiot-dashboard/commit/2b212b69ec7e59e312b115a2069bcbd60204dee5))
+* proxy ([9791b38](https://github.com/dgiot/dgiot-dashboard/commit/9791b38b5dedd3a809a8dd119221d5126cefcb47))
+* proxy ([840c0de](https://github.com/dgiot/dgiot-dashboard/commit/840c0de3c1507f7662e165b7798a70c2cd4b252f))
+* proxy ([e26a0e8](https://github.com/dgiot/dgiot-dashboard/commit/e26a0e85a5ef2a545c93f524bb7b91e30e6509c7))
+* **resource_types:** sortBy ([c30e361](https://github.com/dgiot/dgiot-dashboard/commit/c30e3618730d6a09db7c5648c54536f168bc6b3c))
+* **roles:** roles Relation ([6c7bd25](https://github.com/dgiot/dgiot-dashboard/commit/6c7bd25aa3c043761c752abafc5594c8e7797113))
+* save json type ([b72ae1d](https://github.com/dgiot/dgiot-dashboard/commit/b72ae1de46bedcb8d8f2e54f79b0aa5231ebf1f5))
+* **sortby:** delete sortBy protocol ([206c20e](https://github.com/dgiot/dgiot-dashboard/commit/206c20ec36b6f037f3cda75de3d35ce360dff386))
+* src/dgiot/components/DgiotAmis/render.vue ([3f5f498](https://github.com/dgiot/dgiot-dashboard/commit/3f5f498e2ea4d1ad74216aa8affd5d1a49735d3e))
+* text ([78c405d](https://github.com/dgiot/dgiot-dashboard/commit/78c405df30459727a873978cb16537b6591efb43))
+* **thing unit:** users can create model units themselves ([34c0c2f](https://github.com/dgiot/dgiot-dashboard/commit/34c0c2f3eba4842d8291e340433f1a127d8e95ed))
+* **thing:** 优化物模型删除刷新 ([0b06ce4](https://github.com/dgiot/dgiot-dashboard/commit/0b06ce489afda3a8ca3b6e7fe674a48475516b89))
+* **thing:** message ([55db496](https://github.com/dgiot/dgiot-dashboard/commit/55db4965062ac34eecdea8722b59efa584dcdb79))
+* **thing:** user defined object model units are supported ([5a35d60](https://github.com/dgiot/dgiot-dashboard/commit/5a35d60299905efd8f380a43ea779b63d601d488)), closes [/gitee.com/dgiiot/dgiot/issues/I4RB2R#note_10203658](https://github.com//gitee.com/dgiiot/dgiot/issues/I4RB2R/issues/note_10203658)
+* timeExp ([bedf5fd](https://github.com/dgiot/dgiot-dashboard/commit/bedf5fdf992bd8d33b6da82cbb868a531b59fa6b))
+* **topic:** 用户自定义topic ([e06c75f](https://github.com/dgiot/dgiot-dashboard/commit/e06c75fc9dc24613a7e74b784f76b42498863755))
+* **topic:** change topic subscription from dgiot mqtt dashboard to HTTP subscription ([bcf679c](https://github.com/dgiot/dgiot-dashboard/commit/bcf679cfd2074b9bb9149381eedde95237682532))
+* translate ([a85cacf](https://github.com/dgiot/dgiot-dashboard/commit/a85cacf45b04202332d9a103ca6a15c4c07f6a19))
+
+
+### Performance Improvements
+
+* **i18n:** change the device address to the device location ([159548d](https://github.com/dgiot/dgiot-dashboard/commit/159548df24145a291970be0f47a669f7d8366e73))
+
+
+
 ## [4.5.3](https://github.com/dgiot/dgiot-dashboard/compare/v4.5.2...v4.5.3) (2022-05-09)
 
 
