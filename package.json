@@ -72,7 +72,7 @@
     "vuera": "^0.2.7"
   },
   "devDependencies": {
-    "@dgiot/dgiot-mqtt-dashboard": "1.1.5",
+    "@dgiot/dgiot-mqtt-dashboard": "1.1.6",
     "q": "^1.5.1",
     "react": "^16.14.0",
     "react-dom": "^16.14.0",

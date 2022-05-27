@@ -241,6 +241,7 @@
       })
     },
     created() {
+      this.$removeToken()
       this.isShow = window.name == 'dgiot_iframe' ? false : true
       window.addEventListener('message', this.iframeLogin)
     },
