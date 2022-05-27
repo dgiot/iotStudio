@@ -34,6 +34,11 @@ import {
 import { queryProduct } from '@/api/Product/index'
 import { getMqttEventId, getTopicEventId } from '@/utils'
 
+import {
+  deleteTopic as unSubscribe,
+  getTopic,
+  postTopic as subscribe,
+} from '@/api/Dlink/index'
 // https://www.jianshu.com/p/abdee4e7875a
 /**
  *
@@ -538,5 +543,9 @@ export default {
     Vue.prototype.$FileServe = Cookies.get('fileServer')
     Vue.prototype.$dgiotlog = dgiotlog
     Vue.prototype.$dgiotConsole = dgiotConsole
+    // 订阅方法挂载到全局变量上 2022年5月27日
+    Vue.prototype.$getTopic = getTopic
+    Vue.prototype.$subscribe = subscribe
+    Vue.prototype.$unSubscribe = unSubscribe
   },
 }
