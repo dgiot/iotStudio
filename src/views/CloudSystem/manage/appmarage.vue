@@ -381,6 +381,7 @@
       reupload() {
         if (this.app == '') {
           GetReload('all').then((response) => {
+            console.log('module', response)
             if (response) {
               if (response.length == 0) {
                 this.$message({
@@ -393,7 +394,7 @@
                 this.$message({
                   showClose: true,
                   duration: 2000,
-                  message: '已更新模块' + response,
+                  message: '已更新模块',
                   type: 'success',
                 })
               }
