@@ -838,19 +838,6 @@
         deep: true,
         limit: true,
       },
-      topicKey: {
-        handler: function (newVal) {
-          this.$dgiotBus.$off(newVal)
-          this.$dgiotBus.$on(newVal, (res) => {
-            console.log('payload')
-            console.log(newVal)
-            const { payload } = res
-            this.mqttMsg(payload)
-          })
-        },
-        deep: true,
-        limit: true,
-      },
       sizeZoom: {
         handler: function (zoom) {
           console.log(`当前sizeZoom 为 ${zoom}`)
@@ -885,7 +872,7 @@
     },
     async beforeDestroy() {
       //  取消订阅http请求写法,http需要在topic中加页面路由
-      await this.$unSubscribe(this.subtopic)
+      // await this.$unSubscribe(this.subtopic)
       // 取消订阅mqtt写法 2022-5-27 改为http写法
       // this.$dgiotBus.$emit('MqttUnbscribe', this.topicKey, this.subtopic)
     },
@@ -1205,7 +1192,7 @@
         //     this.loadingConfig[`${key}`] = true
         //   })
         // }, 1240)
-        // this.topicKey = this.$dgiotBus.topicKey(this.router, this.subtopic)
+        this.topicKey = this.$dgiotBus.topicKey(this.router, this.subtopic)
         // this.$dgiotBus.$emit('MqttSubscribe', {
         //   router: this.router,
         //   topic: this.subtopic,
@@ -1216,10 +1203,16 @@
         // await Startdashboard(this.queryParams, Startdashboardid)
         // 本地mqtt 存在问题,在请求4秒后手动关闭所有loading
         const Startdashboardid = '32511dbfe5'
-        const router = 'home'
-        this.subtopic = `$dg/dashboard/${router}/${Startdashboardid}/report`
-        await this.$subscribe(this.subtopic)
+        this.subtopic = `$dg/user/dashboard/${Startdashboardid}/report`
+        // await this.$subscribe(this.subtopic)
+        //  改为后端订阅
         console.log('subtopic', this.subtopic)
+        this.$dgiotBus.$on(this.subtopic, (res) => {
+          const { payloadString } = res
+          console.log('payload')
+          console.log(res)
+          this.mqttMsg(payloadString)
+        })
         this.$nextTick(() => {
           if (this.mapType == 'tencent') {
             this.setTreeFlag(false)
@@ -1492,6 +1485,7 @@
             div {
               display: flex;
               justify-content: center;
+
               //width: 40px;
               //height: 40px;
               p {
