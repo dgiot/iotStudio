@@ -98,7 +98,7 @@ export function Compile(code) {
 
 export function updateall() {
   return request({
-    url: 'update',
+    url: 'upgrade',
     method: 'get',
   })
 }
