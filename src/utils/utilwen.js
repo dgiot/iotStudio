@@ -34,6 +34,11 @@ import {
 import { queryProduct } from '@/api/Product/index'
 import { getMqttEventId, getTopicEventId } from '@/utils'
 
+import {
+  deleteTopic as unSubscribe,
+  getTopic,
+  postTopic as subscribe,
+} from '@/api/Dlink/index'
 // https://www.jianshu.com/p/abdee4e7875a
 /**
  *
@@ -147,16 +152,18 @@ function timestampToTime(timestamp, full) {
   }
 }
 
-export function translateTitle(title) {
+export function translateTitle(title, type = '') {
   let pageTitle = ''
   if (i18n.te(`dgiotI18n.${title}`)) {
     pageTitle = i18n.t(`dgiotI18n.${title}`)
   } else {
     pageTitle = title.substr(title.lastIndexOf('.') + 1)
   }
+  if (type === 'debug') console.log(pageTitle)
   return pageTitle
 }
 
+window.translateTitle = translateTitle
 export function aclObj(roles) {
   if (!roles) return
   let aclObj = {}
@@ -536,5 +543,9 @@ export default {
     Vue.prototype.$FileServe = Cookies.get('fileServer')
     Vue.prototype.$dgiotlog = dgiotlog
     Vue.prototype.$dgiotConsole = dgiotConsole
+    // 订阅方法挂载到全局变量上 2022年5月27日
+    Vue.prototype.$getTopic = getTopic
+    Vue.prototype.$subscribe = subscribe
+    Vue.prototype.$unSubscribe = unSubscribe
   },
 }

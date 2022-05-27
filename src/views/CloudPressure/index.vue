@@ -16,11 +16,106 @@
     :class="{ 'dgiot-fullscreen': isFullscreen }"
   >
     <div class="modal">
+      <el-dialog
+        append-to-body
+        :before-close="closeMap"
+        class="map_dialog"
+        :title="$translateTitle('pressure.安装位置')"
+        :visible.sync="dialog_device"
+        width="60%"
+      >
+        <el-card>
+          <div v-if="false" slot="title"></div>
+          <label>
+            {{ $translateTitle('pressure.关键词') }}
+            <el-input v-model="map.keyword">
+              <i
+                slot="suffix"
+                class="el-input__icon el-icon-search"
+                style="cursor: pointer"
+              ></i>
+            </el-input>
+          </label>
+          <!--          <label>-->
+          <!--            地区：-->
+          <!--            <el-input v-model="map.location" />-->
+          <!--          </label>-->
+          <label>
+            {{ $translateTitle('pressure.安装位置') }}
+            <el-input v-model="form.address">
+              <i
+                slot="suffix"
+                class="el-icon-s-promotion"
+                style="cursor: pointer"
+                @click="map.innerVisible = !map.innerVisible"
+              ></i>
+            </el-input>
+          </label>
+          <baidu-map
+            ak="WpeAb6pL4tsX2ZVd56GHbO9Ut6c4HZhG"
+            :center="mapLabel.position"
+            :map-click="false"
+            :scroll-wheel-zoom="true"
+            style="height: 500px"
+            :style="{ height: mapHeight, width: mapWidth }"
+            :zoom="14"
+            @click="mapClick"
+          >
+            <bm-circle
+              :center="mapLabel.position"
+              :editing="true"
+              radius="1200"
+              stroke-color="blue"
+              :stroke-opacity="0.5"
+              :stroke-weight="1"
+            />
+            <bm-view
+              class="map"
+              :style="{ height: mapHeight, width: mapWidth }"
+            />
+            <bm-local-search
+              :auto-viewport="true"
+              :keyword="map.keyword"
+              :location="map.location"
+            />
+            <bm-control>
+              <bm-panorama
+                anchor="BMAP_ANCHOR_TOP_LEFT"
+                :offset="{ width: 500, height: 0 }"
+              />
+              <bm-overview-map :is-open="true" />
+              <bm-scale :offset="{ width: 260, height: 0 }" />
+              <bm-city-list :offset="{ width: 330, height: 0 }" />
+              <bm-map-type
+                anchor="BMAP_ANCHOR_TOP_LEFT"
+                :map-types="['BMAP_NORMAL_MAP', 'BMAP_HYBRID_MAP']"
+                :offset="{ width: 400, height: 0 }"
+              />
+            </bm-control>
+            <bm-navigation anchor="BMAP_ANCHOR_TOP_RIGHT" />
+            <bm-geolocation
+              anchor="BMAP_ANCHOR_BOTTOM_RIGHT"
+              :auto-location="true"
+              :show-address-bar="true"
+              :show-zoom-info="true"
+            />
+          </baidu-map>
+        </el-card>
+        <span slot="footer" class="dialog-footer">
+          <el-button @click="dialog_device = false">
+            {{ $translateTitle('pressure.取消') }}
+          </el-button>
+          <el-button type="primary" @click="editMap">
+            {{ $translateTitle('pressure.确定') }}
+          </el-button>
+        </span>
+      </el-dialog>
       <Modal
         v-model="draw.settings.visibility"
-        :closable="false"
+        :closable="true"
         fullscreen
         :title="draw.row.name"
+        @on-cancel="close"
       >
         <div>
           <Tabs size="small" :value="defaultTable">
@@ -34,6 +129,7 @@
             </TabPane>
           </Tabs>
         </div>
+        <div slot="footer"></div>
       </Modal>
     </div>
     <div class="draw">
@@ -99,6 +195,7 @@
           v-loading="listLoading"
           :border="border"
           :data="list"
+          :height="$baseTableHeight(0)"
           :size="lineHeight"
           :stripe="stripe"
         >
@@ -107,7 +204,7 @@
             :label="$translateTitle('cloudTest.number')"
             show-overflow-tooltip
             sortable
-            width="95"
+            width="145"
           >
             <template #default="{ $index }">
               {{ $index + 1 }}
@@ -130,9 +227,8 @@
           </el-table-column>
           <el-table-column
             align="center"
-            fixed="right"
             :label="$translateTitle('pressure.压测启停')"
-            width="120"
+            width="180"
           >
             <template #default="{ row }">
               <a-switch
@@ -147,7 +243,7 @@
             align="center"
             fixed="right"
             :label="$translateTitle('pressure.压测状态')"
-            width="120"
+            width="220"
           >
             <template #default="{ row }">
               <el-tag dark :type="row.status == 'ONLINE' ? 'info' : ''">
@@ -161,12 +257,30 @@
           </el-table-column>
           <el-table-column
             align="center"
+            :label="$translateTitle('pressure.安装位置')"
+            prop="address"
+            show-overflow-tooltip
+            sortable
+            width="auto"
+          >
+            <template #default="{ row }">
+              <span
+                style="color: #67c23a"
+                type="success"
+                @click="showAdddress(row)"
+              >
+                {{ row.address || '---' }}
+              </span>
+            </template>
+          </el-table-column>
+          <el-table-column
+            align="center"
             fixed="right"
             :label="$translateTitle('pressure.操作')"
           >
             <template #default="{ row }">
               <el-button type="text" @click="handleClick(row, 'setting')">
-                {{ $translateTitle('pressure.查看配置') }}
+                {{ $translateTitle('pressure.定时任务') }}
               </el-button>
               <el-button type="text" @click="handleClick(row, 'task')">
                 {{ $translateTitle('pressure.压测配置') }}
@@ -228,9 +342,31 @@
     props: {},
     data() {
       return {
+        mapHeight: '500px',
+        mapWidth: '100%',
+        dialog_device: false,
+        mapLabel: {
+          content: '我爱北京天安门',
+          style: {
+            color: 'red',
+            fontSize: '24px',
+          },
+          position: {
+            lng: 116.404,
+            lat: 39.915,
+          },
+          title: '我爱北京天安门',
+        },
+        editRow: {},
+        map: {
+          innerVisible: false,
+          keyword: '余杭区良渚平高创业城c1座',
+          location: '杭州',
+        },
         taskData: {},
         product: '',
         form: {
+          address: '',
           name: '',
           url: '',
           owner: '',
@@ -274,23 +410,28 @@
         height: this.$baseTableHeight(1),
         stripe: true,
         lineHeight: 'medium',
-        checkList: ['压测任务', '开始时间', '结束时间', '压测任务状态'],
+        checkList: [
+          this.$translateTitle('pressure.压测任务'),
+          this.$translateTitle('pressure.开始时间'),
+          this.$translateTitle('pressure.结束时间'),
+          this.$translateTitle('pressure.压测任务状态'),
+        ],
         columns: [
           {
-            label: '压测任务',
+            label: this.$translateTitle('pressure.压测任务'),
             width: 'auto',
             prop: 'name',
             sortable: true,
             disableCheck: true,
           },
           {
-            label: '开始时间',
+            label: this.$translateTitle('pressure.开始时间'),
             width: '200',
             prop: 'startTime',
             sortable: true,
           },
           {
-            label: '结束时间',
+            label: this.$translateTitle('pressure.结束时间'),
             width: '200',
             prop: 'endTime',
             sortable: true,
@@ -327,12 +468,91 @@
         )
       },
     },
-    watch: {},
+    watch: {
+      language: {
+        handler(val) {
+          this.translateTbale(val)
+        },
+        immediate: true,
+      },
+    },
     async mounted() {
       await this.queryZetaProduct()
     },
     destroyed() {},
     methods: {
+      close(i) {
+        return new Promise((resolve) => {
+          this.$Modal.confirm({
+            title:
+              row.isEnable == true
+                ? this.$translateTitle('pressure.压测任务停止')
+                : this.$translateTitle('pressure.压测任务启动'),
+            content:
+              this.$translateTitle('pressure.您确认要手动开始该压测任务吗') +
+              '?',
+            onOk: () => {
+              resolve()
+              row.isEnable = !row.isEnable
+              this.switchTask(row)
+            },
+          })
+        })
+      },
+      showAdddress(item) {
+        this.editRow = item
+        this.map.keyword = item?.address ? item.address : this.map.keyword
+        this.form.address = item?.address ? item.address : this.form.keyword
+        const position = {
+          lng: item?.location?.longitude
+            ? Number(item.location.longitude)
+            : 120.161324,
+          lat: item?.location?.latitude
+            ? Number(item.location.latitude)
+            : 30.26244,
+        }
+        this.mapLabel = {
+          content: item.name,
+          style: {
+            color: 'red',
+            fontSize: '12px',
+          },
+          position: position,
+          title: item.address,
+        }
+        this.bmLabel = true
+        this.dialog_device = true
+      },
+      translateTbale(type) {
+        this.checkList = [
+          this.$translateTitle('pressure.压测任务'),
+          this.$translateTitle('pressure.开始时间'),
+          this.$translateTitle('pressure.结束时间'),
+          this.$translateTitle('pressure.压测任务状态'),
+        ]
+        this.columns = [
+          {
+            label: this.$translateTitle('pressure.压测任务'),
+            width: 'auto',
+            prop: 'name',
+            sortable: true,
+            disableCheck: true,
+          },
+          {
+            label: this.$translateTitle('pressure.开始时间'),
+            width: '200',
+            prop: 'startTime',
+            sortable: true,
+          },
+          {
+            label: this.$translateTitle('pressure.结束时间'),
+            width: '200',
+            prop: 'endTime',
+            sortable: true,
+          },
+        ]
+        console.log(this.checkList, this.columns)
+      },
       toggleSwitch(row) {
         return new Promise((resolve) => {
           this.$Modal.confirm({
@@ -406,6 +626,59 @@
             ? (this.draw.form.visibility = true)
             : (this.draw.settings.visibility = true)
           //  设置默认点击事件
+        }
+      },
+      mapClick(e) {
+        this.location = {
+          __type: 'GeoPoint',
+          latitude: e.point.lat,
+          longitude: e.point.lng,
+        }
+        this.mapLabel.position = {
+          lng: e.point.lng,
+          lat: e.point.lat,
+        }
+        const geocoder = new BMap.Geocoder()
+        geocoder.getLocation(e.point, (rs) => {
+          this.form.address = rs.address
+        })
+        console.log(this.form.address)
+        if (this.editRow.objectId) {
+          this.editRow.location = this.location
+          this.editRow.address = this.form.address
+        }
+      },
+      async editMap() {
+        const mapInfo = {
+          location: this.location,
+          address: this.form.address,
+        }
+        await putDevice(this.editRow.objectId, mapInfo)
+        this.dialog_device = false
+        this.$message({
+          message: this.$translateTitle('pressure.设备位置更新成功'),
+          showClose: true,
+          type: 'success',
+        })
+      },
+      closeMap() {
+        this.dialog_device = false
+        this.map = {
+          innerVisible: false,
+          keyword: '余杭区良渚平高创业城c1座',
+          location: '杭州',
+        }
+        this.mapLabel = {
+          content: '我爱北京天安门',
+          style: {
+            color: 'red',
+            fontSize: '24px',
+          },
+          position: {
+            lng: 116.404,
+            lat: 39.915,
+          },
+          title: '我爱北京天安门',
         }
       },
       async handleClone(device) {
@@ -495,14 +768,21 @@
           ? (params.where.name = { $regex: this.queryForm.name })
           : ''
         const { count = 0, results = [] } = await queryDevice(params)
+        const timeExp = /\[(\d{2,}):(\d{2})(?:\.(\d{2,3}))?]/g
         results.forEach((i) => {
           i.startTime = i?.profile?.startTime
-            ? this.$moment
-                .unix(i.profile.startTime)
-                .format('YYYY-MM-DD HH:mm:ss')
+            ? timeExp.exec(i.profile.startTime)
+              ? this.$moment
+                  .unix(i.profile.startTime)
+                  .format('YYYY-MM-DD HH:mm:ss')
+              : i.profile.startTime
             : this.$translateTitle('pressure.暂未配置')
           i.endTime = i?.profile?.endTime
-            ? this.$moment.unix(i.profile.endTime).format('YYYY-MM-DD HH:mm:ss')
+            ? timeExp.exec(i.profile.endTime)
+              ? this.$moment
+                  .unix(i.profile.endTime)
+                  .format('YYYY-MM-DD HH:mm:ss')
+              : i.profile.endTime
             : this.$translateTitle('pressure.暂未配置')
         })
         this.list = results

@@ -9,6 +9,31 @@ env:
   TZ: Asia/Shanghai
 
 jobs:
+  build:
+    name: build 🚀
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [ latest,current,stable ]
+    steps:
+      - name: Checkout 🚀
+        uses: actions/checkout@v2
+      - name: Use Node.js ${{ matrix.node-version }} 🚀
+        uses: actions/setup-node@v2
+      - name: Cache yarn modules  🚀
+        uses: actions/cache@v2
+        env:
+          cache-name: cache-yarn-modules
+        with:
+          path: '**/node_modules'
+          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ matrix.node-version }}-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-build-${{ env.cache-name }}-${{ matrix.node-version }}-
+      - name: Install dependencies  🚀
+        run: yarn install
+      - name: Generate files  🚀
+        run: yarn build
+
   sync:
     name: sync gitee 🚀
     runs-on: ubuntu-latest
@@ -23,66 +48,30 @@ jobs:
           dst_key: ${{ secrets.PRIVATE_KEY }}
           dst_token: ${{ secrets.GIT_TOKEN }}
           static_list: "dgiot-dashboard" # 只同步这个项目 https://github.com/Yikun/hub-mirror-action#%E9%BB%91%E7%99%BD%E5%90%8D%E5%8D%95
-  build:
-    name: build 🚀
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        node-version: [ latest,current,stable ]
-        pnpm-version: [ latest ]
-    steps:
-      - name: Checkout 🚀
-        uses: actions/checkout@v2
-      - name: Use Node.js ${{ matrix.node-version }} 🚀
-        uses: actions/setup-node@v2
-      - name: Cache pnpm modules  🚀
-        uses: actions/cache@v2
-        env:
-          cache-name: cache-pnpm-modules
-        with:
-          path: ~/.pnpm-store
-          key: ${{ runner.os }}-${{ matrix.pnpm-version }}-build-${{ env.cache-name }}-${{ matrix.node-version }}-${{ hashFiles('**/pnpm-lock.yaml') }}
-          restore-keys: |
-            ${{ runner.os }}-${{ matrix.pnpm-version }}-build-${{ env.cache-name }}-${{ matrix.node-version }}-
-      - name: Use Pnpm ${{ matrix.pnpm-version }} 🚀
-        uses: pnpm/action-setup@v2.2.1
-        with:
-          version: ${{ matrix.pnpm-version }}
-          run_install: true
-      - name: Pnpm script 🚀
-        run: |
-          pnpm build
-    needs: sync
   deploy:
     name: deploy 🚀
     runs-on: ubuntu-latest
     strategy:
       matrix:
         node-version: [ latest ]
-        pnpm-version: [ latest ]
     steps:
       - name: Checkout 🚀
         uses: actions/checkout@v2
       - name: Use Node.js ${{ matrix.node-version }} 🚀
         uses: actions/setup-node@v2
-      - name: Cache pnpm modules  🚀
+      - name: Cache yarn modules  🚀
         uses: actions/cache@v2
         env:
-          cache-name: cache-pnpm-modules
+          cache-name: cache-yarn-modules
         with:
-          path: ~/.pnpm-store
-          key: ${{ runner.os }}-${{ matrix.pnpm-version }}-build-${{ env.cache-name }}-${{ matrix.node-version }}-${{ hashFiles('**/pnpm-lock.yaml') }}
+          path: '**/node_modules'
+          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ matrix.node-version }}-${{ hashFiles('**/yarn.lock') }}
           restore-keys: |
-            ${{ runner.os }}-${{ matrix.pnpm-version }}-build-${{ env.cache-name }}-${{ matrix.node-version }}-
-      - name: Use Pnpm ${{ matrix.pnpm-version }} 🚀
-        uses: pnpm/action-setup@v2.2.1
-        with:
-          version: ${{ matrix.pnpm-version }}
-          run_install: false
-      - name: Pnpm script 🚀
+            ${{ runner.os }}-build-${{ env.cache-name }}-${{ matrix.node-version }}-
+      - name: yarn script 🚀
         run: |
-          pnpm install
-          pnpm build &> /dev/null
+          yarn install
+          yarn build &> /dev/null
           cp -r README.md README-CN.md CHANGELOG.md LICENSE dist
       - name: Deploy to github www 🚀
         uses: JamesIves/github-pages-deploy-action@releases/v3

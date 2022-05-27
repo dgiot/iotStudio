@@ -281,6 +281,7 @@
               data: JSON.parse(
                 this.$refs.monacoCode.$refs.monacoEditor.editor.getValue()
               ),
+              language: this.form.language,
               class: this.form.class,
               title,
               type,

@@ -113,7 +113,13 @@
       </dgiot-query-form-top-panel>
     </dgiot-query-form>
 
-    <el-table ref="tableSort" v-loading="listLoading" border :data="list">
+    <el-table
+      ref="tableSort"
+      v-loading="listLoading"
+      border
+      :data="list"
+      :height="$baseTableHeight(0)"
+    >
       <el-table-column
         align="center"
         label="序号"
@@ -201,9 +207,15 @@
         show-overflow-tooltip
         width="140"
       >
-        <template #default="{ row }">
+        <template #default="{ row, $index }">
           <Select v-model="row.language" @on-change="switchlanguage(row)">
-            <Option v-for="item in lang" :key="item.value" :value="item.value">
+            <Option
+              v-for="item in lang"
+              :key="item.value"
+              :placement="$index == 0 ? 'top-start' : 'bottom-start'"
+              style="z-index: 999"
+              :value="item.value"
+            >
               {{ item.label }}
             </Option>
           </Select>
@@ -253,7 +265,6 @@
     <lowcodeDesign ref="lowcodeDesign" @objectId="lowcodeId" />
   </div>
 </template>
-
 <script>
   import { getTable } from '@/api/Dba'
   import { mapMutations } from 'vuex'

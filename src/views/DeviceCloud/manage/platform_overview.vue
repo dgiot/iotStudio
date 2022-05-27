@@ -623,6 +623,7 @@
   </div>
 </template>
 <script>
+  import { postTopic, deleteTopic } from '@/api/Dlink'
   import icoPath1 from '../../../../public/assets/images/Device/1.png'
   import icoPath2 from '../../../../public/assets/images/Device/2.png'
   // import { queryProduct } from '@/api/Product'
@@ -860,12 +861,12 @@
     },
     mounted() {
       this.initMapHeight()
-      setTimeout(() => {
-        this.queryParams.forEach((e) => {
-          let key = e.vuekey
-          this.loadingConfig[`${key}`] = false
-        })
-      }, 1240)
+      // setTimeout(() => {
+      //   this.queryParams.forEach((e) => {
+      //     let key = e.vuekey
+      //     this.loadingConfig[`${key}`] = false
+      //   })
+      // }, 1240)
       this.router = this.$dgiotBus.router(this.$route.fullPath)
       this.$dgiotBus.$off('qqMapClcik')
       this.$dgiotBus.$on('qqMapClcik', (ev) => {
@@ -881,6 +882,12 @@
           this.mapWidth = window.innerWidth * 0.98 + 'px'
         })()
       }
+    },
+    async beforeDestroy() {
+      //  取消订阅http请求写法,http需要在topic中加页面路由
+      await this.$unSubscribe(this.subtopic)
+      // 取消订阅mqtt写法 2022-5-27 改为http写法
+      // this.$dgiotBus.$emit('MqttUnbscribe', this.topicKey, this.subtopic)
     },
     activated() {
       // dgiotlog.log('keep-alive生效')
@@ -1079,12 +1086,12 @@
           : (this.deviceInfo.topicData = _toppic)
         this.deviceFlag = true
       },
-      printQueryInfo(value, mqttMsg) {
-        this.queryParams.forEach((e) => {
-          if (e.vuekey)
-            console.log(`收到订阅${value}的消息${mqttMsg},查询参数为${mqttMsg}`)
-        })
-      },
+      // printQueryInfo(value, mqttMsg) {
+      //   this.queryParams.forEach((e) => {
+      //     if (e.vuekey)
+      //       console.log(`收到订阅${value}的消息${mqttMsg},查询参数为${mqttMsg}`)
+      //   })
+      // },
       mqttMsg(e) {
         let mqttMsg = isBase64(e) ? Base64.decode(e) : e
         console.log(mqttMsg, '收到消息')
@@ -1189,27 +1196,30 @@
         // dgiotlog.log(objectId)
       },
       async queryData() {
-        const { dashboard = {} } = await getDlinkJson('Dashboard')
-        this.queryParams = dashboard
-        // https://lbsyun.baidu.com/cms/jsapi/class/jsapi_reference.html#a3b22
-        setTimeout(() => {
-          this.queryParams.forEach((e) => {
-            let key = e.vuekey
-            this.loadingConfig[`${key}`] = true
-          })
-        }, 1240)
-        const Startdashboardid = '32511dbfe5'
-        this.subtopic = `$dg/dashboard/${Startdashboardid}/report`
-        this.topicKey = this.$dgiotBus.topicKey(this.router, this.subtopic)
-        this.$dgiotBus.$emit('MqttSubscribe', {
-          router: this.router,
-          topic: this.subtopic,
-          qos: 0,
-          ttl: 1000 * 60 * 60 * 3,
-        })
-        console.log(this.queryParams, 'queryParams')
-        await Startdashboard(this.queryParams, Startdashboardid)
+        // const { dashboard = {} } = await getDlinkJson('Dashboard')
+        // this.queryParams = dashboard
+        // // https://lbsyun.baidu.com/cms/jsapi/class/jsapi_reference.html#a3b22
+        // setTimeout(() => {
+        //   this.queryParams.forEach((e) => {
+        //     let key = e.vuekey
+        //     this.loadingConfig[`${key}`] = true
+        //   })
+        // }, 1240)
+        // this.topicKey = this.$dgiotBus.topicKey(this.router, this.subtopic)
+        // this.$dgiotBus.$emit('MqttSubscribe', {
+        //   router: this.router,
+        //   topic: this.subtopic,
+        //   qos: 0,
+        //   ttl: 1000 * 60 * 60 * 3,
+        // })
+        // console.log(this.queryParams, 'queryParams')
+        // await Startdashboard(this.queryParams, Startdashboardid)
         // 本地mqtt 存在问题,在请求4秒后手动关闭所有loading
+        const Startdashboardid = '32511dbfe5'
+        const router = 'home'
+        this.subtopic = `$dg/dashboard/${router}/${Startdashboardid}/report`
+        await this.$subscribe(this.subtopic)
+        console.log('subtopic', this.subtopic)
         this.$nextTick(() => {
           if (this.mapType == 'tencent') {
             this.setTreeFlag(false)

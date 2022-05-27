@@ -24,3 +24,30 @@ export async function getDlinkJson(type = 'Topic') {
     method: 'get',
   })
 }
+
+export async function deleteTopic(
+  Topic = '$dg/user/router/thing/111/cmd/delete'
+) {
+  return request({
+    url: `topic?topic=${Topic}`,
+    method: 'delete',
+  })
+}
+
+export async function getTopic(Topic = '$dg/user/router/thing/111/cmd/delete') {
+  return request({
+    url: `topic?topic=${Topic}`,
+    method: 'get',
+  })
+}
+
+export async function postTopic(
+  Topic = '$dg/user/router/thing/111/cmd/delete'
+) {
+  return request({
+    url: `topic`,
+    method: 'post',
+    Headers: { 'Content-Type': 'application/json', accept: 'application/json' },
+    data: { topic: Topic },
+  })
+}

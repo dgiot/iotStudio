@@ -226,45 +226,13 @@
               <!-- 编辑 -->
               {{ $translateTitle('task.Edit') }}
             </el-button>
-            <!--            <el-button-->
-            <!--              type="success"-->
-            <!--              size="mini"-->
-            <!--              @click="updateChannel(row)"-->
-            <!--            >-->
-            <!--              &lt;!&ndash; 详情 &ndash;&gt;-->
-            <!--              {{ $translateTitle('product.details') }}-->
-            <!--            </el-button>-->
-            <el-popover
-              :ref="`popover-${$index}`"
-              placement="top"
-              style="margin-left: 10px"
-              width="300"
+            <el-button
+              size="mini"
+              type="danger"
+              @click="delchannelaxios(row, $index)"
             >
-              <!-- <p>确定删除这个{{ row.name }}通道吗？</p> -->
-              <p>
-                {{ $translateTitle('product.qdsczg') }}{{ row.name
-                }}{{ $translateTitle('equipment.channel') }}
-              </p>
-              <div>
-                <el-button
-                  size="mini"
-                  type="text"
-                  @click="row._self.$refs[`popover-${$index}`].doClose()"
-                >
-                  {{ $translateTitle('developer.cancel') }}
-                </el-button>
-                <el-button
-                  size="mini"
-                  type="text"
-                  @click="deleteChannel(row, $index)"
-                >
-                  {{ $translateTitle('developer.determine') }}
-                </el-button>
-              </div>
-              <el-button slot="reference" size="mini" type="danger">
-                {{ $translateTitle('developer.delete') }}
-              </el-button>
-            </el-popover>
+              {{ $translateTitle('developer.delete') }}
+            </el-button>
             <!--            <el-button-->
             <!--              type="goon"-->
             <!--              size="mini"-->
@@ -740,6 +708,7 @@
   import defaultLogo from '../../../../public/assets/images/logo/logo.png'
   import DgiotInput from '@/dgiot/components/DgiotInput/input'
   import { putView } from '@/api/View'
+  import { isBase64 } from '@/utils'
 
   var subdialog
 
@@ -864,7 +833,7 @@
       roleTree: 'user/roleTree',
     }),
     watch: {
-      subtopic: {
+      topicKey: {
         handler: function (newVal, oldval) {
           console.log('newVal topicKey', newVal)
           console.log('oldval topicKey', oldval)
@@ -874,7 +843,8 @@
             this.$dgiotBus.$on(newVal, (res) => {
               console.error(res)
               const { payload } = res
-              this.mqttMsg(payload)
+              //  过滤登录时候，首页mqtt乱码的情况
+              if (!isBase64(payload)) this.mqttMsg(payload)
             })
           }
           if (oldval) {
@@ -1374,26 +1344,30 @@
           this.Get_Re_Channel(this.start)
         }
       },
-
-      // 删除通道
-      deleteChannel(row, $index) {
-        this.delchannelaxios(row, $index)
-      },
-      delchannelaxios(row, $index) {
-        delChannel(row.objectId)
-          .then((results) => {
+      // 二次删除确认
+      delchannelaxios(row, index) {
+        this.$confirm(`此操作将永久删除${row.name}, 是否继续?`, '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning',
+        })
+          .then(async () => {
+            await delChannel(row.objectId)
             this.$message({
               showClose: true,
               duration: 2000,
-              type: 'success',
-              message: '删除成功',
+              type: 'info',
+              message: '已删除',
             })
-            row._self.$refs[`popover-${$index}`].doClose()
-            this.Get_Re_Channel(this.start)
+            this.tableData.splice(index, 1)
           })
-          .catch((e) => {
-            console.log(e.error)
-            this.Get_Re_Channel(this.start)
+          .catch(() => {
+            // this.$message({
+            //   showClose: true,
+            //   duration: 2000,
+            //   type: 'info',
+            //   message: '已取消删除',
+            // })
           })
       },
       addchanneltype() {
@@ -1810,10 +1784,12 @@
     opacity: 1;
     -webkit-transition: all 0.3s;
     transition: all 0.3s;
+
     &:hover {
       right: -4px;
       //background-color: rgba(0, 0, 0, 0.9);
     }
+
     i {
       margin-right: 3px;
       font-size: 12px;
