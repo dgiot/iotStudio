@@ -193,14 +193,15 @@
       this.router = this.$dgiotBus.router(this.$route.fullPath)
       this.setTreeFlag(false)
     },
-    destroyed() {
+    async destroyed() {
       if (!_.isEmpty(localStorage.getItem('konvaStale')))
         localStorage.setItem('konvaStale', JSON.stringify(canvas.stageJson))
-      this.$dgiotBus.$emit(
-        'MqttUnbscribe',
-        this.$dgiotBus.topicKey(this.router + this.topotopic),
-        this.topotopic
-      )
+      // this.$dgiotBus.$emit(
+      //   'MqttUnbscribe',
+      //   this.$dgiotBus.topicKey(this.router + this.topotopic),
+      //   this.topotopic
+      // )
+      await this.$unSubscribe(this.topotopic)
     },
     created() {},
     methods: {
@@ -414,14 +415,14 @@
         this.$dgiotBus.$on(this.$mqttInfo.topicKey, (res) => {
           console.log(res)
           const { payloadString } = res
-          if (Msg.payload) {
+          if (Msg.payloadString) {
             let decodeMqtt
             let updataId = []
-            if (!isBase64(Msg.payload)) {
+            if (!isBase64(Msg.payloadString)) {
               console.log('非base64数据类型')
-              decodeMqtt = Msg.payload
+              decodeMqtt = Msg.payloadString
             } else {
-              decodeMqtt = JSON.parse(Base64.decode(Msg.payload))
+              decodeMqtt = JSON.parse(Base64.decode(Msg.payloadString))
               console.log('消息解密消息', decodeMqtt)
             }
             console.log('decodeMqtt.konva')

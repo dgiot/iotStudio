@@ -370,19 +370,21 @@
         this.clickItem = ''
         this.queryForm.deviceid = this.deviceInfo.objectId
         if (this.queryForm.action == 'start') {
-          this.subtopic = '$dg/trace/' + this.deviceInfo.objectId + '/#'
+          this.subtopic = '$dg/user/trace/' + this.deviceInfo.objectId + '/#'
         }
-        this.topicKey = this.$dgiotBus.topicKey(this.router, this.subtopic)
-        this.$dgiotBus.$emit(`MqttSubscribe`, {
-          router: this.router,
-          topic: this.subtopic,
-          qos: 0,
-          ttl: 1000 * 60 * 60 * 3,
-        })
-        this.$dgiotBus.$off(`${this.topicKey}`)
-        this.$dgiotBus.$on(`${this.topicKey}`, (Msg) => {
-          if (Msg.payload) {
-            this.scroketMsg.unshift(JSON.parse(Msg.payload))
+        // this.topicKey = this.$dgiotBus.topicKey(this.router, this.subtopic)
+        // this.$dgiotBus.$emit(`MqttSubscribe`, {
+        //   router: this.router,
+        //   topic: this.subtopic,
+        //   qos: 0,
+        //   ttl: 1000 * 60 * 60 * 3,
+        // })
+        this.$dgiotBus.$off(this.$mqttInfo.subtopic)
+        console.log(_this.$mqttInfo)
+        console.warn('订阅mqtt', _this.subtopic)
+        this.$dgiotBus.$on(`${this.$mqttInfo.topicKey}`, (Msg) => {
+          if (Msg.payloadString) {
+            this.scroketMsg.unshift(JSON.parse(Msg.payloadString))
             this.logMqtt.key = this.topicKey
             this.clickItem = JSON.stringify(this.scroketMsg, null, 2)
           }

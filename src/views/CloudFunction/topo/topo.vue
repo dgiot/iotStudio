@@ -121,12 +121,13 @@
       this.router = this.$dgiotBus.router(this.$route.fullPath)
       this.handleMqtt()
     },
-    destroyed() {
-      this.$dgiotBus.$emit(
-        'MqttUnbscribe',
-        this.$dgiotBus.topicKey(this.router + this.topotopic),
-        this.topotopic
-      )
+    async destroyed() {
+      // this.$dgiotBus.$emit(
+      //   'MqttUnbscribe',
+      //   this.$dgiotBus.topicKey(this.router + this.topotopic),
+      //   this.topotopic
+      // )
+      await this.$unSubscribe(this.subtopic)
     },
     created() {
       this.$dgiotBus.$off('removeShape')
@@ -489,18 +490,18 @@
       },
       // 处理mqtt信息
       handleMqttMsg() {
-        console.error('this.topicKey', this.topicKey)
-        this.$dgiotBus.$off(this.topicKey)
-        this.$dgiotBus.$on(this.topicKey, (Msg) => {
+        console.error('this.topicKey', this.$mqttInfo.topicKey)
+        this.$dgiotBus.$off(this.$mqttInfo.topicKey)
+        this.$dgiotBus.$on(this.$mqttInfo.topicKey, (Msg) => {
           console.log('收到消息', Msg)
-          if (Msg.payload) {
+          if (Msg.payloadString) {
             let decodeMqtt
             let updataId = []
-            if (!isBase64(Msg.payload)) {
+            if (!isBase64(Msg.payloadString)) {
               console.log('非base64数据类型')
-              decodeMqtt = Msg.payload
+              decodeMqtt = Msg.payloadString
             } else {
-              decodeMqtt = JSON.parse(Base64.decode(Msg.payload))
+              decodeMqtt = JSON.parse(Base64.decode(Msg.payloadString))
               console.log('消息解密消息', decodeMqtt)
             }
 
@@ -541,7 +542,7 @@
           }
         })
       },
-      createKonva(data, globalStageid, type) {
+      async createKonva(data, globalStageid, type) {
         console.log('type', type)
         let Stage
         let _this = this
@@ -875,16 +876,18 @@
         _this.subtopic = `thing/${_this.productid}/post`
         // const deviceId = _this?.$route?.query?.deviceid || 'test'
         // _this.subtopic = `$dg/konva/${deviceId}/properties/report`
-        _this.topicKey = _this.$dgiotBus.topicKey(_this.router, _this.subtopic)
+        // _this.topicKey = _this.$dgiotBus.topicKey(_this.router, _this.subtopic)
         //
-        console.warn('订阅mqtt')
+        await _this.$subscribe(_this.subtopic)
+        console.log(_this.$mqttInfo)
+        console.warn('订阅mqtt', _this.subtopic)
         // 订阅webscroket
-        _this.$dgiotBus.$emit(`MqttSubscribe`, {
-          router: this.router,
-          topic: this.subtopic,
-          qos: 0,
-          ttl: 1000 * 60 * 60 * 3,
-        })
+        // _this.$dgiotBus.$emit(`MqttSubscribe`, {
+        //   router: this.router,
+        //   topic: this.subtopic,
+        //   qos: 0,
+        //   ttl: 1000 * 60 * 60 * 3,
+        // })
         // console.error(_this.stage.toJSON())
         _this.handleMqttMsg()
         // 处理消息
