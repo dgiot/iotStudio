@@ -244,7 +244,7 @@
       //       this.$dgiotBus.$off(newVal)
       //       this.$dgiotBus.$on(newVal, (res) => {
       //         console.error(res)
-      //         const { payload } = res
+      //         const { payloadString } = res
       //         this.mqttMsg(payload)
       //       })
       //     }
@@ -294,10 +294,10 @@
           this.queryForm.product +
           '/' +
           devaddr
-        this.subtopic = '$dg/user/accurate/' + this.pubtopic
+        this.subtopic = '$dg/user/' + this.pubtopic
         await this.$subscribe(this.subtopic)
         console.log(this.$mqttInfo)
-        this.$dgiotBus.$on(this.$mqttInfo.splitTopicKey, (res) => {
+        this.$dgiotBus.$on(this.$mqttInfo.topicKey, (res) => {
           console.log(res)
           const { payloadString } = res
           //  过滤登录时候，首页mqtt乱码的情况
