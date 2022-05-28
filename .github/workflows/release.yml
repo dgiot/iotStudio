@@ -22,7 +22,7 @@ jobs:
         with:
           node-version: '14.15.4'
           registry-url: https://registry.npmjs.org/
-      - run: npm publish --access=public
+      - run: yarn install && npm publish --access=public
         env:
           NODE_AUTH_TOKEN: ${{secrets.npm_token}}
       - name: Prepare the changelog from the tag message
