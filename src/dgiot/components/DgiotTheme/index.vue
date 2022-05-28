@@ -15,9 +15,7 @@
         theme: 'settings/theme',
       }),
     },
-    mounted() {
-      console.error('this.$route.query.theme', this.$route.query.theme)
-    },
+    mounted() {},
     methods: {
       handleOpenTheme() {
         this.$dgiotBus.$emit('theme')

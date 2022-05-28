@@ -445,12 +445,14 @@ export default {
     async subRealtimedata() {
       try {
         // 订阅mqtt
-        this.$dgiotBus.$emit('MqttSubscribe', {
-          router: this.router,
-          topic: this.subtopic,
-          qos: 0,
-          ttl: 1000 * 60 * 60 * 3,
-        })
+        // this.$dgiotBus.$emit('MqttSubscribe', {
+        //   router: this.router,
+        //   topic: this.subtopic,
+        //   qos: 0,
+        //   ttl: 1000 * 60 * 60 * 3,
+        // })
+        await this.$subscribe(this.subtopic)
+        console.log(this.$mqttInfo)
         // mqtt 消息回调
         console.groupCollapsed(
           `%c mqtt 订阅日志`,
@@ -460,19 +462,22 @@ export default {
         console.log('router:', this.router)
         console.groupEnd()
 
-        this.$dgiotBus.$off(this.topicKey) // dgiotBus 关闭事件
-        this.$dgiotBus.$on(this.topicKey, (mqttMsg) => {
+        this.$dgiotBus.$off(this.$mqttInfo.topicKey) // dgiotBus 关闭事件
+        this.$dgiotBus.$on(this.$mqttInfo.topicKey, (mqttMsg) => {
           // mqtt 消息回调
           console.groupCollapsed(
             `%c mqttMsg消息回调`,
             'color:#009a61; font-size: 28px; font-weight: 300'
           )
           console.log(mqttMsg)
-          console.log(Base64.decode(mqttMsg.payload))
-          console.log(JSON.parse(Base64.decode(mqttMsg.payload)).data)
-          console.log('Base64.decode(payload):', Base64.decode(mqttMsg.payload))
+          console.log(Base64.decode(mqttMsg.payloadString))
+          console.log(JSON.parse(Base64.decode(mqttMsg.payloadString)).data)
+          console.log(
+            'Base64.decode(payload):',
+            Base64.decode(mqttMsg.payloadString)
+          )
           console.groupEnd()
-          const { data = [] } = JSON.parse(Base64.decode(mqttMsg.payload))
+          const { data = [] } = JSON.parse(Base64.decode(mqttMsg.payloadString))
           this.renderCard(data)
           if (data) {
             // this.renderCard(data)
@@ -496,10 +501,10 @@ export default {
     }),
     Unbscribe() {
       console.log('Unbscribe all topic')
-      const subtopic = '$dg/trace/' + this.deviceInfo.objectId + '/#'
+      const subtopic = '$dg/user/trace/' + this.deviceInfo.objectId + '/#'
       const topicKey = this.$dgiotBus.topicKey(this.router, subtopic)
       this.$dgiotBus.$emit('MqttUnbscribe', topicKey, subtopic)
-      this.subtopic = `$dg/user/${this.$route.query.deviceid}/realtimecard/report` // 设备实时数据topic
+      this.subtopic = `$dg/user/trace/${this.$route.query.deviceid}/realtimecard/report` // 设备实时数据topic
       this.topicKey = this.$dgiotBus.topicKey(this.router, this.subtopic) // dgiot-mqtt topicKey 唯一标识
       this.$dgiotBus.$emit('MqttUnbscribe', this.topicKey, this.subtopic)
     },
@@ -744,7 +749,8 @@ export default {
     async tabHandleClick(tab) {
       localStorage.removeItem('parse_objectid')
       localStorage.setItem('parse_objectid', this.deviceid)
-      this.$dgiotBus.$emit('MqttUnbscribe', this.topicKey, this.subtopic)
+      // this.$dgiotBus.$emit('MqttUnbscribe', this.topicKey, this.subtopic)
+      await this.$unSubscribe(this.subtopic)
       switch (tab.name) {
         case 'ninth':
           await this.$router.push({

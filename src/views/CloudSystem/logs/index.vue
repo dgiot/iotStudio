@@ -385,20 +385,22 @@
         }
         dgiotlog.log(value) // { key: "lucy", label: "Lucy (101)" }
       },
-      subLog() {
+      async subLog() {
         this.clickItem = ''
         this.scroketMsg = []
         this.key = moment(new Date()).valueOf()
         if (this.dataRef.objectId) {
           this.subtopic = `${this.dataRef.topic}`
           this.topicKey = this.$dgiotBus.topicKey(this.router, this.subtopic)
-          this.$dgiotBus.$emit(`MqttSubscribe`, {
-            router: this.router,
-            topic: this.subtopic,
-            qos: 0,
-            ttl: 1000 * 60 * 60 * 3,
-          })
-
+          // this.$dgiotBus.$emit(`MqttSubscribe`, {
+          //   router: this.router,
+          //   topic: this.subtopic,
+          //   qos: 0,
+          //   ttl: 1000 * 60 * 60 * 3,
+          // })
+          await this.$subscribe(this.subtopic)
+          console.log(this.$mqttInfo)
+          console.warn('订阅mqtt', this.subtopic)
           this.$baseMessage(
             this.subtopic + this.$translateTitle('websocket.subscribeSuccess'),
             'success',
@@ -412,11 +414,12 @@
       handleMqttMsg() {
         this.scroketMsg = []
         this.clickItem = ''
-        this.$dgiotBus.$off(this.topicKey)
-        this.$dgiotBus.$on(this.topicKey, (Msg) => {
+        console.error('this.topicKey', this.$mqttInfo.topicKey)
+        this.$dgiotBus.$off(this.$mqttInfo.topicKey)
+        this.$dgiotBus.$on(this.$mqttInfo.topicKey, (Msg) => {
           dgiotlog.log('收到消息', Msg)
-          if (Msg.payload) {
-            this.scroketMsg.push(JSON.parse(Msg.payload))
+          if (Msg.payloadString) {
+            this.scroketMsg.push(JSON.parse(Msg.payloadString))
             this.key = moment(new Date()).valueOf()
             this.clickItem = JSON.stringify(this.scroketMsg, null, 2)
           }

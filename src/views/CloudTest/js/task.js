@@ -264,11 +264,14 @@ export default {
             'color:#009a61; font-size: 28px; font-weight: 300'
           )
           console.log(mqttMsg)
-          console.log(Base64.decode(mqttMsg.payload))
-          console.log(JSON.parse(Base64.decode(mqttMsg.payload)).data)
-          console.log('Base64.decode(payload):', Base64.decode(mqttMsg.payload))
+          console.log(Base64.decode(mqttMsg.payloadString))
+          console.log(JSON.parse(Base64.decode(mqttMsg.payloadString)).data)
+          console.log(
+            'Base64.decode(payload):',
+            Base64.decode(mqttMsg.payloadString)
+          )
           console.groupEnd()
-          const { data = [] } = JSON.parse(Base64.decode(mqttMsg.payload))
+          const { data = [] } = JSON.parse(Base64.decode(mqttMsg.payloadString))
           if (data) {
             this.renderCard(data)
           } else {
@@ -958,12 +961,14 @@ export default {
             'color:#009a61; font-size: 28px; font-weight: 300'
           )
           console.log(mqttMsg)
-          console.log('payload:', mqttMsg.payload)
+          console.log('payload:', mqttMsg.payloadString)
           console.groupEnd()
           // _this.thingdata = []
           // this.realtimedata = []
           if (mqttMsg?.payload) {
-            const { thingdata = {}, timestamp } = JSON.parse(mqttMsg.payload)
+            const { thingdata = {}, timestamp } = JSON.parse(
+              mqttMsg.payloadString
+            )
             thingdata.timestamp = moment(Number(timestamp)).format(
               'YYYY-MM-DD HH:mm:ss'
             )

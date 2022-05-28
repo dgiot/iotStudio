@@ -832,40 +832,15 @@
     ...mapGetters({
       roleTree: 'user/roleTree',
     }),
-    watch: {
-      topicKey: {
-        handler: function (newVal, oldval) {
-          console.log('newVal topicKey', newVal)
-          console.log('oldval topicKey', oldval)
-          let _this = this
-          if (newVal) {
-            this.$dgiotBus.$off(newVal)
-            this.$dgiotBus.$on(newVal, (res) => {
-              console.error(res)
-              const { payload } = res
-              //  过滤登录时候，首页mqtt乱码的情况
-              if (!isBase64(payload)) this.mqttMsg(payload)
-            })
-          }
-          if (oldval) {
-            // 取消订阅
-            _this.submessage = ''
-            _this.msgList = []
-            _this.logKey = '99'
-          }
-        },
-        deep: true,
-        limit: true,
-      },
-    },
     mounted() {
       this.router = this.$dgiotBus.router(this.$route.fullPath)
       this.Get_Re_Channel(0)
       this.dialogType()
       this.getApplication()
     },
-    beforeDestroy() {
-      this.$dgiotBus.$emit('MqttUnbscribe', this.topicKey, this.subtopic)
+    async beforeDestroy() {
+      // this.$dgiotBus.$emit('MqttUnbscribe', this.topicKey, this.subtopic)
+      await this.$unSubscribe(this.subtopic)
     },
     methods: {
       dybaneucDleform(index, row) {
@@ -890,7 +865,10 @@
         this.tableName.push(data.showname)
         // var dybaneucForms = {}
         this.dybaneucForms[showname] = []
-        this.colCum[showname] = { label: [], prop: [] }
+        this.colCum[showname] = {
+          label: [],
+          prop: [],
+        }
         dgiotlogger.error(925, data, _table)
         const { table } = data
         var arr = {}
@@ -1221,7 +1199,9 @@
           where: {},
         }
         this.channelformsearch.name
-          ? (params.where.name = { $regex: this.channelformsearch.name })
+          ? (params.where.name = {
+              $regex: this.channelformsearch.name,
+            })
           : ''
         const { count, results } = await queryChannel(params)
         this.total = count
@@ -1621,12 +1601,13 @@
         // subdialog.setValue(this.submessage)
         // subdialog.gotoLine(subdialog.session.getLength())
       },
-      subProTopic(row) {
+      async subProTopic(row) {
         this.productinformation(row.objectId)
         this.subdialog = true
         this.subdialogid = row.objectId
         this.channelname = row.objectId
-        this.subtopic = '$dg/channel/' + row.objectId + '/#'
+        this.subtopic = '$dg/user/channel/' + row.objectId + '/#'
+        this.msgList = []
         this.submessage = ''
         this.msgList = []
         let subInfo = {
@@ -1635,13 +1616,22 @@
           qos: 2,
           ttl: 1000 * 60 * 60 * 3,
         }
-        this.$dgiotBus.$emit('MqttSubscribe', subInfo)
+        await this.$subscribe(this.subtopic)
+        console.log(this.$mqttInfo)
+        // this.$dgiotBus.$emit('MqttSubscribe', subInfo)
         subupadte(row.objectId, 'start_logger')
-        this.topicKey = this.$dgiotBus.topicKey(this.router, this.subtopic)
+        this.$dgiotBus.$on(this.$mqttInfo.topicKey, (res) => {
+          console.log(res)
+          const { payloadString } = res
+          //  过滤登录时候，首页mqtt乱码的情况
+          this.mqttMsg(payloadString)
+        })
+        // this.topicKey = this.$dgiotBus.topicKey(this.router, this.subtopic)
       },
-      handleCloseSubdialog() {
+      async handleCloseSubdialog() {
         subupadte(this.channelid, 'stop_logger')
-        this.$dgiotBus.$emit('MqttUnbscribe', this.topicKey, this.subtopic)
+        // this.$dgiotBus.$emit('MqttUnbscribe', this.topicKey, this.subtopic)
+        await this.$unSubscribe(this.subtopic)
         this.refreshFlag = moment().format('x')
         this.submessage = ''
         this.msgList = []

@@ -73,7 +73,7 @@ function getMessage(tag) {
 window.dashboard = info
 window.dgiot = info
 console.log(
-  ' %c Design with by Dgiot  %c http://dev.iotn2n.com ' + '\n\n\n',
+  ' %c Design with by Dgiot  %c http://dev.iotn2n.com ',
   'color: #fadfa3; background: #030307; padding:5px 0;',
   'background: #fadfa3; padding:5px 0;'
 )

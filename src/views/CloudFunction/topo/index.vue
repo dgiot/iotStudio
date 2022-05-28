@@ -150,6 +150,10 @@
         immediate: true,
       },
     },
+    async beforeDestroy() {
+      // this.$dgiotBus.$emit('MqttUnbscribe', this.topicKey, this.subtopic)
+      await this.$unSubscribe(this.subtopic)
+    },
     mounted() {
       this.$nextTick(() => {
         this.handleMqtt()
@@ -189,14 +193,15 @@
       this.router = this.$dgiotBus.router(this.$route.fullPath)
       this.setTreeFlag(false)
     },
-    destroyed() {
+    async destroyed() {
       if (!_.isEmpty(localStorage.getItem('konvaStale')))
         localStorage.setItem('konvaStale', JSON.stringify(canvas.stageJson))
-      this.$dgiotBus.$emit(
-        'MqttUnbscribe',
-        this.$dgiotBus.topicKey(this.router + this.topotopic),
-        this.topotopic
-      )
+      // this.$dgiotBus.$emit(
+      //   'MqttUnbscribe',
+      //   this.$dgiotBus.topicKey(this.router + this.topotopic),
+      //   this.topotopic
+      // )
+      await this.$unSubscribe(this.topotopic)
     },
     created() {},
     methods: {
@@ -387,35 +392,37 @@
           _this.deleteTopo(window.deletePath)
         }, 1000)
         // https://gitee.com/dgiiot/dgiot_dlink/wikis/dgiot-dashboard%20toppic%20%E5%AF%B9%E6%8E%A5dgiot_dlink
-        _this.subtopic = `thing/${_this.productid}/post`
+        _this.subtopic = `$dg/user/topo/${_this.productid}/post`
         // const deviceId = this?.$route?.query?.deviceid || 'test'
         // _this.subtopic = `$dg/konva/${deviceId}/properties/report`
-        _this.topicKey = _this.$dgiotBus.topicKey(_this.router, _this.subtopic)
+        // _this.topicKey = _this.$dgiotBus.topicKey(_this.router, _this.subtopic)
         //
         console.warn('订阅mqtt', _this.subtopic)
+        await _this.$subscribe(_this.subtopic)
+        console.log(_this.$mqttInfo)
         // 订阅webscroket
-        _this.$dgiotBus.$emit(`MqttSubscribe`, {
-          router: this.router,
-          topic: this.subtopic,
-          qos: 0,
-          ttl: 1000 * 60 * 60 * 3,
-        })
+        // _this.$dgiotBus.$emit(`MqttSubscribe`, {
+        //   router: this.router,
+        //   topic: this.subtopic,
+        //   qos: 0,
+        //   ttl: 1000 * 60 * 60 * 3,
+        // })
         _this.handleMqttMsg()
       },
       // 处理mqtt信息
       handleMqttMsg() {
-        console.error('this.topicKey', this.topicKey)
-        this.$dgiotBus.$off(this.topicKey)
-        this.$dgiotBus.$on(this.topicKey, (Msg) => {
-          console.log('收到消息', Msg)
-          if (Msg.payload) {
+        console.error('this.topicKey', this.$mqttInfo.topicKey)
+        this.$dgiotBus.$on(this.$mqttInfo.topicKey, (res) => {
+          console.log(res)
+          const { payloadString } = res
+          if (Msg.payloadString) {
             let decodeMqtt
             let updataId = []
-            if (!isBase64(Msg.payload)) {
+            if (!isBase64(Msg.payloadString)) {
               console.log('非base64数据类型')
-              decodeMqtt = Msg.payload
+              decodeMqtt = Msg.payloadString
             } else {
-              decodeMqtt = JSON.parse(Base64.decode(Msg.payload))
+              decodeMqtt = JSON.parse(Base64.decode(Msg.payloadString))
               console.log('消息解密消息', decodeMqtt)
             }
             console.log('decodeMqtt.konva')

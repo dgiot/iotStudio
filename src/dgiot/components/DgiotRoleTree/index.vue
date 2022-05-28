@@ -162,7 +162,6 @@
     },
     watch: {},
     created() {
-      this.disposable()
       this.$nextTick(async () => {
         /**
          * @description 用户登录时,默认请求一次的接口

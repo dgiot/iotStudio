@@ -1,6 +1,6 @@
 {
   "name": "@dgiot/dgiot-dashboard",
-  "version": "4.5.3",
+  "version": "4.5.4",
   "author": "iotn2n",
   "license": "MPL-2.0",
   "private": false,
@@ -39,7 +39,7 @@
     "reset:config": "rm src/config/developer.config.js && mv src/config/loca.config.js src/config/developer.config.js && echo 'reset config done'",
     "downCdn": "node utils/downCdn.js",
     "downIconfront": "node utils/downIconfront.js",
-    "changelog": "standard-version 0.0.1 && pnpm changelog:zh",
+    "changelog": "pnpm changelog:zh && changelog:zh",
     "cp:git": "rimraf github && cp -r .git github",
     "rmEnv": "rimraf .env",
     "local:server": "node utils/server.js",
@@ -72,7 +72,7 @@
     "vuera": "^0.2.7"
   },
   "devDependencies": {
-    "@dgiot/dgiot-mqtt-dashboard": "1.1.6",
+    "@dgiot/dgiot-mqtt-dashboard": "1.1.7",
     "q": "^1.5.1",
     "react": "^16.14.0",
     "react-dom": "^16.14.0",
