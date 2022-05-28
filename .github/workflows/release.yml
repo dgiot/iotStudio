@@ -14,14 +14,26 @@ env:
 jobs:
   publish:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [ latest ]
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-      - name: Use Node
-        uses: actions/setup-node@v2
+      - name: Use Node.js 🚀
         with:
-          node-version: '14.15.4'
+          node-version: '16.15.0'
           registry-url: https://registry.npmjs.org/
+        uses: actions/setup-node@v2
+      - name: Cache yarn modules  🚀
+        uses: actions/cache@v2
+        env:
+          cache-name: cache-yarn-modules
+        with:
+          path: '**/node_modules'
+          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ matrix.node-version }}-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-build-${{ env.cache-name }}-${{ matrix.node-version }}-
       - run: yarn install && npm publish --access=public
         env:
           NODE_AUTH_TOKEN: ${{secrets.npm_token}}
