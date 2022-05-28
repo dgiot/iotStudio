@@ -392,7 +392,9 @@
           _this.deleteTopo(window.deletePath)
         }, 1000)
         // https://gitee.com/dgiiot/dgiot_dlink/wikis/dgiot-dashboard%20toppic%20%E5%AF%B9%E6%8E%A5dgiot_dlink
-        _this.subtopic = `$dg/user/topo/${_this.productid}/post`
+        _this.subtopic = `$dg/user/${
+          _this?.$route?.query?.deviceid || 'test'
+        }/konva/report`
         // const deviceId = this?.$route?.query?.deviceid || 'test'
         // _this.subtopic = `$dg/konva/${deviceId}/properties/report`
         // _this.topicKey = _this.$dgiotBus.topicKey(_this.router, _this.subtopic)
@@ -412,9 +414,9 @@
       // 处理mqtt信息
       handleMqttMsg() {
         console.error('this.topicKey', this.$mqttInfo.topicKey)
-        this.$dgiotBus.$on(this.$mqttInfo.topicKey, (res) => {
-          console.log(res)
-          const { payloadString } = res
+        this.$dgiotBus.$on(this.$mqttInfo.topicKey, (Msg) => {
+          console.log(Msg)
+          const { payloadString } = Msg
           if (Msg.payloadString) {
             let decodeMqtt
             let updataId = []

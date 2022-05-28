@@ -1620,6 +1620,8 @@
         console.log(this.$mqttInfo)
         // this.$dgiotBus.$emit('MqttSubscribe', subInfo)
         subupadte(row.objectId, 'start_logger')
+        this.msgList = []
+        this.submessage = ''
         this.$dgiotBus.$on(this.$mqttInfo.topicKey, (res) => {
           console.log(res)
           const { payloadString } = res
