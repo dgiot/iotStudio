@@ -830,7 +830,7 @@ export default {
           this.$dgiotBus.$on(newVal, (res) => {
             console.error(res)
             const { payloadString } = res
-            this.mqttMsg(payload)
+            this.mqttMsg(payloadString)
           })
         }
         if (oldval) {
