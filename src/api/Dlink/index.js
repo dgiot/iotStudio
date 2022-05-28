@@ -12,6 +12,7 @@ import {
   update_object,
 } from '@/api/Parse'
 import request from '@/utils/request/request'
+import dgiotBus from '@dgiot/dgiot-mqtt-dashboard/src/utils/bus'
 
 /**
  * @description: 获取dlink json 列表
@@ -28,10 +29,13 @@ export async function getDlinkJson(type = 'Topic') {
 export async function deleteTopic(
   Topic = '$dg/user/router/thing/111/cmd/delete'
 ) {
-  return request({
-    url: `topic?topic=${Topic}`,
-    method: 'delete',
-  })
+  console.warn(`${location.href} unSubscribe ${Topic}`)
+  return Topic
+    ? request({
+        url: `topic?topic=${Topic}`,
+        method: 'delete',
+      })
+    : ''
 }
 
 export async function getTopic(Topic = '$dg/user/router/thing/111/cmd/delete') {
@@ -44,10 +48,25 @@ export async function getTopic(Topic = '$dg/user/router/thing/111/cmd/delete') {
 export async function postTopic(
   Topic = '$dg/user/router/thing/111/cmd/delete'
 ) {
-  return request({
+  const submessage = request({
     url: `topic`,
     method: 'post',
     Headers: { 'Content-Type': 'application/json', accept: 'application/json' },
     data: { topic: Topic },
   })
+  const mqttInfo = {
+    href: location.href,
+    topic: Topic,
+    topicKey: Vue.prototype.$dgiotBus.getTopicKeyBypage(Topic.split('/')[2]),
+    splitTopicKey: Topic.split('/')[2],
+  }
+  console.groupCollapsed(
+    ` href: ${mqttInfo.href} \n topic: ${mqttInfo.topic} \n topicKey: ${mqttInfo.topicKey} \n splitTopicKey: ${mqttInfo.splitTopicKey}`
+  )
+  console.table(mqttInfo)
+  console.groupEnd()
+  // MqttSubscribe
+  window.mqttInfo = window.dgiot.mqttInfo = mqttInfo
+  Vue.prototype.$mqttInfo = mqttInfo
+  return mqttInfo.submessage
 }

@@ -69,9 +69,7 @@ const actions = {
     _defaultRoutes.push(defaultRoutes)
     let routes = [...asyncRoutes]
     // 设置后端路由(不需要可以删除)
-    const { results = [] } = localStorage.getItem('loginInfo')
-      ? await getRouterList()
-      : []
+    const { results = [] } = await getRouterList()
     const cookie = Cookies.get('dgiot_auth_token') !== 'undefined'
     if (!results && cookie) {
       Vue.prototype.$baseMessage(

@@ -832,33 +832,6 @@
     ...mapGetters({
       roleTree: 'user/roleTree',
     }),
-    watch: {
-      subtopic: {
-        handler: function (newVal, oldval) {
-          let _this = this
-          if (newVal) {
-            this.$dgiotBus.$on(
-              this.$dgiotBus.getTopicKeyBypage('channel'),
-              (res) => {
-                console.log('home page topic data', payloadString)
-                console.log(res)
-                const { payloadString } = res
-                //  过滤登录时候，首页mqtt乱码的情况
-                this.mqttMsg(payloadString)
-              }
-            )
-          }
-          if (oldval) {
-            // 取消订阅
-            _this.submessage = ''
-            _this.msgList = []
-            _this.logKey = '99'
-          }
-        },
-        deep: true,
-        limit: true,
-      },
-    },
     mounted() {
       this.router = this.$dgiotBus.router(this.$route.fullPath)
       this.Get_Re_Channel(0)
@@ -1634,6 +1607,7 @@
         this.subdialogid = row.objectId
         this.channelname = row.objectId
         this.subtopic = '$dg/user/channel/' + row.objectId + '/#'
+        this.msgList = []
         this.submessage = ''
         this.msgList = []
         let subInfo = {
@@ -1643,8 +1617,15 @@
           ttl: 1000 * 60 * 60 * 3,
         }
         await this.$subscribe(this.subtopic)
+        console.log(this.$mqttInfo)
         // this.$dgiotBus.$emit('MqttSubscribe', subInfo)
         subupadte(row.objectId, 'start_logger')
+        this.$dgiotBus.$on(this.$mqttInfo.splitTopicKey, (res) => {
+          console.log(res)
+          const { payloadString } = res
+          //  过滤登录时候，首页mqtt乱码的情况
+          this.mqttMsg(payloadString)
+        })
         // this.topicKey = this.$dgiotBus.topicKey(this.router, this.subtopic)
       },
       async handleCloseSubdialog() {

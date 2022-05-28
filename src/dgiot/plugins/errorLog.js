@@ -17,7 +17,7 @@ if (checkNeed()) {
   Vue.config.errorHandler = (err, vm, info) => {
     // eslint-disable-next-line no-console
     const url = window.location.href
-    err.message !==
+    err?.message !==
     "TypeError: Cannot read properties of undefined (reading 'MapTopic')"
       ? Vue.nextTick(() => {
           store

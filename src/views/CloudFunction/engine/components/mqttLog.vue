@@ -235,31 +235,35 @@
           this.queryDevice()
         }
       },
-      topicKey: {
-        handler: function (newVal, oldval) {
-          console.log('newVal topicKey', newVal)
-          console.log('oldval topicKey', oldval)
-          let _this = this
-          if (newVal) {
-            this.$dgiotBus.$off(newVal)
-            this.$dgiotBus.$on(newVal, (res) => {
-              console.error(res)
-              const { payload } = res
-              this.mqttMsg(payload)
-            })
-          }
-          if (oldval) {
-            // 取消订阅
-            _this.submessage = ''
-            _this.msgList = []
-            _this.logKey = '99'
-          }
-        },
-        deep: true,
-        limit: true,
-      },
+      // topicKey: {
+      //   handler: function (newVal, oldval) {
+      //     console.log('newVal topicKey', newVal)
+      //     console.log('oldval topicKey', oldval)
+      //     let _this = this
+      //     if (newVal) {
+      //       this.$dgiotBus.$off(newVal)
+      //       this.$dgiotBus.$on(newVal, (res) => {
+      //         console.error(res)
+      //         const { payload } = res
+      //         this.mqttMsg(payload)
+      //       })
+      //     }
+      //     if (oldval) {
+      //       // 取消订阅
+      //       _this.submessage = ''
+      //       _this.msgList = []
+      //       _this.logKey = '99'
+      //     }
+      //   },
+      //   deep: true,
+      //   limit: true,
+      // },
     },
     mounted() {},
+    async beforeDestroy() {
+      // this.$dgiotBus.$emit('MqttUnbscribe', this.topicKey, this.subtopic)
+      await this.$unSubscribe(this.subtopic)
+    },
     methods: {
       stopchannel(val) {
         if (val == 'device') {
@@ -280,7 +284,7 @@
         // subdialog.setValue(this.submessage)
         // subdialog.gotoLine(subdialog.session.getLength())
       },
-      subscriptionlog(devaddr) {
+      async subscriptionlog(devaddr) {
         this.editorKey = moment().format('x')
         this.deviceLog = 'Log is true' + `\n`
         this.pubtopic =
@@ -290,16 +294,24 @@
           this.queryForm.product +
           '/' +
           devaddr
-        this.subtopic = '$dg/' + this.pubtopic
-        this.router = this.$dgiotBus.router(location.href)
-        this.topicKey = this.$dgiotBus.topicKey(this.router, this.subtopic)
-        let subInfo = {
-          router: this.router,
-          topic: this.subtopic,
-          qos: 2,
-          ttl: 1000 * 60 * 60 * 3,
-        }
-        this.$dgiotBus.$emit('MqttSubscribe', subInfo)
+        this.subtopic = '$dg/user/accurate/' + this.pubtopic
+        await this.$subscribe(this.subtopic)
+        console.log(this.$mqttInfo)
+        this.$dgiotBus.$on(this.$mqttInfo.splitTopicKey, (res) => {
+          console.log(res)
+          const { payloadString } = res
+          //  过滤登录时候，首页mqtt乱码的情况
+          this.mqttMsg(payloadString)
+        })
+        // this.router = this.$dgiotBus.router(location.href)
+        // this.topicKey = this.$dgiotBus.topicKey(this.router, this.subtopic)
+        // let subInfo = {
+        //   router: this.router,
+        //   topic: this.subtopic,
+        //   qos: 2,
+        //   ttl: 1000 * 60 * 60 * 3,
+        // }
+        // this.$dgiotBus.$emit('MqttSubscribe', subInfo)
         // setTimeout(() => {
         //   this.$dgiotBus.$emit(
         //     `MqttPublish`,
