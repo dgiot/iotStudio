@@ -144,13 +144,12 @@
             await this.setTreeFlag(!this.treeFlag)
           })
           await this.setTreeFlag(!this.treeFlag)
-          console.log(res, 'loadDgiotScript success')
+          // console.log(res, 'loadDgiotScript success')
         } catch (error) {
           console.error(error, 'loadDgiotScript error')
         }
       },
       async Mqtt(md5Info) {
-        console.error('src/dgiot/components/DgiotHeader/index.vue', md5Info)
         const { VUE_APP_URL, NODE_ENV } = process.env
         const { hostname, protocol } = location
         const ip =

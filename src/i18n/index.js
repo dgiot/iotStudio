@@ -22,7 +22,6 @@ const messages = {
     ...elJp,
   },
 }
-console.log(messages)
 function getLanguage() {
   return store.getters['settings/language'] || 'zh'
 }

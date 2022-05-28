@@ -314,18 +314,18 @@
                       size="mini"
                       @click="toggleFull()"
                     />
-                    <bm-panorama
-                      anchor="BMAP_ANCHOR_TOP_LEFT"
-                      :offset="{ width: 500, height: 0 }"
-                    />
+                    <!--                    <bm-panorama-->
+                    <!--                      anchor="BMAP_ANCHOR_TOP_LEFT"-->
+                    <!--                      :offset="{ width: 500, height: 0 }"-->
+                    <!--                    />-->
                     <bm-overview-map :is-open="true" />
                     <bm-scale :offset="{ width: 260, height: 0 }" />
                     <bm-city-list :offset="{ width: 330, height: 0 }" />
-                    <bm-map-type
-                      anchor="BMAP_ANCHOR_TOP_LEFT"
-                      :map-types="['BMAP_NORMAL_MAP', 'BMAP_HYBRID_MAP']"
-                      :offset="{ width: 400, height: 0 }"
-                    />
+                    <!--                    <bm-map-type-->
+                    <!--                      anchor="BMAP_ANCHOR_TOP_LEFT"-->
+                    <!--                      :map-types="['BMAP_NORMAL_MAP', 'BMAP_HYBRID_MAP']"-->
+                    <!--                      :offset="{ width: 400, height: 0 }"-->
+                    <!--                    />-->
                   </bm-control>
                   <!--                  <div-->
                   <!--                    v-for="position in getPosition(_tableData)"-->
@@ -851,6 +851,8 @@
       },
     },
     mounted() {
+      window.bh = ''
+      window.kd = ''
       this.initMapHeight()
       // setTimeout(() => {
       //   this.queryParams.forEach((e) => {

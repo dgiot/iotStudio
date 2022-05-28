@@ -16,17 +16,19 @@ const checkNeed = () => {
 if (checkNeed()) {
   Vue.config.errorHandler = (err, vm, info) => {
     // eslint-disable-next-line no-console
-    console.warn('错误拦截:', err, vm, info)
     const url = window.location.href
-    Vue.nextTick(() => {
-      store
-        .dispatch('errorLog/addErrorLog', {
-          err,
-          vm,
-          info,
-          url,
+    err.message !==
+    "TypeError: Cannot read properties of undefined (reading 'MapTopic')"
+      ? Vue.nextTick(() => {
+          store
+            .dispatch('errorLog/addErrorLog', {
+              err,
+              vm,
+              info,
+              url,
+            })
+            .then(() => {})
         })
-        .then(() => {})
-    })
+      : console.warn('错误拦截:', err, vm, info)
   }
 }

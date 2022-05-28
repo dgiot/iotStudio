@@ -17,7 +17,10 @@ const mutations = {
 }
 const actions = {
   addErrorLog({ commit }, errorLog) {
-    commit('addErrorLog', errorLog)
+    errorLog.err.message !==
+    "Cannot read properties of undefined (reading 'MapTopic')"
+      ? commit('addErrorLog', errorLog)
+      : ''
   },
   clearErrorLog({ commit }) {
     commit('clearErrorLog')

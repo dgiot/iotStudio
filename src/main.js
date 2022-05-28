@@ -13,7 +13,6 @@ window.dgiotlogger =
     ? new Lajax(`${location.origin}/iotapi/protocol`)
     : console
 dgiotlogger.info('dgiot-dashboard环境变量：', dgiot)
-dgiotlogger.info('dgiotlogger.queue：', dgiotlogger.queue)
 if (isPwa) require('./registerServiceWorker')
 process.env.NODE_ENV !== 'development'
   ? (Vue.config.productionTip = true)

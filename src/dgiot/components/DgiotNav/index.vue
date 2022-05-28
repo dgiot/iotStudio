@@ -142,7 +142,6 @@
             await this.setTreeFlag(!this.treeFlag)
           })
           await this.setTreeFlag(!this.treeFlag)
-          console.log(res, 'loadDgiotScript success')
         } catch (error) {
           console.error(error, 'loadDgiotScript error')
         }

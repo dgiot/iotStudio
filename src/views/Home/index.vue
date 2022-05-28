@@ -151,7 +151,7 @@
         <el-row v-show="mapType == 'baidu'" :row="24">
           <el-col :span="leftRow" :xs="24">
             <el-row :span="24">
-              <div id="chart_map" class="chart_map" style="position: relative">
+              <div class="chart_map" style="position: relative">
                 <div v-show="false" class="card_left">
                   <el-row class="card_left-row" :gutter="24">
                     <el-col class="card_left-row-col" :span="6">
@@ -314,18 +314,18 @@
                       size="mini"
                       @click="toggleFull()"
                     />
-                    <bm-panorama
-                      anchor="BMAP_ANCHOR_TOP_LEFT"
-                      :offset="{ width: 500, height: 0 }"
-                    />
+                    <!--                    <bm-panorama-->
+                    <!--                      anchor="BMAP_ANCHOR_TOP_LEFT"-->
+                    <!--                      :offset="{ width: 500, height: 0 }"-->
+                    <!--                    />-->
                     <bm-overview-map :is-open="true" />
                     <bm-scale :offset="{ width: 260, height: 0 }" />
                     <bm-city-list :offset="{ width: 330, height: 0 }" />
-                    <bm-map-type
-                      anchor="BMAP_ANCHOR_TOP_LEFT"
-                      :map-types="['BMAP_NORMAL_MAP', 'BMAP_HYBRID_MAP']"
-                      :offset="{ width: 400, height: 0 }"
-                    />
+                    <!--                    <bm-map-type-->
+                    <!--                      anchor="BMAP_ANCHOR_TOP_LEFT"-->
+                    <!--                      :map-types="['BMAP_NORMAL_MAP', 'BMAP_HYBRID_MAP']"-->
+                    <!--                      :offset="{ width: 400, height: 0 }"-->
+                    <!--                    />-->
                   </bm-control>
                   <!--                  <div-->
                   <!--                    v-for="position in getPosition(_tableData)"-->
@@ -623,6 +623,7 @@
   </div>
 </template>
 <script>
+  import { postTopic, deleteTopic } from '@/api/Dlink'
   import icoPath1 from '../../../public/assets/images/Device/1.png'
   import icoPath2 from '../../../public/assets/images/Device/2.png'
   // import { queryProduct } from '@/api/Product'
@@ -632,7 +633,7 @@
   import { Startdashboard } from '@/api/System/index'
   import { isBase64 } from '@/utils'
   import info from '@/components/Device/info'
-  // import queryParams from '@/api/Mock/dashboard'
+  import { getDlinkJson } from '@/api/Dlink'
   import {
     BaiduMap,
     BmCityList,
@@ -650,8 +651,6 @@
     BmPointCollection,
   } from 'vue-baidu-map'
   import { secret } from '@/config/secret.config'
-  // import queryParams from '@/api/Mock/dashboard'
-  import { getDlinkJson } from '@/api/Dlink'
 
   window.dgiot.dgiotEnv = process.env
   export default {
@@ -705,16 +704,18 @@
         },
         mapType: 'baidu',
         isShow: true,
-        ak: secret.baidu.map ?? 'WpeAb6pL4tsX2ZVd56GHbO9Ut6c4HZhG',
+        ak: 'WpeAb6pL4tsX2ZVd56GHbO9Ut6c4HZhG',
         // ak: 'oW2UEhdth2tRbEE4FUpF9E5YVDCIPYih',
         // center:{ lng: 120.187273, lat: 30.334877 },
-        center: { lng: 120.260545, lat: 31.551162 },
+        center: {
+          lng: 120.260545,
+          lat: 31.551162,
+        },
         icoPath: {
           icoPath1: icoPath1,
           icoPath2: icoPath2,
         },
         router: '',
-        topicKey: '',
         loadingConfig: {
           product_count: false,
           app_count: false,
@@ -746,7 +747,9 @@
         loading: true,
         marker: {},
         deviceFlag: false,
-        deviceInfo: { detail: {} },
+        deviceInfo: {
+          detail: {},
+        },
         Product: [],
         imgurl:
           'https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg',
@@ -839,19 +842,6 @@
         deep: true,
         limit: true,
       },
-      topicKey: {
-        handler: function (newVal) {
-          this.$dgiotBus.$off(newVal)
-          this.$dgiotBus.$on(newVal, (res) => {
-            console.log('payload')
-            console.log(newVal)
-            const { payload } = res
-            this.mqttMsg(payload)
-          })
-        },
-        deep: true,
-        limit: true,
-      },
       sizeZoom: {
         handler: function (zoom) {
           console.log(`当前sizeZoom 为 ${zoom}`)
@@ -860,18 +850,16 @@
         limit: true,
       },
     },
-    async created() {
-      const { dashboard = {} } = await getDlinkJson('Dashboard')
-      this.queryParams = dashboard
-    },
     mounted() {
+      window.bh = ''
+      window.kd = ''
       this.initMapHeight()
-      setTimeout(() => {
-        this.queryParams.forEach((e) => {
-          let key = e.vuekey
-          this.loadingConfig[`${key}`] = false
-        })
-      }, 1240)
+      // setTimeout(() => {
+      //   this.queryParams.forEach((e) => {
+      //     let key = e.vuekey
+      //     this.loadingConfig[`${key}`] = false
+      //   })
+      // }, 1240)
       this.router = this.$dgiotBus.router(this.$route.fullPath)
       this.$dgiotBus.$off('qqMapClcik')
       this.$dgiotBus.$on('qqMapClcik', (ev) => {
@@ -883,10 +871,16 @@
       this.initDgiotMqtt()
       window.onresize = () => {
         return (() => {
-          this.mapHeight = window.innerHeight * 0.7 + 'px'
+          this.mapHeight = window.innerHeight * 0.8 + 'px'
           this.mapWidth = window.innerWidth * 0.98 + 'px'
         })()
       }
+    },
+    async beforeDestroy() {
+      //  取消订阅http请求写法,http需要在topic中加页面路由
+      // await this.$unSubscribe(this.subtopic)
+      // 取消订阅mqtt写法 2022-5-27 改为http写法
+      // this.$dgiotBus.$emit('MqttUnbscribe', this.topicKey, this.subtopic)
     },
     activated() {
       // dgiotlog.log('keep-alive生效')
@@ -896,7 +890,7 @@
       this.resizeTheChart()
     },
     methods: {
-      initMapHeight() {
+      async initMapHeight() {
         this.mapHeight = window.innerHeight * 0.7 + 'px'
         this.mapWidth = window.innerWidth * 0.98 + 'px'
       },
@@ -962,7 +956,7 @@
           // this.$message.success(`${res}`)
         } catch (error) {
           // dgiotlog.log(error)
-          this.$baseMessage(error, 'error', 'dgiot-hey-message-error')
+          this.$baseMessage(`${error}`, 'error', 'dgiot-hey-message-error')
         }
       },
       toggleFull(e) {
@@ -1085,19 +1079,19 @@
           : (this.deviceInfo.topicData = _toppic)
         this.deviceFlag = true
       },
-      printQueryInfo(value, mqttMsg) {
-        // queryParams.forEach((e) => {
-        //   if (e.vuekey)
-        //     console.log(`收到订阅${value}的消息${mqttMsg},查询参数为${mqttMsg}`)
-        // })
-      },
+      // printQueryInfo(value, mqttMsg) {
+      //   this.queryParams.forEach((e) => {
+      //     if (e.vuekey)
+      //       console.log(`收到订阅${value}的消息${mqttMsg},查询参数为${mqttMsg}`)
+      //   })
+      // },
       mqttMsg(e) {
         let mqttMsg = isBase64(e) ? Base64.decode(e) : e
         console.log(mqttMsg, '收到消息')
         // // dgiotlog.log(destinationName, mqttMsg, 'mqttMsg')
         let mqttMsgValue = JSON.parse(mqttMsg).value
         let key = JSON.parse(mqttMsg).vuekey
-        this.printQueryInfo(mqttMsgValue, mqttMsg)
+        // this.printQueryInfo(mqttMsgValue, mqttMsg)
         // this.loadingConfig[`${key}`] = true
         // this.$baseNotify(
         //   '',
@@ -1128,6 +1122,7 @@
             this.set_onlineData(this.onlineData)
             break
           case 'dev_off_count':
+            console.error(mqttMsgValue, 'mqttMsgValue')
             this.dev_off_count = mqttMsgValue.count
             this.offlineData = mqttMsgValue.results
             this.set_dev_off_count(this.dev_off_count)
@@ -1171,22 +1166,34 @@
       toggleCard(height) {
         // dgiotlog.log('cardHeight', height)
         if (height != '0px') {
-          $('.map_card').css({ height: '0px' })
+          $('.map_card').css({
+            height: '0px',
+          })
           this.cardHeight = '0px'
         } else {
-          $('.map_card').css({ height: '98px' })
+          $('.map_card').css({
+            height: '98px',
+          })
           this.cardHeight = '98px'
         }
       },
       toggleLeftWidth(width) {
         // dgiotlog.log(width, 'width')
         if (width != '0px') {
-          $('.dgiot-side-bar').css({ width: '0px' })
-          $('.dgiot-main').css({ 'margin-left': '0px' })
+          $('.dgiot-side-bar').css({
+            width: '0px',
+          })
+          $('.dgiot-main').css({
+            'margin-left': '0px',
+          })
           this.leftWidth = '0px'
         } else {
-          $('.dgiot-side-bar').css({ width: '200px' })
-          $('.dgiot-main').css({ 'margin-left': '200px' })
+          $('.dgiot-side-bar').css({
+            width: '200px',
+          })
+          $('.dgiot-main').css({
+            'margin-left': '200px',
+          })
           this.leftWidth = '200px'
         }
       },
@@ -1203,17 +1210,28 @@
             this.loadingConfig[`${key}`] = true
           })
         }, 1240)
+        // this.$dgiotBus.$emit('MqttSubscribe', {
+        //   router: this.router,
+        //   topic: this.subtopic,
+        //   qos: 0,
+        //   ttl: 1000 * 60 * 60 * 3,
+        // })
+        // console.log(this.queryParams, 'queryParams')
         const Startdashboardid = '32511dbfe5'
-        this.subtopic = `$dg/dashboard/${Startdashboardid}/report`
-        this.topicKey = this.$dgiotBus.topicKey(this.router, this.subtopic)
-        this.$dgiotBus.$emit('MqttSubscribe', {
-          router: this.router,
-          topic: this.subtopic,
-          qos: 0,
-          ttl: 1000 * 60 * 60 * 3,
-        })
         await Startdashboard(this.queryParams, Startdashboardid)
         // 本地mqtt 存在问题,在请求4秒后手动关闭所有loading
+        // await this.$subscribe(this.subtopic)
+        //  改为后端订阅
+
+        this.$dgiotBus.$on(
+          this.$dgiotBus.getTopicKeyBypage('dashboard'),
+          (res) => {
+            const { payloadString } = res
+            console.log('home page topic data', payloadString)
+            console.log(res)
+            this.mqttMsg(payloadString)
+          }
+        )
         this.$nextTick(() => {
           if (this.mapType == 'tencent') {
             this.setTreeFlag(false)
@@ -1283,7 +1301,9 @@
           display: 'none',
           'overflow-x': 'auto',
         })
-        $('.el-select-dropdown').css({ display: 'none' })
+        $('.el-select-dropdown').css({
+          display: 'none',
+        })
         this.queryForm.workGroupName = data.label
         this.treeDataValue = data.label
         // dgiotlog.log(this.treeDataValue)
@@ -1486,6 +1506,7 @@
             div {
               display: flex;
               justify-content: center;
+
               //width: 40px;
               //height: 40px;
               p {

@@ -844,7 +844,7 @@
                 console.log(res)
                 const { payloadString } = res
                 //  过滤登录时候，首页mqtt乱码的情况
-                if (!isBase64(payloadString)) this.mqttMsg(payloadString)
+                this.mqttMsg(payloadString)
               }
             )
           }
