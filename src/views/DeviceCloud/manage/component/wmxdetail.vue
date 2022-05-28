@@ -1295,7 +1295,7 @@
        * @description 查询资源通道
        */
       await this.queryResource()
-      await this.queryViewInfo()
+      if (this.$route.query.id) await this.queryViewInfo()
     },
     mounted() {},
     beforeCreate() {}, //生命周期 - 创建之前
