@@ -1,5 +1,5 @@
 <template>
-  <div :key="amisKey" ref="renderBox" className="box"></div>
+  <div :key="amisKey" ref="renderBox" class="box" className="box"></div>
 </template>
 
 <script>
@@ -19,7 +19,7 @@
     name: 'AmisRender',
     props: {
       // eslint-disable-next-line
-      schema: {
+    schema: {
         type: Object,
       },
       updateLocation: {
@@ -299,3 +299,8 @@
     },
   }
 </script>
+<style scoped>
+  .box {
+    height: 90vh;
+  }
+</style>
