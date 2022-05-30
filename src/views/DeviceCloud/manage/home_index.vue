@@ -10,7 +10,6 @@
         width="60%"
       >
         <el-card>
-          <div v-if="false" slot="title"></div>
           <label>
             关键词：
             <el-input v-model="map.keyword">
@@ -124,7 +123,6 @@
         @beforeClose="handleClose"
       >
         <dgiot-dialog append-to-body :show.sync="map.innerVisible" width="55%">
-          <div v-if="false" slot="title"></div>
           <label>
             关键词：
             <el-input v-model="map.keyword">
@@ -161,6 +159,10 @@
             :zoom="15"
             @click="mapClick"
           >
+            <bml-marker-clusterer>
+              <bm-marker />
+              <bm-label />
+            </bml-marker-clusterer>
             <bm-view class="map" />
             <bm-local-search
               :auto-viewport="true"
@@ -181,10 +183,6 @@
                 :offset="{ width: 400, height: 0 }"
               />
             </bm-control>
-            <bml-marker-clusterer>
-              <bm-marker>1</bm-marker>
-              <bm-label>1</bm-label>
-            </bml-marker-clusterer>
             <bm-navigation anchor="BMAP_ANCHOR_TOP_RIGHT" />
             <bm-geolocation
               anchor="BMAP_ANCHOR_BOTTOM_RIGHT"
@@ -435,6 +433,7 @@
         </template>
         <template #default="{ row }">
           <span
+            :key="row.address"
             style="color: #67c23a"
             type="success"
             @click="showAdddress(row)"
@@ -779,6 +778,7 @@
           showClose: true,
           type: 'success',
         })
+        this.fetchData()
       },
       closeMap() {
         this.dialog_device = false

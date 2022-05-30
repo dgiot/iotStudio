@@ -15,7 +15,6 @@ let systemStatic = {
     // 'aliplayer-min.css',
     'amis/lib/themes/cxd.css',
     'amis/lib/helper.css',
-    'amis/lib/themes/antd.css',
   ],
   js: [
     'vue.js',
@@ -79,7 +78,6 @@ let runTimeStatic = {
     'lint.css',
     'amis/lib/themes/cxd.css',
     'amis/lib/helper.css',
-    'amis/lib/themes/antd.css',
   ],
   js: [
     'jszip.min.js',

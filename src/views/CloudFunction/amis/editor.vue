@@ -35,8 +35,8 @@
       v-show="!isPreview"
       ref="dgiotAmis"
       :amis-key="viewId"
+      :schema="amisJson"
       :theme="theme"
-      :value="amisJson"
       @onChange="onChange"
     />
   </div>
@@ -49,7 +49,7 @@
     data() {
       return {
         renderSchema: {},
-        theme: 'antd',
+        theme: 'cxd',
         viewId: this.$route.query.viewId || '',
         isPreview: this.$route.query.isPreview || false,
         amisJson: {},

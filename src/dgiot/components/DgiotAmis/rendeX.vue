@@ -35,7 +35,7 @@
       theme: {
         type: String,
         required: false,
-        default: 'cxd', // antd // cxd
+        default: 'antd', // antd // cxd
       },
     },
     data() {
