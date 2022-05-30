@@ -691,6 +691,8 @@
         delete device.createdAt
         delete device.updatedAt
         delete device.objectId
+        delete device.endTime
+        delete device.startTime
         device.isEnable = false
         device.devaddr = md5('Device' + Math.round(new Date()) + '').substring(
           0,
