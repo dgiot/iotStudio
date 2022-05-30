@@ -13,8 +13,8 @@ let systemStatic = {
     'vditor.css',
     'xterm.css',
     // 'aliplayer-min.css',
-    'amis/lib/themes/cxd.css',
-    'amis/lib/helper.css',
+    // 'amis/lib/themes/cxd.css',
+    // 'amis/lib/helper.css',
   ],
   js: [
     'vue.js',
@@ -76,8 +76,8 @@ let runTimeStatic = {
     'style.min.css',
     'codemirror.css',
     'lint.css',
-    'amis/lib/themes/cxd.css',
-    'amis/lib/helper.css',
+    // 'amis/lib/themes/cxd.css',
+    // 'amis/lib/helper.css',
   ],
   js: [
     'jszip.min.js',

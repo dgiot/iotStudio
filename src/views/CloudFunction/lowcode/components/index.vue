@@ -20,8 +20,7 @@
       :with-header="withHeader"
     >
       <topo v-if="type === 'topo'" :code="code.konva" :object-id="objectId" />
-      <amis v-if="type === 'amis'" :code="code" :object-id="objectId" />
-      <amis v-if="type === 'amis_view'" :code="code" :object-id="objectId" />
+      <amis v-else :code="code" :object-id="objectId" />
     </el-drawer>
   </div>
 </template>
