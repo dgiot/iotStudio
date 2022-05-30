@@ -12,15 +12,15 @@ module.exports = (req, res) => {
   let target = ''
   // 判断 res.url 开头是否包含startsWith
   if (req.url.startsWith('/iotapi')) {
-    target = targetUrl
+    target = targetUrl + '/iotapi'
   } else if (req.url.startsWith('/dgiot_dashboard')) {
-    target = targetUrl
+    target = targetUrl + '/dgiot_dashboard'
   } else if (req.url.includes('/dgiot_swagger')) {
-    target = targetUrl
+    target = targetUrl + '/dgiot_swagger'
   } else if (req.url.startsWith('/dgiot_file')) {
-    target = targetUrl
+    target = targetUrl + '/dgiot_file'
   } else if (req.url.includes('/dgiot-amis-dashboard')) {
-    target = targetUrl
+    target = targetUrl + '/dgiot-amis-dashboard'
   }
   // 创建代理对象并转发请求
   createProxyMiddleware({
