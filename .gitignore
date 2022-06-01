@@ -1,0 +1,52 @@
+.DS_Store
+node_modules
+/dist
+*.zip
+*.rar
+release
+
+# local env files
+.env.local
+.env.*.local
+
+# Log files
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+pnpm-lock.yaml
+*.idea
+*-lock.json
+
+# Editor directories and files
+.idea
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+*.tar.gz
+
+# Lock files
+pnpm-lock.yaml
+pack-lock.json
+# Yarn v2
+.pnp.*
+.yarn/cache
+.yarn/unplugged
+.yarn/build-state.yml
+.yarn/install-state.gz
+.yarnrc
+yarn.lock
+# config
+/gitbit
+/github
+src/config/ignore
+# files
+swagger.json
+lite.sh
+/cli.config.js
+/lite
+/full
+/dev

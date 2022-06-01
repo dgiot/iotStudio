@@ -1,0 +1,18 @@
+module.exports = {
+  publicPath: './',
+  outputDir: 'dist',
+  assetsDir: 'static',
+  lintOnSave: true,
+  transpileDependencies: ['resize-detector'],
+  devPort: '80',
+  providePlugin: {},
+  build7z: false,
+  buildGzip: true,
+  imageCompression: false,
+  useCdn: true,
+  ignoreCdn: ['php', 'bugtags', '1279876845', 'qq'],
+  iconfontId: ['font_2759556_r8d9wroaw8'],
+  isSmp: false,
+  CDN_URL: '/dgiot_dashboard/public',
+  CDN: '//dgiot.netlify.app',
+}

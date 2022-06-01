@@ -1,0 +1,14 @@
+# http://www.appveyor.com/docs/appveyor-yml
+environment:
+  matrix:
+    - nodejs_version: "16"
+
+install:
+  - ps: Install-Product node $env:nodejs_version
+  - curl -L https://unpkg.com/@pnpm/self-installer | node
+  - pnpm config set registry https://registry.npmmirror.com
+  - pnpm config get registry
+  - pnpm install
+test_script:
+  - pnpm build
+build: off

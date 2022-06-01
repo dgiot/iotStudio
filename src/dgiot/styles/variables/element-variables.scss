@@ -1,0 +1,31 @@
+/* 动画 */
+$--all-transition: all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1) !default;
+$--fade-transition: opacity 300ms cubic-bezier(0.23, 1, 0.32, 1) !default;
+$--fade-linear-transition: opacity 200ms linear !default;
+$--md-fade-transition: transform 300ms cubic-bezier(0.23, 1, 0.32, 1),
+  opacity 300ms cubic-bezier(0.23, 1, 0.32, 1) !default;
+$--border-transition-base: border-color 0.2s
+  cubic-bezier(0.645, 0.045, 0.355, 1) !default;
+$--color-transition-base: color 0.2s cubic-bezier(0.645, 0.045, 0.355, 1) !default;
+
+/* 圆角 */
+$--border-radius-base: $base-border-radius !default;
+
+$--button-small-border-radius: $--border-radius-base !default;
+$--border-radius-small: $--border-radius-base !default;
+$--msgbox-border-radius: $--border-radius-base !default;
+$--pagination-border-radius: $--border-radius-base !default;
+$--tag-border-radius: $--border-radius-base !default;
+$--card-border-radius: $--border-radius-base !default;
+$--slider-border-radius: $--border-radius-base !default;
+$--steps-border-radius: $--border-radius-base !default;
+
+/* 颜色 */
+$--color-primary: $base-color-blue !default;
+$--color-success: $base-color-green !default;
+$--color-warning: $base-color-yellow !default;
+$--color-danger: $base-color-red !default;
+$--color-info: #909399 !default;
+
+$--font-path: '~element-ui/lib/theme-chalk/fonts';
+@import '../../../../node_modules/element-ui/packages/theme-chalk/src/index';
