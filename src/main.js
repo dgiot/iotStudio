@@ -5,16 +5,32 @@ import App from './App'
 import i18n from './i18n'
 import store from './store'
 import router from './router'
-import { isPwa, clearConsole } from './config'
+import { clearConsole, isPwa } from './config'
 import dgiotStore from '@dgiot/dgiot-mqtt-dashboard/src/store'
 import VueAmisSdk from 'vue-amis-sdk/packages/index'
-Vue.use(VueAmisSdk)
 import { VuePlugin } from 'vuera'
-Vue.use(VuePlugin)
 import '@/dgiot'
+
+Vue.use(VueAmisSdk)
+Vue.use(VuePlugin)
 window.dgiotlogger =
   process.env.NODE_ENV !== 'development' && clearConsole
-    ? new Lajax(`${location.origin}/iotapi/protocol`)
+    ? new Lajax({
+        url: '/',
+        autoLogError: true, //是否自动记录未捕获错误true
+        autoLogRejection: false, //是否自动记录Promise错误true
+        autoLogAjax: false, //是否自动记录 ajax 请求true
+        //logAjaxFilter:function(ajaxUrl, ajaxMethod) {
+        //    return false;//ajax 自动记录条件过滤函数true记录false不记录
+        //},
+        stylize: true, //是否要格式化 console 打印的内容true
+        showDesc: false, //是否显示初始化描述信息true
+        customDesc: function (lastUnsend, reqId, idFromServer) {
+          return 'dgiot 前端日志模块加载完成。'
+        },
+        interval: 1000000, //日志发送到服务端的间隔时间10000毫秒
+        maxErrorReq: 3, //发送日志请求连续出错的最大次数
+      })
     : console
 dgiotlogger.info('dgiot-dashboard环境变量：', dgiot)
 if (isPwa) require('./registerServiceWorker')

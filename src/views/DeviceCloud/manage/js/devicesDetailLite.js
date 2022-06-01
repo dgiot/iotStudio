@@ -411,7 +411,7 @@ export default {
     this.setTreeFlag(false)
     this.params.style = this.chartType[0].type
     console.log(' this.params.style', this.params.style)
-    this.subtopic = `$dg/user/${this.$route.query.deviceid}/properties/report` // 设备实时数据topic
+    this.subtopic = `$dg/user/realtimecard/${this.$route.query.deviceid}/report` // 设备实时数据topic
     this.router = this.$dgiotBus.router(location.href + this.$route.fullPath)
     this.topicKey = this.$dgiotBus.topicKey(this.router, this.subtopic) // dgiot-mqtt topicKey 唯一标识
     // if (this.$route.query.deviceid) {
@@ -441,12 +441,14 @@ export default {
     async subRealtimedata() {
       try {
         // 订阅mqtt
-        this.$dgiotBus.$emit('MqttSubscribe', {
-          router: this.router,
-          topic: this.subtopic,
-          qos: 0,
-          ttl: 1000 * 60 * 60 * 3,
-        })
+        // this.$dgiotBus.$emit('MqttSubscribe', {
+        //   router: this.router,
+        //   topic: this.subtopic,
+        //   qos: 0,
+        //   ttl: 1000 * 60 * 60 * 3,
+        // })
+        await this.$subscribe(this.subtopic)
+        console.log(this.$mqttInfo)
         // mqtt 消息回调
         console.groupCollapsed(
           `%c mqtt 订阅日志`,
@@ -455,9 +457,8 @@ export default {
         console.log('topic:', this.subtopic)
         console.log('router:', this.router)
         console.groupEnd()
-
-        this.$dgiotBus.$off(this.topicKey) // dgiotBus 关闭事件
-        this.$dgiotBus.$on(this.topicKey, (mqttMsg) => {
+        this.$dgiotBus.$off(this.$mqttInfo.topicKey)
+        this.$dgiotBus.$on(this.$mqttInfo.topicKey, (mqttMsg) => {
           // mqtt 消息回调
           console.groupCollapsed(
             `%c mqttMsg消息回调`,
@@ -490,7 +491,7 @@ export default {
       addVisitedRoute: 'tabs/addVisitedRoute',
     }),
     Unbscribe() {
-      const subtopic = '$dg/trace/' + this.deviceInfo.objectId + '/#'
+      const subtopic = '$dg/user/trace/' + this.deviceInfo.objectId + '/#'
       const topicKey = this.$dgiotBus.topicKey(this.router, subtopic)
       this.$dgiotBus.$emit('MqttUnbscribe', topicKey, subtopic)
       this.$dgiotBus.$emit('MqttUnbscribe', this.topicKey, this.subtopic)
@@ -942,9 +943,9 @@ export default {
       this.setTreeFlag(false)
       this.params.style = this.chartType[0].type
       console.log(' this.params.style', this.params.style)
-      this.subtopic = `$dg/user/${this.$route.query.deviceid}/properties/report` // 设备实时数据topic
+      this.subtopic = `$dg/user/realtimecard/${this.$route.query.deviceid}/report` // 设备实时数据topic
       this.router = this.$dgiotBus.router(location.href + this.$route.fullPath)
-      this.topicKey = this.$dgiotBus.topicKey(this.router, this.subtopic) // dgiot-mqtt topicKey 唯一标识
+      // this.topicKey = this.$dgiotBus.topicKey(this.router, this.subtopic) // dgiot-mqtt topicKey 唯一标识
       // if (this.$route.query.deviceid) {
       this.deviceid = deviceid
       this.subRealtimedata()

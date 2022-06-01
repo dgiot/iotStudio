@@ -15,6 +15,11 @@
     class="xinmahe-container"
     :class="{ 'dgiot-fullscreen': isFullscreen }"
   >
+    <Modal v-model="topoFlag" footer-hide fullscreen :query="routerInfo.query">
+      <span slot="title" v-if="false"></span>
+      <span slot="footer" v-if="false"></span>
+      <topo v-if="topoFlag" ref="topo" />
+    </Modal>
     <el-form
       ref="form"
       :inline="true"
@@ -461,21 +466,21 @@
 <script>
   import TableEdit from '@/views/DeviceCloud/empty/tableEdit'
   import { queryProduct } from '@/api/Product/index'
-  import { getStatistics } from '@/api/Python'
+  import topo from '@/views/CloudFunction/topo/index'
   import { mapGetters, mapMutations } from 'vuex'
   import { queryView } from '@/api/View'
   import {
-    addimeidevice,
+    delDevice,
+    getDevice,
+    postDevice,
     putDevice,
     querycompanyDevice,
-    postDevice,
-    getDevice,
-    delDevice,
   } from '@/api/Device'
 
   export default {
     name: 'Xinmahe',
     components: {
+      topo,
       TableEdit,
     },
     props: {},
@@ -493,6 +498,8 @@
         }, 1000)
       }
       return {
+        topoFlag: false,
+        routerInfo: {},
         Product: [],
         productId: '',
         deviceInfo: {},
@@ -1020,8 +1027,9 @@
       },
       // 组态
       konvaDevice(row) {
+        this.topoFlag = true
         this.$router.push({
-          path: '/Topo',
+          path: '/dashboard/device',
           query: {
             productid: row.product.objectId,
             devaddr: row.devaddr,
@@ -1029,6 +1037,7 @@
             type: 'device',
           },
         })
+        // this.$refs.topo.productid = this.routerInfo.productid
       },
       move(row) {
         console.log(row)

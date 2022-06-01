@@ -236,17 +236,17 @@ export default {
         })
     },
     async subRealtimedata(params) {
-      let subtopic = `$dg/user/${params.parentId.objectId}/properties/report` // 设备实时数据topic
+      let subtopic = `$dg/user/realtimecard/${params.parentId.objectId}/report` // 设备实时数据topic
       let router = this.$dgiotBus.router(location.href + this.$route.fullPath)
-      let topicKey = this.$dgiotBus.topicKey(router, subtopic) // dgiot-mqtt topicKey 唯一标识
+      // let topicKey = this.$dgiotBus.topicKey(router, subtopic) // dgiot-mqtt topicKey 唯一标识
       try {
         // 订阅mqtt
-        this.$dgiotBus.$emit('MqttSubscribe', {
-          router: router,
-          topic: subtopic,
-          qos: 0,
-          ttl: 1000 * 60 * 60 * 3,
-        })
+        // this.$dgiotBus.$emit('MqttSubscribe', {
+        //   router: router,
+        //   topic: subtopic,
+        //   qos: 0,
+        //   ttl: 1000 * 60 * 60 * 3,
+        // })
         // mqtt 消息回调
         console.groupCollapsed(
           `%c mqtt 订阅日志`,
@@ -256,8 +256,8 @@ export default {
         console.log('router:', router)
         console.groupEnd()
 
-        this.$dgiotBus.$off(topicKey) // dgiotBus 关闭事件
-        this.$dgiotBus.$on(topicKey, (mqttMsg) => {
+        this.$dgiotBus.$off(subtopic) // dgiotBus 关闭事件
+        this.$dgiotBus.$on(subtopic, (mqttMsg) => {
           // mqtt 消息回调
           console.groupCollapsed(
             `%c mqttMsg消息回调`,
@@ -985,12 +985,12 @@ export default {
           }
         })
         console.log('_this.thingdata', _this.thingdata)
-        _this.$dgiotBus.$emit('MqttSubscribe', {
-          router: _this.router,
-          topic: _this.subtopic,
-          qos: 0,
-          ttl: 1000 * 60 * 60 * 3,
-        })
+        // _this.$dgiotBus.$emit('MqttSubscribe', {
+        //   router: _this.router,
+        //   topic: _this.subtopic,
+        //   qos: 0,
+        //   ttl: 1000 * 60 * 60 * 3,
+        // })
       } catch (error) {
         console.log(error)
         _this.$baseMessage(

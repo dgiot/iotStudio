@@ -415,7 +415,7 @@ export default {
     this.setTreeFlag(false)
     this.params.style = this.chartType[0].type
     console.log(' this.params.style', this.params.style)
-    this.subtopic = `$dg/user/${this.$route.query.deviceid}/report` // 设备实时数据topic
+    this.subtopic = `$dg/user/realtimecard/${this.$route.query.deviceid}/report` // 设备实时数据topic
     this.router = this.$dgiotBus.router(location.href + this.$route.fullPath)
     this.topicKey = this.$dgiotBus.topicKey(this.router, this.subtopic) // dgiot-mqtt topicKey 唯一标识
     // if (this.$route.query.deviceid) {
@@ -978,7 +978,8 @@ export default {
       this.setTreeFlag(false)
       this.params.style = this.chartType[0].type
       console.log(' this.params.style', this.params.style)
-      this.subtopic = `$dg/user/${this.$route.query.deviceid}/realtimecard/report` // 设备实时数据topic
+      // | 卡片消息 | $dg/user/realtimecard/{DeviceId}/report|平台|用户|
+      this.subtopic = `$dg/user/realtimecard${this.$route.query.deviceid}/report` // 设备实时数据topic
       this.router = this.$dgiotBus.router(location.href + this.$route.fullPath)
       this.topicKey = this.$dgiotBus.topicKey(this.router, this.subtopic) // dgiot-mqtt topicKey 唯一标识
       // if (this.$route.query.deviceid) {

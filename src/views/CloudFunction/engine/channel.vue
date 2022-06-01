@@ -1618,10 +1618,10 @@
         }
         await this.$subscribe(this.subtopic)
         console.log(this.$mqttInfo)
-        // this.$dgiotBus.$emit('MqttSubscribe', subInfo)
         subupadte(row.objectId, 'start_logger')
         this.msgList = []
         this.submessage = ''
+        this.$dgiotBus.$off(this.$mqttInfo.topicKey)
         this.$dgiotBus.$on(this.$mqttInfo.topicKey, (res) => {
           console.log(res)
           const { payloadString } = res
@@ -1631,12 +1631,13 @@
         // this.topicKey = this.$dgiotBus.topicKey(this.router, this.subtopic)
       },
       async handleCloseSubdialog() {
+        this.$dgiotBus.$off(this.$mqttInfo.topicKey)
+        this.msgList = []
+        this.submessage = ''
         subupadte(this.channelid, 'stop_logger')
         // this.$dgiotBus.$emit('MqttUnbscribe', this.topicKey, this.subtopic)
         await this.$unSubscribe(this.subtopic)
         this.refreshFlag = moment().format('x')
-        this.submessage = ''
-        this.msgList = []
         this.subdialog = !this.subdialog
       },
     },

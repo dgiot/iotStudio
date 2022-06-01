@@ -1,40 +1,30 @@
 <template>
   <div class="center">
-    <div class="dgiot-doc-header">
-      <dgiot-query-form v-show="value != 'temp'">
-        <dgiot-query-form-right-panel style="float: right">
-          <el-form
-            ref="form"
-            :inline="true"
-            label-width="0"
-            :model="queryForm"
-            @submit.native.prevent
-          >
-            <el-form-item>
-              <el-button
-                icon="el-icon-plus"
-                type="primary"
-                @click.native="save(value)"
-              >
-                {{ $translateTitle('button.save') }}
-              </el-button>
-            </el-form-item>
-          </el-form>
-        </dgiot-query-form-right-panel>
-      </dgiot-query-form>
-    </div>
-    <div
-      v-show="value != 'temp'"
-      id="vditor"
-      :key="setKey"
-      name="description"
-    />
+    <el-form
+      v-show="flagType !== 'preview'"
+      :key="Form.objectId"
+      class="demo-form-inline"
+      :inline="true"
+      :model="Form"
+    >
+      <el-form-item>
+        <el-input :key="Form.name" v-model="Form.name" />
+      </el-form-item>
+      <el-form-item>
+        <el-button type="primary" @click="save">更新</el-button>
+      </el-form-item>
+    </el-form>
+    <div id="vditor" style="width: 400vh" :title="title" />
     <el-empty v-show="value == 'temp'" :image-size="200" />
   </div>
 </template>
 <script>
   import { putArticle } from '@/api/Article'
-
+  import Vditor from 'vditor'
+  // import 'vditor/src/assets/less/index.less'
+  import 'vditor/dist/index.css'
+  import { mapGetters } from 'vuex'
+  import store from '@/store'
   export default {
     name: 'DgiotVditor',
     props: {
@@ -43,26 +33,54 @@
         required: false,
         default: 'temp',
       },
+      ruleForm: {
+        type: Object,
+        required: false,
+        default() {
+          return {}
+        },
+      },
+      title: {
+        type: String,
+        required: false,
+        default: '',
+      },
+      type: {
+        type: String,
+        required: false,
+        default: 'preview',
+      },
+      objectId: {
+        type: String,
+        required: false,
+        default: 'temp',
+      },
     },
     data() {
       return {
+        Form: this.ruleForm,
+        flagType: this.type,
         queryForm: {
           name: '',
         },
         height: this.$baseTableHeight(0),
-        setKey: moment(new Date()).valueOf(),
         contentEditor: {},
       }
     },
+    computed: {
+      ...mapGetters({
+        token: 'user/token',
+      }),
+    },
     watch: {
-      value(v) {
-        // if (v.length)
+      objectId(v) {
+        this.Form.name = this.ruleForm.name
         this.createVditor()
       },
     },
     mounted() {},
     methods: {
-      async save(value) {
+      async save() {
         try {
           const loading = this.$baseColorfullLoading()
           const params = {
@@ -73,9 +91,9 @@
             'success',
             'dgiot-hey-message-success'
           )
-          const res = await putArticle(this.$route.query.article, params)
+          const res = await putArticle(this.objectId, params)
           loading.close()
-          dgiotlog.warn(this.contentEditor.getValue(), value)
+          dgiotlog.warn(this.contentEditor.getValue())
         } catch (error) {
           dgiotlog.log(error)
           this.$baseMessage(
@@ -86,6 +104,9 @@
         }
       },
       createVditor() {
+        const { NODE_ENV = 'development' } = process.env
+        this.Form = this.ruleForm
+        // this.$set(Form, 'name', this.ruleForm.name)
         this.contentEditor = new Vditor('vditor', {
           // height: this.height,
           placeholder: '此处为话题内容……',
@@ -109,8 +130,9 @@
           cache: {
             enable: false,
           },
-          mode: 'sv',
+          mode: 'ir',
           toolbar: [
+            'upload',
             'emoji',
             'headings',
             'bold',
@@ -131,34 +153,79 @@
             'insert-before',
             'insert-after',
             '|',
-            // 'record',
+            'record',
             'table',
             '|',
             'undo',
             'redo',
             '|',
             'edit-mode',
-            // 'content-theme',
+            'content-theme',
             'code-theme',
             'export',
-            {
-              name: 'more',
-              toolbar: ['fullscreen', 'both', 'preview', 'info', 'help'],
-            },
+            'fullscreen',
+            'both',
+            'preview',
+            'info',
+            'help',
           ],
+          // https://ld246.com/article/1549638745630#options-upload
+          upload: {
+            headers: {
+              'Sec-Fetch-Site': 'same-origin',
+            },
+            multiple: false,
+            accept: 'image/*,.mp3, .wav, .rar',
+            token: this.token,
+            url:
+              NODE_ENV == 'development'
+                ? `${process.env.VUE_APP_URL}/upload`
+                : location.origin + '/upload',
+            linkToImgUrl: '/api/upload/fetch',
+            extraData: {
+              auth_token: this.token,
+              scene: 'app',
+              code: '',
+              path: 'dgiot_file/docs/',
+              output: 'json',
+              submit: 'upload',
+            },
+            fieldName: 'file',
+            filename(name) {
+              return name
+                .replace(/[^(a-zA-Z0-9\u4e00-\u9fa5\.)]/g, '')
+                .replace(/[\?\\/:|<>\*\[\]\(\)\$%\{\}@~]/g, '')
+                .replace('/\\s/g', '')
+            },
+          },
+          height: '100%',
+          width: ' 155vh',
+          value:
+            '由于跨域问题，可前往[完整示例](https://ld246.com/guide/markdown)进行体验，前往 [API](https://ld246.com/article/1549638745630#options-upload) 进行了解。当然也欢迎在下方进行留言。',
           after: () => {
             this.contentEditor.setValue(this.value)
           },
         })
+
+        console.log(this.contentEditor, this.Form.name)
       },
     },
   }
 </script>
-<style lang="scss" scoped>
+<style lang="scss">
   .dgiot-doc-header {
     margin-top: 10px;
   }
+
   #vditor {
-    height: calc(100vh - #{$base-top-bar-height} * 2.7 - 64px);
+    width: 100vh;
+    height: calc(100vh - #{$base-top-bar-height} * 2.7 - 64px) !important;
   }
+  .vditor-toolbar--pin,
+  .vditor-reset {
+    padding-left: 20px !important;
+  }
+  //.vditor-preview {
+  //  height: 100vh !important;
+  //}
 </style>

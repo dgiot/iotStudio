@@ -10,7 +10,6 @@ let systemStatic = {
     'style.min.css',
     'codemirror.css',
     'lint.css',
-    'vditor.css',
     'xterm.css',
     // 'aliplayer-min.css',
     // 'amis/lib/themes/cxd.css',
@@ -79,13 +78,7 @@ let runTimeStatic = {
     // 'amis/lib/themes/cxd.css',
     // 'amis/lib/helper.css',
   ],
-  js: [
-    'jszip.min.js',
-    'jsplumb.min.js',
-    'javascript.js',
-    'json-lint.js',
-    'vditor.js',
-  ],
+  js: ['jszip.min.js', 'jsplumb.min.js', 'javascript.js', 'json-lint.js'],
 }
 if (process.env.NODE_ENV !== 'development') systemStatic.js[0] = 'vue.min.js'
 

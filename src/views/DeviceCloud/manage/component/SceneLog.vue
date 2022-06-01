@@ -379,10 +379,10 @@
         //   qos: 0,
         //   ttl: 1000 * 60 * 60 * 3,
         // })
-        this.$dgiotBus.$off(this.$mqttInfo.subtopic)
-        console.log(_this.$mqttInfo)
-        console.warn('订阅mqtt', _this.subtopic)
-        this.$dgiotBus.$on(`${this.$mqttInfo.topicKey}`, (Msg) => {
+        this.$dgiotBus.$off( this.subtopic)
+        console.log(this.$mqttInfo)
+        console.warn('订阅mqtt', this.subtopic)
+        this.$dgiotBus.$on(`${ this.subtopic}`, (Msg) => {
           if (Msg.payloadString) {
             this.scroketMsg.unshift(JSON.parse(Msg.payloadString))
             this.logMqtt.key = this.topicKey

@@ -30,12 +30,11 @@ export async function deleteTopic(
   Topic = '$dg/user/router/thing/111/cmd/delete'
 ) {
   console.warn(`${location.href} unSubscribe ${Topic}`)
-  return Topic
-    ? request({
-        url: `topic?topic=${Topic}`,
-        method: 'delete',
-      })
-    : ''
+  return {
+    code: 200,
+    msg: 'success',
+    data: { info: 'success' },
+  }
 }
 
 export async function getTopic(Topic = '$dg/user/router/thing/111/cmd/delete') {
@@ -68,5 +67,5 @@ export async function postTopic(
   // MqttSubscribe
   window.mqttInfo = window.dgiot.mqttInfo = mqttInfo
   Vue.prototype.$mqttInfo = mqttInfo
-  return mqttInfo.submessage
+  return submessage
 }

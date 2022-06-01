@@ -270,7 +270,7 @@
           this.$dgiotBus.$emit(
             'MqttUnbscribe',
             this.$dgiotBus.router(this.$route.fullPath),
-            '$dg/channel/' + this.channelId + '/#'
+            '$dg/user/' + this.channelId + '/#'
           )
         }
       },
@@ -297,6 +297,7 @@
         this.subtopic = '$dg/user/' + this.pubtopic
         await this.$subscribe(this.subtopic)
         console.log(this.$mqttInfo)
+        this.$dgiotBus.$off(this.$mqttInfo.topicKey)
         this.$dgiotBus.$on(this.$mqttInfo.topicKey, (res) => {
           console.log(res)
           const { payloadString } = res

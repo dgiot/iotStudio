@@ -370,11 +370,11 @@
           })
       },
       async updateallFiled() {
-        await updateall()
+        const { msg = '数据库升级成功' } = await updateall()
         this.$message({
           showClose: true,
           duration: 2000,
-          message: '字段升级成功',
+          message: msg,
           type: 'success',
         })
       },

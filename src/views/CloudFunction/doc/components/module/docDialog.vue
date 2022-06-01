@@ -21,7 +21,7 @@
           <el-input v-model="form.name" autocomplete="off" />
         </el-form-item>
         <el-form-item
-          v-show="form.parent.objectId.includes('article')"
+          v-show="form.parent.objectId.includes('0')"
           :label="$translateTitle('article.category')"
           :label-width="formLabelWidth"
           prop="category"
@@ -29,7 +29,7 @@
           <el-input v-model="form.category" autocomplete="off" />
         </el-form-item>
         <el-form-item
-          v-show="form.parent.objectId.includes('article')"
+          v-show="form.parent.objectId.includes('0')"
           :label="$translateTitle('article.Icon')"
           :label-width="formLabelWidth"
           prop="ico"
@@ -92,7 +92,7 @@
           type: '',
           name: '',
           parent: {
-            objectId: 'article',
+            objectId: '0',
             __type: 'Pointer',
             className: 'Article',
           },
@@ -110,9 +110,9 @@
               trigger: 'blur',
             },
             {
-              min: 3,
+              min: 1,
               max: 15,
-              message: '长度在 3 到 15 个字符',
+              message: '长度在 1 到 15 个字符',
               trigger: 'blur',
             },
           ],
@@ -123,9 +123,9 @@
               trigger: 'blur',
             },
             {
-              min: 3,
+              min: 1,
               max: 15,
-              message: '长度在 3 到 15 个字符',
+              message: '长度在 1 到 15 个字符',
               trigger: 'blur',
             },
           ],
@@ -168,7 +168,7 @@
           type: '',
           name: '',
           parent: {
-            objectId: 'article',
+            objectId: '0',
             __type: 'Pointer',
             className: 'Article',
           },

@@ -1,275 +1,282 @@
-<template>
-  <div class="dgiot-doc custom-table-container">
-    <div class="dialog">
-      <doc-dialog ref="DocDialog" />
-    </div>
-    <div class="dgiot-doc-header">
-      <dgiot-query-form>
-        <dgiot-query-form-left-panel>
-          <el-form
-            ref="form"
-            :inline="true"
-            label-width="0"
-            :model="queryForm"
-            @submit.native.prevent
-          >
-            <el-form-item>
-              <el-input
-                v-model="queryForm.name"
-                clearable
-                :placeholder="$translateTitle('product.title')"
-              />
-            </el-form-item>
-            <el-form-item>
-              <el-button
-                icon="el-icon-search"
-                native-type="submit"
-                type="primary"
-                @click="queryDoc"
-              >
-                {{ $translateTitle('concentrator.search') }}
-              </el-button>
-              <el-button
-                icon="el-icon-plus"
-                type="primary"
-                @click="newCategory('add')"
-              >
-                {{ $translateTitle('article.New category') }}
-              </el-button>
-            </el-form-item>
-          </el-form>
-        </dgiot-query-form-left-panel>
-      </dgiot-query-form>
-    </div>
-    <div class="dgiot-doc-center">
-      <a-row class="dgiot-doc-center-row" :gutter="24">
-        <a-col
-          v-for="item in HomePageForDetails"
-          :key="item.objectId"
-          class="dgiot-doc-center-row-antdcol"
-          :lg="8"
-          :md="8"
-          :sm="12"
-          :span="6"
-          :xl="6"
-          :xs="24"
-          :xxl="4.5"
-        >
-          <a-card
-            :bordered="false"
-            class="dgiot-doc-center-row-antdcol-card ant-card-bordered"
-            hoverable
-            :title="item.name"
-          >
-            <el-image slot="cover" :alt="item.ico" :src="item.ico">
-              <div slot="error" class="block image-slot">
-                <dgiot-empty height="100px" width="100" />
-              </div>
-            </el-image>
-            <!--            eslint-disable-next-line-->
-            <template slot="actions" class="ant-card-actions">
-              <a-icon
-                key="edit"
-                type="edit"
-                @click="newCategory('edit', item)"
-              />
-              <a-icon key="delete" type="delete" @click="deletDoc(item)" />
-            </template>
-            <el-button type="success" @click.native="goChild(item)">
-              {{ $translateTitle('article.view') }}
-            </el-button>
-            <!--            {{ $moment(Number(item.created_at)).format('YYYY-MM-DD HH:mm:ss') }}-->
-          </a-card>
-        </a-col>
-      </a-row>
-      <el-empty v-show="HomePageForDetails.length == 0" :image-size="200" />
-    </div>
-  </div>
-</template>
-
 <script>
-  import { uuid } from '@/utils'
-  import requiremodule from '@/utils/file/requiremodule'
-  import {
-    createArticle,
-    delArticle,
-    putArticle,
-    queryArticle,
-  } from '@/api/Article'
-
+  import { createArticle, delArticle, getArticle } from '@/api/Article'
+  import { post_tree } from '@/api/Logs'
+  import { mapGetters, mapMutations } from 'vuex'
   export default {
     name: 'DgiotDoc',
-    components: {
-      ...requiremodule(require.context('./components/module', true, /\.vue$/)),
-    },
     data() {
       return {
-        iconStyle: {
-          width: '22px',
-          height: '22px',
-        },
-        queryForm: {
+        ruleForm: {
           name: '',
+          orderBy: 0,
+          data: '',
+          type: 'page',
         },
-        HomePageForDetails: {},
-        settingDetails: {},
+        rules: {
+          name: [
+            { required: true, message: '请输入活动名称', trigger: 'blur' },
+            {
+              min: 1,
+              max: 10,
+              message: '长度在 1 到 10 个字符',
+              trigger: 'blur',
+            },
+          ],
+          type: [
+            { required: true, message: '请输入活动名称', trigger: 'blur' },
+          ],
+        },
+        father: 0,
+        Article: {},
+        id: 1000,
+        type: 'preview',
+        filterText: '',
+        innerVisible: false,
+        data: [],
       }
     },
-    computed: {},
-    mounted() {},
-    created() {
-      this.queryDoc()
+    computed: {
+      ...mapGetters({}),
     },
-    beforeCreate() {}, //生命周期 - 创建之前
-    beforeMount() {}, //生命周期 - 挂载之前
-    beforeUpdate() {}, //生命周期 - 更新之前
-    updated() {}, //生命周期 - 更新之后
-    beforeDestroy() {}, //生命周期 - 销毁之前
-    destroyed() {}, //生命周期 - 销毁完成
-    activated() {},
+    watch: {
+      filterText(val) {
+        this.$refs.tree.filter(val)
+      },
+    },
+    created() {
+      this.setTreeFlag(false)
+      this.qureyTree()
+    },
     methods: {
-      init() {
-        this.$refs.DocDialog.$refs.form.resetFields()
-        this.$refs.DocDialog.dialogFormVisible = false
-        this.queryDoc()
+      ...mapMutations({
+        setTreeFlag: 'settings/setTreeFlag',
+      }),
+      async handleNodeClick(data) {
+        this.ruleForm = await getArticle(data.objectId)
+        this.$refs.vditor.flagType = 'editor'
+        // this.$refs.vditor.flagType == 'preview'
+        //   ? (this.$refs.vditor.flagType = 'editor')
+        //   : (this.$refs.vditor.flagType = 'preview')
       },
-      newCategory(type, item) {
-        this.$refs.DocDialog.dialogFormVisible = true
-        if (item) this.$refs.DocDialog.form = item
-        this.$refs.DocDialog.form.type = type
-      },
-      deletDoc(item) {
-        this.$baseConfirm(
-          this.$translateTitle(
-            'Maintenance.Are you sure you want to delete the current item'
-          ),
-          null,
-          async () => {
-            const loading = this.$baseColorfullLoading()
-            const res = await delArticle(item.objectId)
-            loading.close()
-
-            this.$baseMessage(
-              this.$translateTitle('Maintenance.successfully deleted'),
-              'success',
-              'dgiot-hey-message-success'
-            )
-            setTimeout(() => {
-              this.queryDoc()
-            }, 1200)
-          }
-        )
-      },
-      /**
-       *
-       * @param
-       * @returns
-       */
-      async queryDoc() {
-        this.HomePageForDetails = []
-        try {
-          const params = {
-            where: {
-              parent: 'article',
-            },
-          }
-
-          this.queryForm.name
-            ? (params.where.name = { $regex: this.queryForm.name })
-            : ''
-          const loading = this.$baseColorfullLoading()
-          const { results = [] } = await queryArticle(params)
-          this.HomePageForDetails = results
-          loading.close()
-        } catch (error) {
-          console.log(error)
-          this.$baseMessage(
-            this.$translateTitle('alert.Data request error') + `${error}`,
-            'error',
-            'dgiot-hey-message-error'
-          )
+      async qureyTree() {
+        const params = {
+          province: '',
+          class: 'Article',
+          filter: '{"keys":["parent","name"],"where":{}}',
+          parent: 'parent',
         }
+        const { results = [] } = await post_tree(params)
+        this.data = results
       },
-      createDoc(formName, form) {
-        delete form.type
-        form.parent.objectId.includes('article')
-          ? (form.projectId = `pid_${uuid(6)}`)
-          : ''
-        this.$refs.DocDialog.$refs[`${formName}`].validate(async (valid) => {
-          if (valid) {
-            const loading = this.$baseColorfullLoading()
-            const params = form
-            const { createdAt = '' } = await createArticle(params)
-            loading.close()
-            if (createdAt.length) this.init()
-          } else {
-            console.log('error submit!!')
-            return false
-          }
+      append(data, father, type) {
+        this.ruleForm.type = type
+        this.father = father
+        this.innerVisible = true
+        // const newChild = { id: this.id++, name: 'testtest', children: [] }
+        // if (!data.children) {
+        //   this.$set(data, 'children', [])
+        // }
+        // data.children.push(newChild)
+      },
+      handleTypeClick() {
+        console.log(this.$refs.vditor)
+        this.type == 'preview'
+          ? (this.type = 'editor')
+          : (this.type = 'preview')
+        this.$refs.vditor.flagType == 'preview'
+          ? (this.$refs.vditor.flagType = 'editor')
+          : (this.$refs.vditor.flagType = 'preview')
+      },
+      remove(node, data) {
+        // 二次删除确认
+        this.$baseConfirm(`你确定要删除${data.name}吗`, null, async () => {
+          await delArticle(data.objectId)
+          this.$baseMessage(
+            '已成功删除',
+            'success',
+            'dgiot-hey-message-success'
+          )
+          const parent = node.parent
+          const children = parent.data.children || parent.data
+          const index = children.findIndex((d) => d.objectId === data.objectId)
+          children.splice(index, 1)
         })
       },
-      async editDoc(formName, from) {
-        this.$refs.DocDialog.$refs[`${formName}`].validate(async (valid) => {
+      filterNode(value, data) {
+        if (!value) return true
+        return data.name.indexOf(value) !== -1
+      },
+      submitForm(formName) {
+        this.$refs[formName].validate(async (valid) => {
           if (valid) {
-            const loading = this.$baseColorfullLoading()
-            const params = {
-              category: from.category,
-              ico: from.ico,
-              name: from.name,
-              order: from.order,
+            const Article = {
+              ...this.ruleForm,
+              parent: {
+                objectId: this.father,
+                __type: 'Pointer',
+                className: 'Article',
+              },
             }
-            const res = await putArticle(from.objectId, params)
-            loading.close()
-            setTimeout(() => {
-              this.init()
-            }, 800)
+            await createArticle(Article)
+            this.innerVisible = false
+            this.qureyTree()
+            this.$message({
+              type: 'success',
+              message:
+                ruleForm.type === 'page' ? '文档名称' : '目录名称' + '添加成功',
+              showClose: true,
+              duration: 2200,
+            })
           } else {
             console.log('error submit!!')
             return false
           }
         })
       },
-      goChild(itme) {
-        console.log(itme)
-        this.$router.push({
-          path: '/doc/details',
-          query: {
-            details: itme.projectId,
-            // article: '',
-          },
-        })
+      resetForm(formName) {
+        this.$refs[formName].resetFields()
       },
-    }, //如果页面有keep-alive缓存功能，这个函数会触发
+    },
   }
 </script>
-
-<style lang="scss" scoped>
-  .dgiot-doc {
-    height: calc(100vh - #{$base-top-bar-height} * 2.7);
-    overflow-x: hidden;
-    overflow-y: scroll;
-    transition: $base-transition;
-
-    &-center {
-      &-row {
-        margin: auto 60px !important;
-        text-align: center;
-
-        &-antdcol {
-          margin-top: 20px;
-
-          &-card {
-            min-height: 220px;
-
-            .el-image,
-            .image-slot {
-              width: 100px;
-              height: 100px;
-              margin: 0 auto;
-            }
-          }
-        }
-      }
-    }
+<template>
+  <el-container>
+    <el-aside width="300px">
+      <div class="dialog">
+        <dgiot-dialog append-to-body :show.sync="innerVisible" width="400px">
+          <el-form
+            ref="ruleForm"
+            class="demo-ruleForm"
+            label-width="100px"
+            :model="ruleForm"
+            :rules="rules"
+            size="mini"
+          >
+            <el-form-item
+              :label="ruleForm.type === 'page' ? '文档名称' : '目录名称'"
+              prop="name"
+            >
+              <el-input v-model="ruleForm.name" />
+            </el-form-item>
+            <el-form-item
+              :label="ruleForm.type === 'page' ? '文档顺序' : '目录顺序'"
+              prop="orderBy"
+            >
+              <el-input-number
+                v-model="ruleForm.orderBy"
+                label="文档顺序"
+                :max="100"
+                :min="0"
+                style="width: 100%"
+              />
+            </el-form-item>
+            <el-form-item
+              v-show="ruleForm.type === 'page'"
+              label="文档内容"
+              prop="data"
+            >
+              <el-input
+                v-model="ruleForm.data"
+                label="文档内容"
+                :rows="2"
+                type="textarea"
+              />
+            </el-form-item>
+            <el-form-item>
+              <el-button type="primary" @click="submitForm('ruleForm')">
+                立即创建
+              </el-button>
+              <el-button @click="resetForm('ruleForm')">重置</el-button>
+            </el-form-item>
+          </el-form>
+        </dgiot-dialog>
+      </div>
+      <el-dropdown v-if="type == 'editor'" trigger="click">
+        <el-button type="text">
+          添加页面
+          <i class="el-icon-arrow-down el-icon--right"></i>
+        </el-button>
+        <el-dropdown-menu slot="dropdown">
+          <el-dropdown-item @click.native="append({}, '0', 'page')">
+            添加页面
+          </el-dropdown-item>
+          <el-dropdown-item @click.native="append({}, '0', 'subject')">
+            添加目录
+          </el-dropdown-item>
+        </el-dropdown-menu>
+      </el-dropdown>
+      <el-button style="margin: 0 20px" type="text" @click="handleTypeClick">
+        {{ type == 'preview' ? '编辑' : '预览' }}
+      </el-button>
+      <el-input
+        v-model="filterText"
+        placeholder="输入关键字搜索文件"
+        size="mini"
+        style="width: 80%"
+      />
+      <el-tree
+        ref="tree"
+        :data="data"
+        default-expand-all
+        :expand-on-click-node="false"
+        :filter-node-method="filterNode"
+        node-key="objectId"
+        @node-click="handleNodeClick"
+      >
+        <span slot-scope="{ node, data }" class="custom-tree-node">
+          <span>{{ data.name }}</span>
+          <span v-show="type == 'editor'">
+            <el-dropdown trigger="click">
+              <span class="el-dropdown-link">
+                <i class="el-icon-more"></i>
+              </span>
+              <el-dropdown-menu slot="dropdown">
+                <el-dropdown-item
+                  @click.native="append(data, data.objectId, 'page')"
+                >
+                  添加子页面
+                </el-dropdown-item>
+                <el-dropdown-item
+                  @click.native="append(data, data.objectId, 'subject')"
+                >
+                  添加子目录
+                </el-dropdown-item>
+                <!--                <el-dropdown-item @click.native="rname(node, data)">-->
+                <!--                  重命名-->
+                <!--                </el-dropdown-item>-->
+                <el-dropdown-item @click.native="remove(node, data)">
+                  删除
+                </el-dropdown-item>
+              </el-dropdown-menu>
+            </el-dropdown>
+          </span>
+        </span>
+      </el-tree>
+    </el-aside>
+    <el-container>
+      <dgiot-vditor
+        v-show="ruleForm.objectId"
+        ref="vditor"
+        :object-id="ruleForm.objectId"
+        :rule-form="ruleForm"
+        :title="ruleForm.name"
+        :value="ruleForm.data"
+      />
+      <el-empty v-show="!ruleForm.objectId" style="width: 100%">
+        <div slot="description">
+          欢迎使用文档 你可与你的团队在此共同记录开发文档（规范，流程）等等。
+        </div>
+      </el-empty>
+    </el-container>
+  </el-container>
+</template>
+<style>
+  .custom-tree-node {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 14px;
+    padding-right: 8px;
   }
 </style>

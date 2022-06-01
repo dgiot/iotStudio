@@ -820,29 +820,6 @@ export default {
     }),
   },
   watch: {
-    topicKey: {
-      handler: function (newVal, oldval) {
-        console.log('newVal topicKey', newVal)
-        console.log('oldval topicKey', oldval)
-        let _this = this
-        if (newVal) {
-          this.$dgiotBus.$off(newVal)
-          this.$dgiotBus.$on(newVal, (res) => {
-            console.error(res)
-            const { payloadString } = res
-            this.mqttMsg(payloadString)
-          })
-        }
-        if (oldval) {
-          // 取消订阅
-          _this.submessage = ''
-          _this.msgList = []
-          _this.logKey = '99'
-        }
-      },
-      deep: true,
-      limit: true,
-    },
     issub: {
       deep: true,
       handler(val) {
@@ -3771,24 +3748,31 @@ export default {
       return h + m + s + ' '
     },
     // 订阅日志
-    subProTopic(row) {
+    async subProTopic(row) {
       this.channelid = row.objectId
       this.subdialog = true
       this.subdialogid = row.objectId
       this.channelname = row.objectId
-      this.mqtt.subtopic = '$dg/channel/' + row.objectId + '/#'
+      this.mqtt.subtopic = '$dg/user/channel/' + row.objectId + '/#'
       let subInfo = {
         router: this.mqtt.router,
         topic: this.mqtt.subtopic,
         qos: 2,
         ttl: 1000 * 60 * 60 * 3,
       }
-      this.$dgiotBus.$emit('MqttSubscribe', subInfo)
+      this.$dgiotBus.$off(this.$mqttInfo.topicKey)
+      await this.$subscribe(this.subtopic)
       subupadte(row.objectId, 'start_logger')
-      this.topicKey = this.$dgiotBus.topicKey(
-        this.mqtt.router,
-        this.mqtt.subtopic
-      )
+      // this.topicKey = this.$dgiotBus.topicKey(
+      //   this.mqtt.router,
+      //   this.mqtt.subtopic
+      // )
+
+      this.submessage = ''
+      this.msgList = []
+      this.$dgiotBus.$on(this.$mqttInfo.topicKey, (res) => {
+        this.mqttMsg(res.payloadString)
+      })
     },
     mqttMsg(Msg) {
       console.error(Msg)

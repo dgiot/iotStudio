@@ -46,7 +46,7 @@
       </a-col>
       <a-col :span="20">
         <div class="text">
-          <dgiot-vditor ref="vditor" :value="productDetail.data" />
+          <dgiot-vditor ref="vditor" :value="productDetail" />
         </div>
       </a-col>
     </a-row>
@@ -74,7 +74,7 @@
       return {
         editId: '',
         collapsed: false,
-        productDetail: {},
+        productDetail: '',
         setKey: moment(new Date()).valueOf(),
       }
     },
@@ -184,10 +184,11 @@
       },
       async getTree(router) {
         var filter =
-          '{"keys":["parent","name","data","projectId","order","category","data","Icon","desc"],"where":{"projectId":"LYjcKG3ysu"}}'.replace(
-            'LYjcKG3ysu',
-            this.$route.query.details
-          )
+          '{"keys":["parent","name","data","projectId","order","category","data","Icon","desc"]}'
+        //   .replace(
+        //   'LYjcKG3ysu',
+        //   this.$route.query.article
+        // )
         const params = {
           class: 'Article',
           filter: filter,
@@ -203,9 +204,10 @@
        * @returns
        */
       async getArticle(params) {
+        console.log(params, 'params')
         try {
           const loading = this.$baseColorfullLoading()
-          const data = await getArticle(this.articleId)
+          const { data = '' } = await getArticle(this.articleId)
           this.productDetail = data
           console.log('productDetail', this.productDetail)
           this.$baseMessage(
