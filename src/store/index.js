@@ -28,9 +28,9 @@ const store = new Vuex.Store({
   plugins,
 })
 export default store
-info.secret = Base64.encode(JSON.stringify(info.secret))
-info.secretMsg =
-  'dgiot.secret字段属于机密信息,为了安全起见不予直接展示。已使用Base64加密'
+// info.secret = Base64.encode(JSON.stringify(info.secret))
+// info.secretMsg =
+//   'dgiot.secret字段属于机密信息,为了安全起见不予直接展示。已使用Base64加密'
 // 解密方法 Base64.decode(dgiot.secret)
 // if (!window.isInnerIp) getTags()
 

@@ -52,7 +52,7 @@
             </el-input>
           </label>
           <baidu-map
-            ak="WpeAb6pL4tsX2ZVd56GHbO9Ut6c4HZhG"
+            :ak="$dgiot.secret.baidu.map"
             :center="mapLabel.position"
             :map-click="false"
             :scroll-wheel-zoom="true"
