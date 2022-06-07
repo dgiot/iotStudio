@@ -704,7 +704,7 @@
         },
         mapType: 'baidu',
         isShow: true,
-        ak: 'WpeAb6pL4tsX2ZVd56GHbO9Ut6c4HZhG',
+        ak: this.$dgiot.secret.baidu.map,
         // ak: 'oW2UEhdth2tRbEE4FUpF9E5YVDCIPYih',
         // center:{ lng: 120.187273, lat: 30.334877 },
         center: {
