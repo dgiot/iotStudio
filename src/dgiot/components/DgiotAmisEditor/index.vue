@@ -75,13 +75,16 @@
 <style lang="scss">
   .amis {
     width: 100%;
+    overflow: auto;
     height: calc(100vh - 60px * 2.7) !important;
     #editor {
       width: 100%;
+      overflow: auto;
       height: calc(100vh - 60px * 2.7) !important;
     }
   }
   .ae-Editor .ae-Editor-inner {
+    overflow: auto;
     height: calc(100vh - 60px * 2.7) !important;
   }
 </style>
