@@ -15,7 +15,13 @@
     class="xinmahe-container"
     :class="{ 'dgiot-fullscreen': isFullscreen }"
   >
-    <Modal v-model="topoFlag" footer-hide fullscreen :query="routerInfo.query">
+    <Modal
+      v-model="topoFlag"
+      footer-hide
+      :query="routerInfo.query"
+      width="90%"
+      @on-cancel="closeModal"
+    >
       <span slot="title" v-if="false"></span>
       <span slot="footer" v-if="false"></span>
       <topo v-if="topoFlag" ref="topo" />
@@ -102,6 +108,7 @@
         append-to-body
         :before-close="handleClose"
         center
+        top="5vh"
         :visible.sync="commandInfo.dialog"
         width="80%"
       >
@@ -1024,6 +1031,18 @@
       setting(row) {
         this.settingInfo.dialog = true
         console.log(row)
+      },
+      async closeModal() {
+        await this.$router.push({
+          path: '/dashboard/device',
+          // query: {
+          //   productid: row.product.objectId,
+          //   devaddr: row.devaddr,
+          //   deviceid: row.objectId,
+          //   type: 'device',
+          // },
+        })
+        this.topoFlag = false
       },
       // 组态
       konvaDevice(row) {

@@ -301,6 +301,7 @@
 </script>
 <style scoped>
   .box {
-    height: 90vh;
+    height: 80vh;
+    overflow: auto;
   }
 </style>
