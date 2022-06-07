@@ -547,5 +547,7 @@ export default {
     Vue.prototype.$getTopic = getTopic
     Vue.prototype.$subscribe = subscribe
     Vue.prototype.$unSubscribe = unSubscribe
+    // 全局配置环境变量
+    Vue.prototype.$dgiot = window.dgiot
   },
 }

@@ -16,6 +16,18 @@
     :class="{ 'dgiot-fullscreen': isFullscreen }"
   >
     <div class="modal">
+      <Drawer v-model="Drawer" width="60%">
+        <Tabs size="small" :value="defaultTable">
+          <TabPane
+            v-for="(item, index) in draw.settings.data"
+            :key="index"
+            :label="item.title"
+            :name="item.title"
+          >
+            <dgiot-amis :schema="item.data" :show-help="false" />
+          </TabPane>
+        </Tabs>
+      </Drawer>
       <el-dialog
         append-to-body
         :before-close="closeMap"
@@ -52,7 +64,7 @@
             </el-input>
           </label>
           <baidu-map
-            ak="WpeAb6pL4tsX2ZVd56GHbO9Ut6c4HZhG"
+            :ak="$dgiot.secret.baidu.map"
             :center="mapLabel.position"
             :map-click="false"
             :scroll-wheel-zoom="true"
@@ -188,151 +200,162 @@
       </dgiot-query-form-left-panel>
     </dgiot-query-form>
 
-    <a-tabs v-model="activeKey">
-      <a-tab-pane key="task" :tab="$translateTitle('pressure.压测列表')">
-        <el-table
-          ref="tableSort"
-          v-loading="listLoading"
-          :border="border"
-          :data="list"
-          :height="$baseTableHeight(0)"
-          :size="lineHeight"
-          :stripe="stripe"
-        >
-          <el-table-column
-            align="center"
-            :label="$translateTitle('cloudTest.number')"
-            show-overflow-tooltip
-            sortable
-            width="145"
+    <el-table
+      ref="tableSort"
+      v-loading="listLoading"
+      :border="border"
+      :data="list"
+      :height="$baseTableHeight(0)"
+      :size="lineHeight"
+      :stripe="stripe"
+    >
+      <el-table-column
+        align="center"
+        :label="$translateTitle('cloudTest.number')"
+        show-overflow-tooltip
+        sortable
+        width="145"
+      >
+        <template #default="{ $index }">
+          {{ $index + 1 }}
+        </template>
+      </el-table-column>
+      <el-table-column
+        v-for="(item, index) in finallyColumns"
+        :key="index"
+        align="center"
+        :label="item.label"
+        sortable
+        :width="item.width"
+      >
+        <template #default="{ row }">
+          <span v-if="item.label === $translateTitle('pressure.评级')">
+            <el-rate v-model="row.rate" disabled />
+          </span>
+          <span v-else>{{ row[item.prop] }}</span>
+        </template>
+      </el-table-column>
+      <el-table-column
+        align="center"
+        :label="$translateTitle('pressure.压测启停')"
+        width="auto"
+      >
+        <template #default="{ row }">
+          <a-switch
+            :checked="row.isEnable"
+            :checked-children="$translateTitle('device.start')"
+            :un-checked-children="$translateTitle('device.stop')"
+            @click="toggleSwitch(row)"
+          />
+        </template>
+      </el-table-column>
+      <el-table-column
+        align="center"
+        fixed="right"
+        :label="$translateTitle('pressure.压测状态')"
+        width="auto"
+      >
+        <template #default="{ row }">
+          <el-tag dark :type="row.status == 'ONLINE' ? 'info' : ''">
+            {{
+              row.status == 'ONLINE'
+                ? $translateTitle('pressure.压测中')
+                : $translateTitle('pressure.未压测')
+            }}
+          </el-tag>
+        </template>
+      </el-table-column>
+      <el-table-column
+        align="center"
+        fixed="right"
+        :label="$translateTitle('pressure.报告操作')"
+        width="220"
+      >
+        <template #default="{ row }">
+          <el-button
+            size="mini"
+            type="primary"
+            @click.native="busButton(row, 'pressureconfig')"
           >
-            <template #default="{ $index }">
-              {{ $index + 1 }}
-            </template>
-          </el-table-column>
-          <el-table-column
-            v-for="(item, index) in finallyColumns"
-            :key="index"
-            align="center"
-            :label="item.label"
-            sortable
-            :width="item.width"
+            {{ $translateTitle('pressure.报告配置') }}
+          </el-button>
+          <el-button
+            size="mini"
+            type="info"
+            @click.native="generateReport(row)"
           >
-            <template #default="{ row }">
-              <span v-if="item.label === $translateTitle('pressure.评级')">
-                <el-rate v-model="row.rate" disabled />
-              </span>
-              <span v-else>{{ row[item.prop] }}</span>
-            </template>
-          </el-table-column>
-          <el-table-column
-            align="center"
-            :label="$translateTitle('pressure.压测启停')"
-            width="180"
+            {{ $translateTitle('pressure.生成报告') }}
+          </el-button>
+        </template>
+      </el-table-column>
+      <el-table-column
+        align="center"
+        :label="$translateTitle('pressure.安装位置')"
+        prop="address"
+        show-overflow-tooltip
+        sortable
+        width="auto"
+      >
+        <template #default="{ row }">
+          <span
+            style="color: #67c23a"
+            type="success"
+            @click="showAdddress(row)"
           >
-            <template #default="{ row }">
-              <a-switch
-                :checked="row.isEnable"
-                :checked-children="$translateTitle('device.start')"
-                :un-checked-children="$translateTitle('device.stop')"
-                @click="toggleSwitch(row)"
-              />
-            </template>
-          </el-table-column>
-          <el-table-column
-            align="center"
-            fixed="right"
-            :label="$translateTitle('pressure.压测状态')"
-            width="220"
-          >
-            <template #default="{ row }">
-              <el-tag dark :type="row.status == 'ONLINE' ? 'info' : ''">
-                {{
-                  row.status == 'ONLINE'
-                    ? $translateTitle('pressure.压测中')
-                    : $translateTitle('pressure.未压测')
-                }}
-              </el-tag>
-            </template>
-          </el-table-column>
-          <el-table-column
-            align="center"
-            :label="$translateTitle('pressure.安装位置')"
-            prop="address"
-            show-overflow-tooltip
-            sortable
-            width="auto"
-          >
-            <template #default="{ row }">
-              <span
-                style="color: #67c23a"
-                type="success"
-                @click="showAdddress(row)"
-              >
-                {{ row.address || '---' }}
-              </span>
-            </template>
-          </el-table-column>
-          <el-table-column
-            align="center"
-            fixed="right"
-            :label="$translateTitle('pressure.操作')"
-          >
-            <template #default="{ row }">
-              <el-button type="text" @click="handleClick(row, 'setting')">
-                {{ $translateTitle('pressure.定时任务') }}
-              </el-button>
-              <el-button type="text" @click="handleClick(row, 'task')">
-                {{ $translateTitle('pressure.压测配置') }}
-              </el-button>
-              <el-button type="text" @click="handleClick(row, 'clone')">
-                {{ $translateTitle('pressure.克隆任务') }}
-              </el-button>
-              <el-button type="text" @click="handleClick(row, 'delete')">
-                {{ $translateTitle('pressure.删除任务') }}
-              </el-button>
-            </template>
-          </el-table-column>
-          <template #empty>
-            <el-image
-              class="dgiot-data-empty"
-              :src="
-                require('../../../public/assets/images/platform/assets/empty_images/data_empty.png')
-              "
-            />
-          </template>
-        </el-table>
-        <el-pagination
-          background
-          :current-page="queryForm.size"
-          :layout="layout"
-          :page-size="queryForm.limit"
-          :total="total"
-          @current-change="handleCurrentChange"
-          @size-change="handleSizeChange"
+            {{ row.address || '---' }}
+          </span>
+        </template>
+      </el-table-column>
+      <el-table-column
+        align="center"
+        fixed="right"
+        :label="$translateTitle('pressure.操作')"
+        width="280"
+      >
+        <template #default="{ row }">
+          <el-button type="text" @click="handleClick(row, 'setting')">
+            {{ $translateTitle('pressure.定时任务') }}
+          </el-button>
+          <el-button type="text" @click="handleClick(row, 'task')">
+            {{ $translateTitle('pressure.压测配置') }}
+          </el-button>
+          <el-button type="text" @click="handleClick(row, 'clone')">
+            {{ $translateTitle('pressure.克隆任务') }}
+          </el-button>
+          <el-button type="text" @click="handleClick(row, 'delete')">
+            {{ $translateTitle('pressure.删除任务') }}
+          </el-button>
+        </template>
+      </el-table-column>
+      <template #empty>
+        <el-image
+          class="dgiot-data-empty"
+          :src="
+            require('../../../public/assets/images/platform/assets/empty_images/data_empty.png')
+          "
         />
-      </a-tab-pane>
-      <!--      <a-tab-pane key="report" tab="任务报告">-->
-      <!--        <dgiot-empty />-->
-      <!--      </a-tab-pane>-->
-    </a-tabs>
+      </template>
+    </el-table>
+    <el-pagination
+      background
+      :current-page="queryForm.size"
+      :layout="layout"
+      :page-size="queryForm.limit"
+      :total="total"
+      @current-change="handleCurrentChange"
+      @size-change="handleSizeChange"
+    />
     <table-edit ref="edit" @fetch-data="fetchData" />
   </div>
 </template>
 
 <script>
-  import {
-    queryDevice,
-    getDevice,
-    delDevice,
-    postDevice,
-    putDevice,
-  } from '@/api/Device'
+  import { delDevice, postDevice, putDevice, queryDevice } from '@/api/Device'
   import { queryProduct } from '@/api/Product'
   import { queryProductTemplet } from '@/api/ProductTemplet'
   import TableEdit from '@/views/DeviceCloud/empty/tableEdit'
   import { queryView } from '@/api/View'
-  import { mapGetters } from 'vuex'
+  import { mapGetters, mapMutations } from 'vuex'
 
   export default {
     name: 'Pressure',
@@ -342,6 +365,7 @@
     props: {},
     data() {
       return {
+        Drawer: false,
         mapHeight: '500px',
         mapWidth: '100%',
         dialog_device: false,
@@ -456,12 +480,6 @@
       ...mapGetters({
         language: 'settings/language',
       }),
-      dragOptions() {
-        return {
-          animation: 600,
-          group: 'description',
-        }
-      },
       finallyColumns() {
         return this.columns.filter((item) =>
           this.checkList.includes(item.label)
@@ -477,10 +495,50 @@
       },
     },
     async mounted() {
+      await this.setTreeFlag(false)
       await this.queryZetaProduct()
     },
     destroyed() {},
     methods: {
+      ...mapMutations({
+        setTreeFlag: 'settings/setTreeFlag',
+      }),
+      async generateReport(row) {
+        console.log(row)
+      },
+      async busButton(col, type) {
+        console.log(col, type)
+        this.Drawer = !this.Drawer
+        col.objectId
+          ? localStorage.setItem('parse_objectid', col.objectId)
+          : localStorage.removeItem('parse_objectid')
+        let params = {
+          where: {
+            class: 'Product',
+            type: type,
+            language: this.language,
+          },
+        }
+        // col?.product?.objectId ? (params.where[key] = col.product.objectId) : ''
+        const { results = [] } = await queryView(params)
+        if (_.isEmpty(results)) {
+          this.$message({
+            type: 'info',
+            message: `${this.$translateTitle('pressure.暂未配置语言类型为')}${
+              this.language
+            }${this.$translateTitle(
+              'pressure.的'
+            )}${type}${this.$translateTitle('pressure.表单')}`,
+            showClose: true,
+          })
+          return false
+        } else {
+          this.draw.settings.data = results
+          this.defaultTable = results?.[0]?.title || ''
+          this.Drawer = true
+          //  设置默认点击事件
+        }
+      },
       close(i) {
         return new Promise((resolve) => {
           this.$Modal.confirm({
