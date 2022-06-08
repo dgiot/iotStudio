@@ -15,11 +15,11 @@
       <el-dropdown-menu>
         <el-dropdown-item command="personalCenter">
           <dgiot-icon icon="user-line" />
-          {{ $translateTitle('个人中心') }}
+          {{ $translateTitle('route.个人中心') }}
         </el-dropdown-item>
         <el-dropdown-item command="logout">
           <dgiot-icon icon="logout-circle-r-line" />
-          {{ $translateTitle('退出登录') }}
+          {{ $translateTitle('route.退出登录') }}
         </el-dropdown-item>
       </el-dropdown-menu>
     </template>
