@@ -64,14 +64,14 @@ async function queryAllMsg(commit, dispatch, data, type) {
     const hour = new Date().getHours()
     const thisTime =
       hour < 8
-        ? '早上好'
+        ? Vue.prototype.$translateTitle('route.早上好')
         : hour <= 11
-        ? '上午好'
+        ? Vue.prototype.$translateTitle('route.上午好')
         : hour <= 13
-        ? '中午好'
+        ? Vue.prototype.$translateTitle('route.中文好')
         : hour < 18
-        ? '下午好'
-        : '晚上好'
+        ? Vue.prototype.$translateTitle('route.下午好')
+        : Vue.prototype.$translateTitle('route.晚上好')
     Vue.prototype.$baseNotify(title, `${thisTime}！`)
     console.groupCollapsed(
       '%c login promise.all log',
@@ -415,7 +415,9 @@ const actions = {
       commit('setLoginInfo', userInfo)
     } else {
       Vue.prototype.$baseMessage(
-        `登录失败，可能是密码错误或者账号被禁用！请与平台管理员联系。`,
+        Vue.prototype.$translateTitle(
+          `route.登录失败，可能是密码错误或者账号被禁用！请与平台管理员联系。`
+        ),
         'error'
       )
       return Promise.reject()
@@ -434,15 +436,19 @@ const actions = {
       const hour = new Date().getHours()
       const thisTime =
         hour < 8
-          ? '早上好'
+          ? Vue.prototype.$translateTitle('route.早上好')
           : hour <= 11
-          ? '上午好'
+          ? Vue.prototype.$translateTitle('route.上午好')
           : hour <= 13
-          ? '中午好'
+          ? Vue.prototype.$translateTitle('route.中午好')
           : hour < 18
-          ? '下午好'
-          : '晚上好'
-      Vue.prototype.$baseNotify(`欢迎登录${title}`, `${thisTime}！`)
+          ? Vue.prototype.$translateTitle('route.下午好')
+          : Vue.prototype.$translateTitle('route.晚上好')
+      Vue.prototype.$baseNotify(
+        Vue.prototype.$translateTitle('route.欢迎登录') +
+          Vue.prototype.$translateTitle(`route.${title}`),
+        `${thisTime}！`
+      )
     } else {
       Vue.prototype.$baseMessage(
         `login核心接口异常，请检查返回JSON格式是否正确，是否正确返回${tokenName}...`,
