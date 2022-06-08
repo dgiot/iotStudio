@@ -24,7 +24,7 @@
     >
       <span slot="title" v-if="false"></span>
       <span slot="footer" v-if="false"></span>
-      <topo v-if="topoFlag" ref="topo" />
+      <topopreview v-if="topoFlag" ref="topo" />
     </Modal>
     <el-form
       ref="form"
@@ -473,7 +473,7 @@
 <script>
   import TableEdit from '@/views/DeviceCloud/empty/tableEdit'
   import { queryProduct } from '@/api/Product/index'
-  import topo from '@/views/CloudFunction/topo/index'
+  import topopreview from '@/views/CloudFunction/topo/preview'
   import { mapGetters, mapMutations } from 'vuex'
   import { queryView } from '@/api/View'
   import {
@@ -487,7 +487,7 @@
   export default {
     name: 'Xinmahe',
     components: {
-      topo,
+      topopreview,
       TableEdit,
     },
     props: {},
@@ -1033,15 +1033,7 @@
         console.log(row)
       },
       async closeModal() {
-        await this.$router.push({
-          path: '/dashboard/device',
-          // query: {
-          //   productid: row.product.objectId,
-          //   devaddr: row.devaddr,
-          //   deviceid: row.objectId,
-          //   type: 'device',
-          // },
-        })
+        this.$router.go(-1)
         this.topoFlag = false
       },
       // 组态
@@ -1056,7 +1048,6 @@
             type: 'device',
           },
         })
-        // this.$refs.topo.productid = this.routerInfo.productid
       },
       move(row) {
         console.log(row)
