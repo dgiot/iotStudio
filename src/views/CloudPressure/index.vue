@@ -127,7 +127,7 @@
         :closable="true"
         fullscreen
         :title="draw.row.name"
-        @on-cancel="close"
+        @on-cancel="beforeClose"
       >
         <div>
           <Tabs size="small" :value="defaultTable">
@@ -279,13 +279,13 @@
           >
             {{ $translateTitle('pressure.报告配置') }}
           </el-button>
-          <el-button
-            size="mini"
-            type="info"
-            @click.native="generateReport(row)"
-          >
-            {{ $translateTitle('pressure.生成报告') }}
-          </el-button>
+          <!--          <el-button-->
+          <!--            size="mini"-->
+          <!--            type="info"-->
+          <!--            @click.native="generateReport(row)"-->
+          <!--          >-->
+          <!--            {{ $translateTitle('pressure.生成报告') }}-->
+          <!--          </el-button>-->
         </template>
       </el-table-column>
       <el-table-column
@@ -503,6 +503,9 @@
       ...mapMutations({
         setTreeFlag: 'settings/setTreeFlag',
       }),
+      beforeClose() {
+        this.fetchData()
+      },
       async generateReport(row) {
         console.log(row)
       },
@@ -831,18 +834,12 @@
         const timeExp = /\[(\d{2,}):(\d{2})(?:\.(\d{2,3}))?]/g
         results.forEach((i) => {
           i.startTime = i?.profile?.startTime
-            ? timeExp.exec(i.profile.startTime)
-              ? this.$moment
-                  .unix(i.profile.startTime)
-                  .format('YYYY-MM-DD HH:mm:ss')
-              : i.profile.startTime
+            ? this.$moment
+                .unix(i.profile.startTime)
+                .format('YYYY-MM-DD HH:mm:ss')
             : this.$translateTitle('pressure.暂未配置')
           i.endTime = i?.profile?.endTime
-            ? timeExp.exec(i.profile.endTime)
-              ? this.$moment
-                  .unix(i.profile.endTime)
-                  .format('YYYY-MM-DD HH:mm:ss')
-              : i.profile.endTime
+            ? this.$moment.unix(i.profile.endTime).format('YYYY-MM-DD HH:mm:ss')
             : this.$translateTitle('pressure.暂未配置')
         })
         this.list = results
