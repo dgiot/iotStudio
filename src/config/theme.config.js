@@ -3,9 +3,9 @@
  */
 module.exports = {
   // 布局种类：横向布局horizontal、纵向布局vertical、分栏布局column、综合布局comprehensive、常规布局common
-  layout: 'comprehensive',
+  layout: 'horizontal',
   // 主题名称：默认default、海洋之心ocean、绿荫草场green、碰触纯白white
-  themeName: 'white',
+  themeName: 'ocean',
   // 分栏风格(仅针对分栏布局column时生效)：横向风格horizontal、纵向风格vertical、卡片风格card
   columnStyle: 'horizontal',
   // 是否固定头部固定

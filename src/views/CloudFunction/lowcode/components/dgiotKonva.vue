@@ -38,6 +38,10 @@
         data: this.code.Stage,
         id: 'topo',
       })
+      this.$nextTick(() => {
+        // 禁用调所有移动事件，如需禁用其他，在以下函数中添加
+        konvaUtils.loadKonva(canvas.layer)
+      })
     },
     methods: {
       ...mapMutations({
