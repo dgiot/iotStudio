@@ -835,14 +835,18 @@
               ? this.$moment
                   .unix(i.profile.startTime)
                   .format('YYYY-MM-DD HH:mm:ss')
-              : i.profile.startTime
+              : this.$moment
+                  .unix(i.profile.startTime)
+                  .format('YYYY-MM-DD HH:mm:ss')
             : this.$translateTitle('pressure.暂未配置')
           i.endTime = i?.profile?.endTime
             ? timeExp.exec(i.profile.endTime)
               ? this.$moment
                   .unix(i.profile.endTime)
                   .format('YYYY-MM-DD HH:mm:ss')
-              : i.profile.endTime
+              : this.$moment
+                  .unix(i.profile.endTime)
+                  .format('YYYY-MM-DD HH:mm:ss')
             : this.$translateTitle('pressure.暂未配置')
         })
         this.list = results
