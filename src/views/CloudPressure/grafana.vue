@@ -12,25 +12,37 @@
 <template>
   <div class="grafana-container">
     <div class="grafana">
-      <iframe frameborder="0" src="http://101.32.99.133:3000/login"></iframe>
+      <iframe frameborder="0" :src="iframeSrc"></iframe>
     </div>
   </div>
 </template>
 
 <script>
+  import { mapMutations } from 'vuex'
   export default {
     name: 'Grafana',
     components: {},
     props: {},
     data() {
-      return {}
+      return {
+        iframeSrc:
+          process.env.NODE_ENV !== 'development'
+            ? location.protocol + '//' + location.hostname + ':3000'
+            : 'http://101.32.99.133:3000/login',
+      }
     },
     computed: {},
     watch: {},
     created() {},
-    mounted() {},
+    mounted() {
+      this.setTreeFlag(false)
+    },
     destroyed() {},
-    methods: {},
+    methods: {
+      ...mapMutations({
+        setTreeFlag: 'settings/setTreeFlag',
+      }),
+    },
   }
 </script>
 
