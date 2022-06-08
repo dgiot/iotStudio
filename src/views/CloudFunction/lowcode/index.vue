@@ -571,12 +571,11 @@
       async handleEdit(row) {
         const loading = this.$baseLoading(1)
         const { data = {} } = await getView(row.objectId)
-        if (['amis_view', 'amis'].includes(row.type)) {
+        if (['amis_view', 'amis', 'topo'].includes(row.type)) {
           this.$router.push({
-            path: `/design/editor/amis`,
+            path: '/Topo?productid',
             query: {
-              viewId: row.objectId,
-              type: 'amis',
+              productid: row.key,
             },
           })
         } else {
@@ -611,9 +610,8 @@
       },
       async handleLowCode(lowcodeId) {
         const loading = this.$baseColorfullLoading(1)
-        const res = await getView(lowcodeId)
         loading.close()
-        this.$dgiotBus.$emit('lowcodePreview', res)
+        this.$dgiotBus.$emit('lowcodePreview', await getView(lowcodeId))
       },
       async saveLowCode(lowcodeId, payload) {
         const loading = this.$baseColorfullLoading(1)

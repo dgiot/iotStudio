@@ -28,6 +28,15 @@ export async function getView(ObjectId) {
 }
 
 /**
+ * @description 预览，图元大小状态不可变
+ * @param ObjectId
+ * @returns {Promise<*|ElMessageComponent>}
+ */
+export async function getPreview(ObjectId) {
+  return get_object('View/preview', ObjectId)
+}
+
+/**
  * @docs-api http://prod.iotn2n.com/swagger/#/View/delete_classes_view_id
  * @description 删除视图管理
  * @param ObjectId

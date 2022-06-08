@@ -919,3 +919,54 @@ export function parseQueryString(url) {
     this[`${name}`] = value
   }
 }
+
+// api
+// findInfo https://konvajs.org/docs/selectors/Select_by_id.html
+// Simple_Load https://konvajs.org/docs/data_and_serialization/Simple_Load.html
+/**
+ * @description
+ */
+class konvaUtils {
+  constructor() {
+    this.nodeInfo = []
+    this.nodeTag = []
+  }
+  // bo
+  putNode(nodeid, params) {
+    // in nodeid find node
+    // in node.name event
+    // if thing put text
+    // node.setAttrs(params)
+  }
+  /**
+   * @description 查找所有符合条件的节点
+   * @param node
+   */
+  loadKonva(node, disableNodeType = ['Layer']) {
+    try {
+      if (disableNodeType.indexOf(node.getClassName()) != -1) {
+        const nodes = node.getChildren()
+        this.nodeTag.push(nodes)
+        nodes.forEach((_node) => {
+          this.loadKonva(_node)
+          this.nodeInfo.push(_node)
+          _node.setAttrs({
+            draggable: false,
+          })
+        })
+      } else {
+        console.warn(
+          `node is ${node} \n disableNodeType ${node.getClassName()}`
+        )
+      }
+      this.consoeInfo(`禁用${node.getClassName()}成功`)
+    } catch (e) {
+      console.error(e)
+    }
+  }
+  consoeInfo(text) {
+    console.info(text)
+  }
+}
+
+window.konvaUtils = new konvaUtils()
