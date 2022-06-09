@@ -42,7 +42,7 @@ export function addGroup(name) {
     url: 'group',
     method: 'post',
     data: {
-      devType: 'shuwa_iot_hub',
+      devType: 'dgiot_hub',
       name: name,
       topo: 'group_topo',
     },

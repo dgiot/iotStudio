@@ -36,14 +36,6 @@ export async function ImportMenu(params) {
  * @return {Promise<*|ElMessageComponent>}
  */
 export async function ExportParse(className, params) {
-  // return request({
-  //   url: `export_data?classname=${className}`,
-  //   method: 'post',
-  //   data: params,
-  //   headers: {
-  //     responseType: 'blob',
-  //   },
-  // })
   const _token = store.getters['user/token']
   console.log('_token', _token)
   // eslint-disable-next-line no-undef

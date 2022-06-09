@@ -151,7 +151,7 @@
         <el-row v-show="mapType == 'baidu'" :row="24">
           <el-col :span="leftRow" :xs="24">
             <el-row :span="24">
-              <div class="chart_map" style="position: relative">
+              <div class="chart_map" style="position: relative; width: 100%">
                 <div v-show="false" class="card_left">
                   <el-row class="card_left-row" :gutter="24">
                     <el-col class="card_left-row-col" :span="6">
@@ -296,7 +296,6 @@
                   :center="center"
                   class="baidu_map"
                   :scroll-wheel-zoom="true"
-                  :style="{ height: mapHeight, width: mapWidth }"
                   :zoom="sizeZoom"
                 >
                   <bm-control>
