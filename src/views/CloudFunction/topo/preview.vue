@@ -8,10 +8,7 @@
     <el-container class="konva-container">
       <el-main class="konva-container-main">
         <el-row :gutter="gutter.gutter" class="user-content">
-          <el-col
-            :span="24"
-            class="konva-container-main-baseCol"
-          >
+          <el-col :span="24" class="konva-container-main-baseCol">
             <el-main class="konva-container-baseCol-baseContainer">
               <topo-base
                 ref="topobase"
@@ -236,6 +233,7 @@
               id: 'kevCurrent',
             })
           } else {
+            //添加默认组态
             _this.$baseMessage(
               '暂无组态。显示默认组态',
               'info',

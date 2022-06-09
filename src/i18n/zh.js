@@ -126,16 +126,7 @@ export default {
       'Theme configuration saved successfully': '主题配置保存成功',
       'Theme configuration saved error': '主题配置保存失败',
     },
-    route: {
-      早上好: '早上好',
-      上午好: '上午好',
-      下午好: '下午好',
-      晚上好: '晚上好',
-      '登录失败，可能是密码错误或者账号被禁用！请与平台管理员联系。':
-        '登录失败，可能是密码错误或者账号被禁用！请与平台管理员联系。',
-      欢迎登录: '欢迎登录',
-      云压测: '云压测',
-    },
+    route: {},
     equipment: {
       lists: '列表',
       info: '信息',

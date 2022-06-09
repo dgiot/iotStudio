@@ -130,7 +130,6 @@
   import { queryDevice } from '@/api/Device/index'
   import { delProduct, getProduct } from '@/api/Product'
   import { utc2beijing } from '@/utils'
-  import { getProject, handleZero, setUpLictool } from '@/api/License/index'
 
   export default {
     data() {
