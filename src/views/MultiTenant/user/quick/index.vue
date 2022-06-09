@@ -123,6 +123,7 @@
   import backgroundImage from '../../../../../public/assets/images/platform/assets/login_images/background.jpg'
   import { mapActions, mapGetters, mapMutations } from 'vuex'
   import { isPassword } from '@/utils/data/validate'
+  import { SiteDefault } from '@/api/License'
   export default {
     name: 'Quick',
     directives: {

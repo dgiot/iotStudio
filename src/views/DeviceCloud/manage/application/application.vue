@@ -549,21 +549,20 @@
           keys: 'tag,name,desc,count(*)',
           order: 'updatedAt', // -updatedAt  updatedAt
         }
-        queryRole(params)
-          .then((res) => {
-            this.appdata = res.results
-            this.appdata.map((item) => {
-              // dgiotlog.log(item)
-              if (item.tag.appconfig.secret) {
-                item.isshow = false
-              }
-            })
-            this.total = res.count
-            // dgiotlog.log(this.appdata, "appdata");
-          })
-          .catch((e) => {
-            dgiotlog.log(e)
-          })
+        const { results } = await queryRole(params)
+        this.appdata = results
+        this.appdata.map((item) => {
+          // dgiotlog.log(item)
+          _.merge(item.tag, { appconfig: { secret: '' } })
+          if (item?.tag?.appconfig?.secret) {
+            item.isshow = false
+          } else {
+            item.tag.appconfig.secret = '暂未配置'
+            item.isshow = true
+          }
+        })
+        this.total = results.length
+        console.log(this.appdata, 'appdata')
       },
       handleClickRefresh() {
         this.randomSecret()
