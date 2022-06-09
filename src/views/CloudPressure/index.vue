@@ -646,6 +646,8 @@
       },
       async queryZetaProduct() {
         const { results: zeta = [] } = await queryProductTemplet({
+          excludeKeys:
+            'children,thing,decoder,topics,productSecret,view,category,producttemplet,content,profile',
           where: { name: 'zeta压测报告' },
         })
         const { results: product = [] } = await queryProduct({
