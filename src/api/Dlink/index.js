@@ -44,9 +44,7 @@ export async function getTopic(Topic = '$dg/user/router/thing/111/cmd/delete') {
   })
 }
 
-export async function postTopic(
-  Topic = '$dg/user/router/thing/111/cmd/delete'
-) {
+export async function postTopic(Topic = '$dg/user/router/') {
   const submessage = request({
     url: `topic`,
     method: 'post',
