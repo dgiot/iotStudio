@@ -138,6 +138,7 @@ import { queryMenu } from '@/api/Menu/index'
 import { clearCookie, getToken, removeToken, setToken } from '@/utils/vue'
 import { resetRouter } from '@/router'
 
+import { license } from '@/api/License'
 import { isJson } from '@/utils/data/validate'
 import { tickTime } from '@/utils/time/index'
 const defaultTheme = {
