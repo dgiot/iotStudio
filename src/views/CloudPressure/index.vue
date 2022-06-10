@@ -651,8 +651,12 @@
           where: { name: 'zeta压测报告' },
         })
         const { results: product = [] } = await queryProduct({
+          excludeKeys:
+            'channel,category,children,config,decoder,desc,producttemplet,topics,profile,content',
           where: zeta?.[0]?.objectId
-            ? { producttemplet: zeta?.[0]?.objectId }
+            ? {
+                producttemplet: zeta?.[0]?.objectId,
+              }
             : {},
         })
         product?.[0]?.objectId ? (this.product = product?.[0]?.objectId) : ''
@@ -824,7 +828,7 @@
           limit: this.queryForm.limit,
           count: 'objectId',
           order: '-createdAt',
-          excludeKeys: 'properties',
+          excludeKeys: 'product,profile,content',
           where: {
             product: this.product,
           },
