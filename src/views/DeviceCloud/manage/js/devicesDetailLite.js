@@ -840,24 +840,22 @@ export default {
         })
     },
     CardDevice() {
-      var vm = this
-      vm.loading = true
-      getCardDevice(vm.deviceid)
+      this.loading = true
+      getCardDevice(this.deviceid)
         .then((response) => {
           if (response?.data) {
-            vm.renderCard(response.data)
+            this.renderCard(response.data)
           }
         })
         .catch((error) => {
           console.log('update error 清除timer', error)
         })
       setTimeout(() => {
-        vm.loading = false
+        this.loading = false
       }, 800)
     },
     //渲染卡片
     renderCard(resData) {
-      var vm = this
       let array = []
       resData.forEach((item) => {
         if (item.devicetype) {
@@ -876,8 +874,8 @@ export default {
         })
         machine[item] = arr
       })
-      vm.machinelist = machine
-      vm.thirdtbKey = moment(new Date()).valueOf()
+      this.machinelist = machine
+      this.thirdtbKey = moment(new Date()).valueOf()
     },
     // 实时数据的分页
     dataDeviceSizeChange(val) {
