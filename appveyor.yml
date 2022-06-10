@@ -7,6 +7,6 @@ install:
   - ps: Install-Product node $env:nodejs_version
   - npm config get registry
 #  - npm install --legacy-peer-deps
-#test_script:
-#  - npm run build
+test_script:
+  - npm install --legacy-peer-deps
 build: off
