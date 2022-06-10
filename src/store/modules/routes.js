@@ -6,7 +6,8 @@ import { defaultRoutes, errorRoutes } from '@/config/router.config'
 import { getRouterList } from '@/api/User'
 import { convertRouter, filterRoutes } from '@/utils/router/routes'
 import { getToken } from '@/utils/vue'
-
+import router from '@/utils/router/utils'
+const utilsRouter = new router()
 const state = () => ({
   routes: [],
   cachedRoutes: [],
@@ -83,66 +84,9 @@ const actions = {
     /**
      * 处理路由
      */
-    let data = []
-    results.forEach((item, key) => {
-      if (item.children && item.meta) {
-        item.children.forEach((i, k) => {
-          if (i.meta) {
-            // i.name = i.name
-            i.path = i.url
-            i.component = i.meta.component
-            i.hidden = i.meta.hidden || false
-            i.meta.noKeepAlive = i.meta.noKeepAlive || false
-            i.menuHidden = i.meta.menuHidden || false
-            i.alwaysShow = i.meta.alwaysShow || false
-            // i.meta.title = i.meta.title
-            // i.meta.icon = i.meta.icon
-          }
-        })
-      }
-      if (item.meta && item.meta.redirect) {
-        data.push({
-          hidden: item.meta.hidden || false,
-          menuHidden: item.meta.menuHidden || false,
-          alwaysShow: item.meta.alwaysShow || false,
-          name: item.name,
-          path: item.url,
-          component: item.meta.component,
-          redirect: item.meta.redirect,
-          meta: {
-            title: item.meta.title,
-            icon: item.meta.icon,
-            noKeepAlive: item.meta.noKeepAlive || false,
-          },
-          children: item.children,
-        })
-      } else if (item.meta) {
-        data.push({
-          hidden: item.hidden || false,
-          menuHidden: item.menuHidden || false,
-          alwaysShow: item.alwaysShow || false,
-          name: item.name,
-          path: item.url,
-          component: item.meta.component,
-          meta: {
-            title: item.meta.title,
-            icon: item.meta.icon,
-            noKeepAlive: item.meta.noKeepAlive || false,
-          },
-          children: item.children,
-        })
-      } else {
-        Vue.prototype.$baseMessage(
-          '后端没有正确的返回路由,将展示默认路由',
-          'error',
-          false,
-          'dgiot-hey-message-error'
-        )
-        data = _defaultRoutes
-      }
-    })
+    let data = _.merge(utilsRouter.compute(results, errorRoutes))
+    console.log(data)
     if (data[data.length - 1].path !== '*') {
-      data.push(errorRoutes)
       routes = convertRouter(data)
     }
 
