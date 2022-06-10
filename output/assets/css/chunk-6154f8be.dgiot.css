@@ -2,7 +2,7 @@
  *  build: 杭州数蛙科技有限公司 
  *  copyright: dgiot-dashboard 
  *  author: h7ml(h7ml@qq.com) 
- *  Time: 2022年06月10日18时02分36秒
+ *  Time: 2022年06月10日18时22分20秒
  */
 
 @font-face {
@@ -61,4 +61,3 @@
   margin: 20px 0;
 }
 
-.dashboard-container main{position:relative;top:20px;height:100vh;margin:0 auto;text-align:center}
