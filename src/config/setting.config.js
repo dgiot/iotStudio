@@ -60,7 +60,6 @@ module.exports = {
     'gitee.io',
     'github.io',
     'netlify.app',
-    'vercel.app',
     'surge.sh',
     'h7ml.icu',
   ],
