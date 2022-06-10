@@ -1,0 +1,169 @@
+<!-- HTML for static distribution bundle build -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Swagger UI</title>
+  <link
+    rel="stylesheet"
+    href="./element-ui@2.15.8/lib/theme-chalk/index.css"
+  />
+  <link rel="stylesheet" type="text/css" href="swagger-ui-tree.css" />
+  <link rel="stylesheet" type="text/css" href="./swagger-ui.css" />
+  <script src="./vue@2.6.14/dist/vue.js"></script>
+  <link
+    rel="icon"
+    type="image/png"
+    href="./favicon-32x32.png"
+    sizes="32x32"
+  />
+  <link
+    rel="icon"
+    type="image/png"
+    href="./favicon-16x16.png"
+    sizes="16x16"
+  />
+  <style>
+      html {
+          box-sizing: border-box;
+          overflow: '-moz-scrollbars-vertical';
+          overflow-y: scroll;
+      }
+
+      *,
+      *:before,
+      *:after {
+          box-sizing: inherit;
+      }
+
+      body {
+          margin: 0;
+          background: #fafafa;
+      }
+  </style>
+</head>
+
+<body>
+<div id="dgiot">
+  <el-container class="position-tree">
+    <el-header style="height: 20px">
+      <el-link
+        type="primary"
+        href="http://prod.iotn2n.com"
+        target="_blank"
+        style="text-align: center; font-size: 24px"
+      >
+        dgiot物联网平台
+      </el-link>
+    </el-header>
+    <el-main>
+      <el-tree
+        default-expand-all
+        :data="swaggerTree"
+        :props="defaultProps"
+        @node-click="handleNodeClick"
+      >
+      </el-tree>
+    </el-main>
+    <el-footer style="height: 120px">
+      market@iotn2n.com © {{nowYear}} <br />
+      版权所有：杭州数蛙科技有限公司 <br />
+      友情链接: 开源社区 || 数蛙科技 || 问答社区
+    </el-footer>
+  </el-container>
+</div>
+<div id="swagger-ui"></div>
+<script src="./swagger-ui-bundle.js"></script>
+<script src="./swagger-ui-standalone-preset.js"></script>
+<script src="./axios@0.27.2/dist/axios.min.js"></script>
+<script src="./element-ui@2.15.8/lib/index.js"></script>
+<script>
+  var apiurl = window.location.protocol + "//" + window.location.host + "/swagger.json";
+  // const apiurl = 'http://dev.iotn2n.com/swagger.json';
+  window.onload = function() {
+    // Begin Swagger UI call region
+    const ui = SwaggerUIBundle({
+      url: apiurl,
+      dom_id: "#swagger-ui",
+      deepLinking: true,
+      presets: [SwaggerUIBundle.presets.apis, SwaggerUIStandalonePreset],
+      plugins: [SwaggerUIBundle.plugins.DownloadUrl],
+      layout: "StandaloneLayout"
+    });
+    // End Swagger UI call region
+    window.ui = ui;
+  };
+</script>
+<script>
+  new Vue({
+    el: "#dgiot",
+    data: function() {
+      return {
+        nowYear: new Date().getFullYear(),
+        swaggerTree: [
+          {
+            label: "基础接口",
+            target: "#/DGIOT",
+            children: [
+              {
+                target: "#/DGIOT/post_login",
+                label: "用户登录"
+              },
+              {
+                target: "#/DGIOT/post_logout",
+                label: "退出登录"
+              }
+            ]
+          }
+        ],
+        defaultProps: {
+          children: "children",
+          label: "label"
+        }
+      };
+    },
+    mounted: function() {
+      console.log(axios)
+      // const apiurl = 'http://dev.iotn2n.com/swagger.json';
+       var apiurl =
+         window.location.protocol + "//" + window.location.host + "/iotapi/dlinkjson?type=swaggerTree";
+      axios.get(apiurl).then(res => {
+        console.log(res.data);
+        const { data = [] } = res;
+        if (data) {
+          this.swaggerTree = data;
+        }
+      });
+    },
+    methods: {
+      handleNodeClick(data) {
+        window.location.href = data.target;
+        window.location.reload();
+      }
+    }
+  });
+</script>
+</body>
+<style>
+    body {
+    }
+
+    #dgiot {
+        width: 20%;
+        float: left;
+    }
+
+    #swagger-ui {
+        width: 80%;
+        float: right;
+    }
+
+    .position-tree {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 20%;
+        height: 100%;
+    }
+</style>
+</html>
