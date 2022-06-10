@@ -81,7 +81,7 @@ module.exports = {
     '_mimg',
     'fileServer',
   ],
-  recordRoute: process.env.NODE_ENV == 'development' ? true : false,
+  recordRoute: false,
   logo: 'vuejs-fill',
   i18n: 'zh',
   messageDuration: 1500,
