@@ -28,6 +28,67 @@
           </TabPane>
         </Tabs>
       </Drawer>
+      <Drawer
+        v-model="report"
+        :mask-closable="false"
+        :styles="styles"
+        width="80%"
+      >
+        <el-table
+          :border="border"
+          :data="details.basedata.docxInfo"
+          :size="lineHeight"
+          :stripe="stripe"
+        >
+          <el-table-column
+            align="center"
+            :label="$translateTitle('pressure.生成时间')"
+            prop="timestamp"
+            show-overflow-tooltip
+            sortable
+            width="200"
+          />
+          <el-table-column
+            align="center"
+            :label="$translateTitle('pressure.文件地址')"
+            prop="docxUrl"
+            show-overflow-tooltip
+            sortable
+            width="auto"
+          />
+          <el-table-column
+            align="center"
+            fixed="right"
+            :label="$translateTitle('pressure.报告操作')"
+            width="320"
+          >
+            <template #default="{ row, $index }">
+              <el-button
+                size="mini"
+                type="primary"
+                @click.native="preview(row.docxUrl)"
+              >
+                {{ $translateTitle('pressure.预览') }}
+              </el-button>
+              <el-button
+                :disabled="!row.basedata.templateUrl"
+                size="mini"
+                type="success"
+                @click.native="download(row)"
+              >
+                {{ $translateTitle('pressure.下载') }}
+              </el-button>
+              <el-button
+                size="mini"
+                type="info"
+                @click.native="delete_item(row, $index, draw.settings.data)"
+              >
+                {{ $translateTitle('pressure.删除') }}
+              </el-button>
+            </template>
+          </el-table-column>
+        </el-table>
+      </Drawer>
       <el-dialog
         append-to-body
         :before-close="closeMap"
@@ -269,7 +330,7 @@
         align="center"
         fixed="right"
         :label="$translateTitle('pressure.报告操作')"
-        width="220"
+        width="320"
       >
         <template #default="{ row }">
           <el-button
@@ -279,13 +340,17 @@
           >
             {{ $translateTitle('pressure.报告配置') }}
           </el-button>
-          <!--          <el-button-->
-          <!--            size="mini"-->
-          <!--            type="info"-->
-          <!--            @click.native="generateReport(row)"-->
-          <!--          >-->
-          <!--            {{ $translateTitle('pressure.生成报告') }}-->
-          <!--          </el-button>-->
+          <el-button
+            :disabled="!row.basedata.templateUrl"
+            size="mini"
+            type="success"
+            @click.native="generateReport(row)"
+          >
+            {{ $translateTitle('pressure.生成报告') }}
+          </el-button>
+          <el-button size="mini" type="info" @click.native="showDocxInfo(row)">
+            {{ $translateTitle('pressure.报告信息') }}
+          </el-button>
         </template>
       </el-table-column>
       <el-table-column
@@ -365,6 +430,13 @@
     props: {},
     data() {
       return {
+        report: false,
+        styles: {
+          height: 'calc(100% - 55px)',
+          overflow: 'auto',
+          paddingBottom: '53px',
+          position: 'static',
+        },
         Drawer: false,
         mapHeight: '500px',
         mapWidth: '100%',
@@ -462,7 +534,7 @@
           },
         ],
         list: [],
-        imageList: [],
+        details: { basedata: { docxInfo: [] } },
         listLoading: false,
         layout: 'total, sizes, prev, pager, next, jumper',
         total: 0,
@@ -479,6 +551,7 @@
     computed: {
       ...mapGetters({
         language: 'settings/language',
+        usertoken: 'user/token',
       }),
       finallyColumns() {
         return this.columns.filter((item) =>
@@ -506,8 +579,53 @@
       beforeClose() {
         this.fetchData()
       },
+      showDocxInfo(info) {
+        const _docxInfo = info.basedata.docxInfo
+        _docxInfo.forEach((i) => {
+          i.timestamp = this.$moment
+            .unix(i.timestamp)
+            .format('YYYY-MM-DD HH:mm:ss')
+        })
+        this.details = info
+        console.log(info)
+        this.report = true
+      },
       async generateReport(row) {
-        console.log(row)
+        const params = {
+          reportid: row.objectId,
+          templateUrl: row.basedata.templateUrl,
+          grafanaHost: location.hostname,
+          parseHost: location.hostname,
+        }
+
+        const res = await axios.post('/grafana/generateReport', params, {
+          headers: {
+            'Access-Control-Allow-Origin': '*', //解决cors头问题
+            'Access-Control-Allow-Credentials': 'true', //解决session问题
+            'Content-Type': 'application/json', //将表单数据传递转化为application/json类型
+            sessionToken: this.usertoken,
+          },
+          withCredentials: true,
+        })
+        this.$baseMessage(this.$translateTitle('pressure.报告生成成功'))
+      },
+      async preview(fileurl) {
+        const encodeUrl = encodeURIComponent(Base64.encode(fileurl))
+        window.open(
+          //
+          `${location.hostname}:8012/onlinePreview?url=${encodeUrl}`
+        )
+        console.log('encodeUrl', encodeUrl, fileurl)
+      },
+      async download(row) {
+        window.location = row.docxUrl
+      },
+      async delete_item(row, index, tableData) {
+        tableData.splice(index, 1)
+        console.log(tableData)
+        await putDevice(this.details.objectId, {
+          basedata: this.details.basedata,
+        })
       },
       async busButton(col, type) {
         console.log(col, type)
@@ -839,6 +957,9 @@
         const { count = 0, results = [] } = await queryDevice(params)
         const timeExp = /\[(\d{2,}):(\d{2})(?:\.(\d{2,3}))?]/g
         results.forEach((i) => {
+          i?.basedata?.templateUrl
+            ? ''
+            : (i.basedata = { templateUrl: '', docxInfo: [] })
           i.startTime = i?.profile?.startTime
             ? this.$moment
                 .unix(i.profile.startTime)
