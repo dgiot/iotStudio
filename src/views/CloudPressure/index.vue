@@ -28,12 +28,7 @@
           </TabPane>
         </Tabs>
       </Drawer>
-      <Drawer
-        v-model="report"
-        :mask-closable="false"
-        :styles="styles"
-        width="80%"
-      >
+      <Drawer v-model="report" :styles="styles" width="80%">
         <el-table
           :border="border"
           :data="details.basedata.docxInfo"
@@ -587,7 +582,7 @@
       },
       async showDocxInfo(info) {
         const res = await getDevice(info.objectId)
-        const _docxInfo = res.basedata.docxInfo
+        const _docxInfo = res?.basedata?.docxInfo ? res.basedata.docxInfo : []
         _docxInfo.forEach((i) => {
           i.timestamp = this.$moment
             .unix(i.timestamp)
