@@ -415,7 +415,13 @@
 </template>
 
 <script>
-  import { delDevice, postDevice, putDevice, queryDevice } from '@/api/Device'
+  import {
+    delDevice,
+    postDevice,
+    putDevice,
+    queryDevice,
+    getDevice,
+  } from '@/api/Device'
   import { queryProduct } from '@/api/Product'
   import { queryProductTemplet } from '@/api/ProductTemplet'
   import TableEdit from '@/views/DeviceCloud/empty/tableEdit'
@@ -579,15 +585,16 @@
       beforeClose() {
         this.fetchData()
       },
-      showDocxInfo(info) {
-        const _docxInfo = info.basedata.docxInfo
+      async showDocxInfo(info) {
+        const res = await getDevice(info.objectId)
+        const _docxInfo = res.basedata.docxInfo
         _docxInfo.forEach((i) => {
           i.timestamp = this.$moment
             .unix(i.timestamp)
             .format('YYYY-MM-DD HH:mm:ss')
         })
-        this.details = info
-        console.log(info)
+        this.details = res
+        console.log(res)
         this.report = true
       },
       async generateReport(row) {
@@ -607,6 +614,7 @@
           },
           withCredentials: true,
         })
+        console.log(res)
         this.$baseMessage(this.$translateTitle('pressure.报告生成成功'))
       },
       async preview(fileurl) {
