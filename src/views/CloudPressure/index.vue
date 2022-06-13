@@ -66,7 +66,6 @@
                 {{ $translateTitle('pressure.预览') }}
               </el-button>
               <el-button
-                :disabled="!row.basedata.templateUrl"
                 size="mini"
                 type="success"
                 @click.native="download(row)"
@@ -76,7 +75,9 @@
               <el-button
                 size="mini"
                 type="info"
-                @click.native="delete_item(row, $index, draw.settings.data)"
+                @click.native="
+                  delete_item(row, $index, details.basedata.docxInfo)
+                "
               >
                 {{ $translateTitle('pressure.删除') }}
               </el-button>
@@ -343,7 +344,12 @@
           >
             {{ $translateTitle('pressure.生成报告') }}
           </el-button>
-          <el-button size="mini" type="info" @click.native="showDocxInfo(row)">
+          <el-button
+            :disabled="!row.basedata.docxInfo.length"
+            size="mini"
+            type="info"
+            @click.native="showDocxInfo(row)"
+          >
             {{ $translateTitle('pressure.报告信息') }}
           </el-button>
         </template>
@@ -611,6 +617,7 @@
         })
         console.log(res)
         this.$baseMessage(this.$translateTitle('pressure.报告生成成功'))
+        this.fetchData()
       },
       async preview(fileurl) {
         const encodeUrl = encodeURIComponent(Base64.encode(fileurl))
@@ -629,6 +636,11 @@
         await putDevice(this.details.objectId, {
           basedata: this.details.basedata,
         })
+        this.$baseMessage(
+          this.$translateTitle('pressure.任务删除成功'),
+          'success',
+          'dgiot-hey-message-success'
+        )
       },
       async busButton(col, type) {
         console.log(col, type)
@@ -766,6 +778,7 @@
         })
       },
       async queryZetaProduct() {
+        window._loading = this.$baseLoading(1)
         const { results: zeta = [] } = await queryProductTemplet({
           excludeKeys:
             'children,thing,decoder,topics,productSecret,view,category,producttemplet,content,profile',
@@ -780,8 +793,10 @@
               }
             : {},
         })
-        product?.[0]?.objectId ? (this.product = product?.[0]?.objectId) : ''
-        this.product ? this.fetchData() : ''
+        if (product?.[0]?.objectId) {
+          this.product = product?.[0]?.objectId
+          this.fetchData()
+        }
       },
       async handleView(col, type) {
         col.objectId
@@ -972,6 +987,7 @@
             ? this.$moment.unix(i.profile.endTime).format('YYYY-MM-DD HH:mm:ss')
             : this.$translateTitle('pressure.暂未配置')
         })
+        window._loading.close()
         this.list = results
         this.total = count
         this.listLoading = false
