@@ -932,7 +932,11 @@ class konvaUtils {
     this.nodeTag = []
   }
   // bo
-  putNode(nodeid, params) {
+  putNode(node, nodeid, params, type) {
+    if (type == 'change') {
+      var change = node.find(nodeid)[0].setAttrs(params)
+    }
+    console.log(node, nodeid, params, change)
     // in nodeid find node
     // in node.name event
     // if thing put text
