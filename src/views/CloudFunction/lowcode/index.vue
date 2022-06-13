@@ -571,7 +571,7 @@
       async handleEdit(row) {
         const loading = this.$baseLoading(1)
         const { data = {} } = await getView(row.objectId)
-        if (['amis_view', 'amis', 'topo'].includes(row.type)) {
+        if (['amis_view', 'amis', 'topo'].includes(row.type) == -1) {
           this.$router.push({
             path: '/Topo?productid',
             query: {
