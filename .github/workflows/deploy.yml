@@ -34,20 +34,20 @@ jobs:
       - name: Generate files  🚀
         run: yarn build
 
-  sync:
-    name: sync gitee 🚀
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout 🚀
-        uses: actions/checkout@v2
-      - name: Sync dgiot-dashboard 🚀
-        uses: Yikun/hub-mirror-action@master
-        with:
-          src: github/dgiot
-          dst: gitee/dgiiot
-          dst_key: ${{ secrets.PRIVATE_KEY }}
-          dst_token: ${{ secrets.GIT_TOKEN }}
-          static_list: "dgiot-dashboard" # 只同步这个项目 https://github.com/Yikun/hub-mirror-action#%E9%BB%91%E7%99%BD%E5%90%8D%E5%8D%95
+#  sync:
+#    name: sync gitee 🚀
+#    runs-on: ubuntu-latest
+#    steps:
+#      - name: Checkout 🚀
+#        uses: actions/checkout@v2
+#      - name: Sync dgiot-dashboard 🚀
+#        uses: Yikun/hub-mirror-action@master
+#        with:
+#          src: github/dgiot
+#          dst: gitee/dgiiot
+#          dst_key: ${{ secrets.PRIVATE_KEY }}
+#          dst_token: ${{ secrets.GIT_TOKEN }}
+#          static_list: "dgiot-dashboard" # 只同步这个项目 https://github.com/Yikun/hub-mirror-action#%E9%BB%91%E7%99%BD%E5%90%8D%E5%8D%95
   deploy:
     name: deploy 🚀
     runs-on: ubuntu-latest
