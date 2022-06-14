@@ -16,7 +16,7 @@
         />
       </el-form-item>
       <el-form-item :label="$translateTitle('rule.Remarks')">
-        <el-input v-model="formInline.remarks" type="text" />
+        <el-input v-model="formInline.remarks" type="text"/>
       </el-form-item>
       <el-divider content-position="left">触发器(Trigger)</el-divider>
       <el-row :gutter="24">
@@ -141,7 +141,12 @@
                     :key="item.objectId"
                     :label="item.name"
                     :value="item.objectId"
-                  />
+                  >
+                    <span style="float: left">{{ item.name }}</span>
+                    <span style="float: right; color: #8492a6; font-size: 13px">
+                      {{ item.objectId }}
+                    </span>
+                  </el-option>
                 </el-select>
               </el-form-item>
             </el-col>
@@ -169,7 +174,12 @@
                     :key="deviceName.objectId"
                     :label="deviceName.name"
                     :value="deviceName.objectId"
-                  />
+                  >
+                    <span style="float: left">{{ deviceName.name }}</span>
+                    <span style="float: right; color: #8492a6; font-size: 13px">
+                      {{ deviceName.objectId }}
+                    </span>
+                  </el-option>
                 </el-select>
               </el-form-item>
             </el-col>
@@ -243,7 +253,12 @@
                     :key="item.objectId"
                     :label="item.name"
                     :value="item.objectId"
-                  />
+                  >
+                    <span style="float: left">{{ item.name }}</span>
+                    <span style="float: right; color: #8492a6; font-size: 13px">
+                      {{ item.objectId }}
+                    </span>
+                  </el-option>
                 </el-select>
               </el-form-item>
             </el-col>
@@ -271,11 +286,16 @@
                   placeholder="请选择设备信息"
                 >
                   <el-option
-                    v-for="device in filtersDevice(item.params.productKey)"
-                    :key="device.objectId"
-                    :label="device.name"
-                    :value="device.objectId"
-                  />
+                    v-for="deviceName in filtersDevice(item.params.productKey)"
+                    :key="deviceName.objectId"
+                    :label="deviceName.name"
+                    :value="deviceName.objectId"
+                  >
+                    <span style="float: left">{{ deviceName.name }}</span>
+                    <span style="float: right; color: #8492a6; font-size: 13px">
+                      {{ deviceName.objectId }}
+                    </span>
+                  </el-option>
                 </el-select>
               </el-form-item>
             </el-col>
@@ -412,7 +432,7 @@
           </el-row>
         </el-col>
       </el-row>
-      <el-divider />
+      <el-divider/>
 
       <el-divider content-position="left">执行条件(Conditions)</el-divider>
       <el-row :gutter="24">
@@ -534,7 +554,12 @@
                     :key="item.objectId"
                     :label="item.name"
                     :value="item.objectId"
-                  />
+                  >
+                    <span style="float: left">{{ item.name }}</span>
+                    <span style="float: right; color: #8492a6; font-size: 13px">
+                      {{ item.objectId }}
+                    </span>
+                  </el-option>
                 </el-select>
               </el-form-item>
             </el-col>
@@ -563,11 +588,16 @@
                   placeholder="请选择设备信息"
                 >
                   <el-option
-                    v-for="item in filtersDevice(condition.params.productKey)"
-                    :key="item.objectId"
-                    :label="item.name"
-                    :value="item.objectId"
-                  />
+                    v-for="deviceName in filtersDevice(condition.params.productKey)"
+                    :key="deviceName.objectId"
+                    :label="deviceName.name"
+                    :value="deviceName.objectId"
+                  >
+                    <span style="float: left">{{ deviceName.name }}</span>
+                    <span style="float: right; color: #8492a6; font-size: 13px">
+                      {{ deviceName.objectId }}
+                    </span>
+                  </el-option>
                 </el-select>
               </el-form-item>
             </el-col>
