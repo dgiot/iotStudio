@@ -38,7 +38,7 @@
           <el-table-column
             align="center"
             :label="$translateTitle('pressure.生成时间')"
-            prop="timestamp"
+            prop="unixtimestamp"
             show-overflow-tooltip
             sortable
             width="200"
@@ -418,10 +418,10 @@
 <script>
   import {
     delDevice,
+    getDevice,
     postDevice,
     putDevice,
     queryDevice,
-    getDevice,
   } from '@/api/Device'
   import { queryProduct } from '@/api/Product'
   import { queryProductTemplet } from '@/api/ProductTemplet'
@@ -590,7 +590,7 @@
         const res = await getDevice(info.objectId)
         const _docxInfo = res?.basedata?.docxInfo ? res.basedata.docxInfo : []
         _docxInfo.forEach((i) => {
-          i.timestamp = this.$moment
+          i.unixtimestamp = this.$moment
             .unix(i.timestamp)
             .format('YYYY-MM-DD HH:mm:ss')
         })
@@ -621,11 +621,9 @@
       },
       async preview(fileurl) {
         const encodeUrl = encodeURIComponent(Base64.encode(fileurl))
-        window.open(
-          //
-          `${location.hostname}:8012/onlinePreview?url=${encodeUrl}`
-        )
-        console.log('encodeUrl', encodeUrl, fileurl)
+        const previerUrl = `${location.protocol}//${location.hostname}/onlinePreview?url=${encodeUrl}`
+        console.log(fileurl, encodeUrl, previerUrl)
+        window.open(previerUrl, '_blank')
       },
       async download(row) {
         window.location = row.docxUrl
