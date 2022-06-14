@@ -602,8 +602,8 @@
         const params = {
           reportid: row.objectId,
           templateUrl: row.basedata.templateUrl,
-          // grafanaHost: location.hostname,
-          // parseHost: location.hostname,
+          grafanaHost: location.hostname,
+          parseHost: location.hostname,
         }
 
         const res = await axios.post('/grafana/generateReport', params, {
@@ -795,6 +795,7 @@
         })
         if (product?.[0]?.objectId) {
           this.product = product?.[0]?.objectId
+          localStorage.setItem('product_objectid', this.product)
           this.fetchData()
         }
       },

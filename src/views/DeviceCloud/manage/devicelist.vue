@@ -988,6 +988,7 @@
       },
       async info(row) {
         localStorage.setItem('parse_objectid', row.objectId)
+        localStorage.setItem('product_objectid', row.product.objectId)
         const { results = [] } = await queryView({
           where: {
             class: 'Product',
@@ -1009,10 +1010,11 @@
       },
       async command(row) {
         localStorage.setItem('parse_objectid', row.objectId)
+        localStorage.setItem('product_objectid', row.product.objectId)
         const { results = [] } = await queryView({
           where: {
             class: 'Product',
-            type: 'amis',
+            type: { $in: ['amis', 'profile', 'content'] },
             key: row.product.objectId,
           },
         })

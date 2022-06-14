@@ -1046,6 +1046,7 @@ export default {
     },
     async queryProductInfo(productId) {
       const res = await getProduct(productId)
+      localStorage.setItem('product_objectid', productId)
       const { thing = { properties: [], events: [], services: [], tags: [] } } =
         res
       _.merge({ properties: [], events: [], services: [], tags: [] }, thing)
