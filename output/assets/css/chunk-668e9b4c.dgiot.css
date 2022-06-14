@@ -2,7 +2,7 @@
  *  build: 杭州数蛙科技有限公司 
  *  copyright: dgiot-dashboard 
  *  author: h7ml(h7ml@qq.com) 
- *  Time: 2022年06月13日14时27分03秒
+ *  Time: 2022年06月14日09时49分54秒
  */
 
 @font-face {
@@ -15,7 +15,7 @@
     url(/fonts/ionicons.svg?v=3.0.0#Ionicons) format('svg');
 }
 
-[data-v-ef5b15a2]:export{menu-color:rgba(255,255,255,.95);menu-color-active:rgba(255,255,255,.95);menu-background:#282c34;column-second-menu-background:#fff}.el-row[data-v-ef5b15a2]{margin-bottom:0px !important}.full-modal[data-v-ef5b15a2]{height:100vh !important}.full-modal .ant-modal[data-v-ef5b15a2]{top:0;max-width:100%;padding-bottom:0;margin:0}.full-modal .ant-modal-content[data-v-ef5b15a2]{display:flex;flex-direction:column;height:calc(100vh)}.full-modal .ant-modal-body[data-v-ef5b15a2]{flex:1}.index-container[data-v-ef5b15a2]{width:100%;heigth:100%}
+[data-v-9b5fb87a]:export{menu-color:rgba(255,255,255,.95);menu-color-active:rgba(255,255,255,.95);menu-background:#282c34;column-second-menu-background:#fff}.el-row[data-v-9b5fb87a]{margin-bottom:0px !important}.full-modal[data-v-9b5fb87a]{height:100vh !important}.full-modal .ant-modal[data-v-9b5fb87a]{top:0;max-width:100%;padding-bottom:0;margin:0}.full-modal .ant-modal-content[data-v-9b5fb87a]{display:flex;flex-direction:column;height:calc(100vh)}.full-modal .ant-modal-body[data-v-9b5fb87a]{flex:1}.index-container[data-v-9b5fb87a]{width:100%;heigth:100%}
 [data-v-de097c28]:export{menu-color:rgba(255,255,255,.95);menu-color-active:rgba(255,255,255,.95);menu-background:#282c34;column-second-menu-background:#fff}.grafana-container[data-v-de097c28]{width:100%;heigth:100%}.grafana-container iframe[data-v-de097c28]{display:block;width:100vw;height:100vh;background:#000;border:none}
 [data-v-6af26652]:export{menu-color:rgba(255,255,255,.95);menu-color-active:rgba(255,255,255,.95);menu-background:#282c34;column-second-menu-background:#fff}.CloudSystem-container[data-v-6af26652]{width:100%;height:100%}.CloudSystem-container-container[data-v-6af26652]{width:100%;height:100%}
 [data-v-e24c6614]:export{menu-color:rgba(255,255,255,.95);menu-color-active:rgba(255,255,255,.95);menu-background:#282c34;column-second-menu-background:#fff}.logs[data-v-e24c6614]{height:calc(100vh - 60px * 2.7) !important}.logs[data-v-e24c6614]  .el-table__body,.logs[data-v-e24c6614]  .el-table__empty-block{width:100% !important}.logs-row-tree[data-v-e24c6614]{overflow:scroll}
