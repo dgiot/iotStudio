@@ -10,7 +10,6 @@ env:
 jobs:
   sync:
     name: sync gitee 🚀
-    if: steps.lerna-cache.outputs.cache-hit != 'true'
     runs-on: ubuntu-latest
     steps:
       #      - name: get dashboard size  🚀
