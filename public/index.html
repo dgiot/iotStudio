@@ -9,7 +9,8 @@
     <meta content="<%= VUE_APP_Description %>" name="description" />
     <meta content="<%= VUE_APP_AUTHOR %>" name="author" />
     <meta content="Colby Fayock" property="og:site_name" />
-    <meta name="referrer" content="never" />
+<!--    <meta name="referrer" content="never" />-->
+    <meta name="referrer" content="strict-origin-when-cross-origin">
     <!-- 引入og -->
     <% for(let property in htmlWebpackPlugin.options.ogConfig) { %>
     <meta
