@@ -407,6 +407,7 @@ export default {
   },
   mounted() {
     // this.deviceInfo.product.objectId = this.$route.query.productid
+    localStorage.setItem('product_objectid', this.$route.query.productid)
     this.getDeviceInfo(this.$route.query.deviceid)
     this.setTreeFlag(false)
     this.params.style = this.chartType[0].type
@@ -416,6 +417,7 @@ export default {
     this.topicKey = this.$dgiotBus.topicKey(this.router, this.subtopic) // dgiot-mqtt topicKey 唯一标识
     // if (this.$route.query.deviceid) {
     this.deviceid = this.$route.query.deviceid
+    localStorage.setItem('parse_objectid', deviceid)
     this.subRealtimedata()
     this.initChart()
     window.addEventListener('resize', this.resizeTheChart)
