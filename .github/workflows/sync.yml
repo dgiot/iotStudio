@@ -1,5 +1,8 @@
 name: sync
-on: workflow_dispatch
+on:
+  push:
+    branches: [ master,dev ]
+  workflow_dispatch:
 
 # 设置上海时区
 env:
@@ -10,8 +13,8 @@ jobs:
     if: steps.lerna-cache.outputs.cache-hit != 'true'
     runs-on: ubuntu-latest
     steps:
-#      - name: get dashboard size  🚀
-#        run: size = curl https://api.github.com/repos/dgiot/dgiot-dashboard
+      #      - name: get dashboard size  🚀
+      #        run: size = curl https://api.github.com/repos/dgiot/dgiot-dashboard
       - name: Checkout 🚀
         uses: actions/checkout@v2
       - name: Sync dgiot-dashboard 🚀
