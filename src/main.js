@@ -10,7 +10,12 @@ import dgiotStore from '@dgiot/dgiot-mqtt-dashboard/src/store'
 import VueAmisSdk from 'vue-amis-sdk/packages/index'
 import { VuePlugin } from 'vuera'
 import '@/dgiot'
-
+import 'amis/lib/themes/cxd.css'
+import 'amis/lib/themes/ang.css'
+import 'amis/lib/helper.css'
+import 'amis/sdk/sdk.css'
+import 'amis-editor/dist/style.css'
+// import 'amis-core/lib/index.js'
 Vue.use(VueAmisSdk)
 Vue.use(VuePlugin)
 window.dgiotlogger =
