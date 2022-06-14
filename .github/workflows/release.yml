@@ -1,44 +1,39 @@
-# https://github.com/actions/create-release
-name: release
+name: Release
 
 on:
+  workflow_dispatch:
   push:
     tags:
       - 'v*'
-  workflow_dispatch:
-
-# 设置上海时区
-env:
-  TZ: Asia/Shanghai
 
 jobs:
-  publish:
+  release:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        node-version: [ latest ]
     steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-      - name: Use Node.js 🚀
+      - uses: actions/checkout@v3
         with:
-          node-version: '16.15.0'
-          registry-url: https://registry.npmjs.org/
-        uses: actions/setup-node@v2
-      - name: Cache yarn modules  🚀
-        uses: actions/cache@v2
+          fetch-depth: 0
+      - name: Set node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16.x
+          registry-url: 'https://registry.npmjs.org'
+
+      - name: Setup
+        run: npm i -g @antfu/ni pnpm
+
+      - run: npx changelogithub
+        continue-on-error: true
         env:
-          cache-name: cache-yarn-modules
-        with:
-          path: '**/node_modules'
-          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ matrix.node-version }}-${{ hashFiles('**/yarn.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-build-${{ env.cache-name }}-${{ matrix.node-version }}-
-      - run: yarn install && npm publish --access=public
+          GITHUB_TOKEN: ${{secrets.GIT_TOKEN}}
+
+      - name: Install Dependencies
+        run: nci
+
+      - name: PNPM build
+        run: nr build
+
+      - name: Publish to NPM
+        run: pnpm -r publish --access public --no-git-checks
         env:
           NODE_AUTH_TOKEN: ${{secrets.npm_token}}
-      - name: Prepare the changelog from the tag message
-        run: |
-          VERSION=${GITHUB_REF/refs\/tags\//}
-          echo "Setting release version to $VERSION"
-          echo "release_version=$VERSION" >> $GITHUB_ENV
