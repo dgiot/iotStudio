@@ -43,10 +43,15 @@
             >
               <el-option
                 v-for="item in Types"
-                :key="item"
-                :label="item"
-                :value="item"
-              />
+                :key="item.label"
+                :label="item.label"
+                :value="item.value"
+              >
+                <span style="float: left">{{ item.label }}</span>
+                <span style="float: right; color: #8492a6; font-size: 13px">
+                  {{ item.value }}
+                </span>
+              </el-option>
             </el-select>
           </el-form-item>
           <el-form-item label="key">
@@ -358,14 +363,42 @@
           { label: '日本語', value: 'jp' },
         ],
         Types: [
-          'amis',
-          'deviceInfo',
-          'amis_view',
-          'topo',
-          'profile',
-          'content',
-          'notification',
-          'reportFrom',
+          {
+            value: 'amis',
+            label: '低代码',
+          },
+          {
+            value: 'notification',
+            label: '告警联动',
+          },
+          {
+            value: 'reportFrom',
+            label: '报告表单',
+          },
+          {
+            value: 'deviceInfo',
+            label: '设备信息',
+          },
+          {
+            value: 'amis_view',
+            label: '低代码预览',
+          },
+          {
+            value: 'topo',
+            label: '组态',
+          },
+          {
+            value: 'profile',
+            label: '设备控制',
+          },
+          {
+            value: 'content',
+            label: '数据展示',
+          },
+          {
+            value: 'sms_template',
+            label: '短信模板',
+          },
         ],
         DbaTable: [],
         keys: [],
