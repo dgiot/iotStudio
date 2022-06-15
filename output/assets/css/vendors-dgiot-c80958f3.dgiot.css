@@ -2,7 +2,7 @@
  *  build: 杭州数蛙科技有限公司 
  *  copyright: dgiot-dashboard 
  *  author: h7ml(h7ml@qq.com) 
- *  Time: 2022年06月14日17时46分55秒
+ *  Time: 2022年06月15日12时00分54秒
  */
 /*---------------------------------------------------------------------------------------------
  *  Copyright (c) Microsoft Corporation. All rights reserved.
@@ -18,285 +18,29 @@
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
-/* Arrows */
-.monaco-scrollable-element > .scrollbar > .up-arrow {
-	background: url("data:image/svg+xml;base64,PHN2ZyB2aWV3Qm94PSIwIDAgMTEgMTEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHBhdGggZD0ibTkuNDgwNDYsOC45NjE1bDEuMjYsLTEuMjZsLTUuMDQsLTUuMDRsLTUuNDYsNS4wNGwxLjI2LDEuMjZsNC4yLC0zLjc4bDMuNzgsMy43OHoiIGZpbGw9IiM0MjQyNDIiLz48L3N2Zz4=");
-	cursor: pointer;
-}
-.monaco-scrollable-element > .scrollbar > .down-arrow {
-	background: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMSAxMSI+PHBhdGggdHJhbnNmb3JtPSJyb3RhdGUoLTE4MCA1LjQ5MDQ1OTkxODk3NTgzLDUuODExNTAwMDcyNDc5MjQ4KSIgZmlsbD0iIzQyNDI0MiIgZD0ibTkuNDgwNDYsOC45NjE1bDEuMjYsLTEuMjZsLTUuMDQsLTUuMDRsLTUuNDYsNS4wNGwxLjI2LDEuMjZsNC4yLC0zLjc4bDMuNzgsMy43OHoiLz48L3N2Zz4=");
-	cursor: pointer;
-}
-.monaco-scrollable-element > .scrollbar > .left-arrow {
-	background: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMSAxMSI+PHBhdGggdHJhbnNmb3JtPSJyb3RhdGUoLTkwIDUuNDkwNDU5OTE4OTc1ODMxLDUuNDMxMzgyMTc5MjYwMjU0KSIgZmlsbD0iIzQyNDI0MiIgZD0ibTkuNDgwNDYsOC41ODEzOGwxLjI2LC0xLjI2bC01LjA0LC01LjA0bC01LjQ2LDUuMDRsMS4yNiwxLjI2bDQuMiwtMy43OGwzLjc4LDMuNzh6Ii8+PC9zdmc+");
-	cursor: pointer;
-}
-.monaco-scrollable-element > .scrollbar > .right-arrow {
-	background: url("data:image/svg+xml;base64,PHN2ZyB2aWV3Qm94PSIwIDAgMTEgMTEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHBhdGggdHJhbnNmb3JtPSJyb3RhdGUoOTAgNS42MTcxNjUwODg2NTM1NjQ1LDUuNTU4MDg5NzMzMTIzNzgpICIgZmlsbD0iIzQyNDI0MiIgZD0ibTkuNjA3MTcsOC43MDgwOWwxLjI2LC0xLjI2bC01LjA0LC01LjA0bC01LjQ2LDUuMDRsMS4yNiwxLjI2bDQuMiwtMy43OGwzLjc4LDMuNzh6Ii8+PC9zdmc+");
-	cursor: pointer;
-}
-
-.hc-black .monaco-scrollable-element > .scrollbar > .up-arrow,
-.vs-dark .monaco-scrollable-element > .scrollbar > .up-arrow {
-	background: url("data:image/svg+xml;base64,PHN2ZyB2aWV3Qm94PSIwIDAgMTEgMTEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHBhdGggZD0ibTkuNDgwNDYsOC45NjE1bDEuMjYsLTEuMjZsLTUuMDQsLTUuMDRsLTUuNDYsNS4wNGwxLjI2LDEuMjZsNC4yLC0zLjc4bDMuNzgsMy43OHoiIGZpbGw9IiNFOEU4RTgiLz48L3N2Zz4=");
-}
-.hc-black .monaco-scrollable-element > .scrollbar > .down-arrow,
-.vs-dark .monaco-scrollable-element > .scrollbar > .down-arrow {
-	background: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMSAxMSI+PHBhdGggdHJhbnNmb3JtPSJyb3RhdGUoLTE4MCA1LjQ5MDQ1OTkxODk3NTgzLDUuODExNTAwMDcyNDc5MjQ4KSIgZmlsbD0iI0U4RThFOCIgZD0ibTkuNDgwNDYsOC45NjE1bDEuMjYsLTEuMjZsLTUuMDQsLTUuMDRsLTUuNDYsNS4wNGwxLjI2LDEuMjZsNC4yLC0zLjc4bDMuNzgsMy43OHoiLz48L3N2Zz4=");
-}
-.hc-black .monaco-scrollable-element > .scrollbar > .left-arrow,
-.vs-dark .monaco-scrollable-element > .scrollbar > .left-arrow {
-	background: url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMSAxMSI+PHBhdGggdHJhbnNmb3JtPSJyb3RhdGUoLTkwIDUuNDkwNDU5OTE4OTc1ODMxLDUuNDMxMzgyMTc5MjYwMjU0KSIgZmlsbD0iI0U4RThFOCIgZD0ibTkuNDgwNDYsOC41ODEzOGwxLjI2LC0xLjI2bC01LjA0LC01LjA0bC01LjQ2LDUuMDRsMS4yNiwxLjI2bDQuMiwtMy43OGwzLjc4LDMuNzh6Ii8+PC9zdmc+");
-}
-.hc-black .monaco-scrollable-element > .scrollbar > .right-arrow,
-.vs-dark .monaco-scrollable-element > .scrollbar > .right-arrow {
-	background: url("data:image/svg+xml;base64,PHN2ZyB2aWV3Qm94PSIwIDAgMTEgMTEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHBhdGggdHJhbnNmb3JtPSJyb3RhdGUoOTAgNS42MTcxNjUwODg2NTM1NjQ1LDUuNTU4MDg5NzMzMTIzNzgpICIgZmlsbD0iI0U4RThFOCIgZD0ibTkuNjA3MTcsOC43MDgwOWwxLjI2LC0xLjI2bC01LjA0LC01LjA0bC01LjQ2LDUuMDRsMS4yNiwxLjI2bDQuMiwtMy43OGwzLjc4LDMuNzh6Ii8+PC9zdmc+");
-}
-
-.monaco-scrollable-element > .visible {
-	opacity: 1;
-
-	/* Background rule added for IE9 - to allow clicks on dom node */
-	background:rgba(0,0,0,0);
-
-	transition: opacity 100ms linear;
-}
-.monaco-scrollable-element > .invisible {
-	opacity: 0;
-	pointer-events: none;
-}
-.monaco-scrollable-element > .invisible.fade {
-	transition: opacity 800ms linear;
-}
-
-/* Scrollable Content Inset Shadow */
-.monaco-scrollable-element > .shadow {
-	position: absolute;
-	display: none;
-}
-.monaco-scrollable-element > .shadow.top {
-	display: block;
-	top: 0;
-	left: 3px;
-	height: 3px;
-	width: 100%;
-	box-shadow: #DDD 0 6px 6px -6px inset;
-}
-.monaco-scrollable-element > .shadow.left {
-	display: block;
-	top: 3px;
-	left: 0;
-	height: 100%;
-	width: 3px;
-	box-shadow: #DDD 6px 0 6px -6px inset;
-}
-.monaco-scrollable-element > .shadow.top-left-corner {
-	display: block;
-	top: 0;
-	left: 0;
-	height: 3px;
-	width: 3px;
-}
-.monaco-scrollable-element > .shadow.top.left {
-	box-shadow: #DDD 6px 6px 6px -6px inset;
-}
-
-/* ---------- Default Style ---------- */
-
-.vs .monaco-scrollable-element > .scrollbar > .slider {
-	background: rgba(100, 100, 100, .4);
-}
-.vs-dark .monaco-scrollable-element > .scrollbar > .slider {
-	background: rgba(121, 121, 121, .4);
-}
-.hc-black .monaco-scrollable-element > .scrollbar > .slider {
-	background: rgba(111, 195, 223, .6);
-}
-
-.monaco-scrollable-element > .scrollbar > .slider:hover {
-	background: rgba(100, 100, 100, .7);
-}
-.hc-black .monaco-scrollable-element > .scrollbar > .slider:hover {
-	background: rgba(111, 195, 223, .8);
-}
-
-.monaco-scrollable-element > .scrollbar > .slider.active {
-	background: rgba(0, 0, 0, .6);
-}
-.vs-dark .monaco-scrollable-element > .scrollbar > .slider.active {
-	background: rgba(191, 191, 191, .4);
-}
-.hc-black .monaco-scrollable-element > .scrollbar > .slider.active {
-	background: rgba(111, 195, 223, 1);
-}
-
-.vs-dark .monaco-scrollable-element .shadow.top {
-	box-shadow: none;
-}
-
-.vs-dark .monaco-scrollable-element .shadow.left {
-	box-shadow: #000 6px 0 6px -6px inset;
-}
-
-.vs-dark .monaco-scrollable-element .shadow.top.left {
-	box-shadow: #000 6px 6px 6px -6px inset;
-}
-
-.hc-black .monaco-scrollable-element .shadow.top {
-	box-shadow: none;
-}
-
-.hc-black .monaco-scrollable-element .shadow.left {
-	box-shadow: none;
-}
-
-.hc-black .monaco-scrollable-element .shadow.top.left {
-	box-shadow: none;
-}
-/*---------------------------------------------------------------------------------------------
- *  Copyright (c) Microsoft Corporation. All rights reserved.
- *  Licensed under the MIT License. See License.txt in the project root for license information.
- *--------------------------------------------------------------------------------------------*/
-
-.monaco-sash {
-	position: absolute;
-	z-index: 35;
-	touch-action: none;
-}
-
-.monaco-sash.disabled {
-	pointer-events: none;
-}
-
-.monaco-sash.vertical {
-	cursor: ew-resize;
-	top: 0;
-	width: 4px;
-	height: 100%;
-}
-
-.monaco-sash.mac.vertical {
-	cursor: col-resize;
-}
-
-.monaco-sash.vertical.minimum {
-	cursor: e-resize;
-}
-
-.monaco-sash.vertical.maximum {
-	cursor: w-resize;
-}
-
-.monaco-sash.horizontal {
-	cursor: ns-resize;
-	left: 0;
-	width: 100%;
-	height: 4px;
-}
-
-.monaco-sash.mac.horizontal {
-	cursor: row-resize;
-}
-
-.monaco-sash.horizontal.minimum {
-	cursor: s-resize;
-}
-
-.monaco-sash.horizontal.maximum {
-	cursor: n-resize;
-}
-
-.monaco-sash:not(.disabled).orthogonal-start::before,
-.monaco-sash:not(.disabled).orthogonal-end::after {
-	content: ' ';
-	height: 8px;
-	width: 8px;
-	z-index: 100;
-	display: block;
-	cursor: all-scroll;
-	position: absolute;
-}
-
-.monaco-sash.orthogonal-start.vertical::before {
-	left: -2px;
-	top: -4px;
-}
-
-.monaco-sash.orthogonal-end.vertical::after {
-	left: -2px;
-	bottom: -4px;
-}
-
-.monaco-sash.orthogonal-start.horizontal::before {
-	top: -2px;
-	left: -4px;
-}
-
-.monaco-sash.orthogonal-end.horizontal::after {
-	top: -2px;
-	right: -4px;
-}
-
-.monaco-sash.disabled {
-	cursor: default !important;
-	pointer-events: none !important;
-}
-
-/** Touch **/
-
-.monaco-sash.touch.vertical {
-	width: 20px;
-}
-
-.monaco-sash.touch.horizontal {
-	height: 20px;
-}
-
-/** Debug **/
-
-.monaco-sash.debug {
-	background: cyan;
-}
-
-.monaco-sash.debug.disabled {
-	background: rgba(0, 255, 255, 0.2);
-}
-
-.monaco-sash.debug:not(.disabled).orthogonal-start::before,
-.monaco-sash.debug:not(.disabled).orthogonal-end::after {
-	background: red;
-}
-/*---------------------------------------------------------------------------------------------
- *  Copyright (c) Microsoft Corporation. All rights reserved.
- *  Licensed under the MIT License. See License.txt in the project root for license information.
- *--------------------------------------------------------------------------------------------*/
-
 .monaco-action-bar {
-	text-align: right;
-	overflow: hidden;
 	white-space: nowrap;
+	height: 100%;
 }
 
 .monaco-action-bar .actions-container {
 	display: flex;
 	margin: 0 auto;
 	padding: 0;
+	height: 100%;
 	width: 100%;
-	justify-content: flex-end;
+	align-items: center;
 }
 
 .monaco-action-bar.vertical .actions-container {
 	display: inline-block;
 }
 
-.monaco-action-bar.reverse .actions-container {
-	flex-direction: row-reverse;
-}
-
 .monaco-action-bar .action-item {
+	display: block;
+	align-items: center;
+	justify-content: center;
 	cursor: pointer;
-	display: inline-block;
-	transition: transform 50ms ease;
 	position: relative;  /* DO NOT REMOVE - this is the key to preventing the ghosting icon bug in Chrome 42 */
 }
 
@@ -304,21 +48,26 @@
 	cursor: default;
 }
 
-.monaco-action-bar.animated .action-item.active {
-	transform: scale(1.272019649, 1.272019649); /* 1.272019649 = √φ */
-}
-
 .monaco-action-bar .action-item .icon,
 .monaco-action-bar .action-item .codicon {
-	display: inline-block;
+	display: block;
+}
+
+.monaco-action-bar .action-item .codicon {
+	display: flex;
+	align-items: center;
+	width: 16px;
+	height: 16px;
 }
 
 .monaco-action-bar .action-label {
 	font-size: 11px;
-	margin-right: 4px;
+	padding: 3px;
+	border-radius: 5px;
 }
 
 .monaco-action-bar .action-item.disabled .action-label,
+.monaco-action-bar .action-item.disabled .action-label::before,
 .monaco-action-bar .action-item.disabled .action-label:hover {
 	opacity: 0.4;
 }
@@ -341,8 +90,14 @@
 	margin-right: .8em;
 }
 
-.monaco-action-bar.animated.vertical .action-item.active {
-	transform: translate(5px, 0);
+.monaco-action-bar .action-item .action-label.separator {
+	width: 1px;
+	height: 16px;
+	margin: 5px 4px !important;
+	cursor: default;
+	min-width: 1px;
+	padding: 0;
+	background-color: #bbb;
 }
 
 .secondary-actions .monaco-action-bar .action-label {
@@ -361,227 +116,82 @@
 	margin-right: 10px;
 }
 
+.monaco-action-bar .action-item.action-dropdown-item {
+	display: flex;
+}
+
+.monaco-action-bar .action-item.action-dropdown-item > .action-label {
+	margin-right: 1px;
+}
+
 /*---------------------------------------------------------------------------------------------
  *  Copyright (c) Microsoft Corporation. All rights reserved.
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
-.monaco-menu .monaco-action-bar.vertical {
-	margin-left: 0;
-	overflow: visible;
+@font-face {
+	font-family: "codicon";
+	font-display: block;
+	src: url(../../../static/fonts/codicon.805fb6ad.ttf) format("truetype");
 }
 
-.monaco-menu .monaco-action-bar.vertical .actions-container {
-	display: block;
-}
-
-.monaco-menu .monaco-action-bar.vertical .action-item {
-	padding: 0;
-	transform: none;
-	display: flex;
-}
-
-.monaco-menu .monaco-action-bar.vertical .action-item.active {
-	transform: none;
-}
-
-.monaco-menu .monaco-action-bar.vertical .action-menu-item {
-	flex: 1 1 auto;
-	display: flex;
-	height: 2em;
-	align-items: center;
-	position: relative;
-}
-
-.monaco-menu .monaco-action-bar.vertical .action-label {
-	flex: 1 1 auto;
-	text-decoration: none;
-	padding: 0 1em;
-	background: none;
-	font-size: 12px;
-	line-height: 1;
-}
-
-.monaco-menu .monaco-action-bar.vertical .keybinding,
-.monaco-menu .monaco-action-bar.vertical .submenu-indicator {
+.codicon[class*='codicon-'] {
+	font: normal normal normal 16px/1 codicon;
 	display: inline-block;
-	flex: 2 1 auto;
-	padding: 0 1em;
-	text-align: right;
-	font-size: 12px;
-	line-height: 1;
+	text-decoration: none;
+	text-rendering: auto;
+	text-align: center;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+	-moz-user-select: none;
+	     user-select: none;
+	-webkit-user-select: none;
+	-ms-user-select: none;
 }
 
-.monaco-menu .monaco-action-bar.vertical .submenu-indicator {
-	height: 100%;
+/* icon rules are dynamically created in codiconStyles */
+
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+
+.codicon-wrench-subaction {
+	opacity: 0.5;
 }
 
-.monaco-menu .monaco-action-bar.vertical .submenu-indicator.codicon {
-	font-size: 16px !important;
-	display: flex;
-	align-items: center;
+@-webkit-keyframes codicon-spin {
+	100% {
+		transform:rotate(360deg);
+	}
 }
 
-.monaco-menu .monaco-action-bar.vertical .submenu-indicator.codicon::before {
-	margin-left: auto;
-	margin-right: -20px;
+@keyframes codicon-spin {
+	100% {
+		transform:rotate(360deg);
+	}
 }
 
-.monaco-menu .monaco-action-bar.vertical .action-item.disabled .keybinding,
-.monaco-menu .monaco-action-bar.vertical .action-item.disabled .submenu-indicator {
+.codicon-sync.codicon-modifier-spin,
+.codicon-loading.codicon-modifier-spin,
+.codicon-gear.codicon-modifier-spin,
+.codicon-notebook-state-executing.codicon-modifier-spin {
+	/* Use steps to throttle FPS to reduce CPU usage */
+	-webkit-animation: codicon-spin 1.5s steps(30) infinite;
+	        animation: codicon-spin 1.5s steps(30) infinite;
+}
+
+.codicon-modifier-disabled {
 	opacity: 0.4;
 }
 
-.monaco-menu .monaco-action-bar.vertical .action-label:not(.separator) {
-	display: inline-block;
-	box-sizing: border-box;
-	margin: 0;
-}
-
-.monaco-menu .monaco-action-bar.vertical .action-item {
-	position: static;
-	overflow: visible;
-}
-
-.monaco-menu .monaco-action-bar.vertical .action-item .monaco-submenu {
-	position: absolute;
-}
-
-.monaco-menu .monaco-action-bar.vertical .action-label.separator {
-	padding: 0.5em 0 0 0;
-	margin-bottom: 0.5em;
-	width: 100%;
-}
-
-.monaco-menu .monaco-action-bar.vertical .action-label.separator.text {
-	padding: 0.7em 1em 0.1em 1em;
-	font-weight: bold;
-	opacity: 1;
-}
-
-.monaco-menu .monaco-action-bar.vertical .action-label:hover {
-	color: inherit;
-}
-
-.monaco-menu .monaco-action-bar.vertical .menu-item-check {
-	position: absolute;
-	visibility: hidden;
-	width: 1em;
-	height: 100%;
-}
-
-.monaco-menu .monaco-action-bar.vertical .action-menu-item.checked .menu-item-check {
-	visibility: visible;
-	display: flex;
-	align-items: center;
-	justify-content: center;
-}
-
-/* Context Menu */
-
-.context-view.monaco-menu-container {
-	outline: 0;
-	border: none;
-	-webkit-animation: fadeIn 0.083s linear;
-	        animation: fadeIn 0.083s linear;
-}
-
-.context-view.monaco-menu-container :focus,
-.context-view.monaco-menu-container .monaco-action-bar.vertical:focus,
-.context-view.monaco-menu-container .monaco-action-bar.vertical :focus {
-	outline: 0;
-}
-
-.monaco-menu .monaco-action-bar.vertical .action-item {
-	border: thin solid transparent; /* prevents jumping behaviour on hover or focus */
-}
-
-
-/* High Contrast Theming */
-.hc-black .context-view.monaco-menu-container {
-	box-shadow: none;
-}
-
-.hc-black .monaco-menu .monaco-action-bar.vertical .action-item.focused {
-	background: none;
-}
-
-/* Menubar styles */
-
-.menubar {
-	display: flex;
-	flex-shrink: 1;
-	box-sizing: border-box;
-	height: 30px;
-	overflow: hidden;
-	flex-wrap: wrap;
-}
-
-.fullscreen .menubar:not(.compact) {
-	margin: 0px;
-	padding: 0px 5px;
-}
-
-.menubar > .menubar-menu-button {
-	align-items: center;
-	box-sizing: border-box;
-	padding: 0px 8px;
-	cursor: default;
-	-webkit-app-region: no-drag;
-	zoom: 1;
-	white-space: nowrap;
-	outline: 0;
-}
-
-.menubar.compact {
-	flex-shrink: 0;
-}
-
-.menubar.compact > .menubar-menu-button {
-	width: 100%;
-	height: 100%;
-	padding: 0px;
-}
-
-.menubar .menubar-menu-items-holder {
-	position: absolute;
-	left: 0px;
-	opacity: 1;
-	z-index: 2000;
-}
-
-.menubar .menubar-menu-items-holder.monaco-menu-container {
-	outline: 0;
-	border: none;
-}
-
-.menubar .menubar-menu-items-holder.monaco-menu-container :focus {
-	outline: 0;
-}
-
-.menubar .toolbar-toggle-more {
-	width: 20px;
-	height: 100%;
-}
-
-.menubar.compact .toolbar-toggle-more {
-	position: absolute;
-	left: 0px;
-	top: 0px;
-	cursor: pointer;
-	width: 100%;
-	display: flex;
-	align-items: center;
-	justify-content: center;
-}
-
-.menubar .toolbar-toggle-more {
-	padding: 0;
-	vertical-align: sub;
-}
-
-.menubar.compact .toolbar-toggle-more::before {
-	content: "\eb94" !important;
+/* custom speed & easing for loading icon */
+.codicon-loading,
+.codicon-tree-item-loading::before {
+	-webkit-animation-duration: 1s !important;
+	        animation-duration: 1s !important;
+	-webkit-animation-timing-function: cubic-bezier(0.53, 0.21, 0.29, 0.67) !important;
+	        animation-timing-function: cubic-bezier(0.53, 0.21, 0.29, 0.67) !important;
 }
 
 /*---------------------------------------------------------------------------------------------
@@ -592,6 +202,15 @@
 .context-view {
 	position: absolute;
 	z-index: 2500;
+}
+
+.context-view.fixed {
+	all: initial;
+	font-family: inherit;
+	font-size: 13px;
+	position: fixed;
+	z-index: 2500;
+	color: inherit;
 }
 
 /*---------------------------------------------------------------------------------------------
@@ -630,7 +249,7 @@
 
 .monaco-list-row {
 	position: absolute;
-	box-sizing:	border-box;
+	box-sizing: border-box;
 	overflow: hidden;
 	width: 100%;
 }
@@ -646,12 +265,10 @@
 }
 
 /* Focus */
-.monaco-list.element-focused, .monaco-list.selection-single, .monaco-list.selection-multiple {
+.monaco-list.element-focused,
+.monaco-list.selection-single,
+.monaco-list.selection-multiple {
 	outline: 0 !important;
-}
-
-.monaco-list:focus .monaco-list-row.selected .codicon {
-	color: inherit;
 }
 
 /* Dnd */
@@ -661,6 +278,7 @@
 	border-radius: 10px;
 	font-size: 12px;
 	position: absolute;
+	z-index: 1000;
 }
 
 /* Type filter */
@@ -726,10 +344,6 @@
 	cursor: pointer;
 }
 
-.monaco-list-type-filter > .controls > .filter:checked::before {
-	content: "\eb83" !important; /* codicon-list-filter */
-}
-
 .monaco-list-type-filter > .controls > .filter {
 	margin-left: 4px;
 }
@@ -769,65 +383,681 @@
  *  Licensed under the MIT License. See License.txt in the project root for license information.
  *--------------------------------------------------------------------------------------------*/
 
-.monaco-tl-row {
+.monaco-text-button {
+	box-sizing: border-box;
 	display: flex;
-	height: 100%;
+	width: 100%;
+	padding: 4px;
+	text-align: center;
+	cursor: pointer;
+	justify-content: center;
 	align-items: center;
+}
+
+.monaco-text-button:focus {
+	outline-offset: 2px !important;
+}
+
+.monaco-text-button:hover {
+	text-decoration: none !important;
+}
+
+.monaco-button.disabled:focus,
+.monaco-button.disabled {
+	opacity: 0.4 !important;
+	cursor: default;
+}
+
+.monaco-text-button > .codicon {
+	margin: 0 0.2em;
+	color: inherit !important;
+}
+
+.monaco-button-dropdown {
+	display: flex;
+	cursor: pointer;
+}
+
+.monaco-button-dropdown > .monaco-dropdown-button {
+	margin-left: 1px;
+}
+
+.monaco-description-button {
+	flex-direction: column;
+}
+
+.monaco-description-button .monaco-button-label {
+	font-weight: 500;
+}
+
+.monaco-description-button .monaco-button-description {
+	font-style: italic;
+}
+
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+
+.monaco-count-badge {
+	padding: 3px 6px;
+	border-radius: 11px;
+	font-size: 11px;
+	min-width: 18px;
+	min-height: 18px;
+	line-height: 11px;
+	font-weight: normal;
+	text-align: center;
+	display: inline-block;
+	box-sizing: border-box;
+}
+
+.monaco-count-badge.long {
+	padding: 2px 3px;
+	border-radius: 2px;
+	min-height: auto;
+	line-height: normal;
+}
+
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+
+.monaco-inputbox {
+	position: relative;
+	display: block;
+	padding: 0;
+	box-sizing:	border-box;
+
+	/* Customizable */
+	font-size: inherit;
+}
+
+.monaco-inputbox.idle {
+	border: 1px solid transparent;
+}
+
+.monaco-inputbox > .ibwrapper > .input,
+.monaco-inputbox > .ibwrapper > .mirror {
+
+	/* Customizable */
+	padding: 4px;
+}
+
+.monaco-inputbox > .ibwrapper {
+	position: relative;
+	width: 100%;
+	height: 100%;
+}
+
+.monaco-inputbox > .ibwrapper > .input {
+	display: inline-block;
+	box-sizing:	border-box;
+	width: 100%;
+	height: 100%;
+	line-height: inherit;
+	border: none;
+	font-family: inherit;
+	font-size: inherit;
+	resize: none;
+	color: inherit;
+}
+
+.monaco-inputbox > .ibwrapper > input {
+	text-overflow: ellipsis;
+}
+
+.monaco-inputbox > .ibwrapper > textarea.input {
+	display: block;
+	-ms-overflow-style: none; /* IE 10+: hide scrollbars */
+	scrollbar-width: none; /* Firefox: hide scrollbars */
+	outline: none;
+}
+
+.monaco-inputbox > .ibwrapper > textarea.input::-webkit-scrollbar {
+	display: none; /* Chrome + Safari: hide scrollbar */
+}
+
+.monaco-inputbox > .ibwrapper > textarea.input.empty {
+	white-space: nowrap;
+}
+
+.monaco-inputbox > .ibwrapper > .mirror {
+	position: absolute;
+	display: inline-block;
+	width: 100%;
+	top: 0;
+	left: 0;
+	box-sizing: border-box;
+	white-space: pre-wrap;
+	visibility: hidden;
+	word-wrap: break-word;
+}
+
+/* Context view */
+
+.monaco-inputbox-container {
+	text-align: right;
+}
+
+.monaco-inputbox-container .monaco-inputbox-message {
+	display: inline-block;
+	overflow: hidden;
+	text-align: left;
+	width: 100%;
+	box-sizing:	border-box;
+	padding: 0.4em;
+	font-size: 12px;
+	line-height: 17px;
+	margin-top: -1px;
+	word-wrap: break-word;
+}
+
+/* Action bar support */
+.monaco-inputbox .monaco-action-bar {
+	position: absolute;
+	right: 2px;
+	top: 4px;
+}
+
+.monaco-inputbox .monaco-action-bar .action-item {
+	margin-left: 2px;
+}
+
+.monaco-inputbox .monaco-action-bar .action-item .codicon {
+	background-repeat: no-repeat;
+	width: 16px;
+	height: 16px;
+}
+
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+
+/* ---------- Icon label ---------- */
+
+.monaco-icon-label {
+	display: flex; /* required for icons support :before rule */
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+.monaco-icon-label::before {
+
+	/* svg icons rendered as background image */
+	background-size: 16px;
+	background-position: left center;
+	background-repeat: no-repeat;
+	padding-right: 6px;
+	width: 16px;
+	height: 22px;
+	line-height: inherit !important;
+	display: inline-block;
+
+	/* fonts icons */
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+	vertical-align: top;
+
+	flex-shrink: 0; /* fix for https://github.com/microsoft/vscode/issues/13787 */
+}
+
+.monaco-icon-label > .monaco-icon-label-container {
+	min-width: 0;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	flex: 1;
+}
+
+.monaco-icon-label > .monaco-icon-label-container > .monaco-icon-name-container > .label-name {
+	color: inherit;
+	white-space: pre; /* enable to show labels that include multiple whitespaces */
+}
+
+.monaco-icon-label > .monaco-icon-label-container > .monaco-icon-name-container > .label-name > .label-separator {
+	margin: 0 2px;
+	opacity: 0.5;
+}
+
+.monaco-icon-label > .monaco-icon-label-container > .monaco-icon-description-container > .label-description {
+	opacity: .7;
+	margin-left: 0.5em;
+	font-size: 0.9em;
+	white-space: pre; /* enable to show labels that include multiple whitespaces */
+}
+
+.monaco-icon-label.nowrap > .monaco-icon-label-container > .monaco-icon-description-container > .label-description{
+	white-space: nowrap
+}
+
+.vs .monaco-icon-label > .monaco-icon-label-container > .monaco-icon-description-container > .label-description {
+	opacity: .95;
+}
+
+.monaco-icon-label.italic > .monaco-icon-label-container > .monaco-icon-name-container > .label-name,
+.monaco-icon-label.italic > .monaco-icon-label-container > .monaco-icon-description-container > .label-description {
+	font-style: italic;
+}
+
+.monaco-icon-label.deprecated {
+	text-decoration: line-through;
+	opacity: 0.66;
+}
+
+/* make sure apply italic font style to decorations as well */
+.monaco-icon-label.italic::after {
+	font-style: italic;
+}
+
+.monaco-icon-label.strikethrough > .monaco-icon-label-container > .monaco-icon-name-container > .label-name,
+.monaco-icon-label.strikethrough > .monaco-icon-label-container > .monaco-icon-description-container > .label-description {
+	text-decoration: line-through;
+}
+
+.monaco-icon-label::after {
+	opacity: 0.75;
+	font-size: 90%;
+	font-weight: 600;
+	margin: auto 16px 0 5px; /* https://github.com/microsoft/vscode/issues/113223 */
+	text-align: center;
+}
+
+/* make sure selection color wins when a label is being selected */
+.monaco-list:focus .selected .monaco-icon-label, /* list */
+.monaco-list:focus .selected .monaco-icon-label::after
+{
+	color: inherit !important;
+}
+
+.monaco-list-row.focused.selected .label-description,
+.monaco-list-row.selected .label-description {
+	opacity: .8;
+}
+
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+
+.monaco-keybinding {
+	display: flex;
+	align-items: center;
+	line-height: 10px;
+}
+
+.monaco-keybinding > .monaco-keybinding-key {
+	display: inline-block;
+	border-style: solid;
+	border-width: 1px;
+	border-radius: 3px;
+	vertical-align: middle;
+	font-size: 11px;
+	padding: 3px 5px;
+	margin: 0 2px;
+}
+
+.monaco-keybinding > .monaco-keybinding-key:first-child {
+	margin-left: 0;
+}
+
+.monaco-keybinding > .monaco-keybinding-key:last-child {
+	margin-right: 0;
+}
+
+.monaco-keybinding > .monaco-keybinding-key-separator {
+	display: inline-block;
+}
+
+.monaco-keybinding > .monaco-keybinding-key-chord-separator {
+	width: 6px;
+}
+
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+
+.monaco-dropdown {
+	height: 100%;
+	padding: 0;
+}
+
+.monaco-dropdown > .dropdown-label {
+	cursor: pointer;
+	height: 100%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.monaco-dropdown > .dropdown-label > .action-label.disabled {
+	cursor: default;
+}
+
+.monaco-dropdown-with-primary {
+	display: flex !important;
+	flex-direction: row;
+	border-radius: 5px;
+}
+
+.monaco-dropdown-with-primary > .action-container > .action-label {
+	margin-right: 0;
+}
+
+.monaco-dropdown-with-primary > .dropdown-action-container > .monaco-dropdown > .dropdown-label .codicon[class*='codicon-'] {
+	font-size: 12px;
+	padding-left: 0px;
+	padding-right: 0px;
+	line-height: 16px;
+	margin-left: -3px;
+}
+
+.monaco-dropdown-with-primary > .dropdown-action-container > .monaco-dropdown > .dropdown-label > .action-label {
+	display: block;
+	background-size: 16px;
+	background-position: center center;
+	background-repeat: no-repeat;
+}
+
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+
+.monaco-hover {
+	cursor: default;
+	position: absolute;
+	overflow: hidden;
+	z-index: 50;
+	-moz-user-select: text;
+	     user-select: text;
+	-webkit-user-select: text;
+	-ms-user-select: text;
+	box-sizing: initial;
+	-webkit-animation: fadein 100ms linear;
+	        animation: fadein 100ms linear;
+	line-height: 1.5em;
+}
+
+.monaco-hover.hidden {
+	display: none;
+}
+
+.monaco-hover .hover-contents:not(.html-hover-contents) {
+	padding: 4px 8px;
+}
+
+.monaco-hover .markdown-hover > .hover-contents:not(.code-hover-contents) {
+	max-width: 500px;
+	word-wrap: break-word;
+}
+
+.monaco-hover .markdown-hover > .hover-contents:not(.code-hover-contents) hr {
+	min-width: 100%;
+}
+
+.monaco-hover p,
+.monaco-hover .code,
+.monaco-hover ul {
+	margin: 8px 0;
+}
+
+.monaco-hover code {
+	font-family: var(--monaco-monospace-font);
+}
+
+.monaco-hover hr {
+	box-sizing: border-box;
+	border-left: 0px;
+	border-right: 0px;
+	margin-top: 4px;
+	margin-bottom: -4px;
+	margin-left: -8px;
+	margin-right: -8px;
+	height: 1px;
+}
+
+.monaco-hover p:first-child,
+.monaco-hover .code:first-child,
+.monaco-hover ul:first-child {
+	margin-top: 0;
+}
+
+.monaco-hover p:last-child,
+.monaco-hover .code:last-child,
+.monaco-hover ul:last-child {
+	margin-bottom: 0;
+}
+
+/* MarkupContent Layout */
+.monaco-hover ul {
+	padding-left: 20px;
+}
+.monaco-hover ol {
+	padding-left: 20px;
+}
+
+.monaco-hover li > p {
+	margin-bottom: 0;
+}
+
+.monaco-hover li > ul {
+	margin-top: 0;
+}
+
+.monaco-hover code {
+	border-radius: 3px;
+	padding: 0 0.4em;
+}
+
+.monaco-hover .monaco-tokenized-source {
+	white-space: pre-wrap;
+}
+
+.monaco-hover .hover-row.status-bar {
+	font-size: 12px;
+	line-height: 22px;
+}
+
+.monaco-hover .hover-row.status-bar .actions {
+	display: flex;
+	padding: 0px 8px;
+}
+
+.monaco-hover .hover-row.status-bar .actions .action-container {
+	margin-right: 16px;
+	cursor: pointer;
+}
+
+.monaco-hover .hover-row.status-bar .actions .action-container .action .icon {
+	padding-right: 4px;
+}
+
+.monaco-hover .markdown-hover .hover-contents .codicon {
+	color: inherit;
+	font-size: inherit;
+	vertical-align: middle;
+}
+
+.monaco-hover .hover-contents a.code-link:hover,
+.monaco-hover .hover-contents a.code-link {
+	color: inherit;
+}
+
+.monaco-hover .hover-contents a.code-link:before {
+	content: '(';
+}
+
+.monaco-hover .hover-contents a.code-link:after {
+	content: ')';
+}
+
+.monaco-hover .hover-contents a.code-link > span {
+	text-decoration: underline;
+	/** Hack to force underline to show **/
+	border-bottom: 1px solid transparent;
+	text-underline-position: under;
+}
+
+/** Spans in markdown hovers need a margin-bottom to avoid looking cramped: https://github.com/microsoft/vscode/issues/101496 **/
+.monaco-hover .markdown-hover .hover-contents:not(.code-hover-contents):not(.html-hover-contents) span {
+	margin-bottom: 4px;
+	display: inline-block;
+}
+
+.monaco-hover-content .action-container a {
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	 -ms-user-select: none;
+	     user-select: none;
+}
+
+.monaco-hover-content .action-container.disabled {
+	pointer-events: none;
+	opacity: 0.4;
+	cursor: default;
+}
+
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+
+.monaco-custom-checkbox {
+	margin-left: 2px;
+	float: left;
+	cursor: pointer;
+	overflow: hidden;
+	opacity: 0.7;
+	width: 20px;
+	height: 20px;
+	border: 1px solid transparent;
+	padding: 1px;
+	box-sizing:	border-box;
+	-moz-user-select: none;
+	     user-select: none;
+	-webkit-user-select: none;
+	-ms-user-select: none;
+}
+
+.monaco-custom-checkbox:hover,
+.monaco-custom-checkbox.checked {
+	opacity: 1;
+}
+
+.hc-black .monaco-custom-checkbox {
+	background: none;
+}
+
+.hc-black .monaco-custom-checkbox:hover {
+	background: none;
+}
+
+.monaco-custom-checkbox.monaco-simple-checkbox {
+	height: 18px;
+	width: 18px;
+	border: 1px solid transparent;
+	border-radius: 3px;
+	margin-right: 9px;
+	margin-left: 0px;
+	padding: 0px;
+	opacity: 1;
+	background-size: 16px !important;
+}
+
+/* hide check when unchecked */
+.monaco-custom-checkbox.monaco-simple-checkbox:not(.checked)::before {
+	visibility: hidden;
+}
+
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+/* ---------- Find input ---------- */
+
+.monaco-findInput {
 	position: relative;
 }
 
-.monaco-tl-indent {
-	height: 100%;
+.monaco-findInput .monaco-inputbox {
+	font-size: 13px;
+	width: 100%;
+}
+
+.monaco-findInput > .controls {
 	position: absolute;
-	top: 0;
-	left: 16px;
-	pointer-events: none;
+	top: 3px;
+	right: 2px;
 }
 
-.hide-arrows .monaco-tl-indent {
-	left: 12px;
+.vs .monaco-findInput.disabled {
+	background-color: #E1E1E1;
 }
 
-.monaco-tl-indent > .indent-guide {
-	display: inline-block;
-	box-sizing: border-box;
-	height: 100%;
-	border-left: 1px solid transparent;
+/* Theming */
+.vs-dark .monaco-findInput.disabled {
+	background-color: #333;
 }
 
-.monaco-tl-indent > .indent-guide {
-	transition: border-color 0.1s linear;
+/* Highlighting */
+.monaco-findInput.highlight-0 .controls {
+	-webkit-animation: monaco-findInput-highlight-0 100ms linear 0s;
+	        animation: monaco-findInput-highlight-0 100ms linear 0s;
+}
+.monaco-findInput.highlight-1 .controls {
+	-webkit-animation: monaco-findInput-highlight-1 100ms linear 0s;
+	        animation: monaco-findInput-highlight-1 100ms linear 0s;
+}
+.hc-black .monaco-findInput.highlight-0 .controls,
+.vs-dark  .monaco-findInput.highlight-0 .controls {
+	-webkit-animation: monaco-findInput-highlight-dark-0 100ms linear 0s;
+	        animation: monaco-findInput-highlight-dark-0 100ms linear 0s;
+}
+.hc-black .monaco-findInput.highlight-1 .controls,
+.vs-dark  .monaco-findInput.highlight-1 .controls {
+	-webkit-animation: monaco-findInput-highlight-dark-1 100ms linear 0s;
+	        animation: monaco-findInput-highlight-dark-1 100ms linear 0s;
 }
 
-.monaco-tl-twistie,
-.monaco-tl-contents {
-	height: 100%;
+@-webkit-keyframes monaco-findInput-highlight-0 {
+	0% { background: rgba(253, 255, 0, 0.8); }
+	100% { background: transparent; }
 }
 
-.monaco-tl-twistie {
-	font-size: 10px;
-	text-align: right;
-	padding-right: 6px;
-	flex-shrink: 0;
-	width: 16px;
-	display: flex !important;
-	align-items: center;
-	justify-content: center;
-	color: inherit !important;
-	transform: translateX(3px);
+@keyframes monaco-findInput-highlight-0 {
+	0% { background: rgba(253, 255, 0, 0.8); }
+	100% { background: transparent; }
+}
+@-webkit-keyframes monaco-findInput-highlight-1 {
+	0% { background: rgba(253, 255, 0, 0.8); }
+	/* Made intentionally different such that the CSS minifier does not collapse the two animations into a single one*/
+	99% { background: transparent; }
+}
+@keyframes monaco-findInput-highlight-1 {
+	0% { background: rgba(253, 255, 0, 0.8); }
+	/* Made intentionally different such that the CSS minifier does not collapse the two animations into a single one*/
+	99% { background: transparent; }
 }
 
-.monaco-tl-contents {
-	flex: 1;
-	overflow: hidden;
+@-webkit-keyframes monaco-findInput-highlight-dark-0 {
+	0% { background: rgba(255, 255, 255, 0.44); }
+	100% { background: transparent; }
 }
 
-.monaco-tl-twistie.collapsed::before {
-	transform: rotate(-90deg);
+@keyframes monaco-findInput-highlight-dark-0 {
+	0% { background: rgba(255, 255, 255, 0.44); }
+	100% { background: transparent; }
 }
-
-.monaco-tl-twistie.codicon-loading::before {
-	-webkit-animation: codicon-spin 1.25s linear infinite;
-	        animation: codicon-spin 1.25s linear infinite;
+@-webkit-keyframes monaco-findInput-highlight-dark-1 {
+	0% { background: rgba(255, 255, 255, 0.44); }
+	/* Made intentionally different such that the CSS minifier does not collapse the two animations into a single one*/
+	99% { background: transparent; }
 }
-
+@keyframes monaco-findInput-highlight-dark-1 {
+	0% { background: rgba(255, 255, 255, 0.44); }
+	/* Made intentionally different such that the CSS minifier does not collapse the two animations into a single one*/
+	99% { background: transparent; }
+}
