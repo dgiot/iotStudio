@@ -2,7 +2,7 @@
  *  build: 杭州数蛙科技有限公司 
  *  copyright: dgiot-dashboard 
  *  author: h7ml(h7ml@qq.com) 
- *  Time: 2022年06月14日17时46分55秒
+ *  Time: 2022年06月15日12时00分54秒
  */
 @charset "UTF-8";
 :root {
@@ -375,8 +375,8 @@
   --Calendar-cell-bg: var(--white);
   --Calendar-cell-onActive-bg: var(--info);
   --Calendar-cell-onBetween-bg: rgba(35, 183, 229, 0.1);
-  --Calendar-cell-onDisabled-bg: #f7f7f9;
-  --Calendar-cell-onHover-bg: #f7f7f9;
+  --Calendar-cell-onDisabled-bg: #F7F7F9;
+  --Calendar-cell-onHover-bg: #F7F7F9;
   --Calendar-color: #151b26;
   --Calendar-fontSize: var(--fontSizeSm);
   --Calendar-input-borderColor: var(--borderColor);
@@ -393,7 +393,7 @@
           var(--Calendar-input-fontSize)
       ) / 2
   );
-  --Calendar-shortcut-color: #151b26;
+  --Calendar-shortcut-color: #151B26;
   --Calendar-shortcut-decoration: none;
   --Calendar-shortcut-onHover-color: #1485a8;
   --Calendar-shortcut-onHover-decoration: none;
@@ -463,12 +463,10 @@
   --Checkbox-size: 1rem;
   --Checkbox-inner-size: calc(var(--Checkbox-size) / 2);
   --Checkbox-onHover-color: var(--info);
-  --Checkbox-onDisabled-bg: #f7f7f9;
-  --Checkbox-onDisabled-color: #b8babf;
+  --Checkbox-onDisabled-bg: #e5e7eb;
+  --Checkbox-onDisabled-color: var(--text--muted-color);
   --Checkbox-inner-onDisabled-bg: #d4d6d9;
-  --Checkbox-inner-onDisabled-color: #ffffff;
-  --Checkbox-disabled-unchecked-bg: #f7f7f9;
-  --Checkbox-inner-disabled-checked-bg: #e8e9eb;
+  --Checkbox-disabled-unchecked-bg: #f2f3f3;
   --Checkbox-border-width: var(--Form-input-borderWidth);
   --Checkbox-paddingX: 0.75rem;
   --Checkbox-button-height: 2rem;
@@ -561,7 +559,7 @@
   --DatePicker-borderWidth: var(--Form-input-borderWidth);
   --DatePicker-color: #151b26;
   --DatePicker-header-onHover-color: #1485a8;
-  --DatePicker-arrow-color: #84868c;
+  --DatePicker-arrow-color: #84868C;
   --DatePicker-fontSize: var(--fontSizeSm);
   --DatePicker-header-select-borderColor: #fff;
   --DatePicker-height: var(--Form-input-height);
@@ -740,10 +738,8 @@
   --Form-select-popoverGap: 0;
   --Form-select-search-height: var(--Form-select-menu-height);
   --Form-select-value-bgColor: var(--Form-input-onDisabled-bg);
-  --Form-select-value-bgColor--dark: #46474f;
   --Form-select-value-borderColor: var(--Form-select-value-borderColor);
   --Form-select-valueIcon-color: var(--Form-select-valueIcon-color);
-  --Form-select-valueIcon-color--dark: #e9e9e9;
   --Form-select-valueIcon-onHover-color: var(--Form-select-color);
   --Form-selectOption-height: var(--Form-input-height);
   --Form-selectValue-bg: #d9f3fb;
@@ -1141,14 +1137,11 @@
   --Remark-onHover-borderColor: var(--primary);
   --Remark-onHover-iconColor: #fff;
   --Remark-width: 1rem;
-  --ResultBox-tag-height: 1.5rem;
-  --ResultBox-tag-marginBottom: 0.125rem;
   --ResultBox-icon--onDisabled-color: #ebebeb;
   --ResultBox-icon--onHover-color: #666666;
   --ResultBox-icon-color: #999;
   --ResultBox-value--onDisabled-color: #cccccc;
   --ResultBox-value--onHover-bg: rgba(0, 145, 255, 0.1);
-  --ResultBox-value--onHover-bg--dark: #b8babf;
   --ResultBox-value-bg: #f5f5f5;
   --ResultBox-value-color: #000;
   --ResultBox-value-clear-bg: #d4d6d9;
@@ -14481,7 +14474,7 @@ input[type=button].a-Button--block {
   border-bottom-right-radius: var(--Modal-content-borderRadius);
 }
 .a-Modal-footer .a-Button {
-  min-width: var(--Modal-footer-button-width);
+  width: var(--Modal-footer-button-width);
   margin-left: var(--gap-sm);
 }
 
@@ -18393,6 +18386,7 @@ input[type=button].a-Button--block {
   padding: 0;
   line-height: 1.25rem;
   border-radius: 4px;
+  overflow: hidden;
 }
 .a-Collapse-header {
   font-size: var(--Collapse-header-fontSize);
@@ -18787,16 +18781,6 @@ input[type=button].a-Button--block {
      -moz-user-select: none;
       -ms-user-select: none;
           user-select: none;
-}
-
-.a-CBPicker-trigger {
-  cursor: pointer;
-  transition: transform var(--animation-duration) ease-out;
-  display: flex;
-  color: var(--Form-select-caret-iconColor);
-}
-.a-CBPicker-trigger:hover {
-  color: var(--primary);
 }
 
 @-webkit-keyframes contextMenuInSpecial {
@@ -19259,15 +19243,13 @@ input[type=button].a-Button--block {
   vertical-align: middle;
 }
 .a-Crud-toolbar-item {
+  margin-left: var(--Crud-toolbar-gap);
   margin-top: var(--Crud-toolbar-gap);
   line-height: var(--Crud-toolbar-lineHeight);
   height: var(--Crud-toolbar-height);
   vertical-align: middle;
   display: inline-flex;
   align-items: center;
-}
-.a-Crud-toolbar-item:not(:first-child) {
-  margin-left: var(--Crud-toolbar-gap);
 }
 .a-Crud-toolbar-item--left {
   float: left;
@@ -19301,6 +19283,7 @@ input[type=button].a-Button--block {
 
 @media (min-width: 576px) {
   .a-Crud-toolbar {
+    margin-left: calc(var(--Crud-toolbar-gap) * -1);
     margin-top: calc(var(--Crud-toolbar-gap) * -1);
     flex-basis: 0;
     flex-grow: 1;
@@ -19313,137 +19296,10 @@ input[type=button].a-Button--block {
     clear: both;
   }
   .a-Crud-toolbar-item {
+    margin-left: var(--Crud-toolbar-gap);
     line-height: var(--Crud-toolbar-lineHeight);
     height: var(--Crud-toolbar-height);
     vertical-align: middle;
-  }
-  .a-Crud-toolbar-item:not(:first-child) {
-    margin-left: var(--Crud-toolbar-gap);
-  }
-  .a-Crud-toolbar-item--left {
-    float: left;
-  }
-  .a-Crud-toolbar-item--right {
-    float: right;
-  }
-  .a-Crud-actions > * + .a-Button,
-.a-Crud-actions > * + .a-Button--disabled-wrap {
-    margin-left: var(--Crud-toolbar-gap);
-  }
-}
-.a-Crud2 {
-  position: relative;
-}
-.a-Crud2-selection, .a-Crud2-toolbar, .a-Crud2-body {
-  margin-bottom: var(--gap-base);
-}
-.a-Crud2-selectionLabel {
-  display: inline-block;
-  vertical-align: top;
-  margin-top: var(--gap-xs);
-}
-.a-Crud2-value {
-  cursor: pointer;
-  vertical-align: middle;
-  -webkit-user-select: none;
-     -moz-user-select: none;
-      -ms-user-select: none;
-          user-select: none;
-  line-height: calc( var(--Form-input-lineHeight) * var(--Form-input-fontSize) - 0.125rem );
-  display: inline-block;
-  font-size: var(--Form-selectValue-fontSize);
-  color: var(--Form-selectValue-color);
-  background: var(--Form-selectValue-bg);
-  border: 0.0625rem solid var(--Form-selectValue-borderColor);
-  border-radius: 2px;
-  margin-right: var(--gap-xs);
-  margin-top: var(--gap-xs);
-}
-.a-Crud2-value:hover {
-  background: var(--Form-selectValue-onHover-bg);
-}
-.a-Crud2-value.is-disabled {
-  pointer-events: none;
-  opacity: var(--Button-onDisabled-opacity);
-}
-.a-Crud2-valueIcon {
-  cursor: pointer;
-  border-right: 0.0625rem solid var(--Form-selectValue-borderColor);
-  padding: 1px 5px;
-}
-.a-Crud2-valueIcon:hover {
-  background: var(--Form-selectValue-onHover-bg);
-}
-.a-Crud2-valueLabel {
-  padding: 0 var(--gap-xs);
-}
-.a-Crud2-selectionClear {
-  display: inline-block;
-  cursor: pointer;
-  -webkit-user-select: none;
-     -moz-user-select: none;
-      -ms-user-select: none;
-          user-select: none;
-  margin-left: var(--gap-xs);
-  margin-top: var(--gap-xs);
-  vertical-align: middle;
-}
-.a-Crud2-toolbar-item {
-  margin-top: var(--Crud-toolbar-gap);
-  line-height: var(--Crud-toolbar-lineHeight);
-  height: var(--Crud-toolbar-height);
-  vertical-align: middle;
-  display: inline-flex;
-  align-items: center;
-}
-.a-Crud2-toolbar-item:not(:first-child) {
-  margin-left: var(--Crud-toolbar-gap);
-}
-.a-Crud2-toolbar-item--left {
-  float: left;
-}
-.a-Crud2-toolbar-item--right {
-  float: right;
-}
-.a-Crud2-actions > * + .a-Button,
-.a-Crud2-actions > * + .a-ButtonGroup,
-.a-Crud2-actions > * + .a-ButtonToolbar {
-  margin-left: var(--Crud-toolbar-gap);
-}
-.a-Crud2-statistics {
-  line-height: var(--Crud-toolbar-height);
-  vertical-align: middle;
-}
-.a-Crud2-pageSwitch .a-Select {
-  margin-left: var(--Crud-toolbar-gap);
-}
-.a-Crud2-pager {
-  align-self: flex-start;
-}
-.a-Crud2-filter {
-  margin-bottom: var(--gap-base);
-}
-
-@media (min-width: 576px) {
-  .a-Crud-toolbar {
-    margin-top: calc(var(--Crud-toolbar-gap) * -1);
-    flex-basis: 0;
-    flex-grow: 1;
-  }
-  .a-Crud-toolbar::before, .a-Crud-toolbar::after {
-    display: table;
-    content: "";
-  }
-  .a-Crud-toolbar::after {
-    clear: both;
-  }
-  .a-Crud-toolbar-item {
-    line-height: var(--Crud-toolbar-lineHeight);
-    height: var(--Crud-toolbar-height);
-    vertical-align: middle;
-  }
-  .a-Crud-toolbar-item:not(:first-child) {
-    margin-left: var(--Crud-toolbar-gap);
   }
   .a-Crud-toolbar-item--left {
     float: left;
@@ -21757,7 +21613,7 @@ input[type=button].a-Button--block {
 }
 .a-Table-v2.a-Table-resizable .a-Table-table > thead > tr > th .a-Table-thead-resizable {
   position: absolute;
-  width: 3px;
+  width: 1px;
   right: 0;
   top: 0;
   bottom: 0;
@@ -21804,6 +21660,8 @@ input[type=button].a-Button--block {
 }
 .a-Table-v2 .a-TableCell-searchBtn {
   cursor: pointer;
+  position: static;
+  transform: translateY(-50%);
   color: var(--text--muted-color);
   margin-left: var(--TableCell-icon-gap);
 }
@@ -24066,7 +23924,7 @@ input[type=button].a-Button--block {
   justify-content: flex-start;
 }
 .a-InputBox input {
-  flex-basis: 1.875rem;
+  flex-basis: 5rem;
   flex-grow: 1;
   outline: none;
   background: transparent;
@@ -24397,7 +24255,7 @@ input[type=button].a-Button--block {
   font-size: var(--Form-input-fontSize);
   flex-wrap: wrap;
   justify-content: flex-start;
-  flex-wrap: nowrap;
+  flex-wrap: wrap;
   padding: 0 0.3125rem;
   min-height: var(--Form-input-height);
   align-items: center;
@@ -24405,7 +24263,7 @@ input[type=button].a-Button--block {
   position: relative;
 }
 .a-ResultBox input {
-  flex-basis: 1.875rem;
+  flex-basis: 5rem;
   flex-grow: 1;
   outline: none;
   background: transparent;
@@ -24441,6 +24299,9 @@ input[type=button].a-Button--block {
 }
 .a-ResultBox--borderNone {
   border-color: transparent !important;
+}
+.a-ResultBox.is-clearable {
+  padding-right: 3.4375rem;
 }
 .a-ResultBox.is-error {
   border-color: var(--Form-input-onError-borderColor);
@@ -24479,26 +24340,7 @@ input[type=button].a-Button--block {
 .a-ResultBox.a-NestedSelect {
   padding-left: var(--gap-base);
 }
-.a-ResultBox-value-wrap {
-  flex-grow: 1;
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-}
-.a-ResultBox-actions {
-  display: flex;
-  align-items: center;
-  flex-shrink: 0;
-}
-.a-ResultBox-actions > *:first-child {
-  margin-left: 0.3125rem;
-}
-.a-ResultBox-actions > *:not(:last-child) {
-  margin-right: 0.3125rem;
-}
 .a-ResultBox-singleValue {
-  padding: 0 calc(var(--Form-input-paddingX) - 0.1875rem);
-  flex-grow: 1;
   display: inline-block;
   max-width: 100%;
   overflow: hidden;
@@ -24532,7 +24374,10 @@ input[type=button].a-Button--block {
   margin-left: auto;
   text-decoration: none;
   height: 100%;
+  padding: 0.25rem;
   margin: auto 0;
+  position: absolute;
+  right: 10px;
   background-color: unset;
 }
 .a-ResultBox-clear svg {
@@ -24571,17 +24416,16 @@ input[type=button].a-Button--block {
   color: var(--ResultBox-value-color);
   font-size: var(--Form-input-fontSize);
   padding: 0 var(--gap-xs);
-  min-height: var(--ResultBox-tag-height);
+  min-height: 1.5rem;
   flex-wrap: nowrap;
   display: inline-flex;
   align-items: center;
   margin-right: var(--gap-xs);
-  margin-bottom: var(--ResultBox-tag-marginBottom);
+  margin-bottom: 0.125rem;
   -webkit-user-select: none;
      -moz-user-select: none;
       -ms-user-select: none;
           user-select: none;
-  border-radius: 0.125rem;
 }
 .a-ResultBox-value > a {
   cursor: pointer;
@@ -24610,7 +24454,6 @@ input[type=button].a-Button--block {
 }
 .a-ResultBox-placeholder {
   color: var(--Form-input-placeholderColor);
-  flex-grow: 1;
   -webkit-user-select: none;
      -moz-user-select: none;
       -ms-user-select: none;
@@ -24637,25 +24480,6 @@ input[type=button].a-Button--block {
 }
 .a-ResultBox.a-TransferDropDown > .a-ResultBox-value:hover {
   background: var(--Form-selectValue-onHover-bgColor);
-}
-.a-ResultBox-overflow-wrapper {
-  display: flex;
-  flex-flow: row wrap;
-  justify-content: flex-start;
-  align-items: center;
-  overflow-x: hidden;
-  overflow-y: auto;
-  max-height: calc( (var(--ResultBox-tag-height) + var(--ResultBox-tag-marginBottom)) * 5 );
-}
-.a-ResultBox-overflow.a-Tooltip--dark .a-ResultBox-overflow-wrapper .a-ResultBox-value {
-  color: var(--white);
-  background-color: var(--Form-select-value-bgColor--dark);
-}
-.a-ResultBox-overflow.a-Tooltip--dark .a-ResultBox-overflow-wrapper .a-ResultBox-value:hover {
-  background-color: var(--ResultBox-value--onHover-bg--dark);
-}
-.a-ResultBox-overflow.a-Tooltip--dark .a-ResultBox-overflow-wrapper .a-ResultBox-value > a {
-  color: var(--Form-select-valueIcon-color--dark);
 }
 .a-ResultBox.is-mobile {
   min-height: calc(var(--Form-input-lineHeight) * var(--fontSizeLg));
@@ -25854,7 +25678,7 @@ fieldset.a-Collapse--lg:after {
   justify-content: flex-start;
 }
 .a-TextControl-input input {
-  flex-basis: 1.875rem;
+  flex-basis: 5rem;
   flex-grow: 1;
   outline: none;
   background: transparent;
@@ -26143,8 +25967,6 @@ fieldset.a-Collapse--lg:after {
 }
 .a-TextControl-revealPassword {
   font-size: 0;
-  display: inline-flex;
-  align-items: center;
 }
 .a-TextControl-revealPassword .icon {
   width: var(--Form-input-password-icon-size);
@@ -26183,7 +26005,7 @@ input.a-TextControl-input-password {
   justify-content: flex-start;
 }
 .a-TextareaControl-input input {
-  flex-basis: 1.875rem;
+  flex-basis: 5rem;
   flex-grow: 1;
   outline: none;
   background: transparent;
@@ -26475,16 +26297,19 @@ input.a-TextControl-input-password {
   border-color: var(--Checkbox-gb);
 }
 .a-Checkbox--full.a-Checkbox--checkbox input[disabled] + i {
-  border-color: var(--Checkbox-color);
-  background: var(--Checkbox-onDisabled-bg);
+  border-color: var(--Checkbox-onDisabled-color);
+  background: var(--FileControl-onDisabled-bg);
 }
 .a-Checkbox--full.a-Checkbox--checkbox input[disabled]:checked + i:before {
   border-color: var(--Checkbox-onDisabled-color);
-  background: var(--Checkbox-onDisabled-bg);
 }
 .a-Checkbox--full.a-Checkbox--checkbox input:checked[disabled] + i {
-  border-color: var(--Checkbox-color);
-  background: var(--Checkbox-onDisabled-bg);
+  border-color: var(--Checkbox-onDisabled-color);
+  background: var(--FileControl-onDisabled-bg);
+}
+.a-Checkbox--full.a-Checkbox--checkbox input:checked[disabled] + i:before {
+  background: var(--FileControl-onDisabled-bg);
+  border-color: var(--Checkbox-inner-onDisabled-bg);
 }
 .a-Checkbox--full.a-Checkbox--checkbox > i {
   position: relative;
@@ -26546,7 +26371,6 @@ input.a-TextControl-input-password {
 }
 .a-Checkbox--button.a-Checkbox--checkbox:hover:not(:disabled) {
   color: var(--Checkbox-onHover-color);
-  border-color: var(--Checkbox-onHover-color);
 }
 .a-Checkbox--button.a-Checkbox--checkbox:hover input:checked + i {
   background: transparent;
@@ -26572,7 +26396,7 @@ input.a-TextControl-input-password {
   left: 0;
   width: var(--Checkbox--full-inner-size);
   height: calc(var(--Checkbox--full-inner-size) / 2);
-  transform: translate(-80%, -160%) rotate(-50deg) scale(0.8);
+  transform: translate(-80%, -160%) rotate(-50deg);
   background: transparent;
 }
 .a-Checkbox--button.a-Checkbox--checkbox input[disabled] + i {
@@ -26584,12 +26408,8 @@ input.a-TextControl-input-password {
 }
 .a-Checkbox--button.a-Checkbox--checkbox input:checked[disabled] + i {
   background: transparent;
-  border-width: 0.4375rem;
-  border-color: var(--Checkbox-inner-disabled-checked-bg) transparent transparent var(--Checkbox-inner-disabled-checked-bg);
-}
-.a-Checkbox--button.a-Checkbox--checkbox input:checked[disabled] + i:before {
-  background: transparent;
-  border-color: var(--Checkbox-inner-onDisabled-color) !important;
+  border-width: 0.5rem;
+  border-color: var(--Checkbox-onHover-color) transparent transparent var(--Checkbox-onHover-color);
 }
 .a-Checkbox--button.a-Checkbox--checkbox > i {
   position: absolute;
@@ -26598,7 +26418,6 @@ input.a-TextControl-input-password {
   margin-left: 0;
   border: 0;
   border-style: solid;
-  background: transparent;
 }
 .a-Checkbox--button.a-Checkbox--checkbox > i + span {
   max-width: 6.25rem;
@@ -26618,19 +26437,8 @@ input.a-TextControl-input-password {
   border-color: var(--Switch-checked-onHover-bgColor);
   color: var(--Switch-checked-onHover-bgColor);
 }
-.a-Checkbox--button--disabled--unchecked.a-Checkbox--checkbox {
-  background: var(--Checkbox-disabled-unchecked-bg);
-  border-color: var(--Checkbox-color);
-}
-.a-Checkbox--button--disabled--unchecked.a-Checkbox--checkbox:hover {
-  border-color: var(--Checkbox-color) !important;
-}
-.a-Checkbox--button--disabled--checked.a-Checkbox--checkbox {
-  background: var(--Checkbox-onDisabled-bg);
-  border-color: var(--Checkbox-color) !important;
-}
-.a-Checkbox--button--disabled--checked.a-Checkbox--checkbox:hover {
-  border-color: var(--Checkbox-color) !important;
+.a-Checkbox--button--disabled--unchecked.a-Checkbox--checkbox.a-Checkbox--full i {
+  background: var(--FileControl-onDisabled-bg);
 }
 .a-Checkbox--radio {
   padding-left: var(--Radio-size);
@@ -26851,9 +26659,6 @@ input.a-TextControl-input-password {
 
 .a-TableSelection .a-Table-content {
   border-top: var(--Table-borderWidth) solid var(--Table-borderColor);
-}
-.a-TableSelection .a-Table-table > tbody > tr {
-  cursor: pointer;
 }
 .a-TableSelection .a-Table-table > thead > tr > th,
 .a-TableSelection .a-Table-table > tbody > tr > td {
@@ -27147,7 +26952,6 @@ input.a-TextControl-input-password {
   margin: 0;
   vertical-align: middle;
   text-align: left;
-  transition: all 0.5s ease;
 }
 .a-Switch.is-disabled {
   cursor: not-allowed;
@@ -27491,7 +27295,6 @@ input.a-TextControl-input-password {
 
 .a-Select {
   display: inline-flex;
-  /* select 标签样式 */
   vertical-align: middle;
   text-align: left;
   align-items: center;
@@ -27523,9 +27326,6 @@ input.a-TextControl-input-password {
 }
 .a-Select:focus {
   box-shadow: var(--Form-select-onFocus-boxShadow);
-}
-.a-Select .a-PopOver.a-Select-popover .a-Select-menu {
-  overflow-x: hidden;
 }
 .a-Select .a-PopOver.a-Select-popover .a-Select-menu .a-Select-option {
   height: 2rem;
@@ -27725,7 +27525,6 @@ input.a-TextControl-input-password {
   margin-right: var(--gap-xs);
 }
 .a-Select-input > input {
-  width: 100%;
   outline: none;
   border: none;
   flex-grow: 1;
@@ -27735,6 +27534,7 @@ input.a-TextControl-input-password {
 }
 .a-Select-option {
   cursor: pointer;
+  min-width: 7.5rem;
   padding: calc( ( var(--Form-select-menu-height) - var(--Form-input-lineHeight) * var(--Form-input-fontSize) ) / 2 ) var(--Form-select-paddingX);
 }
 .a-Select-option.is-active {
@@ -27759,15 +27559,6 @@ input.a-TextControl-input-password {
 }
 .a-Select-option.is-highlight > a {
   display: block;
-}
-.a-Select-option .a-Select-option-content,
-.a-Select-option .a-Select-option-content > span > div {
-  flex: auto;
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-  display: inline-block;
-  max-width: 100%;
 }
 .a-Select-noResult {
   color: var(--Form-select-placeholderColor);
@@ -27823,54 +27614,6 @@ input.a-TextControl-input-password {
 .a-Select-popup {
   height: 20rem;
 }
-.a-Select-overflow-wrapper {
-  display: flex;
-  flex-flow: row wrap;
-  justify-content: flex-start;
-  align-items: center;
-  overflow-x: hidden;
-  overflow-y: auto;
-  max-height: calc( ( var(--Form-input-lineHeight) * var(--Form-input-fontSize) - 0.125rem + var(--gap-xs) ) * 5 );
-}
-.a-Select-overflow-wrapper .a-Select-value {
-  position: static;
-  white-space: normal;
-  -webkit-user-select: none;
-     -moz-user-select: none;
-      -ms-user-select: none;
-          user-select: none;
-  line-height: calc( var(--Form-input-lineHeight) * var(--Form-input-fontSize) - 0.125rem );
-  display: inline-block;
-  vertical-align: middle;
-  font-size: var(--Form-selectValue-fontSize);
-  background: var(--Form-select-value-bgColor);
-  border: 0.0625rem solid var(--Form-select-value-borderColor);
-  border-radius: 0.125rem;
-  margin-right: var(--gap-xs);
-  margin-bottom: var(--gap-xs);
-}
-.a-Select-overflow-wrapper .a-Select-value:hover {
-  background-color: var(--Form-selectValue-onHover-bgColor);
-}
-.a-Select-overflow-wrapper .a-Select-valueLabel {
-  display: inline-block;
-  max-width: var(--Form-valueLabel-maxWidth);
-  padding: 0 var(--gap-xs);
-  overflow: hidden;
-  vertical-align: top;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-.a-Select-overflow.a-Tooltip--dark .a-Select-overflow-wrapper .a-Select-value {
-  background-color: var(--Form-select-value-bgColor--dark);
-  border: none;
-}
-.a-Select-overflow.a-Tooltip--dark .a-Select-overflow-wrapper .a-Select-value:hover {
-  background-color: var(--ResultBox-value--onHover-bg--dark);
-}
-.a-Select-overflow.a-Tooltip--dark .a-Select-overflow-wrapper .a-Select-value .a-Select-valueIcon {
-  color: var(--Form-select-valueIcon-color--dark);
-}
 
 .a-Select-popover {
   margin-top: calc(var(--Form-select-outer-borderWidth) * -1);
@@ -27880,6 +27623,7 @@ input.a-TextControl-input-password {
   box-shadow: var(--Form-select-outer-boxShadow);
   border-top-left-radius: 0;
   border-top-right-radius: 0;
+  min-width: 6.25rem;
 }
 .a-Select-popover.a-PopOver--leftTopLeftBottom {
   margin-top: calc( (var(--Form-select-popoverGap) - var(--Form-select-outer-borderWidth)) * -1 );
@@ -28476,11 +28220,21 @@ input.a-TextControl-input-password {
   display: flex;
 }
 
+.a-DateControl {
+  width: auto !important;
+}
+.a-DateControl.is-date > .a-DatePicker {
+  min-width: calc(var(--DatePicker-minWidth) + var(--fontSizeLg) * 2);
+}
+.a-DateControl.is-datetime > .a-DatePicker {
+  min-width: calc(var(--DatePicker-minWidth) + var(--fontSizeLg) * 6);
+}
+
 .a-DatePicker-shortcuts {
   margin: 0;
   padding-left: 0.625rem;
   list-style: none;
-  background: #f7f7f9;
+  background: #F7F7F9;
   line-height: 2rem;
 }
 
@@ -28626,7 +28380,7 @@ input.a-TextControl-input-password {
 .rdt .rdtPicker .rdtDisabled.rdtToday > span,
 .rdt .rdtPicker .rdtOld.rdtToday > span,
 .rdt .rdtPicker .rdtNew.rdtToday > span {
-  border-color: #e8e9eb;
+  border-color: #E8E9EB;
 }
 .rdt .rdtPicker td.rdtActive > span,
 .rdt .rdtPicker td.rdtActive:hover > span {
@@ -28637,7 +28391,7 @@ input.a-TextControl-input-password {
 }
 .rdt .rdtPicker .rdtActive.rdtToday > span {
   background: transparent;
-  border-color: #144bcc;
+  border-color: #144BCC;
 }
 .rdt .rdtPicker td.rdtDisabled > span,
 .rdt .rdtPicker td.rdtDisabled:hover > span {
@@ -28945,7 +28699,7 @@ td.rdtYear.rdtDisabled:hover,
 td.rdtQuarter.rdtDisabled,
 td.rdtQuarter.rdtDisabled:hover {
   background: var(--Calendar-cell-onDisabled-bg);
-  color: #b8babf;
+  color: #B8BABF;
 }
 
 .a-DateRangePicker-start .rdtPicker .rdtActive.rdtBetween {
@@ -30373,7 +30127,7 @@ td.rdtQuarter.rdtDisabled:hover {
   justify-content: flex-start;
 }
 .a-TreeSelect-input input {
-  flex-basis: 1.875rem;
+  flex-basis: 5rem;
   flex-grow: 1;
   outline: none;
   background: transparent;
@@ -30898,7 +30652,7 @@ td.rdtQuarter.rdtDisabled:hover {
   justify-content: flex-start;
 }
 .a-Picker-input input {
-  flex-basis: 1.875rem;
+  flex-basis: 5rem;
   flex-grow: 1;
   outline: none;
   background: transparent;
@@ -31325,8 +31079,7 @@ td.rdtQuarter.rdtDisabled:hover {
 .a-Transfer-select > .a-ChainedSelection .a-ChainedSelection-col {
   height: 100%;
   overflow: auto;
-  min-width: unset;
-  flex: 1 1 0;
+  min-width: 8.125rem;
 }
 .a-Transfer .a--ResultTreeList {
   border-top: 1px solid var(--borderColor);
@@ -31757,7 +31510,7 @@ td.rdtQuarter.rdtDisabled:hover {
   justify-content: flex-start;
 }
 .a-IconPickerControl-input input {
-  flex-basis: 1.875rem;
+  flex-basis: 5rem;
   flex-grow: 1;
   outline: none;
   background: transparent;
@@ -31854,19 +31607,18 @@ td.rdtQuarter.rdtDisabled:hover {
      -moz-user-select: none;
       -ms-user-select: none;
           user-select: none;
-  line-height: var(--Form-input-lineHeight);
   position: absolute;
-  left: 2px;
-  overflow: hidden;
-  width: 100%;
+  left: var(--Form-input-paddingX);
+  top: var(--Form-input-paddingY);
+  margin-top: calc(2 * var(--Form-input-borderWidth));
+  line-height: var(--Form-input-lineHeight);
 }
 .a-IconPickerControl-valueWrap {
+  display: flex;
   justify-content: space-between;
   flex-grow: 1;
   line-height: 1;
   white-space: nowrap;
-  width: 100%;
-  position: relative;
 }
 .a-IconPickerControl-valueWrap > input {
   display: inline-block;
@@ -31876,7 +31628,6 @@ td.rdtQuarter.rdtDisabled:hover {
 .a-IconPickerControl-input--withAC {
   position: relative;
   flex-wrap: wrap;
-  width: 100%;
 }
 .a-IconPickerControl-input--withAC > input {
   width: auto;
@@ -31940,9 +31691,6 @@ td.rdtQuarter.rdtDisabled:hover {
   line-height: calc( var(--Form-input-lineHeight) * var(--Form-input-fontSize) );
   vertical-align: middle;
   display: inline-block;
-  overflow: hidden;
-  width: 100%;
-  text-overflow: ellipsis;
 }
 .a-IconPickerControl-value > i {
   display: inline-block;
@@ -33266,16 +33014,13 @@ td.rdtQuarter.rdtDisabled:hover {
   height: 15.625rem;
   margin-top: 0.625rem;
 }
-.a-FormulaEditor-settings.only-variable {
-  height: 21.875rem;
-}
 .a-FormulaEditor-panel {
   display: flex;
   flex: 1;
   flex-flow: column nowrap;
   justify-content: space-between;
   align-items: stretch;
-  height: 100%;
+  height: 15.625rem;
   border-radius: var(--borderRadius);
   border: var(--Form-input-borderWidth) solid var(--Form-input-borderColor);
 }
@@ -33300,11 +33045,10 @@ td.rdtQuarter.rdtDisabled:hover {
   flex: 1;
   display: flex;
   flex-flow: column nowrap;
-  max-height: calc(100% - 30px);
-  overflow: hidden;
+  max-height: 13.75rem;
 }
 .a-FormulaEditor-panel-body--tabs {
-  max-height: 100%;
+  max-height: 15.625rem;
 }
 .a-FormulaEditor-VariableList-root {
   max-height: 100%;
@@ -33424,12 +33168,10 @@ td.rdtQuarter.rdtDisabled:hover {
   vertical-align: middle;
   text-align: center;
   padding: 0 0.5rem;
+  line-height: 17px;
   border-radius: var(--borderRadius);
   background: #f5f5f5;
   color: var(--black);
-}
-.a-FormulaEditor-VariableList .a-GroupedSelection-item-tag {
-  line-height: 17px;
 }
 .a-FormulaEditor-FuncList {
   display: flex;
@@ -33596,36 +33338,6 @@ td.rdtQuarter.rdtDisabled:hover {
   font-weight: bold;
   line-height: 14px;
   padding: 0 2px;
-}
-
-.a-FormulaPicker.is-input-group {
-  border: var(--Form-input-borderWidth) solid var(--Form-input-borderColor);
-  padding: var(--Form-input-paddingY) var(--Form-input-paddingX);
-  border-radius: var(--borderRadius);
-  background-color: #fff;
-  height: var(--Form-input-height);
-}
-.a-FormulaPicker.is-input-group .a-FormulaPicker-input {
-  display: flex;
-  align-items: center;
-  background: none;
-  padding: 0;
-  border: 0;
-  margin: 0;
-}
-.a-FormulaPicker.is-input-group .a-FormulaPicker-input:focus {
-  border: none;
-  outline: none;
-  box-sizing: none;
-}
-.a-FormulaPicker.is-input-group .a-FormulaPicker-toggler .icon-function {
-  transform: scale(1.8);
-}
-.a-FormulaPicker.is-input-group .a-FormulaPicker-toggler .icon-ellipsis-v {
-  transform: rotate(90deg);
-}
-.a-FormulaPicker.is-input-group .a-FormulaPicker-toggler:hover {
-  cursor: pointer;
 }
 
 .a-Timeline-vertical {

@@ -2,7 +2,7 @@
  *  build: 杭州数蛙科技有限公司 
  *  copyright: dgiot-dashboard 
  *  author: h7ml(h7ml@qq.com) 
- *  Time: 2022年06月14日17时46分55秒
+ *  Time: 2022年06月15日12时00分54秒
  */
 @charset "UTF-8";
 /**
@@ -378,8 +378,8 @@
   --Calendar-cell-bg: var(--white);
   --Calendar-cell-onActive-bg: var(--info);
   --Calendar-cell-onBetween-bg: rgba(24, 144, 255, 0.1);
-  --Calendar-cell-onDisabled-bg: #f7f7f9;
-  --Calendar-cell-onHover-bg: #f7f7f9;
+  --Calendar-cell-onDisabled-bg: #F7F7F9;
+  --Calendar-cell-onHover-bg: #F7F7F9;
   --Calendar-color: #151b26;
   --Calendar-fontSize: var(--fontSizeSm);
   --Calendar-input-borderColor: var(--borderColor);
@@ -396,7 +396,7 @@
           var(--Calendar-input-fontSize)
       ) / 2
   );
-  --Calendar-shortcut-color: #151b26;
+  --Calendar-shortcut-color: #151B26;
   --Calendar-shortcut-decoration: none;
   --Calendar-shortcut-onHover-color: #0069cb;
   --Calendar-shortcut-onHover-decoration: none;
@@ -466,12 +466,10 @@
   --Checkbox-size: 1rem;
   --Checkbox-inner-size: calc(var(--Checkbox-size) / 2);
   --Checkbox-onHover-color: var(--info);
-  --Checkbox-onDisabled-bg: #f7f7f9;
-  --Checkbox-onDisabled-color: #b8babf;
+  --Checkbox-onDisabled-bg: #e5e7eb;
+  --Checkbox-onDisabled-color: var(--text--muted-color);
   --Checkbox-inner-onDisabled-bg: #d4d6d9;
-  --Checkbox-inner-onDisabled-color: #ffffff;
-  --Checkbox-disabled-unchecked-bg: #f7f7f9;
-  --Checkbox-inner-disabled-checked-bg: #e8e9eb;
+  --Checkbox-disabled-unchecked-bg: #f2f3f3;
   --Checkbox-border-width: var(--Form-input-borderWidth);
   --Checkbox-paddingX: 0.75rem;
   --Checkbox-button-height: 2rem;
@@ -564,7 +562,7 @@
   --DatePicker-borderWidth: var(--Form-input-borderWidth);
   --DatePicker-color: #151b26;
   --DatePicker-header-onHover-color: #0069cb;
-  --DatePicker-arrow-color: #84868c;
+  --DatePicker-arrow-color: #84868C;
   --DatePicker-fontSize: var(--fontSizeSm);
   --DatePicker-header-select-borderColor: #fff;
   --DatePicker-height: var(--Form-input-height);
@@ -743,10 +741,8 @@
   --Form-select-popoverGap: 0;
   --Form-select-search-height: var(--Form-select-menu-height);
   --Form-select-value-bgColor: var(--Form-input-onDisabled-bg);
-  --Form-select-value-bgColor--dark: #46474f;
   --Form-select-value-borderColor: var(--Form-select-value-borderColor);
   --Form-select-valueIcon-color: var(--Form-select-valueIcon-color);
-  --Form-select-valueIcon-color--dark: #e9e9e9;
   --Form-select-valueIcon-onHover-color: var(--Form-select-color);
   --Form-selectOption-height: var(--Form-input-height);
   --Form-selectValue-bg: #e4f2ff;
@@ -1144,14 +1140,11 @@
   --Remark-onHover-borderColor: var(--primary);
   --Remark-onHover-iconColor: #fff;
   --Remark-width: 1rem;
-  --ResultBox-tag-height: 1.5rem;
-  --ResultBox-tag-marginBottom: 0.125rem;
   --ResultBox-icon--onDisabled-color: #ebebeb;
   --ResultBox-icon--onHover-color: #666666;
   --ResultBox-icon-color: #999;
   --ResultBox-value--onDisabled-color: #cccccc;
   --ResultBox-value--onHover-bg: rgba(0, 145, 255, 0.1);
-  --ResultBox-value--onHover-bg--dark: #b8babf;
   --ResultBox-value-bg: #f5f5f5;
   --ResultBox-value-color: #000;
   --ResultBox-value-clear-bg: #d4d6d9;
@@ -14589,7 +14582,7 @@ input[type=button].antd-Button--block {
   border-bottom-right-radius: var(--Modal-content-borderRadius);
 }
 .antd-Modal-footer .antd-Button {
-  min-width: var(--Modal-footer-button-width);
+  width: var(--Modal-footer-button-width);
   margin-left: var(--gap-sm);
 }
 
@@ -18501,6 +18494,7 @@ input[type=button].antd-Button--block {
   padding: 0;
   line-height: 1.25rem;
   border-radius: 4px;
+  overflow: hidden;
 }
 .antd-Collapse-header {
   font-size: var(--Collapse-header-fontSize);
@@ -18895,16 +18889,6 @@ input[type=button].antd-Button--block {
      -moz-user-select: none;
       -ms-user-select: none;
           user-select: none;
-}
-
-.antd-CBPicker-trigger {
-  cursor: pointer;
-  transition: transform var(--animation-duration) ease-out;
-  display: flex;
-  color: var(--Form-select-caret-iconColor);
-}
-.antd-CBPicker-trigger:hover {
-  color: var(--primary);
 }
 
 @-webkit-keyframes contextMenuInSpecial {
@@ -19367,15 +19351,13 @@ input[type=button].antd-Button--block {
   vertical-align: middle;
 }
 .antd-Crud-toolbar-item {
+  margin-left: var(--Crud-toolbar-gap);
   margin-top: var(--Crud-toolbar-gap);
   line-height: var(--Crud-toolbar-lineHeight);
   height: var(--Crud-toolbar-height);
   vertical-align: middle;
   display: inline-flex;
   align-items: center;
-}
-.antd-Crud-toolbar-item:not(:first-child) {
-  margin-left: var(--Crud-toolbar-gap);
 }
 .antd-Crud-toolbar-item--left {
   float: left;
@@ -19409,6 +19391,7 @@ input[type=button].antd-Button--block {
 
 @media (min-width: 576px) {
   .antd-Crud-toolbar {
+    margin-left: calc(var(--Crud-toolbar-gap) * -1);
     margin-top: calc(var(--Crud-toolbar-gap) * -1);
     flex-basis: 0;
     flex-grow: 1;
@@ -19421,137 +19404,10 @@ input[type=button].antd-Button--block {
     clear: both;
   }
   .antd-Crud-toolbar-item {
+    margin-left: var(--Crud-toolbar-gap);
     line-height: var(--Crud-toolbar-lineHeight);
     height: var(--Crud-toolbar-height);
     vertical-align: middle;
-  }
-  .antd-Crud-toolbar-item:not(:first-child) {
-    margin-left: var(--Crud-toolbar-gap);
-  }
-  .antd-Crud-toolbar-item--left {
-    float: left;
-  }
-  .antd-Crud-toolbar-item--right {
-    float: right;
-  }
-  .antd-Crud-actions > * + .antd-Button,
-.antd-Crud-actions > * + .antd-Button--disabled-wrap {
-    margin-left: var(--Crud-toolbar-gap);
-  }
-}
-.antd-Crud2 {
-  position: relative;
-}
-.antd-Crud2-selection, .antd-Crud2-toolbar, .antd-Crud2-body {
-  margin-bottom: var(--gap-base);
-}
-.antd-Crud2-selectionLabel {
-  display: inline-block;
-  vertical-align: top;
-  margin-top: var(--gap-xs);
-}
-.antd-Crud2-value {
-  cursor: pointer;
-  vertical-align: middle;
-  -webkit-user-select: none;
-     -moz-user-select: none;
-      -ms-user-select: none;
-          user-select: none;
-  line-height: calc( var(--Form-input-lineHeight) * var(--Form-input-fontSize) - 0.125rem );
-  display: inline-block;
-  font-size: var(--Form-selectValue-fontSize);
-  color: var(--Form-selectValue-color);
-  background: var(--Form-selectValue-bg);
-  border: 0.0625rem solid var(--Form-selectValue-borderColor);
-  border-radius: 2px;
-  margin-right: var(--gap-xs);
-  margin-top: var(--gap-xs);
-}
-.antd-Crud2-value:hover {
-  background: var(--Form-selectValue-onHover-bg);
-}
-.antd-Crud2-value.is-disabled {
-  pointer-events: none;
-  opacity: var(--Button-onDisabled-opacity);
-}
-.antd-Crud2-valueIcon {
-  cursor: pointer;
-  border-right: 0.0625rem solid var(--Form-selectValue-borderColor);
-  padding: 1px 5px;
-}
-.antd-Crud2-valueIcon:hover {
-  background: var(--Form-selectValue-onHover-bg);
-}
-.antd-Crud2-valueLabel {
-  padding: 0 var(--gap-xs);
-}
-.antd-Crud2-selectionClear {
-  display: inline-block;
-  cursor: pointer;
-  -webkit-user-select: none;
-     -moz-user-select: none;
-      -ms-user-select: none;
-          user-select: none;
-  margin-left: var(--gap-xs);
-  margin-top: var(--gap-xs);
-  vertical-align: middle;
-}
-.antd-Crud2-toolbar-item {
-  margin-top: var(--Crud-toolbar-gap);
-  line-height: var(--Crud-toolbar-lineHeight);
-  height: var(--Crud-toolbar-height);
-  vertical-align: middle;
-  display: inline-flex;
-  align-items: center;
-}
-.antd-Crud2-toolbar-item:not(:first-child) {
-  margin-left: var(--Crud-toolbar-gap);
-}
-.antd-Crud2-toolbar-item--left {
-  float: left;
-}
-.antd-Crud2-toolbar-item--right {
-  float: right;
-}
-.antd-Crud2-actions > * + .antd-Button,
-.antd-Crud2-actions > * + .antd-ButtonGroup,
-.antd-Crud2-actions > * + .antd-ButtonToolbar {
-  margin-left: var(--Crud-toolbar-gap);
-}
-.antd-Crud2-statistics {
-  line-height: var(--Crud-toolbar-height);
-  vertical-align: middle;
-}
-.antd-Crud2-pageSwitch .antd-Select {
-  margin-left: var(--Crud-toolbar-gap);
-}
-.antd-Crud2-pager {
-  align-self: flex-start;
-}
-.antd-Crud2-filter {
-  margin-bottom: var(--gap-base);
-}
-
-@media (min-width: 576px) {
-  .antd-Crud-toolbar {
-    margin-top: calc(var(--Crud-toolbar-gap) * -1);
-    flex-basis: 0;
-    flex-grow: 1;
-  }
-  .antd-Crud-toolbar::before, .antd-Crud-toolbar::after {
-    display: table;
-    content: "";
-  }
-  .antd-Crud-toolbar::after {
-    clear: both;
-  }
-  .antd-Crud-toolbar-item {
-    line-height: var(--Crud-toolbar-lineHeight);
-    height: var(--Crud-toolbar-height);
-    vertical-align: middle;
-  }
-  .antd-Crud-toolbar-item:not(:first-child) {
-    margin-left: var(--Crud-toolbar-gap);
   }
   .antd-Crud-toolbar-item--left {
     float: left;
@@ -21865,7 +21721,7 @@ input[type=button].antd-Button--block {
 }
 .antd-Table-v2.antd-Table-resizable .antd-Table-table > thead > tr > th .antd-Table-thead-resizable {
   position: absolute;
-  width: 3px;
+  width: 1px;
   right: 0;
   top: 0;
   bottom: 0;
@@ -21912,6 +21768,8 @@ input[type=button].antd-Button--block {
 }
 .antd-Table-v2 .antd-TableCell-searchBtn {
   cursor: pointer;
+  position: static;
+  transform: translateY(-50%);
   color: var(--text--muted-color);
   margin-left: var(--TableCell-icon-gap);
 }
@@ -24174,7 +24032,7 @@ input[type=button].antd-Button--block {
   justify-content: flex-start;
 }
 .antd-InputBox input {
-  flex-basis: 1.875rem;
+  flex-basis: 5rem;
   flex-grow: 1;
   outline: none;
   background: transparent;
@@ -24505,7 +24363,7 @@ input[type=button].antd-Button--block {
   font-size: var(--Form-input-fontSize);
   flex-wrap: wrap;
   justify-content: flex-start;
-  flex-wrap: nowrap;
+  flex-wrap: wrap;
   padding: 0 0.3125rem;
   min-height: var(--Form-input-height);
   align-items: center;
@@ -24513,7 +24371,7 @@ input[type=button].antd-Button--block {
   position: relative;
 }
 .antd-ResultBox input {
-  flex-basis: 1.875rem;
+  flex-basis: 5rem;
   flex-grow: 1;
   outline: none;
   background: transparent;
@@ -24549,6 +24407,9 @@ input[type=button].antd-Button--block {
 }
 .antd-ResultBox--borderNone {
   border-color: transparent !important;
+}
+.antd-ResultBox.is-clearable {
+  padding-right: 3.4375rem;
 }
 .antd-ResultBox.is-error {
   border-color: var(--Form-input-onError-borderColor);
@@ -24587,26 +24448,7 @@ input[type=button].antd-Button--block {
 .antd-ResultBox.antd-NestedSelect {
   padding-left: var(--gap-base);
 }
-.antd-ResultBox-value-wrap {
-  flex-grow: 1;
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-}
-.antd-ResultBox-actions {
-  display: flex;
-  align-items: center;
-  flex-shrink: 0;
-}
-.antd-ResultBox-actions > *:first-child {
-  margin-left: 0.3125rem;
-}
-.antd-ResultBox-actions > *:not(:last-child) {
-  margin-right: 0.3125rem;
-}
 .antd-ResultBox-singleValue {
-  padding: 0 calc(var(--Form-input-paddingX) - 0.1875rem);
-  flex-grow: 1;
   display: inline-block;
   max-width: 100%;
   overflow: hidden;
@@ -24640,7 +24482,10 @@ input[type=button].antd-Button--block {
   margin-left: auto;
   text-decoration: none;
   height: 100%;
+  padding: 0.25rem;
   margin: auto 0;
+  position: absolute;
+  right: 10px;
   background-color: unset;
 }
 .antd-ResultBox-clear svg {
@@ -24679,17 +24524,16 @@ input[type=button].antd-Button--block {
   color: var(--ResultBox-value-color);
   font-size: var(--Form-input-fontSize);
   padding: 0 var(--gap-xs);
-  min-height: var(--ResultBox-tag-height);
+  min-height: 1.5rem;
   flex-wrap: nowrap;
   display: inline-flex;
   align-items: center;
   margin-right: var(--gap-xs);
-  margin-bottom: var(--ResultBox-tag-marginBottom);
+  margin-bottom: 0.125rem;
   -webkit-user-select: none;
      -moz-user-select: none;
       -ms-user-select: none;
           user-select: none;
-  border-radius: 0.125rem;
 }
 .antd-ResultBox-value > a {
   cursor: pointer;
@@ -24718,7 +24562,6 @@ input[type=button].antd-Button--block {
 }
 .antd-ResultBox-placeholder {
   color: var(--Form-input-placeholderColor);
-  flex-grow: 1;
   -webkit-user-select: none;
      -moz-user-select: none;
       -ms-user-select: none;
@@ -24745,25 +24588,6 @@ input[type=button].antd-Button--block {
 }
 .antd-ResultBox.antd-TransferDropDown > .antd-ResultBox-value:hover {
   background: var(--Form-selectValue-onHover-bgColor);
-}
-.antd-ResultBox-overflow-wrapper {
-  display: flex;
-  flex-flow: row wrap;
-  justify-content: flex-start;
-  align-items: center;
-  overflow-x: hidden;
-  overflow-y: auto;
-  max-height: calc( (var(--ResultBox-tag-height) + var(--ResultBox-tag-marginBottom)) * 5 );
-}
-.antd-ResultBox-overflow.antd-Tooltip--dark .antd-ResultBox-overflow-wrapper .antd-ResultBox-value {
-  color: var(--white);
-  background-color: var(--Form-select-value-bgColor--dark);
-}
-.antd-ResultBox-overflow.antd-Tooltip--dark .antd-ResultBox-overflow-wrapper .antd-ResultBox-value:hover {
-  background-color: var(--ResultBox-value--onHover-bg--dark);
-}
-.antd-ResultBox-overflow.antd-Tooltip--dark .antd-ResultBox-overflow-wrapper .antd-ResultBox-value > a {
-  color: var(--Form-select-valueIcon-color--dark);
 }
 .antd-ResultBox.is-mobile {
   min-height: calc(var(--Form-input-lineHeight) * var(--fontSizeLg));
@@ -25962,7 +25786,7 @@ fieldset.antd-Collapse--lg:after {
   justify-content: flex-start;
 }
 .antd-TextControl-input input {
-  flex-basis: 1.875rem;
+  flex-basis: 5rem;
   flex-grow: 1;
   outline: none;
   background: transparent;
@@ -26251,8 +26075,6 @@ fieldset.antd-Collapse--lg:after {
 }
 .antd-TextControl-revealPassword {
   font-size: 0;
-  display: inline-flex;
-  align-items: center;
 }
 .antd-TextControl-revealPassword .icon {
   width: var(--Form-input-password-icon-size);
@@ -26291,7 +26113,7 @@ input.antd-TextControl-input-password {
   justify-content: flex-start;
 }
 .antd-TextareaControl-input input {
-  flex-basis: 1.875rem;
+  flex-basis: 5rem;
   flex-grow: 1;
   outline: none;
   background: transparent;
@@ -26583,16 +26405,19 @@ input.antd-TextControl-input-password {
   border-color: var(--Checkbox-gb);
 }
 .antd-Checkbox--full.antd-Checkbox--checkbox input[disabled] + i {
-  border-color: var(--Checkbox-color);
-  background: var(--Checkbox-onDisabled-bg);
+  border-color: var(--Checkbox-onDisabled-color);
+  background: var(--FileControl-onDisabled-bg);
 }
 .antd-Checkbox--full.antd-Checkbox--checkbox input[disabled]:checked + i:before {
   border-color: var(--Checkbox-onDisabled-color);
-  background: var(--Checkbox-onDisabled-bg);
 }
 .antd-Checkbox--full.antd-Checkbox--checkbox input:checked[disabled] + i {
-  border-color: var(--Checkbox-color);
-  background: var(--Checkbox-onDisabled-bg);
+  border-color: var(--Checkbox-onDisabled-color);
+  background: var(--FileControl-onDisabled-bg);
+}
+.antd-Checkbox--full.antd-Checkbox--checkbox input:checked[disabled] + i:before {
+  background: var(--FileControl-onDisabled-bg);
+  border-color: var(--Checkbox-inner-onDisabled-bg);
 }
 .antd-Checkbox--full.antd-Checkbox--checkbox > i {
   position: relative;
@@ -26654,7 +26479,6 @@ input.antd-TextControl-input-password {
 }
 .antd-Checkbox--button.antd-Checkbox--checkbox:hover:not(:disabled) {
   color: var(--Checkbox-onHover-color);
-  border-color: var(--Checkbox-onHover-color);
 }
 .antd-Checkbox--button.antd-Checkbox--checkbox:hover input:checked + i {
   background: transparent;
@@ -26680,7 +26504,7 @@ input.antd-TextControl-input-password {
   left: 0;
   width: var(--Checkbox--full-inner-size);
   height: calc(var(--Checkbox--full-inner-size) / 2);
-  transform: translate(-80%, -160%) rotate(-50deg) scale(0.8);
+  transform: translate(-80%, -160%) rotate(-50deg);
   background: transparent;
 }
 .antd-Checkbox--button.antd-Checkbox--checkbox input[disabled] + i {
@@ -26692,12 +26516,8 @@ input.antd-TextControl-input-password {
 }
 .antd-Checkbox--button.antd-Checkbox--checkbox input:checked[disabled] + i {
   background: transparent;
-  border-width: 0.4375rem;
-  border-color: var(--Checkbox-inner-disabled-checked-bg) transparent transparent var(--Checkbox-inner-disabled-checked-bg);
-}
-.antd-Checkbox--button.antd-Checkbox--checkbox input:checked[disabled] + i:before {
-  background: transparent;
-  border-color: var(--Checkbox-inner-onDisabled-color) !important;
+  border-width: 0.5rem;
+  border-color: var(--Checkbox-onHover-color) transparent transparent var(--Checkbox-onHover-color);
 }
 .antd-Checkbox--button.antd-Checkbox--checkbox > i {
   position: absolute;
@@ -26706,7 +26526,6 @@ input.antd-TextControl-input-password {
   margin-left: 0;
   border: 0;
   border-style: solid;
-  background: transparent;
 }
 .antd-Checkbox--button.antd-Checkbox--checkbox > i + span {
   max-width: 6.25rem;
@@ -26726,19 +26545,8 @@ input.antd-TextControl-input-password {
   border-color: var(--Switch-checked-onHover-bgColor);
   color: var(--Switch-checked-onHover-bgColor);
 }
-.antd-Checkbox--button--disabled--unchecked.antd-Checkbox--checkbox {
-  background: var(--Checkbox-disabled-unchecked-bg);
-  border-color: var(--Checkbox-color);
-}
-.antd-Checkbox--button--disabled--unchecked.antd-Checkbox--checkbox:hover {
-  border-color: var(--Checkbox-color) !important;
-}
-.antd-Checkbox--button--disabled--checked.antd-Checkbox--checkbox {
-  background: var(--Checkbox-onDisabled-bg);
-  border-color: var(--Checkbox-color) !important;
-}
-.antd-Checkbox--button--disabled--checked.antd-Checkbox--checkbox:hover {
-  border-color: var(--Checkbox-color) !important;
+.antd-Checkbox--button--disabled--unchecked.antd-Checkbox--checkbox.antd-Checkbox--full i {
+  background: var(--FileControl-onDisabled-bg);
 }
 .antd-Checkbox--radio {
   padding-left: var(--Radio-size);
@@ -26959,9 +26767,6 @@ input.antd-TextControl-input-password {
 
 .antd-TableSelection .antd-Table-content {
   border-top: var(--Table-borderWidth) solid var(--Table-borderColor);
-}
-.antd-TableSelection .antd-Table-table > tbody > tr {
-  cursor: pointer;
 }
 .antd-TableSelection .antd-Table-table > thead > tr > th,
 .antd-TableSelection .antd-Table-table > tbody > tr > td {
@@ -27255,7 +27060,6 @@ input.antd-TextControl-input-password {
   margin: 0;
   vertical-align: middle;
   text-align: left;
-  transition: all 0.5s ease;
 }
 .antd-Switch.is-disabled {
   cursor: not-allowed;
@@ -27599,7 +27403,6 @@ input.antd-TextControl-input-password {
 
 .antd-Select {
   display: inline-flex;
-  /* select 标签样式 */
   vertical-align: middle;
   text-align: left;
   align-items: center;
@@ -27631,9 +27434,6 @@ input.antd-TextControl-input-password {
 }
 .antd-Select:focus {
   box-shadow: var(--Form-select-onFocus-boxShadow);
-}
-.antd-Select .antd-PopOver.antd-Select-popover .antd-Select-menu {
-  overflow-x: hidden;
 }
 .antd-Select .antd-PopOver.antd-Select-popover .antd-Select-menu .antd-Select-option {
   height: 2rem;
@@ -27833,7 +27633,6 @@ input.antd-TextControl-input-password {
   margin-right: var(--gap-xs);
 }
 .antd-Select-input > input {
-  width: 100%;
   outline: none;
   border: none;
   flex-grow: 1;
@@ -27843,6 +27642,7 @@ input.antd-TextControl-input-password {
 }
 .antd-Select-option {
   cursor: pointer;
+  min-width: 7.5rem;
   padding: calc( ( var(--Form-select-menu-height) - var(--Form-input-lineHeight) * var(--Form-input-fontSize) ) / 2 ) var(--Form-select-paddingX);
 }
 .antd-Select-option.is-active {
@@ -27867,15 +27667,6 @@ input.antd-TextControl-input-password {
 }
 .antd-Select-option.is-highlight > a {
   display: block;
-}
-.antd-Select-option .antd-Select-option-content,
-.antd-Select-option .antd-Select-option-content > span > div {
-  flex: auto;
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-  display: inline-block;
-  max-width: 100%;
 }
 .antd-Select-noResult {
   color: var(--Form-select-placeholderColor);
@@ -27931,54 +27722,6 @@ input.antd-TextControl-input-password {
 .antd-Select-popup {
   height: 20rem;
 }
-.antd-Select-overflow-wrapper {
-  display: flex;
-  flex-flow: row wrap;
-  justify-content: flex-start;
-  align-items: center;
-  overflow-x: hidden;
-  overflow-y: auto;
-  max-height: calc( ( var(--Form-input-lineHeight) * var(--Form-input-fontSize) - 0.125rem + var(--gap-xs) ) * 5 );
-}
-.antd-Select-overflow-wrapper .antd-Select-value {
-  position: static;
-  white-space: normal;
-  -webkit-user-select: none;
-     -moz-user-select: none;
-      -ms-user-select: none;
-          user-select: none;
-  line-height: calc( var(--Form-input-lineHeight) * var(--Form-input-fontSize) - 0.125rem );
-  display: inline-block;
-  vertical-align: middle;
-  font-size: var(--Form-selectValue-fontSize);
-  background: var(--Form-select-value-bgColor);
-  border: 0.0625rem solid var(--Form-select-value-borderColor);
-  border-radius: 0.125rem;
-  margin-right: var(--gap-xs);
-  margin-bottom: var(--gap-xs);
-}
-.antd-Select-overflow-wrapper .antd-Select-value:hover {
-  background-color: var(--Form-selectValue-onHover-bgColor);
-}
-.antd-Select-overflow-wrapper .antd-Select-valueLabel {
-  display: inline-block;
-  max-width: var(--Form-valueLabel-maxWidth);
-  padding: 0 var(--gap-xs);
-  overflow: hidden;
-  vertical-align: top;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-.antd-Select-overflow.antd-Tooltip--dark .antd-Select-overflow-wrapper .antd-Select-value {
-  background-color: var(--Form-select-value-bgColor--dark);
-  border: none;
-}
-.antd-Select-overflow.antd-Tooltip--dark .antd-Select-overflow-wrapper .antd-Select-value:hover {
-  background-color: var(--ResultBox-value--onHover-bg--dark);
-}
-.antd-Select-overflow.antd-Tooltip--dark .antd-Select-overflow-wrapper .antd-Select-value .antd-Select-valueIcon {
-  color: var(--Form-select-valueIcon-color--dark);
-}
 
 .antd-Select-popover {
   margin-top: calc(var(--Form-select-outer-borderWidth) * -1);
@@ -27988,6 +27731,7 @@ input.antd-TextControl-input-password {
   box-shadow: var(--Form-select-outer-boxShadow);
   border-top-left-radius: 0;
   border-top-right-radius: 0;
+  min-width: 6.25rem;
 }
 .antd-Select-popover.antd-PopOver--leftTopLeftBottom {
   margin-top: calc( (var(--Form-select-popoverGap) - var(--Form-select-outer-borderWidth)) * -1 );
@@ -28584,11 +28328,21 @@ input.antd-TextControl-input-password {
   display: flex;
 }
 
+.antd-DateControl {
+  width: auto !important;
+}
+.antd-DateControl.is-date > .antd-DatePicker {
+  min-width: calc(var(--DatePicker-minWidth) + var(--fontSizeLg) * 2);
+}
+.antd-DateControl.is-datetime > .antd-DatePicker {
+  min-width: calc(var(--DatePicker-minWidth) + var(--fontSizeLg) * 6);
+}
+
 .antd-DatePicker-shortcuts {
   margin: 0;
   padding-left: 0.625rem;
   list-style: none;
-  background: #f7f7f9;
+  background: #F7F7F9;
   line-height: 2rem;
 }
 
@@ -28734,7 +28488,7 @@ input.antd-TextControl-input-password {
 .rdt .rdtPicker .rdtDisabled.rdtToday > span,
 .rdt .rdtPicker .rdtOld.rdtToday > span,
 .rdt .rdtPicker .rdtNew.rdtToday > span {
-  border-color: #e8e9eb;
+  border-color: #E8E9EB;
 }
 .rdt .rdtPicker td.rdtActive > span,
 .rdt .rdtPicker td.rdtActive:hover > span {
@@ -28745,7 +28499,7 @@ input.antd-TextControl-input-password {
 }
 .rdt .rdtPicker .rdtActive.rdtToday > span {
   background: transparent;
-  border-color: #144bcc;
+  border-color: #144BCC;
 }
 .rdt .rdtPicker td.rdtDisabled > span,
 .rdt .rdtPicker td.rdtDisabled:hover > span {
@@ -29053,7 +28807,7 @@ td.rdtYear.rdtDisabled:hover,
 td.rdtQuarter.rdtDisabled,
 td.rdtQuarter.rdtDisabled:hover {
   background: var(--Calendar-cell-onDisabled-bg);
-  color: #b8babf;
+  color: #B8BABF;
 }
 
 .antd-DateRangePicker-start .rdtPicker .rdtActive.rdtBetween {
@@ -30481,7 +30235,7 @@ td.rdtQuarter.rdtDisabled:hover {
   justify-content: flex-start;
 }
 .antd-TreeSelect-input input {
-  flex-basis: 1.875rem;
+  flex-basis: 5rem;
   flex-grow: 1;
   outline: none;
   background: transparent;
@@ -31006,7 +30760,7 @@ td.rdtQuarter.rdtDisabled:hover {
   justify-content: flex-start;
 }
 .antd-Picker-input input {
-  flex-basis: 1.875rem;
+  flex-basis: 5rem;
   flex-grow: 1;
   outline: none;
   background: transparent;
@@ -31433,8 +31187,7 @@ td.rdtQuarter.rdtDisabled:hover {
 .antd-Transfer-select > .antd-ChainedSelection .antd-ChainedSelection-col {
   height: 100%;
   overflow: auto;
-  min-width: unset;
-  flex: 1 1 0;
+  min-width: 8.125rem;
 }
 .antd-Transfer .antd--ResultTreeList {
   border-top: 1px solid var(--borderColor);
@@ -31865,7 +31618,7 @@ td.rdtQuarter.rdtDisabled:hover {
   justify-content: flex-start;
 }
 .antd-IconPickerControl-input input {
-  flex-basis: 1.875rem;
+  flex-basis: 5rem;
   flex-grow: 1;
   outline: none;
   background: transparent;
@@ -31962,19 +31715,18 @@ td.rdtQuarter.rdtDisabled:hover {
      -moz-user-select: none;
       -ms-user-select: none;
           user-select: none;
-  line-height: var(--Form-input-lineHeight);
   position: absolute;
-  left: 2px;
-  overflow: hidden;
-  width: 100%;
+  left: var(--Form-input-paddingX);
+  top: var(--Form-input-paddingY);
+  margin-top: calc(2 * var(--Form-input-borderWidth));
+  line-height: var(--Form-input-lineHeight);
 }
 .antd-IconPickerControl-valueWrap {
+  display: flex;
   justify-content: space-between;
   flex-grow: 1;
   line-height: 1;
   white-space: nowrap;
-  width: 100%;
-  position: relative;
 }
 .antd-IconPickerControl-valueWrap > input {
   display: inline-block;
@@ -31984,7 +31736,6 @@ td.rdtQuarter.rdtDisabled:hover {
 .antd-IconPickerControl-input--withAC {
   position: relative;
   flex-wrap: wrap;
-  width: 100%;
 }
 .antd-IconPickerControl-input--withAC > input {
   width: auto;
@@ -32048,9 +31799,6 @@ td.rdtQuarter.rdtDisabled:hover {
   line-height: calc( var(--Form-input-lineHeight) * var(--Form-input-fontSize) );
   vertical-align: middle;
   display: inline-block;
-  overflow: hidden;
-  width: 100%;
-  text-overflow: ellipsis;
 }
 .antd-IconPickerControl-value > i {
   display: inline-block;
@@ -33374,16 +33122,13 @@ td.rdtQuarter.rdtDisabled:hover {
   height: 15.625rem;
   margin-top: 0.625rem;
 }
-.antd-FormulaEditor-settings.only-variable {
-  height: 21.875rem;
-}
 .antd-FormulaEditor-panel {
   display: flex;
   flex: 1;
   flex-flow: column nowrap;
   justify-content: space-between;
   align-items: stretch;
-  height: 100%;
+  height: 15.625rem;
   border-radius: var(--borderRadius);
   border: var(--Form-input-borderWidth) solid var(--Form-input-borderColor);
 }
@@ -33408,11 +33153,10 @@ td.rdtQuarter.rdtDisabled:hover {
   flex: 1;
   display: flex;
   flex-flow: column nowrap;
-  max-height: calc(100% - 30px);
-  overflow: hidden;
+  max-height: 13.75rem;
 }
 .antd-FormulaEditor-panel-body--tabs {
-  max-height: 100%;
+  max-height: 15.625rem;
 }
 .antd-FormulaEditor-VariableList-root {
   max-height: 100%;
@@ -33532,12 +33276,10 @@ td.rdtQuarter.rdtDisabled:hover {
   vertical-align: middle;
   text-align: center;
   padding: 0 0.5rem;
+  line-height: 17px;
   border-radius: var(--borderRadius);
   background: #f5f5f5;
   color: var(--black);
-}
-.antd-FormulaEditor-VariableList .antd-GroupedSelection-item-tag {
-  line-height: 17px;
 }
 .antd-FormulaEditor-FuncList {
   display: flex;
@@ -33704,36 +33446,6 @@ td.rdtQuarter.rdtDisabled:hover {
   font-weight: bold;
   line-height: 14px;
   padding: 0 2px;
-}
-
-.antd-FormulaPicker.is-input-group {
-  border: var(--Form-input-borderWidth) solid var(--Form-input-borderColor);
-  padding: var(--Form-input-paddingY) var(--Form-input-paddingX);
-  border-radius: var(--borderRadius);
-  background-color: #fff;
-  height: var(--Form-input-height);
-}
-.antd-FormulaPicker.is-input-group .antd-FormulaPicker-input {
-  display: flex;
-  align-items: center;
-  background: none;
-  padding: 0;
-  border: 0;
-  margin: 0;
-}
-.antd-FormulaPicker.is-input-group .antd-FormulaPicker-input:focus {
-  border: none;
-  outline: none;
-  box-sizing: none;
-}
-.antd-FormulaPicker.is-input-group .antd-FormulaPicker-toggler .icon-function {
-  transform: scale(1.8);
-}
-.antd-FormulaPicker.is-input-group .antd-FormulaPicker-toggler .icon-ellipsis-v {
-  transform: rotate(90deg);
-}
-.antd-FormulaPicker.is-input-group .antd-FormulaPicker-toggler:hover {
-  cursor: pointer;
 }
 
 .antd-Timeline-vertical {
