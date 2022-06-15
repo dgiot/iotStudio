@@ -258,6 +258,7 @@
     </dgiot-query-form>
 
     <el-table
+      key="table1"
       ref="tableSort"
       v-loading="listLoading"
       :border="border"
@@ -308,7 +309,6 @@
       </el-table-column>
       <el-table-column
         align="center"
-        fixed="right"
         :label="$translateTitle('pressure.压测状态')"
         width="auto"
       >
@@ -324,7 +324,6 @@
       </el-table-column>
       <el-table-column
         align="center"
-        fixed="right"
         :label="$translateTitle('pressure.报告操作')"
         width="320"
       >
@@ -430,7 +429,7 @@
   import { mapGetters, mapMutations } from 'vuex'
 
   export default {
-    name: 'Pressure',
+    name: 'PressureCloud',
     components: {
       TableEdit,
     },
@@ -573,6 +572,12 @@
         },
         immediate: true,
       },
+    },
+    created() {
+      this.$nextTick(() => {
+        console.log(this.$refs.tableSort)
+        this.$refs.tableSort.doLayout()
+      })
     },
     async mounted() {
       await this.setTreeFlag(false)
@@ -963,7 +968,7 @@
           limit: this.queryForm.limit,
           count: 'objectId',
           order: '-createdAt',
-          excludeKeys: 'product,profile,content',
+          excludeKeys: 'product,content',
           where: {
             product: this.product,
           },
@@ -974,6 +979,8 @@
         const { count = 0, results = [] } = await queryDevice(params)
         const timeExp = /\[(\d{2,}):(\d{2})(?:\.(\d{2,3}))?]/g
         results.forEach((i) => {
+          i?.basedata ? '' : (i.basedata = {})
+          i?.basedata?.docxInfo ? '' : (i.basedata.docxInfo = [])
           i?.basedata?.templateUrl
             ? ''
             : (i.basedata = { templateUrl: '', docxInfo: [] })
@@ -991,10 +998,13 @@
         this.total = count
         this.listLoading = false
       },
-    }, //如果页面有keep-alive缓存功能，这个函数会触发
+    },
   }
 </script>
 <style>
+  .el-table__fixed-right {
+    height: 100% !important;
+  }
   @font-face {
     font-family: Ionicons;
     font-style: normal;
