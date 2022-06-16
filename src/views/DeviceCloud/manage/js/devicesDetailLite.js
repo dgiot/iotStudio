@@ -417,7 +417,7 @@ export default {
     this.topicKey = this.$dgiotBus.topicKey(this.router, this.subtopic) // dgiot-mqtt topicKey 唯一标识
     // if (this.$route.query.deviceid) {
     this.deviceid = this.$route.query.deviceid
-    localStorage.setItem('parse_objectid', deviceid)
+    localStorage.setItem('parse_objectid', this.deviceid)
     this.subRealtimedata()
     this.initChart()
     window.addEventListener('resize', this.resizeTheChart)
@@ -843,7 +843,7 @@ export default {
     },
     CardDevice() {
       this.loading = true
-      getCardDevice(this.deviceid)
+      getCardDevice(this.$route.query.deviceid)
         .then((response) => {
           if (response?.data) {
             this.renderCard(response.data)
@@ -939,7 +939,7 @@ export default {
       await this.delVisitedRoute(this.$route.path)
       this.activeName = 'first'
       this.$router.push({ path: this.$route.path, query })
-      this.getDeviceInfo(deviceid)
+      this.getDeviceInfo(query.deviceid)
       this.setTreeFlag(false)
       this.params.style = this.chartType[0].type
       console.log(' this.params.style', this.params.style)
@@ -947,7 +947,7 @@ export default {
       this.router = this.$dgiotBus.router(location.href + this.$route.fullPath)
       // this.topicKey = this.$dgiotBus.topicKey(this.router, this.subtopic) // dgiot-mqtt topicKey 唯一标识
       // if (this.$route.query.deviceid) {
-      this.deviceid = deviceid
+      this.deviceid = query.deviceid
       this.subRealtimedata()
       this.initChart()
       window.addEventListener('resize', this.resizeTheChart)
