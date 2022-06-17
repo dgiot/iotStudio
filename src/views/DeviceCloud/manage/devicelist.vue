@@ -853,6 +853,8 @@
                   type: 'success',
                   message: this.$translateTitle(`迁移成功`),
                 })
+                // 迁移成功刷新界面
+                this.fetchData()
               } else {
                 this.$message({
                   showClose: true,
