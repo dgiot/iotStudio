@@ -1102,6 +1102,34 @@
         this.list = results
         this.total = count
         this.listLoading = false
+        // 订阅处理所有的设备
+        await this.subAllDevice()
+      },
+      async subAllDevice() {
+        const topics = []
+        this.list.forEach((item) => {
+          topics.push(
+            `/$dg/thing/device/${item.product.objectId}/${item.devaddr}/properties/publish`
+          )
+        })
+        await this.$subscribe(topics)
+        this.$dgiotBus.$on('/$dg/thing', (Msg) => {
+          console.log('收到消息', Msg)
+          const parseString = JSON.parse(Msg.payloadString)
+          console.log('收到消息', parseString)
+          if (parseString) {
+            const topicsKeys = Object.keys(parseString)
+            console.log(topicsKeys)
+            topicsKeys.forEach((t) => {
+              this.list.forEach((i) => {
+                if (i.objectId == t) {
+                  const mergeInfo = _.merge(i, parseString[t])
+                  console.log(`更新设备${i.name}`, mergeInfo)
+                }
+              })
+            })
+          }
+        })
       },
     },
   }
