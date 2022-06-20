@@ -54,8 +54,11 @@ export async function postTopic(Topic = '$dg/user/router/') {
   const mqttInfo = {
     href: location.href,
     topic: Topic,
-    topicKey: Vue.prototype.$dgiotBus.getTopicKeyBypage(Topic.split('/')[2]),
-    splitTopicKey: Topic.split('/')[2],
+    topicKey:
+      typeof Topic == 'string'
+        ? Vue.prototype.$dgiotBus.getTopicKeyBypage(Topic.split('/')[2])
+        : Topic,
+    splitTopicKey: typeof Topic == 'string' ? Topic.split('/')[2] : Topic,
   }
   console.groupCollapsed(
     ` href: ${mqttInfo.href} \n topic: ${mqttInfo.topic} \n topicKey: ${mqttInfo.topicKey} \n splitTopicKey: ${mqttInfo.splitTopicKey}`
