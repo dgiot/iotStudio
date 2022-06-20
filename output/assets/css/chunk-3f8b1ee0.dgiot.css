@@ -2,7 +2,7 @@
  *  build: 杭州数蛙科技有限公司 
  *  copyright: dgiot-dashboard 
  *  author: h7ml(h7ml@qq.com) 
- *  Time: 2022年06月17日18时21分18秒
+ *  Time: 2022年06月20日15时41分56秒
  */
 
 .el-table__fixed-right {
@@ -18,7 +18,7 @@
     url(/fonts/ionicons.svg?v=3.0.0#Ionicons) format('svg');
 }
 
-[data-v-1c29a6e7]:export{menu-color:rgba(255,255,255,.95);menu-color-active:rgba(255,255,255,.95);menu-background:#282c34;column-second-menu-background:#fff}.el-row[data-v-1c29a6e7]{margin-bottom:0px !important}.full-modal[data-v-1c29a6e7]{height:100vh !important}.full-modal .ant-modal[data-v-1c29a6e7]{top:0;max-width:100%;padding-bottom:0;margin:0}.full-modal .ant-modal-content[data-v-1c29a6e7]{display:flex;flex-direction:column;height:calc(100vh)}.full-modal .ant-modal-body[data-v-1c29a6e7]{flex:1}.index-container[data-v-1c29a6e7]{width:100%;heigth:100%}
+[data-v-a5fe3324]:export{menu-color:rgba(255,255,255,.95);menu-color-active:rgba(255,255,255,.95);menu-background:#282c34;column-second-menu-background:#fff}.el-row[data-v-a5fe3324]{margin-bottom:0px !important}.full-modal[data-v-a5fe3324]{height:100vh !important}.full-modal .ant-modal[data-v-a5fe3324]{top:0;max-width:100%;padding-bottom:0;margin:0}.full-modal .ant-modal-content[data-v-a5fe3324]{display:flex;flex-direction:column;height:calc(100vh)}.full-modal .ant-modal-body[data-v-a5fe3324]{flex:1}.index-container[data-v-a5fe3324]{width:100%;heigth:100%}
 [data-v-de097c28]:export{menu-color:rgba(255,255,255,.95);menu-color-active:rgba(255,255,255,.95);menu-background:#282c34;column-second-menu-background:#fff}.grafana-container[data-v-de097c28]{width:100%;heigth:100%}.grafana-container iframe[data-v-de097c28]{display:block;width:100vw;height:100vh;background:#000;border:none}
 [data-v-6af26652]:export{menu-color:rgba(255,255,255,.95);menu-color-active:rgba(255,255,255,.95);menu-background:#282c34;column-second-menu-background:#fff}.CloudSystem-container[data-v-6af26652]{width:100%;height:100%}.CloudSystem-container-container[data-v-6af26652]{width:100%;height:100%}
 [data-v-e24c6614]:export{menu-color:rgba(255,255,255,.95);menu-color-active:rgba(255,255,255,.95);menu-background:#282c34;column-second-menu-background:#fff}.logs[data-v-e24c6614]{height:calc(100vh - 60px * 2.7) !important}.logs[data-v-e24c6614]  .el-table__body,.logs[data-v-e24c6614]  .el-table__empty-block{width:100% !important}.logs-row-tree[data-v-e24c6614]{overflow:scroll}
