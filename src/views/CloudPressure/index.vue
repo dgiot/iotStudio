@@ -900,6 +900,9 @@
         delete device.objectId
         delete device.endTime
         delete device.startTime
+        // delete device.ip
+        // delete device.basedata
+        // delete device.devaddr
         device.isEnable = false
         device.devaddr = md5('Device' + Math.round(new Date()) + '').substring(
           0,
@@ -968,7 +971,6 @@
           limit: this.queryForm.limit,
           count: 'objectId',
           order: '-createdAt',
-          excludeKeys: 'product,content',
           where: {
             product: this.product,
           },

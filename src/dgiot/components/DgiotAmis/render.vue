@@ -3,6 +3,7 @@
 </template>
 
 <script>
+  import store from '@/store'
   import { mapGetters } from 'vuex'
   /**
    * @description amis配置参数
@@ -119,8 +120,8 @@
             _.merge(config.headers, {
               author: 'iotn2n',
               platform: 'amis',
-              departmentToken: this.departmentToken,
-              sessionToken: this.token,
+              departmentToken: store.getters['user/departmentToken'],
+              sessionToken: store.getters['user/token'],
             })
             if (method === 'get' && data) {
               config.params = data
