@@ -21,7 +21,7 @@ Vue.use(VuePlugin)
 window.dgiotlogger =
   process.env.NODE_ENV !== 'development' && clearConsole
     ? new Lajax({
-        url: '/',
+        url: 'https://reqres.in/api/users',
         autoLogError: true, //是否自动记录未捕获错误true
         autoLogRejection: false, //是否自动记录Promise错误true
         autoLogAjax: false, //是否自动记录 ajax 请求true

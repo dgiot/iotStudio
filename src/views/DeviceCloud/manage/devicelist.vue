@@ -575,7 +575,7 @@
           },
           name: '',
           isEnable: true,
-          status: 'OFFLINE',
+          status: 'ONLINE',
           devaddr: '',
           basedata: {},
           route: {},
@@ -1082,14 +1082,8 @@
         await this.subAllDevice()
       },
       async subAllDevice() {
-        const topics = []
-        this.list.forEach((item) => {
-          topics.push(
-            `/$dg/thing/device/${item.product.objectId}/${item.devaddr}/properties/publish`
-          )
-        })
-        await this.$subscribe(topics)
-        this.$dgiotBus.$on('/$dg/thing', (Msg) => {
+        await this.$subscribe('$dg/user/devicestate/#')
+        this.$dgiotBus.$on('/$dg/user', (Msg) => {
           console.log('收到消息', Msg)
           const parseString = JSON.parse(Msg.payloadString)
           console.log('收到消息', parseString)
