@@ -1083,7 +1083,7 @@
       },
       async subAllDevice() {
         await this.$subscribe('$dg/user/devicestate/#')
-        this.$dgiotBus.$on('/$dg/user', (Msg) => {
+        this.$dgiotBus.$on('/$dg/user/devicestate', (Msg) => {
           console.log('收到消息', Msg)
           const parseString = JSON.parse(Msg.payloadString)
           console.log('收到消息', parseString)
