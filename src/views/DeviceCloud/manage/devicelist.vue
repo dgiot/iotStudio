@@ -19,7 +19,7 @@
       v-model="topoFlag"
       footer-hide
       :query="routerInfo.query"
-      width="90%"
+      width="1200"
       @on-cancel="closeModal"
     >
       <span slot="title" v-if="false"></span>
@@ -331,33 +331,9 @@
         width="80"
       >
         <template #default="{ row }">
-          <span v-if="row.status == 'ONLINE'" :class="row.status">
-            {{ $translateTitle('product.online') }}
-          </span>
-          <el-tooltip
-            v-if="row.status == 'ONLINE'"
-            :content="$translateTitle('equipment.thedeviceisonline')"
-            placement="top"
-          >
-            <i class="el-icon-question" />
-          </el-tooltip>
-          <span v-if="row.status == 'OFFLINE'" :class="row.status">
-            {{ $translateTitle('product.offline') }}
-          </span>
-          <el-tooltip
-            v-if="row.status == 'OFFLINE'"
-            :content="$translateTitle('equipment.thedeviceisoffline')"
-            placement="top"
-          >
-            <i class="el-icon-question" />
-          </el-tooltip>
-          <span
-            v-if="row.status != 'OFFLINE' && row.status != 'ONLINE'"
-            :class="row.status"
-          >
-            <!-- 未注册 -->
-            {{ $translateTitle('product.unregistered') }}
-          </span>
+          <el-tag :type="row.status == 'ONLINE' ? 'success' : 'warning'">
+            {{ row.status == 'ONLINE' ? '在线' : '离线' }}
+          </el-tag>
         </template>
       </el-table-column>
       <el-table-column
@@ -1134,7 +1110,14 @@
     },
   }
 </script>
-
+<style>
+  .ivu-modal-body {
+    padding: 0;
+  }
+  .el-main {
+    padding: 0;
+  }
+</style>
 <style lang="scss" scoped>
   .xinmahe-container {
     width: 100%;
