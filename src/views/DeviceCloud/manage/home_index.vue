@@ -348,6 +348,7 @@
     </dgiot-query-form>
 
     <el-table
+      :key="upkey"
       ref="tableSort"
       v-loading="listLoading"
       border
@@ -638,6 +639,7 @@
     },
     data() {
       return {
+        upkey: moment(new Date()).valueOf() + '',
         dialog_device: false,
         mapLabel: {
           content: '我爱北京天安门',
@@ -1215,19 +1217,20 @@
         await this.subAllDevice()
       },
       async subAllDevice() {
-        await this.$subscribe('$dg/user/devicestate/#')
-        this.$dgiotBus.$on('/$dg/user/devicestate', (Msg) => {
-          console.log('收到消息', Msg)
+        let _this = this
+        await _this.$subscribe('$dg/user/devicestate/#')
+        _this.$dgiotBus.$off(_this.$mqttInfo.topicKey)
+        _this.$dgiotBus.$on(_this.$mqttInfo.topicKey, (Msg) => {
           const parseString = JSON.parse(Msg.payloadString)
           console.log('收到消息', parseString)
           if (parseString) {
             const topicsKeys = Object.keys(parseString)
-            console.log(topicsKeys)
-            topicsKeys.forEach((t) => {
-              this.list.forEach((i) => {
-                if (i.objectId == t) {
-                  const mergeInfo = _.merge(i, parseString[t])
-                  console.log(`更新设备${i.name}`, mergeInfo)
+            _this.list.forEach((t) => {
+              topicsKeys.forEach((j) => {
+                if (t.objectId == j) {
+                  const mergeInfo = _.merge(t, parseString[j])
+                  console.log(`更新设备${t.name}`, mergeInfo, parseString[j])
+                  _this.upkey = moment(new Date()).valueOf() + ''
                 }
               })
             })
