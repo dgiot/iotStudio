@@ -182,6 +182,7 @@
             :bm-label="bmLabel"
             :label="mapLabel"
             :map-center="mapLabel.position"
+            :markers="[mapLabel.position]"
             :nav-show="true"
             :scale-show="true"
             :scroll-wheel-zoom="true"
