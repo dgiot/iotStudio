@@ -1,6 +1,11 @@
 ## [4.5.4](https://github.com/dgiot/dgiot-dashboard/compare/v4.5.5...v4.5.4) (2022-06-22)
 
 
+### Bug Fixes
+
+* **other:** 修復设备列表订阅 ([27115ef](https://github.com/dgiot/dgiot-dashboard/commit/27115ef44de12c4986a98002173d385eb5593b54))
+
+
 ### Features
 
 * **components:** 设备管理 ([0a9756c](https://github.com/dgiot/dgiot-dashboard/commit/0a9756cadaa45a0796f345fa064c1f1f239af7ee))
