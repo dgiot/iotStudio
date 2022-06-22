@@ -1089,8 +1089,8 @@
       async subAllDevice() {
         let _this = this
         // await _this.$subscribe('$dg/user/devicestate/#')
-        _this.$dgiotBus.$off('devicestate')
-        _this.$dgiotBus.$on('devicestate', (Msg) => {
+        // _this.$dgiotBus.$off('devicestate')
+        _this.$dgiotBus.$on('$dg/user/devicestate', (Msg) => {
           const parseString = JSON.parse(Msg.payloadString)
           console.log('收到消息', parseString)
           if (parseString) {
@@ -1100,7 +1100,7 @@
                 if (t.objectId == j) {
                   const mergeInfo = _.merge(t, parseString[j])
                   console.log(`更新设备${t.name}`, mergeInfo, parseString[j])
-                  _this.upkey = moment(new Date()).valueOf() + ''
+                  // _this.upkey = moment(new Date()).valueOf() + ''
                 }
               })
             })
