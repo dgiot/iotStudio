@@ -1,6 +1,6 @@
 {
   "name": "@dgiot/dgiot-dashboard",
-  "version": "4.6.0",
+  "version": "4.5.5",
   "author": "h7ml",
   "license": "MPL-2.0",
   "private": false,
@@ -11,7 +11,7 @@
     "serve": "vue-cli-service serve",
     "test": "vue-cli-service lint --fix",
     "release": "npm run changelog:en && npm run changelog:zh",
-    "standard": "standard-version 0.0.1",
+    "standard": "standard-version -r patch -n",
     "dgiot:install": "start ./pnpm.sh",
     "build": "vue-cli-service build --report",
     "fix-memory-limit": "cross-env LIMIT=4096 increase-memory-limit",
