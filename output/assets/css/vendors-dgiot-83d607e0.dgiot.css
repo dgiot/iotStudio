@@ -2,7 +2,7 @@
  *  build: 杭州数蛙科技有限公司 
  *  copyright: dgiot-dashboard 
  *  author: h7ml(h7ml@qq.com) 
- *  Time: 2022年06月21日23时52分36秒
+ *  Time: 2022年06月22日11时30分38秒
  */
 @charset "UTF-8";
 /**
@@ -7302,7 +7302,6 @@ button::-moz-focus-inner {
   -webkit-touch-callout: none;
   -webkit-user-select: none;
   -moz-user-select: none;
-  -ms-user-select: none;
   user-select: none;
 }
 
@@ -7314,7 +7313,6 @@ button::-moz-focus-inner {
   -webkit-touch-callout: none;
   -webkit-user-select: none;
   -moz-user-select: none;
-  -ms-user-select: none;
   user-select: none;
 }
 
@@ -7513,7 +7511,6 @@ button::-moz-focus-inner {
 }
 
 .tox .tox-collection__item-container--column {
-  -ms-grid-row-align: center;
   align-self: center;
   flex: 1 1 auto;
   flex-direction: column;
@@ -7532,7 +7529,6 @@ button::-moz-focus-inner {
 }
 
 .tox .tox-collection__item-container--column.tox-collection__item-container--valign-middle {
-  -ms-grid-row-align: center;
   align-self: center;
 }
 
@@ -8971,7 +8967,6 @@ body.tox-dialog__disable-scroll {
   height: 100%;
   margin: 0;
   overflow: hidden;
-  -ms-scroll-chaining: none;
   overscroll-behavior: none;
   padding: 0;
   touch-action: pinch-zoom;
@@ -9294,11 +9289,9 @@ body.tox-dialog__disable-scroll {
   border-width: 1px;
   box-shadow: none;
   box-sizing: border-box;
-  display: -ms-grid;
   display: grid;
   font-size: 14px;
   font-weight: normal;
-  -ms-grid-columns: minmax(40px, 1fr) auto minmax(40px, 1fr);
   grid-template-columns: minmax(40px, 1fr) auto minmax(40px, 1fr);
   margin-top: 4px;
   opacity: 0;
@@ -9397,17 +9390,14 @@ body.tox-dialog__disable-scroll {
 }
 
 .tox .tox-notification__body {
-  -ms-grid-row-align: center;
   align-self: center;
   color: #222f3e;
   font-size: 14px;
   -ms-grid-column-span: 1;
   grid-column-end: 3;
-  -ms-grid-column: 2;
   grid-column-start: 2;
   -ms-grid-row-span: 1;
   grid-row-end: 2;
-  -ms-grid-row: 1;
   grid-row-start: 1;
   text-align: center;
   white-space: normal;
@@ -9424,17 +9414,13 @@ body.tox-dialog__disable-scroll {
 }
 
 .tox .tox-notification__icon {
-  -ms-grid-row-align: center;
   align-self: center;
   -ms-grid-column-span: 1;
   grid-column-end: 2;
-  -ms-grid-column: 1;
   grid-column-start: 1;
   -ms-grid-row-span: 1;
   grid-row-end: 2;
-  -ms-grid-row: 1;
   grid-row-start: 1;
-  -ms-grid-column-align: end;
   justify-self: end;
 }
 
@@ -9443,30 +9429,23 @@ body.tox-dialog__disable-scroll {
 }
 
 .tox .tox-notification__dismiss {
-  -ms-grid-row-align: start;
   align-self: start;
   -ms-grid-column-span: 1;
   grid-column-end: 4;
-  -ms-grid-column: 3;
   grid-column-start: 3;
   -ms-grid-row-span: 1;
   grid-row-end: 2;
-  -ms-grid-row: 1;
   grid-row-start: 1;
-  -ms-grid-column-align: end;
   justify-self: end;
 }
 
 .tox .tox-notification .tox-progress-bar {
   -ms-grid-column-span: 3;
   grid-column-end: 4;
-  -ms-grid-column: 1;
   grid-column-start: 1;
   -ms-grid-row-span: 1;
   grid-row-end: 3;
-  -ms-grid-row: 2;
   grid-row-start: 2;
-  -ms-grid-column-align: center;
   justify-self: center;
 }
 
@@ -9995,7 +9974,6 @@ body.tox-dialog__disable-scroll {
 }
 
 .tox .tox-tbtn--return {
-  -ms-grid-row-align: stretch;
   align-self: stretch;
   height: unset;
   width: 16px;
@@ -10498,7 +10476,6 @@ body.tox-dialog__disable-scroll {
   font-family: serif, Times, "Times New Roman";
   -webkit-user-select: none;
   -moz-user-select: none;
-  -ms-user-select: none;
   user-select: none;
 }
 
@@ -11371,7 +11348,6 @@ body.video-react-full-window .video-react-fullscreen {
   touch-action: none;
   -webkit-user-select: none;
   -moz-user-select: none;
-  -ms-user-select: none;
   user-select: none;
 }
 
@@ -11809,7 +11785,6 @@ body.video-react-full-window .video-react-fullscreen {
   /* Konqueror */
   -moz-user-select: none;
   /* Firefox */
-  -ms-user-select: none;
   /* Internet Explorer/Edge */
   user-select: none;
 }
@@ -11901,7 +11876,6 @@ td.rdtQuarter:hover {
   /* Konqueror */
   -moz-user-select: none;
   /* Firefox */
-  -ms-user-select: none;
   /* Internet Explorer/Edge */
   user-select: none;
 }
@@ -13363,7 +13337,6 @@ body {
   text-decoration: none;
   -webkit-user-select: none;
      -moz-user-select: none;
-      -ms-user-select: none;
           user-select: none;
 }
 .antd-AsideNav-item a:hover {
@@ -13672,7 +13645,6 @@ img.antd-AsideNav-itemIcon {
   vertical-align: middle;
   -webkit-user-select: none;
      -moz-user-select: none;
-      -ms-user-select: none;
           user-select: none;
   background: transparent;
   border: var(--Button-borderWidth) solid transparent;
@@ -14259,7 +14231,6 @@ input[type=button].antd-Button--block {
 .antd-Breadcrumb-separator {
   -webkit-user-select: none;
      -moz-user-select: none;
-      -ms-user-select: none;
           user-select: none;
   margin: 0 var(--gap-sm);
   text-align: center;
@@ -14289,7 +14260,6 @@ input[type=button].antd-Button--block {
   vertical-align: middle;
   -webkit-user-select: none;
      -moz-user-select: none;
-      -ms-user-select: none;
           user-select: none;
   color: var(--BreadcrumbDropdown-item-default-color);
   background-color: var(--BreadcrumbDropdown-item-default-bg);
@@ -14808,7 +14778,6 @@ input[type=button].antd-Button--block {
   text-align: center;
   -webkit-user-select: none;
      -moz-user-select: none;
-      -ms-user-select: none;
           user-select: none;
 }
 
@@ -14912,8 +14881,7 @@ input[type=button].antd-Button--block {
   left: -0.375rem;
   top: 50%;
   cursor: ew-resize;
-  -ms-writing-mode: tb-lr;
-      writing-mode: vertical-lr;
+  writing-mode: vertical-lr;
   width: 0.75rem;
   height: 1.5rem;
 }
@@ -14964,8 +14932,7 @@ input[type=button].antd-Button--block {
   right: -0.375rem;
   top: 50%;
   cursor: ew-resize;
-  -ms-writing-mode: tb-lr;
-      writing-mode: vertical-lr;
+  writing-mode: vertical-lr;
   width: 0.75rem;
   height: 1.5rem;
 }
@@ -15473,7 +15440,6 @@ input[type=button].antd-Button--block {
   background-color: var(--PickerColumns-bg);
   -webkit-user-select: none;
      -moz-user-select: none;
-      -ms-user-select: none;
           user-select: none;
   flex: 1;
   overflow: hidden;
@@ -16170,7 +16136,6 @@ input[type=button].antd-Button--block {
   list-style: none;
   -webkit-user-select: none;
      -moz-user-select: none;
-      -ms-user-select: none;
           user-select: none;
 }
 .antd-Tabs-links::before, .antd-Tabs-links::after {
@@ -16879,7 +16844,6 @@ input[type=button].antd-Button--block {
   list-style: none;
   -webkit-user-select: none;
      -moz-user-select: none;
-      -ms-user-select: none;
           user-select: none;
   margin: 0;
   padding: 0;
@@ -16918,7 +16882,6 @@ input[type=button].antd-Button--block {
   white-space: nowrap;
   -webkit-user-select: none;
      -moz-user-select: none;
-      -ms-user-select: none;
           user-select: none;
 }
 .antd-Nav .antd-Nav-list--tabs {
@@ -17219,8 +17182,7 @@ input[type=button].antd-Button--block {
   right: -0.375rem;
   top: 50%;
   cursor: ew-resize;
-  -ms-writing-mode: tb-lr;
-      writing-mode: vertical-lr;
+  writing-mode: vertical-lr;
   width: 0.75rem;
   height: 1.5rem;
   margin-top: -0.75rem;
@@ -17232,7 +17194,6 @@ input[type=button].antd-Button--block {
   text-align: center;
   -webkit-user-select: none;
      -moz-user-select: none;
-      -ms-user-select: none;
           user-select: none;
   color: #666;
 }
@@ -17305,7 +17266,6 @@ input[type=button].antd-Button--block {
   font-size: var(--fontSizeSm);
   -webkit-user-select: none;
      -moz-user-select: none;
-      -ms-user-select: none;
           user-select: none;
 }
 .antd-Remark-icon > svg {
@@ -18049,7 +18009,6 @@ input[type=button].antd-Button--block {
   border: none;
   -webkit-user-select: none;
      -moz-user-select: none;
-      -ms-user-select: none;
           user-select: none;
 }
 .antd-DropDown-menu-root {
@@ -18078,7 +18037,6 @@ input[type=button].antd-Button--block {
   vertical-align: middle;
   -webkit-user-select: none;
      -moz-user-select: none;
-      -ms-user-select: none;
           user-select: none;
   color: var(--DropDown-menuItem-color);
   -webkit-text-decoration: var(--link-decoration);
@@ -18554,7 +18512,6 @@ input[type=button].antd-Button--block {
   cursor: not-allowed;
   -webkit-user-select: none;
      -moz-user-select: none;
-      -ms-user-select: none;
           user-select: none;
   color: var(--text--muted-color);
 }
@@ -18877,7 +18834,6 @@ input[type=button].antd-Button--block {
   border-radius: 5px;
   -webkit-user-select: none;
      -moz-user-select: none;
-      -ms-user-select: none;
           user-select: none;
 }
 
@@ -18887,7 +18843,6 @@ input[type=button].antd-Button--block {
   display: inline-block;
   -webkit-user-select: none;
      -moz-user-select: none;
-      -ms-user-select: none;
           user-select: none;
 }
 
@@ -19309,7 +19264,6 @@ input[type=button].antd-Button--block {
   vertical-align: middle;
   -webkit-user-select: none;
      -moz-user-select: none;
-      -ms-user-select: none;
           user-select: none;
   line-height: calc( var(--Form-input-lineHeight) * var(--Form-input-fontSize) - 0.125rem );
   display: inline-block;
@@ -19344,7 +19298,6 @@ input[type=button].antd-Button--block {
   cursor: pointer;
   -webkit-user-select: none;
      -moz-user-select: none;
-      -ms-user-select: none;
           user-select: none;
   margin-left: var(--gap-xs);
   margin-top: var(--gap-xs);
@@ -19581,7 +19534,6 @@ input[type=button].antd-Button--block {
   cursor: col-resize;
   -webkit-user-select: none;
      -moz-user-select: none;
-      -ms-user-select: none;
           user-select: none;
   opacity: 0.5;
   z-index: 3000;
@@ -21986,7 +21938,6 @@ input[type=button].antd-Button--block {
   vertical-align: middle;
   -webkit-user-select: none;
      -moz-user-select: none;
-      -ms-user-select: none;
           user-select: none;
   color: var(--link-color);
   -webkit-text-decoration: var(--link-decoration);
@@ -22091,7 +22042,6 @@ input[type=button].antd-Button--block {
   overflow: hidden;
   -webkit-user-select: none;
      -moz-user-select: none;
-      -ms-user-select: none;
           user-select: none;
 }
 .antd-ColumnToggler-modal-content .antd-ColumnToggler-menuItem label > i {
@@ -23198,7 +23148,6 @@ input[type=button].antd-Button--block {
 .antd-Pagination > li > span {
   -webkit-user-select: none;
      -moz-user-select: none;
-      -ms-user-select: none;
           user-select: none;
   cursor: pointer;
   position: relative;
@@ -23709,7 +23658,6 @@ input[type=button].antd-Button--block {
   align-items: center;
   -webkit-user-select: none;
      -moz-user-select: none;
-      -ms-user-select: none;
           user-select: none;
 }
 .antd-ImageGallery-main > img {
@@ -23765,7 +23713,6 @@ input[type=button].antd-Button--block {
   flex-direction: row;
   -webkit-user-select: none;
      -moz-user-select: none;
-      -ms-user-select: none;
           user-select: none;
 }
 .antd-ImageGallery-prevList, .antd-ImageGallery-nextList {
@@ -24046,16 +23993,10 @@ input[type=button].antd-Button--block {
   -moz-user-select: none;
        user-select: none;
 }
-.antd-InputBox input:-ms-input-placeholder {
-  color: var(--Form-input-placeholderColor);
-  -ms-user-select: none;
-      user-select: none;
-}
 .antd-InputBox input::placeholder {
   color: var(--Form-input-placeholderColor);
   -webkit-user-select: none;
      -moz-user-select: none;
-      -ms-user-select: none;
           user-select: none;
 }
 .antd-InputBox:hover {
@@ -24385,16 +24326,10 @@ input[type=button].antd-Button--block {
   -moz-user-select: none;
        user-select: none;
 }
-.antd-ResultBox input:-ms-input-placeholder {
-  color: var(--Form-input-placeholderColor);
-  -ms-user-select: none;
-      user-select: none;
-}
 .antd-ResultBox input::placeholder {
   color: var(--Form-input-placeholderColor);
   -webkit-user-select: none;
      -moz-user-select: none;
-      -ms-user-select: none;
           user-select: none;
 }
 .antd-ResultBox:hover {
@@ -24532,7 +24467,6 @@ input[type=button].antd-Button--block {
   margin-bottom: 0.125rem;
   -webkit-user-select: none;
      -moz-user-select: none;
-      -ms-user-select: none;
           user-select: none;
 }
 .antd-ResultBox-value > a {
@@ -24564,7 +24498,6 @@ input[type=button].antd-Button--block {
   color: var(--Form-input-placeholderColor);
   -webkit-user-select: none;
      -moz-user-select: none;
-      -ms-user-select: none;
           user-select: none;
 }
 .antd-ResultBox > input {
@@ -24728,16 +24661,10 @@ input[type=button].antd-Button--block {
   -moz-user-select: none;
        user-select: none;
 }
-.antd-SearchBox > input:-ms-input-placeholder {
-  color: var(--Form-input-placeholderColor);
-  -ms-user-select: none;
-      user-select: none;
-}
 .antd-SearchBox > input::placeholder {
   color: var(--Form-input-placeholderColor);
   -webkit-user-select: none;
      -moz-user-select: none;
-      -ms-user-select: none;
           user-select: none;
 }
 .antd-SearchBox-clearable {
@@ -25800,16 +25727,10 @@ fieldset.antd-Collapse--lg:after {
   -moz-user-select: none;
        user-select: none;
 }
-.antd-TextControl-input input:-ms-input-placeholder {
-  color: var(--Form-input-placeholderColor);
-  -ms-user-select: none;
-      user-select: none;
-}
 .antd-TextControl-input input::placeholder {
   color: var(--Form-input-placeholderColor);
   -webkit-user-select: none;
      -moz-user-select: none;
-      -ms-user-select: none;
           user-select: none;
 }
 .antd-TextControl-input:hover {
@@ -25881,7 +25802,6 @@ fieldset.antd-Collapse--lg:after {
   color: var(--Form-input-placeholderColor);
   -webkit-user-select: none;
      -moz-user-select: none;
-      -ms-user-select: none;
           user-select: none;
   position: absolute;
   left: var(--Form-input-paddingX);
@@ -26015,7 +25935,6 @@ fieldset.antd-Collapse--lg:after {
 .antd-TextControl-value {
   -webkit-user-select: none;
      -moz-user-select: none;
-      -ms-user-select: none;
           user-select: none;
   line-height: calc( var(--Form-input-lineHeight) * var(--Form-input-fontSize) );
   vertical-align: middle;
@@ -26127,16 +26046,10 @@ input.antd-TextControl-input-password {
   -moz-user-select: none;
        user-select: none;
 }
-.antd-TextareaControl-input input:-ms-input-placeholder {
-  color: var(--Form-input-placeholderColor);
-  -ms-user-select: none;
-      user-select: none;
-}
 .antd-TextareaControl-input input::placeholder {
   color: var(--Form-input-placeholderColor);
   -webkit-user-select: none;
      -moz-user-select: none;
-      -ms-user-select: none;
           user-select: none;
 }
 .antd-TextareaControl-input:hover {
@@ -26227,9 +26140,6 @@ input.antd-TextControl-input-password {
 .antd-TextareaControl > textarea::-moz-placeholder {
   color: var(--Form-input-placeholderColor);
 }
-.antd-TextareaControl > textarea:-ms-input-placeholder {
-  color: var(--Form-input-placeholderColor);
-}
 .antd-TextareaControl > textarea::placeholder {
   color: var(--Form-input-placeholderColor);
 }
@@ -26284,7 +26194,6 @@ input.antd-TextControl-input-password {
   font-weight: var(--fontWeightNormal);
   -webkit-user-select: none;
      -moz-user-select: none;
-      -ms-user-select: none;
           user-select: none;
   pointer-events: none;
 }
@@ -26707,7 +26616,6 @@ input.antd-TextControl-input-password {
   overflow: auto;
   -webkit-user-select: none;
      -moz-user-select: none;
-      -ms-user-select: none;
           user-select: none;
   padding: var(--gap-xs) 0;
 }
@@ -26724,7 +26632,6 @@ input.antd-TextControl-input-password {
   cursor: pointer;
   -webkit-user-select: none;
      -moz-user-select: none;
-      -ms-user-select: none;
           user-select: none;
 }
 .antd-GroupedSelection-item > .antd-Checkbox {
@@ -26824,7 +26731,6 @@ input.antd-TextControl-input-password {
   cursor: pointer;
   -webkit-user-select: none;
      -moz-user-select: none;
-      -ms-user-select: none;
           user-select: none;
 }
 .antd-TreeSelection-itemInner > .antd-Checkbox {
@@ -26883,7 +26789,6 @@ input.antd-TextControl-input-password {
   cursor: pointer;
   -webkit-user-select: none;
      -moz-user-select: none;
-      -ms-user-select: none;
           user-select: none;
 }
 .antd-ChainedSelection-item > .antd-Checkbox {
@@ -26986,16 +26891,10 @@ input.antd-TextControl-input-password {
   -moz-user-select: none;
        user-select: none;
 }
-.antd-CityPicker-input:-ms-input-placeholder {
-  color: var(--Form-input-placeholderColor);
-  -ms-user-select: none;
-      user-select: none;
-}
 .antd-CityPicker-input::placeholder {
   color: var(--Form-input-placeholderColor);
   -webkit-user-select: none;
      -moz-user-select: none;
-      -ms-user-select: none;
           user-select: none;
 }
 .antd-CityPicker-input:focus {
@@ -27030,16 +26929,10 @@ input.antd-TextControl-input-password {
   -moz-user-select: none;
        user-select: none;
 }
-.antd-CityArea-Input:-ms-input-placeholder {
-  color: var(--Form-input-placeholderColor);
-  -ms-user-select: none;
-      user-select: none;
-}
 .antd-CityArea-Input::placeholder {
   color: var(--Form-input-placeholderColor);
   -webkit-user-select: none;
      -moz-user-select: none;
-      -ms-user-select: none;
           user-select: none;
 }
 .antd-CityArea-Input:focus {
@@ -27173,7 +27066,6 @@ input.antd-TextControl-input-password {
 }
 .antd-Number-handler-up-inner, .antd-Number-handler-down-inner {
   -moz-user-select: none;
-   -ms-user-select: none;
        user-select: none;
   -webkit-user-select: none;
   display: inline-block;
@@ -27454,7 +27346,6 @@ input.antd-TextControl-input-password {
 .antd-Select-valueWrap {
   -webkit-user-select: none;
      -moz-user-select: none;
-      -ms-user-select: none;
           user-select: none;
   position: relative;
   flex-grow: 1;
@@ -27472,7 +27363,6 @@ input.antd-TextControl-input-password {
   line-height: var(--Form-input-lineHeight);
   -webkit-user-select: none;
      -moz-user-select: none;
-      -ms-user-select: none;
           user-select: none;
   white-space: nowrap;
   color: var(--Form-select-placeholderColor);
@@ -27511,7 +27401,6 @@ input.antd-TextControl-input-password {
   white-space: normal;
   -webkit-user-select: none;
      -moz-user-select: none;
-      -ms-user-select: none;
           user-select: none;
   line-height: calc( var(--Form-input-lineHeight) * var(--Form-input-fontSize) - 0.125rem );
   display: inline-block;
@@ -27594,7 +27483,6 @@ input.antd-TextControl-input-password {
   overflow: auto;
   -webkit-user-select: none;
      -moz-user-select: none;
-      -ms-user-select: none;
           user-select: none;
 }
 .antd-Select-menu .antd-Checkbox--sm > i {
@@ -27674,7 +27562,6 @@ input.antd-TextControl-input-password {
   font-size: var(--Form-select-input-fontSize);
   -webkit-user-select: none;
      -moz-user-select: none;
-      -ms-user-select: none;
           user-select: none;
   padding: calc( ( var(--Form-select-menu-height) - var(--Form-input-lineHeight) * var(--Form-input-fontSize) ) / 2 ) var(--Form-select-paddingX);
 }
@@ -27841,7 +27728,6 @@ input.antd-TextControl-input-password {
   position: relative;
   -webkit-user-select: none;
      -moz-user-select: none;
-      -ms-user-select: none;
           user-select: none;
   font-size: var(--ListControl-fontSize);
   display: inline-block;
@@ -27969,7 +27855,6 @@ input.antd-TextControl-input-password {
   color: var(--DatePicker-placeholderColor);
   -webkit-user-select: none;
      -moz-user-select: none;
-      -ms-user-select: none;
           user-select: none;
   margin-right: var(--gap-base);
   flex-basis: 0;
@@ -28106,9 +27991,6 @@ input.antd-TextControl-input-password {
 .antd-ColorPicker-input::-moz-placeholder {
   color: var(--ColorPicker-placeholderColor);
 }
-.antd-ColorPicker-input:-ms-input-placeholder {
-  color: var(--ColorPicker-placeholderColor);
-}
 .antd-ColorPicker-input::placeholder {
   color: var(--ColorPicker-placeholderColor);
 }
@@ -28125,9 +28007,6 @@ input.antd-TextControl-input-password {
   color: var(--ColorPicker-onDisabled-color);
 }
 .antd-ColorPicker.is-disabled > .antd-ColorPicker-input::-moz-placeholder {
-  color: var(--ColorPicker-onDisabled-color);
-}
-.antd-ColorPicker.is-disabled > .antd-ColorPicker-input:-ms-input-placeholder {
   color: var(--ColorPicker-onDisabled-color);
 }
 .antd-ColorPicker.is-disabled > .antd-ColorPicker-input::placeholder {
@@ -28267,7 +28146,6 @@ input.antd-TextControl-input-password {
   color: var(--DatePicker-placeholderColor);
   -webkit-user-select: none;
      -moz-user-select: none;
-      -ms-user-select: none;
           user-select: none;
   margin-right: var(--gap-base);
   min-width: 3.125rem;
@@ -28414,7 +28292,6 @@ input.antd-TextControl-input-password {
 .rdt {
   -webkit-user-select: none;
      -moz-user-select: none;
-      -ms-user-select: none;
           user-select: none;
   font-size: var(--Calendar-fontSize);
   color: var(--Calendar-color);
@@ -28652,7 +28529,6 @@ input.antd-TextControl-input-password {
   text-align: center;
   -webkit-user-select: none;
      -moz-user-select: none;
-      -ms-user-select: none;
           user-select: none;
   cursor: pointer;
   text-decoration: none;
@@ -28891,7 +28767,6 @@ td.rdtQuarter.rdtDisabled:hover {
   color: var(--DatePicker-placeholderColor);
   -webkit-user-select: none;
      -moz-user-select: none;
-      -ms-user-select: none;
           user-select: none;
   margin-right: var(--gap-base);
   flex-basis: 0;
@@ -30015,7 +29890,6 @@ td.rdtQuarter.rdtDisabled:hover {
   position: relative;
   -webkit-user-select: none;
      -moz-user-select: none;
-      -ms-user-select: none;
           user-select: none;
   margin-bottom: 0.25rem;
   padding-left: var(--Tree-icon-gap);
@@ -30097,16 +29971,10 @@ td.rdtQuarter.rdtDisabled:hover {
   -moz-user-select: none;
        user-select: none;
 }
-.antd-Tree-itemInput > input:-ms-input-placeholder {
-  color: var(--Form-input-placeholderColor);
-  -ms-user-select: none;
-      user-select: none;
-}
 .antd-Tree-itemInput > input::placeholder {
   color: var(--Form-input-placeholderColor);
   -webkit-user-select: none;
      -moz-user-select: none;
-      -ms-user-select: none;
           user-select: none;
 }
 .antd-Tree-itemInput > input:focus {
@@ -30249,16 +30117,10 @@ td.rdtQuarter.rdtDisabled:hover {
   -moz-user-select: none;
        user-select: none;
 }
-.antd-TreeSelect-input input:-ms-input-placeholder {
-  color: var(--Form-input-placeholderColor);
-  -ms-user-select: none;
-      user-select: none;
-}
 .antd-TreeSelect-input input::placeholder {
   color: var(--Form-input-placeholderColor);
   -webkit-user-select: none;
      -moz-user-select: none;
-      -ms-user-select: none;
           user-select: none;
 }
 .antd-TreeSelect-input:hover {
@@ -30647,7 +30509,6 @@ td.rdtQuarter.rdtDisabled:hover {
   margin: 2px 3px;
   -webkit-user-select: none;
      -moz-user-select: none;
-      -ms-user-select: none;
           user-select: none;
 }
 .antd-SubForm-valueLabel {
@@ -30730,7 +30591,6 @@ td.rdtQuarter.rdtDisabled:hover {
   color: var(--Form-input-placeholderColor);
   -webkit-user-select: none;
      -moz-user-select: none;
-      -ms-user-select: none;
           user-select: none;
   padding: 4px;
 }
@@ -30774,16 +30634,10 @@ td.rdtQuarter.rdtDisabled:hover {
   -moz-user-select: none;
        user-select: none;
 }
-.antd-Picker-input input:-ms-input-placeholder {
-  color: var(--Form-input-placeholderColor);
-  -ms-user-select: none;
-      user-select: none;
-}
 .antd-Picker-input input::placeholder {
   color: var(--Form-input-placeholderColor);
   -webkit-user-select: none;
      -moz-user-select: none;
-      -ms-user-select: none;
           user-select: none;
 }
 .antd-Picker-input:hover {
@@ -30864,7 +30718,6 @@ td.rdtQuarter.rdtDisabled:hover {
   color: var(--Form-input-placeholderColor);
   -webkit-user-select: none;
      -moz-user-select: none;
-      -ms-user-select: none;
           user-select: none;
   position: absolute;
   line-height: var(--Form-input-lineHeight);
@@ -30892,7 +30745,6 @@ td.rdtQuarter.rdtDisabled:hover {
   cursor: pointer;
   -webkit-user-select: none;
      -moz-user-select: none;
-      -ms-user-select: none;
           user-select: none;
   white-space: nowrap;
   vertical-align: middle;
@@ -30999,7 +30851,6 @@ td.rdtQuarter.rdtDisabled:hover {
   cursor: pointer;
   -webkit-user-select: none;
      -moz-user-select: none;
-      -ms-user-select: none;
           user-select: none;
   border: var(--TagControl-sugBtn-borderWidth) solid transparent;
   padding: var(--TagControl-sugBtn-paddingY) var(--TagControl-sugBtn-paddingX);
@@ -31087,7 +30938,6 @@ td.rdtQuarter.rdtDisabled:hover {
   cursor: pointer;
   -webkit-user-select: none;
      -moz-user-select: none;
-      -ms-user-select: none;
           user-select: none;
   color: var(--Rating-inactive-color);
 }
@@ -31238,7 +31088,6 @@ td.rdtQuarter.rdtDisabled:hover {
 .antd-Transfer-checkAll, .antd-Transfer-clearAll {
   -webkit-user-select: none;
      -moz-user-select: none;
-      -ms-user-select: none;
           user-select: none;
   cursor: pointer;
 }
@@ -31429,7 +31278,6 @@ td.rdtQuarter.rdtDisabled:hover {
   font-size: var(--Form-select-input-fontSize);
   -webkit-user-select: none;
      -moz-user-select: none;
-      -ms-user-select: none;
           user-select: none;
   padding: calc( ( var(--Form-select-menu-height) - var(--Form-input-lineHeight) * var(--Form-input-fontSize) ) / 2 ) var(--Form-select-paddingX);
 }
@@ -31529,7 +31377,6 @@ td.rdtQuarter.rdtDisabled:hover {
   cursor: pointer;
   -webkit-user-select: none;
      -moz-user-select: none;
-      -ms-user-select: none;
           user-select: none;
   padding: 0 0.375rem;
 }
@@ -31570,7 +31417,6 @@ td.rdtQuarter.rdtDisabled:hover {
   text-overflow: ellipsis;
   -webkit-user-select: none;
      -moz-user-select: none;
-      -ms-user-select: none;
           user-select: none;
 }
 .antd-Cascader-option-selectedNum {
@@ -31632,16 +31478,10 @@ td.rdtQuarter.rdtDisabled:hover {
   -moz-user-select: none;
        user-select: none;
 }
-.antd-IconPickerControl-input input:-ms-input-placeholder {
-  color: var(--Form-input-placeholderColor);
-  -ms-user-select: none;
-      user-select: none;
-}
 .antd-IconPickerControl-input input::placeholder {
   color: var(--Form-input-placeholderColor);
   -webkit-user-select: none;
      -moz-user-select: none;
-      -ms-user-select: none;
           user-select: none;
 }
 .antd-IconPickerControl-input:hover {
@@ -31713,7 +31553,6 @@ td.rdtQuarter.rdtDisabled:hover {
   color: var(--Form-input-placeholderColor);
   -webkit-user-select: none;
      -moz-user-select: none;
-      -ms-user-select: none;
           user-select: none;
   position: absolute;
   left: var(--Form-input-paddingX);
@@ -31764,7 +31603,6 @@ td.rdtQuarter.rdtDisabled:hover {
   font-size: var(--fontSizeSm);
   -webkit-user-select: none;
      -moz-user-select: none;
-      -ms-user-select: none;
           user-select: none;
 }
 .antd-IconPickerControl-tab.active {
@@ -31794,7 +31632,6 @@ td.rdtQuarter.rdtDisabled:hover {
 .antd-IconPickerControl-value {
   -webkit-user-select: none;
      -moz-user-select: none;
-      -ms-user-select: none;
           user-select: none;
   line-height: calc( var(--Form-input-lineHeight) * var(--Form-input-fontSize) );
   vertical-align: middle;
@@ -32491,7 +32328,6 @@ td.rdtQuarter.rdtDisabled:hover {
   cursor: pointer;
   -webkit-user-select: none;
      -moz-user-select: none;
-      -ms-user-select: none;
           user-select: none;
   padding: 0 1rem;
   border-bottom: 0.0625rem solid var(--UserSelect--border-color);
@@ -32512,7 +32348,6 @@ td.rdtQuarter.rdtDisabled:hover {
   text-align: left;
   -webkit-user-select: none;
      -moz-user-select: none;
-      -ms-user-select: none;
           user-select: none;
   display: flex;
   align-items: center;
@@ -32780,7 +32615,6 @@ td.rdtQuarter.rdtDisabled:hover {
 .antd-AnchorNav--horizontal .antd-AnchorNav-link-wrap {
   -webkit-user-select: none;
      -moz-user-select: none;
-      -ms-user-select: none;
           user-select: none;
   margin: 0px;
   padding: 0px;
@@ -34596,7 +34430,6 @@ a.text-black:hover {
 .no-select {
   -webkit-user-select: none;
      -moz-user-select: none;
-      -ms-user-select: none;
           user-select: none;
 }
 
