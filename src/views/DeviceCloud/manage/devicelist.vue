@@ -1089,8 +1089,8 @@
       async subAllDevice() {
         let _this = this
         // await _this.$subscribe('$dg/user/devicestate/#')
-        _this.$dgiotBus.$off(_this.$mqttInfo.topicKey)
-        _this.$dgiotBus.$on(_this.$mqttInfo.topicKey, (Msg) => {
+        _this.$dgiotBus.$off('devicestate')
+        _this.$dgiotBus.$on('devicestate', (Msg) => {
           const parseString = JSON.parse(Msg.payloadString)
           console.log('收到消息', parseString)
           if (parseString) {

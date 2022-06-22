@@ -3,6 +3,7 @@
 
 ### Features
 
+* **components:** 设备管理 ([0a9756c](https://github.com/dgiot/dgiot-dashboard/commit/0a9756cadaa45a0796f345fa064c1f1f239af7ee))
 * **projects:** scripts ([d4566d9](https://github.com/dgiot/dgiot-dashboard/commit/d4566d90c7ca08ef84107f2a7ff3b8b8cf0da6e8))
 
 
