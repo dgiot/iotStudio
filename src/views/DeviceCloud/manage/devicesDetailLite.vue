@@ -12,6 +12,7 @@
             <dgiot-baidu-map
               ref="map"
               :bmLabel="bmLabel"
+              :markers="[mapLabel.position]"
               :label="mapLabel"
               :navShow="true"
               :scaleShow="true"
