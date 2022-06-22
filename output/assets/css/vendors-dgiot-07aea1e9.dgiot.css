@@ -2,7 +2,7 @@
  *  build: 杭州数蛙科技有限公司 
  *  copyright: dgiot-dashboard 
  *  author: h7ml(h7ml@qq.com) 
- *  Time: 2022年06月21日23时52分36秒
+ *  Time: 2022年06月22日11时30分38秒
  */
 /*!
  * Font Awesome Free 6.1.1 by @fontawesome - https://fontawesome.com
@@ -21061,7 +21061,6 @@ readers do not read off random characters that represent icons */
   -webkit-touch-callout: none;
   -webkit-user-select: none;
   -moz-user-select: none;
-  -ms-user-select: none;
   user-select: none;
 }
 
@@ -21073,7 +21072,6 @@ readers do not read off random characters that represent icons */
   -webkit-touch-callout: none;
   -webkit-user-select: none;
   -moz-user-select: none;
-  -ms-user-select: none;
   user-select: none;
 }
 
@@ -21272,7 +21270,6 @@ readers do not read off random characters that represent icons */
 }
 
 .tox .tox-collection__item-container--column {
-  -ms-grid-row-align: center;
   align-self: center;
   flex: 1 1 auto;
   flex-direction: column;
@@ -21291,7 +21288,6 @@ readers do not read off random characters that represent icons */
 }
 
 .tox .tox-collection__item-container--column.tox-collection__item-container--valign-middle {
-  -ms-grid-row-align: center;
   align-self: center;
 }
 
@@ -22737,7 +22733,6 @@ readers do not read off random characters that represent icons */
   height: 100%;
   margin: 0;
   overflow: hidden;
-  -ms-scroll-chaining: none;
   overscroll-behavior: none;
   padding: 0;
   touch-action: pinch-zoom;
@@ -23061,11 +23056,9 @@ readers do not read off random characters that represent icons */
   border-width: 1px;
   box-shadow: none;
   box-sizing: border-box;
-  display: -ms-grid;
   display: grid;
   font-size: 14px;
   font-weight: normal;
-  -ms-grid-columns: minmax(40px, 1fr) auto minmax(40px, 1fr);
   grid-template-columns: minmax(40px, 1fr) auto minmax(40px, 1fr);
   margin-top: 4px;
   opacity: 0;
@@ -23164,17 +23157,14 @@ readers do not read off random characters that represent icons */
 }
 
 .tox .tox-notification__body {
-  -ms-grid-row-align: center;
   align-self: center;
   color: #222f3e;
   font-size: 14px;
   -ms-grid-column-span: 1;
   grid-column-end: 3;
-  -ms-grid-column: 2;
   grid-column-start: 2;
   -ms-grid-row-span: 1;
   grid-row-end: 2;
-  -ms-grid-row: 1;
   grid-row-start: 1;
   text-align: center;
   white-space: normal;
@@ -23191,17 +23181,13 @@ readers do not read off random characters that represent icons */
 }
 
 .tox .tox-notification__icon {
-  -ms-grid-row-align: center;
   align-self: center;
   -ms-grid-column-span: 1;
   grid-column-end: 2;
-  -ms-grid-column: 1;
   grid-column-start: 1;
   -ms-grid-row-span: 1;
   grid-row-end: 2;
-  -ms-grid-row: 1;
   grid-row-start: 1;
-  -ms-grid-column-align: end;
   justify-self: end;
 }
 
@@ -23210,30 +23196,23 @@ readers do not read off random characters that represent icons */
 }
 
 .tox .tox-notification__dismiss {
-  -ms-grid-row-align: start;
   align-self: start;
   -ms-grid-column-span: 1;
   grid-column-end: 4;
-  -ms-grid-column: 3;
   grid-column-start: 3;
   -ms-grid-row-span: 1;
   grid-row-end: 2;
-  -ms-grid-row: 1;
   grid-row-start: 1;
-  -ms-grid-column-align: end;
   justify-self: end;
 }
 
 .tox .tox-notification .tox-progress-bar {
   -ms-grid-column-span: 3;
   grid-column-end: 4;
-  -ms-grid-column: 1;
   grid-column-start: 1;
   -ms-grid-row-span: 1;
   grid-row-end: 3;
-  -ms-grid-row: 2;
   grid-row-start: 2;
-  -ms-grid-column-align: center;
   justify-self: center;
 }
 
@@ -23765,7 +23744,6 @@ readers do not read off random characters that represent icons */
 }
 
 .tox .tox-tbtn--return {
-  -ms-grid-row-align: stretch;
   align-self: stretch;
   height: unset;
   width: 16px;
@@ -24304,7 +24282,6 @@ readers do not read off random characters that represent icons */
   font-family: serif, Times, "Times New Roman";
   -webkit-user-select: none;
   -moz-user-select: none;
-  -ms-user-select: none;
   user-select: none;
 }
 
@@ -25212,7 +25189,6 @@ readers do not read off random characters that represent icons */
   touch-action: none;
   -webkit-user-select: none;
   -moz-user-select: none;
-  -ms-user-select: none;
   user-select: none;
 }
 
@@ -25658,7 +25634,6 @@ readers do not read off random characters that represent icons */
   /* Konqueror */
   -moz-user-select: none;
   /* Firefox */
-  -ms-user-select: none;
   /* Internet Explorer/Edge */
   user-select: none;
 }
@@ -25751,7 +25726,6 @@ readers do not read off random characters that represent icons */
   /* Konqueror */
   -moz-user-select: none;
   /* Firefox */
-  -ms-user-select: none;
   /* Internet Explorer/Edge */
   user-select: none;
 }
@@ -27360,7 +27334,6 @@ readers do not read off random characters that represent icons */
   text-decoration: none;
   -webkit-user-select: none;
      -moz-user-select: none;
-      -ms-user-select: none;
           user-select: none;
 }
 
@@ -27722,7 +27695,6 @@ readers do not read off random characters that represent icons */
   vertical-align: middle;
   -webkit-user-select: none;
      -moz-user-select: none;
-      -ms-user-select: none;
           user-select: none;
   background: transparent;
   border: var(--Button-borderWidth) solid transparent;
@@ -28436,7 +28408,6 @@ readers do not read off random characters that represent icons */
 .amis-scope .cxd-Breadcrumb-separator {
   -webkit-user-select: none;
      -moz-user-select: none;
-      -ms-user-select: none;
           user-select: none;
   margin: 0 var(--gap-sm);
   text-align: center;
@@ -28468,7 +28439,6 @@ readers do not read off random characters that represent icons */
   vertical-align: middle;
   -webkit-user-select: none;
      -moz-user-select: none;
-      -ms-user-select: none;
           user-select: none;
   color: var(--BreadcrumbDropdown-item-default-color);
   background-color: var(--BreadcrumbDropdown-item-default-bg);
@@ -29066,7 +29036,6 @@ readers do not read off random characters that represent icons */
   text-align: center;
   -webkit-user-select: none;
      -moz-user-select: none;
-      -ms-user-select: none;
           user-select: none;
 }
 
@@ -29179,8 +29148,7 @@ readers do not read off random characters that represent icons */
   left: -0.375rem;
   top: 50%;
   cursor: ew-resize;
-  -ms-writing-mode: tb-lr;
-      writing-mode: vertical-lr;
+  writing-mode: vertical-lr;
   width: 0.75rem;
   height: 1.5rem;
 }
@@ -29235,8 +29203,7 @@ readers do not read off random characters that represent icons */
   right: -0.375rem;
   top: 50%;
   cursor: ew-resize;
-  -ms-writing-mode: tb-lr;
-      writing-mode: vertical-lr;
+  writing-mode: vertical-lr;
   width: 0.75rem;
   height: 1.5rem;
 }
@@ -29826,7 +29793,6 @@ readers do not read off random characters that represent icons */
   background-color: var(--PickerColumns-bg);
   -webkit-user-select: none;
      -moz-user-select: none;
-      -ms-user-select: none;
           user-select: none;
   flex: 1;
   overflow: hidden;
@@ -30649,7 +30615,6 @@ readers do not read off random characters that represent icons */
   list-style: none;
   -webkit-user-select: none;
      -moz-user-select: none;
-      -ms-user-select: none;
           user-select: none;
 }
 
@@ -31513,7 +31478,6 @@ readers do not read off random characters that represent icons */
   list-style: none;
   -webkit-user-select: none;
      -moz-user-select: none;
-      -ms-user-select: none;
           user-select: none;
   margin: 0;
   padding: 0;
@@ -31558,7 +31522,6 @@ readers do not read off random characters that represent icons */
   white-space: nowrap;
   -webkit-user-select: none;
      -moz-user-select: none;
-      -ms-user-select: none;
           user-select: none;
 }
 
@@ -31918,8 +31881,7 @@ readers do not read off random characters that represent icons */
   right: -0.375rem;
   top: 50%;
   cursor: ew-resize;
-  -ms-writing-mode: tb-lr;
-      writing-mode: vertical-lr;
+  writing-mode: vertical-lr;
   width: 0.75rem;
   height: 1.5rem;
   margin-top: -0.75rem;
@@ -31931,7 +31893,6 @@ readers do not read off random characters that represent icons */
   text-align: center;
   -webkit-user-select: none;
      -moz-user-select: none;
-      -ms-user-select: none;
           user-select: none;
   color: #666;
 }
@@ -32012,7 +31973,6 @@ readers do not read off random characters that represent icons */
   font-size: var(--fontSizeSm);
   -webkit-user-select: none;
      -moz-user-select: none;
-      -ms-user-select: none;
           user-select: none;
 }
 
@@ -32898,7 +32858,6 @@ readers do not read off random characters that represent icons */
   border: none;
   -webkit-user-select: none;
      -moz-user-select: none;
-      -ms-user-select: none;
           user-select: none;
 }
 
@@ -32931,7 +32890,6 @@ readers do not read off random characters that represent icons */
   vertical-align: middle;
   -webkit-user-select: none;
      -moz-user-select: none;
-      -ms-user-select: none;
           user-select: none;
   color: var(--DropDown-menuItem-color);
   -webkit-text-decoration: var(--link-decoration);
@@ -33508,7 +33466,6 @@ readers do not read off random characters that represent icons */
   cursor: not-allowed;
   -webkit-user-select: none;
      -moz-user-select: none;
-      -ms-user-select: none;
           user-select: none;
   color: var(--text--muted-color);
 }
@@ -33896,7 +33853,6 @@ readers do not read off random characters that represent icons */
   border-radius: 5px;
   -webkit-user-select: none;
      -moz-user-select: none;
-      -ms-user-select: none;
           user-select: none;
 }
 
@@ -33906,7 +33862,6 @@ readers do not read off random characters that represent icons */
   display: inline-block;
   -webkit-user-select: none;
      -moz-user-select: none;
-      -ms-user-select: none;
           user-select: none;
 }
 
@@ -34420,7 +34375,6 @@ readers do not read off random characters that represent icons */
   vertical-align: middle;
   -webkit-user-select: none;
      -moz-user-select: none;
-      -ms-user-select: none;
           user-select: none;
   line-height: calc( var(--Form-input-lineHeight) * var(--Form-input-fontSize) - 0.125rem );
   display: inline-block;
@@ -34461,7 +34415,6 @@ readers do not read off random characters that represent icons */
   cursor: pointer;
   -webkit-user-select: none;
      -moz-user-select: none;
-      -ms-user-select: none;
           user-select: none;
   margin-left: var(--gap-xs);
   margin-top: var(--gap-xs);
@@ -34753,7 +34706,6 @@ readers do not read off random characters that represent icons */
   cursor: col-resize;
   -webkit-user-select: none;
      -moz-user-select: none;
-      -ms-user-select: none;
           user-select: none;
   opacity: 0.5;
   z-index: 3000;
@@ -37876,7 +37828,6 @@ readers do not read off random characters that represent icons */
   vertical-align: middle;
   -webkit-user-select: none;
      -moz-user-select: none;
-      -ms-user-select: none;
           user-select: none;
   color: var(--link-color);
   -webkit-text-decoration: var(--link-decoration);
@@ -38006,7 +37957,6 @@ readers do not read off random characters that represent icons */
   overflow: hidden;
   -webkit-user-select: none;
      -moz-user-select: none;
-      -ms-user-select: none;
           user-select: none;
 }
 
@@ -39320,7 +39270,6 @@ readers do not read off random characters that represent icons */
 .amis-scope .cxd-Pagination > li > span {
   -webkit-user-select: none;
      -moz-user-select: none;
-      -ms-user-select: none;
           user-select: none;
   cursor: pointer;
   position: relative;
@@ -39923,7 +39872,6 @@ readers do not read off random characters that represent icons */
   align-items: center;
   -webkit-user-select: none;
      -moz-user-select: none;
-      -ms-user-select: none;
           user-select: none;
 }
 
@@ -39993,7 +39941,6 @@ readers do not read off random characters that represent icons */
   flex-direction: row;
   -webkit-user-select: none;
      -moz-user-select: none;
-      -ms-user-select: none;
           user-select: none;
 }
 
@@ -40325,17 +40272,10 @@ readers do not read off random characters that represent icons */
        user-select: none;
 }
 
-.amis-scope .cxd-InputBox input:-ms-input-placeholder {
-  color: var(--Form-input-placeholderColor);
-  -ms-user-select: none;
-      user-select: none;
-}
-
 .amis-scope .cxd-InputBox input::placeholder {
   color: var(--Form-input-placeholderColor);
   -webkit-user-select: none;
      -moz-user-select: none;
-      -ms-user-select: none;
           user-select: none;
 }
 
@@ -40727,17 +40667,10 @@ readers do not read off random characters that represent icons */
        user-select: none;
 }
 
-.amis-scope .cxd-ResultBox input:-ms-input-placeholder {
-  color: var(--Form-input-placeholderColor);
-  -ms-user-select: none;
-      user-select: none;
-}
-
 .amis-scope .cxd-ResultBox input::placeholder {
   color: var(--Form-input-placeholderColor);
   -webkit-user-select: none;
      -moz-user-select: none;
-      -ms-user-select: none;
           user-select: none;
 }
 
@@ -40903,7 +40836,6 @@ readers do not read off random characters that represent icons */
   margin-bottom: 0.125rem;
   -webkit-user-select: none;
      -moz-user-select: none;
-      -ms-user-select: none;
           user-select: none;
 }
 
@@ -40943,7 +40875,6 @@ readers do not read off random characters that represent icons */
   color: var(--Form-input-placeholderColor);
   -webkit-user-select: none;
      -moz-user-select: none;
-      -ms-user-select: none;
           user-select: none;
 }
 
@@ -41145,17 +41076,10 @@ readers do not read off random characters that represent icons */
        user-select: none;
 }
 
-.amis-scope .cxd-SearchBox > input:-ms-input-placeholder {
-  color: var(--Form-input-placeholderColor);
-  -ms-user-select: none;
-      user-select: none;
-}
-
 .amis-scope .cxd-SearchBox > input::placeholder {
   color: var(--Form-input-placeholderColor);
   -webkit-user-select: none;
      -moz-user-select: none;
-      -ms-user-select: none;
           user-select: none;
 }
 
@@ -42438,17 +42362,10 @@ readers do not read off random characters that represent icons */
        user-select: none;
 }
 
-.amis-scope .cxd-TextControl-input input:-ms-input-placeholder {
-  color: var(--Form-input-placeholderColor);
-  -ms-user-select: none;
-      user-select: none;
-}
-
 .amis-scope .cxd-TextControl-input input::placeholder {
   color: var(--Form-input-placeholderColor);
   -webkit-user-select: none;
      -moz-user-select: none;
-      -ms-user-select: none;
           user-select: none;
 }
 
@@ -42538,7 +42455,6 @@ readers do not read off random characters that represent icons */
   color: var(--Form-input-placeholderColor);
   -webkit-user-select: none;
      -moz-user-select: none;
-      -ms-user-select: none;
           user-select: none;
   position: absolute;
   left: var(--Form-input-paddingX);
@@ -42709,7 +42625,6 @@ readers do not read off random characters that represent icons */
 .amis-scope .cxd-TextControl-value {
   -webkit-user-select: none;
      -moz-user-select: none;
-      -ms-user-select: none;
           user-select: none;
   line-height: calc( var(--Form-input-lineHeight) * var(--Form-input-fontSize) );
   vertical-align: middle;
@@ -42839,17 +42754,10 @@ readers do not read off random characters that represent icons */
        user-select: none;
 }
 
-.amis-scope .cxd-TextareaControl-input input:-ms-input-placeholder {
-  color: var(--Form-input-placeholderColor);
-  -ms-user-select: none;
-      user-select: none;
-}
-
 .amis-scope .cxd-TextareaControl-input input::placeholder {
   color: var(--Form-input-placeholderColor);
   -webkit-user-select: none;
      -moz-user-select: none;
-      -ms-user-select: none;
           user-select: none;
 }
 
@@ -42962,10 +42870,6 @@ readers do not read off random characters that represent icons */
   color: var(--Form-input-placeholderColor);
 }
 
-.amis-scope .cxd-TextareaControl > textarea:-ms-input-placeholder {
-  color: var(--Form-input-placeholderColor);
-}
-
 .amis-scope .cxd-TextareaControl > textarea::placeholder {
   color: var(--Form-input-placeholderColor);
 }
@@ -43029,7 +42933,6 @@ readers do not read off random characters that represent icons */
   font-weight: var(--fontWeightNormal);
   -webkit-user-select: none;
      -moz-user-select: none;
-      -ms-user-select: none;
           user-select: none;
   pointer-events: none;
 }
@@ -43535,7 +43438,6 @@ readers do not read off random characters that represent icons */
   overflow: auto;
   -webkit-user-select: none;
      -moz-user-select: none;
-      -ms-user-select: none;
           user-select: none;
   padding: var(--gap-xs) 0;
 }
@@ -43554,7 +43456,6 @@ readers do not read off random characters that represent icons */
   cursor: pointer;
   -webkit-user-select: none;
      -moz-user-select: none;
-      -ms-user-select: none;
           user-select: none;
 }
 
@@ -43674,7 +43575,6 @@ readers do not read off random characters that represent icons */
   cursor: pointer;
   -webkit-user-select: none;
      -moz-user-select: none;
-      -ms-user-select: none;
           user-select: none;
 }
 
@@ -43745,7 +43645,6 @@ readers do not read off random characters that represent icons */
   cursor: pointer;
   -webkit-user-select: none;
      -moz-user-select: none;
-      -ms-user-select: none;
           user-select: none;
 }
 
@@ -43866,17 +43765,10 @@ readers do not read off random characters that represent icons */
        user-select: none;
 }
 
-.amis-scope .cxd-CityPicker-input:-ms-input-placeholder {
-  color: var(--Form-input-placeholderColor);
-  -ms-user-select: none;
-      user-select: none;
-}
-
 .amis-scope .cxd-CityPicker-input::placeholder {
   color: var(--Form-input-placeholderColor);
   -webkit-user-select: none;
      -moz-user-select: none;
-      -ms-user-select: none;
           user-select: none;
 }
 
@@ -43916,17 +43808,10 @@ readers do not read off random characters that represent icons */
        user-select: none;
 }
 
-.amis-scope .cxd-CityArea-Input:-ms-input-placeholder {
-  color: var(--Form-input-placeholderColor);
-  -ms-user-select: none;
-      user-select: none;
-}
-
 .amis-scope .cxd-CityArea-Input::placeholder {
   color: var(--Form-input-placeholderColor);
   -webkit-user-select: none;
      -moz-user-select: none;
-      -ms-user-select: none;
           user-select: none;
 }
 
@@ -44082,7 +43967,6 @@ readers do not read off random characters that represent icons */
 .amis-scope .cxd-Number-handler-up-inner,
 .amis-scope .cxd-Number-handler-down-inner {
   -moz-user-select: none;
-   -ms-user-select: none;
        user-select: none;
   -webkit-user-select: none;
   display: inline-block;
@@ -44414,7 +44298,6 @@ readers do not read off random characters that represent icons */
 .amis-scope .cxd-Select-valueWrap {
   -webkit-user-select: none;
      -moz-user-select: none;
-      -ms-user-select: none;
           user-select: none;
   position: relative;
   flex-grow: 1;
@@ -44434,7 +44317,6 @@ readers do not read off random characters that represent icons */
   line-height: var(--Form-input-lineHeight);
   -webkit-user-select: none;
      -moz-user-select: none;
-      -ms-user-select: none;
           user-select: none;
   white-space: nowrap;
   color: var(--Form-select-placeholderColor);
@@ -44481,7 +44363,6 @@ readers do not read off random characters that represent icons */
   white-space: normal;
   -webkit-user-select: none;
      -moz-user-select: none;
-      -ms-user-select: none;
           user-select: none;
   line-height: calc( var(--Form-input-lineHeight) * var(--Form-input-fontSize) - 0.125rem );
   display: inline-block;
@@ -44577,7 +44458,6 @@ readers do not read off random characters that represent icons */
   overflow: auto;
   -webkit-user-select: none;
      -moz-user-select: none;
-      -ms-user-select: none;
           user-select: none;
 }
 
@@ -44672,7 +44552,6 @@ readers do not read off random characters that represent icons */
   font-size: var(--Form-select-input-fontSize);
   -webkit-user-select: none;
      -moz-user-select: none;
-      -ms-user-select: none;
           user-select: none;
   padding: calc( ( var(--Form-select-menu-height) - var(--Form-input-lineHeight) * var(--Form-input-fontSize) ) / 2 ) var(--Form-select-paddingX);
 }
@@ -44866,7 +44745,6 @@ readers do not read off random characters that represent icons */
   position: relative;
   -webkit-user-select: none;
      -moz-user-select: none;
-      -ms-user-select: none;
           user-select: none;
   font-size: var(--ListControl-fontSize);
   display: inline-block;
@@ -45024,7 +44902,6 @@ readers do not read off random characters that represent icons */
   color: var(--DatePicker-placeholderColor);
   -webkit-user-select: none;
      -moz-user-select: none;
-      -ms-user-select: none;
           user-select: none;
   margin-right: var(--gap-base);
   flex-basis: 0;
@@ -45181,10 +45058,6 @@ readers do not read off random characters that represent icons */
   color: var(--ColorPicker-placeholderColor);
 }
 
-.amis-scope .cxd-ColorPicker-input:-ms-input-placeholder {
-  color: var(--ColorPicker-placeholderColor);
-}
-
 .amis-scope .cxd-ColorPicker-input::placeholder {
   color: var(--ColorPicker-placeholderColor);
 }
@@ -45205,10 +45078,6 @@ readers do not read off random characters that represent icons */
 }
 
 .amis-scope .cxd-ColorPicker.is-disabled > .cxd-ColorPicker-input::-moz-placeholder {
-  color: var(--ColorPicker-onDisabled-color);
-}
-
-.amis-scope .cxd-ColorPicker.is-disabled > .cxd-ColorPicker-input:-ms-input-placeholder {
   color: var(--ColorPicker-onDisabled-color);
 }
 
@@ -45371,7 +45240,6 @@ readers do not read off random characters that represent icons */
   color: var(--DatePicker-placeholderColor);
   -webkit-user-select: none;
      -moz-user-select: none;
-      -ms-user-select: none;
           user-select: none;
   margin-right: var(--gap-base);
   min-width: 3.125rem;
@@ -45540,7 +45408,6 @@ readers do not read off random characters that represent icons */
 .amis-scope .rdt {
   -webkit-user-select: none;
      -moz-user-select: none;
-      -ms-user-select: none;
           user-select: none;
   font-size: var(--Calendar-fontSize);
   color: var(--Calendar-color);
@@ -45820,7 +45687,6 @@ readers do not read off random characters that represent icons */
   text-align: center;
   -webkit-user-select: none;
      -moz-user-select: none;
-      -ms-user-select: none;
           user-select: none;
   cursor: pointer;
   text-decoration: none;
@@ -46097,7 +45963,6 @@ readers do not read off random characters that represent icons */
   color: var(--DatePicker-placeholderColor);
   -webkit-user-select: none;
      -moz-user-select: none;
-      -ms-user-select: none;
           user-select: none;
   margin-right: var(--gap-base);
   flex-basis: 0;
@@ -47426,7 +47291,6 @@ readers do not read off random characters that represent icons */
   position: relative;
   -webkit-user-select: none;
      -moz-user-select: none;
-      -ms-user-select: none;
           user-select: none;
   margin-bottom: 0.25rem;
   padding-left: var(--Tree-icon-gap);
@@ -47524,17 +47388,10 @@ readers do not read off random characters that represent icons */
        user-select: none;
 }
 
-.amis-scope .cxd-Tree-itemInput > input:-ms-input-placeholder {
-  color: var(--Form-input-placeholderColor);
-  -ms-user-select: none;
-      user-select: none;
-}
-
 .amis-scope .cxd-Tree-itemInput > input::placeholder {
   color: var(--Form-input-placeholderColor);
   -webkit-user-select: none;
      -moz-user-select: none;
-      -ms-user-select: none;
           user-select: none;
 }
 
@@ -47705,17 +47562,10 @@ readers do not read off random characters that represent icons */
        user-select: none;
 }
 
-.amis-scope .cxd-TreeSelect-input input:-ms-input-placeholder {
-  color: var(--Form-input-placeholderColor);
-  -ms-user-select: none;
-      user-select: none;
-}
-
 .amis-scope .cxd-TreeSelect-input input::placeholder {
   color: var(--Form-input-placeholderColor);
   -webkit-user-select: none;
      -moz-user-select: none;
-      -ms-user-select: none;
           user-select: none;
 }
 
@@ -48190,7 +48040,6 @@ readers do not read off random characters that represent icons */
   margin: 2px 3px;
   -webkit-user-select: none;
      -moz-user-select: none;
-      -ms-user-select: none;
           user-select: none;
 }
 
@@ -48295,7 +48144,6 @@ readers do not read off random characters that represent icons */
   color: var(--Form-input-placeholderColor);
   -webkit-user-select: none;
      -moz-user-select: none;
-      -ms-user-select: none;
           user-select: none;
   padding: 4px;
 }
@@ -48344,17 +48192,10 @@ readers do not read off random characters that represent icons */
        user-select: none;
 }
 
-.amis-scope .cxd-Picker-input input:-ms-input-placeholder {
-  color: var(--Form-input-placeholderColor);
-  -ms-user-select: none;
-      user-select: none;
-}
-
 .amis-scope .cxd-Picker-input input::placeholder {
   color: var(--Form-input-placeholderColor);
   -webkit-user-select: none;
      -moz-user-select: none;
-      -ms-user-select: none;
           user-select: none;
 }
 
@@ -48455,7 +48296,6 @@ readers do not read off random characters that represent icons */
   color: var(--Form-input-placeholderColor);
   -webkit-user-select: none;
      -moz-user-select: none;
-      -ms-user-select: none;
           user-select: none;
   position: absolute;
   line-height: var(--Form-input-lineHeight);
@@ -48489,7 +48329,6 @@ readers do not read off random characters that represent icons */
   cursor: pointer;
   -webkit-user-select: none;
      -moz-user-select: none;
-      -ms-user-select: none;
           user-select: none;
   white-space: nowrap;
   vertical-align: middle;
@@ -48614,7 +48453,6 @@ readers do not read off random characters that represent icons */
   cursor: pointer;
   -webkit-user-select: none;
      -moz-user-select: none;
-      -ms-user-select: none;
           user-select: none;
   border: var(--TagControl-sugBtn-borderWidth) solid transparent;
   padding: var(--TagControl-sugBtn-paddingY) var(--TagControl-sugBtn-paddingX);
@@ -48714,7 +48552,6 @@ readers do not read off random characters that represent icons */
   cursor: pointer;
   -webkit-user-select: none;
      -moz-user-select: none;
-      -ms-user-select: none;
           user-select: none;
   color: var(--Rating-inactive-color);
 }
@@ -48898,7 +48735,6 @@ readers do not read off random characters that represent icons */
 .amis-scope .cxd-Transfer-clearAll {
   -webkit-user-select: none;
      -moz-user-select: none;
-      -ms-user-select: none;
           user-select: none;
   cursor: pointer;
 }
@@ -49124,7 +48960,6 @@ readers do not read off random characters that represent icons */
   font-size: var(--Form-select-input-fontSize);
   -webkit-user-select: none;
      -moz-user-select: none;
-      -ms-user-select: none;
           user-select: none;
   padding: calc( ( var(--Form-select-menu-height) - var(--Form-input-lineHeight) * var(--Form-input-fontSize) ) / 2 ) var(--Form-select-paddingX);
 }
@@ -49241,7 +49076,6 @@ readers do not read off random characters that represent icons */
   cursor: pointer;
   -webkit-user-select: none;
      -moz-user-select: none;
-      -ms-user-select: none;
           user-select: none;
   padding: 0 0.375rem;
 }
@@ -49288,7 +49122,6 @@ readers do not read off random characters that represent icons */
   text-overflow: ellipsis;
   -webkit-user-select: none;
      -moz-user-select: none;
-      -ms-user-select: none;
           user-select: none;
 }
 
@@ -49359,17 +49192,10 @@ readers do not read off random characters that represent icons */
        user-select: none;
 }
 
-.amis-scope .cxd-IconPickerControl-input input:-ms-input-placeholder {
-  color: var(--Form-input-placeholderColor);
-  -ms-user-select: none;
-      user-select: none;
-}
-
 .amis-scope .cxd-IconPickerControl-input input::placeholder {
   color: var(--Form-input-placeholderColor);
   -webkit-user-select: none;
      -moz-user-select: none;
-      -ms-user-select: none;
           user-select: none;
 }
 
@@ -49459,7 +49285,6 @@ readers do not read off random characters that represent icons */
   color: var(--Form-input-placeholderColor);
   -webkit-user-select: none;
      -moz-user-select: none;
-      -ms-user-select: none;
           user-select: none;
   position: absolute;
   left: var(--Form-input-paddingX);
@@ -49517,7 +49342,6 @@ readers do not read off random characters that represent icons */
   font-size: var(--fontSizeSm);
   -webkit-user-select: none;
      -moz-user-select: none;
-      -ms-user-select: none;
           user-select: none;
 }
 
@@ -49553,7 +49377,6 @@ readers do not read off random characters that represent icons */
 .amis-scope .cxd-IconPickerControl-value {
   -webkit-user-select: none;
      -moz-user-select: none;
-      -ms-user-select: none;
           user-select: none;
   line-height: calc( var(--Form-input-lineHeight) * var(--Form-input-fontSize) );
   vertical-align: middle;
@@ -50366,7 +50189,6 @@ readers do not read off random characters that represent icons */
   cursor: pointer;
   -webkit-user-select: none;
      -moz-user-select: none;
-      -ms-user-select: none;
           user-select: none;
   padding: 0 1rem;
   border-bottom: 0.0625rem solid var(--UserSelect--border-color);
@@ -50392,7 +50214,6 @@ readers do not read off random characters that represent icons */
   text-align: left;
   -webkit-user-select: none;
      -moz-user-select: none;
-      -ms-user-select: none;
           user-select: none;
   display: flex;
   align-items: center;
@@ -50706,7 +50527,6 @@ readers do not read off random characters that represent icons */
 .amis-scope .cxd-AnchorNav--horizontal .cxd-AnchorNav-link-wrap {
   -webkit-user-select: none;
      -moz-user-select: none;
-      -ms-user-select: none;
           user-select: none;
   margin: 0px;
   padding: 0px;
@@ -52903,7 +52723,6 @@ readers do not read off random characters that represent icons */
 .amis-scope .no-select {
   -webkit-user-select: none;
      -moz-user-select: none;
-      -ms-user-select: none;
           user-select: none;
 }
 
