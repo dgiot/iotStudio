@@ -76,8 +76,8 @@
       :average-center="averageCenter"
     >
       <bm-marker
-        v-for="marker of markers"
-        :key="marker"
+        v-for="(marker, index) of markers"
+        :key="index"
         :position="{ lng: marker.lng, lat: marker.lat }"
       />
     </bml-marker-clusterer>

@@ -803,6 +803,7 @@
         }
       },
       showAdddress(item) {
+        console.log(item)
         this.editRow = item
         this.map.keyword = item?.address ? item.address : this.map.keyword
         this.form.address = item?.address ? item.address : this.form.keyword
