@@ -1,4 +1,26 @@
-## [4.5.4](https://github.com/dgiot/dgiot-dashboard/compare/v5.0.0...v4.5.4) (2022-06-22)
+## [4.5.4](https://github.com/dgiot/dgiot-dashboard/compare/v4.5.5...v4.5.4) (2022-06-22)
+
+
+### Features
+
+* **projects:** scripts ([d4566d9](https://github.com/dgiot/dgiot-dashboard/commit/d4566d90c7ca08ef84107f2a7ff3b8b8cf0da6e8))
+
+
+
+## [4.5.5](https://github.com/dgiot/dgiot-dashboard/compare/v4.6.0...v4.5.5) (2022-06-22)
+
+
+
+# [4.6.0](https://github.com/dgiot/dgiot-dashboard/compare/v5.0.0...v4.6.0) (2022-06-22)
+
+
+### Features
+
+* **deps:** scripts ([3b7e869](https://github.com/dgiot/dgiot-dashboard/commit/3b7e869f3310e90f04bf9892c0ae9d00f10cbd7c))
+
+
+
+# [5.0.0](https://github.com/dgiot/dgiot-dashboard/compare/v4.5.4...v5.0.0) (2022-06-22)
 
 
 ### Bug Fixes

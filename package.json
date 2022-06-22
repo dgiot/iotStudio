@@ -11,6 +11,7 @@
     "serve": "vue-cli-service serve",
     "test": "vue-cli-service lint --fix",
     "release": "npm run changelog:en && npm run changelog:zh",
+    "standard": "standard-version -r patch -n && npm run release",
     "dgiot:install": "start ./pnpm.sh",
     "build": "vue-cli-service build --report",
     "fix-memory-limit": "cross-env LIMIT=4096 increase-memory-limit",
