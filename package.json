@@ -1,6 +1,6 @@
 {
   "name": "@dgiot/dgiot-dashboard",
-  "version": "4.5.4",
+  "version": "5.0.0",
   "author": "h7ml",
   "license": "MPL-2.0",
   "private": false,
@@ -10,6 +10,7 @@
     "start": "vue-cli-service serve",
     "serve": "vue-cli-service serve",
     "test": "vue-cli-service lint --fix",
+    "release": "standard-version",
     "dgiot:install": "start ./pnpm.sh",
     "build": "vue-cli-service build --report",
     "fix-memory-limit": "cross-env LIMIT=4096 increase-memory-limit",
@@ -63,6 +64,7 @@
     "amis": "1.9.1-beta.11",
     "amis-editor": "4.1.0-beta.24",
     "driver.js": "^0.9.8",
+    "pnpm": "^7.3.0",
     "register-service-worker": "1.7.2",
     "resize-detector": "0.3.0",
     "vditor": "^3.8.15",
