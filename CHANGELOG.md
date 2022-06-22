@@ -1,3 +1,14 @@
+# Changelog
+
+All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
+
+## [4.6.0](https://github.com/dgiot/dgiot-dashboard/compare/v5.0.0...v4.6.0) (2022-06-22)
+
+
+### Features
+
+* **deps:** scripts ([3b7e869](https://github.com/dgiot/dgiot-dashboard/commit/3b7e869f3310e90f04bf9892c0ae9d00f10cbd7c))
+
 ## [4.5.4](https://github.com/dgiot/dgiot-dashboard/compare/v5.0.0...v4.5.4) (2022-06-22)
 
 
@@ -64,6 +75,3 @@ ISSUES CLOSED: https://github.com/dgiot/dgiot/issues/486
 
 
 ## 4.5.4 (2022-06-01)
-
-
-
