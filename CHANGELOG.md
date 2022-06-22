@@ -3,6 +3,7 @@
 
 ### Bug Fixes
 
+* **components:** 设备列表 ([a9dd45c](https://github.com/dgiot/dgiot-dashboard/commit/a9dd45ca5044fa0532807a114feab6d8125d625b))
 * **components:** 设备列表 ([36e2951](https://github.com/dgiot/dgiot-dashboard/commit/36e29513ec2e8a88ccb586e1779800f81aa4b771))
 * **other:** 修復设备列表订阅 ([27115ef](https://github.com/dgiot/dgiot-dashboard/commit/27115ef44de12c4986a98002173d385eb5593b54))
 
@@ -15,6 +16,7 @@
 
 ### BREAKING CHANGES
 
+* **components:** 修复设备列表订阅不正确
 * **components:** 修复设备列表订阅不正确
 
 
