@@ -321,6 +321,9 @@
           if (valid) {
             const loading = this.$baseColorfullLoading()
             const params = form
+            delete params.createdAt
+            delete params.updatedAt
+            delete params.objectId
             const { createdAt = '' } = await createArticle(params)
             loading.close()
             if (createdAt.length) this.init()

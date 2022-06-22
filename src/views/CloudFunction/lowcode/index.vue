@@ -384,6 +384,10 @@
             label: '低代码预览',
           },
           {
+            value: 'pressureconfig',
+            label: '压测配置',
+          },
+          {
             value: 'topo',
             label: '组态',
           },
@@ -596,7 +600,7 @@
       handleAdd() {
         this.$refs['edit'].type = 'add'
         // 解决子组件修改影响父组件的显示问题
-        // this.$refs['edit'].DbaTable = this.DbaTable
+        this.$refs['edit'].DbaTable = this.DbaTable
         // this.$refs['edit'].row = this.queryForm
         this.$refs['edit'].dialogFormVisible = true
         this.$refs['edit'].showEdit(this.queryForm)
