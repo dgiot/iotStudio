@@ -135,7 +135,7 @@
           const { js: runTimejs } = runTimeStatic
           runTimejs.forEach((_js) => {
             _runTimeStatic.js.push(`${staticUrl}js/${_js}`)
-            _runTimeStatic.js.push(`${staticUrl}css/amis/sdk/sdk.js`)
+            // _runTimeStatic.js.push(`${staticUrl}css/amis/sdk/sdk.js`)
           })
           const res = await loadScript(_runTimeStatic.js)
           this.$nextTick(async () => {
