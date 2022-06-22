@@ -124,6 +124,12 @@ instance.interceptors.request.use(
     }
     const { path = '/' } = router.history.current
     let { headers = {} } = config
+    _.merge(headers, {
+      departmentToken: departmentToken,
+      author: 'h7ml',
+      email: 'h7ml@qq.com',
+      platform: 'web',
+    })
     headers[`${tokenName}`] = usertoken
     if (headers['proxy'] == true) {
       console.log('src/utils/Request/request.js', config, 'config')
