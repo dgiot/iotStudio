@@ -577,7 +577,7 @@
             factory: '',
           },
           name: '',
-          isEnable: true,
+          isEnable: false,
           status: 'ONLINE',
           devaddr: '',
           basedata: {},
