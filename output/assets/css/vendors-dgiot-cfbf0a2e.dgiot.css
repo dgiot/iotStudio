@@ -2,7 +2,7 @@
  *  build: 杭州数蛙科技有限公司 
  *  copyright: dgiot-dashboard 
  *  author: h7ml(h7ml@qq.com) 
- *  Time: 2022年06月21日23时52分36秒
+ *  Time: 2022年06月22日11时30分38秒
  */
 /*!
  * Vditor v3.8.15 - A markdown editor written in TypeScript.
@@ -281,7 +281,6 @@
   display: none;
   -webkit-user-select: none;
      -moz-user-select: none;
-      -ms-user-select: none;
           user-select: none;
   max-width: 320px;
   min-width: 80px;
@@ -622,7 +621,6 @@
   font-size: 12px;
   -webkit-user-select: none;
      -moz-user-select: none;
-      -ms-user-select: none;
           user-select: none;
   float: right;
   margin: 8px 3px 0 0;
@@ -636,7 +634,6 @@
   cursor: row-resize;
   -webkit-user-select: none;
      -moz-user-select: none;
-      -ms-user-select: none;
           user-select: none;
   position: absolute;
   width: 100%;
@@ -752,7 +749,6 @@
   margin-left: 24px;
   -webkit-user-select: none;
      -moz-user-select: none;
-      -ms-user-select: none;
           user-select: none;
   color: var(--toolbar-icon-color);
 }
@@ -1140,7 +1136,6 @@
   /* works for line-numbers below 1000 lines */
   -webkit-user-select: none;
      -moz-user-select: none;
-      -ms-user-select: none;
           user-select: none;
   counter-reset: linenumber;
 }
@@ -1272,7 +1267,6 @@
   margin-bottom: 16px;
   -webkit-user-select: text;
      -moz-user-select: text;
-      -ms-user-select: text;
           user-select: text;
   color: #4285f4;
 }
