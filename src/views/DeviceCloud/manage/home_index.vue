@@ -954,7 +954,7 @@
                 },
                 profile: {},
                 route: {},
-                isEnable: false,
+                isEnable: true,
                 status: 'OFFLINE',
               }
               const { error = '', objectId = '' } = await postDevice(params)

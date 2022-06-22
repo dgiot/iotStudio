@@ -28,6 +28,7 @@ module.exports = {
     ['projects', '项目搭建'],
     ['components', '组件相关'],
     ['vuex', 'vuex 相关'],
+    ['issues', 'issues 修复'],
     ['utils', 'utils 相关'],
     ['styles', '样式相关'],
     ['deps', '项目依赖'],

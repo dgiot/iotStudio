@@ -117,6 +117,9 @@
                 className: 'Article',
               },
             }
+            delete Article.createdAt
+            delete Article.updatedAt
+            delete Article.objectId
             await createArticle(Article)
             this.innerVisible = false
             this.qureyTree()

@@ -49,6 +49,7 @@
             <el-option label="设备名称" value="name" />
             <el-option label="外壳编号" value="detail.assetNum" />
             <el-option label="主板编号" value="devaddr" />
+            <el-option label="sim卡号" value="content.simserialno" />
           </el-select>
         </el-input>
       </el-form-item>
@@ -577,13 +578,14 @@
             factory: '',
           },
           name: '',
-          isEnable: false,
-          status: 'ONLINE',
+          isEnable: true,
+          status: 'OFFLINE',
           devaddr: '',
           basedata: {},
           route: {},
           product: { __type: 'Pointer', className: 'Product', objectId: '' },
         },
+        content: { simserialno: '' },
         product: '',
         createDeviceDialog: false,
         drawerAdd: false,

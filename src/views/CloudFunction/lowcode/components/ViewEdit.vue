@@ -193,6 +193,10 @@
             label: '数据展示',
           },
           {
+            value: 'pressureconfig',
+            label: '压测配置',
+          },
+          {
             value: 'sms_template',
             label: '短信模板',
           },
