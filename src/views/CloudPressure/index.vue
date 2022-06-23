@@ -337,6 +337,7 @@
           </el-button>
           <el-button
             :disabled="!row.basedata.templateUrl"
+            :loading="row.loading"
             size="mini"
             type="success"
             @click.native="generateReport(row)"
@@ -604,13 +605,14 @@
         this.report = true
       },
       async generateReport(row) {
+        row.loading = true
         const params = {
           reportid: row.objectId,
           templateUrl: row.basedata.templateUrl,
           grafanaHost: location.hostname,
           parseHost: location.hostname,
         }
-
+        let random = Math.random() * 20 + 30
         const res = await axios.post('/grafana/generateReport', params, {
           headers: {
             'Access-Control-Allow-Origin': '*', //解决cors头问题
@@ -621,8 +623,14 @@
           withCredentials: true,
         })
         console.log(res)
-        this.$baseMessage(this.$translateTitle('pressure.报告生成成功'))
-        this.fetchData()
+        console.log(random)
+        setTimeout(async () => {
+          // 随机数30到50 秒后设置报告生成成功
+          // 关闭按钮加载状态
+          row.loading = false
+          this.$baseMessage(this.$translateTitle('pressure.报告生成成功'))
+          this.fetchData()
+        }, random * 1000 * 10)
       },
       async preview(fileurl) {
         const encodeUrl = encodeURIComponent(Base64.encode(fileurl))
@@ -981,6 +989,7 @@
         const { count = 0, results = [] } = await queryDevice(params)
         const timeExp = /\[(\d{2,}):(\d{2})(?:\.(\d{2,3}))?]/g
         results.forEach((i) => {
+          i.loading = false
           i?.basedata ? '' : (i.basedata = {})
           i?.basedata?.docxInfo ? '' : (i.basedata.docxInfo = [])
           i?.basedata?.templateUrl
