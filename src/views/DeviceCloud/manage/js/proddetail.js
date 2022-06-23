@@ -906,8 +906,8 @@ export default {
   methods: {
     async handleAddressClose() {
       this.dialog_address = !this.dialog_address
-       await putProduct(this.productObj.objectId, {
-         config: this.productdetail.config,
+      await putProduct(this.productObj.objectId, {
+        config: this.productdetail.config,
       })
       this.$message({
         type: 'success',
@@ -918,7 +918,7 @@ export default {
     },
     inputAddress() {
       const address = this.productdetail.config.addres
-      console.log(1111111111111111,addres)
+      console.log(1111111111111111, addres)
       // https://lbsyun.baidu.com/jsdemo.htm#wAddressParseSingle  根据位置解析
       var map = new BMapGL.Map('container')
       map.centerAndZoom(new BMapGL.Point(116.331398, 39.897445), 12)
@@ -930,9 +930,7 @@ export default {
         function (point) {
           if (point) {
             map.centerAndZoom(point, 16)
-            map.addOverlay(
-              new BMapGL.Marker(point, { title: address })
-            )
+            map.addOverlay(new BMapGL.Marker(point, { title: address }))
           } else {
             alert('您选择的地址没有解析到结果！')
           }
@@ -944,10 +942,10 @@ export default {
     mapClick(e) {
       this.productdetail.config.location = {
         __type: 'GeoPoint',
-        latitude: e.point.lat,
-        longitude: e.point.lng,
+        latitude: e.point.lng,
+        longitude: e.point.lat,
       }
-      console.log(e,this.productdetail.config)
+      console.log(e, this.productdetail.config)
       // this.center.lng = e.point.lng
       // this.center.lat = e.point.lat
       // this.addresspointer =
@@ -1155,6 +1153,7 @@ export default {
       this.productObj = res
       this.modules.data = setThing
       this.productdetail.thing = setThing
+      this.productdetail.config = res.config
     },
     async submitModules(type, form) {
       form.data.outputParams = []
@@ -3248,18 +3247,7 @@ export default {
           if (response) {
             this.productInfo = _.merge(response, {
               decoder: { code: '' },
-              thing: { properties: [] },
-              config: {
-                parser: [],
-                profile: [],
-                basedate: { params: [] },
-                address: '余杭区良渚平高创业城c1座',
-                location: {
-                  latitude: '120.161324',
-                  longitude: '30.262441',
-                  __type: 'GeoPoint',
-                },
-              },
+              thing: { properties: [] }
             })
             this.productName = response.name
             for (var key in response) {
