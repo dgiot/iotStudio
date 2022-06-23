@@ -1236,7 +1236,9 @@
             _this.list.forEach((t) => {
               topicsKeys.forEach((j) => {
                 if (t.objectId == j) {
-                  const mergeInfo = _.merge(t, parseString[j])
+                  const mergeInfo = _.merge(t, parseString[j], {
+                    detail: { address: parseString[j].address },
+                  })
                   console.log(`更新设备${t.name}`)
                   args.name = t.name
                   console.log(mergeInfo, parseString[j])

@@ -1,6 +1,115 @@
 <template>
   <div class="proddetail">
     <dgiot-profile v-show="false" :product-info="productInfo" />
+    <el-dialog
+      append-to-body
+      :before-close="handleAddressClose"
+      class="map_dialog"
+      title="安装位置"
+      :visible.sync="dialog_address"
+      width="70%"
+    >
+      <el-card>
+        <label>
+          安装位置：
+          <el-input
+            v-model="productdetail.config.address"
+            @input="inputAddress"
+          >
+            <i
+              slot="suffix"
+              class="el-icon-s-promotion"
+              style="cursor: pointer"
+            ></i>
+          </el-input>
+        </label>
+        <baidu-map
+          :key="productdetail.config.location.latitude"
+          :ak="$dgiot.secret.baidu.map"
+          :center="{
+            lng: productdetail.config.location.latitude,
+            lat: productdetail.config.location.longitude,
+          }"
+          :map-click="false"
+          :scroll-wheel-zoom="true"
+          style="height: 300px"
+          :style="{ height: '500px', width: '100%' }"
+          :zoom="15"
+          @click="mapClick"
+        >
+          <bm-view class="map" />
+          <bm-city-list :offset="{ width: 330, height: 0 }" />
+          <bm-local-search
+            :auto-viewport="true"
+            :keyword="productdetail.config.address"
+            :location="{
+              lng: productdetail.config.location.latitude,
+              lat: productdetail.config.location.longitude,
+            }"
+          />
+          <bm-control>
+            <bm-panorama
+              anchor="BMAP_ANCHOR_TOP_LEFT"
+              :offset="{ width: 500, height: 0 }"
+            />
+            <bm-overview-map :is-open="true" />
+            <bm-scale :offset="{ width: 260, height: 0 }" />
+            <bm-city-list :offset="{ width: 450, height: 0 }" />
+            <bm-map-type
+              anchor="BMAP_ANCHOR_TOP_LEFT"
+              :map-types="['BMAP_NORMAL_MAP', 'BMAP_HYBRID_MAP']"
+              :offset="{ width: 400, height: 0 }"
+            />
+          </bm-control>
+          <bml-marker-clusterer>
+            <bm-marker />
+            <bm-label />
+          </bml-marker-clusterer>
+          <bm-navigation anchor="BMAP_ANCHOR_TOP_RIGHT" />
+          <bm-geolocation
+            anchor="BMAP_ANCHOR_BOTTOM_RIGHT"
+            :auto-location="true"
+            :show-address-bar="true"
+            :show-zoom-info="true"
+          />
+        </baidu-map>
+        <!--        <dgiot-baidu-map-->
+        <!--          ref="map"-->
+        <!--          :bm-label="true"-->
+        <!--          :label="{-->
+        <!--            content: productdetail.config.address,-->
+        <!--            style: {-->
+        <!--              color: 'red',-->
+        <!--              fontSize: '24px',-->
+        <!--            },-->
+        <!--            position: {-->
+        <!--              lng: productdetail.config.location.latitude,-->
+        <!--              lat: productdetail.config.location.longitude,-->
+        <!--            },-->
+        <!--            title: productdetail.config.address,-->
+        <!--          }"-->
+        <!--          :map-center="{-->
+        <!--            lng: productdetail.config.location.latitude,-->
+        <!--            lat: productdetail.config.location.longitude,-->
+        <!--          }"-->
+        <!--          :markers="[-->
+        <!--            {-->
+        <!--              lng: productdetail.config.location.latitude,-->
+        <!--              lat: productdetail.config.location.longitude,-->
+        <!--            },-->
+        <!--          ]"-->
+        <!--          :nav-show="true"-->
+        <!--          :scale-show="true"-->
+        <!--          :scroll-wheel-zoom="true"-->
+        <!--        />-->
+      </el-card>
+      <!--      <span slot="footer" class="dialog-footer">-->
+      <!--        <el-button @click="dialog_device = false">取 消</el-button>-->
+      <!--        <el-button type="primary" @click="dialog_device = false">-->
+      <!--          确 定-->
+      <!--        </el-button>-->
+      <!--      </span>-->
+    </el-dialog>
     <div>
       <el-tabs ref="_tabs" v-model="activeName" @tab-click="handleClick">
         <!--产品信息-->
@@ -195,6 +304,24 @@
                     @click.native="amisShow = !amisShow"
                   >
                     {{ amisproductInfo.length || 0 }}
+                  </el-link>
+                </el-descriptions-item>
+                <el-descriptions-item
+                  :label="$translateTitle('equipment.address')"
+                >
+                  <el-link
+                    type="success"
+                    @click="dialog_address = !dialog_address"
+                  >
+                    {{ productdetail.config.address || '-' }}
+                  </el-link>
+                </el-descriptions-item>
+                <el-descriptions-item
+                  :label="$translateTitle('equipment.Longitude and latitude')"
+                >
+                  <el-link type="success">
+                    {{ productdetail.config.location.latitude }}
+                    {{ productdetail.config.location.longitude }}
                   </el-link>
                 </el-descriptions-item>
                 <!--                <el-descriptions-item>-->

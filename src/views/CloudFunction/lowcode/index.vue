@@ -514,6 +514,9 @@
         setTreeFlag: 'settings/setTreeFlag',
       }),
       async switchlanguage(v) {
+        if (!v.language) {
+          return false
+        }
         await putView(v.objectId, { language: v.language })
         this.$message({
           type: 'success',
