@@ -1091,20 +1091,33 @@
         // await _this.$subscribe('$dg/user/devicestate/#')
         // _this.$dgiotBus.$off('devicestate')
         _this.$dgiotBus.$on('$dg/user/devicestate', (Msg) => {
+          let args = {}
           const parseString = JSON.parse(Msg.payloadString)
-          console.log('收到消息', parseString)
           if (parseString) {
             const topicsKeys = Object.keys(parseString)
+            console.groupCollapsed(
+              `%c收到devicestate消息 ${topicsKeys}`,
+              'color:#009a61; font-size: 28px; font-weight: 300'
+            )
+            args.key = topicsKeys
+            console.log(parseString)
+            args.parseString = parseString
             _this.list.forEach((t) => {
               topicsKeys.forEach((j) => {
                 if (t.objectId == j) {
                   const mergeInfo = _.merge(t, parseString[j])
-                  console.log(`更新设备${t.name}`, mergeInfo, parseString[j])
-                  // _this.upkey = moment(new Date()).valueOf() + ''
+                  console.log(`更新设备${t.name}`)
+                  args.name = t.name
+                  console.log(mergeInfo, parseString[j])
+                  args.Info = parseString[j]
+                  args.mergeInfo = mergeInfo
+                  _this.upkey = moment(new Date()).valueOf() + ''
                 }
               })
             })
           }
+          console.info(args)
+          console.groupEnd()
         })
       },
     },
