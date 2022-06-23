@@ -3,7 +3,7 @@ module.exports = {
   proxy,
   baseURL: proxy[0].path,
   contentType: 'application/json',
-  requestTimeout: 1000 * 1 * 30,
+  requestTimeout: 1000 * 60 * 3,
   successCode: [
     200,
     0,

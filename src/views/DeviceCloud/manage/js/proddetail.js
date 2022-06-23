@@ -38,7 +38,24 @@ var isallchannel = false
 var isupdatetrue = ''
 import dgiotViews from '@/views/CloudFunction/lowcode'
 import { getProtocol } from '@/api/Protocol'
-
+import {
+  BaiduMap,
+  BmCityList,
+  BmControl,
+  BmGeolocation,
+  BmInfoWindow,
+  BmlMarkerClusterer,
+  BmMapType,
+  BmMarker,
+  BmNavigation,
+  BmOverviewMap,
+  BmPanorama,
+  BmScale,
+  BmLabel,
+  BmView,
+  BmLocalSearch,
+  BmPointCollection,
+} from 'vue-baidu-map'
 export default {
   components: {
     mqttLog,
@@ -46,6 +63,22 @@ export default {
     'dgiot-wmx': wmxdetail,
     'dgiot-profile': profile,
     'thing-form': thingForm,
+    BmLocalSearch,
+    BmPointCollection,
+    BmInfoWindow,
+    BmScale,
+    BmMapType,
+    BmView,
+    BmOverviewMap,
+    BmPanorama,
+    BmControl,
+    BmLabel,
+    BaiduMap,
+    BmNavigation,
+    BmGeolocation,
+    BmCityList,
+    BmMarker,
+    BmlMarkerClusterer,
   },
   data() {
     const validCode = (rule, value, callback) => {
@@ -631,9 +664,18 @@ export default {
       },
       ProductSecret: '',
       dynamicReg: false,
+      dialog_address: false,
       productId: '',
       productName: '',
       productdetail: {
+        config: {
+          address: '余杭区良渚平高创业城c1座',
+          location: {
+            latitude: '120.161324',
+            longitude: '30.262441',
+            __type: 'GeoPoint',
+          },
+        },
         thing: { properties: [], events: [], services: [], tags: [] },
       },
       topicData: [],
@@ -862,6 +904,61 @@ export default {
     this.subdialogtimer = null
   },
   methods: {
+    async handleAddressClose() {
+      this.dialog_address = !this.dialog_address
+       await putProduct(this.productObj.objectId, {
+         config: this.productdetail.config,
+      })
+      this.$message({
+        type: 'success',
+        message: '安装位置更新成功',
+        showClose: true,
+        duration: 2000,
+      })
+    },
+    inputAddress() {
+      const address = this.productdetail.config.addres
+      console.log(1111111111111111,addres)
+      // https://lbsyun.baidu.com/jsdemo.htm#wAddressParseSingle  根据位置解析
+      var map = new BMapGL.Map('container')
+      map.centerAndZoom(new BMapGL.Point(116.331398, 39.897445), 12)
+      //创建地址解析器实例
+      var myGeo = new BMapGL.Geocoder()
+      // 将地址解析结果显示在地图上，并调整地图视野
+      myGeo.getPoint(
+        address,
+        function (point) {
+          if (point) {
+            map.centerAndZoom(point, 16)
+            map.addOverlay(
+              new BMapGL.Marker(point, { title: address })
+            )
+          } else {
+            alert('您选择的地址没有解析到结果！')
+          }
+        },
+        '北京市'
+      )
+      console.log(address)
+    },
+    mapClick(e) {
+      this.productdetail.config.location = {
+        __type: 'GeoPoint',
+        latitude: e.point.lat,
+        longitude: e.point.lng,
+      }
+      console.log(e,this.productdetail.config)
+      // this.center.lng = e.point.lng
+      // this.center.lat = e.point.lat
+      // this.addresspointer =
+      //   e.point.lng.toFixed(6) + ',' + e.point.lat.toFixed(6)
+      const geocoder = new BMap.Geocoder() // 创建地址解析器的实例
+      //  let Marker = new BMap.Marker()
+      geocoder.getLocation(e.point, (rs) => {
+        console.log(rs)
+        this.productdetail.config.address = rs.address
+      })
+    },
     toggleSwitch(row) {
       row.isshow = !row.isshow
       this.preserve('isshow')
@@ -3156,6 +3253,12 @@ export default {
                 parser: [],
                 profile: [],
                 basedate: { params: [] },
+                address: '余杭区良渚平高创业城c1座',
+                location: {
+                  latitude: '120.161324',
+                  longitude: '30.262441',
+                  __type: 'GeoPoint',
+                },
               },
             })
             this.productName = response.name
