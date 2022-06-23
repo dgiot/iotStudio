@@ -2,7 +2,7 @@
  *  build: 杭州数蛙科技有限公司 
  *  copyright: dgiot-dashboard 
  *  author: h7ml(h7ml@qq.com) 
- *  Time: 2022年06月23日12时28分50秒
+ *  Time: 2022年06月23日17时43分44秒
  */
 
 .full-screen-icon {
@@ -65,7 +65,7 @@
 
 [data-v-f28b0d6a]:export{menu-color:rgba(255,255,255,.95);menu-color-active:rgba(255,255,255,.95);menu-background:#282c34;column-second-menu-background:#fff}*[data-v-f28b0d6a]{padding:0;margin:0}.remove-text[data-v-f28b0d6a]{padding:20px;font-size:24px;text-align:center}.show-multiple[data-v-f28b0d6a]{display:flex}.show-multiple .multiple-player[data-v-f28b0d6a]{width:calc(100% / 4);margin:20px}.player-btns[data-v-f28b0d6a]{display:flex;flex-wrap:wrap;justify-content:center;width:100%}.player-btns span[data-v-f28b0d6a]{display:inline-block;width:150px;height:40px;padding:5px 10px;margin:0 auto;margin:5px;line-height:40px;text-align:center;cursor:pointer;background:#e1e1e1;border:1px solid #eee;border-radius:10px}.source-box[data-v-f28b0d6a]{padding:5px 10px;margin-bottom:20px}.source-box .source-label[data-v-f28b0d6a]{display:block;margin-right:20px;font-size:16px}.source-box #source[data-v-f28b0d6a]{margin-top:10px}.source-box .source-input[data-v-f28b0d6a]{width:80%;padding:5px 10px;margin-top:10px;border:1px solid #ccc}
 
-.box[data-v-3167f26b] {
+.box[data-v-c623a81e] {
   height: 80vh;
   overflow: auto;
 }
