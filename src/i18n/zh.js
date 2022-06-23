@@ -131,6 +131,7 @@ export default {
       lists: '列表',
       info: '信息',
       address: '安装位置',
+      'Longitude and latitude': '经纬度',
       Department: '所属部门',
       'Equipment Overview': '设备概况',
       'device status': '设备状态',

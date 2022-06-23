@@ -2438,7 +2438,7 @@
           relationApp: this.currentDepartment.name,
           roles: [],
           categoryname: '',
-          config: { checkList: ['konva', 'amis'] },
+          config: { checkList: ['konva', 'amis'], address: '余杭区良渚平高创业城c1座', location: { latitude: '120.161324', longitude: '30.262441' , __type: 'GeoPoint'} },
         }
         this.productid = moment(new Date()).valueOf().toString()
         this.dialogFormVisible = true

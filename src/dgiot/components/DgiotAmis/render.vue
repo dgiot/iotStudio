@@ -118,10 +118,11 @@
             config.headers = headers || {}
             config.method = method
             _.merge(config.headers, {
-              author: 'iotn2n',
               platform: 'amis',
               departmentToken: store.getters['user/departmentToken'],
               sessionToken: store.getters['user/token'],
+              author: 'h7ml',
+              email: 'h7ml@qq.com',
             })
             if (method === 'get' && data) {
               config.params = data
@@ -197,6 +198,12 @@
             console.log('replaceArr', replaceArr)
             console.info('请求url', url)
             console.groupEnd()
+            if (url.indexOf('null') == -1 || url.indexOf('undefined') == -1) {
+              throw new Error(`url请求参数不正确${url}`)
+              console.log(url)
+              // topo 以下处理了 请求参数替换不正确时页面报错的情况
+              url = url.replace('/null', '/').replace('/undefined', '/')
+            }
             // return axios(url, config)
             // topo: fix https://gitee.com/dgiiot/dgiot/issues/I4RRY3
             // 处理静态资源部署在在二级下页面下,但是页面
@@ -218,8 +225,8 @@
             //   当前页面路由router
             const { path } = this.$route
             // 解决设计界面弹出提示问题
-            // if (!path.indexOf('design')) {
             console.log(path.indexOf('design'), path)
+            // if (!path.indexOf('design')) {
             this.$message({
               type: type,
               message: msg,
