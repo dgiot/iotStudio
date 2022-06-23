@@ -1,4 +1,4 @@
-## [4.5.4](https://github.com/dgiot/dgiot-dashboard/compare/v4.5.5...v4.5.4) (2022-06-22)
+## [4.5.4](https://github.com/dgiot/dgiot-dashboard/compare/v4.5.5...v4.5.4) (2022-06-23)
 
 
 ### Bug Fixes
@@ -12,6 +12,7 @@
 ### Features
 
 * **components:** 设备管理 ([0a9756c](https://github.com/dgiot/dgiot-dashboard/commit/0a9756cadaa45a0796f345fa064c1f1f239af7ee))
+* **projects:** 云压测 ([97a7f62](https://github.com/dgiot/dgiot-dashboard/commit/97a7f62e0b32949dc2bc4d1297a30befa76fe583))
 * **projects:** scripts ([d4566d9](https://github.com/dgiot/dgiot-dashboard/commit/d4566d90c7ca08ef84107f2a7ff3b8b8cf0da6e8))
 
 
