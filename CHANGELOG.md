@@ -1,4 +1,4 @@
-## [4.5.4](https://github.com/dgiot/dgiot-dashboard/compare/v4.5.5...v4.5.4) (2022-06-23)
+## [4.5.4](https://github.com/dgiot/dgiot-dashboard/compare/v4.5.5...v4.5.4) (2022-06-27)
 
 
 ### Bug Fixes
@@ -7,6 +7,7 @@
 * **components:** 设备列表 ([7a5b59b](https://github.com/dgiot/dgiot-dashboard/commit/7a5b59b9bbbd9163e5df359224f5b6b433b2432e))
 * **components:** 设备列表 ([a9dd45c](https://github.com/dgiot/dgiot-dashboard/commit/a9dd45ca5044fa0532807a114feab6d8125d625b))
 * **components:** 设备列表 ([36e2951](https://github.com/dgiot/dgiot-dashboard/commit/36e29513ec2e8a88ccb586e1779800f81aa4b771))
+* **equipmentCloud:** 修复产品详情默认经纬度未赋值导致的报错 ([0e40544](https://github.com/dgiot/dgiot-dashboard/commit/0e405447e29df011bf2e96c34fd8b47c88264284))
 * **other:** 修復设备列表订阅 ([27115ef](https://github.com/dgiot/dgiot-dashboard/commit/27115ef44de12c4986a98002173d385eb5593b54))
 
 

@@ -569,9 +569,9 @@
           lat: 39.915,
         },
         deviceForm: {
-          content: {
-            devddrNum: moment().format('x'),
-          },
+          // content: {
+          //   devddrNum: moment().format('x'),
+          // },
           detail: {
             assetNum: '',
             expirationTime: moment().format('x'),
