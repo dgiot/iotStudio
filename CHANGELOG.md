@@ -12,6 +12,7 @@
 
 ### Features
 
+* **cloudPressure:** 压测报告生成添加等待时间 优化loading ([2969b9b](https://github.com/dgiot/dgiot-dashboard/commit/2969b9b605b24507300bfcbb48515ec6fc4a1a80))
 * **components:** 百度地图 ([2028435](https://github.com/dgiot/dgiot-dashboard/commit/2028435e76e2a7de221266fa54b40d793c9495cb))
 * **components:** 设备管理 ([0a9756c](https://github.com/dgiot/dgiot-dashboard/commit/0a9756cadaa45a0796f345fa064c1f1f239af7ee))
 * **components:** 云压测 ([ed99eee](https://github.com/dgiot/dgiot-dashboard/commit/ed99eee177a5947609cfa35998bdd1f8b3d3a9ab))
