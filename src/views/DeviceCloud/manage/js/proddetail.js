@@ -3247,7 +3247,15 @@ export default {
           if (response) {
             this.productInfo = _.merge(response, {
               decoder: { code: '' },
-              thing: { properties: [] }
+              thing: { properties: [] },
+              config: {
+                address: '余杭区良渚平高创业城c1座',
+                location: {
+                  latitude: '120.161324',
+                  longitude: '30.262441',
+                  __type: 'GeoPoint',
+                },
+              },
             })
             this.productName = response.name
             for (var key in response) {
