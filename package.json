@@ -145,7 +145,7 @@
     "url-loader": "4.1.1",
     "vue": "^3.2.13",
     "vue-eslint-parser": "8.0.1",
-    "vue-loader": "^15.9.2",
+    "vue-loader": "^17.0.0",
     "vue-template-compiler": "2.6.14",
     "webpack": "4.46.0",
     "webpackbar": "5.0.2"
