@@ -139,7 +139,7 @@
     "standard-version": "^9.3.2",
     "stylelint": "^13.13.1",
     "stylelint-config-prettier": "^9.0.3",
-    "stylelint-config-recess-order": "^2.6.0",
+    "stylelint-config-recess-order": "^3.0.0",
     "svg-sprite-loader": "6.0.11",
     "typescript": "4.6.2",
     "url-loader": "4.1.1",
