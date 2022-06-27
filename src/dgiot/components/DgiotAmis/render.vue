@@ -199,7 +199,7 @@
             console.info('请求url', url)
             console.groupEnd()
             if (url.indexOf('null') == -1 || url.indexOf('undefined') == -1) {
-              throw new Error(`url请求参数不正确${url}`)
+              // throw new Error(`url请求参数不正确${url}`)
               console.log(url)
               // topo 以下处理了 请求参数替换不正确时页面报错的情况
               url = url.replace('/null', '/').replace('/undefined', '/')
