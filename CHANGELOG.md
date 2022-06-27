@@ -8,6 +8,7 @@
 * **components:** 设备列表 ([a9dd45c](https://github.com/dgiot/dgiot-dashboard/commit/a9dd45ca5044fa0532807a114feab6d8125d625b))
 * **components:** 设备列表 ([36e2951](https://github.com/dgiot/dgiot-dashboard/commit/36e29513ec2e8a88ccb586e1779800f81aa4b771))
 * **equipmentCloud:** 修复产品详情默认经纬度未赋值导致的报错 ([0e40544](https://github.com/dgiot/dgiot-dashboard/commit/0e405447e29df011bf2e96c34fd8b47c88264284))
+* **equipmentCloud:** 修复设备管理因存在默认值导致添加设备时，时序数据问题 ([71d7b87](https://github.com/dgiot/dgiot-dashboard/commit/71d7b8752f7c211d119f388f29908c0e2671ef01))
 * **other:** 修復设备列表订阅 ([27115ef](https://github.com/dgiot/dgiot-dashboard/commit/27115ef44de12c4986a98002173d385eb5593b54))
 
 
