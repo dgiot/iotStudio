@@ -563,11 +563,9 @@
           </el-button>
         </template>
       </el-table-column>
-      <template #empty>
-        <el-image class="dgiot-data-empty" />
-      </template>
     </el-table>
     <el-pagination
+      :key="paginationKey"
       background
       :current-page="queryForm.size"
       :layout="layout"
@@ -639,6 +637,7 @@
     },
     data() {
       return {
+        paginationKey: moment(new Date()).valueOf() + '',
         upkey: moment(new Date()).valueOf() + '',
         dialog_device: false,
         mapLabel: {
@@ -1168,9 +1167,11 @@
         this.queryForm.skip = Number(val - 1) * Number(this.queryForm.limit)
         this.fetchData()
       },
-      handleQuery() {
+      async handleQuery() {
         this.queryForm.limit = 20
-        this.fetchData()
+        this.queryForm.skip = 0
+        this.paginationKey = moment(new Date()).valueOf() + ''
+        await this.fetchData()
       },
       async fetchData() {
         console.log(this.queryForm)
