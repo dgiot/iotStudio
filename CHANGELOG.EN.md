@@ -1,4 +1,4 @@
-## [4.5.4](https://github.com/dgiot/dgiot-dashboard/compare/v4.5.5...v4.5.4) (2022-06-27)
+## [4.5.4](https://github.com/dgiot/dgiot-dashboard/compare/v4.5.5...v4.5.4) (2022-06-28)
 
 
 ### Bug Fixes
@@ -14,6 +14,7 @@
 
 ### Features
 
+* **统计功能:** 添加友盟统计 ([b0cd74d](https://github.com/dgiot/dgiot-dashboard/commit/b0cd74d8ea9454da3dec28447c46a2287a8b08c9))
 * **cloudPressure:** 压测报告生成添加等待时间 优化loading ([2969b9b](https://github.com/dgiot/dgiot-dashboard/commit/2969b9b605b24507300bfcbb48515ec6fc4a1a80))
 * **components:** 百度地图 ([2028435](https://github.com/dgiot/dgiot-dashboard/commit/2028435e76e2a7de221266fa54b40d793c9495cb))
 * **components:** 设备管理 ([0a9756c](https://github.com/dgiot/dgiot-dashboard/commit/0a9756cadaa45a0796f345fa064c1f1f239af7ee))
