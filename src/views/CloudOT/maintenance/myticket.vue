@@ -557,7 +557,7 @@
           devicename: '',
           statusFlag: false,
           status: '',
-          number: '',
+          number: this.$route.query.id || '',
           product: '',
           type: '',
           pageNo: 1,

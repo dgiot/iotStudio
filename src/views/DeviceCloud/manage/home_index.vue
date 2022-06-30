@@ -551,7 +551,7 @@
       </el-table-column>
       <el-table-column
         align="center"
-        label="离线时间"
+        label="最后更新时间"
         show-overflow-tooltip
         sortable
         width="160"
@@ -590,20 +590,33 @@
           >
             {{ $translateTitle('product.details') }}
           </el-button>
-          <el-button
-            size="mini"
-            type="text"
-            @click="showTree(row, row.objectId, row.Company)"
-          >
-            {{ $translateTitle('equipment.move') }}
-          </el-button>
-          <el-button
-            size="mini"
-            type="text"
-            @click="handleDelete(row.objectId, 2)"
-          >
-            {{ $translateTitle('developer.delete') }}
-          </el-button>
+          <a-dropdown style="margin-left: 10px">
+            <a class="el-icon-more" @click.prevent>
+              <DownOutlined />
+            </a>
+            <template #overlay>
+              <a-menu>
+                <a-menu-item>
+                  <el-button
+                    size="mini"
+                    type="text"
+                    @click="showTree(row, row.objectId, row.Company)"
+                  >
+                    {{ $translateTitle('equipment.move') }}
+                  </el-button>
+                </a-menu-item>
+                <a-menu-item>
+                  <el-button
+                    size="mini"
+                    type="text"
+                    @click="handleDelete(row.objectId, 2)"
+                  >
+                    {{ $translateTitle('developer.delete') }}
+                  </el-button>
+                </a-menu-item>
+              </a-menu>
+            </template>
+          </a-dropdown>
         </template>
       </el-table-column>
     </el-table>
@@ -623,19 +636,14 @@
 
 <script>
   import {
-    addimeidevice,
     putDevice,
     querycompanyDevice,
-    getDevice,
     postDevice,
     delDevice,
   } from '@/api/Device'
-  import { doDelete, getList } from '@/api/Mock/table'
   import { mapActions, mapGetters, mapMutations } from 'vuex'
   import TableEdit from '@/views/DeviceCloud/empty/tableEdit'
   import { queryProduct } from '@/api/Product'
-  import { delDict } from '@/api/Dict'
-  import { returnLogin } from '@/utils/utilwen'
   import {
     BaiduMap,
     BmCityList,
@@ -656,7 +664,7 @@
   } from 'vue-baidu-map'
   import info from '@/components/Device/info'
   import { putView, queryView } from '@/api/View'
-  import topopreview from '@/views/CloudFunction/topo/preview'
+  import topopreview from '@/views/CloudFunction/topo/index'
   export default {
     name: 'Device',
     components: {
