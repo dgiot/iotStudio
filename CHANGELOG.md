@@ -1,4 +1,4 @@
-## [4.5.4](https://github.com/dgiot/dgiot-dashboard/compare/v4.5.5...v4.5.4) (2022-06-27)
+## [4.5.4](https://github.com/dgiot/dgiot-dashboard/compare/v4.5.5...v4.5.4) (2022-06-29)
 
 
 ### Bug Fixes
@@ -14,11 +14,13 @@
 
 ### Features
 
+* **统计功能:** 添加友盟统计 ([b0cd74d](https://github.com/dgiot/dgiot-dashboard/commit/b0cd74d8ea9454da3dec28447c46a2287a8b08c9))
 * **cloudPressure:** 压测报告生成添加等待时间 优化loading ([2969b9b](https://github.com/dgiot/dgiot-dashboard/commit/2969b9b605b24507300bfcbb48515ec6fc4a1a80))
 * **components:** 百度地图 ([2028435](https://github.com/dgiot/dgiot-dashboard/commit/2028435e76e2a7de221266fa54b40d793c9495cb))
 * **components:** 设备管理 ([0a9756c](https://github.com/dgiot/dgiot-dashboard/commit/0a9756cadaa45a0796f345fa064c1f1f239af7ee))
 * **components:** 云压测 ([ed99eee](https://github.com/dgiot/dgiot-dashboard/commit/ed99eee177a5947609cfa35998bdd1f8b3d3a9ab))
 * **dashboard:** 新增百度统计 ([396c7be](https://github.com/dgiot/dgiot-dashboard/commit/396c7be11d010deae48bd915265a904202df0be2))
+* **equipmentCloud:** 修復設備列表查询条件更新后pagination组件不更新 ([28115a9](https://github.com/dgiot/dgiot-dashboard/commit/28115a982d253e11fbd2ec1cfd64b40409c5e122))
 * **projects:** 云压测 ([97a7f62](https://github.com/dgiot/dgiot-dashboard/commit/97a7f62e0b32949dc2bc4d1297a30befa76fe583))
 * **projects:** scripts ([d4566d9](https://github.com/dgiot/dgiot-dashboard/commit/d4566d90c7ca08ef84107f2a7ff3b8b8cf0da6e8))
 
