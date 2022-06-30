@@ -23,6 +23,7 @@
 * **dashboard:** 新增百度统计 ([396c7be](https://github.com/dgiot/dgiot-dashboard/commit/396c7be11d010deae48bd915265a904202df0be2))
 * **equipmentCloud:** 物模型是否展示 ([2b50100](https://github.com/dgiot/dgiot-dashboard/commit/2b50100a58ca61ca1cea563f816e412bb56fadd1))
 * **equipmentCloud:** 修復設備列表查询条件更新后pagination组件不更新 ([28115a9](https://github.com/dgiot/dgiot-dashboard/commit/28115a982d253e11fbd2ec1cfd64b40409c5e122))
+* **equipmentCloud:** konva ([20e1b10](https://github.com/dgiot/dgiot-dashboard/commit/20e1b10be36cf25ed2ca13b12127ab9c49daa90d))
 * **projects:** 云压测 ([97a7f62](https://github.com/dgiot/dgiot-dashboard/commit/97a7f62e0b32949dc2bc4d1297a30befa76fe583))
 * **projects:** scripts ([d4566d9](https://github.com/dgiot/dgiot-dashboard/commit/d4566d90c7ca08ef84107f2a7ff3b8b8cf0da6e8))
 

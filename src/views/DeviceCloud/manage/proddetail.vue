@@ -1355,10 +1355,10 @@
                       >
                         <template #default="{ row }">
                           <a-switch
-                            :checked="row.isstorage"
+                            :checked="row.isshow"
                             checked-children="展示"
                             un-checked-children="不展示"
-                            @click="toggleStore(row)"
+                            @click="toggleSwitch(row)"
                           />
                         </template>
                       </el-table-column>
@@ -1370,10 +1370,10 @@
                       >
                         <template #default="{ row }">
                           <a-switch
-                            :checked="row.isshow"
+                            :checked="row.isstorage"
                             checked-children="存储"
                             un-checked-children="不存储"
-                            @click="toggleSwitch(row)"
+                            @click="toggleStore(row)"
                           />
                         </template>
                       </el-table-column>
