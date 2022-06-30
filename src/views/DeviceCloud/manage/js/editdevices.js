@@ -346,13 +346,13 @@ export default {
       thirdtotal: 0,
       topic: [
         {
-          topic: '$dg/user/${deviceid}/post',
+          topic: '$dg/thing/{productId}/{deviceAddr}/properties/report',
           type: 'pub',
           desc: '设备上报',
           isdef: true,
         },
         {
-          topic: '$dg/thing/${deviceid}/',
+          topic: '$dg/device/{productId}/{deviceAddr}/profile',
           type: 'sub',
           desc: '消息下发',
           isdef: true,
@@ -558,15 +558,33 @@ export default {
         // const deviceid = resultes.objectId
         let _toppic = [
           {
-            topic: `$dg/thing/${deviceid}/post`,
+            topic: `$dg/thing/${ProductId}/${DevAddr}/properties/report`,
             type: 'pub',
-            desc: '设备上报',
+            desc: '属性上报',
             isdef: true,
           },
           {
-            topic: `$dg/thing/${deviceid}/`,
-            type: 'sub',
-            desc: '消息下发',
+            topic: `$dg/device/${ProductId}/${DevAddr}/properties`,
+            type: 'pub',
+            desc: '属性采集',
+            isdef: true,
+          },
+          {
+            topic: `$dg/user/konva/${deviceid}/report`,
+            type: 'pub',
+            desc: '组态消息',
+            isdef: true,
+          },
+          {
+            topic: `$dg/user/realtimecard/${deviceid}/report`,
+            type: 'pub',
+            desc: '卡片消息',
+            isdef: true,
+          },
+          {
+            topic: `$dg/device/${ProductId}/${DevAddr}/profile`,
+            type: 'pub',
+            desc: '设备控制',
             isdef: true,
           },
         ]
