@@ -695,6 +695,7 @@ export default {
         },
       ],
       isshow: true,
+      isstorage:true,
       isaccumulate: false,
       addRules: {
         name: [
@@ -961,6 +962,10 @@ export default {
       row.isshow = !row.isshow
       this.preserve('isshow')
     },
+    toggleStore(row) {
+      row.isstorage = !row.isstorage
+      this.preserve('isstorage')
+    },
     thingParameters(form, index, type) {
       this.editIndex = index
       console.log(
@@ -1171,6 +1176,7 @@ export default {
         devicetype: form.data.name,
         required: false,
         isshow: true,
+        isstorage:true,
         isaccumulate: false,
         dataForm: { order: moment(new Date()).format('x') },
         dataType: {
@@ -1322,6 +1328,7 @@ export default {
         falsevalue: 0,
         isread: 'r',
         isshow: true,
+        isstorage:true,
         isaccumulate: false,
         unit: '',
         string: '',
@@ -2415,6 +2422,7 @@ export default {
           ico: rowData.ico,
           isread: rowData.accessMode,
           isshow: rowData.isshow,
+          isstorage: rowData.isstorage,
           isaccumulate: rowData.isaccumulate,
           identifier: rowData.identifier,
           editdatatype: true,
@@ -2458,6 +2466,7 @@ export default {
           ico: rowData.ico,
           isread: rowData.accessMode,
           isshow: rowData.isshow,
+          isstorage: rowData.isstorage,
           isaccumulate: rowData.isaccumulate,
           identifier: rowData.identifier,
           collection:
@@ -2501,6 +2510,7 @@ export default {
           ico: rowData.ico,
           isread: rowData.accessMode,
           isshow: rowData.isshow,
+          isstorage: rowData.isstorage,
           isaccumulate: rowData.isaccumulate,
           identifier: rowData.identifier,
           collection:
@@ -2552,6 +2562,7 @@ export default {
           ico: rowData.ico,
           isread: rowData.accessMode,
           isshow: rowData.isshow,
+          isstorage: rowData.isstorage,
           isaccumulate: rowData.isaccumulate,
           identifier: rowData.identifier,
           collection:
@@ -2595,6 +2606,7 @@ export default {
           ico: rowData.ico,
           isread: rowData.accessMode,
           isshow: rowData.isshow,
+          isstorage: rowData.isstorage,
           isaccumulate: rowData.isaccumulate,
           collection:
             rowData.dataForm == undefined ? '' : rowData.dataForm.collection,
@@ -2642,6 +2654,7 @@ export default {
           ico: rowData.ico,
           isread: rowData.accessMode,
           isshow: rowData.isshow,
+          isstorage: rowData.isstorage,
           isaccumulate: rowData.isaccumulate,
           identifier: rowData.identifier,
           strategy:
@@ -2686,6 +2699,7 @@ export default {
           ico: rowData.ico,
           isread: rowData.accessMode,
           isshow: rowData.isshow,
+          isstorage: rowData.isstorage,
           isaccumulate: rowData.isaccumulate,
           identifier: rowData.identifier,
           editdatatype: true,
@@ -2729,6 +2743,7 @@ export default {
           ico: rowData.ico,
           isread: rowData.accessMode,
           isshow: rowData.isshow,
+          isstorage: rowData.isstorage,
           isaccumulate: rowData.isaccumulate,
           identifier: rowData.identifier,
           editdatatype: true,

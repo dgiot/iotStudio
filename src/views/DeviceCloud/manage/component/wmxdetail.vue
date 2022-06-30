@@ -190,7 +190,7 @@
                   prop="isshow"
                 >
                   <el-radio-group
-                    v-model="sizeForm.isshow"
+                    v-model="sizeForm.isstorage"
                     size="medium"
                     style="width: 100%"
                   >
@@ -200,6 +200,18 @@
                     <el-radio :label="false">
                       {{ $translateTitle('product.notstorage') }}
                     </el-radio>
+                  </el-radio-group>
+                </el-form-item>
+              </el-col>
+              <el-col :span="8">
+                <el-form-item label="是否展示">
+                  <el-radio-group
+                    v-model="sizeForm.issshow"
+                    size="medium"
+                    style="width: 100%"
+                  >
+                    <el-radio :label="true">展示</el-radio>
+                    <el-radio :label="false">不展示</el-radio>
                   </el-radio-group>
                 </el-form-item>
               </el-col>
@@ -1226,10 +1238,17 @@
               trigger: 'change',
             },
           ],
-          isshow: [
+          isstorage: [
             {
               required: true,
               message: '请选择是否存储',
+              trigger: 'change',
+            },
+          ],
+          issshow: [
+            {
+              required: true,
+              message: '请选择是否展示',
               trigger: 'change',
             },
           ],
@@ -1420,11 +1439,24 @@
               console.log(resource.params[k])
             }
             this.resource.changeData = resource
-            this.resource.arrlist = resource.arr
+            // this.resource.arrlist = resource.arr
             this.resource.addchannel = resource.obj
-            console.log(this.resource.arrlist)
+            this.resource.arrlist = _.sortBy(resource.arr, function (item) {
+              return item.order //根据code对数据进行升序排序，若是降序则改成：return -item.code
+            })
+            console.log(this.resource.arrlist, 'arrlist')
+            this.resource.data = _.sortBy(this.protocol, function (item) {
+              return item.order //根据code对数据进行升序排序，若是降序则改成：return -item.code
+            })
             this.resource.arrlist.forEach((i) => {
               console.error(i)
+              this.resource.arrlist = _.sortBy(resource.arr, function (item) {
+                return item.order //根据code对数据进行升序排序，若是降序则改成：return -item.code
+              })
+              console.log(this.resource.arrlist, 'arrlist')
+              this.resource.data = _.sortBy(this.protocol, function (item) {
+                return item.order //根据code对数据进行升序排序，若是降序则改成：return -item.code
+              })
               if (i.allowCreate) this.dynamicTable(i)
             })
             // allowCreate
@@ -1441,8 +1473,10 @@
         const { dataType = [], dataNnit = [] } = await getDlinkJson('ThingUnit')
         this.allunit = dataNnit
         this.dataType = dataType
-        this.resource.data = this.protocol
-        console.error(this.resource.data)
+        this.resource.data = _.sortBy(this.protocol, function (item) {
+          return item.order //根据code对数据进行升序排序，若是降序则改成：return -item.code
+        })
+        console.error(this.resource.data, 'data')
         this.resource.data.forEach((item, index) => {
           this.resource.data[index].arr = []
           this.resource.data[index].obj = {}
@@ -1462,7 +1496,15 @@
             this.resource.data[index].arr.push(item.params[key])
             console.log(this.resource.data[index].arr)
           }
+          this.resource.data[index].arr = _.sortBy(
+            this.resource.data[index].arr,
+            function (item) {
+              return item.order //根据code对数据进行升序排序，若是降序则改成：return -item.code
+            }
+          )
+          console.info(this.resource.data[index].arr, 'result order')
           this.resource.data[index].arr.map((_item) => {
+            console.log(_item)
             this.resource.data[index].obj[_item.showname] = _item?.default
               ?.value
               ? _item.default.value
@@ -1477,6 +1519,7 @@
               dgiotlogger.info(_item.type, _item.enum, _item, 'set select')
           })
           console.log(this.resource.data[index].arr)
+          console.info('this.resource.data', this.resource.data)
         })
         console.info('this.resource.data', this.resource.data)
       },
@@ -1952,7 +1995,10 @@
           this.resource.disabled = item.dataForm.protocol.length ? true : false
           // this.changeResource(this.resource.value)
 
-          this.resource.arrlist = item.dataSource
+          this.resource.arrlist = _.sortBy(item.dataSource, function (item) {
+            return item.order //根据code对数据进行升序排序，若是降序则改成：return -item.code
+          })
+          console.log(this.resource.arrlist, 'arrlist')
           this.$nextTick(() => {
             this.resource.data.forEach((resource, index) => {
               // resource[index].arr = []
@@ -2058,6 +2104,7 @@
               required: true,
               accessMode: sizeForm.isread,
               isshow: sizeForm.isshow,
+              isstorage: sizeForm.isshow,
               isaccumulate: sizeForm.isaccumulate,
               identifier: sizeForm.identifier,
             }

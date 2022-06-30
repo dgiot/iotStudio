@@ -30,6 +30,7 @@
             />
             <dgiot-error-log :title="$translateTitle(`home.error log`)" />
             <dgiot-notice :title="$translateTitle(`home.notice`)" />
+            <dgiot-doc :title="$translateTitle(`home.full screen`)" />
             <dgiot-full-screen :title="$translateTitle(`home.full screen`)" />
             <dgiot-language
               v-show="isShow"
