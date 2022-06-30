@@ -1349,6 +1349,21 @@
                       />
                       <el-table-column
                         align="center"
+                        label="是否展示"
+                        prop="name"
+                        width="100"
+                      >
+                        <template #default="{ row }">
+                          <a-switch
+                            :checked="row.isstorage"
+                            checked-children="展示"
+                            un-checked-children="不展示"
+                            @click="toggleStore(row)"
+                          />
+                        </template>
+                      </el-table-column>
+                      <el-table-column
+                        align="center"
                         label="是否存储"
                         prop="name"
                         width="100"
