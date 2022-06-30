@@ -206,7 +206,7 @@
               <el-col :span="8">
                 <el-form-item label="是否展示">
                   <el-radio-group
-                    v-model="sizeForm.issshow"
+                    v-model="sizeForm.isshow"
                     size="medium"
                     style="width: 100%"
                   >
@@ -1245,7 +1245,7 @@
               trigger: 'change',
             },
           ],
-          issshow: [
+          isshow: [
             {
               required: true,
               message: '请选择是否展示',
@@ -2104,7 +2104,7 @@
               required: true,
               accessMode: sizeForm.isread,
               isshow: sizeForm.isshow,
-              isstorage: sizeForm.isshow,
+              isstorage: sizeForm.isstorage,
               isaccumulate: sizeForm.isaccumulate,
               identifier: sizeForm.identifier,
             }
@@ -2215,6 +2215,8 @@
             delete obj.index
             dgiotlog.log(this.resource.changeData, 'changeData')
             dgiotlog.log('dynamicData', this.resource.addchannel)
+            // 是否展示
+            obj.isstorage = sizeForm.isstorage
             // 新增协议类型参数
             obj.dataForm.protocol = this.resource.value
             // 处理动态数据源
