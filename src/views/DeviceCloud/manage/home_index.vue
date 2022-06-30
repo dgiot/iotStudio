@@ -1,6 +1,36 @@
 <template>
   <div class="comprehensive-table-container">
     <div class="dialog">
+      <Modal
+        v-model="topoFlag"
+        footer-hide
+        :query="routerInfo.query"
+        width="1200"
+        @on-cancel="closeModal"
+      >
+        <span slot="title" v-if="false"></span>
+        <span slot="footer" v-if="false"></span>
+        <topopreview v-if="topoFlag" ref="topo" />
+      </Modal>
+      <el-dialog
+        append-to-body
+        :before-close="handleCloseAmis"
+        center
+        top="5vh"
+        :visible.sync="commandInfo.dialog"
+        width="80%"
+      >
+        <el-tabs v-model="activeName">
+          <el-tab-pane
+            v-for="(item, index) in commandInfo.data"
+            :key="index + 'i'"
+            :label="item.title"
+            :name="index + ''"
+          >
+            <dgiot-amis :schema="item.data" :show-help="false" />
+          </el-tab-pane>
+        </el-tabs>
+      </el-dialog>
       <el-dialog
         append-to-body
         :before-close="closeMap"
@@ -228,7 +258,7 @@
               placeholder="请输入设备地址"
             />
           </el-form-item>
-          <el-form-item label="资产编号" prop="detail.assetNum">
+          <el-form-item label="资产编号">
             <el-input
               v-model="form.detail.assetNum"
               placeholder="请输入资产编号"
@@ -246,6 +276,15 @@
                 style="cursor: pointer"
               ></i>
             </el-input>
+          </el-form-item>
+          <el-form-item label="到期时间">
+            <el-date-picker
+              v-model="form.detail.expirationTime"
+              placeholder="选择日期："
+              style="width: 100%"
+              type="date"
+              value-format="timestamp"
+            />
           </el-form-item>
           <el-form-item style="text-align: center">
             <el-button type="primary" @click="submitForm('form', form.type)">
@@ -275,27 +314,33 @@
             >
               <el-option
                 v-for="item in product"
-                :key="item.objectId"
+                :key="item.objectId + 'j'"
                 :label="item.name"
                 :value="item.objectId"
               />
             </el-select>
           </el-form-item>
-          <el-form-item label="设备名称">
+          <el-form-item>
             <el-input
-              v-model="queryForm.name"
-              clearable
-              placeholder="请输入设备名称"
-            />
+              v-model="queryForm.search"
+              class="input-with-select"
+              placeholder="请输入查询参数"
+              style="margin-left: 20px"
+            >
+              <el-select
+                v-model="queryForm.type"
+                clearable
+                placeholder="请选择查询类型"
+                style="width: 160px"
+                slot="prepend"
+              >
+                <el-option label="设备名称" value="name" />
+                <el-option label="资产编号" value="detail.assetNum" />
+                <el-option label="设备地址" value="devaddr" />
+              </el-select>
+            </el-input>
           </el-form-item>
-          <el-form-item v-show="!fold" label="设备地址">
-            <el-input
-              v-model="queryForm.devaddr"
-              clearable
-              placeholder="请输入设备地址"
-            />
-          </el-form-item>
-          <el-form-item v-show="!fold" label="设备状态">
+          <el-form-item v-show="!fold" label="状态">
             <el-select
               v-model="queryForm.status"
               clearable
@@ -306,27 +351,18 @@
               <el-option label="离线" value="OFFLINE" />
             </el-select>
           </el-form-item>
-          <el-form-item v-show="!fold" label="启用状态">
+          <el-form-item v-show="!fold" label="开关机">
             <el-select
               v-model="queryForm.isEnable"
               clearable
-              placeholder="请选择启用状态"
+              placeholder="请选择开关机状态"
               @change="handleQuery()"
             >
-              <el-option label="启用" value="true" />
-              <el-option label="禁用" value="false" />
+              <el-option label="开机" value="true" />
+              <el-option label="关机" value="false" />
             </el-select>
           </el-form-item>
           <el-form-item>
-            <el-button type="text" @click="fold = !fold">
-              <span v-if="fold">展开</span>
-              <span v-else>合并</span>
-              <dgiot-icon
-                class="dgiot-dropdown"
-                :class="{ 'dgiot-dropdown-active': fold }"
-                icon="arrow-up-s-line"
-              />
-            </el-button>
             <el-button
               icon="el-icon-search"
               native-type="submit"
@@ -348,7 +384,7 @@
     </dgiot-query-form>
 
     <el-table
-      :key="upkey"
+      :key="upkey + 't'"
       ref="tableSort"
       v-loading="listLoading"
       border
@@ -375,6 +411,7 @@
         prop="name"
         show-overflow-tooltip
         sortable
+        width="160"
       >
         <template slot="header">
           <span>设备名称</span>
@@ -411,6 +448,14 @@
         align="center"
         label="设备地址"
         prop="devaddr"
+        show-overflow-tooltip
+        sortable
+        width="120"
+      />
+      <el-table-column
+        align="center"
+        label="资产编号"
+        prop="detail.assetNum"
         show-overflow-tooltip
         sortable
         width="120"
@@ -465,8 +510,8 @@
       >
         <template #default="{ row }">
           <el-tag
-            v-for="item in getAcl(row.ACL)"
-            :key="item"
+            v-for="(item, index) in getAcl(row.ACL)"
+            :key="index"
             effect="plain"
             :type="item"
           >
@@ -526,8 +571,17 @@
       >
         <template #default="{ row }">
           <el-button size="mini" type="text" @click="konvaDevice(row)">
-            {{ $translateTitle('concentrator.konva') }}
+            设备面板
           </el-button>
+          <el-button size="mini" type="text" @click="info(row)">
+            设备信息
+          </el-button>
+          <el-button size="mini" type="text" @click="command(row)">
+            控制
+          </el-button>
+          <!--          <el-button size="mini" type="text" @click="konvaDevice(row)">-->
+          <!--            {{ $translateTitle('concentrator.konva') }}-->
+          <!--          </el-button>-->
           <el-button
             size="mini"
             style="margin-left: 10px"
@@ -536,17 +590,6 @@
           >
             {{ $translateTitle('product.details') }}
           </el-button>
-          <!--          <el-button-->
-          <!--            size="mini"-->
-          <!--            style="text-align: center"-->
-          <!--            type="text"-->
-          <!--            @click="editorDevice(row)"-->
-          <!--          >-->
-          <!--            {{ $translateTitle('concentrator.edit') }}-->
-          <!--          </el-button>-->
-          <!--          <el-button size="mini" type="info" @click="konvaDevice(row)">-->
-          <!--            {{ $translateTitle('concentrator.konva') }}-->
-          <!--          </el-button>-->
           <el-button
             size="mini"
             type="text"
@@ -612,11 +655,12 @@
     BmPointCollection,
   } from 'vue-baidu-map'
   import info from '@/components/Device/info'
-  import { putView } from '@/api/View'
-
+  import { putView, queryView } from '@/api/View'
+  import topopreview from '@/views/CloudFunction/topo/preview'
   export default {
-    name: 'ComprehensiveTable',
+    name: 'Device',
     components: {
+      topopreview,
       TableEdit,
       BmLocalSearch,
       BmPointCollection,
@@ -637,6 +681,22 @@
     },
     data() {
       return {
+        activeName: '0',
+        commandInfo: {
+          dialog: false,
+          data: {},
+        },
+        settingInfo: {
+          dialog: false,
+        },
+        statisticsInfo: {
+          dialog: false,
+        },
+        moveInfo: {
+          dialog: false,
+        },
+        topoFlag: false,
+        routerInfo: {},
         paginationKey: moment(new Date()).valueOf() + '',
         upkey: moment(new Date()).valueOf() + '',
         dialog_device: false,
@@ -679,7 +739,7 @@
             latitude: '120.161324',
             longitude: '30.262441',
           },
-          detail: { assetNum: '' },
+          detail: { assetNum: '', expirationTime: moment().format('x') },
         },
         rules: {
           name: [
@@ -714,6 +774,7 @@
         total: 0,
         selectRows: '',
         queryForm: {
+          type: 'name',
           excludeKeys:
             'channel,children,config,thing,decoder,data,basedata,content',
           include: 'product',
@@ -724,6 +785,7 @@
             ? this.$route.query.isEnable
             : '',
           devaddr: '',
+          all: true,
           status: this.$route.query.status ? this.$route.query.status : '',
           skip: 0,
           limit: 10,
@@ -765,6 +827,50 @@
             showClose: true,
             duration: 1500,
           })
+        }
+      },
+      async info(row) {
+        localStorage.setItem('parse_objectid', row.objectId)
+        localStorage.setItem('product_objectid', row.product.objectId)
+        const { results = [] } = await queryView({
+          where: {
+            class: 'Product',
+            type: 'deviceInfo',
+            key: row.product.objectId,
+          },
+        })
+        if (_.isEmpty(results)) {
+          this.$baseMessage(
+            '暂未配置下发控制表单',
+            'info',
+            'dgiot-hey-message-error'
+          )
+          return false
+        } else {
+          this.commandInfo.dialog = true
+          this.commandInfo.data = results
+        }
+      },
+      async command(row) {
+        localStorage.setItem('parse_objectid', row.objectId)
+        localStorage.setItem('product_objectid', row.product.objectId)
+        const { results = [] } = await queryView({
+          where: {
+            class: 'Product',
+            type: { $in: ['amis', 'profile', 'content'] },
+            key: row.product.objectId,
+          },
+        })
+        if (_.isEmpty(results)) {
+          this.$baseMessage(
+            '暂未配置下发控制表单',
+            'info',
+            'dgiot-hey-message-error'
+          )
+          return false
+        } else {
+          this.commandInfo.dialog = true
+          this.commandInfo.data = results
         }
       },
       async editMap() {
@@ -1017,6 +1123,15 @@
       resetForm(formName) {
         this.$refs[formName].resetFields()
       },
+      handleCloseAmis() {
+        this.coordinate = {
+          lng: 116.404,
+          lat: 39.915,
+        }
+        this.dialog_device = false
+        this.commandInfo.dialog = false
+        this.fetchData(false)
+      },
       handleClose(done) {
         this.form = {
           sync: false,
@@ -1140,10 +1255,15 @@
           },
         })
       },
+      async closeModal() {
+        this.$router.go(-1)
+        this.topoFlag = false
+      },
       // 组态
       konvaDevice(row) {
+        this.topoFlag = true
         this.$router.push({
-          path: '/Topo',
+          path: '/dashboard/devicelist',
           query: {
             productid: row.product.objectId,
             devaddr: row.devaddr,
@@ -1186,21 +1306,19 @@
           where: {},
         }
         console.log(this.$route.query)
-        this.queryForm.name
-          ? (params.where.name = { $regex: this.queryForm.name })
-          : ''
         this.queryForm.product
           ? (params.where.product = this.queryForm.product)
           : ''
-        this.queryForm.devaddr
-          ? (params.where.devaddr = { $regex: this.queryForm.devaddr })
+        this.queryForm.search
+          ? (params.where[this.queryForm.type] = {
+              $regex: this.queryForm.search,
+            })
           : ''
-        this.queryForm.status
+        this.queryForm.status.length
           ? (params.where.status = this.queryForm.status)
           : ''
         this.queryForm.isEnable
-          ? (params.where.isEnable =
-              this.queryForm.isEnable == 'true' ? true : false)
+          ? (params.where.isEnable = this.queryForm.isEnable)
           : ''
         const { results: list = [], count: total = 0 } =
           await querycompanyDevice(params, this.token)
