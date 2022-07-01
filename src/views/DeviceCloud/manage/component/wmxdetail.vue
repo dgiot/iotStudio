@@ -1369,7 +1369,10 @@
         console.log(index, row)
       },
       dynamicTable(data, type, _table) {
-        console.log(type)
+        console.log(
+          type,
+          'dynamicTabledynamicTabledynamicTabledynamicTabledynamicTabledynamicTabledynamicTabledynamicTabledynamicTabledynamicTable'
+        )
         this.tableName = data.showname
         var dybaneucForms = []
         this.colCum = { label: [], prop: [] }

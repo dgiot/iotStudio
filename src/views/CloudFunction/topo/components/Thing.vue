@@ -32,7 +32,7 @@
 
 <script>
   import wmxdetail from '@/views/DeviceCloud/manage/component/wmxdetail'
-  import { postThing, putProduct, putThing } from '@/api/Product'
+  import { postThing, putThing } from '@/api/Product'
   import { edit_konva_thing, get_konva_thing } from '@/api/Topo'
   import { mapGetters, mapMutations } from 'vuex'
   import { putView, getView } from '@/api/View'
@@ -354,6 +354,8 @@
                 ico: konvathing.ico,
                 isread: konvathing.accessMode,
                 isshow: konvathing.isshow,
+                isstorage: konvathing.isstorage,
+                isaccumulate: konvathing.isaccumulate,
                 identifier: konvathing.identifier,
                 editdatatype: true,
               }
@@ -398,6 +400,8 @@
                 ico: konvathing.ico,
                 isread: konvathing.accessMode,
                 isshow: konvathing.isshow,
+                isstorage: konvathing.isstorage,
+                isaccumulate: konvathing.isaccumulate,
                 identifier: konvathing.identifier,
                 collection:
                   konvathing.dataForm == undefined
@@ -448,6 +452,8 @@
                 ico: konvathing.ico,
                 isread: konvathing.accessMode,
                 isshow: konvathing.isshow,
+                isstorage: konvathing.isstorage,
+                isaccumulate: konvathing.isaccumulate,
                 identifier: konvathing.identifier,
                 collection:
                   konvathing.dataForm == undefined
@@ -505,6 +511,8 @@
                 ico: konvathing.ico,
                 isread: konvathing.accessMode,
                 isshow: konvathing.isshow,
+                isstorage: konvathing.isstorage,
+                isaccumulate: konvathing.isaccumulate,
                 identifier: konvathing.identifier,
                 collection:
                   konvathing.dataForm == undefined
@@ -554,6 +562,8 @@
                 ico: konvathing.ico,
                 isread: konvathing.accessMode,
                 isshow: konvathing.isshow,
+                isstorage: konvathing.isstorage,
+                isaccumulate: konvathing.isaccumulate,
                 collection:
                   konvathing.dataForm == undefined
                     ? ''
@@ -612,6 +622,8 @@
                 ico: konvathing.ico,
                 isread: konvathing.accessMode,
                 isshow: konvathing.isshow,
+                isstorage: konvathing.isstorage,
+                isaccumulate: konvathing.isaccumulate,
                 identifier: konvathing.identifier,
                 strategy:
                   konvathing.dataForm == undefined
@@ -664,6 +676,8 @@
                 ico: konvathing.ico,
                 isread: konvathing.accessMode,
                 isshow: konvathing.isshow,
+                isaccumulate: konvathing.isaccumulate,
+                isstorage: konvathing.isstorage,
                 identifier: konvathing.identifier,
                 editdatatype: true,
               }
@@ -713,6 +727,8 @@
                 ico: konvathing.ico,
                 isread: konvathing.accessMode,
                 isshow: konvathing.isshow,
+                isaccumulate: konvathing.isaccumulate,
+                isstorage: konvathing.isstorage,
                 identifier: konvathing.identifier,
                 editdatatype: true,
               }
@@ -721,7 +737,8 @@
             obj.protocol = konvathing.dataForm.protocol
             this.setSizeForm(obj)
             this.$nextTick(async () => {
-              this.$refs['sizeForm'].queryResource()
+              await this.$refs['sizeForm'].queryResource()
+              await this.$refs['sizeForm'].queryProtocol()
               // 保证子组件已经挂载完成）
               // if (this.$refs['sizeForm'])
               this.$refs['sizeForm'].resource.value =
@@ -736,24 +753,32 @@
               this.$nextTick(() => {
                 this.$refs['sizeForm'].resource.data.forEach(
                   (resource, index) => {
+                    console.info(resource, '物模型回显事件')
                     // resource[index].arr = []
                     // resource[index].obj = {}
                     if (
                       this.$refs['sizeForm'].resource.value === resource.cType
                     ) {
-                      console.info(resource, 'success cType')
+                      console.info(resource, '物模型回显事件')
+                      resource.arr.forEach((i) => {
+                        if (i.allowCreate) {
+                          this.$refs['sizeForm'].dynamicTable(
+                            i,
+                            '回显',
+                            konvathing.dataSource[i.showname]
+                          )
+                        }
+                      })
                       console.info(konvathing.dataSource, 'rowData.dataSource')
+                      this.$refs['sizeForm'].resource.addchannel =
+                        konvathing.dataSource
                       for (var o in konvathing.dataSource) {
                         for (var j in resource.obj) {
-                          if (o === j)
-                            resource.obj[o] = konvathing.dataSource[j]
+                          if (o === j) resource.obj[o] = rowData.dataSource[j]
                         }
                       }
                       console.info(resource.obj, 'set resource.obj')
-                      this.$refs['sizeForm'].resource.addchannel = resource.obj
                     }
-                    this.$refs['sizeForm'].resource.changeData =
-                      konvathing.dataSource
                     this.$refs['sizeForm'].resource.changeData =
                       konvathing.dataSource
                     if (resource.cType == konvathing.dataForm.protocol) {
@@ -800,6 +825,8 @@
           falsevalue: 0,
           isread: 'r',
           isshow: false,
+          isstorage: true,
+          isaccumulate: false,
           unit: '',
           string: '',
           date: 'String类型的UTC时间戳 (毫秒)',

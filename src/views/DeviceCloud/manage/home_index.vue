@@ -591,9 +591,7 @@
             {{ $translateTitle('product.details') }}
           </el-button>
           <a-dropdown style="margin-left: 10px">
-            <a class="el-icon-more" @click.prevent>
-              <DownOutlined />
-            </a>
+            <a class="el-icon-more" @click.prevent></a>
             <template #overlay>
               <a-menu>
                 <a-menu-item>
