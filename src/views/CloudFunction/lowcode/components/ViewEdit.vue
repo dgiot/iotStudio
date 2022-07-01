@@ -41,7 +41,7 @@
             :value="item.value"
           >
             <span style="float: left">{{ item.label }}</span>
-            <span style="float: right; color: #8492a6; font-size: 13px">
+            <span style="float: right; font-size: 13px; color: #8492a6">
               {{ item.value }}
             </span>
           </el-option>

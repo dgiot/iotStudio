@@ -246,7 +246,7 @@
       </el-table>
       <div class="elpagination">
         <el-pagination
-          :key="length + 'key' + total"
+          :key="paginationKey + 'key' + total"
           layout="total, sizes, prev, pager, next, jumper"
           :page-size="length"
           :page-sizes="[5, 10, 20, 30, 50]"
@@ -804,6 +804,7 @@
           ],
         },
         length: 10,
+        paginationKey: moment(new Date()).valueOf() + '',
         start: 0,
         total: 0,
         selectregion: {},
@@ -1198,6 +1199,7 @@
           keys: 'count(*)',
           where: {},
         }
+        this.paginationKey = moment(new Date()).valueOf() + ''
         this.channelformsearch.name
           ? (params.where.name = {
               $regex: this.channelformsearch.name,

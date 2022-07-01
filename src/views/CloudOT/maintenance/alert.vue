@@ -245,7 +245,7 @@
     <!--      @pagination="fetchData"-->
     <!--    />-->
     <dgiot-parser-pagination
-      :key="list.length + 'forensics'"
+      :key="paginationKey + 'forensics'"
       ref="forensics"
       :pagination="paginations"
       :query-payload="queryPayload"
@@ -266,11 +266,13 @@
   import { mapGetters } from 'vuex'
   import { Promise } from 'q'
   import { getView } from '@/api/View'
+
   export default {
     name: 'Index',
     components: {},
     data() {
       return {
+        paginationKey: moment(new Date()).valueOf() + '',
         editRow: {},
         amisData: {},
         paginations: { layout: 'total, sizes, prev, pager, next, jumper' },
@@ -529,6 +531,7 @@
         this.fetchData()
       },
       async fetchData(args = {}) {
+        this.paginationKey = moment(new Date()).valueOf() + ''
         if (!args.limit) {
           args = this.queryForm
         }
@@ -545,7 +548,7 @@
             // productid: this.queryForm.productName
             //   ? this.queryForm.productName
             //   : 'all',
-            isprocess: this.queryForm.isprocess,
+            // isprocess: this.queryForm.isprocess,
             include: '',
             where: {
               'content._productid': {
@@ -558,7 +561,7 @@
             limit: args.limit,
             order: args.order,
             skip: args.skip,
-            count: args.keys,
+            count: 'objectId',
             // productid: this.queryForm.productName
             //   ? this.queryForm.productName
             //   : 'all',
@@ -570,11 +573,11 @@
         //   ? (this.queryPayload.where.content['_productid'] = )
         //   : 'all'
 
-        this.queryForm.isprocess
-          ? (this.queryPayload.where['process'] = {
-              $regex: this.queryForm.isprocess,
-            })
-          : ''
+        // this.queryForm.isprocess
+        //   ? (this.queryPayload.where['process'] = {
+        //     $regex: this.queryForm.isprocess,
+        //   })
+        //   : ''
         if (this.queryForm.searchDate.length) {
           this.queryPayload.where['createdAt'] = {
             $gt: {
