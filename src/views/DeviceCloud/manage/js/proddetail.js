@@ -1,29 +1,41 @@
 /* eslint-disable */
 import mqttLog from '@/views/CloudFunction/engine/components/mqttLog.vue'
 import thingForm from '@/views/DeviceCloud/manage/component/Thing/form'
-import { getDlinkJson } from '@/api/Dlink'
-import { mapGetters, mapMutations } from 'vuex'
-import { delDevice, getDeviceCountByProduct } from '@/api/Device/index'
-import {
-  deleteThing,
-  postThing,
-  putThing,
-  putProduct,
-  getProduct,
-} from '@/api/Product/index'
-import { putChannel } from '@/api/Channel/index'
-import { downBinary } from '@/api/File/index'
-import { getAllunit, getDictCount } from '@/api/Dict/index'
-import { getChannelCountByProduct, saveChanne } from '@/api/Channel/index'
-import { getRule } from '@/api/Rules'
-import { postProductTemplet } from '@/api/ProductTemplet'
-import { Compile, subupadte } from '@/api/System/index'
-import { setTimeout } from 'timers'
+import {getDlinkJson} from '@/api/Dlink'
+import {mapGetters, mapMutations} from 'vuex'
+import {getDeviceCountByProduct} from '@/api/Device/index'
+import {deleteThing, getProduct, postThing, putProduct, putThing,} from '@/api/Product/index'
+import {getChannelCountByProduct, putChannel, saveChanne} from '@/api/Channel/index'
+import {downBinary} from '@/api/File/index'
+import {getDictCount} from '@/api/Dict/index'
+import {getRule} from '@/api/Rules'
+import {postProductTemplet} from '@/api/ProductTemplet'
+import {Compile, subupadte} from '@/api/System/index'
+import {setTimeout} from 'timers'
 import wmxdetail from '@/views/DeviceCloud/manage/component/wmxdetail'
-import { returnLogin } from '@/utils/utilwen'
 import profile from '@/views/DeviceCloud/manage/profile'
-import { dgiotlog } from '../../../../utils/dgiotLog'
-import { queryView } from '@/api/View'
+import {dgiotlog} from '../../../../utils/dgiotLog'
+import {queryView} from '@/api/View'
+import dgiotViews from '@/views/CloudFunction/lowcode'
+import {getProtocol} from '@/api/Protocol'
+import {
+  BaiduMap,
+  BmCityList,
+  BmControl,
+  BmGeolocation,
+  BmInfoWindow,
+  BmLabel,
+  BmlMarkerClusterer,
+  BmLocalSearch,
+  BmMapType,
+  BmMarker,
+  BmNavigation,
+  BmOverviewMap,
+  BmPanorama,
+  BmPointCollection,
+  BmScale,
+  BmView,
+} from 'vue-baidu-map'
 
 var editor
 var editor1
@@ -36,26 +48,6 @@ const Base64 = require('js-base64').Base64
 var setdata = ''
 var isallchannel = false
 var isupdatetrue = ''
-import dgiotViews from '@/views/CloudFunction/lowcode'
-import { getProtocol } from '@/api/Protocol'
-import {
-  BaiduMap,
-  BmCityList,
-  BmControl,
-  BmGeolocation,
-  BmInfoWindow,
-  BmlMarkerClusterer,
-  BmMapType,
-  BmMarker,
-  BmNavigation,
-  BmOverviewMap,
-  BmPanorama,
-  BmScale,
-  BmLabel,
-  BmView,
-  BmLocalSearch,
-  BmPointCollection,
-} from 'vue-baidu-map'
 export default {
   components: {
     mqttLog,
@@ -224,8 +216,8 @@ export default {
         hiddenRow: ['class', 'key', 'createdAt'],
       },
       dlinkUnit: [],
-      dlinkTopic: { basic: [], thing: [] },
-      mergeObj: { basic: [], thing: [] },
+      dlinkTopic: {basic: [], thing: []},
+      mergeObj: {basic: [], thing: []},
       tabsChild: 'properties',
       // tabsChild: 'events',
       modules: {
@@ -241,7 +233,7 @@ export default {
         events: {
           rules: {
             name: [
-              { required: true, message: '请输入功能名称', trigger: 'blur' },
+              {required: true, message: '请输入功能名称', trigger: 'blur'},
               {
                 min: 1,
                 max: 30,
@@ -250,10 +242,10 @@ export default {
               },
             ],
             identifier: [
-              { required: true, message: '请输入标识符', trigger: 'blur' },
+              {required: true, message: '请输入标识符', trigger: 'blur'},
             ],
             types: [
-              { required: true, message: '请选择调用方式', trigger: 'change' },
+              {required: true, message: '请选择调用方式', trigger: 'change'},
             ],
             output: [
               {
@@ -277,7 +269,7 @@ export default {
         services: {
           rules: {
             name: [
-              { required: true, message: '请输入功能名称', trigger: 'blur' },
+              {required: true, message: '请输入功能名称', trigger: 'blur'},
               {
                 min: 1,
                 max: 40,
@@ -286,10 +278,10 @@ export default {
               },
             ],
             identifier: [
-              { required: true, message: '请输入标识符', trigger: 'blur' },
+              {required: true, message: '请输入标识符', trigger: 'blur'},
             ],
             transfer: [
-              { required: true, message: '请选择调用方式', trigger: 'change' },
+              {required: true, message: '请选择调用方式', trigger: 'change'},
             ],
           },
           visible: false,
@@ -308,18 +300,18 @@ export default {
       upKey: moment.now(),
       codeFlag: false,
       productInfo: {
-        decoder: { code: '' },
-        thing: { properties: [], events: [], services: [], tags: [] },
+        decoder: {code: ''},
+        thing: {properties: [], events: [], services: [], tags: []},
         config: {
           parser: [],
           profile: [],
-          basedate: { params: [] },
+          basedate: {params: []},
         },
       },
       productObj: {
-        thing: { properties: [], events: [], services: [], tags: [] },
+        thing: {properties: [], events: [], services: [], tags: []},
       },
-      FromMachine: [{ name: 'ALL' }],
+      FromMachine: [{name: 'ALL'}],
       machineForm: {},
       machine: false,
       devicetype: '',
@@ -385,7 +377,7 @@ export default {
       decoderlength: 10,
       topicrule: {
         info: [
-          { required: true, message: '请选择topic所属类型', trigger: 'change' },
+          {required: true, message: '请选择topic所属类型', trigger: 'change'},
         ],
         topic: [
           {
@@ -676,7 +668,7 @@ export default {
             __type: 'GeoPoint',
           },
         },
-        thing: { properties: [], events: [], services: [], tags: [] },
+        thing: {properties: [], events: [], services: [], tags: []},
       },
       topicData: [],
       topicDefault: {},
@@ -695,7 +687,7 @@ export default {
         },
       ],
       isshow: true,
-      isstorage:true,
+      isstorage: true,
       isaccumulate: false,
       addRules: {
         name: [
@@ -802,11 +794,11 @@ export default {
       amisShow: true,
       rules: {
         name: [
-          { required: true, message: '请输入活动名称', trigger: 'blur' },
-          { min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' },
+          {required: true, message: '请输入活动名称', trigger: 'blur'},
+          {min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur'},
         ],
         region: [
-          { required: true, message: '请选择活动区域', trigger: 'change' },
+          {required: true, message: '请选择活动区域', trigger: 'change'},
         ],
         date1: [
           {
@@ -833,9 +825,9 @@ export default {
           },
         ],
         resource: [
-          { required: true, message: '请选择活动资源', trigger: 'change' },
+          {required: true, message: '请选择活动资源', trigger: 'change'},
         ],
-        desc: [{ required: true, message: '请填写活动形式', trigger: 'blur' }],
+        desc: [{required: true, message: '请填写活动形式', trigger: 'blur'}],
       },
     }
   },
@@ -931,7 +923,7 @@ export default {
         function (point) {
           if (point) {
             map.centerAndZoom(point, 16)
-            map.addOverlay(new BMapGL.Marker(point, { title: address }))
+            map.addOverlay(new BMapGL.Marker(point, {title: address}))
           } else {
             alert('您选择的地址没有解析到结果！')
           }
@@ -1016,27 +1008,27 @@ export default {
       // this.$refs.thingForm.resetForm('ruleForm')
       console.log('清空子组件的规则校验和表单数据')
     },
-    basicMethod({ column, rowIndex }) {
+    basicMethod({column, rowIndex}) {
       return this.mergeObj.basic[column.property][rowIndex]
         ? {
-            rowspan: this.mergeObj.basic[column.property][rowIndex],
-            colspan: 1,
-          }
+          rowspan: this.mergeObj.basic[column.property][rowIndex],
+          colspan: 1,
+        }
         : {
-            rowspan: 0,
-            colspan: 0,
-          }
+          rowspan: 0,
+          colspan: 0,
+        }
     },
-    thingMethod({ column, rowIndex }) {
+    thingMethod({column, rowIndex}) {
       return this.mergeObj.basic[column.property][rowIndex]
         ? {
-            rowspan: this.mergeObj.basic[column.property][rowIndex],
-            colspan: 1,
-          }
+          rowspan: this.mergeObj.basic[column.property][rowIndex],
+          colspan: 1,
+        }
         : {
-            rowspan: 0,
-            colspan: 0,
-          }
+          rowspan: 0,
+          colspan: 0,
+        }
     },
     async editEvent(item, index, type) {
       this.editIndex = index
@@ -1048,9 +1040,9 @@ export default {
     },
     async getDefaultTopic() {
       const res = await getDlinkJson('Topic')
-      const { UnifyUnitSpecsDTO = [] } = await getDlinkJson('Unit')
+      const {UnifyUnitSpecsDTO = []} = await getDlinkJson('Unit')
       this.dlinkUnit = UnifyUnitSpecsDTO
-      this.dlinkUnit.unshift({ Symbol: '/', Name: '无' })
+      this.dlinkUnit.unshift({Symbol: '/', Name: '无'})
       this.dlinkTopic = res
       for (var k in this.dlinkTopic) {
         await this.mergeTable(k, this.dlinkTopic[k])
@@ -1117,7 +1109,7 @@ export default {
         : ''
       this.modules.type == 'services'
         ? this.$refs.services.clearValidate() &&
-          this.$refs.services.resetFields()
+        this.$refs.services.resetFields()
         : ''
       this.modules.events.data.types = 'info'
       this.modules.services.data.transfer = 'sync'
@@ -1147,11 +1139,11 @@ export default {
     async queryProductInfo(productId) {
       const res = await getProduct(productId)
       localStorage.setItem('product_objectid', productId)
-      const { thing = { properties: [], events: [], services: [], tags: [] } } =
+      const {thing = {properties: [], events: [], services: [], tags: []}} =
         res
-      _.merge({ properties: [], events: [], services: [], tags: [] }, thing)
+      _.merge({properties: [], events: [], services: [], tags: []}, thing)
       const setThing = _.merge(
-        { properties: [], events: [], services: [], tags: [] },
+        {properties: [], events: [], services: [], tags: []},
         thing
       )
       dgiotlogger.log('thing', setThing)
@@ -1176,9 +1168,9 @@ export default {
         devicetype: form.data.name,
         required: false,
         isshow: true,
-        isstorage:true,
+        isstorage: true,
         isaccumulate: false,
-        dataForm: { order: moment(new Date()).format('x') },
+        dataForm: {order: moment(new Date()).format('x')},
         dataType: {
           type: type,
         },
@@ -1191,7 +1183,7 @@ export default {
       this.atbas.visible = false
       await this.queryProductInfo(this.$route.query.id)
       return false
-      const { thing } = this.productObj
+      const {thing} = this.productObj
       dgiotlogger.log(this.productObj, thing, this.modules.data)
       dgiotlogger.info('this.modules.data')
       this.$refs[type].validate(async (valid) => {
@@ -1296,7 +1288,7 @@ export default {
     ...mapMutations({
       setSizeForm: 'konva/setSizeForm',
     }),
-    tableRowClassName({ row, rowIndex }) {
+    tableRowClassName({row, rowIndex}) {
       if (rowIndex === 1) {
         return 'warning-row'
       } else if (rowIndex === 3) {
@@ -1328,7 +1320,7 @@ export default {
         falsevalue: 0,
         isread: 'r',
         isshow: true,
-        isstorage:true,
+        isstorage: true,
         isaccumulate: false,
         unit: '',
         string: '',
@@ -1539,13 +1531,13 @@ export default {
     },
     async getAllunit() {
       this.allunit = []
-      const { UnifyUnitSpecsDTO = [] } = await getDlinkJson('Unit')
+      const {UnifyUnitSpecsDTO = []} = await getDlinkJson('Unit')
       this.allunit = UnifyUnitSpecsDTO
     },
     async getTopic() {
       this.topicData = []
       this.topicDefault = {}
-      const { topics = {} } = await getProduct(this.productId)
+      const {topics = {}} = await getProduct(this.productId)
       this.topicDefault = topics
       for (let i in topics) {
         let obj = {}
@@ -1836,7 +1828,7 @@ export default {
       this.allchannelData = []
       this.channeltype = 1
       this.innerVisible = true
-      const type = { $in: ['1', '3'] }
+      const type = {$in: ['1', '3']}
       const product = {
         $ne: {
           __type: 'Pointer',
@@ -1860,7 +1852,7 @@ export default {
     },
     // 物接入
     getProductChannel() {
-      const type = { $in: ['1', '3'] }
+      const type = {$in: ['1', '3']}
       const product = {
         __type: 'Pointer',
         className: 'Product',
@@ -1892,7 +1884,7 @@ export default {
       this.allchannelData = []
       this.channeltype = 0
       this.innerVisible = true
-      const type = { $in: ['2'] }
+      const type = {$in: ['2']}
       const product = {
         $ne: {
           __type: 'Pointer',
@@ -1917,7 +1909,7 @@ export default {
 
     // 物存储
     getResourceChannel() {
-      const type = { $in: ['2'] }
+      const type = {$in: ['2']}
       const product = {
         __type: 'Pointer',
         className: 'Product',
@@ -2756,8 +2748,8 @@ export default {
       this.setSizeForm(obj)
       //调用子组件的下拉事件
       this.$nextTick(async () => {
-        this.$refs['sizeForm'].queryResource()
-        this.$refs['sizeForm'].queryProtocol()
+        await this.$refs['sizeForm'].queryResource()
+        await this.$refs['sizeForm'].queryProtocol()
         // 保证子组件已经挂载完成）
         // if (this.$refs['sizeForm'])
         this.$refs['sizeForm'].resource.value = rowData.dataForm.protocol
@@ -2976,9 +2968,9 @@ export default {
       const params =
         type === 'json'
           ? {
-              thing: JSON.parse(editor1.getValue()),
-            }
-          : { thing: this.productdetail.thing }
+            thing: JSON.parse(editor1.getValue()),
+          }
+          : {thing: this.productdetail.thing}
       await putProduct(this.productId, params)
       setTimeout(() => {
         this.$message({
@@ -2997,7 +2989,7 @@ export default {
     },
     async Industry() {
       this.option = []
-      const { results } = await this.$getIndustry('category', 100)
+      const {results} = await this.$getIndustry('category', 100)
       results.map((items) => {
         var obj = {}
         obj.value = items.type
@@ -3197,7 +3189,8 @@ export default {
         .then((_) => {
           done()
         })
-        .catch((_) => {})
+        .catch((_) => {
+        })
     },
 
     // 还原
@@ -3229,14 +3222,14 @@ export default {
       let info = {
         count: 'objectId',
         where: {
-          key: { $regex: this.$route.query.id },
-          type: { $regex: 'notification' },
+          key: {$regex: this.$route.query.id},
+          type: {$regex: 'notification'},
         },
       }
       this.$route.query.id
-        ? (info.where.key = { $regex: this.$route.query.id })
+        ? (info.where.key = {$regex: this.$route.query.id})
         : ''
-      const { results, count = 0 } = await queryView(info)
+      const {results, count = 0} = await queryView(info)
       this.amisShow = count > 0 ? true : false
       this.amisproductInfo = results
     },
@@ -3255,14 +3248,14 @@ export default {
       // 需要找到 this.productId 并传入
       this.productId = this.$route.query.id
       this.queryDeviceCount(this.productId)
-      this.FromMachine = [{ name: 'ALL' }]
+      this.FromMachine = [{name: 'ALL'}]
       this.$get_object('Product', this.productId)
         .then((response) => {
           dgiotlog.log('response', response)
           if (response) {
             this.productInfo = _.merge(response, {
-              decoder: { code: '' },
-              thing: { properties: [] },
+              decoder: {code: ''},
+              thing: {properties: []},
               config: {
                 address: '余杭区良渚平高创业城c1座',
                 location: {
@@ -3906,7 +3899,8 @@ export default {
       this.subdialog = false
     },
     // 停止topic刷新
-    stopsub(value) {}, // topic增加
+    stopsub(value) {
+    }, // topic增加
     subTopic(formName, isupdated) {
       this.$refs[formName].validate(async (valid) => {
         console.log(this.topicDefault, isupdated)
@@ -3998,8 +3992,10 @@ export default {
         })
     },
     // 分页
-    handleSizeChange(val) {},
-    handleCurrentChange(val) {},
+    handleSizeChange(val) {
+    },
+    handleCurrentChange(val) {
+    },
     addEngine() {
       this.$router.push({
         path: '/rules_engine/addengine',
