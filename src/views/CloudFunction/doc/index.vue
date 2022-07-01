@@ -275,11 +275,11 @@
 </template>
 <style>
   .custom-tree-node {
-    flex: 1;
     display: flex;
+    flex: 1;
     align-items: center;
     justify-content: space-between;
-    font-size: 14px;
     padding-right: 8px;
+    font-size: 14px;
   }
 </style>
