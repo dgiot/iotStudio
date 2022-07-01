@@ -2,7 +2,7 @@
  *  build: 杭州数蛙科技有限公司 
  *  copyright: dgiot-dashboard 
  *  author: h7ml(h7ml@qq.com) 
- *  Time: 2022年07月01日19时10分34秒
+ *  Time: 2022年07月01日22时26分03秒
  */
 
 .full-screen-icon {
@@ -72,7 +72,7 @@
 
 [data-v-00483c72]:export{menu-color:rgba(255,255,255,.95);menu-color-active:rgba(255,255,255,.95);menu-background:#282c34;column-second-menu-background:#fff}.content[data-v-00483c72]{width:100%;height:100%}
 [data-v-baada414]:export{menu-color:rgba(255,255,255,.95);menu-color-active:rgba(255,255,255,.95);menu-background:#282c34;column-second-menu-background:#fff}.drawerCode-container[data-v-baada414]{width:100%;height:100%}.drawerCode-container .fixed-btn[data-v-baada414]{position:fixed;right:24px;bottom:48px;z-index:999}.drawerCode-container .demo-drawer__footer[data-v-baada414]{text-align:center;cursor:pointer}
-.amis{width:100%;overflow:auto;height:calc(100vh - 60px * 2.7) !important}.amis #editor{width:100%;overflow:auto;height:calc(100vh - 60px * 2.7) !important}.ae-Editor .ae-Editor-inner{overflow:auto;height:calc(100vh - 60px * 2.7) !important}
+.amis{width:100%;height:calc(100vh - 60px * 2.7) !important;overflow:auto}.amis #editor{width:100%;height:calc(100vh - 60px * 2.7) !important;overflow:auto}.ae-Editor .ae-Editor-inner{height:calc(100vh - 60px * 2.7) !important;overflow:auto}
 [data-v-7b486bea]:export{menu-color:rgba(255,255,255,.95);menu-color-active:rgba(255,255,255,.95);menu-background:#282c34;column-second-menu-background:#fff}.node-tree[data-v-7b486bea]{height:85vh;margin:12px 0 auto 12px;text-align:center}.custom-resizer[data-v-7b486bea]{width:100%;height:90vh}.custom[data-v-7b486bea]{width:auto;height:auto}.custom-resizer>.pane[data-v-7b486bea]{overflow:hidden}.custom-resizer>.multipane-resizer[data-v-7b486bea]{position:relative;left:0;margin:0}.custom-resizer>.multipane-resizer[data-v-7b486bea]:before{position:absolute;top:50%;left:50%;display:block;width:3px;height:40px;margin-top:-20px;margin-left:-1.5px;content:"";border-right:1px solid #ccc;border-left:1px solid #ccc}.custom-resizer>.multipane-resizer[data-v-7b486bea]:hover:before{border-color:#999}
 [data-v-4ee737f7]:export{menu-color:rgba(255,255,255,.95);menu-color-active:rgba(255,255,255,.95);menu-background:#282c34;column-second-menu-background:#fff}.avatar-dropdown[data-v-4ee737f7]{display:flex;align-content:center;align-items:center;justify-content:center;justify-items:center}.avatar-dropdown .user-avatar[data-v-4ee737f7]{width:40px;height:40px;margin-left:15px;cursor:pointer;border-radius:50%}.avatar-dropdown .user-name[data-v-4ee737f7]{position:relative;display:flex;align-content:center;align-items:center;height:40px;margin-left:6px;line-height:40px;cursor:pointer}.avatar-dropdown .user-name [class*=ri-][data-v-4ee737f7]{margin-left:0 !important}
 [data-v-45afc844]:export{menu-color:rgba(255,255,255,.95);menu-color-active:rgba(255,255,255,.95);menu-background:#282c34;column-second-menu-background:#fff}.baidu_map[data-v-45afc844]{height:500px}.baidu_map .sample[data-v-45afc844]{position:absolute;width:120px;height:40px;padding:10px;overflow:hidden;line-height:40px;color:#fff;text-align:center;background:rgba(0,0,0,.5);box-shadow:0 0 5px #000}.baidu_map .sample.active[data-v-45afc844]{color:#fff;background:rgba(0,0,0,.75)}
