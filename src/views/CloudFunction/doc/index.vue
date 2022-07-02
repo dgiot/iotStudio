@@ -52,8 +52,11 @@
         setTreeFlag: 'settings/setTreeFlag',
       }),
       async handleNodeClick(data) {
-        this.ruleForm = await getArticle(data.objectId)
-        this.$refs.vditor.flagType = 'editor'
+        // 根据类型显示文档
+        if (data.type == 'page') {
+          this.ruleForm = await getArticle(data.objectId)
+          this.$refs.vditor.flagType = 'editor'
+        }
         // this.$refs.vditor.flagType == 'preview'
         //   ? (this.$refs.vditor.flagType = 'editor')
         //   : (this.$refs.vditor.flagType = 'preview')
@@ -62,7 +65,7 @@
         const params = {
           province: '',
           class: 'Article',
-          filter: '{"keys":["parent","name"],"where":{}}',
+          filter: '{"keys":["parent","name","type"],"where":{}}',
           parent: 'parent',
         }
         const { results = [] } = await post_tree(params)
@@ -227,7 +230,13 @@
         @node-click="handleNodeClick"
       >
         <span slot-scope="{ node, data }" class="custom-tree-node">
-          <span>{{ data.name }}</span>
+          <span
+            :class="
+              data.type == 'subject' ? 'el-icon-files' : 'el-icon-document'
+            "
+          >
+            {{ data.name }}
+          </span>
           <span v-show="type == 'editor'">
             <el-dropdown trigger="click">
               <span class="el-dropdown-link">

@@ -8,10 +8,7 @@
       :model="Form"
     >
       <el-form-item>
-        <el-input :key="Form.name" v-model="Form.name" />
-      </el-form-item>
-      <el-form-item>
-        <el-button type="primary" @click="save">更新</el-button>
+        <el-button type="primary" @click="save">保存</el-button>
       </el-form-item>
     </el-form>
     <div id="vditor" style="width: 400vh" :title="title" />
