@@ -2351,6 +2351,7 @@ export default {
       this.$nextTick(() => {
         this.$refs['sizeForm'].queryResource()
         this.$refs['sizeForm'].queryProtocol()
+        this.upKey = moment.now()
       })
       this.moduletype = moduletype
       this.modules.type = moduletype
@@ -2746,6 +2747,7 @@ export default {
       obj.protocol = rowData.dataForm.protocol
       obj.profile = rowData.profile
       this.setSizeForm(obj)
+      this.upKey = moment.now()
       //调用子组件的下拉事件
       this.$nextTick(async () => {
         await this.$refs['sizeForm'].queryResource()
@@ -3372,14 +3374,16 @@ export default {
       this.wmxSituation = '新增'
       if (type) {
         this.wmxdialogVisible = false
-        this.$refs['sizeForm'].$refs['sizeForm'].resetFields()
-        this.$refs['sizeForm'].$refs['sizeForm'].clearValidate()
-        this.setSizeForm(this.getFormOrginalData())
+        await this.$refs['sizeForm'].$refs['sizeForm'].resetFields()
+        await this.$refs['sizeForm'].$refs['sizeForm'].clearValidate()
+        await this.setSizeForm(this.getFormOrginalData())
         this.$refs['sizeForm'].resource.disabled = false
         await this.handleChildClick(this.tabsChild)
         if (this.$refs['sizeForm']) await this.$refs['sizeForm'].queryResource()
+        this.upKey = moment.now()
       } else {
         this.wmxdialogVisible = false
+        this.upKey = moment.now()
       }
     },
     // 协议编辑
