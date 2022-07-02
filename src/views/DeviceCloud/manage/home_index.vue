@@ -1063,10 +1063,14 @@
                   className: 'Product',
                   objectId: this.form.product,
                 },
-                profile: {},
-                route: {},
+                // profile: {},
+                // route: {},
                 isEnable: true,
-                status: 'OFFLINE',
+                status: 'ONLINE',
+              }
+              if (params.address == '') {
+                delete params.address
+                delete params.location
               }
               const { error = '', objectId = '' } = await postDevice(params)
               if (error) {
