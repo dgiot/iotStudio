@@ -548,7 +548,7 @@
             // productid: this.queryForm.productName
             //   ? this.queryForm.productName
             //   : 'all',
-            // isprocess: this.queryForm.isprocess,
+            isprocess: this.queryForm.isprocess,
             include: '',
             where: {
               'content._productid': {
@@ -573,11 +573,11 @@
         //   ? (this.queryPayload.where.content['_productid'] = )
         //   : 'all'
 
-        // this.queryForm.isprocess
-        //   ? (this.queryPayload.where['process'] = {
-        //     $regex: this.queryForm.isprocess,
-        //   })
-        //   : ''
+        this.queryForm.isprocess + ''.length
+          ? (this.queryPayload.where['status'] = this.queryForm.isprocess)
+          : ''
+        if (!Number(this.queryPayload.where['status']))
+          delete this.queryPayload.where['status']
         if (this.queryForm.searchDate.length) {
           this.queryPayload.where['createdAt'] = {
             $gt: {
