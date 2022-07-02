@@ -1026,7 +1026,6 @@
 <script>
   import { getDlinkJson } from '@/api/Dlink'
   import { mapGetters, mapMutations } from 'vuex'
-  import defaultLogo from '../../../../../public/assets/images/logo/logo.png'
   import { getProtocol } from '@/api/Protocol'
   import { getProduct } from '@/api/Product'
 
@@ -1116,6 +1115,7 @@
         },
         value: '',
         inputParams: {},
+        Type: 'addThing',
         dataList: [{}],
         dataType: [],
         options: [
@@ -1321,7 +1321,9 @@
     beforeMount() {}, //生命周期 - 挂载之前
     beforeUpdate() {}, //生命周期 - 更新之前
     updated() {}, //生命周期 - 更新之后
-    beforeDestroy() {}, //生命周期 - 销毁之前
+    beforeDestroy() {
+      this.Type = 'addThing'
+    }, //生命周期 - 销毁之前
     activated() {},
     methods: {
       async queryProtocol() {
@@ -1561,6 +1563,7 @@
         setProtocol: 'product/setProtocol',
       }),
       changeThing(item) {
+        this.Type = 'showThing'
         console.error(item)
         let that = this
         dgiotlog.log('this.sizeFormaaa', that.$refs.sizeForm.model.name)
@@ -1614,6 +1617,7 @@
             isread: item.accessMode,
             isshow: item.isshow,
             isaccumulate: item.isaccumulate,
+            isstorage: item.isstorage,
             identifier: item.identifier,
           }
           if (item.dataForm) {
@@ -1623,6 +1627,7 @@
           }
         } else if (item.dataType.type == 'image') {
           obj = {
+            isstorage: item.isstorage,
             name: item.name,
             devicetype: item.devicetype,
             ico: item.ico,
@@ -1665,6 +1670,7 @@
           }
         } else if (item.dataType.type == 'bool') {
           obj = {
+            isstorage: item.isstorage,
             name: item.name,
             devicetype: item.devicetype,
             ico: item.ico,
@@ -1713,6 +1719,7 @@
             })
           }
           obj = {
+            isstorage: item.isstorage,
             name: item.name,
             devicetype: item.devicetype,
             ico: item.ico,
@@ -1753,6 +1760,7 @@
           }
         } else if (item.dataType.type == 'struct') {
           obj = {
+            isstorage: item.isstorage,
             name: item.name,
             devicetype: item.devicetype,
             ico: item.ico,
@@ -1792,6 +1800,7 @@
           }
         } else if (item.dataType.type == 'text') {
           obj = {
+            isstorage: item.isstorage,
             name: item.name,
             devicetype: item.devicetype,
             ico: item.ico,
@@ -1831,6 +1840,7 @@
           }
         } else if (item.dataType.type == 'date') {
           obj = {
+            isstorage: item.isstorage,
             name: item.name,
             devicetype: item.devicetype,
             ico: item.ico,
@@ -1869,6 +1879,7 @@
           }
         } else if (item.dataType.type == 'file') {
           obj = {
+            isstorage: item.isstorage,
             name: item.name,
             devicetype: item.devicetype,
             ico: item.ico,
@@ -1907,6 +1918,7 @@
           }
         } else if (item.dataType.type == 'url') {
           obj = {
+            isstorage: item.isstorage,
             name: item.name,
             devicetype: item.devicetype,
             ico: item.ico,
@@ -1945,6 +1957,7 @@
           }
         } else if (item.dataType.type == 'geopoint') {
           obj = {
+            isstorage: item.isstorage,
             name: item.name,
             devicetype: item.devicetype,
             ico: item.ico,
@@ -1991,16 +2004,19 @@
         console.log('obj 1944', obj)
         that.setSizeForm(obj)
         this.$nextTick(async () => {
-          this.queryResource()
+          await this.queryResource()
           // 保证子组件已经挂载完成）
           // if (this)
           this.resource.value = item.dataForm.protocol
           this.resource.disabled = item.dataForm.protocol.length ? true : false
           // this.changeResource(this.resource.value)
-
-          this.resource.arrlist = _.sortBy(item.dataSource, function (item) {
-            return item.order //根据code对数据进行升序排序，若是降序则改成：return -item.code
-          })
+          console.log(item.dataSource, 'item.dataSource')
+          this.resource.arrlist =
+            this.Type == 'showThing'
+              ? item.dataSource
+              : _.sortBy(item.dataSource, function (item) {
+                  return item.order //根据code对数据进行升序排序，若是降序则改成：return -item.code
+                })
           console.log(this.resource.arrlist, 'arrlist')
           this.$nextTick(() => {
             this.resource.data.forEach((resource, index) => {
