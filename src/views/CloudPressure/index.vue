@@ -908,6 +908,7 @@
         delete device.objectId
         delete device.endTime
         delete device.startTime
+        delete device.loading
         // delete device.ip
         // delete device.basedata
         // delete device.devaddr

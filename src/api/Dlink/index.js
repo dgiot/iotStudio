@@ -4,15 +4,7 @@
  */
 // https://docs.parseplatform.org/rest/guide/#batch-operations
 // http://prod.iotn2n.com/dgiot_swagger/#/Dlink/get_topic
-import {
-  create_object,
-  del_object,
-  get_object,
-  query_object,
-  update_object,
-} from '@/api/Parse'
 import request from '@/utils/request/request'
-import dgiotBus from '@dgiot/dgiot-mqtt-dashboard/src/utils/bus'
 
 /**
  * @description: 获取dlink json 列表
@@ -41,6 +33,25 @@ export async function getTopic(Topic = '$dg/user/router/thing/111/cmd/delete') {
   return request({
     url: `topic?topic=${Topic}`,
     method: 'get',
+  })
+}
+
+/**
+ * @description: 通知后台客户端信息
+ * @param UserSession
+ * @returns {Promise<*>}
+ */
+export async function postCookie(UserSession) {
+  /**
+   * @description: 客户端信息
+   * @type {{mapType: string}}
+   */
+  const clientInfo = { mapType: 'baidu' }
+  return request({
+    url: `/cookie`,
+    method: 'post',
+    Headers: { 'Content-Type': 'application/json', accept: 'application/json' },
+    data: { UserSession: UserSession, cookie: clientInfo },
   })
 }
 
