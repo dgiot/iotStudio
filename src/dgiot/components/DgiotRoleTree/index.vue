@@ -47,7 +47,8 @@
   import { Permission } from '@/api/Permission'
   import { getProtocol } from '@/api/Protocol'
   import { queryProduct } from '@/api/Product'
-  import { getDlinkJson } from '@/api/Dlink'
+  import { getDlinkJson, postCookie } from '@/api/Dlink'
+  import store from '@/store'
 
   export default {
     name: 'DgiotRoleTree',
@@ -209,6 +210,10 @@
         }
         const { results: permission = [] } = await Permission()
         const chart = await getDlinkJson('ChartType')
+        const info = await postCookie(
+          store.getters['user/token']
+        )
+        console.log(info)
         this.setPermission(permission)
         const protocol = await getProtocol()
         // protocol做排序处理
