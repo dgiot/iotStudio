@@ -15,7 +15,7 @@
           <el-row :gutter="24">
             <el-col :lg="12" :md="12" :sm="24" :xl="12" :xs="24">
               <el-form-item
-                :label="$translateTitle('Maintenance.project') + ': '"
+                :label="$translateTitle('equipment.Products') + ': '"
               >
                 <!--                <el-input v-model="detail._product" readonly disabled />-->
                 <span>{{ form.info.productname }}</span>

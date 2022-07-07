@@ -210,9 +210,7 @@
         }
         const { results: permission = [] } = await Permission()
         const chart = await getDlinkJson('ChartType')
-        const info = await postCookie(
-          store.getters['user/token']
-        )
+        const info = await postCookie(store.getters['user/token'])
         console.log(info)
         this.setPermission(permission)
         const protocol = await getProtocol()

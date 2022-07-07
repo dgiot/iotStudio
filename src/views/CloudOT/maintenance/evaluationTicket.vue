@@ -52,7 +52,7 @@
             size="medium "
           >
             <el-form-item
-              :label="$translateTitle('Maintenance.project')"
+              :label="$translateTitle('equipment.Products')"
               prop="product"
             >
               <el-select
@@ -154,11 +154,11 @@
               :placeholder="$translateTitle('Maintenance.Ticket number')"
             />
           </el-form-item>
-          <el-form-item :label="$translateTitle('Maintenance.projects')">
+          <el-form-item :label="$translateTitle('equipment.Products')">
             <el-select
               v-model="queryForm.product"
               clearable
-              :placeholder="$translateTitle('Maintenance.project')"
+              :placeholder="$translateTitle('equipment.Products')"
             >
               <el-option
                 v-for="(item, index) in _Product"
@@ -184,6 +184,20 @@
           <!--              placeholder="请输入账号"-->
           <!--            />-->
           <!--          </el-form-item>-->
+          <el-form-item :label="$translateTitle('Maintenance.status')">
+            <el-select
+              v-model="queryForm.status"
+              clearable
+              :placeholder="$translateTitle('Maintenance.Ticket status')"
+            >
+              <el-option
+                v-for="item in status"
+                :key="item.key"
+                :label="$translateTitle(item.text)"
+                :value="item.key"
+              />
+            </el-select>
+          </el-form-item>
           <el-form-item :label="$translateTitle('Maintenance.times')">
             <el-date-picker
               v-model="queryForm.searchDate"
@@ -277,7 +291,7 @@
 
       <el-table-column
         align="center"
-        :label="$translateTitle('Maintenance.project')"
+        :label="$translateTitle('equipment.Products')"
         show-overflow-tooltip
         sortable
       >
@@ -800,6 +814,9 @@
           : ''
         this.queryForm.type
           ? (params.where.type = { $regex: this.queryForm.type })
+          : ''
+        _.isNumber(this.queryForm.status)
+          ? (params.where.status = this.queryForm.status)
           : ''
         if (this.queryForm.searchDate?.length) {
           params.where['createdAt'] = {

@@ -1199,7 +1199,6 @@
           keys: 'count(*)',
           where: {},
         }
-        this.paginationKey = moment(new Date()).valueOf() + ''
         this.channelformsearch.name
           ? (params.where.name = {
               $regex: this.channelformsearch.name,
@@ -1382,6 +1381,7 @@
         this.length = val
         // this.total = 0
         this.Get_Re_Channel(1)
+        this.paginationKey = moment(new Date()).valueOf() + ''
       },
       channelCurrentChange(val) {
         // this.total = 0

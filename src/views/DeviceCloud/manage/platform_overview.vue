@@ -1086,10 +1086,10 @@
       // },
       mqttMsg(e) {
         let mqttMsg = isBase64(e) ? Base64.decode(e) : e
-        console.log(mqttMsg, '收到消息')
         // // dgiotlog.log(destinationName, mqttMsg, 'mqttMsg')
         let mqttMsgValue = JSON.parse(mqttMsg).value
         let key = JSON.parse(mqttMsg).vuekey
+        console.log(mqttMsg, `收到${key}消息`)
         // this.printQueryInfo(mqttMsgValue, mqttMsg)
         // this.loadingConfig[`${key}`] = true
         // this.$baseNotify(
@@ -1150,6 +1150,8 @@
               //   item.icon
               // }.png?${new Date().getTime()}\``)
             })
+            console.error('baiduMap')
+            console.log(this.tableData)
             this.set_tableData(this.tableData)
             this.$forceUpdate()
             break

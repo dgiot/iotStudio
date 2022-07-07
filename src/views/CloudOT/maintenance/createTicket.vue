@@ -77,7 +77,7 @@
             size="medium "
           >
             <el-form-item
-              :label="$translateTitle('Maintenance.project')"
+              :label="$translateTitle('equipment.Products')"
               prop="product"
             >
               <el-select
@@ -179,11 +179,11 @@
               :placeholder="$translateTitle('Maintenance.Ticket number')"
             />
           </el-form-item>
-          <el-form-item :label="$translateTitle('Maintenance.projects')">
+          <el-form-item :label="$translateTitle('equipment.Products')">
             <el-select
               v-model="queryForm.product"
               clearable
-              :placeholder="$translateTitle('Maintenance.project')"
+              :placeholder="$translateTitle('equipment.Products')"
             >
               <el-option
                 v-for="(item, index) in _Product"
@@ -355,7 +355,7 @@
 
       <el-table-column
         align="center"
-        :label="$translateTitle('Maintenance.project')"
+        :label="$translateTitle('equipment.Products')"
         show-overflow-tooltip
         sortable
       >

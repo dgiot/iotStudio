@@ -46,10 +46,10 @@
               :placeholder="$translateTitle('Maintenance.Ticket number')"
             />
           </el-form-item>
-          <el-form-item :label="$translateTitle('Maintenance.project')">
+          <el-form-item :label="$translateTitle('equipment.Products')">
             <el-select
               v-model="queryForm.product"
-              :placeholder="$translateTitle('Maintenance.project')"
+              :placeholder="$translateTitle('equipment.Products')"
             >
               <el-option
                 v-for="(item, index) in _Product"
@@ -85,6 +85,20 @@
               type="daterange"
               value-format="yyyy-MM-dd"
             />
+          </el-form-item>
+          <el-form-item :label="$translateTitle('Maintenance.status')">
+            <el-select
+              v-model="queryForm.status"
+              clearable
+              :placeholder="$translateTitle('Maintenance.Ticket status')"
+            >
+              <el-option
+                v-for="item in status"
+                :key="item.key"
+                :label="$translateTitle(item.text)"
+                :value="item.key"
+              />
+            </el-select>
           </el-form-item>
           <el-form-item>
             <el-button
@@ -149,7 +163,7 @@
 
       <el-table-column
         align="center"
-        :label="$translateTitle('Maintenance.project')"
+        :label="$translateTitle('equipment.Products')"
         show-overflow-tooltip
         sortable
       >
@@ -220,13 +234,23 @@
         <dgiot-empty />
       </template>
     </el-table>
-    <DgiotPagination
-      v-show="total"
+    <div class="elpagination">
+      <el-pagination
+        :current-page.sync="queryForm.skip"
+        layout="total, sizes, prev, pager, next, jumper"
+        :page-size.sync="queryForm.limit"
+        :page-sizes="[5, 10, 20, 30, 50]"
+        :total="total"
+        @current-change="fetchData"
+        @size-change="fetchData"
+      />
+    </div>
+    <!-- <dgiot-pagination
       :limit.sync="queryForm.pageSize"
       :page.sync="queryForm.pageNo"
       :total="total"
       @pagination="fetchData"
-    />
+    /> -->
   </div>
 </template>
 
@@ -249,9 +273,28 @@
         ishard: true,
         isfooter: false,
         step: 1,
+        length: 20,
         detail: {},
         deviceFlag: false,
         AllDevice: [],
+        status: [
+          {
+            key: 0,
+            text: 'Maintenance.To be assigned',
+          },
+          {
+            key: 1,
+            text: 'Maintenance.Assigned',
+          },
+          {
+            key: 2,
+            text: 'Maintenance.Processed',
+          },
+          {
+            key: 3,
+            text: 'Maintenance.Statement',
+          },
+        ],
         height: this.$baseTableHeight(0),
         dialogFormVisible: false,
         types: ['故障维修'],
@@ -397,17 +440,18 @@
       //   this.fetchData()
       // },
       async fetchData(args = {}) {
+        dgiotlog.log(this.queryForm.toString(), 'queryForm', args)
         if (!args.limit) {
           args = this.queryForm
         }
-        dgiotlog.log(this.queryForm, 'queryForm', args)
+        // dgiotlog.log(this.queryForm, 'queryForm', args)
         this.listLoading = false
         const loading = this.$baseColorfullLoading()
         let params = {
-          limit: args.limit,
-          order: args.order,
-          skip: args.skip,
-          keys: 'objectId',
+          limit: this.queryForm.limit,
+          order: this.queryForm.order,
+          skip: (this.queryForm.skip - 1) * this.queryForm.limit,
+          count: 'objectId',
           where: {},
         }
         this.queryForm.number
@@ -420,6 +464,10 @@
           : ''
         this.queryForm.type
           ? (params.where.type = { $regex: this.queryForm.type })
+          : ''
+        console.log('this.queryForm.status', this.queryForm.status)
+        this.queryForm.status.length
+          ? (params.where.status = this.queryForm.status)
           : ''
         if (this.queryForm.searchDate?.length) {
           params.where['createdAt'] = {

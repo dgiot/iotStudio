@@ -80,7 +80,7 @@
             size="medium "
           >
             <el-form-item
-              :label="$translateTitle('Maintenance.project')"
+              :label="$translateTitle('equipment.Products')"
               prop="product"
             >
               <el-select
@@ -182,11 +182,11 @@
               :placeholder="$translateTitle('Maintenance.Ticket number')"
             />
           </el-form-item>
-          <el-form-item :label="$translateTitle('Maintenance.projects')">
+          <el-form-item :label="$translateTitle('equipment.Products')">
             <el-select
               v-model="queryForm.product"
               clearable
-              :placeholder="$translateTitle('Maintenance.project')"
+              :placeholder="$translateTitle('equipment.Products')"
             >
               <el-option
                 v-for="(item, index) in Product"
@@ -351,7 +351,7 @@
 
       <el-table-column
         align="center"
-        :label="$translateTitle('Maintenance.project')"
+        :label="$translateTitle('equipment.Products')"
         show-overflow-tooltip
         sortable
       >
@@ -449,12 +449,20 @@
         <dgiot-empty />
       </template>
     </el-table>
-    <dgiot-Pagination
-      v-show="total > 0"
-      :limit.sync="queryForm.pageSize"
-      :page.sync="queryForm.pageNo"
+    <!--    <dgiot-Pagination-->
+    <!--      :limit.sync="queryForm.pageSize"-->
+    <!--      :page.sync="queryForm.pageNo"-->
+    <!--      :total="total"-->
+    <!--      @pagination="fetchData"-->
+    <!--    />-->
+    <el-pagination
+      :key="paginationKey + 'key' + total"
+      layout="total, sizes, prev, pager, next, jumper"
+      :page-size="total"
+      :page-sizes="[10, 20, 30, 50]"
       :total="total"
-      @pagination="fetchData"
+      @current-change="channelCurrentChange"
+      @size-change="channelSizeChange"
     />
   </div>
 </template>
@@ -534,7 +542,10 @@
         // aclObj: {},
         listLoading: false,
         layout: 'total, sizes, prev, pager, next, jumper',
+        length: 10,
+        start: 0,
         total: 0,
+        paginationKey: moment(new Date()).valueOf() + '',
         status: [
           {
             key: 0,
@@ -632,6 +643,19 @@
       this.handleCreated('created')
     },
     methods: {
+      // 分页
+      channelSizeChange(val) {
+        this.length = val
+        // this.total = 0
+        this.fetchData()
+      },
+      channelCurrentChange(val) {
+        // this.total = 0
+        if (val <= 1) this.total = 0
+        console.log(val)
+        this.start = (val - 1) * this.length
+        this.fetchData()
+      },
       myUpload(content) {
         const file = content.file
         let extension = file.name.substring(file.name.lastIndexOf('.') + 1)
@@ -891,10 +915,11 @@
         const loading = this.$baseColorfullLoading()
         console.log(this.queryForm.status, this.queryForm.status == '')
         let params = {
-          limit: args.limit,
           order: args.order,
-          skip: args.skip,
+          skip: this.start,
+          limit: this.length,
           keys: args.keys,
+          count: 'objectId',
           where: {
             // info: {},
           },
