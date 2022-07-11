@@ -663,9 +663,8 @@ export default {
         config: {
           address: '余杭区良渚平高创业城c1座',
           location: {
-            latitude: '120.161324',
-            longitude: '30.262441',
-            __type: 'GeoPoint',
+            longitude: '120.161324',
+            latitude: '30.262441',
           },
         },
         thing: {properties: [], events: [], services: [], tags: []},
@@ -934,9 +933,8 @@ export default {
     },
     mapClick(e) {
       this.productdetail.config.location = {
-        __type: 'GeoPoint',
-        latitude: e.point.lng,
-        longitude: e.point.lat,
+        latitude: e.point.lat,
+        longitude: e.point.lng,
       }
       console.log(e, this.productdetail.config)
       // this.center.lng = e.point.lng
@@ -3261,9 +3259,8 @@ export default {
               config: {
                 address: '余杭区良渚平高创业城c1座',
                 location: {
-                  latitude: '120.161324',
-                  longitude: '30.262441',
-                  __type: 'GeoPoint',
+                  longitude: '120.161324',
+                  latitude: '30.262441',
                 },
               },
             })

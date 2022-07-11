@@ -14,13 +14,11 @@
   import { alert, confirm } from 'amis/lib/components/Alert'
   import { toast } from 'amis/lib/components/Toast'
   import copy from 'copy-to-clipboard'
-  // import ReactDOM from 'react-dom'
-
   export default {
     name: 'AmisRender',
     props: {
       // eslint-disable-next-line
-    schema: {
+      schema: {
         type: Object,
       },
       updateLocation: {
@@ -106,6 +104,9 @@
             return false
           },
           fetcher: ({ url, method, data, config, headers }) => {
+            // url = qs.stringify(url)
+            console.log(qs.stringify(url))
+            console.log(qs.parse(url))
             let replaceArr = {}
             config = config || {}
             config.headers = config.headers || {}
@@ -308,6 +309,10 @@
   }
 </script>
 <style scoped>
+  .antd-Modal-content {
+    padding: 1.5rem;
+    border-radius: 0.375rem;
+  }
   .box {
     height: 80vh;
     overflow: auto;

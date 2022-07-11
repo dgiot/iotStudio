@@ -466,7 +466,7 @@
           ? (params.where.type = { $regex: this.queryForm.type })
           : ''
         console.log('this.queryForm.status', this.queryForm.status)
-        this.queryForm.status.length
+        _.isNumber(this.queryForm.status)
           ? (params.where.status = this.queryForm.status)
           : ''
         if (this.queryForm.searchDate?.length) {
