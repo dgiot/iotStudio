@@ -1,4 +1,4 @@
-## [4.5.5](https://github.com/dgiot/dgiot-dashboard/compare/v4.5.4...v4.5.5) (2022-07-07)
+## [4.5.5](https://github.com/dgiot/dgiot-dashboard/compare/v4.5.4...v4.5.5) (2022-07-11)
 
 
 ### Bug Fixes
@@ -20,6 +20,7 @@
 * **components:** 修复topic 订阅不正常 ([640037d](https://github.com/dgiot/dgiot-dashboard/commit/640037d89dbf6b36fb4f5a6da4f7d17f930ce09d))
 * **components:** dgiot-amis ([85c8aba](https://github.com/dgiot/dgiot-dashboard/commit/85c8abae0b14d4ca8aa4e3f7542f1d6ca67d8883))
 * **dependencies:** 降低amis 依賴 ([5e0588b](https://github.com/dgiot/dgiot-dashboard/commit/5e0588b901b1143ffd117d197ebce1cc72fa6b48))
+* **equipmentCloud:** 设备location 字段不正确修复 ([7cb037b](https://github.com/dgiot/dgiot-dashboard/commit/7cb037b4a69eb11cf50c864f40b86f2d94036127))
 * **equipmentCloud:** 修复产品详情默认经纬度未赋值导致的报错 ([0e40544](https://github.com/dgiot/dgiot-dashboard/commit/0e405447e29df011bf2e96c34fd8b47c88264284))
 * **equipmentCloud:** 修复设备管理因存在默认值导致添加设备时，时序数据问题 ([71d7b87](https://github.com/dgiot/dgiot-dashboard/commit/71d7b8752f7c211d119f388f29908c0e2671ef01))
 * **equipmentCloud:** 组态 ([a52ecd2](https://github.com/dgiot/dgiot-dashboard/commit/a52ecd2c2717e016d1185e0f64d0f151121e93ae))
