@@ -134,10 +134,10 @@ import {
 } from '@/config'
 
 import { getUserInfo, login, logout, socialLogin, jwtlogin } from '@/api/User'
+import { departmentToken } from '@/api/Role'
 import { queryMenu } from '@/api/Menu/index'
 import { clearCookie, getToken, removeToken, setToken } from '@/utils/vue'
 import { resetRouter } from '@/router'
-
 import { license } from '@/api/License'
 import { isJson } from '@/utils/data/validate'
 import { tickTime } from '@/utils/time/index'
@@ -409,9 +409,10 @@ const actions = {
       },
       _userInfo
     )
-    const { sessionToken = '' } = data
+    const { sessionToken = '', roles = [] } = data
     if (sessionToken) {
       await queryAllMsg(commit, dispatch, data, 'ajax')
+      await departmentToken(roles[0].name)
       commit('setLoginInfo', userInfo)
     } else {
       Vue.prototype.$baseMessage(

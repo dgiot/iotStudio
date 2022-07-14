@@ -1324,7 +1324,7 @@
               $regex: this.queryForm.search,
             })
           : ''
-        _.isNumber(this.queryForm.status)
+        this.queryForm.status
           ? (params.where.status = this.queryForm.status)
           : ''
         this.queryForm.isEnable
