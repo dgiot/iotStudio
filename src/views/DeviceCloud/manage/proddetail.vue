@@ -288,23 +288,15 @@
                   </el-button>
                 </el-descriptions-item>
                 <el-descriptions-item
-                  :label="$translateTitle('product.parser')"
+                  :label="$translateTitle('konva.Visualization')"
                 >
-                  <!--                  {{ productInfo.config.parser.length || 0 }}-->
-                  <template slot="label">
-                    <el-link
-                      type="success"
-                      @click.native="amisShow = !amisShow"
-                    >
-                      {{ $translateTitle('product.parser') }}
-                    </el-link>
-                  </template>
-                  <el-link
-                    :type="amisproductInfo.length ? 'success' : 'default'"
-                    @click.native="amisShow = !amisShow"
+                  <el-button
+                    :disabled="amisproductInfo.length == 0"
+                    type="text"
+                    @click="activeName = 'view'"
                   >
                     {{ amisproductInfo.length || 0 }}
-                  </el-link>
+                  </el-button>
                 </el-descriptions-item>
                 <el-descriptions-item
                   :label="$translateTitle('equipment.address')"
@@ -324,34 +316,7 @@
                     {{ productdetail.config.location.longitude }}
                   </el-link>
                 </el-descriptions-item>
-                <!--                <el-descriptions-item>-->
-                <!--                  <template slot="label">-->
-                <!--                    <el-link-->
-                <!--                      type="success"-->
-                <!--                      @click="feateditorParser1(productInfo, 'profile', true)"-->
-                <!--                    >-->
-                <!--                      {{ $translateTitle('product.profile') }}-->
-                <!--                    </el-link>-->
-                <!--                  </template>-->
-                <!--                  <el-link-->
-                <!--                    type="primary"-->
-                <!--                    @click="feateditorParser1(productInfo, 'profile', false)"-->
-                <!--                  >-->
-                <!--                    {{ productInfo.config.profile.length || 0 }}-->
-                <!--                  </el-link>-->
-                <!--                </el-descriptions-item>-->
-                <!--                <el-descriptions-item>-->
-                <!--                  <template slot="label">-->
-                <!--                    {{ $translateTitle("product.decoder") }}-->
-                <!--                  </template>-->
-                <!--                  <el-button type="text" @click="seeDecoder(productInfo.decoder)">-->
-                <!--                    {{ $translateTitle("product.details") }}-->
-                <!--                  </el-button>-->
-                <!--                </el-descriptions-item>-->
               </el-descriptions>
-            </div>
-            <div v-show="amisShow" class="amis">
-              <dgiot-views :view-form="viewForm" />
             </div>
           </div>
         </el-tab-pane>
@@ -2401,15 +2366,10 @@
             </span>
           </el-dialog>
         </el-tab-pane>
-        <!--协议解析-->
-        <!-- <div style="diaplay:none;"> -->
-        <!-- <div> -->
-        <!-- <el-tab-pane label="物解析" name="fourth"> -->
+        <!--物解析-->
         <el-tab-pane
-          :disabled="true"
           :label="$translateTitle('product.matteranalysis')"
           name="fourth"
-          style="diaplay: none"
         >
           <div class="protolheader">
             <el-form
@@ -2670,8 +2630,7 @@
             ><textarea class="ace_text-input" /></pre>
           </div>
         </el-tab-pane>
-        <!-- </div> -->
-        <!-----------------服务通道------------------------------------------>
+        <!--物接入-->
         <el-tab-pane
           :label="$translateTitle('product.physicalaccess')"
           name="fiveth"
@@ -2800,10 +2759,7 @@
             <!--添加通道-->
           </div>
         </el-tab-pane>
-        <!-- <el-tab-pane label="物采集" name="eighth">
-          <TaskCollection1 :productId="productId" :isreload="isreload" />
-        </el-tab-pane>-->
-        <!-- <el-tab-pane label="物存储" name="seven"> -->
+        <!--物存储-->
         <el-tab-pane
           :label="$translateTitle('product.materialstorage')"
           name="seven"
@@ -2966,90 +2922,19 @@
             </div>
           </div>
         </el-tab-pane>
-        <!-- <el-tab-pane label="物规则" name="sixeth">
-          <div class="engintable">
-            <div class="engineheader">
-              <h3>{{ $translateTitle('rule.rule')}}</h3>
-              <el-button
-                type="primary"
-                icon="el-icon-plus"
-                style="float:right;margin:19px 0"
-                size="small"
-                @click.native="addEngine"
-              >{{ $translateTitle('developer.add')}}</el-button>
-            </div>
-            <el-table
-              :data="engineData"
-              style="width: 100%;text-align:center"
-              :cell-class-name="getRowindex"
-            >
-              <el-table-column label="ID" align="center" width="180">
-                <template #default="{ row }">
-                  <span @click.native="detailRules(row.id)">{{row.id}}</span>
-                </template>
-              </el-table-column>
-              <el-table-column :label=" $translateTitle('rule.TriggerEvent')" align="center">
-                <template #default="{ row }">
-                  <span>{{row.for.join(',')}}</span>
-                </template>
-              </el-table-column>
-              <el-table-column prop="rawsql" align="center" label="SQL"></el-table-column>
-              <el-table-column align="center" :label=" $translateTitle('rule.ResponseAction')">
-                <template #default="{ row }">
-                  <span>{{actions(row.actions)}}</span>
-                </template>
-              </el-table-column>
-              <el-table-column align="center" :label=" $translateTitle('developer.operation')">
-                <template #default="{ row }">
-                  <el-button type="info" @click.native="detailRules(row.id)" size="mini" plain>查看</el-button>
-                  <el-button type="info" @click.native="deleteRule(row.id)" size="mini" plain>删除</el-button>
-                </template>
-              </el-table-column>
-            </el-table>
-            <div class="block">
-              <el-pagination
-                @size-change="handleSizeChange"
-                @current-change="handleCurrentChange"
-                :page-sizes="[10, 20, 30, 50]"
-                :page-size="rulepagesize"
-                layout="total, sizes, prev, pager, next, jumper"
-                :total="ruletotal"
-              ></el-pagination>
-            </div>
-          </div>
-
-          <div style="width:40%">
-            <div>
-              <el-tag>{{ $translateTitle('product.modeltemplate')}}</el-tag>
-            </div>
-            <pre id="editor6" class="ace_editor" style="min-height:300px;width:100%">
-               <textarea class="ace_text-input" style="overflow:scroll"></textarea>
-              </pre>
-            <el-divider direction="vertical"></el-divider>
-          </div>
-
-          <div style="width:30%">
-            <div>
-              <el-tag>{{ $translateTitle('product.modelstorage')}}</el-tag>
-            </div>
-            <pre id="editor4" class="ace_editor" style="min-height:300px;width:100%">
-              <textarea class="ace_text-input"></textarea>
-            </pre>
-            <el-divider direction="vertical"></el-divider>
-          </div>
-
-          <div style="width:30%">
-            <div>
-              <el-tag>{{ $translateTitle('product.modeldataoutput')}}</el-tag>
-              <el-button type="primary" size="small" @click.native="testgraphql">测试</el-button>
-            </div>
-            <pre id="editor5" class="ace_editor" style="min-height:300px;width:100%">
-              <textarea class="ace_text-input"></textarea>
-            </pre>
-        </div>-->
-        <!-- </el-tab-pane> -->
-        <el-tab-pane label="可视化" name="view">
+        <!--可视化-->
+        <el-tab-pane
+          :label="$translateTitle('konva.Visualization')"
+          name="view"
+        >
           <dgiot-views :key="activeName" :view-form="viewForm" />
+        </el-tab-pane>
+        <!--告警-->
+        <el-tab-pane
+          :label="$translateTitle('leftbar.alarms')"
+          name="notification"
+        >
+          <dgiot-views :view-form="viewForm" />
         </el-tab-pane>
       </el-tabs>
     </div>
@@ -3122,13 +3007,6 @@
       </span>
     </el-dialog>
     <!--通道弹窗-->
-    <!-- <el-dialog
-  :append-to-body="true"
-      :visible.sync="innerVisible"
-      :close-on-click-modal="false"
-      title="添加通道"
-      append-to-body
-    > -->
     <el-dialog
       :append-to-body="true"
       :close-on-click-modal="false"
@@ -3279,9 +3157,7 @@
         </el-button>
       </div>
     </el-dialog>
-
-    <!-- <el-dialog
-  :append-to-body="true" :visible.sync="exportDialogShow" title="导出" width="25%"> -->
+    <!--导出-->
     <el-dialog
       :append-to-body="true"
       :title="$translateTitle('product.export')"
@@ -3301,17 +3177,7 @@
         </el-button>
       </div>
     </el-dialog>
-
-    <!--物模型采集公式按钮-->
-    <!-- <el-dialog
-  :append-to-body="true"
-      :fullscreen="true"
-      :before-close="handleCloseCollecttion"
-      :visible.sync="collectionDialogVisible"
-      :close-on-click-modal="false"
-      title="查看采集公式"
-      width="100%"
-    > -->
+    <!--查看采集公式-->
     <el-dialog
       :append-to-body="true"
       :before-close="handleCloseCollecttion"

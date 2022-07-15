@@ -150,6 +150,13 @@
                   localStorage.getItem('parse_objectid')
                 )
               : ''
+            // 添加parse_notificationid
+            localStorage.getItem('parse_notificationid')
+              ? url.replaceAll(
+                  'parse_notificationid',
+                  localStorage.getItem('parse_notificationid')
+                )
+              : ''
             if (headers?.dgiotReplace?.length) {
               const dgiotReplace = headers['dgiotReplace'].split(',') // 将dgiotReplace参数string格式转化为对象格式
               const { store = 'localStorage' } = headers // token 存储方式 默认存储在localStorage中
