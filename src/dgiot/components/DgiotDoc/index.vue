@@ -9,7 +9,7 @@
       url: {
         required: false,
         type: String,
-        default: 'https://dgiot-web.vercel.app/',
+        default: 'https://doc.dgiotcloud.cn/',
       },
     },
     methods: {
