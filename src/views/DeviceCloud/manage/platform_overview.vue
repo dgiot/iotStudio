@@ -349,7 +349,6 @@
                       <bm-marker
                         animation="BMAP_ANIMATION_BOUNCE"
                         :dragging="true"
-                        @click="_goDevice(item, index)"
                         :icon="{
                           url:
                             item.icon == 1
@@ -361,6 +360,7 @@
                           lng: item.location.longitude,
                           lat: item.location.latitude,
                         }"
+                        @click="_goDevice(item, index)"
                       >
                         <bm-label
                           :content="item.name"
