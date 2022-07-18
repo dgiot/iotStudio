@@ -349,6 +349,7 @@
                       <bm-marker
                         animation="BMAP_ANIMATION_BOUNCE"
                         :dragging="true"
+                        @click="_goDevice(item, index)"
                         :icon="{
                           url:
                             item.icon == 1
