@@ -54,6 +54,7 @@
 * **dashboard): feat(equipmentCloud:** konva ([e693b48](https://github.com/dgiot/dgiot-dashboard/commit/e693b48b6395cbc70929cfc44f53fa2e8a5b84dc))
 * **dashboard:** 更新设备管理参数条件 ([49f716a](https://github.com/dgiot/dgiot-dashboard/commit/49f716a2223519cb0ce9c7f3b9486071e91c6fbe))
 * **dashboard:** 新增百度统计 ([a83f048](https://github.com/dgiot/dgiot-dashboard/commit/a83f0483a19e3435df825c9961f83588413f84ae))
+* **dashboard:** 总控台设备地图点击跳转 ([1fdd029](https://github.com/dgiot/dgiot-dashboard/commit/1fdd029453266efc8dde853c0445d8f87362ec0f))
 * **dashboard:** dgiot@4.5.5 ([eea287d](https://github.com/dgiot/dgiot-dashboard/commit/eea287da5c47f584ccb7228170fdfb2a9a3a9615))
 * **dependencies:** vue-amis-sdk@1.10.3 ([8c15ed8](https://github.com/dgiot/dgiot-dashboard/commit/8c15ed88ad58ff84037ee01533c9539fd41765bb))
 * **deps:** scripts ([ba2ca2c](https://github.com/dgiot/dgiot-dashboard/commit/ba2ca2ce180f73ff2d51793a239a195a4464b78f))
