@@ -21,6 +21,7 @@
             <el-select
               v-model="queryForm.title"
               allow-create
+              clearable
               default-first-option
               filterable
               placeholder="请选择"
@@ -39,6 +40,7 @@
             <el-select
               v-model="queryForm.type"
               allow-create
+              clearable
               default-first-option
               filterable
               :placeholder="$translateTitle('rule.Type')"
@@ -286,6 +288,11 @@
       async fetchData(params) {
         if (_.isEmpty(params)) params = this.queryPayload
         this.queryPayload.where = {}
+        if (this.$route.query.id) {
+          this.queryForm.class = 'Product'
+          this.queryForm.key = this.$route.query.id
+          this.queryPayload.where.key = this.$route.query.id
+        }
         this.queryForm.class
           ? (this.queryPayload.where.class = { $regex: this.queryForm.class })
           : ''

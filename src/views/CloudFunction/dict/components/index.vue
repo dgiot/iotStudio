@@ -9,25 +9,31 @@
 -->
 <template>
   <div class="index-container">
-    <el-drawer
-      ref="dgiotDict"
-      v-drawerDrag
-      append-to-body
-      size="50%"
-      title="字典"
-      :visible.sync="dictFlag"
-    >
-      <dgiot-dict :object-id="dictId" />
-    </el-drawer>
-    <el-drawer
-      ref="dgiotWord"
-      v-drawerDrag
-      append-to-body
-      size="50%"
-      :visible.sync="wordFlag"
-    >
-      <dgiot-word :data="data" :object-id="dictId" />
-    </el-drawer>
+    <div class="drawerCode-content">
+      <el-drawer
+        ref="dgiotDict"
+        v-drawerDrag
+        append-to-body
+        size="50%"
+        title="字典"
+        :visible.sync="dictFlag"
+      >
+        <dgiot-dict :object-id="dictId" />
+      </el-drawer>
+    </div>
+    <div class="drawerCode-content">
+      <el-drawer
+        ref="dgiotWord"
+        v-drawerDrag
+        append-to-body
+        size="50%"
+        title="文档字典"
+        top="5vh"
+        :visible.sync="wordFlag"
+      >
+        <dgiot-word :data="data" :object-id="dictId" />
+      </el-drawer>
+    </div>
   </div>
 </template>
 

@@ -163,16 +163,6 @@ instance.interceptors.request.use(
       config.url.indexOf('/classes/') == 0 &&
       !ignoreApi.some((item) => config.url.includes(item))
     ) {
-      console.groupCollapsed(
-        `%c部门切换token拦截url日志`,
-        'color:black; font-size: 18px; font-weight: 300'
-      )
-      dgiotlog.log(
-        'src/utils/Request/request.js',
-        `拦截的url为${config.url}\n当前请求使用了部门token：为${departmentToken}\n用户登录token为${usertoken}`,
-        'color:black; font-size: 18px; font-weight: 300'
-      )
-      console.groupEnd()
       config.headers[`${tokenName}`] = departmentToken
       if (ignoreApi.some((item) => config.url.includes(item))) {
         console.groupCollapsed(

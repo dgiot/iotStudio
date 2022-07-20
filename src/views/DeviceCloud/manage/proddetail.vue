@@ -2936,6 +2936,10 @@
         >
           <dgiot-views :view-form="viewForm" />
         </el-tab-pane>
+        <!--字典-->
+        <el-tab-pane :label="$translateTitle('product.dict')" name="dict">
+          <dgiot-dict :dict-form="dictForm" />
+        </el-tab-pane>
       </el-tabs>
     </div>
 

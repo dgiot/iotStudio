@@ -265,12 +265,16 @@
         })
       },
       get_fileinfo(row) {
+        console.log(row)
         this.detailView = true
         this.ViewLoading = true
         file_info('files/' + row.path + '/' + row.name).then((res) => {
-          this.detailinfo = res.data
-          this.detailinfo.url =
-            this.$FileServe + '/' + row.path + '/' + row.name
+          this.detailinfo = {}
+          if (res.data) {
+            this.detailinfo = res.data
+            this.detailinfo.url =
+              this.$FileServe + '/' + row.path + '/' + row.name
+          }
           this.ViewLoading = false
         })
       },

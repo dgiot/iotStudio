@@ -82,12 +82,6 @@
                     <span v-else>否</span>
                   </template>
                 </el-table-column>
-                <!--                  <el-table-column prop="readonly" label="是否只读">-->
-                <!--                    <template #default="{ row }">-->
-                <!--                      <span v-if="row.readonly">是</span>-->
-                <!--                      <span v-else>否</span>-->
-                <!--                    </template>-->
-                <!--                  </el-table-column>-->
                 <el-table-column align="center" label="操作" width="160">
                   <template #default="{ row, $index }">
                     <el-button

@@ -30,7 +30,7 @@
                 align="center"
                 :label="$translateTitle('cloudTest.number')"
                 show-overflow-tooltip
-                width="auto"
+                width="50"
               >
                 <template #default="{ $index }">
                   {{ $index + 1 }}
@@ -118,7 +118,7 @@
                 align="center"
                 :label="$translateTitle('cloudTest.number')"
                 show-overflow-tooltip
-                width="auto"
+                width="50"
               >
                 <template #default="{ $index }">
                   {{ $index + 1 }}

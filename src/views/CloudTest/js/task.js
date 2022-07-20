@@ -15,6 +15,7 @@ import {
 } from '@/api/Evidence'
 import { getDevice } from '../../../api/Device'
 import moment from 'moment'
+
 export default {
   name: 'TaskIndex',
   filters: {
@@ -236,44 +237,18 @@ export default {
         })
     },
     async subRealtimedata(params) {
+      this.router = this.$dgiotBus.router(location.href + this.$route.fullPath)
       let subtopic = `$dg/user/realtimecard/${params.parentId.objectId}/report` // 设备实时数据topic
-      let router = this.$dgiotBus.router(location.href + this.$route.fullPath)
-      // let topicKey = this.$dgiotBus.topicKey(router, subtopic) // dgiot-mqtt topicKey 唯一标识
       try {
-        // 订阅mqtt
-        // this.$dgiotBus.$emit('MqttSubscribe', {
-        //   router: router,
-        //   topic: subtopic,
-        //   qos: 0,
-        //   ttl: 1000 * 60 * 60 * 3,
-        // })
         // mqtt 消息回调
-        console.groupCollapsed(
-          `%c mqtt 订阅日志`,
-          'color:#009a61; font-size: 28px; font-weight: 300'
-        )
-        console.log('topic:', subtopic)
-        console.log('router:', router)
-        console.groupEnd()
-
-        this.$dgiotBus.$off(subtopic) // dgiotBus 关闭事件
-        this.$dgiotBus.$on(subtopic, (mqttMsg) => {
-          // mqtt 消息回调
-          console.groupCollapsed(
-            `%c mqttMsg消息回调`,
-            'color:#009a61; font-size: 28px; font-weight: 300'
-          )
-          console.log(mqttMsg)
-          console.log(Base64.decode(mqttMsg.payloadString))
-          console.log(JSON.parse(Base64.decode(mqttMsg.payloadString)).data)
-          console.log(
-            'Base64.decode(payload):',
-            Base64.decode(mqttMsg.payloadString)
-          )
-          console.groupEnd()
+        await this.$subscribe(subtopic)
+        this.$dgiotBus.$off(this.$mqttInfo.topicKey) // dgiotBus 关闭事件
+        this.$dgiotBus.$on(this.$mqttInfo.topicKey, (mqttMsg) => {
           const { data = [] } = JSON.parse(Base64.decode(mqttMsg.payloadString))
+          this.renderCard(data)
           if (data) {
-            this.renderCard(data)
+            this.collectiontable(data)
+            // this.renderCard(data)
           } else {
             this.CardDevice()
           }
@@ -287,11 +262,30 @@ export default {
         )
       }
     },
+    collectiontable(resData) {
+      let _this = this
+      let thingdata = {}
+      resData.forEach((item) => {
+        // thingdata[item.identifier] = item.number
+        this.$set(thingdata, item.identifier, item.number)
+        this.$set(thingdata, 'timestamp', item.time)
+      })
+      // mqtt 消息回调
+      if (!_.isEmpty(thingdata) && thingdata?.dgiotcollectflag == 0) {
+        _this.thingdata = []
+        console.log(thingdata)
+        _this.thingdata[0] = thingdata // 只显示一条
+      } else {
+        //实时数据
+        _this.realtimedata.unshift(thingdata) // 最新数据放在最前面
+      }
+      // _this.getSummaries({ columns: [], data: _this.thingdata }) // 计算平均值
+    },
     renderCard(resData) {
       var vm = this
       let array = []
       resData.forEach((item) => {
-        if (item.devicetype) {
+        if (item.devicetype && item.identifier != 'dgiotcollectflag') {
           array.push(item.devicetype)
         }
       })
@@ -815,13 +809,6 @@ export default {
             }
           }
         }
-        // mqtt 消息回调
-        console.groupCollapsed(
-          '%c send mqttMsg items',
-          'color:#009a61; font-size: 28px; font-weight: 300'
-        )
-        console.log(items)
-        console.groupEnd()
         const { table = [] } = await postHead({
           items: items,
           productid: params.parentId.product.objectId,
@@ -857,14 +844,7 @@ export default {
               items.push(basedata[key])
           }
         }
-        // mqtt 消息回调
-        console.groupCollapsed(
-          '%c send mqttMsg items',
-          'color:#009a61; font-size: 28px; font-weight: 300'
-        )
-        console.log(items)
-        console.groupEnd()
-        const pubTopic = `/${row.parentId.product.objectId}/${row.parentId.devaddr}/device/event` // 读取opc属性topic
+        const pubTopic = `$dg/thing/${row.parentId.objectId}/properties/get/request_id=opc_items` // 读取opc属性topic
         const message = {
           cmd: 'opc_items',
           groupid: row.parentId.objectId, //'设备ID',
@@ -872,14 +852,6 @@ export default {
             basedata.dgiot_testing_opcserver ?? 'Kepware.KEPServerEX.V6',
           items: items, //要读取到属性列表
         } // 下发的消息内容
-        // mqtt 消息回调
-        console.groupCollapsed(
-          '%c 下发消息',
-          'color:#009a61; font-size: 28px; font-weight: 300'
-        )
-        console.log(message)
-        console.log(pubTopic)
-        console.groupEnd()
         await this.$dgiotBus.$emit(
           `MqttPublish`,
           pubTopic,
@@ -887,6 +859,13 @@ export default {
           0,
           false
         ) // 开始任务
+        console.groupCollapsed(
+          `%c 发送开始任务`,
+          'color:#009a61; font-size: 28px; font-weight: 300'
+        )
+        console.log('message', message)
+        console.log('pubTopic', pubTopic)
+        console.groupEnd()
       } catch (error) {
         console.log(error)
         this.$baseMessage(
@@ -909,30 +888,8 @@ export default {
       _this.collectionInfo = params
       _this.featHistoryEvidence(this.collectionInfo.objectId)
       try {
-        const thingcolumns = {}
-        const items = []
-        _this.thingdata = []
-        // _this.thingcolumns = []
         const { basedata = [] } = await getDevice(params.objectId)
-        if (!_.isEmpty(basedata)) {
-          /**
-           * @description 判断下发组态topic的item
-           * @description 必须以 标识符 dgiot_testing_equipment_ 开头
-           */
-          for (let key in basedata) {
-            if (key.indexOf('dgiot_testing_equipment_') == 0)
-              items.push(basedata[key])
-          }
-        }
-        // mqtt 消息回调
-        console.groupCollapsed(
-          '%c send mqttMsg items',
-          'color:#009a61; font-size: 28px; font-weight: 300'
-        )
-        console.log(items)
-        console.groupEnd()
-        _this.subtopic = `topo/${params.parentId.product.objectId}/${params.parentId.devaddr}/post` // 组态上报topic
-        const pubTopic = `/${params.parentId.product.objectId}/${params.parentId.devaddr}/device/event` // 读取opc属性topic
+        const pubTopic = `$dg/thing/${params.parentId.objectId}/properties/get/request_id=opc_report` // 读取opc属性topic
         const message = {
           cmd: 'opc_report', // 采集条数
           duration: Number(basedata.dgiot_sampling_parametric_frequency) ?? 5, //条数
@@ -952,45 +909,6 @@ export default {
           0,
           false
         ) // 开始采集
-        _this.topicKey = _this.$dgiotBus.topicKey(_this.router, _this.subtopic) // dgiot-mqtt topicKey 唯一标识
-        _this.$dgiotBus.$off(_this.topicKey) // dgiotBus 关闭事件
-        _this.$dgiotBus.$on(_this.topicKey, (mqttMsg) => {
-          // mqtt 消息回调
-          console.groupCollapsed(
-            `%c mqttMsg消息回调 \n${_this.topicKey}`,
-            'color:#009a61; font-size: 28px; font-weight: 300'
-          )
-          console.log(mqttMsg)
-          console.log('payload:', mqttMsg.payloadString)
-          console.groupEnd()
-          // _this.thingdata = []
-          // this.realtimedata = []
-          if (mqttMsg?.payload) {
-            const { thingdata = {}, timestamp } = JSON.parse(
-              mqttMsg.payloadString
-            )
-            thingdata.timestamp = moment(Number(timestamp)).format(
-              'YYYY-MM-DD HH:mm:ss'
-            )
-            if (!_.isEmpty(thingdata) && thingdata?.dgiotcollectflag == 0) {
-              console.log(thingdata)
-              _this.thingdata[0] = thingdata // 只显示一条
-              // _this.thingdata.unshift(thingdata) // 最新数据放在最前面
-            } else {
-              //实时数据
-              // _this.realtimedata.push(thingdata) // 只显示一条
-              _this.realtimedata.unshift(thingdata) // 最新数据放在最前面
-            }
-            // _this.getSummaries({ columns: [], data: _this.thingdata }) // 计算平均值
-          }
-        })
-        console.log('_this.thingdata', _this.thingdata)
-        // _this.$dgiotBus.$emit('MqttSubscribe', {
-        //   router: _this.router,
-        //   topic: _this.subtopic,
-        //   qos: 0,
-        //   ttl: 1000 * 60 * 60 * 3,
-        // })
       } catch (error) {
         console.log(error)
         _this.$baseMessage(
@@ -999,7 +917,7 @@ export default {
           'dgiot-hey-message-error'
         )
       }
-      _this.subRealtimedata(params)
+      // _this.subRealtimedata(params)
     },
     /**
      * @Author: dext7r

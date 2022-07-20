@@ -18,6 +18,7 @@ import {dgiotlog} from '../../../../utils/dgiotLog'
 import {queryView} from '@/api/View'
 import dgiotViews from '@/views/CloudFunction/lowcode'
 import {getProtocol} from '@/api/Protocol'
+import dgiotDict from '@/views/CloudFunction/dict'
 import {
   BaiduMap,
   BmCityList,
@@ -52,6 +53,7 @@ export default {
   components: {
     mqttLog,
     dgiotViews,
+    dgiotDict,
     'dgiot-wmx': wmxdetail,
     'dgiot-profile': profile,
     'thing-form': thingForm,
