@@ -8,94 +8,80 @@
 * @DocumentLink:
 -->
 <template>
-  <div>
-    <el-tabs v-model="activeName">
-      <el-tab-pane
-        :label="$translateTitle('developer.dictinfo')"
-        name="字典管理"
+  <div style="margin-left: 30px; margin-right: 30px">
+    <el-button
+      class="mt-3"
+      icon="el-icon-plus"
+      size="small"
+      type="primary"
+      @click.native="addparam"
+    >
+      <!-- 新增 -->
+      {{ $translateTitle('product.newlyadded') }}
+    </el-button>
+    <h1></h1>
+    <el-form
+      ref="dataform"
+      class="demo-ruleForm"
+      label-width="100px"
+      :model="dataform"
+      size="mini"
+      status-icon
+    >
+      <el-table
+        border
+        :cell-style="{ 'text-align': 'center' }"
+        :data="dataform.params"
+        :header-cell-style="{ 'text-align': 'center' }"
+        style="width: 100%"
       >
-        <el-form ref="dataform" label-width="100px" :model="dataform">
-          <el-button
-            class="mt-3"
-            icon="el-icon-plus"
-            size="small"
-            type="primary"
-            @click.native="addparam"
-          >
-            <!-- 新增 -->
-            {{ $translateTitle('product.newlyadded') }}
-          </el-button>
-          <el-table
-            :data="dataform.params"
-            style="width: 100%; text-align: center"
-          >
-            <el-table-column
-              :label="$translateTitle('equipment.serialnumber')"
-              prop="order"
-            />
-            <el-table-column
-              :label="$translateTitle('deviceLog.identifier')"
-              prop="identifier"
-            />
-            <el-table-column
-              :label="$translateTitle('equipment.name')"
-              prop="name"
-            />
-            <el-table-column
-              :label="$translateTitle('rule.Type')"
-              prop="type"
-            />
-            <el-table-column
-              :label="$translateTitle('cloudTest.datasources')"
-              prop="sources"
-            />
-            <el-table-column
-              align="center"
-              :label="$translateTitle('task.Operation')"
-              width="160"
+        <el-table-column
+          :label="$translateTitle('equipment.serialnumber')"
+          prop="order"
+        />
+        <el-table-column
+          :label="$translateTitle('deviceLog.identifier')"
+          prop="identifier"
+        />
+        <el-table-column
+          :label="$translateTitle('equipment.name')"
+          prop="name"
+        />
+        <el-table-column :label="$translateTitle('rule.Type')" prop="type" />
+        <el-table-column
+          :label="$translateTitle('cloudTest.datasources')"
+          prop="sources"
+        />
+        <el-table-column
+          align="center"
+          :label="$translateTitle('task.Operation')"
+          width="160"
+        >
+          <template #default="{ row, $index }">
+            <el-button
+              plain
+              size="mini"
+              :title="$translateTitle('task.Edit')"
+              type="info"
+              @click.native="editRow($index, row)"
             >
-              <template #default="{ row, $index }">
-                <el-button
-                  plain
-                  size="mini"
-                  :title="$translateTitle('task.Edit')"
-                  type="info"
-                  @click.native="editRow($index, row)"
-                >
-                  <!-- 编辑 -->
-                  {{ $translateTitle('task.Edit') }}
-                </el-button>
-                <el-button
-                  plain
-                  size="mini"
-                  :title="$translateTitle('task.Delete')"
-                  type="danger"
-                  @click.native="delRow($index)"
-                >
-                  <!-- 删除 -->
-                  {{ $translateTitle('task.Delete') }}
-                </el-button>
-              </template>
-            </el-table-column>
-          </el-table>
-        </el-form>
-      </el-tab-pane>
-      <el-tab-pane label="Json" name="Json">
-        <el-form ref="dataform" label-width="100px" :model="dataform">
-          <el-form-item :label="$translateTitle('task.data')" prop="data">
-            <div style="height: 30vh; overflow: auto">
-              <dgiot-monaco-plus
-                ref="monacoCode"
-                :codes="dataform.data"
-                :lang="'json'"
-                :read-only="false"
-                :theme="'vs-dark'"
-              />
-            </div>
-          </el-form-item>
-        </el-form>
-      </el-tab-pane>
-    </el-tabs>
+              <!-- 编辑 -->
+              {{ $translateTitle('task.Edit') }}
+            </el-button>
+            <el-button
+              plain
+              size="mini"
+              :title="$translateTitle('task.Delete')"
+              type="danger"
+              @click.native="delRow($index)"
+            >
+              <!-- 删除 -->
+              {{ $translateTitle('task.Delete') }}
+            </el-button>
+          </template>
+        </el-table-column>
+      </el-table>
+    </el-form>
     <el-drawer
       ref="param"
       v-drawerDrag

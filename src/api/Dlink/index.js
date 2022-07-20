@@ -71,11 +71,6 @@ export async function postTopic(Topic = '$dg/user/router/') {
         : Topic,
     splitTopicKey: typeof Topic == 'string' ? Topic.split('/')[2] : Topic,
   }
-  console.groupCollapsed(
-    ` href: ${mqttInfo.href} \n topic: ${mqttInfo.topic} \n topicKey: ${mqttInfo.topicKey} \n splitTopicKey: ${mqttInfo.splitTopicKey}`
-  )
-  console.table(mqttInfo)
-  console.groupEnd()
   // MqttSubscribe
   window.mqttInfo = window.dgiot.mqttInfo = mqttInfo
   Vue.prototype.$mqttInfo = mqttInfo
