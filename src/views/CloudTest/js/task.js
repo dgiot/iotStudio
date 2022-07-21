@@ -32,6 +32,12 @@ export default {
   },
   data() {
     return {
+      management: {
+        dialog: false,
+        data: {},
+      },
+      managementactiveName: '0',
+      dialog_device: false,
       machinelist: {},
       historyEvidenceid: '',
       nowTime: window.datetime,
@@ -701,14 +707,31 @@ export default {
     async handleManagement(row) {
       this.$refs['lowcodeDesign'].withHeader = true
       localStorage.setItem('parse_objectid', row.objectId)
+      localStorage.setItem('product_objectid', row.product.objectId)
       const params = {
         limit: 1,
         where: { type: 'amis', key: row.objectId },
       }
       const { results } = await queryView(params)
-      console.log(results)
-      this.lowcodeId = results[0].objectId
-      this.$dgiotBus.$emit('lowcodePreview', results[0])
+      console.log('results', results)
+
+      if (_.isEmpty(results)) {
+        this.$baseMessage('暂未配置任务表单', 'info', 'dgiot-hey-message-error')
+        return false
+      } else {
+        this.management.dialog = true
+        this.management.data = results
+      }
+      // this.lowcodeId = results[0].objectId
+      // this.$dgiotBus.$emit('lowcodePreview', results[0])
+    },
+    handleCloseAmis() {
+      this.coordinate = {
+        lng: 116.404,
+        lat: 39.915,
+      }
+      this.dialog_device = false
+      this.management.dialog = false
     },
     /**
      * @Author: h7ml

@@ -335,20 +335,6 @@
           @submit.native.prevent
         >
           <el-form-item>
-            <!--            <el-select-->
-            <!--              v-model="queryForm.name"-->
-            <!--              multiple-->
-            <!--              :placeholder="-->
-            <!--                $translateTitle('cloudTest.Please select review status')-->
-            <!--              "-->
-            <!--            >-->
-            <!--              <el-option-->
-            <!--                v-for="item in options"-->
-            <!--                :key="item.value"-->
-            <!--                :label="item.label"-->
-            <!--                :value="item.value"-->
-            <!--              />-->
-            <!--            </el-select>-->
             <el-input
               v-model="queryForm.name"
               :placeholder="
@@ -523,6 +509,26 @@
       @paginationQuery="paginationQuery"
     />
     <lowcode-design ref="lowcodeDesign" @objectId="lowcodeId" />
+    <!--    配置任务-->
+    <el-dialog
+      append-to-body
+      :before-close="handleCloseAmis"
+      center
+      top="5vh"
+      :visible.sync="management.dialog"
+      width="80%"
+    >
+      <el-tabs v-model="managementactiveName">
+        <el-tab-pane
+          v-for="(item, index) in management.data"
+          :key="index + 'i'"
+          :label="item.title"
+          :name="index + ''"
+        >
+          <dgiot-amis :schema="item.data" :show-help="false" />
+        </el-tab-pane>
+      </el-tabs>
+    </el-dialog>
   </div>
 </template>
 
