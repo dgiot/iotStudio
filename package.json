@@ -63,7 +63,7 @@
     "@dgiot/dgiot-monaco": "^0.2.2",
     "@material/icon-button": "13.0.0",
     "amis": "1.9.1-beta.11",
-    "amis-editor": "4.1.0-beta.24",
+    "amis-editor": "5.2.0",
     "driver.js": "^0.9.8",
     "pnpm": "^7.3.0",
     "register-service-worker": "1.7.2",
