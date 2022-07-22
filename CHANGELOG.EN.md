@@ -1,4 +1,4 @@
-## [4.5.5](https://github.com/dgiot/dgiot-dashboard/compare/v4.5.4...v4.5.5) (2022-07-18)
+## [4.5.6](https://github.com/dgiot/dgiot-dashboard/compare/v4.5.4...v4.5.6) (2022-07-20)
 
 
 ### Bug Fixes
@@ -10,6 +10,7 @@
 * **压测报告:** 修复压测报告列表展示逻辑 ([328907d](https://github.com/dgiot/dgiot-dashboard/commit/328907d80d151dc0da7f3cf5ea7906afe60124ec))
 * **压测报告:** 修复压测报告预览地址不正确 ([380ee2c](https://github.com/dgiot/dgiot-dashboard/commit/380ee2cbb60fe3181f56f3e842d22419bc5dab7e))
 * **压测报告:** 修复压测列表样式错乱的问题 ([2231c5d](https://github.com/dgiot/dgiot-dashboard/commit/2231c5dda27174b5a1e54d641e5d634ffe90e73f))
+* 云检测修复 ([3f4df6a](https://github.com/dgiot/dgiot-dashboard/commit/3f4df6a03a16891a6d8893929f737dee07763051))
 * **action:** 修复sync工作流语法不正确 ([357a282](https://github.com/dgiot/dgiot-dashboard/commit/357a282c189cd57b69b51ede661a7355d45cefe5))
 * **appveyor:** script ([3e93c80](https://github.com/dgiot/dgiot-dashboard/commit/3e93c802870cd90f36b2a8eb12761f33cbb45bb1))
 * **cloudTest:** 克隆任务多余参数删除 ([a26b5fd](https://github.com/dgiot/dgiot-dashboard/commit/a26b5fd103b4cc59c7e7b3984e49c44d609c04de))
