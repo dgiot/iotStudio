@@ -37,6 +37,7 @@ import {
   BmScale,
   BmView,
 } from 'vue-baidu-map'
+import {putDevice} from "../../../../api/Device";
 
 var editor
 var editor1
@@ -898,6 +899,17 @@ export default {
     this.subdialogtimer = null
   },
   methods: {
+    async blurinterval(productdetail) {
+        await putProduct(productdetail.objectId, {
+          config: productdetail.config,
+        })
+        this.$message({
+          message: '物模型缓存延时修改成功',
+          type: 'success',
+          showClose: true,
+          duration: 1500,
+        })
+    },
     async handleAddressClose() {
       this.dialog_address = !this.dialog_address
       await putProduct(this.productObj.objectId, {
