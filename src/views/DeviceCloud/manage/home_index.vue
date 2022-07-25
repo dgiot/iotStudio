@@ -239,6 +239,7 @@
               :disabled="form.type == 'edit' ? true : false"
               placeholder="请选择产品"
               style="width: 100%"
+              @change="selectChange"
             >
               <el-option
                 v-for="item in product"
@@ -641,7 +642,7 @@
   } from '@/api/Device'
   import { mapActions, mapGetters, mapMutations } from 'vuex'
   import TableEdit from '@/views/DeviceCloud/empty/tableEdit'
-  import { queryProduct } from '@/api/Product'
+  import { getProduct, queryProduct } from '@/api/Product'
   import {
     BaiduMap,
     BmCityList,
@@ -687,6 +688,7 @@
     },
     data() {
       return {
+        productDetail: {},
         activeName: '0',
         commandInfo: {
           dialog: false,
@@ -1041,6 +1043,11 @@
         })
         return name
       },
+      async selectChange(productId) {
+        getProduct(productId).then((res) => {
+          this.productDetail = res
+        })
+      },
       submitForm(formName, type) {
         this.$refs[formName].validate(async (valid) => {
           if (valid) {
@@ -1072,6 +1079,8 @@
                 delete params.address
                 delete params.location
               }
+              params.detail.devType = this.productDetail.devType
+              params.detail.category = this.productDetail.category.objectId
               const { error = '', objectId = '' } = await postDevice(params)
               if (error) {
                 this.$message({

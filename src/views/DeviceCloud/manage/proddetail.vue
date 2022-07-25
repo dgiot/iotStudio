@@ -299,6 +299,17 @@
                   </el-button>
                 </el-descriptions-item>
                 <el-descriptions-item
+                  :label="$translateTitle('product.productinterval')"
+                >
+                  <el-input
+                    v-model="productdetail.config.interval"
+                    size="mini"
+                    style="margin: 0 auto"
+                    type="number"
+                    @blur="blurinterval(productdetail)"
+                  />
+                </el-descriptions-item>
+                <el-descriptions-item
                   :label="$translateTitle('equipment.address')"
                 >
                   <el-link
@@ -2938,7 +2949,7 @@
         </el-tab-pane>
         <!--字典-->
         <el-tab-pane :label="$translateTitle('product.dict')" name="dict">
-          <dgiot-dict :dict-form="dictForm" />
+          <dgiot-dict />
         </el-tab-pane>
       </el-tabs>
     </div>

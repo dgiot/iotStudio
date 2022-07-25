@@ -741,6 +741,7 @@ export default {
       exportpro: '导出产品',
       topoview: '组态大屏',
       importpro: '导入产品',
+      productinterval: '物模型缓存延时(秒/s)',
     },
     scripttips: {
       Pleaseinputproduct: '请输入产品',
