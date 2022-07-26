@@ -43,7 +43,10 @@ const topoStage = {
         "['thing', 'amis', 'device'].indexOf(node.getAttr('name')) ",
         ['thing', 'amis', 'device'].indexOf(node.getAttr('name'))
       )
-      if (['thing', 'amis', 'device'].indexOf(node.getAttr('name')) != -1) {
+      if (
+        ['thing', 'amis', 'device'].indexOf(node.getAttr('name')) != -1 ||
+        location.href.includes('evidence')
+      ) {
         const nodeTags = node.getChildren()
         nodeTags.forEach((tag) => {
           info['tag'].push(tag)
@@ -88,7 +91,10 @@ const topoStage = {
     })
     stage.find('Text').forEach((node) => {
       info['Text'] = stage.find('Text')
-      if (location.href.includes('&type=device')) {
+      if (
+        location.href.includes('&type=device') ||
+        location.href.includes('evidence')
+      ) {
         dgiotlogger.info('dgiotlogger node:', node)
         node
           ? node.setAttrs({
@@ -131,6 +137,11 @@ const topoStage = {
     })
     stage.find('Path').forEach((node) => {
       info['Path'] = stage.find('Path')
+      info['evidence'].push(node)
+      addNodeEvent({
+        type: node.getAttr('name'),
+        node: node,
+      })
       if (['evidence', 'thing', 'device'].indexOf(node.getAttr('name')) != -1) {
         if (
           location.href.includes('preview') ||
@@ -149,12 +160,6 @@ const topoStage = {
 
         // canvas.layer.batchDraw()
         // canvas.stage.batchDraw()
-
-        info['evidence'].push(node)
-        addNodeEvent({
-          type: node.getAttr('name'),
-          node: node,
-        })
       }
       // node.setAttrs({
       //   scaleX: args.saleInfo.scaleX,
