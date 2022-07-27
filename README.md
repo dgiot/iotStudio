@@ -18,7 +18,7 @@ DGIoT是国内首款轻量级工业物联网开源平台，我们致力于为5�
 
 ## 平台快速体验与技术交流微信群
 
-| 微信技术支持群 |电脑端https://prod.dgiotcloud.cn| [QQ技术支持群](https://jq.qq.com/?_wv=1027&k=LipWZvDe)： 346566935   | 
+| 微信技术支持群 |[电脑端]https://prod.dgiotcloud.cn| [QQ技术支持群](https://jq.qq.com/?_wv=1027&k=LipWZvDe)： 346566935   | 
 |:---:|:---:|:---:|
 | ![image](https://user-images.githubusercontent.com/51999461/153103247-62746a47-64d0-4385-ae2e-13398688a033.png) |**
 平台体验网址**<br/>https://prod.dgiotcloud.c<br/></br><br/>**账号密码均为：**</br><br/></br><font size=3>**
