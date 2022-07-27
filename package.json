@@ -99,7 +99,7 @@
     "chokidar": "3.5.3",
     "chrome-launcher": "0.15.0",
     "clean-webpack-plugin": "4.0.0",
-    "commitizen": "4.2.4",
+    "commitizen": "4.2.5",
     "compression-webpack-plugin": "^6.1.1",
     "conventional-changelog-cli": "^2.2.2",
     "copy-to-clipboard": "3.3.1",
