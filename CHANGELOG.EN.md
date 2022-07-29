@@ -1,3 +1,19 @@
+## [4.5.7](https://github.com/dgiot/dgiot-dashboard/compare/v4.5.6...v4.5.7) (2022-07-29)
+
+
+### Bug Fixes
+
+* 物模型延时缓存 ([c8dd9d4](https://github.com/dgiot/dgiot-dashboard/commit/c8dd9d4713fb9f36129fb660ecc68c55c73df775))
+* **cloudTest:** evidence ([e8d0510](https://github.com/dgiot/dgiot-dashboard/commit/e8d051073aee73634a11fe3d31f0a7c4f54f67be))
+* **dashboard): build(发布版本:** dgiot-dashboard@v4.5.6 ([1d4302c](https://github.com/dgiot/dgiot-dashboard/commit/1d4302cd183474db6bbbb6dbc4fbc46163d351c8)), closes [#511](https://github.com/dgiot/dgiot-dashboard/issues/511)
+
+
+### Features
+
+* dgiot_amis ([8c91153](https://github.com/dgiot/dgiot-dashboard/commit/8c91153c8ad5b6b32d91c57a36fe55fefa3da721))
+
+
+
 ## [4.5.6](https://github.com/dgiot/dgiot-dashboard/compare/v4.5.4...v4.5.6) (2022-07-20)
 
 
