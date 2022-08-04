@@ -341,10 +341,7 @@
       }
     },
     computed: {},
-    mounted() {
-      console.log('this.data', this.data)
-      console.log('this.dataform', this.dataform)
-    },
+    mounted() {},
     beforeCreate() {}, //生命周期 - 创建之前
     beforeMount() {}, //生命周期 - 挂载之前
     beforeUpdate() {}, //生命周期 - 更新之前
@@ -395,6 +392,7 @@
                 type: 'success',
               })
             } else {
+              this.dataform.params = this.dataform.params || []
               this.dataform.params.push(this.param)
               this.$message({
                 showClose: true,
@@ -404,7 +402,6 @@
               })
             }
             this.saveDict()
-            this.edit_param_dialog = false
           }
         })
       },
@@ -413,6 +410,7 @@
           id: this.objectId,
           data: { data: this.dataform },
         })
+        this.edit_param_dialog = false
       },
     }, //如果页面有keep-alive缓存功能，这个函数会触发
   }

@@ -18,7 +18,7 @@
         title="字典"
         :visible.sync="dictFlag"
       >
-        <dgiot-dict :object-id="dictId" />
+        <dgiot-dict :data="data" :object-id="dictId" />
       </el-drawer>
     </div>
     <div class="drawerCode-content">
@@ -94,9 +94,6 @@
       async designDict(type, objectId, data) {
         this.dictId = objectId
         this.data = data
-        console.log('data', data)
-        console.log('objectId', objectId)
-        console.log('type', type)
         switch (type) {
           case 'word':
             this.wordFlag = true
