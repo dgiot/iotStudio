@@ -229,20 +229,6 @@
           @submit.native.prevent
         >
           <el-form-item>
-            <!--            <el-select-->
-            <!--              v-model="queryForm.name"-->
-            <!--              multiple-->
-            <!--              :placeholder="-->
-            <!--                $translateTitle('cloudTest.Please select review status')-->
-            <!--              "-->
-            <!--            >-->
-            <!--              <el-option-->
-            <!--                v-for="item in options"-->
-            <!--                :key="item.value"-->
-            <!--                :label="item.label"-->
-            <!--                :value="item.value"-->
-            <!--              />-->
-            <!--            </el-select>-->
             <el-input
               v-model="queryForm.name"
               :placeholder="
@@ -347,6 +333,14 @@
             {{ $translateTitle(`product.Underreview`) }}
           </el-button>
           <el-button
+            v-show="row.profile.iszjimee"
+            size="mini"
+            type="primary"
+            @click.native="handleManagement(row)"
+          >
+            {{ $translateTitle(`task.testItemsreview`) }}
+          </el-button>
+          <el-button
             v-show="row.profile.step == 3"
             size="mini"
             type="success"
@@ -386,14 +380,6 @@
           >
             历史数据
           </el-button>
-          <el-button
-            v-show="row.profile.step != -1"
-            size="mini"
-            type="success"
-            @click.native="handleManagement(row)"
-          >
-            {{ $translateTitle(`task.Configuration`) }}
-          </el-button>
         </template>
       </el-table-column>
       <template #empty>
@@ -414,6 +400,26 @@
       @paginationQuery="paginationQuery"
     />
     <lowcode-design ref="lowcodeDesign" @objectId="lowcodeId" />
+    <!--检测项审核-->
+    <el-dialog
+      append-to-body
+      :before-close="handleCloseAmis"
+      center
+      top="5vh"
+      :visible.sync="management.dialog"
+      width="80%"
+    >
+      <el-tabs v-model="managementactiveName">
+        <el-tab-pane
+          v-for="(item, index) in management.data"
+          :key="index + 'i'"
+          :label="item.title"
+          :name="index + ''"
+        >
+          <dgiot-amis :schema="item.data" :show-help="false" />
+        </el-tab-pane>
+      </el-tabs>
+    </el-dialog>
   </div>
 </template>
 
