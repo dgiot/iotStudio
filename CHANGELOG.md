@@ -1,4 +1,4 @@
-## [4.5.7](https://github.com/dgiot/dgiot-dashboard/compare/v4.5.6...v4.5.7) (2022-07-29)
+## [4.5.7](https://github.com/dgiot/dgiot-dashboard/compare/v4.5.6...v4.5.7) (2022-08-04)
 
 
 ### Bug Fixes
@@ -10,6 +10,7 @@
 
 ### Features
 
+* **cloudTest:** 检测项 ([76928b4](https://github.com/dgiot/dgiot-dashboard/commit/76928b4114b12cfd50afc5cc077f21f145e1f98e))
 * dgiot_amis ([8c91153](https://github.com/dgiot/dgiot-dashboard/commit/8c91153c8ad5b6b32d91c57a36fe55fefa3da721))
 
 
