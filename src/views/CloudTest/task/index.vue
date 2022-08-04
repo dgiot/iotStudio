@@ -373,11 +373,58 @@
       <el-table-column
         align="center"
         :label="$translateTitle('cloudTest.number')"
-        show-overflow-tooltip
-        width="auto"
+        width="50px"
       >
         <template #default="{ $index }">
           {{ $index + 1 }}
+        </template>
+      </el-table-column>
+      <el-table-column
+        align="center"
+        label="任务名称"
+        prop="name"
+        show-overflow-tooltip
+        sortable
+        width="160"
+      />
+      <el-table-column
+        align="center"
+        label="报告模板"
+        prop="profile.wordtemplatename"
+        show-overflow-tooltip
+        sortable
+        width="160"
+      />
+      <el-table-column
+        align="center"
+        label="测试台体"
+        prop="name"
+        show-overflow-tooltip
+        sortable
+        width="160"
+      >
+        <template #default="{ row }">
+          <span v-if="row.profile.testbed">{{ row.profile.testbed }}</span>
+          <el-form v-else :model="row">
+            <el-select
+              v-model="row.profile.testbed"
+              :placeholder="$translateTitle('task.Select')"
+              style="width: 100%"
+              value-key="objectId"
+              @change="
+                (val) => {
+                  changetestbed(val, row)
+                }
+              "
+            >
+              <el-option
+                v-for="item in grouplist"
+                :key="item.objectId"
+                :label="item.name"
+                :value="item"
+              />
+            </el-select>
+          </el-form>
         </template>
       </el-table-column>
       <el-table-column
@@ -390,7 +437,6 @@
         :sortable="item.sortable"
         :width="item.width"
       />
-
       <el-table-column
         align="center"
         :label="$translateTitle(`deviceLog.status`)"
@@ -537,6 +583,7 @@
   .el-divider__text {
     font-size: 18px;
   }
+
   .setting {
     margin: 20px 0;
   }

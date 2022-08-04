@@ -18,6 +18,11 @@ export default {
   },
   data() {
     return {
+      management: {
+        dialog: false,
+        data: {},
+      },
+      managementactiveName: '0',
       statisticsVisible: false,
       evidenceId: '',
       aliplayer: {
@@ -556,19 +561,29 @@ export default {
         )
       }
     },
+    handleCloseAmis() {
+      this.coordinate = {
+        lng: 116.404,
+        lat: 39.915,
+      }
+      this.dialog_device = false
+      this.management.dialog = false
+    },
     async handleManagement(row) {
       this.$refs['lowcodeDesign'].withHeader = true
       localStorage.setItem('parse_objectid', row.objectId)
       const params = {
-        limit: 1,
         where: { type: 'amis_view', key: row.objectId },
       }
       const { results = [] } = await queryView(params)
       console.log(results)
-      if (results.length == 0)
-        this.$baseMessage('暂无配置', 'success', 'dgiot-hey-message-success')
-      this.lowcodeId = results[0].objectId
-      this.$dgiotBus.$emit('lowcodePreview', results[0])
+      if (_.isEmpty(results)) {
+        this.$baseMessage('暂未配置检测项', 'info', 'dgiot-hey-message-error')
+        return false
+      } else {
+        this.management.dialog = true
+        this.management.data = results
+      }
     },
     /**
      * @Author: h7ml

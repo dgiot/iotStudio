@@ -112,8 +112,6 @@ export default {
       stripe: true,
       lineHeight: 'medium',
       checkList: [
-        'mission name',
-        'Inspection number',
         'Inspection template',
         'testbed',
         'Trade Names',
@@ -122,37 +120,6 @@ export default {
         'end time',
       ],
       columns: [
-        {
-          label: 'mission name',
-          width: 'auto',
-          prop: 'name',
-          sortable: true,
-        },
-        // {
-        //   label: 'Inspection number',
-        //   width: 'auto',
-        //   prop: 'devaddr',
-        //   sortable: true,
-        //   disableCheck: true,
-        // },
-        {
-          label: 'Inspection template',
-          width: 'auto',
-          prop: 'profile.wordtemplatename',
-          sortable: true,
-        },
-        {
-          label: 'testbed',
-          width: 'auto',
-          prop: 'profile.testbed',
-          sortable: true,
-        },
-        // {
-        //   label: 'Creation Time',
-        //   width: 'auto',
-        //   prop: 'createdAt',
-        //   sortable: true,
-        // },
         {
           label: 'Starting time',
           width: 'auto',
@@ -326,6 +293,18 @@ export default {
         this.ruleForm,
         val.objectId
       )
+    },
+    async changetestbed(val, row) {
+      let profile = row.profile
+      profile.testbed = val.name
+      await putDevice(row.objectId, {
+        profile: profile,
+        parentId: {
+          __type: 'Pointer',
+          className: 'Device',
+          objectId: val.objectId,
+        },
+      })
     },
     async getwordtemp() {
       const params = {
@@ -571,6 +550,14 @@ export default {
      */
     taskStart(row) {
       let _this = this
+      if (!row.profile.testbed) {
+        _this.$baseMessage(
+          '请选择测试台体',
+          'waring',
+          'dgiot-hey-message-error'
+        )
+        return
+      }
       _this.$baseConfirm(
         _this.$translateTitle(
           'Maintenance.Are you sure you want to start the current mission'
@@ -709,7 +696,6 @@ export default {
       localStorage.setItem('parse_objectid', row.objectId)
       localStorage.setItem('product_objectid', row.product.objectId)
       const params = {
-        limit: 1,
         where: { type: 'amis', key: row.objectId },
       }
       const { results } = await queryView(params)
