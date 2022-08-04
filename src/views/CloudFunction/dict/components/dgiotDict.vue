@@ -8,72 +8,64 @@
 * @DocumentLink:
 -->
 <template>
-  <div>
-    <el-form ref="data" label-width="100px" :model="data">
-      <el-button
-        class="mt-3"
-        icon="el-icon-plus"
-        size="small"
-        type="primary"
-        @click.native="addparam"
+  <div style="margin-left: 30px; margin-right: 30px">
+    <el-button
+      class="mt-3"
+      icon="el-icon-plus"
+      size="small"
+      type="primary"
+      @click.native="addparam"
+    >
+      <!-- 新增 -->
+      {{ $translateTitle('product.newlyadded') }}
+    </el-button>
+    <h1></h1>
+    <el-table
+      border
+      :cell-style="{ 'text-align': 'center' }"
+      :data="dataform.params"
+      :header-cell-style="{ 'text-align': 'center' }"
+      style="width: 100%"
+    >
+      <el-table-column
+        :label="$translateTitle('equipment.serialnumber')"
+        prop="order"
+      />
+      <el-table-column
+        :label="$translateTitle('deviceLog.identifier')"
+        prop="identifier"
+      />
+      <el-table-column :label="$translateTitle('equipment.name')" prop="name" />
+      <el-table-column :label="$translateTitle('rule.Type')" prop="type" />
+      <el-table-column
+        align="center"
+        :label="$translateTitle('task.Operation')"
+        width="160"
       >
-        <!-- 新增 -->
-        {{ $translateTitle('product.newlyadded') }}
-      </el-button>
-      <el-table :data="data.params" style="width: 100%; text-align: center">
-        <el-table-column
-          :label="$translateTitle('equipment.serialnumber')"
-          prop="order"
-        />
-        <el-table-column
-          :label="$translateTitle('deviceLog.identifier')"
-          prop="identifier"
-        />
-        <el-table-column
-          :label="$translateTitle('equipment.name')"
-          prop="name"
-        />
-        <el-table-column :label="$translateTitle('rule.Type')" prop="type" />
-        <el-table-column
-          align="center"
-          :label="$translateTitle('task.Operation')"
-          width="160"
-        >
-          <template #default="{ row, $index }">
-            <el-button
-              plain
-              size="mini"
-              :title="$translateTitle('task.Edit')"
-              type="info"
-              @click.native="editRow($index, row)"
-            >
-              <!-- 编辑 -->
-              {{ $translateTitle('task.Edit') }}
-            </el-button>
-            <el-button
-              plain
-              size="mini"
-              :title="$translateTitle('task.Delete')"
-              type="danger"
-              @click.native="delRow($index)"
-            >
-              <!-- 删除 -->
-              {{ $translateTitle('task.Delete') }}
-            </el-button>
-          </template>
-        </el-table-column>
-      </el-table>
-      <el-form-item size="mini" style="text-align: center">
-        <el-button type="primary" @click.native="submitdata">
-          <!-- 提交 -->
-          {{ $translateTitle('application.submit') }}
-        </el-button>
-        <el-button @click="dict_temp_dialog = false">
-          <!-- 取消 -->
-          {{ $translateTitle('developer.cancel') }}
-        </el-button>
-      </el-form-item>
-    </el-form>
+        <template #default="{ row, $index }">
+          <el-button
+            plain
+            size="mini"
+            :title="$translateTitle('task.Edit')"
+            type="info"
+            @click.native="editRow($index, row)"
+          >
+            <!-- 编辑 -->
+            {{ $translateTitle('task.Edit') }}
+          </el-button>
+          <el-button
+            plain
+            size="mini"
+            :title="$translateTitle('task.Delete')"
+            type="danger"
+            @click.native="delRow($index)"
+          >
+            <!-- 删除 -->
+            {{ $translateTitle('task.Delete') }}
+          </el-button>
+        </template>
+      </el-table-column>
+    </el-table>
     <el-drawer
       ref="param"
       v-drawerDrag
@@ -166,10 +158,19 @@
         required: true,
         type: String,
       },
+      data: {
+        default: function () {
+          return {
+            params: [],
+          }
+        },
+        required: true,
+        type: Object,
+      },
     },
     data() {
       return {
-        data: { params: [] },
+        dataform: this.data,
         param: {},
         rules: {
           name: [
@@ -227,7 +228,7 @@
         })
       },
       delRow(index) {
-        this.data.params.splice(index, 1)
+        this.dataform.params.splice(index, 1)
         this.saveDict()
       },
       editRow(index, row) {
@@ -251,7 +252,7 @@
         this.$refs[param].validate(async (valid) => {
           if (valid) {
             if (this.editIndexId != undefined) {
-              this.data.params[this.editIndexId] = this.param
+              this.dataform.params[this.editIndexId] = this.param
               this.$message({
                 showClose: true,
                 duration: 2000,
@@ -259,7 +260,7 @@
                 type: 'success',
               })
             } else {
-              this.data.params.push(this.param)
+              this.dataform.params.push(this.param)
               this.$message({
                 showClose: true,
                 duration: 2000,
@@ -267,7 +268,6 @@
                 type: 'success',
               })
             }
-            console.log('this.data', this.data)
             this.saveDict()
           }
         })
@@ -275,8 +275,9 @@
       saveDict() {
         this.$dgiotBus.$emit('saveDict', {
           id: this.objectId,
-          data: { data: this.data },
+          data: { data: this.dataform },
         })
+        this.edit_param_dialog = false
       },
     }, //如果页面有keep-alive缓存功能，这个函数会触发
   }
