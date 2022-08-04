@@ -2,9 +2,10 @@
  *  build: 杭州数蛙科技有限公司 
  *  copyright: dgiot-dashboard 
  *  author: h7ml(h7ml@qq.com) 
- *  Time: 2022年07月29日15时17分15秒
+ *  Time: 2022年08月04日10时29分42秒
  */
 [data-v-7c917f6c]:export{menu-color:rgba(255,255,255,.95);menu-color-active:rgba(255,255,255,.95);menu-background:#282c34;column-second-menu-background:#fff}
+.dashboard-container main{position:relative;top:20px;height:100vh;margin:0 auto;text-align:center}
 [data-v-2da43cc9]:export{menu-color:rgba(255,255,255,.95);menu-color-active:rgba(255,255,255,.95);menu-background:#282c34;column-second-menu-background:#fff}
 [data-v-c9b3dd86]:export{menu-color:rgba(255,255,255,.95);menu-color-active:rgba(255,255,255,.95);menu-background:#282c34;column-second-menu-background:#fff}.instruct[data-v-c9b3dd86]{box-sizing:border-box;min-height:100%;padding:20px;background:#fff}.instruct .instruct_button[data-v-c9b3dd86]{display:flex;flex-direction:row-reverse;flex-direction:unset;justify-content:space-between}.instruct .instruct_table[data-v-c9b3dd86]{margin-top:20px}.instruct[data-v-c9b3dd86] .el-select--small{width:100%}
 [data-v-61080db8]:export{menu-color:rgba(255,255,255,.95);menu-color-active:rgba(255,255,255,.95);menu-background:#282c34;column-second-menu-background:#fff}#addApp[data-v-61080db8]{width:100%;padding:20px;margin:0 auto}#addApp .head[data-v-61080db8]{display:flex;justify-content:space-between;margin:20px 0}#addApp .form[data-v-61080db8]{padding:10px 30px;border:3px solid #f7f7f7}#addApp .form .title[data-v-61080db8]{margin:10px 0;text-align:right}#addApp .form .el-form .el-col-12[data-v-61080db8]{padding:20px}@media screen and (max-width: 1100px){#addApp .form .el-form .el-col-12[data-v-61080db8]{width:100%}}#addApp .form .el-form .el-form-item[data-v-61080db8] .el-slider__marks-text{width:30px;margin-top:5px}#addApp .form .el-form .el-form-item[data-v-61080db8] .el-cascader{width:100%}#addApp .form .el-form .el-form-item[data-v-61080db8] .el-select{width:100%}#addApp .form .el-form .el-form-item[data-v-61080db8] .el-input-number{width:100%}#addApp .btns[data-v-61080db8]{margin-top:40px;text-align:center}
