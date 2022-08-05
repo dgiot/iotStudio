@@ -73,6 +73,74 @@
             </el-main>
           </el-col>
         </el-row>
+        <el-drawer
+          title="样式编辑"
+          append-to-body
+          :before-close="handleCloseEdit"
+          :direction="direction"
+          size="20%"
+          :modal="false"
+          :visible.sync="editFlag"
+        >
+          <!-- <div :style="{'text-align':'center','font-weight':'600'}">{{editNode.attrs.text}}</div> -->
+          <el-form
+            ref="form"
+            :model="editForm"
+            label-width="80px"
+            style="margin-right: 10px"
+          >
+            <el-form-item label="字体颜色">
+              <el-input
+                v-model="editForm.fill"
+                @input="handleEditKonva"
+              ></el-input>
+            </el-form-item>
+
+            <el-form-item label="宽度">
+              <el-input
+                v-model="editForm.width"
+                type="number"
+                @input="handleEditKonva"
+              ></el-input>
+            </el-form-item>
+            <el-form-item label="高度">
+              <el-input
+                v-model="editForm.height"
+                type="number"
+                @input="handleEditKonva"
+              ></el-input>
+            </el-form-item>
+            <el-form-item label="字体大小">
+              <el-input
+                v-model="editForm.fontSize"
+                type="number"
+                @input="handleEditKonva"
+              ></el-input>
+            </el-form-item>
+            <el-form-item label="纵向偏移">
+              <el-input
+                v-model="editForm.lineHeight"
+                type="number"
+                :step="0.1"
+                @input="handleEditKonva"
+              ></el-input>
+            </el-form-item>
+            <el-form-item label="描边颜色">
+              <el-input
+                v-model="editForm.stroke"
+                @input="handleEditKonva"
+              ></el-input>
+            </el-form-item>
+            <el-form-item label="描边宽度">
+              <el-input
+                v-model="editForm.strokeWidth"
+                type="number"
+                :step="0.1"
+                @input="handleEditKonva"
+              ></el-input>
+            </el-form-item>
+          </el-form>
+        </el-drawer>
       </el-main>
     </el-container>
   </div>
@@ -86,6 +154,7 @@
   import { getProduct } from '@/api/Product'
   import { putView, getView } from '@/api/View'
 
+  import { isBase64 } from '@/utils'
   export default {
     components: {
       ...requiremodule(require.context('./components', true, /\.vue$/)),
@@ -93,8 +162,20 @@
     data() {
       return {
         subtopic: '',
+        editFlag: false,
+        direction: 'rtl',
+        editNode: '',
         router: '',
         viewInfo: {},
+        editForm: {
+          fill: '', //字体颜色
+          width: 42, //宽度
+          height: 35, //高度
+          lineHeight: 0, //纵向偏移
+          fontSize: 14, //字体大小
+          stroke: '', //描边颜色
+          strokeWidth: 0, //描边宽度
+        },
         driver: null,
         Stage: {},
         isFull: false,
@@ -136,12 +217,43 @@
       this.$nextTick(() => {
         this.handleKonva()
       })
+      this.$dgiotBus.$off('nodeEdit')
+      this.$dgiotBus.$on('nodeEdit', async (node) => {
+        console.log('接收到编辑节点消息', node)
+        this.editNode = node
+        this.editFlag = true
+        // this.editNode.setAttrs({
+        //   fill: '#091322',
+        //   width: 80,
+        //   height: 80,
+        //   lineHeight: 2.2,
+        //   fontSize: 28,
+        //   // x: 20,
+        //   // y: -0,
+        // })
+        this.editForm = {
+          fill: node.attrs.fill || '',
+          width: node.attrs.width || 42,
+          height: node.attrs.height || 35,
+          lineHeight: node.attrs.lineHeight || 0,
+          fontSize: node.attrs.fontSize || 14,
+          stroke: node.attrs.stroke || '', //描边颜色
+          strokeWidth: node.attrs.strokeWidth || 0, //描边颜色
+          // x: node.attrs.x || 0,
+          // y: node.attrs.y || 0,
+        }
+        // color: '',
+      })
       this.$dgiotBus.$off('_busUpdata')
       this.$dgiotBus.$on('_busUpdata', async () => {
         if (this.viewInfo.objectId) {
           await this._updataTopo(this.viewInfo.objectId)
         }
       })
+      this.subtopic = `$dg/user/konva/${this.$route.query.deviceid}/report` //组态订阅主题
+      if (this.$route.query.type == 'device') {
+        this.handleMqttMsg()
+      }
       this.driver = new this.$Driver({
         className: 'vue-admin-beautiful-wrapper', // className to wrap driver.js popover
         animate: true, // Animate while changing highlighted element
@@ -184,6 +296,22 @@
         setTreeFlag: 'settings/setTreeFlag',
         createdEvidence: 'topo/createdEvidence',
       }),
+      /**
+       * 编辑组态节点
+       */
+      handleEditKonva() {
+        // console.log(this.editForm)
+        this.editForm.width = Number(this.editForm.width)
+        this.editForm.height = Number(this.editForm.height)
+        this.editForm.lineHeight = Number(this.editForm.lineHeight)
+        this.editForm.fontSize = Number(this.editForm.fontSize)
+        this.editForm.strokeWidth = Number(this.editForm.strokeWidth)
+        // console.log(this.editForm)
+        this.editNode.setAttrs(this.editForm)
+      },
+      handleCloseEdit() {
+        this.editFlag = false
+      },
       nextPage(type) {
         let query = JSON.parse(JSON.stringify(this.$route.query))
         const list = JSON.parse(this.$route.query.list)
@@ -206,6 +334,53 @@
       guide() {
         this.driver.defineSteps(steps)
         this.driver.start()
+      },
+      async handleMqttMsg() {
+        // console.error('this.topicKey', this.$mqttInfo.topicKey)
+        // console.log('是否是pc端', this.$ispc())
+        if (this.$route.query.type == 'device') {
+          await this.$subscribe(this.subtopic)
+        }
+        this.$dgiotBus.$off('$dg/user/konva')
+        this.$dgiotBus.$on('$dg/user/konva', (Msg) => {
+          console.log('这是组态消息', Msg)
+          if (Msg.payloadString) {
+            let decodeMqtt = null
+            // let updataId = []
+            // console.log('非base64数据类型', JSON.parse(Msg.payloadString))
+            if (!isBase64(Msg.payloadString)) {
+              console.log('非base64数据类型', JSON.parse(Msg.payloadString))
+              decodeMqtt = JSON.parse(Msg.payloadString)
+            } else {
+              decodeMqtt = JSON.parse(Base64.decode(Msg.payloadString))
+              console.log('消息解密消息', decodeMqtt)
+            }
+            // decodeMqtt = Msg.payloadString
+            console.log('decodeMqtt.konva', canvas.stage)
+            console.log(decodeMqtt)
+            // const Shape = decodeMqtt.konva
+            // const Text = canvas.stage.find('Text')
+            // console.log('text', Text)
+            decodeMqtt.konva.forEach((item) => {
+              // console.log(item)
+              var info = konvaUtils.putNode(
+                canvas.stage,
+                item.id,
+                item.text,
+                item.type
+              )
+              // canvas.stage.find(item.id)[0].setAttrs(item.params)
+            })
+            // var info = konvaUtils.putNode(
+            //   canvas.stage,
+            //   decodeMqtt.id,
+            //   decodeMqtt.params
+            // )
+            console.log('infokonvaUtils', konvaUtils)
+            //  node.find(nodeid)[0].setAttrs(params)
+            return
+          }
+        })
       },
       async _updataTopo(objectId) {
         this.viewInfo.data.konva = { Stage: JSON.parse(canvas.stage.toJSON()) }

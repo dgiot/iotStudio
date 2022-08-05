@@ -335,19 +335,19 @@
                   <!--                  >-->
                   <!--                    {{ $translateTitle('equipment.see') }}-->
                   <!--                  </el-link>-->
-                  <el-link
+                  <el-button
                     type="primary"
                     :underline="false"
                     @click="editorDevice(row)"
                   >
                     编辑
-                  </el-link>
+                  </el-button>
                   <el-button
                     size="mini"
                     type="danger"
                     @click="makeSure(row, $index)"
                   >
-                    {{ $translateTitle('developer.determine') }}
+                    {{ $translateTitle('developer.delete') }}
                   </el-button>
                   <!--                  <el-link-->
                   <!--                    v-if="row.nodeType != 0"-->
@@ -820,13 +820,13 @@
             },
             { validator: CheckDevaddr },
           ],
-          batchId: [
-            {
-              required: true,
-              message: '请输入设备批次',
-              trigger: 'blur',
-            },
-          ],
+          // batchId: [
+          //   {
+          //     required: true,
+          //     message: '请输入设备批次',
+          //     trigger: 'blur',
+          //   },
+          // ],
           nodeType: [
             {
               required: true,
