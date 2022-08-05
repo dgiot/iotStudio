@@ -84,6 +84,23 @@
         <!--        </el-button>-->
         <Evidence />
       </a-collapse-panel>
+      <!-- <a-collapse-panel key="4" :header="$translateTitle('topo.basic element')">
+        <el-button
+          draggable="true"
+          size="mini"
+          type="primary"
+          @click.native="
+            createBasicThing({
+              productid: $route.query.productid,
+              type: 'static',
+              hidden: false,
+            })
+          "
+        >
+          静态框
+        </el-button>
+        <el-divider />
+      </a-collapse-panel> -->
       <!--      <a-collapse-panel key="4" :header="$translateTitle('topo.image')">-->
       <!--        <div>-->
       <!--          <el-collapse v-model="activeNames" accordion>-->
@@ -276,6 +293,7 @@
         setFlag: 'konva/setFlag',
         setDrawParams: 'konva/setDrawParams',
         createThing: 'topo/createThing',
+        createBasicThing: 'topo/createBasicThing',
         createAmis: 'topo/createAmis',
         createHistory: 'topo/createHistory',
         setKonvaBg: 'topo/setKonvaBg',

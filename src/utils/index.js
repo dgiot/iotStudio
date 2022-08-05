@@ -833,7 +833,7 @@ export function isBase64(str) {
     return false
   }
   try {
-    return btoa(atob(str)) == str
+    return window.btoa(window.atob(str)) == str
   } catch (err) {
     return false
   }
@@ -932,11 +932,13 @@ class konvaUtils {
     this.nodeTag = []
   }
   // bo
-  putNode(node, nodeid, params, type) {
-    if (type == 'change') {
-      var change = node.find(nodeid)[0].setAttrs(params)
+  putNode(node, nodeid, text, type) {
+    console.log('组态修改', node, nodeid, text, type)
+    if (type != 'undefined') {
+      let params = {}
+      params[type] = text
+      var change = node.find(`#${nodeid}`)[0].setAttrs(params)
     }
-    console.log(node, nodeid, params, change)
     // in nodeid find node
     // in node.name event
     // if thing put text

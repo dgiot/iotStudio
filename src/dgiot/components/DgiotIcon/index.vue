@@ -8,7 +8,8 @@
     props: {
       icon: {
         type: String,
-        required: true,
+        default: '',
+        // required: true,
       },
     },
   }

@@ -527,11 +527,11 @@
         </el-col>
         <el-col :lg="16" :md="13" :sm="11" :xl="18" :xs="10">
           <el-link
-            v-if="$route.query.message && Number($route.query.step) != 5"
-            type="warning"
+            v-if="$route.query.message && Number($route.query.step) == 4"
+            type="success"
             :underline="false"
           >
-            {{ $translateTitle('cloudTest.The reason is not reviewed') }}：
+            {{ $translateTitle('cloudTest.report audit opinion') }}：
             {{ $route.query.message }}
           </el-link>
           <el-link

@@ -129,6 +129,25 @@ function dateFormat(fmt, date) {
   }
   return fmt
 }
+function isPC() {
+  var userAgentInfo = navigator.userAgent
+  var Agents = new Array(
+    'Android',
+    'iPhone',
+    'SymbianOS',
+    'Windows Phone',
+    'iPad',
+    'iPod'
+  )
+  var flag = true
+  for (var v = 0; v < Agents.length; v++) {
+    if (userAgentInfo.indexOf(Agents[v]) > 0) {
+      flag = false
+      break
+    }
+  }
+  return flag
+}
 
 function timestampToTime(timestamp, full) {
   if (!timestamp) {
@@ -543,6 +562,8 @@ export default {
     Vue.prototype.$FileServe = Cookies.get('fileServer')
     Vue.prototype.$dgiotlog = dgiotlog
     Vue.prototype.$dgiotConsole = dgiotConsole
+    //判断当前是否为pc端
+    Vue.prototype.$ispc = isPC
     // 订阅方法挂载到全局变量上 2022年5月27日
     Vue.prototype.$getTopic = getTopic
     Vue.prototype.$subscribe = subscribe

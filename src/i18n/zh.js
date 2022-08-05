@@ -754,6 +754,7 @@ export default {
       background: '背景底图',
       evidence: '取证',
       'evidence control': '取证控件',
+      'basic element': '基本元件',
       'Add text content': '添加文本',
       text: '文本',
       'text button': '文本按钮',
