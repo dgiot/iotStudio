@@ -191,14 +191,38 @@ const mutations = {
     canvas.konva = attr
   },
   contextMenu(state, handler) {
-    addNodeEvent({
-      type: 'contextMenu',
-      stage: canvas.stage,
-      layer: canvas.layer,
-      args: canvas.handlerArgs,
-      contextmenu: canvas.contextmenu,
+    // node.findAncestors('.mygroup'); Node.prototype.parentNode
+    let id = canvas.contextmenu.attrs.id
+    console.log(
+      'handler',
       handler,
-    })
+      canvas.contextmenu,
+      canvas.contextmenu.getParent()
+    )
+    id = id.slice(0, id.length - 5)
+    console.log('寻找', canvas.stage.find(`#${id}`))
+    // canvas.contextmenu.findAncestors(
+    //   `#${}`
+    // )
+    if (handler == 'remove') {
+      addNodeEvent({
+        type: 'contextMenu',
+        stage: canvas.stage,
+        layer: canvas.layer,
+        args: canvas.handlerArgs,
+        contextmenu: canvas.contextmenu.getParent(), //canvas.contextmenu,
+        handler,
+      })
+    } else {
+      addNodeEvent({
+        type: 'contextMenu',
+        stage: canvas.stage,
+        layer: canvas.layer,
+        args: canvas.handlerArgs,
+        contextmenu: canvas.contextmenu,
+        handler,
+      })
+    }
   },
   createdEvidence(state, Evidence) {
     state.createdEvidence = Evidence
@@ -227,6 +251,7 @@ const mutations = {
     addNodeEvent(args)
   },
   createThing(state, thing, x, y) {
+    console.log('thing内容', thing, x, y)
     const simpleText = addNodeEvent({
       type: 'createThing',
       thing,
@@ -346,6 +371,9 @@ const actions = {
   },
   createThing({ commit }, args) {
     commit('createThing', args)
+  },
+  createBasicThing({ commit }, args) {
+    commit('createBasicThing', args)
   },
   createAmis({ commit }, args) {
     commit('createAmis', args)

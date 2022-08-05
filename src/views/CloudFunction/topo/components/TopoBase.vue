@@ -107,10 +107,11 @@
               fnHandler: 'moveToTop',
               btnName: '置顶',
             },
-            {
-              fnHandler: 'moveToBottom',
-              btnName: '置底',
-            },
+            // {
+            //   fnHandler: 'moveToBottom',
+            //   btnName: '置底',
+            // },
+
             //   {
             //   fnHandler: 'copy',
             //   icoName: 'fa fa-minus-square-o  fa-fw',
