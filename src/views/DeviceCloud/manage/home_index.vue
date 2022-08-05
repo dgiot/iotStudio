@@ -5,7 +5,7 @@
         v-model="topoFlag"
         footer-hide
         :query="routerInfo.query"
-        width="1200"
+        width="1400"
         @on-cancel="closeModal"
       >
         <span slot="title" v-if="false"></span>
