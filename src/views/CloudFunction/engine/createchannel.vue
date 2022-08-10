@@ -1,7 +1,12 @@
 <template>
   <div class="createResourcechannel">
-    <dgiot-input ref="uploadFinish" @fileInfo="fileInfo" />
-
+    <dgiot-input
+      ref="uploadFinish"
+      accept=".csv"
+      :params="inputParams"
+      @fileInfo="fileInfo"
+      @files="files"
+    />
     <el-form
       ref="addchannel"
       label-width="auto"
@@ -61,20 +66,6 @@
                     addchannel.region == item.cType ? '#00bad0' : '#c0c4cc',
                 }"
               >
-                <!--                <div slot="header" class="clearfix">-->
-                <!--                  <el-button-->
-                <!--                    :disabled="resourceid != ''"-->
-                <!--                    :type="-->
-                <!--                      addchannel.region == item.cType ? 'success' : 'primary'-->
-                <!--                    "-->
-                <!--                    size="mini"-->
-                <!--                    style="text-align: center"-->
-                <!--                    @click="setCard(item.cType)"-->
-                <!--                  >-->
-                <!--                    {{ addchannel.region == item.cType ? '已选' : '选择' }}-->
-                <!--                  </el-button>-->
-                <!--                  <p>{{ item.title.zh }}</p>-->
-                <!--                </div>-->
                 <div class="text item" @click="setCard(item.cType)">
                   <el-row :gutter="24">
                     <el-col :span="6">
@@ -234,6 +225,13 @@
                 :value="item1.enum[index1]"
               />
             </el-select>
+            <div v-else-if="item.type == 'upload'">
+              <el-button type="primary" @click.native="uploadCkick(item)">
+                {{ $translateTitle('application.uploadfile') }}
+              </el-button>
+              &nbsp;
+              <span>{{ addchannel[item.filename] }}</span>
+            </div>
             <div v-else-if="item.allowCreate">
               <el-button
                 @click.native="dybaneucForms[item.showname].unshift({})"
@@ -388,6 +386,8 @@
             },
           ],
         },
+        inputParams: {},
+        listLoading: false,
         addchannel: {
           codes: '{}',
           name: '',
@@ -435,20 +435,45 @@
         this.$refs['addchannel'].resetFields()
         this.resourceid = ''
       },
-      uploadCkick(type, index) {
-        console.log(type, index)
-        this.channeindex = index
+      uploadCkick(item) {
+        // 触发子组件的点击事件
         this.$refs['uploadFinish'].$refs.uploader.dispatchEvent(
           new MouseEvent('click')
         )
+        this.inputParams = {
+          item: item,
+          file: '',
+          scene: 'app',
+          path: 'product/csv/',
+        }
       },
       async fileInfo(info) {
-        console.log('uploadFinish', info)
-        console.log(this.channelregion)
-        this.channelregion[this.channeindex].params.ico.default = info.url
-        console.log(this.channelregion[this.channeindex].params.ico.default)
-        const res = await putResourceTypes(this.channelregion)
-        console.log(res)
+        this.$set(this.addchannel, this.inputParams.item.showname, info.path)
+        this.$set(
+          this.addchannel,
+          this.inputParams.item.filename,
+          this.inputParams.filename
+        )
+        this.inputParams = {}
+        if (info.url) {
+          this.$message({
+            showClose: true,
+            duration: 2000,
+            type: 'success',
+            message: '上传成功',
+          })
+        } else {
+          this.$message({
+            showClose: true,
+            duration: 2000,
+            type: 'error',
+            message: '上传失败',
+          })
+        }
+      },
+      files(file) {
+        this.inputParams.filename = file.name
+        this.inputParams.file = file
       },
       // 关闭本页面
       handleClose() {
