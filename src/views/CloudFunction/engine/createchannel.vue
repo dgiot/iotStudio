@@ -226,11 +226,12 @@
               />
             </el-select>
             <div v-else-if="item.type == 'upload'">
+              &nbsp;
               <el-button type="primary" @click.native="uploadCkick(item)">
                 {{ $translateTitle('application.uploadfile') }}
               </el-button>
               &nbsp;
-              <span>{{ addchannel[item.filename] }}</span>
+              <span>{{ addchannel[item.showname + 'filename'] }}</span>
             </div>
             <div v-else-if="item.allowCreate">
               <el-button
@@ -387,7 +388,6 @@
           ],
         },
         inputParams: {},
-        listLoading: false,
         addchannel: {
           codes: '{}',
           name: '',
@@ -448,12 +448,9 @@
         }
       },
       async fileInfo(info) {
-        this.$set(this.addchannel, this.inputParams.item.showname, info.path)
-        this.$set(
-          this.addchannel,
-          this.inputParams.item.filename,
-          this.inputParams.filename
-        )
+        const newname = this.inputParams.item.showname + 'filename'
+        this.$set(this.addchannel, this.inputParams.item.showname, info.src)
+        this.$set(this.addchannel, newname, this.inputParams.filename)
         this.inputParams = {}
         if (info.url) {
           this.$message({
