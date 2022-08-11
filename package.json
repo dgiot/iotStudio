@@ -61,7 +61,7 @@
     "@dgiot/dgiot-component": "0.0.3",
     "@dgiot/dgiot-icons": "0.0.19",
     "@dgiot/dgiot-monaco": "^0.2.2",
-    "@material/icon-button": "13.0.0",
+    "@material/icon-button": "14.0.0",
     "amis": "1.9.1-beta.11",
     "amis-editor": "4.1.0-beta.24",
     "driver.js": "^0.9.8",
