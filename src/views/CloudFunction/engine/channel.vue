@@ -295,59 +295,6 @@
             />
           </el-select>
         </el-form-item>
-        <!--        <el-form-item>-->
-        <!--          <el-row :gutter="24">-->
-        <!--            <el-col-->
-        <!--              v-for="(item, index) in channelregion"-->
-        <!--              :key="index"-->
-        <!--              :span="24"-->
-        <!--              style="cursor: pointer"-->
-        <!--            >-->
-        <!--              <el-card-->
-        <!--                v-if="item.params.ico && item.params.ico.default"-->
-        <!--                v-show="addchannel.region == item.cType"-->
-        <!--                class="box-card"-->
-        <!--                :shadow="addchannel.region == item.cType ? 'always' : 'hover'"-->
-        <!--                size="mini"-->
-        <!--                :style="{-->
-        <!--                  display: addchannel.region == item.cType ? 'block' : 'none',-->
-        <!--                  color:-->
-        <!--                    addchannel.region == item.cType ? '#00bad0' : '#c0c4cc',-->
-        <!--                }"-->
-        <!--              >-->
-        <!--                <div slot="header" class="clearfix">-->
-        <!--                  <span>{{ item.title.zh }}</span>-->
-        <!--                  &lt;!&ndash;                                  <el-button&ndash;&gt;-->
-        <!--                  &lt;!&ndash;                                    :disabled="resourceid != ''"&ndash;&gt;-->
-        <!--                  &lt;!&ndash;                                    size="mini"&ndash;&gt;-->
-        <!--                  &lt;!&ndash;                                    style="float: right"&ndash;&gt;-->
-        <!--                  &lt;!&ndash;                                    type="success"&ndash;&gt;-->
-        <!--                  &lt;!&ndash;                                    @click="setCard(item.cType)"&ndash;&gt;-->
-        <!--                  &lt;!&ndash;                                  >&ndash;&gt;-->
-        <!--                  &lt;!&ndash;                                    &lt;!&ndash; 已选 &ndash;&gt;&ndash;&gt;-->
-        <!--                  &lt;!&ndash;                                    {{ $translateTitle('product.selected') }}&ndash;&gt;-->
-        <!--                  &lt;!&ndash;                                  </el-button>&ndash;&gt;-->
-        <!--                </div>-->
-        <!--                <div class="text item">-->
-        <!--                  <el-row :gutter="24">-->
-        <!--                    <el-col :span="12">-->
-        <!--                      <img-->
-        <!--                        class="image"-->
-        <!--                        :src="-->
-        <!--                          item.params.ico.default ? item.params.ico.default : ''-->
-        <!--                        "-->
-        <!--                        style="width: 50px; height: 50px"-->
-        <!--                      />-->
-        <!--                    </el-col>-->
-        <!--                    <el-col :span="12">-->
-        <!--                      <el-tag>{{ item.cType }}</el-tag>-->
-        <!--                    </el-col>-->
-        <!--                  </el-row>-->
-        <!--                </div>-->
-        <!--              </el-card>-->
-        <!--            </el-col>-->
-        <!--          </el-row>-->
-        <!--        </el-form-item>-->
         <el-form-item
           :label="$translateTitle('developer.channelname')"
           prop="name"
@@ -423,12 +370,6 @@
                 <i class="el-icon-picture-outline"></i>
               </div>
             </el-image>
-            <!--            <el-button-->
-            <!--              v-else-if="item.showname == 'ico'"-->
-            <!--              slot="append"-->
-            <!--              icon="el-icon-upload"-->
-            <!--              @click="uploadCkick(addchannel[item.showname], index, 'arrlist')"-->
-            <!--            />-->
             <el-input
               v-else-if="item.type == 'integer'"
               v-model.number="addchannel[item.showname]"
@@ -464,6 +405,14 @@
                 :value="item.enum[index1]"
               />
             </el-select>
+            <div v-else-if="item.type == 'upload'">
+              &nbsp;
+              <el-button type="primary" @click.native="uploadCkick(item)">
+                {{ $translateTitle('application.uploadfile') }}
+              </el-button>
+              &nbsp;
+              <span>{{ addchannel[item.showname + 'filename'] }}</span>
+            </div>
             <div v-else-if="item.allowCreate">
               <el-button
                 @click.native="dybaneucForms[item.showname].unshift({})"
@@ -767,6 +716,7 @@
           name: '',
         },
         channelregion: [],
+        inputParams: {},
         addchannel: {
           region: '',
           desc: '',
@@ -1078,22 +1028,42 @@
           )
         }
       },
-      uploadCkick(type, index, channeType) {
-        console.log(type, index)
-        this.channeindex = index
-        this.channeType = channeType
+      uploadCkick(item) {
+        // 触发子组件的点击事件
         this.$refs['uploadFinish'].$refs.uploader.dispatchEvent(
           new MouseEvent('click')
         )
-      },
-      fileInfo(info) {
-        console.log('uploadFinish', info)
-        if (this.channeType == 'arrlist') {
-          this.arrlist[this.channeindex].default = info.url
-          console.log(this.arrlist[this.channeindex])
-        } else {
-          this.channelregion[this.channeindex].params.ico.default = info.url
+        this.inputParams = {
+          item: item,
+          file: '',
+          scene: 'app',
+          path: 'product/csv/',
         }
+      },
+      async fileInfo(info) {
+        const newname = this.inputParams.item.showname + 'filename'
+        this.$set(this.addchannel, this.inputParams.item.showname, info.src)
+        this.$set(this.addchannel, newname, this.inputParams.filename)
+        this.inputParams = {}
+        if (info.url) {
+          this.$message({
+            showClose: true,
+            duration: 2000,
+            type: 'success',
+            message: '上传成功',
+          })
+        } else {
+          this.$message({
+            showClose: true,
+            duration: 2000,
+            type: 'error',
+            message: '上传失败',
+          })
+        }
+      },
+      files(file) {
+        this.inputParams.filename = file.name
+        this.inputParams.file = file
       },
       addchannelForm(formName) {
         if (this.resourceid) {
@@ -1196,7 +1166,6 @@
           skip: this.start,
           limit: this.length,
           order: '-createdAt',
-          keys: 'count(*)',
           where: {},
         }
         this.channelformsearch.name
@@ -1416,7 +1385,6 @@
         this.removeauto(item)
       },
       removeauto(val) {
-        console.log(val)
         var obj = {}
         var obj1 = {
           applicationtText: [
@@ -1448,53 +1416,6 @@
             },
           ],
         }
-        // if (this.resourceid == '') {
-        //   this.channelregion.map((item) => {
-        //     if (item.cType == val) {
-        //       this.$forceUpdate()
-        //       this.selectregion = item
-        //       this.arrlist = this.orderObject(this.selectregion.params)
-        //       this.arrlist.map((item) => {
-        //         if (item.allowCreate) {
-        //           this.dynamicTable(
-        //             item,
-        //             '回显',
-        //             this.channelrow.config[item.showname],
-        //             item.showname,
-        //             1485
-        //           )
-        //         }
-        //         if (item.default) {
-        //           obj[item.showname] = item.default
-        //         } else {
-        //           obj[item.showname] = ''
-        //         }
-        //         if (item.required) {
-        //           if (item.type == 'string' || item.type == 'integer') {
-        //             obj1[item.showname] = [
-        //               {
-        //                 required: true,
-        //                 trigger: 'blur',
-        //               },
-        //             ]
-        //           } else {
-        //             obj1[item.showname] = [
-        //               {
-        //                 required: true,
-        //                 trigger: 'change',
-        //               },
-        //             ]
-        //           }
-        //         }
-        //       })
-        //       obj.region = val
-        //       obj.desc = ''
-        //       obj.name = ''
-        //       obj.type = this.selectregion.type
-        //       obj.isEnable = false
-        //     }
-        //   })
-        // } else {
         this.channelregion.map((item) => {
           if (item.cType == val) {
             this.selectregion = item
@@ -1502,14 +1423,12 @@
             this.arrlist = this.orderObject(this.selectregion.params)
             const sortBy = _.sortBy(this.arrlist, ['order'])
             this.arrlist = sortBy
-            console.log(this.arrlist)
             this.arrlist.map((item) => {
               for (var key in this.channelrow.config) {
                 if (item.showname == key) {
                   obj[item.showname] = this.channelrow.config[key]
                 }
                 if (item.allowCreate) {
-                  console.error(item, '1532', item.showname)
                   this.dynamicTable(
                     item,
                     '回显',
@@ -1552,13 +1471,12 @@
             obj.applicationtText = key ? key.substr(5) : ''
           }
         }
-        this.addchannel = obj
-        console.log(this.addchannel)
+        this.addchannel = this.channelrow.config
+        console.log('addchannel', this.addchannel)
         this.addchannel.region = val
         this.addrules = obj1
       },
       editorChannel(row) {
-        console.log(row)
         this.channelrow = row
         this.resourceid = row.objectId
         this.channelupdated = '编辑'
