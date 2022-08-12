@@ -89,54 +89,78 @@
             label-width="80px"
             style="margin-right: 10px"
           >
-            <el-form-item label="字体颜色">
+            <div v-if="editNode.attrs.name != 'sprite'">
+              <el-form-item label="字体颜色">
+                <el-input
+                  v-model="editForm.fill"
+                  @input="handleEditKonva"
+                ></el-input>
+              </el-form-item>
+              <el-form-item label="宽度">
+                <el-input
+                  v-model="editForm.width"
+                  type="number"
+                  @input="handleEditKonva"
+                ></el-input>
+              </el-form-item>
+              <el-form-item label="高度">
+                <el-input
+                  v-model="editForm.height"
+                  type="number"
+                  @input="handleEditKonva"
+                ></el-input>
+              </el-form-item>
+              <el-form-item label="字体大小">
+                <el-input
+                  v-model="editForm.fontSize"
+                  type="number"
+                  @input="handleEditKonva"
+                ></el-input>
+              </el-form-item>
+              <el-form-item label="纵向偏移">
+                <el-input
+                  v-model="editForm.lineHeight"
+                  type="number"
+                  :step="0.1"
+                  @input="handleEditKonva"
+                ></el-input>
+              </el-form-item>
+              <el-form-item label="描边颜色">
+                <el-input
+                  v-model="editForm.stroke"
+                  @input="handleEditKonva"
+                ></el-input>
+              </el-form-item>
+              <el-form-item label="描边宽度">
+                <el-input
+                  v-model="editForm.strokeWidth"
+                  type="number"
+                  :step="0.1"
+                  @input="handleEditKonva"
+                ></el-input>
+              </el-form-item>
+              <el-form-item label="文本内容">
+                <el-input
+                  v-model="editForm.text"
+                  @input="handleEditKonva"
+                ></el-input>
+              </el-form-item>
+              <el-form-item label="底部颜色">
+                <el-input
+                  v-model="btmfill"
+                  @input="handleEditbtmKonva"
+                ></el-input>
+              </el-form-item>
+            </div>
+            <el-form-item
+              label="比例大小"
+              v-if="editNode.attrs.name == 'sprite'"
+            >
               <el-input
-                v-model="editForm.fill"
-                @input="handleEditKonva"
-              ></el-input>
-            </el-form-item>
-
-            <el-form-item label="宽度">
-              <el-input
-                v-model="editForm.width"
-                type="number"
-                @input="handleEditKonva"
-              ></el-input>
-            </el-form-item>
-            <el-form-item label="高度">
-              <el-input
-                v-model="editForm.height"
-                type="number"
-                @input="handleEditKonva"
-              ></el-input>
-            </el-form-item>
-            <el-form-item label="字体大小">
-              <el-input
-                v-model="editForm.fontSize"
-                type="number"
-                @input="handleEditKonva"
-              ></el-input>
-            </el-form-item>
-            <el-form-item label="纵向偏移">
-              <el-input
-                v-model="editForm.lineHeight"
+                v-model="scale"
                 type="number"
                 :step="0.1"
-                @input="handleEditKonva"
-              ></el-input>
-            </el-form-item>
-            <el-form-item label="描边颜色">
-              <el-input
-                v-model="editForm.stroke"
-                @input="handleEditKonva"
-              ></el-input>
-            </el-form-item>
-            <el-form-item label="描边宽度">
-              <el-input
-                v-model="editForm.strokeWidth"
-                type="number"
-                :step="0.1"
-                @input="handleEditKonva"
+                @input="handleEditSacle"
               ></el-input>
             </el-form-item>
           </el-form>
@@ -164,7 +188,9 @@
         subtopic: '',
         editFlag: false,
         direction: 'rtl',
-        editNode: '',
+        editNode: {
+          attrs: {},
+        },
         router: '',
         viewInfo: {},
         editForm: {
@@ -175,7 +201,10 @@
           fontSize: 14, //字体大小
           stroke: '', //描边颜色
           strokeWidth: 0, //描边宽度
+          text: '', //文本内容
         },
+        btmfill: '',
+        scale: 1,
         driver: null,
         Stage: {},
         isFull: false,
@@ -239,9 +268,12 @@
           fontSize: node.attrs.fontSize || 14,
           stroke: node.attrs.stroke || '', //描边颜色
           strokeWidth: node.attrs.strokeWidth || 0, //描边颜色
+          text: node.attrs.text || '',
           // x: node.attrs.x || 0,
           // y: node.attrs.y || 0,
         }
+        this.btmfill = node.parent.children[0].attrs.fill
+        this.scale = node.attrs.scaleX
         // color: '',
       })
       this.$dgiotBus.$off('_busUpdata')
@@ -308,6 +340,22 @@
         this.editForm.strokeWidth = Number(this.editForm.strokeWidth)
         // console.log(this.editForm)
         this.editNode.setAttrs(this.editForm)
+      },
+      /**
+       * 编辑修改底部颜色
+       */
+      handleEditbtmKonva() {
+        let params = {
+          fill: this.btmfill,
+        }
+        this.editNode.parent.children[0].setAttrs(params)
+      },
+      handleEditSacle() {
+        let params = {
+          scaleX: Number(this.scale),
+          scaleY: Number(this.scale),
+        }
+        this.editNode.setAttrs(params)
       },
       handleCloseEdit() {
         this.editFlag = false

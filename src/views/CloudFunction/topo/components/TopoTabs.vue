@@ -84,7 +84,7 @@
         <!--        </el-button>-->
         <Evidence />
       </a-collapse-panel>
-      <!-- <a-collapse-panel key="4" :header="$translateTitle('topo.basic element')">
+      <a-collapse-panel key="4" :header="$translateTitle('topo.basic element')">
         <el-button
           draggable="true"
           size="mini"
@@ -97,10 +97,71 @@
             })
           "
         >
-          静态框
+          静态文本框
         </el-button>
         <el-divider />
-      </a-collapse-panel> -->
+        <el-button
+          draggable="true"
+          size="mini"
+          type="primary"
+          @click.native="
+            createBasicThing({
+              productid: $route.query.productid,
+              type: 'knovaimage',
+              image: 'http://dev.iotn2n.com/dgiot_file/topo/png/pump.gif',
+              hidden: false,
+            })
+          "
+        >
+          水泵
+        </el-button>
+        <!-- <el-button
+          draggable="true"
+          size="mini"
+          type="primary"
+          @click.native="
+            createBasicThing({
+              productid: $route.query.productid,
+              type: 'gifimage',
+              image: 'http://konvajs-doc.bluehymn.com/assets/blob-sprite.png',
+              animations: {
+                idle: [
+                  // x, y, width, height (4 frames)
+                  2, 2, 70, 119, 71, 2, 74, 119, 146, 2, 81, 119, 226, 2, 76,
+                  119, 300, 2, 76, 119,
+                ],
+              },
+              hidden: false,
+            })
+          "
+        >
+          精灵图
+        </el-button> -->
+        <!-- <el-button
+          draggable="true"
+          size="mini"
+          type="primary"
+          @click.native="
+            createBasicThing({
+              productid: $route.query.productid,
+              type: 'gifimage',
+              image: 'http://dev.iotn2n.com/dgiot_file/topo/png/pump.png',
+              animations: {
+                idle: [
+                  // x, y, width, height (4 frames)
+                  2, 2, 84, 65, 131, 2, 84, 65, 262, 2, 84, 65, 389, 2, 84, 65,
+                  518, 2, 84, 65,
+                ],
+              },
+              hidden: false,
+            })
+          "
+        >
+          水泵
+        </el-button> -->
+        <el-divider />
+        <!-- http://dev.iotn2n.com/dgiot_file/topo/png/pump.png -->
+      </a-collapse-panel>
       <!--      <a-collapse-panel key="4" :header="$translateTitle('topo.image')">-->
       <!--        <div>-->
       <!--          <el-collapse v-model="activeNames" accordion>-->

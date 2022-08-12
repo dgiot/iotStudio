@@ -1,7 +1,25 @@
 /**
  * @description 登录、获取用户信息、退出登录、清除token逻辑，不建议修改
  */
-
+const isPC = () => {
+  var userAgentInfo = navigator.userAgent
+  var Agents = new Array(
+    'Android',
+    'iPhone',
+    'SymbianOS',
+    'Windows Phone',
+    'iPad',
+    'iPod'
+  )
+  var flag = true
+  for (var v = 0; v < Agents.length; v++) {
+    if (userAgentInfo.indexOf(Agents[v]) > 0) {
+      flag = false
+      break
+    }
+  }
+  return flag
+}
 const getLocalStorage = (key) => {
   const value = localStorage.getItem(key)
   if (isJson(value)) {
@@ -409,7 +427,16 @@ const actions = {
       },
       _userInfo
     )
-    const { sessionToken = '', roles = [] } = data
+    console.log('查看数据', data)
+    const { sessionToken = '', roles = [], objectId = '' } = data
+    console.log('不是pc端', isPC())
+    if (!isPC()) {
+      window.jstoken?.setJsToken(
+        window.location.hostname,
+        objectId,
+        sessionToken
+      )
+    }
     if (sessionToken) {
       await queryAllMsg(commit, dispatch, data, 'ajax')
       await departmentToken(roles[0].name)
