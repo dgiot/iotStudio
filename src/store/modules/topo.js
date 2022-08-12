@@ -205,12 +205,23 @@ const mutations = {
     //   `#${}`
     // )
     if (handler == 'remove') {
+      let contextmenu = ''
+      console.log('当前节点', canvas.contextmenu)
+      if (
+        canvas.contextmenu.attrs.name == 'evidence' ||
+        canvas.contextmenu.attrs.name == 'konvaimage' ||
+        canvas.contextmenu.attrs.name == 'sprite'
+      ) {
+        contextmenu = canvas.contextmenu
+      } else {
+        contextmenu = canvas.contextmenu.getParent()
+      }
       addNodeEvent({
         type: 'contextMenu',
         stage: canvas.stage,
         layer: canvas.layer,
         args: canvas.handlerArgs,
-        contextmenu: canvas.contextmenu.getParent(), //canvas.contextmenu,
+        contextmenu, //canvas.contextmenu,
         handler,
       })
     } else {
@@ -254,6 +265,66 @@ const mutations = {
     console.log('thing内容', thing, x, y)
     const simpleText = addNodeEvent({
       type: 'createThing',
+      thing,
+      saleInfo: {
+        scaleX: 100 * 0.01,
+        scaleY: 100 * 0.01,
+      },
+      randomXy,
+    })
+    canvas.layer.add(simpleText)
+    // canvas.layer.batchDraw()
+    // canvas.stage.batchDraw()
+    addNodeEvent({
+      type: 'handleChildren',
+      stage: canvas.stage,
+      layer: canvas.layer,
+      args: canvas.handlerArgs,
+      x,
+      y,
+    })
+  },
+  createBasicThing(state, thing, x, y) {
+    console.log('thing内容', thing, x, y)
+    if (thing.type == 'knovaimage' || thing.type == 'gifimage') {
+      console.log('konvaimage', thing)
+      // state.createdEvidence = Evidence
+      // var imageObj = new Image()
+      // imageObj.src = thing.image
+      let simpleImage = ''
+      if (thing.type == 'knovaimage') {
+        simpleImage = addNodeEvent(
+          _.merge(canvas.handlerArgs, {
+            type: 'createImage',
+            image: thing.image,
+            productid: thing.productid,
+          })
+        )
+      } else if (thing.type == 'gifimage') {
+        simpleImage = addNodeEvent(
+          _.merge(canvas.handlerArgs, {
+            type: 'gifImage',
+            image: thing.image,
+            animations: thing.animations,
+            productid: thing.productid,
+          })
+        )
+        simpleImage.start()
+      }
+      console.log('simpleEvidence\n', simpleImage)
+      canvas.layer.add(simpleImage)
+      canvas.layer.batchDraw()
+      canvas.stage.batchDraw()
+      addNodeEvent({
+        type: 'handleChildren',
+        stage: canvas.stage,
+        layer: canvas.layer,
+        args: canvas.handlerArgs,
+      })
+      return
+    }
+    const simpleText = addNodeEvent({
+      type: 'createStatic',
       thing,
       saleInfo: {
         scaleX: 100 * 0.01,
