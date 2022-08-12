@@ -47,10 +47,12 @@ export default {
       original: {},
       collectionInfo: {},
       drawxnqxPath: '',
+      profiledrawxnqxPath: '',
       thingdata: [],
       realtimedata: [],
       thingcolumns: [],
       historycolumns: [],
+      historydata: [],
       visible: false,
       router: '',
       topicKey: '',
@@ -219,6 +221,11 @@ export default {
         this.$dgiotBus.$on(this.$mqttInfo.topicKey, (mqttMsg) => {
           const { data = [] } = JSON.parse(Base64.decode(mqttMsg.payloadString))
           this.renderCard(data)
+          // 刷新存储数据
+          getDevice(params.objectId).then((res) => {
+            this.historyEvidence = res.profile.historicaldata
+            this.drawxnqxPath = res.profile.drawxnqxPath
+          })
           if (data) {
             this.collectiontable(data)
             // this.renderCard(data)
@@ -402,8 +409,8 @@ export default {
               reportId: this.ruleForm.templatenameid,
               identifier: 'inspectionReportTemp',
               step: 0,
-              // 0 1 2 3 4
-              // 开始 取证 完成 生成报告
+              // 0     1        2      3       4
+              // 未开始 开始检测中 提交审核 审核完成  生成报告
             },
             parentId: this.ruleForm.testbedid,
             name: this.ruleForm.name,
@@ -449,14 +456,15 @@ export default {
         const loading = this.$baseColorfullLoading()
         const { results = [] } = await queryEvidence(params)
         if (results?.length) {
-          this.historyEvidence = results[0].original.avgs ?? []
+          this.historyEvidence = results[0].original.avgs ?? this.historydata
           this.collectionInfo.profile.historicaldata = this.historyEvidence
           this.historyInfo = results[0]
-          this.drawxnqxPath = results[0].original.path ?? ''
+          this.drawxnqxPath =
+            results[0].original.path ?? this.profiledrawxnqxPath
+        } else {
+          this.historyEvidence = this.historydata
+          this.drawxnqxPath = this.profiledrawxnqxPath
         }
-        this.historycolumns = _.filter(this.thingcolumns, function (item) {
-          return item.prop !== 'timestamp'
-        })
         // await this.drawxnqx(this.collectionInfo.objectId, this.historyEvidence)
         this.$baseMessage(
           this.$translateTitle('alert.Data request successfully'),
@@ -823,7 +831,14 @@ export default {
           productid: params.parentId.product.objectId,
         })
         _this.thingcolumns = table
-        console.log(' _this.thingcolumns', _this.thingcolumns)
+        _this.historycolumns = _.filter(table, function (item) {
+          return item.prop !== 'timestamp'
+        })
+        if (_this.historycolumns) {
+          _this.historycolumns = params.profile.historicaldatacolumns
+        }
+        _this.historydata = params.profile.historicaldata
+        _this.profiledrawxnqxPath = params.profile.drawxnqxPath
         _this.featHistoryEvidence(this.collectionInfo.objectId)
         _this.visible = true
       } catch (error) {
@@ -946,12 +961,10 @@ export default {
           drawxnqxPath: this.drawxnqxPath,
         }),
       }
-      console.log(collectionInfo, _profile)
       if (type) this.visible = false
       try {
         const loading = this.$baseColorfullLoading()
-        const results = await putDevice(collectionInfo.objectId, _profile)
-        console.log(results)
+        await putDevice(collectionInfo.objectId, _profile)
         this.$baseMessage(
           this.$translateTitle('alert.Data request successfully'),
           'success',
