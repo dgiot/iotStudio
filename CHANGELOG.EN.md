@@ -1,17 +1,36 @@
-## [4.5.7](https://github.com/dgiot/dgiot-dashboard/compare/v4.5.6...v4.5.7) (2022-08-04)
+## [4.5.7](https://github.com/dgiot/dgiot-dashboard/compare/v4.5.6...v4.5.7) (2022-08-10)
 
 
 ### Bug Fixes
 
 * 物模型延时缓存 ([c8dd9d4](https://github.com/dgiot/dgiot-dashboard/commit/c8dd9d4713fb9f36129fb660ecc68c55c73df775))
+* **appveyor:** script ([ce59370](https://github.com/dgiot/dgiot-dashboard/commit/ce593705fafa3c5b16062d27f43d66034139d561))
 * **cloudTest:** evidence ([e8d0510](https://github.com/dgiot/dgiot-dashboard/commit/e8d051073aee73634a11fe3d31f0a7c4f54f67be))
 * **dashboard): build(发布版本:** dgiot-dashboard@v4.5.6 ([1d4302c](https://github.com/dgiot/dgiot-dashboard/commit/1d4302cd183474db6bbbb6dbc4fbc46163d351c8)), closes [#511](https://github.com/dgiot/dgiot-dashboard/issues/511)
+* **equipmentCloud:** 字典修复 ([24a9690](https://github.com/dgiot/dgiot-dashboard/commit/24a96904b4879da9a952c9f6bf7358048863198c))
+* **ignore:** hidden test_script ([61b6326](https://github.com/dgiot/dgiot-dashboard/commit/61b632636fc8409b1e99f4235a9a865d22d72af4))
+* **queryZetaProduct:** queryProductTemplet ([1c47a45](https://github.com/dgiot/dgiot-dashboard/commit/1c47a4511451818ecd1f8fdcf2b4cebd0e6b4761))
 
 
 ### Features
 
+* **压测报告:** 报告查询 ([06608f7](https://github.com/dgiot/dgiot-dashboard/commit/06608f7df8edeef0dd0bb4005130dc88db9ced31))
+* **压测报告:** 压测报告查询格式化 ([50cb7ff](https://github.com/dgiot/dgiot-dashboard/commit/50cb7ff858330f4ce24c9b45569190df37f4c9fd))
+* **压测:** 完成压测报告生成 ([86dd1ef](https://github.com/dgiot/dgiot-dashboard/commit/86dd1ef83c73ef257251494e16ea99900526539a))
+* add Konva Edit ([49883e0](https://github.com/dgiot/dgiot-dashboard/commit/49883e08dd84382c0cb7be0877c316f959c592a7))
 * **cloudTest:** 检测项 ([76928b4](https://github.com/dgiot/dgiot-dashboard/commit/76928b4114b12cfd50afc5cc077f21f145e1f98e))
 * dgiot_amis ([8c91153](https://github.com/dgiot/dgiot-dashboard/commit/8c91153c8ad5b6b32d91c57a36fe55fefa3da721))
+* **equipmentCloud:** 通道添加上传文件功能 ([f04d2f4](https://github.com/dgiot/dgiot-dashboard/commit/f04d2f45d0e077d30ca1bb75c41d4bb12bc2a439))
+* knova Configuration display ([d0d5cdb](https://github.com/dgiot/dgiot-dashboard/commit/d0d5cdba26aa779120718d7722c3fc48a88ebb07))
+* **proxy:** nodejs_version ([25f0fea](https://github.com/dgiot/dgiot-dashboard/commit/25f0feaf77ee4662b206f9b01894839b74c04fca))
+* **router:** 路由处理分离 ([e2023ed](https://github.com/dgiot/dgiot-dashboard/commit/e2023ed42854c38af414288faf4260a064ed2d7e))
+* translate ([ebd3196](https://github.com/dgiot/dgiot-dashboard/commit/ebd3196a719d75bb8978143935d87529262c6980))
+* update catalogue ([4530af6](https://github.com/dgiot/dgiot-dashboard/commit/4530af6825129925923dfd6e2000701b9cb5a63a))
+
+
+### Reverts
+
+* **修复应用管理 && 背景图丢失): feat(grafana:** url ([2ee8701](https://github.com/dgiot/dgiot-dashboard/commit/2ee87010a2ef7e6afdc580ad2a155f975447f885))
 
 
 
