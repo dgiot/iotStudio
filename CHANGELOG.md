@@ -7,6 +7,7 @@
 * **appveyor:** script ([ce59370](https://github.com/dgiot/dgiot-dashboard/commit/ce593705fafa3c5b16062d27f43d66034139d561))
 * **cloudTest:** evidence ([e8d0510](https://github.com/dgiot/dgiot-dashboard/commit/e8d051073aee73634a11fe3d31f0a7c4f54f67be))
 * **dashboard): build(发布版本:** dgiot-dashboard@v4.5.6 ([1d4302c](https://github.com/dgiot/dgiot-dashboard/commit/1d4302cd183474db6bbbb6dbc4fbc46163d351c8)), closes [#511](https://github.com/dgiot/dgiot-dashboard/issues/511)
+* **equipmentCloud:** 通道编辑上传文件 ([53d1e6d](https://github.com/dgiot/dgiot-dashboard/commit/53d1e6d269ee2441bc2d13384f429f42dd80d1f6))
 * **equipmentCloud:** 字典修复 ([24a9690](https://github.com/dgiot/dgiot-dashboard/commit/24a96904b4879da9a952c9f6bf7358048863198c))
 * **ignore:** hidden test_script ([61b6326](https://github.com/dgiot/dgiot-dashboard/commit/61b632636fc8409b1e99f4235a9a865d22d72af4))
 * **queryZetaProduct:** queryProductTemplet ([1c47a45](https://github.com/dgiot/dgiot-dashboard/commit/1c47a4511451818ecd1f8fdcf2b4cebd0e6b4761))
