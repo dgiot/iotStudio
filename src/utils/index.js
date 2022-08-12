@@ -919,6 +919,28 @@ export function parseQueryString(url) {
     this[`${name}`] = value
   }
 }
+//
+// 原文链接：https://blog.csdn.net/weixin_42539678/article/details/124509254
+export function imgUrlToFile(url) {
+  return new Promise((resolve, reject) => {
+    var blob = null
+    let imgFile = null
+    var xhr = new XMLHttpRequest()
+    xhr.open('GET', url)
+    xhr.setRequestHeader('Accept', 'image/gif')
+    xhr.responseType = 'blob'
+    xhr.onload = () => {
+      blob = xhr.response
+      imgFile = new File([blob], 'imageName', { type: 'image/gif' })
+      resolve(imgFile)
+    }
+
+    xhr.onerror = (e) => {
+      reject(e)
+    }
+    xhr.send()
+  })
+}
 
 // api
 // findInfo https://konvajs.org/docs/selectors/Select_by_id.html

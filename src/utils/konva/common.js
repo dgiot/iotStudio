@@ -1,4 +1,5 @@
 import topoLable from './core/topoLable'
+import topoBasic from './core/topoBasic'
 import amis from './core/amis'
 import device from './core/device'
 import topoVideo from './core/topoVideo'
@@ -10,6 +11,9 @@ import topoPath from '@/utils/konva/core/topoPath'
 
 function createThing(thing, saleInfo, randomXy, args) {
   return topoLable.create(thing, saleInfo, randomXy, args)
+}
+function createBasic(thing, saleInfo, randomXy, args) {
+  return topoBasic.create(thing, saleInfo, randomXy, args)
 }
 
 function createHistory(thing, saleInfo, randomXy, args) {
@@ -90,6 +94,15 @@ function addNodeEvent(args) {
         break
       case 'createThing': // 创建物模型
         return createThing(thing, saleInfo, randomXy, args)
+        break
+      case 'createStatic':
+        return createBasic(thing, saleInfo, randomXy, args)
+        break
+      case 'createImage':
+        return topoBasic.createImage(args)
+        break
+      case 'gifImage':
+        return topoBasic.createGifImage(args)
         break
       case 'createHistory': // 历史数据按钮
         return createHistory(thing, saleInfo, randomXy, args)
