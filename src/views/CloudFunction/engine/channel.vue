@@ -37,7 +37,7 @@
         @onChange="onChange"
       />
     </el-drawer>
-    <dgiot-input ref="uploadFinish" @fileInfo="fileInfo" />
+    <dgiot-input ref="uploadFinish" accept=".csv" @fileInfo="fileInfo" />
     <div class="firsttable">
       <el-form
         class="demo-form-inline"

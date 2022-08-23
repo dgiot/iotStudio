@@ -222,10 +222,12 @@ export default {
           const { data = [] } = JSON.parse(Base64.decode(mqttMsg.payloadString))
           this.renderCard(data)
           // 刷新存储数据
-          getDevice(params.objectId).then((res) => {
-            this.historyEvidence = res.profile.historicaldata
-            this.drawxnqxPath = res.profile.drawxnqxPath
-          })
+          if (params.profile.istcp) {
+            getDevice(params.objectId).then((res) => {
+              this.historyEvidence = res.profile.historicaldata
+              this.drawxnqxPath = res.profile.drawxnqxPath
+            })
+          }
           if (data) {
             this.collectiontable(data)
             // this.renderCard(data)
@@ -446,8 +448,7 @@ export default {
       this.historyEvidence = []
       try {
         const params = {
-          order: '-createdAt',
-          skip: 0,
+          limit: 1,
           where: {
             'original.taskid': taskid,
             'original.type': 'avgs',
@@ -871,7 +872,7 @@ export default {
         const pubTopic = `$dg/thing/${row.parentId.objectId}/properties/get/request_id=opc_items` // 读取opc属性topic
         const message = {
           cmd: 'opc_items',
-          groupid: row.parentId.objectId, //'设备ID',
+          groupid: row.objectId, //'任务ID',
           opcserver:
             basedata.dgiot_testing_opcserver ?? 'Kepware.KEPServerEX.V6',
           items: items, //要读取到属性列表
@@ -917,7 +918,7 @@ export default {
         const message = {
           cmd: 'opc_report', // 采集条数
           duration: Number(basedata.dgiot_sampling_parametric_frequency) ?? 5, //条数
-          groupid: params.parentId.objectId,
+          groupid: params.objectId,
         }
         console.groupCollapsed(
           `%c 发送采集消息`,
