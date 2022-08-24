@@ -580,6 +580,43 @@
           </el-tabs>
         </el-tab-pane>
         <el-tab-pane label="视频监控" name="video">
+          <el-form
+            :inline="true"
+            :model="deviceInfo"
+            class="demo-form-inline"
+            size="small"
+          >
+            <el-form-item
+              label="流类型"
+            >
+            <el-select
+              v-model="deviceInfo.detail.videoType"
+              placeholder="请选择"
+              size="mini"
+              style="width: 90px"
+            >
+              <el-option
+                v-for="(item, index) in videoOptions"
+                :key="index"
+                :label="item"
+                :value="item"
+              />
+            </el-select>
+            </el-form-item>
+            <el-form-item
+              label="流地址"
+            >
+              <el-input
+                style="width: 900px"
+                v-model="deviceInfo.detail.videoSrc"
+                placeholder="流地址"
+              />
+            </el-form-item>
+            <el-button
+              type="primary"
+              @click="updatevideoSrc(deviceInfo)"
+            >播放</el-button>
+          </el-form>
           <dgiot-aliplayer
             v-if="activeName === 'video'"
             ref="dgiotPlayer"
@@ -587,12 +624,12 @@
             :playsource="
               deviceInfo.detail && deviceInfo.detail.videoSrc
                 ? deviceInfo.detail.videoSrc
-                : 'https://media.w3.org/2010/05/sintel/trailer.mp4'
+                : ''
             "
             :type="
               deviceInfo.detail && deviceInfo.detail.videoType
                 ? deviceInfo.detail.videoType
-                : 'mp4'
+                : ''
             "
             width="100%"
           />
