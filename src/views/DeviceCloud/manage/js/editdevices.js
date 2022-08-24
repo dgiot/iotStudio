@@ -129,6 +129,7 @@ export default {
       },
     }
     return {
+      videoOptions: ['m3u8', 'mp4', 'flv', 'mp3'],
       commandInfo: {
         dialog: false,
         data: {},
@@ -1218,6 +1219,16 @@ export default {
           newData.isEnable = newData.isEnable != true
           this.devicesTableData[index] = newData
         })
+    },
+    updatevideoSrc(deviceInfo) {
+      const params = {
+        detail: deviceInfo.detail,
+      }
+      this.$putDevice(deviceInfo.objectId, params)
+      this.activeName = 'first'
+      this.$nextTick(function () {
+        this.activeName = 'video'
+      })
     },
   },
 }
