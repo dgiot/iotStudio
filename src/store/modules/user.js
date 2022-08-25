@@ -86,7 +86,7 @@ async function queryAllMsg(commit, dispatch, data, type) {
         : hour <= 11
         ? Vue.prototype.$translateTitle('route.上午好')
         : hour <= 13
-        ? Vue.prototype.$translateTitle('route.中文好')
+        ? Vue.prototype.$translateTitle('route.中午好')
         : hour < 18
         ? Vue.prototype.$translateTitle('route.下午好')
         : Vue.prototype.$translateTitle('route.晚上好')
