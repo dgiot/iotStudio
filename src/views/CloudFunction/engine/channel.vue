@@ -721,6 +721,7 @@
           region: '',
           desc: '',
           applicationtText: '',
+          name: '',
         },
         applicationList: [],
         addrules: {
@@ -1474,6 +1475,8 @@
         this.addchannel = this.channelrow.config
         console.log('addchannel', this.addchannel)
         this.addchannel.region = val
+        this.$set(this.addchannel, 'name', this.channelrow.name)
+        this.$set(this.addchannel, 'desc', this.channelrow.desc)
         this.addrules = obj1
       },
       editorChannel(row) {
