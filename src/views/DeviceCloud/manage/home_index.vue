@@ -3,6 +3,7 @@
     <div class="dialog">
       <Modal
         v-model="topoFlag"
+        class="wrap_konva"
         footer-hide
         :query="routerInfo.query"
         width="1400"
@@ -11,6 +12,28 @@
         <span slot="title" v-if="false"></span>
         <span slot="footer" v-if="false"></span>
         <topopreview v-if="topoFlag" ref="topo" />
+        <div v-if="vueFlag">
+          <div
+            v-for="(comp, index) in vueComponents"
+            :key="index"
+            class="vue_component"
+            :style="{
+              left: comp.x + 'px',
+              top: comp.y + 'px',
+              width: comp.width + 'px',
+              height: comp.height + 'px',
+            }"
+          >
+            <topo-line
+              v-if="comp.type == 'line'"
+              :comp="comp"
+              :style="{
+                width: comp.width + 'px',
+                height: comp.height + 'px',
+              }"
+            />
+          </div>
+        </div>
       </Modal>
       <el-dialog
         append-to-body
@@ -662,6 +685,7 @@
     BmPointCollection,
   } from 'vue-baidu-map'
   import info from '@/components/Device/info'
+  import topoLine from './component/topocompvue/TopoLine'
   import { putView, queryView } from '@/api/View'
   import topopreview from '@/views/CloudFunction/topo/index'
   export default {
@@ -685,11 +709,14 @@
       BmCityList,
       BmMarker,
       BmlMarkerClusterer,
+      topoLine, //vuetopocomp
     },
     data() {
       return {
         productDetail: {},
         activeName: '0',
+        vueComponents: [],
+        vueFlag: false,
         commandInfo: {
           dialog: false,
           data: {},
@@ -815,6 +842,13 @@
     created() {
       this.fetchProduct()
       this.fetchData()
+    },
+    mounted() {
+      this.$dgiotBus.$off('vueComponent')
+      this.$dgiotBus.$on('vueComponent', async (list, flag) => {
+        this.vueComponents = list
+        this.vueFlag = flag
+      })
     },
     methods: {
       ...mapActions({
@@ -1277,12 +1311,13 @@
       async closeModal() {
         this.$router.go(-1)
         this.topoFlag = false
+        this.vueFlag = false
       },
       // 组态
       konvaDevice(row) {
         this.topoFlag = true
         this.$router.push({
-          path: '/dashboard/devicelist',
+          path: '/roles/konvadetail', // /roles/konvadetail  /dashboard/devicelist 原页面
           query: {
             productid: row.product.objectId,
             devaddr: row.devaddr,
@@ -1400,5 +1435,14 @@
     display: block;
     width: 100%;
     height: 300px;
+  }
+  .wrap_konva {
+    box-sizing: border-box !important;
+    position: relative;
+    .vue_component {
+      position: absolute;
+      z-index: 99999;
+      // background-color: #0077b8;
+    }
   }
 </style>

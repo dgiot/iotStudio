@@ -207,10 +207,12 @@ const mutations = {
     if (handler == 'remove') {
       let contextmenu = ''
       console.log('当前节点', canvas.contextmenu)
+      if (canvas.contextmenu.attrs.id == 'bg') return
       if (
         canvas.contextmenu.attrs.name == 'evidence' ||
         canvas.contextmenu.attrs.name == 'konvaimage' ||
-        canvas.contextmenu.attrs.name == 'sprite'
+        canvas.contextmenu.attrs.name == 'sprite' ||
+        canvas.contextmenu.attrs.name == 'vuecomponent'
       ) {
         contextmenu = canvas.contextmenu
       } else {
@@ -286,7 +288,11 @@ const mutations = {
   },
   createBasicThing(state, thing, x, y) {
     console.log('thing内容', thing, x, y)
-    if (thing.type == 'knovaimage' || thing.type == 'gifimage') {
+    if (
+      thing.type == 'knovaimage' ||
+      thing.type == 'gifimage' ||
+      thing.type == 'vuecomponent'
+    ) {
       console.log('konvaimage', thing)
       // state.createdEvidence = Evidence
       // var imageObj = new Image()
@@ -297,6 +303,14 @@ const mutations = {
           _.merge(canvas.handlerArgs, {
             type: 'createImage',
             image: thing.image,
+            productid: thing.productid,
+          })
+        )
+      } else if (thing.type == 'vuecomponent') {
+        simpleImage = addNodeEvent(
+          _.merge(canvas.handlerArgs, {
+            type: 'createVueComponent',
+            chart: thing.chart,
             productid: thing.productid,
           })
         )

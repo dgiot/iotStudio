@@ -104,6 +104,9 @@ function addNodeEvent(args) {
       case 'gifImage':
         return topoBasic.createGifImage(args)
         break
+      case 'createVueComponent':
+        return topoBasic.createVueComponent(args)
+        break
       case 'createHistory': // 历史数据按钮
         return createHistory(thing, saleInfo, randomXy, args)
         break

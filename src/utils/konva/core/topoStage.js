@@ -496,6 +496,68 @@ const topoStage = {
         console.log('click', e.target.attrs)
       })
     })
+    let list = []
+    stage.find('Rect').forEach((node) => {
+      if (
+        location.href.includes('&type=device') ||
+        location.href.includes('evidence')
+      ) {
+        let item = {
+          type: node.attrs.type,
+          x: node.attrs.x,
+          y: node.attrs.y,
+          width: node.attrs.width,
+          height: node.attrs.height,
+        }
+        list.push(item)
+        dgiotlogger.info('dgiotlogger node:', node)
+        node
+          ? node.setAttrs({
+              draggable: false,
+            })
+          : ''
+        node?.parent
+          ? node.parent.setAttrs({
+              draggable: false,
+            })
+          : ''
+      }
+      addNodeEvent({
+        type: node.getAttr('name'),
+        node: node,
+      })
+      node.on('contextmenu', (e) => {
+        canvas.contextmenu = e.target
+        console.log('contextmenu', e.target)
+      })
+      node.on('click', (e) => {
+        console.log('点击弹出编辑框', e.evt.button, dbclickflag)
+        //判断是否点击鼠标左键和在编辑状态
+        if (dbclickflag) {
+          // clearTimeout(timer)
+          setTimeout(() => {
+            dbclickflag = false
+          }, 500)
+        }
+        if (!dbclickflag) {
+          dbclickflag = true
+          timer = setTimeout(() => {
+            if (
+              e.evt.button == 0 &&
+              window.location.hash.indexOf('type=device') < 0
+            ) {
+              dbclickflag = false
+              console.log('打开编辑框')
+              dgiotBus.$emit('nodeEdit', node)
+            }
+          }, 500)
+        }
+      })
+    })
+    if (location.href.includes('&type=device')) {
+      console.info('vue组件信息', list)
+      dgiotBus.$emit('vueComponent', list, true)
+    }
 
     console.groupCollapsed(
       '%ctopoStage log',
