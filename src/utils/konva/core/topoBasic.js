@@ -321,6 +321,35 @@ const topoBasic = {
 
     return simpleImage
   },
+  createVueComponent(args) {
+    console.info(
+      'src/utils/konva/core/topoBasic.js',
+      'gifImage',
+      // args.path,
+      args
+    )
+
+    let vueComponet = ''
+    const topoId = uuid(5)
+    vueComponet = new Konva.Rect({
+      x: 100,
+      y: 100,
+      width: 300,
+      height: 200,
+      type: args.chart,
+      fill: 'rgba(30, 30, 30,0.7)',
+      text: args.chart,
+      name: 'vuecomponent',
+      id: args.productid + '_vuecomponent' + topoId,
+      draggable: true,
+    })
+
+    // vueComponet.setAttrs({
+    //   src: args.image,
+    // })
+
+    return vueComponet
+  },
   /**
    * @description 绑定组态
    */

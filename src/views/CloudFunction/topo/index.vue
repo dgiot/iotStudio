@@ -90,11 +90,17 @@
             style="margin-right: 10px"
           >
             <div v-if="editNode.attrs.name != 'sprite'">
-              <el-form-item label="字体颜色">
+              <el-form-item label="颜色">
                 <el-input
                   v-model="editForm.fill"
                   @input="handleEditKonva"
                 ></el-input>
+                <el-color-picker
+                  v-model="editForm.fill"
+                  color-format="rgb"
+                  :show-alpha="true"
+                  @active-change="colorChange($event, 'fill', true)"
+                ></el-color-picker>
               </el-form-item>
               <el-form-item label="宽度">
                 <el-input
@@ -130,6 +136,12 @@
                   v-model="editForm.stroke"
                   @input="handleEditKonva"
                 ></el-input>
+                <el-color-picker
+                  v-model="editForm.stroke"
+                  color-format="rgb"
+                  :show-alpha="true"
+                  @active-change="colorChange($event, 'stroke', true)"
+                ></el-color-picker>
               </el-form-item>
               <el-form-item label="描边宽度">
                 <el-input
@@ -145,11 +157,20 @@
                   @input="handleEditKonva"
                 ></el-input>
               </el-form-item>
-              <el-form-item label="底部颜色">
+              <el-form-item
+                label="底部颜色"
+                v-if="editNode.attrs.name != 'vuecomponent'"
+              >
                 <el-input
                   v-model="btmfill"
                   @input="handleEditbtmKonva"
                 ></el-input>
+                <el-color-picker
+                  v-model="btmfill"
+                  color-format="rgb"
+                  :show-alpha="true"
+                  @active-change="colorChange($event, 'btmfill', false)"
+                ></el-color-picker>
               </el-form-item>
             </div>
             <el-form-item
@@ -176,7 +197,7 @@
   import { mapGetters, mapMutations } from 'vuex'
   import { _getTopo } from '@/api/Topo'
   import { getProduct } from '@/api/Product'
-  import { putView, getView } from '@/api/View'
+  import { putView, getView, postView } from '@/api/View'
 
   import { isBase64 } from '@/utils'
   export default {
@@ -193,6 +214,49 @@
         },
         router: '',
         viewInfo: {},
+        defaultTopo: {
+          konva: {
+            Stage: {
+              attrs: {
+                height: 700,
+                width: 1520,
+              },
+              children: [
+                {
+                  attrs: {
+                    id: 'Layer_Thing',
+                  },
+                  children: [
+                    {
+                      attrs: {
+                        height: '700',
+                        id: 'bg',
+                        src: '/dgiot_file/knova/knova_bg.png?timestamp=1635422987361',
+                        type: 'bg-image',
+                        width: '1200',
+                      },
+                      className: 'Image',
+                    },
+                    {
+                      attrs: {
+                        draggable: true,
+                        id: 'f9dddd0eeb_amisBMK8t',
+                        name: 'amis',
+                        opacity: 0.75,
+                        x: 323,
+                        y: 84.95900920567532,
+                      },
+                      children: [],
+                      className: 'Label',
+                    },
+                  ],
+                  className: 'Layer',
+                },
+              ],
+              className: 'Stage',
+            },
+          },
+        },
         editForm: {
           fill: '', //字体颜色
           width: 42, //宽度
@@ -267,7 +331,7 @@
           lineHeight: node.attrs.lineHeight || 0,
           fontSize: node.attrs.fontSize || 14,
           stroke: node.attrs.stroke || '', //描边颜色
-          strokeWidth: node.attrs.strokeWidth || 0, //描边颜色
+          strokeWidth: node.attrs.strokeWidth || 0.1, //描边宽度
           text: node.attrs.text || '',
           // x: node.attrs.x || 0,
           // y: node.attrs.y || 0,
@@ -328,6 +392,19 @@
         setTreeFlag: 'settings/setTreeFlag',
         createdEvidence: 'topo/createdEvidence',
       }),
+      /**
+       * 改变背景颜色
+       */
+      colorChange(e, type, flag) {
+        // console.log(e, type)
+        if (flag) {
+          this.editForm[type] = e
+          this.handleEditKonva()
+        } else {
+          type == 'btmfill' ? (this.btmfill = e) : ''
+          this.handleEditbtmKonva()
+        }
+      },
       /**
        * 编辑组态节点
        */
@@ -505,19 +582,41 @@
               id: 'kevCurrent',
             })
           } else {
-            _this.$baseMessage(
-              '暂无组态。显示默认组态',
-              'info',
-              'dgiot-hey-message-error'
-            )
-            console.log(
-              'topo info msg 请求数据没有组态 就设置这个组态为默认',
-              _this.Stage
-            )
-            await _this.initKonva({
-              data: _this.initKonva,
-              id: 'kevCurrent',
-            })
+            console.log(this.$route)
+            if (!this.$route.query.deviceid) {
+              let params = {
+                data: this.defaultTopo,
+                language: 'zh',
+                class: 'Product',
+                type: 'topo',
+                title: '组态',
+                key: this.$route.query.productid,
+              }
+              const res = await postView(params)
+              console.log('这是新建', res)
+              params.objectId = res.objectId
+              this.viewInfo = params
+              console.log('这是konva', this.viewInfo.data)
+              await _this.initKonva({
+                data: this.viewInfo.data.konva.Stage,
+                id: 'kevCurrent',
+              })
+            } else {
+              console.log('查看params', param)
+              _this.$baseMessage(
+                '暂无组态。显示默认组态',
+                'info',
+                'dgiot-hey-message-error'
+              )
+              console.log(
+                'topo info msg 请求数据没有组态 就设置这个组态为默认',
+                _this.Stage
+              )
+              await _this.initKonva({
+                data: _this.initKonva,
+                id: 'kevCurrent',
+              })
+            }
           }
           loading.close()
         } catch (e) {
