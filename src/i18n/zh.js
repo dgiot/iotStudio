@@ -1173,6 +1173,8 @@ export default {
     // 云系统
     system: {
       'Accurate log': '精确日志查询',
+      smsconfiguration: '短信配置',
+      mailconfiguration: '邮件配置',
     },
     category: {
       'Add subcategory': '新增子分类',

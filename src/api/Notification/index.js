@@ -41,3 +41,18 @@ export async function putNotification(ObjectId, params) {
 export async function postNotification(params) {
   return create_object('Notification', params)
 }
+
+export async function getconfiguration() {
+  return request({
+    url: `configuration`,
+    method: 'get',
+  })
+}
+
+export async function postconfiguration(data) {
+  return request({
+    url: `configuration`,
+    method: 'post',
+    data: data,
+  })
+}
