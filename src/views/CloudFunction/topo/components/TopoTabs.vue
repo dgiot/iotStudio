@@ -100,11 +100,13 @@
           静态文本框
         </el-button>
         <el-divider />
-        <el-button
+        <img
           draggable="true"
           size="mini"
+          src="http://dev.iotn2n.com/dgiot_file/topo/png/pump.gif"
+          style="width: 40px; height: 40px; display: inline-block"
           type="primary"
-          @click.native="
+          @click="
             createBasicThing({
               productid: $route.query.productid,
               type: 'knovaimage',
@@ -112,9 +114,29 @@
               hidden: false,
             })
           "
-        >
-          水泵
-        </el-button>
+        />
+        <img
+          draggable="true"
+          size="mini"
+          src="https://mp0.usr.cn/uploads/drawimg/1612317621248_0251.gif"
+          style="
+            width: 40px;
+            height: 40px;
+            display: inline-block;
+            margin-left: 20px;
+          "
+          type="primary"
+          @click="
+            createBasicThing({
+              productid: $route.query.productid,
+              type: 'knovaimage',
+              image:
+                'https://mp0.usr.cn/uploads/drawimg/1612317621248_0251.gif',
+              hidden: false,
+            })
+          "
+        />
+        <el-divider />
         <el-button
           draggable="true"
           size="mini"
@@ -137,28 +159,6 @@
         >
           精灵图
         </el-button>
-        <!-- <el-button
-          draggable="true"
-          size="mini"
-          type="primary"
-          @click.native="
-            createBasicThing({
-              productid: $route.query.productid,
-              type: 'gifimage',
-              image: 'http://dev.iotn2n.com/dgiot_file/topo/png/pump.png',
-              animations: {
-                idle: [
-                  // x, y, width, height (4 frames)
-                  2, 2, 84, 65, 131, 2, 84, 65, 262, 2, 84, 65, 389, 2, 84, 65,
-                  518, 2, 84, 65,
-                ],
-              },
-              hidden: false,
-            })
-          "
-        >
-          水泵
-        </el-button> -->
         <el-divider />
         <el-button
           draggable="true"
@@ -168,12 +168,34 @@
             createBasicThing({
               productid: $route.query.productid,
               type: 'vuecomponent',
+              data: {},
               chart: 'line',
               hidden: false,
             })
           "
         >
           折线图
+        </el-button>
+        <el-button
+          draggable="true"
+          size="mini"
+          type="primary"
+          @click.native="
+            createBasicThing({
+              productid: $route.query.productid,
+              type: 'vuecomponent',
+              data: {
+                width: 262,
+                height: 72,
+                fill: 'rgba(80, 190, 240, 0.2)',
+                text: '产品数量',
+              },
+              chart: 'realcard',
+              hidden: false,
+            })
+          "
+        >
+          数据卡片
         </el-button>
         <el-divider />
         <!-- http://dev.iotn2n.com/dgiot_file/topo/png/pump.png -->

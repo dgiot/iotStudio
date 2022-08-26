@@ -32,6 +32,22 @@
                 height: comp.height + 'px',
               }"
             />
+            <topo-card
+              v-if="comp.type == 'realcard'"
+              :comp="comp"
+              :style="{
+                width: comp.width + 'px',
+                height: comp.height + 'px',
+              }"
+            />
+            <img
+              v-if="comp.type == 'konvaimage'"
+              :src="comp.src"
+              :style="{
+                width: comp.width + 'px',
+                height: comp.height + 'px',
+              }"
+            />
           </div>
         </div>
       </Modal>
@@ -686,6 +702,7 @@
   } from 'vue-baidu-map'
   import info from '@/components/Device/info'
   import topoLine from './component/topocompvue/TopoLine'
+  import topoCard from './component/topocompvue/TopoCard'
   import { putView, queryView } from '@/api/View'
   import topopreview from '@/views/CloudFunction/topo/index'
   export default {
@@ -710,6 +727,7 @@
       BmMarker,
       BmlMarkerClusterer,
       topoLine, //vuetopocomp
+      topoCard,
     },
     data() {
       return {
@@ -844,6 +862,8 @@
       this.fetchData()
     },
     mounted() {
+      this.vueComponents = []
+      this.vueFlag = false
       this.$dgiotBus.$off('vueComponent')
       this.$dgiotBus.$on('vueComponent', async (list, flag) => {
         this.vueComponents = list
@@ -1317,7 +1337,7 @@
       konvaDevice(row) {
         this.topoFlag = true
         this.$router.push({
-          path: '/roles/konvadetail', // /roles/konvadetail  /dashboard/devicelist 原页面
+          path: '/dashboard/devicelist', // /roles/konvadetail  /dashboard/devicelist 原页面
           query: {
             productid: row.product.objectId,
             devaddr: row.devaddr,
@@ -1429,7 +1449,7 @@
     },
   }
 </script>
-<style lang="scss">
+<style lang="scss" scoped>
   .dialog-map,
   .map {
     display: block;
