@@ -138,13 +138,13 @@ export default {
         // },
         {
           label: 'Starting time',
-          width: 'auto',
+          width: '180',
           prop: 'starttime',
           sortable: true,
         },
         {
           label: 'end time',
-          width: 'auto',
+          width: '180',
           prop: 'endtime',
           sortable: true,
         },

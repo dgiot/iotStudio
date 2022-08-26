@@ -385,7 +385,6 @@
         prop="name"
         show-overflow-tooltip
         sortable
-        width="160"
       />
       <el-table-column
         align="center"
@@ -393,7 +392,6 @@
         prop="profile.wordtemplatename"
         show-overflow-tooltip
         sortable
-        width="160"
       />
       <el-table-column
         align="center"
@@ -401,7 +399,6 @@
         prop="name"
         show-overflow-tooltip
         sortable
-        width="160"
       >
         <template #default="{ row }">
           <span v-if="row.profile.testbed">{{ row.profile.testbed }}</span>
@@ -440,7 +437,7 @@
       <el-table-column
         align="center"
         :label="$translateTitle(`deviceLog.status`)"
-        width="auto"
+        width="120"
       >
         <template #default="{ row }">
           <el-popover
@@ -480,7 +477,7 @@
         align="center"
         fixed="right"
         :label="$translateTitle(`cloudTest.operate`)"
-        width="380"
+        width="280"
       >
         <template #default="{ row }">
           <el-button
