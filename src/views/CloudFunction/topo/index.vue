@@ -151,12 +151,30 @@
                   @input="handleEditKonva"
                 ></el-input>
               </el-form-item>
-              <el-form-item label="文本内容">
+              <el-form-item
+                v-if="editNode.attrs.name == 'vuecomponent'"
+                label="绑定类型"
+              >
+                <el-select
+                  v-model="editForm.text"
+                  @change="handleEditKonva"
+                  placeholder="请选择"
+                >
+                  <el-option
+                    v-for="item in dataTypeList"
+                    :key="item.value"
+                    :label="item.label"
+                    :value="item.value"
+                  ></el-option>
+                </el-select>
+              </el-form-item>
+              <el-form-item v-else label="文本内容">
                 <el-input
                   v-model="editForm.text"
                   @input="handleEditKonva"
                 ></el-input>
               </el-form-item>
+
               <el-form-item
                 label="底部颜色"
                 v-if="editNode.attrs.name != 'vuecomponent'"
@@ -212,6 +230,24 @@
         editNode: {
           attrs: {},
         },
+        dataTypeList: [
+          {
+            label: '产品数量',
+            value: '产品数量',
+          },
+          {
+            label: '设备数量',
+            value: '设备数量',
+          },
+          {
+            label: '在线设备',
+            value: '在线设备',
+          },
+          {
+            label: '离线设备',
+            value: '离线设备',
+          },
+        ],
         router: '',
         viewInfo: {},
         defaultTopo: {
@@ -416,6 +452,15 @@
         this.editForm.fontSize = Number(this.editForm.fontSize)
         this.editForm.strokeWidth = Number(this.editForm.strokeWidth)
         // console.log(this.editForm)
+        if (this.editNode.attrs.id == 'bg') {
+          let editForm = {
+            width: Number(this.editForm.width),
+            height: Number(this.editForm.height),
+          }
+          console.log('这是修改背景大小', editForm)
+          this.editNode.setAttrs(editForm)
+          return
+        }
         this.editNode.setAttrs(this.editForm)
       },
       /**

@@ -2057,13 +2057,14 @@
           </el-dialog>
           <!--添加物模型弹窗-->
           <el-dialog
+            v-if="wmxdialogVisible"
             :append-to-body="true"
             :before-close="wmxhandleClose"
             :close-on-click-modal="false"
             :fullscreen="moduletype == 'properties' ? true : false"
             :title="wmxSituation + '自定义属性'"
-            :top="moduletype == 'properties' ? '0vh' : '10vh'"
             :visible.sync="wmxdialogVisible"
+            :top="moduletype == 'properties' ? '0vh' : '10vh'"
             :width="moduletype == 'properties' ? '100%' : '80%'"
           >
             <dgiot-wmx
