@@ -2063,8 +2063,8 @@
             :close-on-click-modal="false"
             :fullscreen="moduletype == 'properties' ? true : false"
             :title="wmxSituation + '自定义属性'"
-            :visible.sync="wmxdialogVisible"
             :top="moduletype == 'properties' ? '0vh' : '10vh'"
+            :visible.sync="wmxdialogVisible"
             :width="moduletype == 'properties' ? '100%' : '80%'"
           >
             <dgiot-wmx

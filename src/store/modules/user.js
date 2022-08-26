@@ -434,7 +434,7 @@ const actions = {
       window.jstoken?.setJsToken(
         window.location.hostname,
         objectId,
-        sessionToken + '_uniapp'
+        sessionToken
       )
     }
     if (sessionToken) {
