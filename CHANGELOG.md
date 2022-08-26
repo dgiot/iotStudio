@@ -1,4 +1,22 @@
-## [4.5.7](https://github.com/dgiot/dgiot-dashboard/compare/v4.5.6...v4.5.7) (2022-08-10)
+## [4.5.9](https://github.com/dgiot/dgiot-dashboard/compare/v4.5.8...v4.5.9) (2022-08-26)
+
+
+### Bug Fixes
+
+* **equipmentCloud:** 设备视频监控 ([5ecad38](https://github.com/dgiot/dgiot-dashboard/commit/5ecad3830da60262fb7ce5887aea1dd29b0f4619))
+* konva cannot be edited ([2584459](https://github.com/dgiot/dgiot-dashboard/commit/25844596aaf7dabd5284e3ad1f91008099314229))
+* Object Model cannot be opened ([e3f087e](https://github.com/dgiot/dgiot-dashboard/commit/e3f087e13ab67c1b1b1bd1a45b40fe82c2ad812a))
+
+
+### Features
+
+* 修改任务id ([a9f0e10](https://github.com/dgiot/dgiot-dashboard/commit/a9f0e10a8a9f3ab62a57dcad85b238278221bb84))
+* **cloudSystem:** dgiot_configuration ([2bd7cc3](https://github.com/dgiot/dgiot-dashboard/commit/2bd7cc3fe57c2558c77b3a9c6a7067a1af2f8cfe))
+* **dashboard:** 4.5.9 ([77bd25f](https://github.com/dgiot/dgiot-dashboard/commit/77bd25f70a3b1c88919d8f189be61d0567f8c659))
+
+
+
+## [4.5.8](https://github.com/dgiot/dgiot-dashboard/compare/v4.5.6...v4.5.8) (2022-08-12)
 
 
 ### Bug Fixes
@@ -9,6 +27,7 @@
 * **dashboard): build(发布版本:** dgiot-dashboard@v4.5.6 ([1d4302c](https://github.com/dgiot/dgiot-dashboard/commit/1d4302cd183474db6bbbb6dbc4fbc46163d351c8)), closes [#511](https://github.com/dgiot/dgiot-dashboard/issues/511)
 * **equipmentCloud:** 通道编辑上传文件 ([53d1e6d](https://github.com/dgiot/dgiot-dashboard/commit/53d1e6d269ee2441bc2d13384f429f42dd80d1f6))
 * **equipmentCloud:** 字典修复 ([24a9690](https://github.com/dgiot/dgiot-dashboard/commit/24a96904b4879da9a952c9f6bf7358048863198c))
+* **equipmentCloud:** add rgif.js gif.js ([1b7230e](https://github.com/dgiot/dgiot-dashboard/commit/1b7230e94834c00e3ccb7c256c269dad174f6dd2))
 * **ignore:** hidden test_script ([61b6326](https://github.com/dgiot/dgiot-dashboard/commit/61b632636fc8409b1e99f4235a9a865d22d72af4))
 * **queryZetaProduct:** queryProductTemplet ([1c47a45](https://github.com/dgiot/dgiot-dashboard/commit/1c47a4511451818ecd1f8fdcf2b4cebd0e6b4761))
 
@@ -23,6 +42,7 @@
 * dgiot_amis ([8c91153](https://github.com/dgiot/dgiot-dashboard/commit/8c91153c8ad5b6b32d91c57a36fe55fefa3da721))
 * **equipmentCloud:** 通道添加上传文件功能 ([f04d2f4](https://github.com/dgiot/dgiot-dashboard/commit/f04d2f45d0e077d30ca1bb75c41d4bb12bc2a439))
 * knova Configuration display ([d0d5cdb](https://github.com/dgiot/dgiot-dashboard/commit/d0d5cdba26aa779120718d7722c3fc48a88ebb07))
+* Konva gif Edit ([43da241](https://github.com/dgiot/dgiot-dashboard/commit/43da24120e9edea2a991a873e8d662bd957dfeea))
 * **proxy:** nodejs_version ([25f0fea](https://github.com/dgiot/dgiot-dashboard/commit/25f0feaf77ee4662b206f9b01894839b74c04fca))
 * **router:** 路由处理分离 ([e2023ed](https://github.com/dgiot/dgiot-dashboard/commit/e2023ed42854c38af414288faf4260a064ed2d7e))
 * translate ([ebd3196](https://github.com/dgiot/dgiot-dashboard/commit/ebd3196a719d75bb8978143935d87529262c6980))
