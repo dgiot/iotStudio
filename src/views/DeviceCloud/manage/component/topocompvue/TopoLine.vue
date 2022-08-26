@@ -1,7 +1,7 @@
 <template>
   <div
     class="topoLine"
-    :style="{ width: comp.width + 'px', hieght: comp.height + 'px' }"
+    :style="{ width: comp.width + 'px', height: comp.height + 'px' }"
   >
     <ve-line
       :data="chartData"
@@ -111,7 +111,7 @@
           .then((res) => {
             // this.$baseColorfullLoading().close()
             console.log(res, 'res charts')
-            if (res?.chartData) {
+            if (res?.chartData?.rows.length > 0) {
               const { chartData = {} } = res
               this.chartData = chartData
               this.$nextTick(() => {

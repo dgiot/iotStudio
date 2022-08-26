@@ -3803,7 +3803,7 @@ export default {
               'dgiot-hey-message-success'
             )
             await this.getProDetail()
-            await this.queryProductInfo(this.$route.query.id)
+            // await this.queryProductInfo(this.$route.query.id)
           } else
             this.$baseMessage(
               this.$translateTitle('user.error deleted') + res?.msg
@@ -3898,7 +3898,7 @@ export default {
       })
     },
     mqttMsg(Msg) {
-      console.error(Msg)
+      // console.error(Msg)
       this.msgList.push({
         timestamp: moment().format('x'),
         msg: Msg,
