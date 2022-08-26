@@ -22,6 +22,22 @@
               height: comp.height + 'px',
             }"
           />
+          <topo-card
+            v-if="comp.type == 'realcard'"
+            :comp="comp"
+            :style="{
+              width: comp.width + 'px',
+              height: comp.height + 'px',
+            }"
+          />
+          <img
+            v-if="comp.type == 'konvaimage'"
+            :src="comp.src"
+            :style="{
+              width: comp.width + 'px',
+              height: comp.height + 'px',
+            }"
+          />
         </div>
       </div>
     </div>
@@ -30,12 +46,14 @@
 
 <script>
   import topoLine from './component/topocompvue/TopoLine'
+  import topoCard from './component/topocompvue/TopoCard'
   import topopreview from '@/views/CloudFunction/topo/index'
   export default {
     name: 'KonvaDetails',
     components: {
       topopreview,
       topoLine,
+      topoCard,
     },
     data() {
       return {
@@ -45,6 +63,8 @@
       }
     },
     mounted() {
+      this.vueComponents = []
+      this.vueFlag = false
       console.log('111111111')
       this.$dgiotBus.$off('vueComponent')
       this.$dgiotBus.$on('vueComponent', async (list, flag) => {

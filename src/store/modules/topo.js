@@ -311,6 +311,7 @@ const mutations = {
           _.merge(canvas.handlerArgs, {
             type: 'createVueComponent',
             chart: thing.chart,
+            data: thing.data,
             productid: thing.productid,
           })
         )
