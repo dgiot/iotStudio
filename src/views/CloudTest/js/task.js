@@ -124,13 +124,13 @@ export default {
       columns: [
         {
           label: 'Starting time',
-          width: 'auto',
+          width: '180',
           prop: 'starttime',
           sortable: true,
         },
         {
           label: 'end time',
-          width: 'auto',
+          width: '180',
           prop: 'endtime',
           sortable: true,
         },
@@ -965,7 +965,9 @@ export default {
       if (type) this.visible = false
       try {
         const loading = this.$baseColorfullLoading()
-        await putDevice(collectionInfo.objectId, _profile)
+        if (!collectionInfo.profile.istcp) {
+          await putDevice(collectionInfo.objectId, _profile)
+        }
         this.$baseMessage(
           this.$translateTitle('alert.Data request successfully'),
           'success',

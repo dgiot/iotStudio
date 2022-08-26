@@ -91,7 +91,7 @@
               align="center"
               :label="$translateTitle('cloudTest.single audit')"
               show-overflow-tooltip
-              :width="180"
+              :width="120"
             >
               <template #default="{ row }">
                 <el-tag
@@ -282,7 +282,7 @@
         align="center"
         :label="$translateTitle(`deviceLog.status`)"
         show-overflow-tooltip
-        width="auto"
+        width="120"
       >
         <template #default="{ row }">
           <el-tooltip
@@ -321,7 +321,7 @@
         align="center"
         fixed="right"
         :label="$translateTitle(`cloudTest.operate`)"
-        width="480"
+        width="420"
       >
         <template #default="{ row }">
           <el-button
