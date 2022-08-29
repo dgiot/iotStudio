@@ -88,7 +88,7 @@
     "@vue/cli-plugin-babel": "^4.5.15",
     "@vue/cli-plugin-eslint": "^4.5.15",
     "@vue/cli-plugin-router": "^4.5.15",
-    "@vue/cli-plugin-vuex": "^4.5.15",
+    "@vue/cli-plugin-vuex": "^5.0.8",
     "@vue/cli-service": "^4.5.15",
     "@vue/eslint-config-prettier": "6.0.0",
     "babel-plugin-dynamic-import-node": "^2.3.3",
