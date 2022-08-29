@@ -100,17 +100,18 @@
           静态文本框
         </el-button>
         <el-divider />
+        <div style="text-align: left; margin: 10px; font-weight: 600">动图</div>
         <img
           draggable="true"
           size="mini"
-          src="http://dev.iotn2n.com/dgiot_file/topo/png/pump.gif"
+          src="https://prod.dgiotcloud.cn/dgiot_file/topo/png/pump.gif"
           style="width: 40px; height: 40px; display: inline-block"
           type="primary"
           @click="
             createBasicThing({
               productid: $route.query.productid,
               type: 'knovaimage',
-              image: 'http://dev.iotn2n.com/dgiot_file/topo/png/pump.gif',
+              image: 'https://prod.dgiotcloud.cn/dgiot_file/topo/png/pump.gif',
               hidden: false,
             })
           "
@@ -132,6 +133,31 @@
               type: 'knovaimage',
               image:
                 'https://mp0.usr.cn/uploads/drawimg/1612317621248_0251.gif',
+              hidden: false,
+            })
+          "
+        />
+        <el-divider />
+        <div style="text-align: left; margin: 10px; font-weight: 600">
+          静态图
+        </div>
+        <img
+          draggable="true"
+          size="mini"
+          src="https://mp0.usr.cn/uploads/drawimg/1612317616625_0334.png"
+          style="
+            width: 40px;
+            height: 40px;
+            display: inline-block;
+            margin-left: 20px;
+          "
+          type="primary"
+          @click="
+            createBasicThing({
+              productid: $route.query.productid,
+              type: 'staticimage',
+              image:
+                'https://mp0.usr.cn/uploads/drawimg/1612317616625_0334.png',
               hidden: false,
             })
           "

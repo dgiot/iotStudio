@@ -211,6 +211,7 @@ const mutations = {
       if (
         canvas.contextmenu.attrs.name == 'evidence' ||
         canvas.contextmenu.attrs.name == 'konvaimage' ||
+        canvas.contextmenu.attrs.name == 'staticimage' ||
         canvas.contextmenu.attrs.name == 'sprite' ||
         canvas.contextmenu.attrs.name == 'vuecomponent'
       ) {
@@ -290,6 +291,7 @@ const mutations = {
     console.log('thing内容', thing, x, y)
     if (
       thing.type == 'knovaimage' ||
+      thing.type == 'staticimage' ||
       thing.type == 'gifimage' ||
       thing.type == 'vuecomponent'
     ) {
@@ -302,6 +304,14 @@ const mutations = {
         simpleImage = addNodeEvent(
           _.merge(canvas.handlerArgs, {
             type: 'createImage',
+            image: thing.image,
+            productid: thing.productid,
+          })
+        )
+      } else if (thing.type == 'staticimage') {
+        simpleImage = addNodeEvent(
+          _.merge(canvas.handlerArgs, {
+            type: 'createStaticImage',
             image: thing.image,
             productid: thing.productid,
           })

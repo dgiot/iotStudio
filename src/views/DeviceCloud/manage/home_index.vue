@@ -6,7 +6,7 @@
         class="wrap_konva"
         footer-hide
         :query="routerInfo.query"
-        width="1400"
+        width="1200"
         @on-cancel="closeModal"
       >
         <span slot="title" v-if="false"></span>
