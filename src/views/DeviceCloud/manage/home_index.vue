@@ -32,6 +32,22 @@
                 height: comp.height + 'px',
               }"
             />
+            <topo-pie
+              v-if="comp.type == 'pie'"
+              :comp="comp"
+              :style="{
+                width: comp.width + 'px',
+                height: comp.height + 'px',
+              }"
+            />
+            <topo-caltable
+              v-if="comp.type == 'carousel'"
+              :comp="comp"
+              :style="{
+                width: comp.width + 'px',
+                height: comp.height + 'px',
+              }"
+            />
             <topo-card
               v-if="comp.type == 'realcard'"
               :comp="comp"
@@ -702,6 +718,8 @@
   } from 'vue-baidu-map'
   import info from '@/components/Device/info'
   import topoLine from './component/topocompvue/TopoLine'
+  import topoPie from './component/topocompvue/TopoPie'
+  import topoCaltable from './component/topocompvue/TopoCaltable'
   import topoCard from './component/topocompvue/TopoCard'
   import { putView, queryView } from '@/api/View'
   import topopreview from '@/views/CloudFunction/topo/index'
@@ -727,6 +745,8 @@
       BmMarker,
       BmlMarkerClusterer,
       topoLine, //vuetopocomp
+      topoPie,
+      topoCaltable,
       topoCard,
     },
     data() {

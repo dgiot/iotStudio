@@ -728,14 +728,14 @@
           applicationtText: [
             {
               required: true,
-              message: '请选择所属应用',
+              message: '请选择所属部门',
               trigger: 'change',
             },
           ],
           roles: [
             {
               required: true,
-              message: '请选择所属应用',
+              message: '请选择所属部门',
               trigger: 'blur',
             },
           ],
@@ -1391,14 +1391,14 @@
           applicationtText: [
             {
               required: true,
-              message: '请选择所属应用',
+              message: '请选择所属部门',
               trigger: 'change',
             },
           ],
           roles: [
             {
               required: true,
-              message: '请选择所属应用',
+              message: '请选择所属部门',
               trigger: 'blur',
             },
           ],
@@ -1466,7 +1466,7 @@
           }
         })
         // }
-        // 读取acl列表,获取所属应用名称
+        // 读取acl列表,获取所属部门名称
         if (this.channelrow) {
           for (var key in this.channelrow.ACL) {
             obj.applicationtText = key ? key.substr(5) : ''

@@ -1309,11 +1309,17 @@
       },
     },
     async created() {
+      console.log('sizeform 表单值', this.sizeForm)
+      if (this.sizeForm.type == 'bool') {
+        this.$set(this.sizeForm, 'truevalue', 1)
+        this.$set(this.sizeForm, 'falsevalue', 0)
+      }
       await this.queryProtocol()
       /**
        * @description 查询资源通道
        */
       await this.queryResource()
+
       if (this.$route.query.id) await this.queryViewInfo()
     },
     mounted() {},

@@ -89,18 +89,18 @@
               </el-form-item>
 
               <el-form-item
-                label="所属应用"
+                label="所属部门"
                 :rules="[
                   {
                     required: true,
-                    message: '请选择所属应用',
+                    message: '请选择所属部门',
                     trigger: 'blur',
                   },
                 ]"
               >
                 <el-input
                   v-model="form.relationApp"
-                  placeholder="请选择所属应用"
+                  placeholder="请选择所属部门"
                 >
                   <template slot="append">
                     <i
@@ -120,11 +120,11 @@
                   />
                 </div>
               </el-form-item>
-              <!-- 所属应用(角色) app -->
+              <!-- 所属部门(角色) app -->
               <!-- <el-form-item
                 :label=" $translateTitle('application.applicationtype')"
                 :rules="[
-                  { required: true, message: '请选择所属应用',trigger: 'blur'},
+                  { required: true, message: '请选择所属部门',trigger: 'blur'},
                 ]"
               >
                 <el-input v-model="form.relationApp" :disabled="true"/>

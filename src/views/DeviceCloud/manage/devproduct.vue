@@ -2,7 +2,7 @@
   <div class="devproduct">
     <h3>
       {{ $translateTitle('route.产品管理') }}
-      <span v-if="projectName">{{ '(所属应用:' + projectName + ')' }}</span>
+      <span v-if="projectName">{{ '(所属部门:' + projectName + ')' }}</span>
     </h3>
     <el-tabs v-model="activeName">
       <el-tab-pane
@@ -236,11 +236,11 @@
                 :rules="[
                   {
                     required: true,
-                    message: '请选择所属应用',
+                    message: '请选择所属部门',
                     trigger: 'blur',
                   },
                 ]"
-                label="所属应用"
+                label="所属部门"
               > -->
               <el-form-item
                 :label="$translateTitle('application.applicationtype')"
@@ -526,7 +526,7 @@
           roles: [
             {
               required: true,
-              message: '请选择所属应用',
+              message: '请选择所属部门',
               trigger: 'blur',
             },
           ],
