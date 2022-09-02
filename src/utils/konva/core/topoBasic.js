@@ -301,8 +301,8 @@ const topoBasic = {
       x: Axis.x,
       y: Axis.y,
       image: imageObj,
-      width: 106,
-      height: 118,
+      width: args.data.width,
+      height: args.data.height,
       type: 'staticimage',
       // handler: 'dblclick',
       draggable: true,
@@ -310,6 +310,7 @@ const topoBasic = {
     simpleImage.setAttrs({
       src: args.image,
     })
+    // simpleImage.zIndex(1)
     // } else if (args.type == 'gifimage') {
 
     // }

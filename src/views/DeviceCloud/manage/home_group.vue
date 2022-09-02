@@ -212,18 +212,18 @@
                 :rules="[
                   {
                     required: true,
-                    message: '请选择所属应用',
+                    message: '请选择所属部门',
                     trigger: 'blur',
                   },
                 ]"
-                label="所属应用"
+                label="所属部门"
               > -->
               <el-form-item
                 :label="$translateTitle('application.applicationtype')"
                 :rules="[
                   {
                     required: true,
-                    message: '请选择所属应用',
+                    message: '请选择所属部门',
                     trigger: 'blur',
                   },
                 ]"
@@ -564,7 +564,7 @@
           roles: [
             {
               required: true,
-              message: '请选择所属应用',
+              message: '请选择所属部门',
               trigger: 'blur',
             },
           ],
