@@ -62,7 +62,7 @@
     "@dgiot/dgiot-icons": "0.0.19",
     "@dgiot/dgiot-monaco": "^0.2.2",
     "@material/icon-button": "13.0.0",
-    "amis": "1.9.1-beta.11",
+    "amis": "2.2.0",
     "amis-editor": "4.1.0-beta.24",
     "driver.js": "^0.9.8",
     "pnpm": "^7.3.0",
@@ -74,6 +74,7 @@
     "vue-audio-visual": "^2.4.0",
     "vue-contextmenu": "1.5.11",
     "vue-infinite-scroll": "^2.0.2",
+    "vue-seamless-scroll": "^1.1.23",
     "vuera": "0.2.7"
   },
   "devDependencies": {
