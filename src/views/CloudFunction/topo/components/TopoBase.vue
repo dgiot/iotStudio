@@ -146,7 +146,6 @@
       this.dgiotDragEvent = false
       this.$dgiotBus.$off('dgiotDragStart')
       this.$dgiotBus.$on('dgiotDragStart', (args) => {
-        console.log(args, 'args')
         if (args) this.dgiotDragEvent = true
       })
     },
@@ -161,7 +160,6 @@
       }),
       handleMouseDown(e) {
         if (this.dgiotDragEvent) {
-          console.info('handleMouseDown', e)
           this.createThing({
             productid: this.$route.query.productid,
             hidden: false,

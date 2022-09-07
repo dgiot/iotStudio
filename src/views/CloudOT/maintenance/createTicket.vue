@@ -628,9 +628,7 @@
       },
     },
     created() {
-      console.log(this._Product, '_Product')
       dgiotlog.log('role', this.role)
-
       dgiotlog.log('this.aclObj', this.aclObj)
     },
     mounted() {

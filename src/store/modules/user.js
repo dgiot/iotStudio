@@ -427,9 +427,9 @@ const actions = {
       },
       _userInfo
     )
-    console.log('查看数据', data)
+    // console.log('查看数据', data)
     const { sessionToken = '', roles = [], objectId = '' } = data
-    console.log('不是pc端', isPC())
+    // console.log('不是pc端', isPC())
     if (!isPC()) {
       window.jstoken?.setJsToken(
         window.location.hostname,

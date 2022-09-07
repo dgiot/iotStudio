@@ -924,7 +924,6 @@ export default {
     },
     inputAddress() {
       const address = this.productdetail.config.addres
-      console.log(1111111111111111, addres)
       // https://lbsyun.baidu.com/jsdemo.htm#wAddressParseSingle  根据位置解析
       var map = new BMapGL.Map('container')
       map.centerAndZoom(new BMapGL.Point(116.331398, 39.897445), 12)
@@ -943,14 +942,12 @@ export default {
         },
         '北京市'
       )
-      console.log(address)
     },
     mapClick(e) {
       this.productdetail.config.location = {
         latitude: e.point.lat,
         longitude: e.point.lng,
       }
-      console.log(e, this.productdetail.config)
       // this.center.lng = e.point.lng
       // this.center.lat = e.point.lat
       // this.addresspointer =
@@ -958,7 +955,6 @@ export default {
       const geocoder = new BMap.Geocoder() // 创建地址解析器的实例
       //  let Marker = new BMap.Marker()
       geocoder.getLocation(e.point, (rs) => {
-        console.log(rs)
         this.productdetail.config.address = rs.address
       })
     },
@@ -986,7 +982,6 @@ export default {
       // this.onChildrenDrawerClose()
     },
     editParameters(form, type) {
-      console.log('thingParameters', form)
       // 向events 的 outputData 添加 输出参数
       this.modules[type].data.output[this.editIndex] = form
       this.atbas.childrenDrawer = false
@@ -1044,7 +1039,6 @@ export default {
     },
     async editEvent(item, index, type) {
       this.editIndex = index
-      await console.log('editEvent', item)
       this.atbas.childrenDrawer = true
       this.eventForm = item
       this.eventType = 'edit'
@@ -1166,8 +1160,6 @@ export default {
     },
     async submitModules(type, form) {
       form.data.outputParams = []
-      console.log(form.data.output, 'form.data.output')
-      console.log(form.data, 'form.data')
       // 计算输出参数
       form.data.output.forEach((o, index) => {
         form.data.outputParams.push({
@@ -1189,7 +1181,6 @@ export default {
         moduleType: type,
         updateAt: moment(new Date()).format('x'),
       }
-      console.log('_item', _item)
       window._item = _item
       await this.submitForm(_item)
       this.atbas.visible = false
@@ -1200,7 +1191,6 @@ export default {
       dgiotlogger.info('this.modules.data')
       this.$refs[type].validate(async (valid) => {
         if (valid) {
-          await console.log(type, form.data)
           this.modules.data.events.push(_item)
           const res = await putProduct(this.productObj.objectId, {
             thing: this.modules.data,
@@ -1403,8 +1393,6 @@ export default {
         services = [],
         tags = [],
       } = this.productObj.thing
-      console.log(this.tabsChild, e)
-      console.log(e.name, this.productObj.thing, this.productObj.thing[e.name])
       switch (e.name) {
         case 'properties':
           this.modules.data.properties = properties || []
@@ -1569,7 +1557,6 @@ export default {
         obj.value = topics[i]
         this.topicData.push(obj)
       }
-      console.log(this.topicData)
     },
     /**
      * @description 导出产品

@@ -501,7 +501,6 @@ export default {
       addVisitedRoute: 'tabs/addVisitedRoute',
     }),
     Unbscribe() {
-      console.log('Unbscribe all topic')
       const subtopic = '$dg/user/trace/' + this.deviceInfo.objectId + '/#'
       const topicKey = this.$dgiotBus.topicKey(this.router, subtopic)
       this.$dgiotBus.$emit('MqttUnbscribe', topicKey, subtopic)
@@ -593,7 +592,6 @@ export default {
         resultes.topicData = resultes.product.topics
           ? resultes.product.topics.concat(_toppic)
           : _toppic
-        console.log(resultes, 'resultes')
         this.deviceInfo = resultes
         // this.$baseMessage(
         //   this.$translateTitle('alert.Data request successfully'),
@@ -736,7 +734,6 @@ export default {
         await getDabDevice(deviceid, params)
           .then((res) => {
             // this.$baseColorfullLoading().close()
-            console.log(res, 'res charts')
             if (res?.chartData) {
               const { chartData = {} } = res
               this.chartData = chartData
@@ -747,7 +744,6 @@ export default {
                 }, 1000)
               })
             }
-            console.log('this.chartData', this.chartData)
             this.loading = false
             this.dataEmpty = false
           })
@@ -983,7 +979,6 @@ export default {
       })
     },
     async deviceToDetail(row) {
-      console.log('row', row)
       const query = {
         deviceid: row.objectId,
         nodeType: row.nodeType,
@@ -996,7 +991,6 @@ export default {
       this.getDeviceInfo(query.deviceid)
       this.setTreeFlag(false)
       this.params.style = this.chartType[0].type
-      console.log(' this.params.style', this.params.style)
       // | 卡片消息 | $dg/user/realtimecard/{DeviceId}/report|平台|用户|
       this.subtopic = `$dg/user/realtimecard${this.$route.query.deviceid}/report` // 设备实时数据topic
       this.router = this.$dgiotBus.router(location.href + this.$route.fullPath)

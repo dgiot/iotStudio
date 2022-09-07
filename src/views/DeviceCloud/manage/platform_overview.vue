@@ -313,83 +313,108 @@
                       size="mini"
                       @click="toggleFull()"
                     />
-                    <!--                    <bm-panorama-->
-                    <!--                      anchor="BMAP_ANCHOR_TOP_LEFT"-->
-                    <!--                      :offset="{ width: 500, height: 0 }"-->
-                    <!--                    />-->
                     <bm-overview-map :is-open="true" />
                     <bm-scale :offset="{ width: 260, height: 0 }" />
                     <bm-city-list :offset="{ width: 330, height: 0 }" />
-                    <!--                    <bm-map-type-->
-                    <!--                      anchor="BMAP_ANCHOR_TOP_LEFT"-->
-                    <!--                      :map-types="['BMAP_NORMAL_MAP', 'BMAP_HYBRID_MAP']"-->
-                    <!--                      :offset="{ width: 400, height: 0 }"-->
-                    <!--                    />-->
+                    <bm-map-type
+                      anchor="BMAP_ANCHOR_TOP_LEFT"
+                      :map-types="['BMAP_NORMAL_MAP', 'BMAP_HYBRID_MAP']"
+                      :offset="{ width: 400, height: 0 }"
+                    />
                   </bm-control>
-                  <!--                  <div-->
-                  <!--                    v-for="position in getPosition(_tableData)"-->
-                  <!--                    v-show="sizeZoom <= 8"-->
-                  <!--                    :key="position.objectId"-->
-                  <!--                  >-->
-                  <!--                    <bm-point-collection-->
-                  <!--                      v-if="sizeZoom <= 8"-->
-                  <!--                      color="red"-->
-                  <!--                      :points="[position]"-->
-                  <!--                      :shape="-->
-                  <!--                        position.icon == 1-->
-                  <!--                          ? 'BMAP_POINT_SHAPE_STAR'-->
-                  <!--                          : 'BMAP_POINT_SHAPE_WATERDROP'-->
-                  <!--                      "-->
-                  <!--                      size="BMAP_POINT_SIZE_SMALL"-->
-                  <!--                      @click="_goDevice(position)"-->
-                  <!--                    />-->
-                  <!--                  </div>-->
                   <bml-marker-clusterer :average-center="true">
                     <div v-for="(item, index) in _tableData" :key="index">
                       <bm-marker
-                        animation="BMAP_ANIMATION_BOUNCE"
-                        :dragging="true"
+                        :ref="'bm_info' + index"
                         :icon="{
                           url:
                             item.icon == 1
                               ? icoPath.icoPath1
                               : icoPath.icoPath2,
-                          size: { width: 70, height: 70 },
+                          size: { width: 100, height: 100 },
                         }"
                         :position="{
                           lng: item.location.longitude,
                           lat: item.location.latitude,
                         }"
-                        @click="_goDevice(item, index)"
+                        @click="showDeatils(item, index)"
                       >
-                        <bm-label
-                          :content="item.name"
-                          :label-style="{ color: 'red', fontSize: '12px' }"
-                          :offset="{ width: 15, height: 6 }"
-                          @click="_goDevice(item, index)"
-                        />
+                        <bm-info-window
+                          :key="index"
+                          :position="{
+                            lng: item.location.longitude,
+                            lat: item.location.latitude,
+                          }"
+                          :show="item.show"
+                          style="display: none"
+                          @close="closeInfo(item, index)"
+                        >
+                          <div
+                            v-show="deviceInfo"
+                            class="deviceInfo"
+                            style="width: 400px"
+                          >
+                            <el-row :gutter="24">
+                              <el-col :span="6">
+                                <el-image
+                                  :preview-src-list="[`${productIco}`]"
+                                  :src="productIco"
+                                  style="width: 100px; height: 100px"
+                                >
+                                  <div slot="error" class="image-slot">
+                                    <i
+                                      class="el-icon-picture-outline empty"
+                                      style="width: 100px; height: 100px"
+                                    ></i>
+                                  </div>
+                                </el-image>
+                              </el-col>
+                              <el-col :span="18">
+                                <p :title="deviceInfo.name">
+                                  {{ $translateTitle('equipment.devicename') }}
+                                  ： {{ deviceInfo.name }}
+                                </p>
+                                <p>
+                                  {{ $translateTitle('equipment.address') }}
+                                  ： {{ deviceInfo.address }}
+                                </p>
+                                <p>
+                                  {{
+                                    $translateTitle('zetadevices.devicestatus')
+                                  }}
+                                  ：
+                                  <el-link
+                                    :type="
+                                      deviceInfo.status === 'ONLINE'
+                                        ? 'success'
+                                        : 'warning'
+                                    "
+                                    :underline="false"
+                                  >
+                                    {{
+                                      deviceInfo.status === 'ONLINE'
+                                        ? $translateTitle('zetadevices.online')
+                                        : $translateTitle('zetadevices.offline')
+                                    }}
+                                  </el-link>
+                                </p>
+                                <p>
+                                  <el-link
+                                    type="primary"
+                                    @click="goLink('real-time', item)"
+                                  >
+                                    {{
+                                      $translateTitle(
+                                        'product.Device Information'
+                                      )
+                                    }}
+                                  </el-link>
+                                </p>
+                              </el-col>
+                            </el-row>
+                          </div>
+                        </bm-info-window>
                       </bm-marker>
-                      <!--                    <bm-marker-->
-                      <!--                      :ref="'bm_info' + index"-->
-                      <!--                      :icon="{-->
-                      <!--                          url:-->
-                      <!--                            item.icon == 1-->
-                      <!--                              ? icoPath.icoPath1-->
-                      <!--                              : icoPath.icoPath2,-->
-                      <!--                          size: { width: 100, height: 100 },-->
-                      <!--                        }"-->
-                      <!--                      :position="{-->
-                      <!--                          lng: item.location.longitude,-->
-                      <!--                          lat: item.location.latitude,-->
-                      <!--                        }"-->
-                      <!--                      @click="showDeatils(item, index)"-->
-                      <!--                    >-->
-                      <!--                      <bm-label-->
-                      <!--                        :content="item.name"-->
-                      <!--                        :label-style="{ color: 'red', fontSize: '24px' }"-->
-                      <!--                        :offset="{ width: -35, height: 30 }"-->
-                      <!--                      />-->
-                      <!--                    </bm-marker>-->
                     </div>
                   </bml-marker-clusterer>
                   <bm-navigation anchor="BMAP_ANCHOR_TOP_RIGHT" />
@@ -626,7 +651,7 @@
   import { postTopic, deleteTopic } from '@/api/Dlink'
   import icoPath1 from '../../../../public/assets/images/Device/1.png'
   import icoPath2 from '../../../../public/assets/images/Device/2.png'
-  // import { queryProduct } from '@/api/Product'
+  import { queryProduct } from '@/api/Product'
   import { getDevice } from '@/api/Device'
   import { mapGetters, mapMutations } from 'vuex'
   import { getToken } from '@/api/Menu'
@@ -916,7 +941,6 @@
           p.lng = p.location.longitude
           p.lat = p.location.latitude
         })
-        console.log(position)
         return position
       },
       /**
@@ -1025,28 +1049,28 @@
         return name
       },
       closeInfo(item, index) {
-        // item.show = false
+        item.show = false
         // this.$refs[`bm_info${index}`][0].$children[0].show = false
         // this.set_tableData(_.merge([], this._tableData))
         // this.$forceUpdate()
       },
       async showDeatils(row, index) {
-        // const loading = this.$baseColorfullLoading(0)
-        // this.productIco = ''
-        // this.deviceInfo = await getDevice(row.objectId)
-        // const { results = [{ icon: '' }] } = await queryProduct({
-        //   count: 'objectId',
-        //   order: '-updatedAt',
-        //   keys: 'icon',
-        //   where: {
-        //     objectId: this.deviceInfo.product.objectId,
-        //   },
-        // })
-        // this.productIco = results[0].icon
-        // row.show = true
-        //
-        // // dgiotlog.log(this.productIco, row, row.show, index, this.deviceInfo)
-        // // 延时加载
+        const loading = this.$baseColorfullLoading(0)
+        this.productIco = ''
+        this.deviceInfo = await getDevice(row.objectId)
+        const { results = [{ icon: '' }] } = await queryProduct({
+          count: 'objectId',
+          order: '-updatedAt',
+          keys: 'icon',
+          where: {
+            objectId: this.deviceInfo.product.objectId,
+          },
+        })
+        this.productIco = results[0].icon
+        loading.close()
+        this.$refs[`bm_info${index}`][0].$children[0].show = true
+        // dgiotlog.log(this.productIco, row, row.show, index, this.deviceInfo)
+        // 延时加载
         // setTimeout(() => {
         //   loading.close()
         //   dgiotlog.info(this.$refs[`bm_info${index}`])
@@ -1087,19 +1111,9 @@
       // },
       mqttMsg(e) {
         let mqttMsg = isBase64(e) ? Base64.decode(e) : e
-        // // dgiotlog.log(destinationName, mqttMsg, 'mqttMsg')
         let mqttMsgValue = JSON.parse(mqttMsg).value
         let key = JSON.parse(mqttMsg).vuekey
-        console.log(mqttMsg, `收到${key}消息`)
-        // this.printQueryInfo(mqttMsgValue, mqttMsg)
-        // this.loadingConfig[`${key}`] = true
-        // this.$baseNotify(
-        //   '',
-        //   `${this.$translateTitle('websocket.messages')}${key}`
-        // )
-        // // dgiotlog.log(key, mqttMsgValue, JSON.parse(mqttMsg))
-        // console.clear()
-
+        //console.log(`收到${key}消息`)
         switch (key) {
           case 'app_count':
             this.app_count = mqttMsgValue.count
@@ -1147,12 +1161,8 @@
                   : item.icon === '1'
                   ? 'blue'
                   : 'red'
-              // item.iconUrl = require(`@/assets/images/Device/${
-              //   item.icon
-              // }.png?${new Date().getTime()}\``)
             })
-            console.error('baiduMap')
-            console.log(this.tableData)
+            // console.log('tableData', this.tableData)
             this.set_tableData(this.tableData)
             this.$forceUpdate()
             break
@@ -1229,8 +1239,8 @@
           this.$dgiotBus.getTopicKeyBypage('dashboard'),
           (res) => {
             const { payloadString } = res
-            console.log('home page topic data', payloadString)
-            console.log(res)
+            // console.log('home page topic data', payloadString)
+            // console.log(res)
             this.mqttMsg(payloadString)
           }
         )
@@ -1336,35 +1346,20 @@
       },
       goDevice(name) {
         this.$router.push({
-          path: '/dashboard/device',
+          path: '/dashboard/devicelist',
           query: {
             product: name,
           },
         })
-        console.log(window.errRoute)
-        if (window?.errRoute?.name)
-          this.$router.push({
-            path: '/dashboard/devicelist',
-            query: {
-              product: name,
-            },
-          })
       },
       _goDevice(item) {
         this.$router.push({
-          path: 'dashboard/device',
+          path: '/roles/editdevices',
           query: {
-            devicename: item.name,
+            deviceid: item.objectId,
+            ischildren: 'false',
           },
         })
-        console.log(window.errRoute)
-        if (window?.errRoute?.name)
-          this.$router.push({
-            path: '/dashboard/devicelist',
-            query: {
-              devicename: item.name,
-            },
-          })
       },
       goLink(type, item) {
         switch (type) {

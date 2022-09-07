@@ -889,7 +889,6 @@
         this.Product = results
       },
       async fetchData(args = {}) {
-        console.log(this.created % 2, this.created, 'this.created')
         if (!args.limit) {
           args = this.queryForm
         }

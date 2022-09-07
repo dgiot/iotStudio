@@ -312,7 +312,6 @@
               this.$emit('editParameters', this.ruleForm, this.thingType)
             }
           } else {
-            console.log('error submit!!')
             return false
           }
         })

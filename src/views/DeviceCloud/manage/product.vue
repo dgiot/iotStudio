@@ -1818,8 +1818,6 @@
             })
             break
         }
-
-        console.log(product, type)
       },
       handleSizeChange(val) {
         this.queryForm.limit = val
@@ -1904,8 +1902,6 @@
         }
         this.v.name ? (params.where.name = { $regex: this.v.name }) : ''
         args?.categorys ? (params.where.category = { $in: args.categorys }) : ''
-        console.log(params)
-        console.log('params')
         try {
           const { results = [], count = 0 } = await queryProductTemplet(params)
           // loading.close()
@@ -1975,7 +1971,6 @@
         }
       },
       delRow(index, rows) {
-        console.log(index, rows)
         this.dictTempForm.params.splice(index, 1)
         // this.onJsonSave("dictTempForm");
       },
@@ -2237,7 +2232,6 @@
     // 选择产品模板
     async chooseTemplate(row) {
       this.selectedRow = row
-      console.log(row)
       // const res = await this.getcategoryname(row.category)
       this.$set(
         this.form,
@@ -2254,7 +2248,6 @@
       // try {
       //   const res = await this.getcategoryname(row.category)
       // }catch (e) {
-      //   console.log(e)
       //   this.$message({
       //     type:'error',
       //     message:e,
@@ -2262,7 +2255,6 @@
       //   })
       // }
       this.cascaderDrawer = !this.cascaderDrawer
-      console.log('select', row)
     },
     async getcategoryname(category) {
       const {name} = await getCategory(category.parent.objectId)
@@ -2498,9 +2490,7 @@
       if (row.icon) {
         this.imageUrl = row.icon
       }
-
         // this.form.relationApp = this.currentDepartment.name
-        console.log('row', row)
         dgiotlog.log('form', this.form)
       },
       async categorytree() {
@@ -2593,12 +2583,6 @@
               setAcl['*'] = {
                 read: true,
               }
-              console.clear()
-              console.log('this.form', this.form)
-              console.log(
-                this.form.config.checkList,
-                'this.form.config.checkList'
-              )
               const addparams = {
                   productSecret: productSecret,
                   ACL: setAcl,
@@ -2612,7 +2596,6 @@
               dgiotlog.log('createProduct', params)
               this.createProduct(params)
             } else {
-              console.log('editProduct', initparams)
               delete initparams.category
               delete initparams.producttemplet
               delete initparams.thing // 修改产品时 不修改物模型

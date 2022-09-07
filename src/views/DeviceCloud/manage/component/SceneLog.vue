@@ -380,8 +380,6 @@
         //   ttl: 1000 * 60 * 60 * 3,
         // })
         this.$dgiotBus.$off( this.subtopic)
-        console.log(this.$mqttInfo)
-        console.warn('订阅mqtt', this.subtopic)
         this.$dgiotBus.$on(`${ this.subtopic}`, (Msg) => {
           if (Msg.payloadString) {
             this.scroketMsg.unshift(JSON.parse(Msg.payloadString))

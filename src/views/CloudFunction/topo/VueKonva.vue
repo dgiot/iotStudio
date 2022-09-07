@@ -235,7 +235,6 @@
       removeShape(node) {
         let _this = this
         const Layer = _this.stage.find('Layer')[0]
-        console.log('删除的节点', node)
         var Image = _this.stage.find('Image')
         var tweens = []
         for (var n = 0; n < tweens.length; n++) {
@@ -246,8 +245,6 @@
           Image.each((shape) => {
             console.log('图片相关', shape)
             if (shape.attrs.id == node.attrs.id) {
-              console.log(shape, 'shape.target 找到了这个node 节点')
-              console.log(node, 'shape.target 找到了这个node 节点')
               shape.remove()
               shape.destroy()
               node.remove()
@@ -449,7 +446,6 @@
         // console.log('11111111')
         await putProduct(productid, params)
           .then((res) => {
-            console.log(res, '产品组态更新成功')
             // this.handleCloseSub()
             this.$message({
               showClose: true,
@@ -484,21 +480,16 @@
           // this.mqttMsg(payload)
           let decodeMqtt
           let updataId = []
-          console.log('收到消息', Msg)
           if (!isBase64(Msg)) {
-            console.log('非base64数据类型')
             return
           } else {
             decodeMqtt = JSON.parse(Base64.decode(Msg))
-            console.log('消息解密消息', decodeMqtt)
           }
 
-          console.log(decodeMqtt.konva)
           const Shape = decodeMqtt.konva
           // apply transition to all nodes in the array
           // Text.each(function (shape) {
           const Text = _this.stage.find('Text')
-          console.log(Text)
           const tweens = []
           for (var n = 0; n < tweens.length; n++) {
             tweens[n].destroy()
@@ -507,8 +498,6 @@
           Shape.each((i) => {
             Text.each((shape) => {
               if (i.id == shape.attrs.id) {
-                console.log('更新节点', i)
-                console.log(shape)
                 shape.text(i.text)
                 tweens.push(
                   new Konva.Tween({
@@ -523,14 +512,8 @@
             })
           })
           if (updataId) {
-            console.log('以下组态id未更新', updataId)
           }
           _this.stage.batchDraw()
-          console.log('konva数据更新成功')
-          // _this.updataProduct(this.productid)
-
-
-
         })
 
         // Websocket.add_hook(channeltopic, (Msg) => {
@@ -597,9 +580,7 @@
           retained: true,
           qos: 2,
         }
-        console.log('sendInfo', sendInfo)
         if (_this.$refs.topoheader) {
-          console.log('订阅mqtt')
           _this.$refs.topoheader.handleCloseSub(sendInfo)
         }
         const {
@@ -619,13 +600,11 @@
           where: { objectId: _this.$route.query.productid },
         })
         _this.productconfig = results[0]
-        console.log(_this.productconfig)
         if (message == 'SUCCESS') {
           // console.log(this.$refs['edrawer'].$refs, 'edrawer')
           _this.$refs['operation']
             ? (_this.$refs['operation'].productconfig = results[0])
             : console.log(' _this.$refs[\'operation\']', _this.$refs['operation'])
-          console.log(data.Stage.attrs.id)
           _this.globalStageid = data.Stage.attrs.id
           _this.createKonva(data, _this.globalStageid, 'create')
           _this.paramsconfig = { konva: data }
@@ -635,7 +614,6 @@
       },
       // js 绘制
       createKonva(data, globalStageid, type) {
-        console.log('type', type)
         let Stage
         let _this = this
         if (type != 'create') {
@@ -643,8 +621,6 @@
         } else {
           Stage = data.Stage
         }
-        console.log(data)
-        console.log(Stage.attrs.height, Stage.attrs.width, '450')
         Stage.attrs.height = _this.stageConfig.height
         Stage.attrs.width = _this.stageConfig.width
         console.log(Stage.attrs.height, Stage.attrs.width, '453')

@@ -351,7 +351,6 @@
       }),
       async featUnit() {
         const { UnifyUnitSpecsDTO = [] } = await getDlinkJson('Unit')
-        console.info(UnifyUnitSpecsDTO)
       },
       handleEdit(row) {
         this.$refs['edit'].showEdit(row)

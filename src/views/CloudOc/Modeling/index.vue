@@ -152,7 +152,6 @@
           },
         }
         const { results } = await queryDictTemp(params)
-        console.log('模板', results)
         this.dict = results
       },
       async fetchData() {
@@ -177,7 +176,6 @@
         // this.listLoading = false
       },
       modelToDetail(item) {
-        console.log(item)
         // return
         this.$router.push({
           path: '/oc/Modeling/modeldetail',
@@ -205,9 +203,7 @@
               parent: this.parent,
               tempname: this.form.tempname,
             }
-            console.log('部门', params)
             postRole(params).then((res) => {
-              console.log('result', res)
               this.fetchData()
               this.drawer = !this.drawer
             })

@@ -187,7 +187,6 @@ export default {
           canvas.layer.add(simpleText)
         })
       } catch (error) {
-        console.log(error)
         this.$baseMessage(
           this.$translateTitle('alert.Data request error') + `${error}`,
           'error',
@@ -211,7 +210,6 @@ export default {
         this.evidenceDialog = false
         this.auditDialog = false
       } catch (error) {
-        console.log(error)
         this.$baseMessage(
           this.$translateTitle('alert.Data request error') + `${error}`,
           'error',
@@ -228,14 +226,12 @@ export default {
      * @Description:
      */
     async saveEvidences(objectId, index, row) {
-      console.log(objectId, index, row)
       try {
         const loading = this.$baseColorfullLoading()
         const params = {
           original: row.original,
         }
         const res = await putEvidence(objectId, params)
-        console.log(res)
         this.$baseMessage(
           this.$translateTitle('alert.Data request successfully'),
           'success',
@@ -243,7 +239,6 @@ export default {
         )
         loading.close()
       } catch (error) {
-        console.log(error)
         this.$baseMessage(
           this.$translateTitle('alert.Data request error') + `${error}`,
           'error',
@@ -272,7 +267,6 @@ export default {
         )
         loading.close()
       } catch (error) {
-        console.log(error)
         this.$baseMessage(
           this.$translateTitle('alert.Data request error') + `${error}`,
           'error',
@@ -341,7 +335,6 @@ export default {
           file: file,
           filename: `${this.evidenceid}${fileType}`,
         }
-        console.warn('Evidence', Evidence)
         var formData = new FormData()
         for (let key in Evidence) {
           formData.append(key, Evidence[key])
@@ -446,7 +439,6 @@ export default {
         const { results = [] } = await queryDevice(params)
         if (results?.[0]?.devaddr) {
           this.ukey = results[0].devaddr
-          console.info('-----------------this.ukey', this.ukey)
         } else {
           this.$baseMessage(
             this.$translateTitle(
@@ -458,7 +450,6 @@ export default {
         }
         loading.close()
       } catch (error) {
-        console.log(error)
         this.$baseMessage(
           this.$translateTitle('alert.Data request error') + `${error}`,
           'error',
@@ -560,7 +551,6 @@ export default {
     async headerTask(item, index) {
       try {
         const loading = this.$baseColorfullLoading()
-        console.log(item, index)
         const query = JSON.parse(JSON.stringify(this.$route.query))
         query.taskid = item.objectId
         query.suite = 1
@@ -573,7 +563,6 @@ export default {
         this.queryTask(query.taskid)
         this.queryEvidence(query.taskid)
       } catch (error) {
-        console.log(error)
         this.$baseMessage(
           this.$translateTitle('alert.Data request error') + `${error}`,
           'error',
@@ -625,7 +614,6 @@ export default {
         // )
         // loading.close()
       } catch (error) {
-        console.log(error)
         this.$baseMessage(
           this.$translateTitle('alert.Data request error') + `${error}`,
           'error',
@@ -665,7 +653,6 @@ export default {
         )
         loading.close()
       } catch (error) {
-        console.log(error)
         this.$baseMessage(
           this.$translateTitle('alert.Data request error') + `${error}`,
           'error',
@@ -720,7 +707,6 @@ export default {
         )
         loading.close()
       } catch (error) {
-        console.log(error)
         this.$baseMessage(
           this.$translateTitle('alert.Data request error') + `${error}`,
           'error',

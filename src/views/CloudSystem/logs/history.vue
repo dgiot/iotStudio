@@ -361,13 +361,6 @@
               // },
             },
           }
-          console.log(this.queryForm.searchDate)
-          console.log({
-            time: {
-              $get: moment(this.queryForm.searchDate[0]).format('x'),
-              // $lte: moment(this.queryForm.searchDate[1]).format('x'),
-            },
-          })
           const { results = [], count: total = 0 } = await queryLog(params)
           results.forEach((item) => {
             item.time = this.$moment(

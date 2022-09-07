@@ -319,7 +319,6 @@
         this.properties.data.properties.forEach((item) => {
           data.data[item.propertyCode] = item.propertyValue
         })
-        console.log(data)
         if (this.clickRow.objectId) {
           await putDict(this.clickRow.objectId, { data: data.data })
         } else {
@@ -351,7 +350,6 @@
       async showDiloog(item) {
         if (item.data.properties) {
           await this.properties.data.properties.forEach((i) => {
-            console.log(i)
             i.prop = {
               label: i.propertyDesc,
               prop: i.propertyCode,
@@ -365,7 +363,6 @@
             i[i.propertyCode] = ''
             i.propertyValue = ''
           })
-          console.log(this.properties.data.properties)
           this.formDialog = true
         } else
           await this.$baseMessage(
@@ -389,7 +386,6 @@
             parent: item.objectId,
           },
         })
-        console.log(results)
         this.total = count
         this.MasterData = results
         if (!_.isEmpty(properties.data.properties)) {
@@ -494,7 +490,6 @@
           parent: 'parent',
         }
         const results = await post_tree(params)
-        console.log(results)
       },
       async fetchData() {
         this.masterTree()
@@ -509,7 +504,6 @@
         this.queryForm.name
           ? (params.where.title = { $regex: this.queryForm.name })
           : ''
-        console.info(params)
         const { results } = await queryDict(params)
         this.list = results
         if (results.length > 0) {

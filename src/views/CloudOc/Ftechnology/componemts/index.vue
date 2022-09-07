@@ -901,7 +901,6 @@
        * @Description:
        */
       async busInfo(type, params) {
-        console.log(type, params)
         switch (type) {
           case 'view':
             this.$router.push({
@@ -973,7 +972,6 @@
        * @Description:
        */
       async handleClick(tab, event) {
-        console.log(tab, event)
         try {
           this.fetchData()
           switch (tab.name) {
@@ -989,7 +987,6 @@
               break
           }
         } catch (error) {
-          console.log(error)
           this.$baseMessage(
             this.$translateTitle('alert.Data request error') + `${error}`,
             'error',

@@ -348,7 +348,6 @@
       })
       this.$dgiotBus.$off('nodeEdit')
       this.$dgiotBus.$on('nodeEdit', async (node) => {
-        console.log('接收到编辑节点消息', node)
         this.editNode = node
         this.editFlag = true
         // this.editNode.setAttrs({
@@ -459,7 +458,6 @@
             width: Number(this.editForm.width),
             height: Number(this.editForm.height),
           }
-          console.log('这是修改背景大小', editForm)
           this.editNode.setAttrs(editForm)
           return
         }
@@ -515,21 +513,15 @@
         }
         this.$dgiotBus.$off('$dg/user/konva')
         this.$dgiotBus.$on('$dg/user/konva', (Msg) => {
-          console.log('这是组态消息', Msg)
+          //console.log('这是组态消息', Msg)
           if (Msg.payloadString) {
             let decodeMqtt = null
-            // let updataId = []
-            // console.log('非base64数据类型', JSON.parse(Msg.payloadString))
             if (!isBase64(Msg.payloadString)) {
-              console.log('非base64数据类型', JSON.parse(Msg.payloadString))
               decodeMqtt = JSON.parse(Msg.payloadString)
             } else {
               decodeMqtt = JSON.parse(Base64.decode(Msg.payloadString))
-              console.log('消息解密消息', decodeMqtt)
             }
             // decodeMqtt = Msg.payloadString
-            console.log('decodeMqtt.konva', canvas.stage)
-            console.log(decodeMqtt)
             // const Shape = decodeMqtt.konva
             // const Text = canvas.stage.find('Text')
             // console.log('text', Text)
@@ -548,7 +540,6 @@
             //   decodeMqtt.id,
             //   decodeMqtt.params
             // )
-            console.log('infokonvaUtils', konvaUtils)
             //  node.find(nodeid)[0].setAttrs(params)
             return
           }
@@ -565,10 +556,7 @@
             'success',
             'dgiot-hey-message-success'
           )
-          console.error('this.viewInfo.data', this.viewInfo.data)
-        } catch (e) {
-          console.log(e)
-        }
+        } catch (e) {}
       },
       async handleKonva() {
         let _this = this
@@ -640,24 +628,17 @@
                 key: this.$route.query.productid,
               }
               const res = await postView(params)
-              console.log('这是新建', res)
               params.objectId = res.objectId
               this.viewInfo = params
-              console.log('这是konva', this.viewInfo.data)
               await _this.initKonva({
                 data: this.viewInfo.data.konva.Stage,
                 id: 'kevCurrent',
               })
             } else {
-              console.log('查看params', param)
               _this.$baseMessage(
                 '暂无组态。显示默认组态',
                 'info',
                 'dgiot-hey-message-error'
-              )
-              console.log(
-                'topo info msg 请求数据没有组态 就设置这个组态为默认',
-                _this.Stage
               )
               await _this.initKonva({
                 data: _this.initKonva,
@@ -671,7 +652,6 @@
             data: this.Stage,
             id: 'kevCurrent',
           })
-          console.log('topo info msg 组态请求出错', e)
           loading.close()
         }
         setTimeout(() => {

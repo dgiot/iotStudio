@@ -23,7 +23,7 @@
     type: 'page',
     body: {
       type: 'tpl',
-      tpl: 'Hello World!',
+      tpl: ' ',
     },
   }
   export default {

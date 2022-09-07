@@ -384,7 +384,6 @@
        */
       showDetail(row) {
         this.preDialog = true
-        console.log(row)
         this.msg = JSON.stringify(row, null, 2)
         this.refreshFlag = moment(new Date()).valueOf()
       },

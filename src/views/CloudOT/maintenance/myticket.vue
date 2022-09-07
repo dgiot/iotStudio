@@ -597,18 +597,12 @@
           return this.$store.state.global._deviceFlag
         },
         set(v) {
-          console.log(
-            'this.$store.state.global._deviceFlag',
-            this.$store.state.global._deviceFlag,
-            v
-          )
           this.set_deviceFlag(v)
         },
       },
       aclObj() {
         let aclObj = {}
         this.role.map((e) => {
-          console.log(e.name, '')
           aclObj[`${'role' + ':' + e.name}`] = {
             read: true,
             write: true,
@@ -619,13 +613,11 @@
     },
     watch: {
       _deviceFlag: function (e) {
-        console.log(e)
         if (e == false) {
           this.fetchData()
         }
       },
       'queryForm.status': function (e) {
-        console.log(e)
         if (e != '') {
           this.queryForm.statusFlag = true
         } else {
@@ -633,11 +625,7 @@
         }
       },
     },
-    created() {
-      console.log('role', this.role)
-
-      console.log('this.aclObj', this.aclObj)
-    },
+    created() {},
     mounted() {
       // this.fetchData()
       this.handleCreated('created')
@@ -652,7 +640,6 @@
       channelCurrentChange(val) {
         // this.total = 0
         if (val <= 1) this.total = 0
-        console.log(val)
         this.start = (val - 1) * this.length
         this.fetchData()
       },
@@ -666,12 +653,10 @@
           path: 'ticket',
           filename: 'ticket' + `${moment().format('x')}.${extension}`,
         }
-        console.log('extension', params)
         UploadImg(params)
           .then((res) => {
             if (res.data.url) {
               this.form.photo.push(res.data.url)
-              console.log('上传成功的回调', res.data.url, this.form.photo)
             } else {
               console.log('no up url ', res)
             }
@@ -754,7 +739,6 @@
         const loading = this.$baseColorfullLoading()
         const res = await create_object('Maintenance', params)
         loading.close()
-        console.log('res', res)
         this.fetchData()
         this.dialogFormVisible = false
       },
@@ -766,7 +750,6 @@
         val.forEach((item) => {
           this.selectedList.push(item)
         })
-        console.log(this.selectedList)
       },
       ...mapMutations({
         set_deviceFlag: 'global/set_deviceFlag',
@@ -781,7 +764,6 @@
        * @return {Promise<void>}
        */
       async batchExport(row) {
-        console.log(row)
         try {
           const params = {
             results: [],
@@ -822,7 +804,6 @@
             })
           })
         }
-        console.log(batchParams, 'batchParams')
         this.$baseConfirm(
           this.$translateTitle(
             'Maintenance.Are you sure you want to delete the current item'
@@ -865,7 +846,6 @@
             break
           default:
             return type
-            console.log('other', type)
         }
       },
       showInfo(row, ishard = false, isfooter = true) {
@@ -906,14 +886,11 @@
         this.Product = results
       },
       async fetchData(args = {}) {
-        console.log(this.created % 2, this.created, 'this.created')
         if (!args.limit) {
           args = this.queryForm
         }
-        console.log(this.queryForm, 'queryForm', args)
         this.listLoading = false
         const loading = this.$baseColorfullLoading()
-        console.log(this.queryForm.status, this.queryForm.status == '')
         let params = {
           order: args.order,
           skip: this.start,
@@ -954,7 +931,6 @@
         }
         await query_object('Maintenance', params)
           .then((res) => {
-            console.log(res, 'res')
             const { results = [], count = 0 } = res
             this.list = results
             this.list.forEach((e) => {
@@ -972,10 +948,8 @@
             this.$baseMessage(e, 'error', 'dgiot-hey-message-error')
             loading.close()
           })
-        console.log(this.list, 'this.list')
       },
       async prodChange(e) {
-        console.log(e)
         this.Device = []
         this.Product.map((p) => {
           if (p.objectId == e) {
@@ -987,7 +961,6 @@
           where: { product: e },
         }
         const { results } = await queryDevice(params)
-        console.log(results, '设备')
         this.Device = results
       },
       deviceChange(e) {
@@ -996,7 +969,6 @@
             this.form.devicename = p.name
           }
         })
-        console.log(this.form.productname, this.form.devicename)
       },
       dispatch() {
         this.$refs.changeinfo.$refs.step1.dispatchUser()
@@ -1014,7 +986,6 @@
           status: 0,
           info: info,
         }
-        console.log(objectId, params)
         const res = await update_object('Maintenance', objectId, params)
         if (res.updatedAt) {
           this.set_deviceFlag(false)
@@ -1032,7 +1003,6 @@
           status: 0,
           info: info,
         }
-        console.log(objectId, params)
         const res = await update_object('Maintenance', objectId, params)
         if (res.updatedAt) {
           this.set_deviceFlag(false)

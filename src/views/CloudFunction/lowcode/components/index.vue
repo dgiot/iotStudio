@@ -62,7 +62,6 @@
         const amisEnv = {}
         const { type, data, objectId, class: _class } = params
         if (_class == 'Device') {
-          console.log(data)
           // const { headers = { store: 'localStorage' } } = data.initApi
           // 设置amis中的变量参数。
           // 目前只设置了parse_objectid
@@ -78,7 +77,6 @@
             `%c amis env`,
             'color:#009a61; font-size: 28px'
           )
-          console.log('amisEnv', amisEnv)
           console.groupEnd()
         }
         this.designLowCode(type, objectId, data)
@@ -127,9 +125,6 @@
        * @return {Promise<void>}
        */
       async designLowCode(type, objectId, data) {
-        console.log(type)
-        console.log(data)
-        console.log(objectId)
         this.code = data
         this.type = type
         this.objectId = objectId

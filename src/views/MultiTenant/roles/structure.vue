@@ -181,14 +181,6 @@
                       <div>{{ row.email }}</div>
                     </template>
                   </el-table-column>
-                  <!--                  <el-table-column :label="$translateTitle('user.department')">-->
-                  <!--                    <template #default="{ row }">-->
-                  <!--                      <div>-->
-                  <!--                        {{ row.departmentname || departmentname }}-->
-                  <!--                      </div>-->
-                  <!--                    </template>-->
-                  <!--                  </el-table-column>-->
-
                   <el-table-column
                     :label="$translateTitle('user.createdtime')"
                     :show-overflow-tooltip="true"
@@ -995,16 +987,11 @@
             cancelButtonText: '取消',
             type: 'warning',
           }).then(async () => {
-            // const data = {
-            //   department: this.curDepartmentId,
-            //   username: row.username,
-            // }
             const params = {
               department: this.currentDepartment.objectId,
               username: row.username,
             }
             const res = await EmployeeTurnover(params)
-            // this.$dgiotBus.$emit('asyncTreeData')
             if (res) {
               this.$message({
                 showClose: true,

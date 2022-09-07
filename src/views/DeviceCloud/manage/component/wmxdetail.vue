@@ -1309,7 +1309,6 @@
       },
     },
     async created() {
-      console.log('sizeform 表单值', this.sizeForm)
       if (this.sizeForm.type == 'bool') {
         this.$set(this.sizeForm, 'truevalue', 1)
         this.$set(this.sizeForm, 'falsevalue', 0)
@@ -1334,20 +1333,11 @@
     methods: {
       async queryProtocol() {
         const protocol = await getProtocol()
-        // console.log(protocol)
-        // // protocol做排序处理
-        // // protocol.forEach((p) => {
-        // //   for (let j in p.params) p.params = _.sortBy(p.params, ['order'])
-        // // })
-        // console.log(protocol)
         this.setProtocol(protocol)
       },
-      handleClick(tab) {
-        console.log(tab)
-      },
+      handleClick(tab) {},
       createColumn(tab) {
         this.dybaneucForms.unshift({})
-        console.log(tab)
       },
       getFromType(item, column, type) {
         var res = 'input'
@@ -1374,13 +1364,8 @@
             )
           }
         )
-        console.log(index, row)
       },
       dynamicTable(data, type, _table) {
-        console.log(
-          type,
-          'dynamicTabledynamicTabledynamicTabledynamicTabledynamicTabledynamicTabledynamicTabledynamicTabledynamicTabledynamicTable'
-        )
         this.tableName = data.showname
         var dybaneucForms = []
         this.colCum = { label: [], prop: [] }
@@ -1396,18 +1381,14 @@
           title[table[t].key] = table[t].zh
           arr[table[t].key] = table[t].default.label || table[t].default
           this.tableTitle = title
-          console.error(1298, table[t], t, arr)
-          console.error(1304, t, table[t], this.tableTitle)
         }
         if (type === '回显') {
-          console.error(1307, '回显', title)
           dybaneucForms = []
           _table.forEach((_itme, _tidx) => {
             arr = {}
             for (var t in title) {
               var _title = title[t]
               arr[t] = _itme[_title]
-              console.error(_itme[_title], t, _itme, 1312)
             }
             dybaneucForms.push(arr)
           })
@@ -1430,7 +1411,6 @@
         dybaneucForms.map((i) => {
           var arr = {}
           for (let j in i) {
-            console.log(j, i[j], title[j])
             arr[title[j]] = i[j]
           }
           obj.push(arr)
@@ -1439,7 +1419,6 @@
         return obj
       },
       async changeResource(val) {
-        console.error('changeResource', val)
         this.resource.changeData = {}
         // this.resource.arrlist = []
         // this.$nextTick(async () => {
@@ -1447,7 +1426,6 @@
         await this.resource.data.forEach((resource) => {
           if (resource.cType == val) {
             for (let k in resource.params) {
-              console.log(resource.params[k])
             }
             this.resource.changeData = resource
             // this.resource.arrlist = resource.arr
@@ -1455,16 +1433,13 @@
             this.resource.arrlist = _.sortBy(resource.arr, function (item) {
               return item.order //根据code对数据进行升序排序，若是降序则改成：return -item.code
             })
-            console.log(this.resource.arrlist, 'arrlist')
             this.resource.data = _.sortBy(this.protocol, function (item) {
               return item.order //根据code对数据进行升序排序，若是降序则改成：return -item.code
             })
             this.resource.arrlist.forEach((i) => {
-              console.error(i)
               this.resource.arrlist = _.sortBy(resource.arr, function (item) {
                 return item.order //根据code对数据进行升序排序，若是降序则改成：return -item.code
               })
-              console.log(this.resource.arrlist, 'arrlist')
               this.resource.data = _.sortBy(this.protocol, function (item) {
                 return item.order //根据code对数据进行升序排序，若是降序则改成：return -item.code
               })
@@ -1487,7 +1462,6 @@
         this.resource.data = _.sortBy(this.protocol, function (item) {
           return item.order //根据code对数据进行升序排序，若是降序则改成：return -item.code
         })
-        console.error(this.resource.data, 'data')
         this.resource.data.forEach((item, index) => {
           this.resource.data[index].arr = []
           this.resource.data[index].obj = {}
@@ -1505,7 +1479,6 @@
               }
             }
             this.resource.data[index].arr.push(item.params[key])
-            console.log(this.resource.data[index].arr)
           }
           this.resource.data[index].arr = _.sortBy(
             this.resource.data[index].arr,
@@ -1513,9 +1486,7 @@
               return item.order //根据code对数据进行升序排序，若是降序则改成：return -item.code
             }
           )
-          console.info(this.resource.data[index].arr, 'result order')
           this.resource.data[index].arr.map((_item) => {
-            console.log(_item)
             this.resource.data[index].obj[_item.showname] = _item?.default
               ?.value
               ? _item.default.value
@@ -1529,19 +1500,12 @@
               // 设置默认值
               dgiotlogger.info(_item.type, _item.enum, _item, 'set select')
           })
-          console.log(this.resource.data[index].arr)
-          console.info('this.resource.data', this.resource.data)
         })
-        console.info('this.resource.data', this.resource.data)
       },
       // 数据类型
-      changeGroup(type) {
-        console.log(type, this.sizeForm.type)
-      },
+      changeGroup(type) {},
       fileInfo(info) {
-        dgiotlog.log('========================', info)
         this.sizeForm.ico = info.path
-        console.log('========================path', this.sizeForm.ico)
       },
       uploadCkick(type) {
         this.upNodeType = type
@@ -1570,7 +1534,6 @@
       }),
       changeThing(item) {
         this.Type = 'showThing'
-        console.error(item)
         let that = this
         dgiotlog.log('this.sizeFormaaa', that.$refs.sizeForm.model.name)
         dgiotlog.log('item', item)
@@ -2007,7 +1970,6 @@
         obj.nobound = that.sizeForm.nobound
         obj.dis = item.dataForm.address
         obj.isdis = that.sizeForm.isdis
-        console.log('obj 1944', obj)
         that.setSizeForm(obj)
         this.$nextTick(async () => {
           await this.queryResource()
@@ -2016,49 +1978,40 @@
           this.resource.value = item.dataForm.protocol
           this.resource.disabled = item.dataForm.protocol.length ? true : false
           // this.changeResource(this.resource.value)
-          console.log(item.dataSource, 'item.dataSource')
           this.resource.arrlist =
             this.Type == 'showThing'
               ? item.dataSource
               : _.sortBy(item.dataSource, function (item) {
                   return item.order //根据code对数据进行升序排序，若是降序则改成：return -item.code
                 })
-          console.log(this.resource.arrlist, 'arrlist')
           this.$nextTick(() => {
             this.resource.data.forEach((resource, index) => {
               // resource[index].arr = []
               // resource[index].obj = {}
               if (this.resource.value === resource.cType) {
-                console.info(resource, 'success cType')
                 resource.arr.forEach((i) => {
                   if (i.allowCreate) {
                     this.dynamicTable(i, '回显', item.dataSource[i.showname])
                   }
                 })
-                console.info(item.dataSource, 'item.dataSource')
                 for (var o in item.dataSource) {
                   for (var j in resource.obj) {
                     if (o === j) resource.obj[o] = item.dataSource[j]
                   }
                 }
-                console.info(resource.obj, 'set resource.obj')
                 this.resource.addchannel = resource.obj
               }
               this.resource.changeData = item.dataSource
               if (resource.cType == item.dataForm.protocol) {
-                console.log(resource, 'success')
               }
             })
           })
-          console.log('refs sizeForm', this) // 子组件的实例
         })
       },
       wmxCurrentChange(val) {
-        console.log(this.wmxData)
         this.wmxstart = val
       },
       wmxSizeChange(val) {
-        console.log(this.wmxData)
         this.wmxstart = 1
         this.wmxPageSize = val
       },
@@ -2087,9 +2040,7 @@
         })
       },
       submitForm(formName) {
-        console.log(this.$refs.sizeForm, this.sizeForm)
         const table = this.dictParse(this.dybaneucForms, this.tableTitle)
-        console.log(table)
         this.$refs[formName].validate((valid) => {
           if (valid) {
             var sizeForm = this.sizeForm
@@ -2245,7 +2196,6 @@
             // 新增协议类型参数
             obj.dataForm.protocol = this.resource.value
             // 处理动态数据源
-            console.log(this.resource)
             var dataSource = {
               ...this.resource.addchannel,
             }
@@ -2263,8 +2213,6 @@
             obj.profile = this.sizeForm.profile
             // 删除掉icon 属性
             delete obj.dataForm.ico
-            console.log('submitForm obj', obj)
-            // console.log('resource.arrlist', this.resource)
             this.$emit('submitForm', obj)
             // this.$refs[formName].resetFields()
           } else {
