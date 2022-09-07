@@ -94,11 +94,11 @@
                 :rules1="[
                   {
                     required: true,
-                    message: '请选择所属应用',
+                    message: '请选择所属部门',
                     trigger: 'blur',
                   },
                 ]"
-                label="所属应用"
+                label="所属部门"
               > -->
               <el-form-item
                 :label="$translateTitle('application.applicationtype')"
@@ -112,7 +112,7 @@
               >
                 <!-- <el-input
                   v-model="addDictForm.applicationtText"
-                  placeholder="请选择所属应用"
+                  placeholder="请选择所属部门"
                   readonly
                 > -->
                 <el-input
@@ -1288,7 +1288,7 @@
             rolesObj: [
               {
                 required: true,
-                message: '请选择所属应用',
+                message: '请选择所属部门',
                 trigger: 'change',
               },
             ],
@@ -1474,7 +1474,7 @@
           rolesObj: [
             {
               required: true,
-              message: '请选择所属应用',
+              message: '请选择所属部门',
               trigger: 'change',
             },
           ],
@@ -1484,7 +1484,7 @@
       onSubmit(formName) {
         this.$refs[formName].validate((valid) => {
           if (!this.addDictForm.applicationtText) {
-            this.$message('请选择所属应用')
+            this.$message('请选择所属部门')
             return
           }
           if (valid) {

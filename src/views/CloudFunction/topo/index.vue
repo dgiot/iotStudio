@@ -416,6 +416,8 @@
       this.setTreeFlag(false)
     },
     async destroyed() {
+      console.log('this.topotopic', this.topotopic)
+      this.$dgiotBus.$off('$dg/user/konva')
       if (!_.isEmpty(localStorage.getItem('konvaStale')))
         localStorage.setItem('konvaStale', JSON.stringify(canvas.stageJson))
       await this.$unSubscribe(this.topotopic)

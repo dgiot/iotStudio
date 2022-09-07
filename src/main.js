@@ -15,6 +15,11 @@ import 'amis/lib/themes/ang.css'
 import 'amis/lib/helper.css'
 import 'amis/sdk/sdk.css'
 import 'amis-editor/dist/style.css'
+
+//列表自动滚动
+import scroll from 'vue-seamless-scroll'
+Vue.use(scroll)
+
 // import 'amis-core/lib/index.js'
 Vue.use(VueAmisSdk)
 Vue.use(VuePlugin)

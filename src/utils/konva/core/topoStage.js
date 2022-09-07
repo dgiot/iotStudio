@@ -331,6 +331,13 @@ const topoStage = {
         // layer.batchDraw()
         // stage.batchDraw()
       }
+      if (node.attrs.type == 'staticimage') {
+        let image = new Image()
+        node.setAttrs({
+          image: image,
+        })
+        image.src = node.attrs.src
+      }
       node.on('contextmenu', (e) => {
         canvas.contextmenu = e.target
         console.log('contextmenu', e.target)
