@@ -217,8 +217,6 @@
         this.$nextTick(() => {
           this.codes = canvas.stage.toJSON()
           this.drawerTopo = true
-          console.log('monacoCodeTopo 加载日志')
-          console.log(this.$refs.monacoCodeTopo)
           if (this.$refs.monacoCodeTopo.monacoEditor)
             this.$refs.monacoCodeTopo.monacoEditor
               .getAction('editor.action.formatDocument')
@@ -284,10 +282,8 @@
           this.setDraw(true)
           this.setFlag(v)
         }
-        console.info('我要绘制', v)
       },
       removeFn() {
-        console.log(this.graphNow)
         if (this.graphNow) {
           this.$dgiotBus.$emit('removeShape', this.graphNow)
         } else {
@@ -302,7 +298,6 @@
         // this.$emit('ImageTable', type)
       },
       destroyed() {
-        console.log('取消订阅mqtt')
         this.handleCloseSub()
       },
       fileInfo(info) {
@@ -318,9 +313,7 @@
           retained: true,
           qos: 2,
         }
-        Websocket.unsubscribe(sendInfo, (res) => {
-          console.log('取消订阅mqtt', res.msg)
-        })
+        Websocket.unsubscribe(sendInfo, (res) => {})
       },
       // 是否自动刷新mqtt消息
       stopsub(value) {
@@ -340,9 +333,7 @@
       },
       // 取消订阅mqtt
       handleCloseSub(sendInfo) {
-        Websocket.unsubscribe(sendInfo, (res) => {
-          console.log('取消订阅mqtt', res.msg)
-        })
+        Websocket.unsubscribe(sendInfo, (res) => {})
       },
     }, //如果页面有keep-alive缓存功能，这个函数会触发
   }

@@ -856,11 +856,6 @@
         this.queryForm.type
           ? (params.where.type = { $regex: this.queryForm.type })
           : ''
-        console.log(
-          'this.queryForm.status',
-          this.queryForm.status,
-          !_.isEmpty(this.queryForm.status)
-        )
         _.isNumber(this.queryForm.status)
           ? (params.where.status = this.queryForm.status)
           : ''

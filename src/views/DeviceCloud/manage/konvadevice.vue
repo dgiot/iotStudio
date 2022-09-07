@@ -65,7 +65,6 @@
     mounted() {
       this.vueComponents = []
       this.vueFlag = false
-      console.log('111111111')
       this.$dgiotBus.$off('vueComponent')
       this.$dgiotBus.$on('vueComponent', async (list, flag) => {
         this.vueComponents = list

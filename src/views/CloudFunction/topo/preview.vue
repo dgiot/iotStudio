@@ -159,10 +159,7 @@
             'success',
             'dgiot-hey-message-success'
           )
-          console.error('this.viewInfo.data', this.viewInfo.data)
-        } catch (e) {
-          console.log(e)
-        }
+        } catch (e) {}
       },
       async handleMqtt() {
         let _this = this
@@ -197,7 +194,6 @@
               '%c _getTopo',
               'color:#009a61; font-size: 28px; font-weight: 300'
             )
-            console.info('data ->\n', data)
             console.groupEnd()
             _this.$refs['operation']
               ? (_this.$refs['operation'].productconfig = results[0])
@@ -207,16 +203,11 @@
                 )
             _this.globalStageid = data.Stage.attrs.id
             _this.paramsconfig = { konva: data }
-            console.log(
-              'topo info msg 请求数据有组态 就设置这个组态为请求回来的组态',
-              data.Stage,
-              data.viewid
-            )
+
             if (data.viewid) {
               const res = await getView(data.viewid)
               this.viewInfo = res
             }
-            console.error(this.viewInfo)
             await _this.initKonva({
               data: data.Stage,
               id: 'kevCurrent',
@@ -227,10 +218,6 @@
               '暂无组态。显示默认组态',
               'info',
               'dgiot-hey-message-error'
-            )
-            console.log(
-              'topo info msg 请求数据没有组态 就设置这个组态为默认',
-              _this.Stage
             )
             await _this.initKonva({
               data: _this.initKonva,
@@ -243,7 +230,6 @@
             data: this.Stage,
             id: 'kevCurrent',
           })
-          console.log('topo info msg 组态请求出错', e)
           loading.close()
         }
         setTimeout(() => {
@@ -266,32 +252,20 @@
         _this.subtopic = `$dg/user/konva/${
           _this?.$route?.query?.deviceid || 'test'
         }/report`
-        console.warn('订阅mqtt', _this.subtopic)
         await _this.$subscribe(_this.subtopic)
-        console.log(_this.$mqttInfo)
         _this.handleMqttMsg()
       },
       handleMqttMsg() {
-        console.error('this.topicKey', this.$mqttInfo.topicKey)
         this.$dgiotBus.$off(this.$mqttInfo.topicKey)
         this.$dgiotBus.$on(this.$mqttInfo.topicKey, (Msg) => {
-          console.log(Msg)
           if (Msg.payloadString) {
             let decodeMqtt
             let updataId = []
             if (!isBase64(Msg.payloadString)) {
-              console.log('非base64数据类型', JSON.parse(Msg.payloadString))
               decodeMqtt = JSON.parse(Msg.payloadString)
             } else {
               decodeMqtt = JSON.parse(Base64.decode(Msg.payloadString))
-              console.log('消息解密消息', decodeMqtt)
             }
-            // decodeMqtt = Msg.payloadString
-            console.log('decodeMqtt.konva', canvas.stage)
-            console.log(decodeMqtt)
-            // const Shape = decodeMqtt.konva
-            // const Text = canvas.stage.find('Text')
-            // console.log('text', Text)
             decodeMqtt.forEach((item) => {
               var info = konvaUtils.putNode(
                 canvas.stage,
@@ -299,45 +273,8 @@
                 item.params,
                 item.type
               )
-              // canvas.stage.find(item.id)[0].setAttrs(item.params)
             })
-            // var info = konvaUtils.putNode(
-            //   canvas.stage,
-            //   decodeMqtt.id,
-            //   decodeMqtt.params
-            // )
-            console.log('infokonvaUtils', konvaUtils)
-            //  node.find(nodeid)[0].setAttrs(params)
             return
-            // const tweens = []
-            // for (var n = 0; n < tweens.length; n++) {
-            //   tweens[n].destroy()
-            // }
-            // Shape.forEach((i) => {
-            //   // 修改mqtt傳入的node節點值
-            //   // konvaUtils.putNode(i, { text: i.text })
-            //   // canvas.stage.findOne('#0765bee775_agreementstate_text')
-            //   Text.forEach((shape) => {
-            //     if (i.id == shape.attrs.id) {
-            //       console.log('更新节点', i)
-            //       console.log(shape)
-            //       shape.text(i.text)
-            //       tweens.push(
-            //         new Konva.Tween({
-            //           node: shape,
-            //           duration: 1,
-            //           easing: Konva.Easings.ElasticEaseOut,
-            //         }).play()
-            //       )
-            //     } else updataId.push(i.id)
-            //   })
-            // })
-
-            // updataId ? console.log('以下组态id未更新', updataId) : ''
-
-            // console.log('konva数据更新成功')
-            // 禁用调所有移动事件，如需禁用其他，在以下函数中添加
-            // konvaUtils.loadKonva(canvas.layer)
           }
         })
       },

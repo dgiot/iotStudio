@@ -170,8 +170,6 @@
           '%c option',
           'color:#009a61; font-size: 28px; font-weight: 300'
         )
-
-        console.log(this.option)
         console.groupEnd()
         dgiotlogger.info('MqttConnect', this.option)
         await this.$dgiotBus.$emit('MqttConnect', this.option)

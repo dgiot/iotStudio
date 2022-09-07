@@ -140,7 +140,6 @@
       this.nodeAttr.visible = false
       this.$dgiotBus.$off('nodeInfo')
       this.$dgiotBus.$on('nodeInfo', (args) => {
-        console.log(args.attrs.amis_id, 'nodeInfo')
         if (this.$route.query.deviceid) {
           localStorage.setItem('parse_objectid', this.$route.query.deviceid)
           this.quertAmis(args.attrs.amis_id)
@@ -173,7 +172,6 @@
         this.viewInfo = data
       },
       async bind_amis(args) {
-        console.log(args.objectId, this.amisNode.node)
         this.amisNode.node.setAttrs({
           fill: 'red',
           bind_amis: true,
@@ -196,7 +194,6 @@
           type: 'success',
         })
         this.amisLoading = false
-        console.log(args, this.amisNode.node)
       },
       async bindAmis(args) {
         const loading = this.$baseLoading()
@@ -212,7 +209,6 @@
             type: 'amis',
           },
         })
-        console.log(amisDict, args)
         this.amisDict = amisDict
         this.amisCount = count
         this.nodeAttr.visible = false
@@ -220,7 +216,6 @@
         loading.close()
       },
       async preview_amis(args) {
-        console.log(args)
         await this.quertAmis(args.objectId)
       },
       async goDesign() {
@@ -248,12 +243,9 @@
         this.$dgiotBus.$emit('refresh', this.$route)
       },
       updataForm(from) {
-        console.log('子组件改变的值')
-        console.log(from)
         this.setSizeForm(from)
       },
       addDas() {
-        console.log(this.sizeForm)
         this.sizeForm.daslist.push({
           addr: '',
         })
@@ -266,28 +258,20 @@
       },
       // 提交
       submitForm(obj) {
-        console.log('sizeForm', obj)
-        console.log('thingType', this.thingType)
-        console.log('toponobound', this.toponobound)
-        console.log('topokonvathing', this.topokonvathing)
-        console.info('如果type是put 走put，否则post')
         // 判断 里是否有这个identifier
         if (_.isEmpty(this.topokonvathing) == true) this.thingType = 'post'
         else this.thingType = 'put'
         this.toponobound.forEach((item) => {
-          console.log(obj.identifier, item.identifier, 'identifier')
           if (obj.identifier == item.identifier) {
             this.thingType = 'put'
           }
         })
-        console.log('thingType', this.thingType)
         let data = {
           item: obj,
           productid: this.$route.query.productid,
         }
         if (this.thingType == 'post') {
           postThing(data).then((res) => {
-            console.log('编辑', res)
             if (res.code == 200) {
               this.$message({
                 showClose: true,
@@ -302,7 +286,6 @@
                 shapeid: this.shapeid,
               }
               edit_konva_thing(params).then((res) => {
-                console.log(res)
                 // this.handleCloseSub()
               })
               this.wmxhandleClose()
@@ -317,7 +300,6 @@
           })
         } else {
           putThing(data).then((res) => {
-            console.log('编辑', res)
             if (res.code == 200) {
               this.$message({
                 showClose: true,
@@ -332,7 +314,6 @@
                 shapeid: this.shapeid,
               }
               edit_konva_thing(params).then((res) => {
-                console.log(res)
                 // this.handleCloseSub()
               })
               this.wmxhandleClose()
@@ -389,7 +370,6 @@
           loading.close()
         } catch (e) {
           loading.close()
-          console.log(e)
         }
       },
       async bindTopo(args) {
@@ -400,7 +380,6 @@
           productid: args.id.split('_')[0],
           text: args.text,
         }
-        console.log('args', args)
         try {
           // const { thing={},config } = await getProduct(args.id.split('_')[0])
           let params = {
@@ -425,12 +404,9 @@
             return
           }
           const { konvathing = {}, nobound = [] } = data
-          console.log(konvathing, 'konvathing')
-          console.log(nobound, 'nobound')
           this.toponobound = nobound
           this.topokonvathing = konvathing
           if (Object.values(konvathing).length > 0) {
-            console.log(`物模型存在这个属性`, konvathing)
             this.reset(nobound)
             var obj = {}
             var daslist = []

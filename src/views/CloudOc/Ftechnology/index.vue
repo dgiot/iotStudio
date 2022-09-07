@@ -336,7 +336,6 @@
         }
       },
       fileInfo(file) {
-        console.log(file)
         this.$baseMessage(
           '上传成功',
           `${file.name} 上传成功，请点击确定按钮，查看图片`,

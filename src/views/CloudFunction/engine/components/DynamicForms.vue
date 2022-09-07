@@ -477,8 +477,6 @@
         dgiotlogger.log('properties', properties)
       },
       async onSubmit() {
-        console.log(this.ruleContent)
-        console.log('submit!')
         const res = await sqlTpl(
           _.merge(this.ruleContent, {
             productid: this.$route.query.productid

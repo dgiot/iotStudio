@@ -69,7 +69,6 @@
       })
       this.$dgiotBus.$off('thingType')
       this.$dgiotBus.$on('thingType', (type) => {
-        console.log(type, 'type things')
         this.thingType = type
       })
       this.$baseEventBus.$off(
@@ -78,7 +77,6 @@
       this.$baseEventBus.$on(
         this.$dgiotBus.topicKey('dgiot_thing', 'dgiotThing'),
         (args) => {
-          console.log('aaaaa', args)
           if (args) {
             // 绑定物模型
             if (args.type == 'bind_topo') {
@@ -110,12 +108,9 @@
         this.$dgiotBus.$emit('refresh', this.$route)
       },
       updataForm(from) {
-        console.log('子组件改变的值')
-        console.log(from)
         this.setSizeForm(from)
       },
       addDas() {
-        console.log(this.sizeForm)
         this.sizeForm.daslist.push({
           addr: '',
         })
@@ -128,28 +123,20 @@
       },
       // 提交
       submitForm(obj) {
-        console.log('sizeForm', obj)
-        console.log('thingType', this.thingType)
-        console.log('toponobound', this.toponobound)
-        console.log('topokonvathing', this.topokonvathing)
-        console.info('如果type是put 走put，否则post')
         // 判断 里是否有这个identifier
         if (_.isEmpty(this.topokonvathing) == true) this.thingType = 'post'
         else this.thingType = 'put'
         this.toponobound.forEach((item) => {
-          console.log(obj.identifier, item.identifier, 'identifier')
           if (obj.identifier == item.identifier) {
             this.thingType = 'put'
           }
         })
-        console.log('thingType', this.thingType)
         let data = {
           item: obj,
           productid: this.$route.query.productid,
         }
         if (this.thingType == 'post') {
           postThing(data).then((res) => {
-            console.log('编辑', res)
             if (res.code == 200) {
               this.$message({
                 type: 'success',
@@ -162,7 +149,6 @@
                 shapeid: this.shapeid,
               }
               edit_konva_thing(params).then((res) => {
-                console.log(res)
                 // this.handleCloseSub()
               })
               this.wmxhandleClose()
@@ -177,7 +163,6 @@
           })
         } else {
           putThing(data).then((res) => {
-            console.log('编辑', res)
             if (res.code == 200) {
               this.$message({
                 showClose: true,
@@ -192,7 +177,6 @@
                 shapeid: this.shapeid,
               }
               edit_konva_thing(params).then((res) => {
-                console.log(res)
                 // this.handleCloseSub()
               })
               this.wmxhandleClose()
@@ -237,31 +221,6 @@
           'success',
           'dgiot-hey-message-success'
         )
-        // const loading = this.$baseLoading()
-        // try {
-        //   localStorage.setItem('konvaStale', canvas.stage.toJSON())
-        //   const params = {
-        //     config: _.merge(this.productconfig, {
-        //       konva: { Stage: JSON.parse(canvas.stage.toJSON()) },
-        //     }),
-        //   }
-        //   this.$message.success(this.$translateTitle('user.update completed'))
-        //   const res =
-        //     this.$route.query.type == 'Evidence'
-        //       ? await putView(this.$route.query.viewid, {
-        //           data: _.merge(
-        //             {
-        //               konva: { Stage: JSON.parse(canvas.stage.toJSON()) },
-        //             },
-        //             this.viewInfo
-        //           ),
-        //         })
-        //       : await putProduct(this.$route.query.productid, params)
-        //   loading.close()
-        // } catch (e) {
-        //   loading.close()
-        //   console.log(e)
-        // }
       },
       async bindTopo(args) {
         const loading = this.$baseLoading()
@@ -271,7 +230,6 @@
           productid: args.id.split('_')[0],
           text: args.text,
         }
-        console.log('args', args)
         try {
           // const { thing={},config } = await getProduct(args.id.split('_')[0])
           let params = {
@@ -296,12 +254,9 @@
             return
           }
           const { konvathing = {}, nobound = [] } = data
-          console.log(konvathing, 'konvathing')
-          console.log(nobound, 'nobound')
           this.toponobound = nobound
           this.topokonvathing = konvathing
           if (Object.values(konvathing).length > 0) {
-            console.log(`物模型存在这个属性`, konvathing)
             this.reset(nobound)
             var obj = {}
             var daslist = []
@@ -753,13 +708,11 @@
               this.$nextTick(() => {
                 this.$refs['sizeForm'].resource.data.forEach(
                   (resource, index) => {
-                    console.info(resource, '物模型回显事件')
                     // resource[index].arr = []
                     // resource[index].obj = {}
                     if (
                       this.$refs['sizeForm'].resource.value === resource.cType
                     ) {
-                      console.info(resource, '物模型回显事件')
                       resource.arr.forEach((i) => {
                         if (i.allowCreate) {
                           this.$refs['sizeForm'].dynamicTable(
@@ -769,7 +722,6 @@
                           )
                         }
                       })
-                      console.info(konvathing.dataSource, 'rowData.dataSource')
                       this.$refs['sizeForm'].resource.addchannel =
                         konvathing.dataSource
                       for (var o in konvathing.dataSource) {
@@ -777,17 +729,12 @@
                           if (o === j) resource.obj[o] = rowData.dataSource[j]
                         }
                       }
-                      console.info(resource.obj, 'set resource.obj')
                     }
                     this.$refs['sizeForm'].resource.changeData =
                       konvathing.dataSource
-                    if (resource.cType == konvathing.dataForm.protocol) {
-                      console.log(resource, 'success')
-                    }
                   }
                 )
               })
-              console.log('refs sizeForm', this.$refs['sizeForm']) // 子组件的实例
             })
           } else {
             this.reset(nobound)
@@ -798,13 +745,9 @@
           }
           // 显示物模型弹窗
           this.thingDialog = true
-          // this.productconfig = config
-          // console.log(thing)
-          // this.thingData = thing
           loading.close()
         } catch (e) {
           loading.close()
-          console.log(e)
         }
       },
       reset(nobound) {

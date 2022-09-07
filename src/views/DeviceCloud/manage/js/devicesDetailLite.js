@@ -411,7 +411,6 @@ export default {
     this.getDeviceInfo(this.$route.query.deviceid)
     this.setTreeFlag(false)
     this.params.style = this.chartType[0].type
-    console.log(' this.params.style', this.params.style)
     this.subtopic = `$dg/user/realtimecard/${this.$route.query.deviceid}/report` // 设备实时数据topic
     this.router = this.$dgiotBus.router(location.href + this.$route.fullPath)
     this.topicKey = this.$dgiotBus.topicKey(this.router, this.subtopic) // dgiot-mqtt topicKey 唯一标识
@@ -442,15 +441,7 @@ export default {
      */
     async subRealtimedata() {
       try {
-        // 订阅mqtt
-        // this.$dgiotBus.$emit('MqttSubscribe', {
-        //   router: this.router,
-        //   topic: this.subtopic,
-        //   qos: 0,
-        //   ttl: 1000 * 60 * 60 * 3,
-        // })
         await this.$subscribe(this.subtopic)
-        console.log(this.$mqttInfo)
         // mqtt 消息回调
         console.groupCollapsed(
           `%c mqtt 订阅日志`,
@@ -479,7 +470,6 @@ export default {
           }
         })
       } catch (error) {
-        console.log(error)
         this.$baseMessage(
           this.$translateTitle('alert.Data request error') + `${error}`,
           'error',
@@ -563,23 +553,12 @@ export default {
         resultes.topicData = resultes.product.topics
           ? resultes.product.topics.concat(_toppic)
           : _toppic
-        console.log(resultes, 'resultes')
         this.deviceInfo = resultes
-        // this.$baseMessage(
-        //   this.$translateTitle('alert.Data request successfully'),
-        //   'success',
-        //   'dgiot-hey-message-success'
-        // )
-        // loading.close()
         this.mapLabel = mapLabel
         if (this.$refs['map'])
           this.$refs['map'].baiduCenter = this.mapLabel.position
         this.bmLabel = true
-        // this.$refs['map'].label = this.mapLabel
-        console.info('vm.mapLabel\n', this.mapLabel)
-        console.info('vm.mapLabel\n', this.$refs['map'])
       } catch (error) {
-        console.log(error)
         this.$baseMessage(
           this.$translateTitle('alert.Data request error') + `${error}`,
           'error',
@@ -590,7 +569,6 @@ export default {
     toggleChart(e) {
       this.chartKey = moment(new Date()).valueOf()
       this.loading = false
-      console.log(e)
       this.chartExtend = {}
       this.chartDataZoom = []
       let type = ['funnel', 'radar', 'radar']
@@ -640,7 +618,6 @@ export default {
         charts.forEach((chart) => {
           chart.$children[0].resize()
         })
-        console.log('重绘完成', charts)
       } else {
         charts.$children[0].resize()
       }
@@ -674,16 +651,7 @@ export default {
         rows: [],
       }
       if (this.params.startTime && this.params.endTime) {
-        // this.$baseColorfullLoading(
-        //   1,
-        //   this.$translateTitle('home.messag_loding')
-        // )
         let deviceid = this.$route.query.deviceid
-        // let endTime = moment(this.params.datetimerange[1]).valueOf()
-        // let startTime = moment(this.params.datetimerange[0]).valueOf()
-        // console.log('endTime', endTime)
-        // console.log('startTime', startTime)
-        // const limit = moment(endTime).diff(moment(startTime), 'days')
         const {
           interval,
           keys,
@@ -705,8 +673,6 @@ export default {
         }
         await getDabDevice(deviceid, params)
           .then((res) => {
-            // this.$baseColorfullLoading().close()
-            console.log(res, 'res charts')
             if (res?.chartData) {
               const { chartData = {} } = res
               this.chartData = chartData
@@ -717,24 +683,16 @@ export default {
                 }, 1000)
               })
             }
-            console.log('this.chartData', this.chartData)
             this.loading = false
             this.dataEmpty = false
           })
           .catch((e) => {
-            console.log(e)
             this.loading = false
-            // this.$baseColorfullLoading().close()
           })
       } else {
-        // this.$message.error(
-        //   this.$translateTitle('developer.Please select the query Time')
-        // )
       }
     },
-    print(item) {
-      console.log(item)
-    },
+    print(item) {},
     tabHandleClick(tab) {
       this.$dgiotBus.$emit('MqttUnbscribe', this.topicKey, this.subtopic)
       switch (tab.name) {
@@ -816,7 +774,6 @@ export default {
       if (this.childrendevices.devicesname != '') {
         params.where.devaddr = this.childrendevices.devicesname
       }
-      console.log('this.params', params)
       this.$queryDevice(params)
         .then((res) => {
           this.childrenDeviceTotal = res.count
@@ -837,7 +794,6 @@ export default {
           }
         })
         .catch((err) => {
-          console.log(err)
           this.$baseMessage('请求出错11', err.error, 3000)
         })
     },
@@ -930,7 +886,6 @@ export default {
       })
     },
     async deviceToDetail(row) {
-      console.log('row', row)
       const query = {
         deviceid: row.objectId,
         nodeType: row.nodeType,
@@ -942,7 +897,6 @@ export default {
       this.getDeviceInfo(query.deviceid)
       this.setTreeFlag(false)
       this.params.style = this.chartType[0].type
-      console.log(' this.params.style', this.params.style)
       this.subtopic = `$dg/user/realtimecard/${this.$route.query.deviceid}/report` // 设备实时数据topic
       this.router = this.$dgiotBus.router(location.href + this.$route.fullPath)
       // this.topicKey = this.$dgiotBus.topicKey(this.router, this.subtopic) // dgiot-mqtt topicKey 唯一标识

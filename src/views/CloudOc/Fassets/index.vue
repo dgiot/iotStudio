@@ -397,7 +397,6 @@
           const {
             data: { list, total },
           } = await getList(this.queryForm)
-          console.error(list, total, this.queryForm)
           setTimeout(() => {
             this.list = list
             this.total = total

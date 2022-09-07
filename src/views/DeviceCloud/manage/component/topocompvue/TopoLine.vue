@@ -110,7 +110,6 @@
         await getDabDevice(deviceid, params)
           .then((res) => {
             // this.$baseColorfullLoading().close()
-            console.log(res, 'res charts')
             if (res?.chartData?.rows.length > 0) {
               const { chartData = {} } = res
               this.chartData = chartData
@@ -121,12 +120,10 @@
                 }, 1000)
               })
             }
-            console.log('this.chartData', this.chartData)
             this.loading = false
             this.dataEmpty = false
           })
           .catch((e) => {
-            console.log(e)
             this.loading = false
             // this.$baseColorfullLoading().close()
           })

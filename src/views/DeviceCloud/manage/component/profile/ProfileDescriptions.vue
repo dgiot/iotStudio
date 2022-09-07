@@ -391,7 +391,6 @@
     },
     methods: {
       async handletabs(tabs) {
-        console.log('handletabs', tabs)
         this.viewForm = {
           class: 'ProductTemplet',
           type: 'amis',
@@ -490,7 +489,6 @@
           results.length > 0 ? results[0] : { title: codeid + '的解码器' }
         this.$nextTick(() => {
           this.$dgiotBus.$on('monaco-save', async (data) => {
-            console.log(data, 'data')
             const params = {
               data: { decoder: Base64.encode(data) },
               class: 'Product',
@@ -723,7 +721,6 @@
         set_amisJson: 'amis/set_amisJson',
       }),
       seeDecoder(productDetail) {
-        console.log(ace, 'ace', this.ace_editor)
         const { decoder = {} } = productDetail
         this.dialogTableVisible = false
         this.dialogDictVisible = false

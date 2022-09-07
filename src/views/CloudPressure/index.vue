@@ -576,7 +576,6 @@
     },
     created() {
       this.$nextTick(() => {
-        console.log(this.$refs.tableSort)
         this.$refs.tableSort.doLayout()
       })
     },
@@ -601,7 +600,6 @@
             .format('YYYY-MM-DD HH:mm:ss')
         })
         this.details = res
-        console.log(res)
         this.report = true
       },
       async generateReport(row) {
@@ -622,8 +620,7 @@
           },
           withCredentials: true,
         })
-        console.log(res)
-        console.log(random)
+
         setTimeout(async () => {
           // 随机数30到50 秒后设置报告生成成功
           // 关闭按钮加载状态
@@ -635,7 +632,6 @@
       async preview(fileurl) {
         const encodeUrl = encodeURIComponent(Base64.encode(fileurl))
         const previerUrl = `${location.protocol}//${location.hostname}/onlinePreview?url=${encodeUrl}`
-        console.log(fileurl, encodeUrl, previerUrl)
         window.open(previerUrl, '_blank')
       },
       async download(row) {
@@ -643,7 +639,6 @@
       },
       async delete_item(row, index, tableData) {
         tableData.splice(index, 1)
-        console.log(tableData)
         await putDevice(this.details.objectId, {
           basedata: this.details.basedata,
         })
@@ -654,7 +649,6 @@
         )
       },
       async busButton(col, type) {
-        console.log(col, type)
         this.Drawer = !this.Drawer
         col.objectId
           ? localStorage.setItem('parse_objectid', col.objectId)
@@ -756,7 +750,6 @@
             sortable: true,
           },
         ]
-        console.log(this.checkList, this.columns)
       },
       toggleSwitch(row) {
         return new Promise((resolve) => {
@@ -857,7 +850,6 @@
         geocoder.getLocation(e.point, (rs) => {
           this.form.address = rs.address
         })
-        console.log(this.form.address)
         if (this.editRow.objectId) {
           this.editRow.location = this.location
           this.editRow.address = this.form.address

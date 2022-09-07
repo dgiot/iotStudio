@@ -265,7 +265,6 @@
         })
       },
       get_fileinfo(row) {
-        console.log(row)
         this.detailView = true
         this.ViewLoading = true
         file_info('files/' + row.path + '/' + row.name).then((res) => {

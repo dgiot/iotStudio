@@ -1041,7 +1041,6 @@ export default {
      * @Description:
      */
     getSummaries(params) {
-      console.log(params, 'params')
       const { columns, data } = params
       const sums = []
       columns.forEach((column, index) => {

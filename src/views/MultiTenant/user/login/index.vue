@@ -336,7 +336,10 @@
                   expires: 60 * 1000 * 30,
                 }
               )
-              await this.login({ username: 'feiiplat', password: 'feiiplat' })
+              await this.login({
+                username: 'yanshizhanghao',
+                password: 'yanshizhanghao',
+              })
               await this.goHome()
             }
           })

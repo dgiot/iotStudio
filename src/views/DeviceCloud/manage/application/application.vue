@@ -17,18 +17,29 @@
         style="width: 80%; margin-bottom: 10px; border: 1px solid #cccccc"
       >
         <el-row :gutter="24">
-          <el-col :span="4">
+          <el-col :span="6">
             <div class="grid-content bg-purple">
               <i class="iconfont icon-yingyong" style="color: #666666" />
-              <p>{{ item.name }}</p>
+              <p
+                style="
+                  display: inline-block;
+                  margin-top: 50px;
+                  margin-left: 50px;
+                "
+              >
+                {{ item.name }}
+              </p>
             </div>
           </el-col>
-          <el-col :span="16">
-            <div class="grid-content bg-purple">
+          <el-col :span="12">
+            <div
+              class="grid-content bg-purple"
+              style="display: inline-block; margin-top: 30px"
+            >
               <dl>
                 <dt>
                   <!-- App ID -->
-                  {{ $translateTitle('product.appid') }}
+                  {{ 'App ID' }}
                   <el-tooltip
                     :content="
                       $translateTitle(
@@ -43,7 +54,7 @@
                 <dd>{{ item.objectId }}</dd>
                 <dt>
                   <!-- App Secret -->
-                  {{ $translateTitle('product.appsecret') }}
+                  {{ 'App Secret' }}
                   <el-tooltip
                     :content="$translateTitle('product.aaab')"
                     placement="bottom"
@@ -51,36 +62,32 @@
                     <i class="el-icon-question" />
                   </el-tooltip>
                 </dt>
-                <dd v-if="item.isshow">
-                  {{ item.tag.appconfig.secret }}
-                </dd>
-                <dd v-if="!item.isshow">
-                  <i v-if="item.tag.appconfig.secret">
-                    {{
-                      item.tag.appconfig.secret.substr(0, 4) +
-                      '********************' +
-                      item.tag.appconfig.secret.substr(24)
-                    }}
-                    <el-button
-                      round
-                      size="samll"
-                      style="position: absolute; top: 30px; margin-left: 10px"
-                      @click="xianshi(item.objectId)"
+                <dd>
+                  <span v-if="item.isshow == false">
+                    ********************
+                    <el-link
+                      style="margin-left: 5px; cursor: pointer"
+                      type="primary"
+                      :underline="false"
+                      @click="xianshi(item.objectId, true)"
                     >
-                      <!-- 完整密钥 -->
-                      {{ $translateTitle('product.fullkey') }}
-                    </el-button>
-                  </i>
+                      {{ $translateTitle('product.display') }}
+                    </el-link>
+                  </span>
+                  <span v-else>
+                    <span v-copyText="item.tag.appconfig.secret">
+                      {{ item.tag.appconfig.secret }}
+                    </span>
+                    <el-link
+                      style="margin-left: 5px; cursor: pointer"
+                      type="primary"
+                      :underline="false"
+                      @click="xianshi(item.objectId, false)"
+                    >
+                      {{ $translateTitle('product.hidden') }}
+                    </el-link>
+                  </span>
                 </dd>
-                <dt>
-                  <!-- 应用名称 -->
-                  {{ $translateTitle('task.Applicationname') }}
-                  <i class="el-icon-s-promotion" />
-                </dt>
-                <dd v-if="item.name">
-                  {{ item.name }}
-                </dd>
-                <dd v-else>-</dd>
               </dl>
             </div>
           </el-col>
@@ -98,21 +105,21 @@
                   {{ $translateTitle('developer.Modifyapplication') }}
                 </el-link>
               </p>
-              <p class="editor">
-                <el-link type="primary" @click.native="nodeDeployment(item)">
-                  <!-- 节点部署 -->
-                  {{ $translateTitle('developer.Nodedeployment') }}
-                </el-link>
-              </p>
-              <p class="editor">
-                <el-link
-                  type="primary"
-                  @click.native="applicationDeployment(item)"
-                >
-                  <!-- 应用部署 -->
-                  {{ $translateTitle('developer.Applicationdeployment') }}
-                </el-link>
-              </p>
+              <!--              <p class="editor">-->
+              <!--                <el-link type="primary" @click.native="nodeDeployment(item)">-->
+              <!--                  &lt;!&ndash; 节点部署 &ndash;&gt;-->
+              <!--                  {{ $translateTitle('developer.Nodedeployment') }}-->
+              <!--                </el-link>-->
+              <!--              </p>-->
+              <!--              <p class="editor">-->
+              <!--                <el-link-->
+              <!--                  type="primary"-->
+              <!--                  @click.native="applicationDeployment(item)"-->
+              <!--                >-->
+              <!--                  &lt;!&ndash; 应用部署 &ndash;&gt;-->
+              <!--                  {{ $translateTitle('developer.Applicationdeployment') }}-->
+              <!--                </el-link>-->
+              <!--              </p>-->
             </div>
           </el-col>
         </el-row>
@@ -127,147 +134,7 @@
       />
     </div>
 
-    <!--新建弹框-->
-    <el-dialog
-      :append-to-body="true"
-      :close-on-click-modal="false"
-      :title="$translateTitle('developer.addapp')"
-      :visible.sync="dialogVisible"
-      width="55%"
-    >
-      <div
-        v-loading="loading"
-        class="block"
-        element-loading-background="rgba(0, 0, 0, 0.8)"
-        element-loading-spinner="el-icon-loading"
-        :element-loading-text="$translateTitle('developer.Waitingtoreturn')"
-      >
-        <el-form ref="form" label-width="120px" :model="form" :rules="Rule">
-          <!-- <el-form-item label="平台">
-                <el-select v-model="form.product" placeholder="请选择平台"  style="width:80%">
-                  <el-option v-for="(item,index) in selectapp" :key="index" :label="item.attributes.subtitle" :value="item.id"></el-option>
-               </el-select>
-          </el-form-item>-->
-          <el-form-item
-            :label="$translateTitle('application.applicationname')"
-            prop="desc"
-          >
-            <el-input
-              v-model="form.desc"
-              :placheholder="
-                $translateTitle('product.enter1') +
-                $translateTitle('application.applicationname')
-              "
-              style="width: 80%"
-            />
-          </el-form-item>
-          <el-form-item
-            :label="$translateTitle('application.tokeneffectivetime')"
-          >
-            <el-input
-              v-model="form.time"
-              :placheholder="$translateTitle('product.enterapptime')"
-              style="width: 80%"
-              type="number"
-            />
-            <span style="margin-left: 5px">
-              <!-- 秒 -->
-              {{ $translateTitle('application.seconds') }}
-            </span>
-          </el-form-item>
-          <el-form-item :label="$translateTitle('product.Wordpreviewserver')">
-            <el-input
-              v-model="form.wordpreview"
-              :placheholder="
-                $translateTitle('product.enter1') +
-                $translateTitle('product.Wordpreviewserver')
-              "
-              style="width: 80%"
-            />
-          </el-form-item>
-          <el-form-item
-            :label="$translateTitle('product.Wordproductionserver')"
-          >
-            <el-input
-              v-model="form.wordproduct"
-              :placheholder="
-                $translateTitle('product.enter1') +
-                $translateTitle('product.Wordproductionserver')
-              "
-              style="width: 80%"
-            />
-          </el-form-item>
-
-          <el-form-item
-            :label="$translateTitle('application.fileresources')"
-            prop="file"
-          >
-            <el-input
-              v-model="form.file"
-              :placheholder="$translateTitle('product.enter1') + url"
-              style="width: 80%"
-            />
-          </el-form-item>
-
-          <el-form-item
-            :label="$translateTitle('application.Configurationresources')"
-            prop="topo"
-          >
-            <el-input
-              v-model="form.topo"
-              placheholder="$translateTitle('product.enter1') + url"
-              style="width: 80%"
-            />
-          </el-form-item>
-
-          <el-form-item label="Graphql API" prop="graphql">
-            <el-input
-              v-model="form.graphql"
-              placheholder="$translateTitle('product.enter1') + url"
-              style="width: 80%"
-            />
-          </el-form-item>
-
-          <el-form-item label="Restful API" prop="rest">
-            <el-input
-              v-model="form.rest"
-              placheholder="$translateTitle('product.enter1') + url"
-              style="width: 80%"
-            />
-          </el-form-item>
-
-          <el-form-item label="home">
-            <el-input
-              v-model="form.home"
-              :placheholder="
-                $translateTitle('product.enter1') +
-                $translateTitle('developer.path')
-              "
-              style="width: 80%"
-            />
-          </el-form-item>
-        </el-form>
-      </div>
-      <span slot="footer" class="dialog-footer">
-        <el-button @click="dialogVisible = false">
-          <!-- 取消 -->
-          {{ $translateTitle('developer.cancel') }}
-        </el-button>
-        <el-button type="primary" @click.native="Define('form')">
-          <!-- 确定 -->
-          {{ $translateTitle('developer.determine') }}
-        </el-button>
-      </span>
-    </el-dialog>
-
     <!--修改应用信息-->
-    <!-- <el-dialog
-  :append-to-body="true"
-      :visible.sync="update"
-      :close-on-click-modal="false"
-      title="修改应用信息"
-      width="55%"
-    > -->
     <el-dialog
       :append-to-body="true"
       :close-on-click-modal="false"
@@ -280,10 +147,10 @@
     >
       <div class="block">
         <el-form ref="form1" label-width="170px" :model="form1" :rules="Rule">
-          <!-- <el-form-item label="应用名称" prop="desc">
-            <el-input v-model="form1.desc" style="width:80%" />
-          </el-form-item> -->
-          <el-form-item :label="$translateTitle('application.Accesskey')">
+          <el-form-item label="应用名称" prop="name">
+            <span style="width: 80%">{{ form1.name }}</span>
+          </el-form-item>
+          <el-form-item label="App Secret">
             <el-input v-model="form1.secret" readonly style="width: 80%">
               <el-button
                 slot="append"
@@ -296,7 +163,7 @@
             :label="$translateTitle('application.tokeneffectivetime')"
           >
             <el-input
-              v-model="form1.time"
+              v-model="form1.expires"
               :placheholder="$translateTitle('product.enterapptime')"
               style="width: 80%"
               type="number"
@@ -306,75 +173,13 @@
               {{ $translateTitle('task.Seconds') }}
             </span>
           </el-form-item>
-          <el-form-item :label="$translateTitle('product.Wordpreviewserver')">
+          <el-form-item :label="$translateTitle('developer.describe')">
             <el-input
-              v-model="form1.wordpreview"
-              :placheholder="
-                $translateTitle('product.enter1') +
-                $translateTitle('product.Wordpreviewserver')
-              "
+              v-model="form1.desc"
+              :autosize="{ minRows: 2 }"
+              :placheholder="$translateTitle('product.enterapptime')"
               style="width: 80%"
-            />
-          </el-form-item>
-          <el-form-item
-            :label="$translateTitle('product.Wordproductionserver')"
-          >
-            <el-input
-              v-model="form1.wordproduct"
-              :placheholder="
-                $translateTitle('product.enter1') +
-                $translateTitle('product.Wordproductionserver')
-              "
-              style="width: 80%"
-            />
-          </el-form-item>
-
-          <el-form-item
-            :label="$translateTitle('application.fileresources')"
-            prop="file"
-          >
-            <el-input
-              v-model="form1.file"
-              placheholder="$translateTitle('product.enter1') + url"
-              style="width: 80%"
-            />
-          </el-form-item>
-
-          <el-form-item
-            :label="$translateTitle('application.Configurationresources')"
-            prop="topo"
-          >
-            <el-input
-              v-model="form1.topo"
-              placheholder="$translateTitle('product.enter1') + url"
-              style="width: 80%"
-            />
-          </el-form-item>
-
-          <el-form-item label="Graphql API" prop="graphql">
-            <el-input
-              v-model="form1.graphql"
-              placheholder="$translateTitle('product.enter1') + url"
-              style="width: 80%"
-            />
-          </el-form-item>
-
-          <el-form-item label="Restful API" prop="rest">
-            <el-input
-              v-model="form1.rest"
-              placheholder="$translateTitle('product.enter1') + url"
-              style="width: 80%"
-            />
-          </el-form-item>
-
-          <el-form-item label="home">
-            <el-input
-              v-model="form1.home"
-              :placheholder="
-                $translateTitle('product.enter1') +
-                $translateTitle('developer.path')
-              "
-              style="width: 80%"
+              type="textarea"
             />
           </el-form-item>
         </el-form>
@@ -412,37 +217,12 @@
       return {
         url: '',
         total: 0,
-        pagesize: 10,
+        pagesize: 5,
         start: 0,
         update: false,
-        form1: {
-          name: '',
-          product: '',
-          time: '',
-          file: '',
-          graphql: '',
-          rest: '',
-          topo: '',
-          secret: '',
-          desc: '',
-          home: '',
-          wordpreview: 'http://pump.iotn2n.com:8012',
-          wordproduct: 'http://pump.iotn2n.com',
-        },
+        form1: {},
         dialogVisible: false,
-        form: {
-          name: '',
-          product: '',
-          time: '18000',
-          file: 'http://file.iotn2n.com/shapes/upload',
-          graphql: 'http://cad.iotn2n.com:5080/graphql',
-          rest: 'http://cad.iotn2n.com:5080/iotapi',
-          topo: 'http://shapes.iotn2n.com/',
-          secret: '',
-          home: 'D:/shuwa/shuwa_data_center',
-          wordpreview: 'http://pump.iotn2n.com:8012',
-          wordproduct: 'http://pump.iotn2n.com/',
-        },
+        form: {},
         Rule: {
           desc: [
             {
@@ -493,15 +273,6 @@
       }
     },
     created() {},
-    //   watch:{
-    //      appdata:{
-    //          handler(newVal) {
-    //          dgiotlog.log(newVal)
-    //       },
-    //       deep:true
-    //      }
-
-    //   },
     mounted() {
       this.getAppdetail(this.pagesize, this.start)
 
@@ -546,23 +317,24 @@
         const params = {
           skip: start,
           limit: pagesize,
-          keys: 'tag,name,desc,count(*)',
-          order: 'updatedAt', // -updatedAt  updatedAt
+          count: 'objectid',
+          keys: 'tag,name,desc',
+          order: 'createdAt', // -updatedAt  updatedAt
         }
-        const { results } = await queryRole(params)
+        const { count, results } = await queryRole(params)
         this.appdata = results
         this.appdata.map((item) => {
           // dgiotlog.log(item)
-          _.merge(item.tag, { appconfig: { secret: '' } })
+          console.log(item?.tag?.appconfig)
           if (item?.tag?.appconfig?.secret) {
             item.isshow = false
           } else {
+            item.tag.appconfig = {}
             item.tag.appconfig.secret = '暂未配置'
             item.isshow = true
           }
         })
-        this.total = results.length
-        console.log(this.appdata, 'appdata')
+        this.total = count
       },
       handleClickRefresh() {
         this.randomSecret()
@@ -587,16 +359,12 @@
       },
       updateapp(item) {
         this.update = true
-        this.form1.objectId = item.objectId
-        this.form1.time = item.tag.appconfig.expires
-        this.form1.file = item.tag.appconfig.file
-        this.form1.rest = item.tag.appconfig.rest
-        this.form1.topo = item.tag.appconfig.topo
-        this.form1.graphql = item.tag.appconfig.graphql
-        this.form1.home = item.tag.appconfig.home
-
-        this.form1.secret = item.tag.appconfig.secret
-        this.form1.desc = item.tag.appconfig.desc
+        this.$set(this.form1, 'objectId', item.objectId)
+        this.$set(this.form1, 'name', item.name)
+        this.$set(this.form1, 'secret', item.tag.appconfig.secret)
+        this.$set(this.form1, 'expires', item.tag.appconfig.expires)
+        this.$set(this.form1, 'desc', item.tag.appconfig.desc)
+        this.$set(this.form1, 'tag', item.tag)
       },
       updatedDefine(form) {
         this.$refs[form].validate((valid) => {
@@ -609,22 +377,12 @@
         })
       },
       async updateObj(objectId) {
-        const formParam = {
-          expires: this.form1.time,
-          file: this.form1.file,
-          graphql: this.form1.graphql,
-          rest: this.form1.rest,
-          topo: this.form1.topo,
-          home: this.form1.home,
-          secret: this.form1.secret,
-          wordpreview: this.form1.home,
-          wordproduct: this.form1.secret,
-        }
+        this.form1.tag.appconfig.secret = this.form1.secret
+        this.form1.tag.appconfig.expires = this.form1.expires
+        this.form1.tag.appconfig.desc = this.form1.desc
         var tag = {
-          appconfig: {},
+          tag: this.form1.tag,
         }
-        tag.appconfig = formParam
-        // dgiotlog.log(tag.appconfig);
         await putRole(objectId, tag)
           .then((res) => {
             this.$message({
@@ -670,13 +428,13 @@
         })
       },
       // 显示，隐藏
-      xianshi(objectId) {
+      xianshi(objectId, flag) {
         // dgiotlog.log(objectId)
         var obj
         for (var i = 0; i < this.appdata.length; i++) {
           if (this.appdata[i].objectId == objectId) {
             obj = this.appdata[i]
-            this.appdata[i].isshow = true
+            this.appdata[i].isshow = flag
             this.$set(this.appdata, i, obj)
           }
         }

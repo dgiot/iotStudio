@@ -461,7 +461,6 @@
       moveSvg(item) {
         let el = getSvgPath(item, 'path')
         const paths = JSON.stringify(el.topo)
-        console.info(`getSvgPath function return ${paths}`)
         this.busData.paths = paths
         this.$dgiotBus.$emit('busTopo', 'path', this.busData)
       },
@@ -475,7 +474,6 @@
           productid: 'productid',
           thingid: 'thingid',
         })
-        console.log(res)
       },
       uploadCkick(type) {
         this.upImgType = type
@@ -513,14 +511,12 @@
       //   this.$emit('fatherMouseup', item)
       // },
       async fileInfo(res) {
-        console.log(res)
         if (this.upImgType === 'img') {
           await this.handleIcon(res.url)
         } else {
           //  直接设置背景图的地址
           localStorage.setItem('konvaBg', res.path)
           await this.setKonvaBg(res.path)
-          console.error('set konva bg \n', Cookies.get('fileServer') + res.path)
           //  然后重新绘制一下 使用vuex topo
         }
       },
@@ -532,7 +528,6 @@
           _this.$set(_this.imgParams, 'width', img.width)
           _this.$set(_this.imgParams, 'height', img.height)
           _this.$set(_this.imgParams, 'src', img.src)
-          console.log('图片加载完成', _this.imgParams)
           _this.$baseMessage(
             _this.$translateTitle('图片加载完成,可双击画图区域填充'),
             'success',

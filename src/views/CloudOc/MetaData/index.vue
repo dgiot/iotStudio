@@ -242,7 +242,6 @@
         this.queryForm.name
           ? (params.where.title = { $regex: this.queryForm.name })
           : ''
-        console.info(params)
         this.listLoading = true
         const { results, count } = await queryDict(params)
         this.list = results

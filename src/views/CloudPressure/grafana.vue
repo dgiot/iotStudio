@@ -44,12 +44,7 @@
     },
     watch: {
       theme: {
-        handler(theme) {
-          console.log(
-            theme,
-            'themethemethemethemethemethemethemethemethemethemethemethemethemethemetheme'
-          )
-        },
+        handler(theme) {},
         deep: true,
         immediate: true,
       },

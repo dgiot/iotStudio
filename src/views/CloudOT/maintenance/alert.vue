@@ -22,20 +22,39 @@
         />
       </el-dialog>
       <el-dialog
-        v-drag
         :append-to-body="true"
+        height="20%"
+        title="告警内容"
         :visible.sync="dynamicformView"
-        width="50vh"
+        width="50%"
       >
-        <el-form>
-          <el-form-item label="产品名称" label-width="200">
-            <span>{{ editRow.productname }}</span>
-          </el-form-item>
-          <el-form-item label="设备编号" label-width="200">
-            <span>{{ devicename }}</span>
-          </el-form-item>
-        </el-form>
-        <dgiot-amis :schema="amisData" :show-help="false" />
+        <div>
+          <el-form style="margin-left: 20px; margin-rigth: 20px">
+            <el-form-item label="产品名称" label-width="200">
+              <span>{{ editRow.productname }}</span>
+            </el-form-item>
+            <el-form-item label="设备编号" label-width="200">
+              <span>{{ devicename }}</span>
+            </el-form-item>
+            <el-form-item :label="$translateTitle('alert.Alarm status')">
+              <el-radio v-model="status" label="1">已处理</el-radio>
+              <el-radio v-model="status" label="2">误报</el-radio>
+            </el-form-item>
+            <el-form-item :label="$translateTitle('alert.Alarm remark')">
+              <el-input v-model="process" type="textarea" />
+            </el-form-item>
+          </el-form>
+          <el-form style="text-align: right">
+            <el-button @click="dynamicformView = false">
+              {{ $translateTitle('tagsView.close') }}
+            </el-button>
+            <el-button type="primary" @click.native="submitAlert(alertId)">
+              {{ $translateTitle('button.submit') }}
+            </el-button>
+          </el-form>
+
+          <dgiot-amis :schema="amisData" :show-help="false" />
+        </div>
       </el-dialog>
     </div>
     <dgiot-query-form class="query-form">
@@ -208,22 +227,6 @@
           <el-button size="mini" type="primary" @click="showdynamicform(row)">
             {{ $translateTitle('Maintenance.View') }}
           </el-button>
-          <!--          <el-button-->
-          <!--            size="mini"-->
-          <!--            type="primary"-->
-          <!--            @click="showInfo(row.type, row.content, row.objectId)"-->
-          <!--          >-->
-          <!--            {{ $translateTitle('Maintenance.View') }}-->
-          <!--          </el-button>-->
-          <!--          <el-button v-show="row.status == 0" type="success">-->
-          <!--            {{ $translateTitle('Maintenance.Dispatch') }}-->
-          <!--          </el-button>-->
-          <!--          <el-button v-show="row.status == 1" type="success">-->
-          <!--            {{ $translateTitle('Maintenance.Evaluation') }}-->
-          <!--          </el-button>-->
-          <!--          <el-button v-show="row.status == 3" type="info">-->
-          <!--            {{ $translateTitle('Maintenance.deal with') }}-->
-          <!--          </el-button>-->
           <el-button
             size="mini"
             type="danger"
@@ -237,13 +240,6 @@
         <dgiot-empty />
       </template>
     </el-table>
-    <!--    <DgiotPagination-->
-    <!--      v-show="total"-->
-    <!--      :limit.sync="queryForm.pageSize"-->
-    <!--      :page.sync="queryForm.pageNo"-->
-    <!--      :total="total"-->
-    <!--      @pagination="fetchData"-->
-    <!--    />-->
     <dgiot-parser-pagination
       :key="paginationKey + 'forensics'"
       ref="forensics"
@@ -375,8 +371,8 @@
 
     created() {},
     mounted() {
-      dgiotlogger.log(this._Product)
-      console.log(JSON.stringify(this._Product))
+      // dgiotlogger.log(this._Product)
+      // console.log(JSON.stringify(this._Product))
       this.fetchData()
     },
     methods: {
@@ -456,6 +452,8 @@
           process: this.process,
           status: Number(this.status),
         }
+        console.log('alertId', alertId)
+        console.log('alertParams', alertParams)
         try {
           const res = await putNotification(alertId, alertParams)
           dgiotlog.log(res)
@@ -475,6 +473,7 @@
       async showdynamicform(row) {
         localStorage.setItem('parse_objectid', row.deviceid)
         localStorage.setItem('parse_notificationid', row.objectId)
+        this.alertId = row.objectId
         this.amisData = {}
         this.devicename = row.devaddr
         this.editRow = row
@@ -545,11 +544,6 @@
             order: args.order,
             skip: args.skip,
             count: args.keys,
-            // productid: this.queryForm.productName
-            //   ? this.queryForm.productName
-            //   : 'all',
-            isprocess: this.queryForm.isprocess,
-            include: '',
             where: {
               'content._productid': {
                 $regex: this.queryForm.productName,
@@ -562,22 +556,15 @@
             order: args.order,
             skip: args.skip,
             count: 'objectId',
-            // productid: this.queryForm.productName
-            //   ? this.queryForm.productName
-            //   : 'all',
-            include: '',
             where: {},
           }
         }
-        // this.queryForm.productName
-        //   ? (this.queryPayload.where.content['_productid'] = )
-        //   : 'all'
-
-        this.queryForm.isprocess + ''.length
-          ? (this.queryPayload.where['status'] = this.queryForm.isprocess)
-          : ''
-        if (!Number(this.queryPayload.where['status']))
+        if (String(this.queryForm.isprocess + '').length > 0) {
+          this.queryPayload.where['status'] = this.queryForm.isprocess
+        }
+        if (isNaN(this.queryPayload.where['status'])) {
           delete this.queryPayload.where['status']
+        }
         if (this.queryForm.searchDate.length) {
           this.queryPayload.where['createdAt'] = {
             $gt: {
@@ -592,8 +579,7 @@
             },
           }
         }
-
-        // {"createdAt":{"$lt":{"__type":"Date","iso":"2022-02-11T02:16:18.906Z"}},"updatedAt":{"$gt":{"__type":"Date","iso":"2022-02-18T02:16:18.906Z"}}}
+        console.log('this.queryPayload', this.queryPayload)
         const { results = [], count = 0 } = await queryNotification(
           this.queryPayload
         )
@@ -601,7 +587,6 @@
         this.total = count
         this.$refs['forensics'].ination.total = count
         loading.close()
-        console.log(this.list, 'this.list')
       },
       async prodChange(e) {
         this.Device = []

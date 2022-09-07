@@ -47,7 +47,7 @@
     },
     async created() {},
     mounted() {
-      console.log('window.name\n', window.name)
+      // console.log('window.name\n', window.name)
       // document.getElementsByTagName('link')[0].href = this.avatar
     },
     methods: {

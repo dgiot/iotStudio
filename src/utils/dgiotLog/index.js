@@ -140,7 +140,7 @@ function printDgiotlog(option, message) {
     console[level] || dgiotlog.log,
     console
   )
-  log.apply(console, logArgs.concat(message))
+  // log.apply(console, logArgs.concat(message))
 }
 function time(label, timeFn, dgiotlogOption) {
   var startTime = Date.now()

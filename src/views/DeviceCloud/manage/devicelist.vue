@@ -765,12 +765,11 @@
           className: 'Product',
           objectId: this.productId,
         }
-        console.log('deviceForm', this.deviceForm)
       },
-      async print(row) {
-        console.log(await getDevice(row.objectId))
-        console.log(row, row.isEnable)
-      },
+      // async print(row) {
+      //   console.log(await getDevice(row.objectId))
+      //   console.log(row, row.isEnable)
+      // },
       getTime(t, row) {
         return t
           ? moment(Number(t)).format('YYYY-MM-DD')
@@ -805,7 +804,6 @@
       transferAcl(data) {
         const aclKey1 = 'role' + ':' + data.name
         const aclObj = {}
-        console.log(this.deviceInfo)
         aclObj[aclKey1] = {
           read: true,
           write: true,
@@ -904,7 +902,6 @@
         // this.center.lat = 30.26667
         // this.zoom = this.zoom
         this.map = map
-        console.log(this.map)
       },
       // 点击查看
       clickRow(baidulocation, title) {
@@ -923,7 +920,6 @@
           title: title,
         }
         this.bmLabel = true
-        console.log(this.mapLabel)
         this.dialog_device = true
         // this.$refs['map'].baiduCenter = position
       },
@@ -936,7 +932,6 @@
             params.detail.assetNum = this.deviceForm.detail.assetNum
             await this.doPostDevice(params)
           } else {
-            console.log('error submit!!')
             return false
           }
         })
@@ -1015,7 +1010,6 @@
       },
       setting(row) {
         this.settingInfo.dialog = true
-        console.log(row)
       },
       async closeModal() {
         this.$router.go(-1)
@@ -1035,7 +1029,6 @@
         })
       },
       move(row) {
-        console.log(row)
         this.deviceInfo = row
         if (row.ACL) {
           for (var key in row.ACL) {
@@ -1059,7 +1052,6 @@
         this.fetchData()
       },
       async fetchData(listLoading = true) {
-        console.log(this.queryForm.type, this.queryForm)
         let params = {
           skip: this.queryForm.skip,
           limit: this.queryForm.limit,
@@ -1072,7 +1064,6 @@
           params.where[this.queryForm.type] = this.queryForm.search.length
             ? { $regex: this.queryForm.search }
             : (params.where = {})
-        console.info(params)
         this.listLoading = listLoading
         const { results, count } = await querycompanyDevice(params)
         results.forEach((i) => {
@@ -1100,7 +1091,6 @@
               'color:#009a61; font-size: 28px; font-weight: 300'
             )
             args.key = topicsKeys
-            console.log(parseString)
             args.parseString = parseString
             _this.list.forEach((t) => {
               topicsKeys.forEach((j) => {
@@ -1108,9 +1098,7 @@
                   const mergeInfo = _.merge(t, parseString[j], {
                     detail: { address: parseString[j].address },
                   })
-                  console.log(`更新设备${t.name}`)
                   args.name = t.name
-                  console.log(mergeInfo, parseString[j])
                   args.Info = parseString[j]
                   args.mergeInfo = mergeInfo
                   _this.upkey = moment(new Date()).valueOf() + ''
@@ -1118,8 +1106,6 @@
               })
             })
           }
-          console.info(args)
-          console.groupEnd()
         })
       },
     },

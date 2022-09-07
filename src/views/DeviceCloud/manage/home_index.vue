@@ -990,7 +990,6 @@
         }
       },
       showAdddress(item) {
-        console.log(item)
         this.editRow = item
         this.map.keyword = item?.address ? item.address : this.map.keyword
         this.form.address = item?.address ? item.address : this.form.keyword
@@ -1074,7 +1073,6 @@
         this.map = map
       },
       mapClick(e) {
-        console.log(e)
         this.location = {
           __type: 'GeoPoint',
           latitude: e.point.lat,
@@ -1208,7 +1206,6 @@
               }
             }
           } else {
-            console.log('error submit!!')
             return false
           }
         })
@@ -1312,14 +1309,11 @@
               'children,thing,decoder,topics,productSecret,desc,view,category,producttemplet',
           })
           this.product = results
-        } catch (error) {
-          console.log(error)
-        }
+        } catch (error) {}
       },
       // 设备编辑
       editorDevice(row) {
         this.editRow = row
-        console.log(row)
         this.form = {
           sync: true,
           type: 'edit',
@@ -1388,7 +1382,6 @@
         await this.fetchData()
       },
       async fetchData() {
-        console.log(this.queryForm)
         this.listLoading = true
         let params = {
           skip: this.queryForm.skip,
@@ -1399,7 +1392,6 @@
           count: 'objectId',
           where: {},
         }
-        console.log(this.$route.query)
         this.queryForm.product
           ? (params.where.product = this.queryForm.product)
           : ''
@@ -1444,7 +1436,6 @@
               'color:#009a61; font-size: 28px; font-weight: 300'
             )
             args.key = topicsKeys[0]
-            console.log(parseString)
             args.parseString = parseString
             _this.list.forEach((t) => {
               topicsKeys.forEach((j) => {
@@ -1452,9 +1443,7 @@
                   const mergeInfo = _.merge(t, parseString[j], {
                     detail: { address: parseString[j].address },
                   })
-                  console.log(`更新设备${t.name}`)
                   args.name = t.name
-                  console.log(mergeInfo, parseString[j])
                   args.Info = parseString[j]
                   args.mergeInfo = mergeInfo
                   _this.upkey = moment(new Date()).valueOf() + ''

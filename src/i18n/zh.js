@@ -1214,6 +1214,7 @@ export default {
       'alert number': '告警编号',
       'the starting time': '告警时间',
       'Alarm handling': '告警处理',
+      'Alarm remark': '备注',
       'Alarm status': '告警状态',
       isprocess: '是否处理',
       'Data request successfully': '数据请求成功',
