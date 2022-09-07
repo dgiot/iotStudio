@@ -74,6 +74,7 @@
     "vue-audio-visual": "^2.4.0",
     "vue-contextmenu": "1.5.11",
     "vue-infinite-scroll": "^2.0.2",
+    "vue-seamless-scroll": "^1.1.23",
     "vuera": "0.2.7"
   },
   "devDependencies": {
@@ -137,7 +138,7 @@
     "shelljs": "0.8.4",
     "speed-measure-webpack-plugin": "1.5.0",
     "standard-version": "^9.3.2",
-    "stylelint": "^13.13.1",
+    "stylelint": "^14.11.0",
     "stylelint-config-prettier": "^9.0.3",
     "stylelint-config-recess-order": "^3.0.0",
     "svg-sprite-loader": "6.0.11",
