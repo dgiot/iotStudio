@@ -2,7 +2,7 @@
  *  build: 杭州数蛙科技有限公司 
  *  copyright: dgiot-dashboard 
  *  author: h7ml(h7ml@qq.com) 
- *  Time: 2022年08月26日20时53分32秒
+ *  Time: 2022年09月07日15时51分19秒
  */
 @charset "UTF-8";
 /**
@@ -4377,7 +4377,6 @@ ol.decimal_type > li:before {
 }
 
 .fr-sticky {
-  position: -webkit-sticky;
   position: -moz-sticky;
   position: -ms-sticky;
   position: -o-sticky;
@@ -20609,7 +20608,6 @@ input[type=button].antd-Button--block {
   border-top: none;
 }
 .antd-Table--autoFillHeight > .antd-Table-contentWrap > .antd-Table-content table thead {
-  position: -webkit-sticky;
   position: sticky;
   top: 0;
   z-index: 1;
@@ -20709,7 +20707,6 @@ input[type=button].antd-Button--block {
   padding: var(--Table-toolbar-marginY) var(--Table-toolbar-marginX);
 }
 .antd-Table-v2 .antd-Table-header.antd-Table-sticky-holder {
-  position: -webkit-sticky;
   position: sticky;
   z-index: 3;
   background: var(--Table-bg);

@@ -2,7 +2,7 @@
  *  build: 杭州数蛙科技有限公司 
  *  copyright: dgiot-dashboard 
  *  author: h7ml(h7ml@qq.com) 
- *  Time: 2022年08月26日20时53分32秒
+ *  Time: 2022年09月07日15时51分19秒
  */
 /*!
  * Font Awesome Free 6.1.1 by @fontawesome - https://fontawesome.com
@@ -18093,7 +18093,6 @@ readers do not read off random characters that represent icons */
 }
 
 .fr-sticky {
-  position: -webkit-sticky;
   position: -moz-sticky;
   position: -ms-sticky;
   position: -o-sticky;
@@ -36116,7 +36115,6 @@ readers do not read off random characters that represent icons */
 }
 
 .amis-scope .cxd-Table--autoFillHeight > .cxd-Table-contentWrap > .cxd-Table-content table thead {
-  position: -webkit-sticky;
   position: sticky;
   top: 0;
   z-index: 1;
@@ -36237,7 +36235,6 @@ readers do not read off random characters that represent icons */
 }
 
 .amis-scope .cxd-Table-v2 .cxd-Table-header.cxd-Table-sticky-holder {
-  position: -webkit-sticky;
   position: sticky;
   z-index: 3;
   background: var(--Table-bg);
