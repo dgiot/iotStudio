@@ -2,7 +2,7 @@
  *  build: 杭州数蛙科技有限公司 
  *  copyright: dgiot-dashboard 
  *  author: h7ml(h7ml@qq.com) 
- *  Time: 2022年08月26日20时53分32秒
+ *  Time: 2022年09月07日15时51分19秒
  */
 @charset "UTF-8";
 /*!markdown
@@ -19754,7 +19754,6 @@ https://www.w3school.com.cn/cssref/pr_class_position.asp
 }
 
 .sticky {
-  position: -webkit-sticky;
   position: sticky;
 }
 
@@ -19776,7 +19775,6 @@ https://www.w3school.com.cn/cssref/pr_class_position.asp
   }
 
   .m\:sticky {
-    position: -webkit-sticky;
     position: sticky;
   }
 }
@@ -19798,7 +19796,6 @@ https://www.w3school.com.cn/cssref/pr_class_position.asp
   }
 
   .pc\:sticky {
-    position: -webkit-sticky;
     position: sticky;
   }
 }
