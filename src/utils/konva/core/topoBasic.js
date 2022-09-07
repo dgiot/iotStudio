@@ -278,6 +278,45 @@ const topoBasic = {
 
     return simpleImage
   },
+  createStaticImage(args) {
+    console.info(
+      'src/utils/konva/core/topoBasic.js',
+      'createdEvidence',
+      // args.path,
+      args
+    )
+    const Axis = {
+      x: 10 + args.path.index * 100 + canvas.randomXy(60, 10),
+      y: 400 + canvas.randomXy(40, 10),
+    }
+    let simpleImage = ''
+    const topoId = uuid(5)
+    // if (args.type == 'createImage') {
+    var imageObj = new Image()
+    imageObj.src = args.image
+    // imageObj.onload = () => {
+    simpleImage = new Konva.Image({
+      name: 'staticimage',
+      id: args.productid + '_staticimage' + topoId,
+      x: Axis.x,
+      y: Axis.y,
+      image: imageObj,
+      width: args.data.width,
+      height: args.data.height,
+      type: 'staticimage',
+      // handler: 'dblclick',
+      draggable: true,
+    })
+    simpleImage.setAttrs({
+      src: args.image,
+    })
+    // simpleImage.zIndex(1)
+    // } else if (args.type == 'gifimage') {
+
+    // }
+
+    return simpleImage
+  },
   createGifImage(args) {
     console.info(
       'src/utils/konva/core/topoBasic.js',

@@ -100,17 +100,18 @@
           静态文本框
         </el-button>
         <el-divider />
+        <div style="text-align: left; margin: 10px; font-weight: 600">动图</div>
         <img
           draggable="true"
           size="mini"
-          src="http://dev.iotn2n.com/dgiot_file/topo/png/pump.gif"
+          src="https://prod.dgiotcloud.cn/dgiot_file/topo/png/pump.gif"
           style="width: 40px; height: 40px; display: inline-block"
           type="primary"
           @click="
             createBasicThing({
               productid: $route.query.productid,
               type: 'knovaimage',
-              image: 'http://dev.iotn2n.com/dgiot_file/topo/png/pump.gif',
+              image: 'https://prod.dgiotcloud.cn/dgiot_file/topo/png/pump.gif',
               hidden: false,
             })
           "
@@ -137,6 +138,61 @@
           "
         />
         <el-divider />
+        <div style="text-align: left; margin: 10px; font-weight: 600">
+          静态图
+        </div>
+        <img
+          draggable="true"
+          size="mini"
+          src="https://mp0.usr.cn/uploads/drawimg/1612317616625_0334.png"
+          style="
+            width: 40px;
+            height: 40px;
+            display: inline-block;
+            margin-left: 20px;
+          "
+          type="primary"
+          @click="
+            createBasicThing({
+              productid: $route.query.productid,
+              type: 'staticimage',
+              data: {
+                width: 180,
+                height: 200,
+              },
+              image:
+                'https://mp0.usr.cn/uploads/drawimg/1612317616625_0334.png',
+              hidden: false,
+            })
+          "
+        />
+        <img
+          draggable="true"
+          size="mini"
+          src=" https://ucloud-web-sh.oss-cn-shanghai.aliyuncs.com/cloud/web/prod/screen/assets/1650512783877_0362.png"
+          style="
+            width: 60px;
+            height: 20px;
+            display: inline-block;
+            margin-left: 20px;
+          "
+          type="primary"
+          @click="
+            createBasicThing({
+              productid: $route.query.productid,
+              type: 'staticimage',
+              data: {
+                width: 420,
+                height: 35,
+              },
+              image:
+                ' https://ucloud-web-sh.oss-cn-shanghai.aliyuncs.com/cloud/web/prod/screen/assets/1650512783877_0362.png',
+              hidden: false,
+            })
+          "
+        />
+        <!-- -->
+        <el-divider />
         <el-button
           draggable="true"
           size="mini"
@@ -160,6 +216,7 @@
           精灵图
         </el-button>
         <el-divider />
+        <div style="text-align: left; margin: 10px; font-weight: 600">组件</div>
         <el-button
           draggable="true"
           size="mini"
@@ -168,7 +225,12 @@
             createBasicThing({
               productid: $route.query.productid,
               type: 'vuecomponent',
-              data: {},
+              data: {
+                width: 400,
+                height: 260,
+                fill: 'rgba(30, 30, 30,0.7)',
+                text: '折线图',
+              },
               chart: 'line',
               hidden: false,
             })
@@ -196,6 +258,48 @@
           "
         >
           数据卡片
+        </el-button>
+        <el-button
+          draggable="true"
+          size="mini"
+          type="primary"
+          @click.native="
+            createBasicThing({
+              productid: $route.query.productid,
+              type: 'vuecomponent',
+              data: {
+                width: 240,
+                height: 240,
+                fill: 'rgba(30, 30, 30, 0.7)',
+                text: '饼图',
+              },
+              chart: 'pie',
+              hidden: false,
+            })
+          "
+        >
+          饼图
+        </el-button>
+        <el-button
+          draggable="true"
+          size="mini"
+          type="primary"
+          @click.native="
+            createBasicThing({
+              productid: $route.query.productid,
+              type: 'vuecomponent',
+              data: {
+                width: 420,
+                height: 260,
+                fill: 'rgba(30, 30, 30, 0.7)',
+                text: '轮播告警列表',
+              },
+              chart: 'carousel',
+              hidden: false,
+            })
+          "
+        >
+          轮播告警列表
         </el-button>
         <el-divider />
         <!-- http://dev.iotn2n.com/dgiot_file/topo/png/pump.png -->

@@ -143,7 +143,7 @@
           </el-form-item>
         </el-col>
         <el-col v-if="active == 2" :span="12">
-          <el-form-item label="所属应用" prop="applicationtText">
+          <el-form-item label="所属部门" prop="applicationtText">
             <el-input
               v-model="addchannel.applicationtText"
               readonly
@@ -368,7 +368,7 @@
           applicationtText: [
             {
               required: true,
-              message: '请选择所属应用',
+              message: '请选择所属部门',
               trigger: 'change',
             },
           ],
@@ -636,7 +636,7 @@
           applicationtText: [
             {
               required: true,
-              message: '请选择所属应用',
+              message: '请选择所属部门',
               trigger: 'change',
             },
           ],
@@ -745,7 +745,7 @@
             }
           })
         }
-        // 读取acl列表,获取所属应用名称
+        // 读取acl列表,获取所属部门名称
         if (this.channelrow) {
           for (var key in this.channelrow.ACL) {
             obj.applicationtText = key ? key.substr(5) : ''

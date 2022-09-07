@@ -197,20 +197,22 @@ const mutations = {
       'handler',
       handler,
       canvas.contextmenu,
-      canvas.contextmenu.getParent()
+      canvas.handlerArgs
+      // canvas.contextmenu.getParent()
     )
-    id = id.slice(0, id.length - 5)
-    console.log('寻找', canvas.stage.find(`#${id}`))
+    // id = id.slice(0, id.length - 5)
+    // console.log('寻找', canvas.stage.find(`#${id}`))
     // canvas.contextmenu.findAncestors(
     //   `#${}`
     // )
+    if (canvas.contextmenu.attrs.id == 'bg') return
     if (handler == 'remove') {
       let contextmenu = ''
       console.log('当前节点', canvas.contextmenu)
-      if (canvas.contextmenu.attrs.id == 'bg') return
       if (
         canvas.contextmenu.attrs.name == 'evidence' ||
         canvas.contextmenu.attrs.name == 'konvaimage' ||
+        canvas.contextmenu.attrs.name == 'staticimage' ||
         canvas.contextmenu.attrs.name == 'sprite' ||
         canvas.contextmenu.attrs.name == 'vuecomponent'
       ) {
@@ -227,6 +229,22 @@ const mutations = {
         handler,
       })
     } else {
+      if (handler == 'moveToTop') {
+        // canvas.contextmenu  所选node 节点
+        if (
+          canvas.contextmenu.attrs.type == 'static' ||
+          canvas.contextmenu.attrs.id.indexOf('text') >= 0
+        ) {
+          canvas.contextmenu.parent.zIndex(
+            canvas.contextmenu.parent.parent.children.length - 1
+          )
+          return
+        }
+        console.log('索引层级', canvas.contextmenu.parent.children.length - 1)
+        canvas.contextmenu.zIndex(canvas.contextmenu.parent.children.length - 1)
+        return
+      }
+      console.log('操作', handler)
       addNodeEvent({
         type: 'contextMenu',
         stage: canvas.stage,
@@ -290,6 +308,7 @@ const mutations = {
     console.log('thing内容', thing, x, y)
     if (
       thing.type == 'knovaimage' ||
+      thing.type == 'staticimage' ||
       thing.type == 'gifimage' ||
       thing.type == 'vuecomponent'
     ) {
@@ -303,6 +322,15 @@ const mutations = {
           _.merge(canvas.handlerArgs, {
             type: 'createImage',
             image: thing.image,
+            productid: thing.productid,
+          })
+        )
+      } else if (thing.type == 'staticimage') {
+        simpleImage = addNodeEvent(
+          _.merge(canvas.handlerArgs, {
+            type: 'createStaticImage',
+            image: thing.image,
+            data: thing.data,
             productid: thing.productid,
           })
         )

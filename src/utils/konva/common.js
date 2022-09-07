@@ -101,6 +101,9 @@ function addNodeEvent(args) {
       case 'createImage':
         return topoBasic.createImage(args)
         break
+      case 'createStaticImage':
+        return topoBasic.createStaticImage(args)
+        break
       case 'gifImage':
         return topoBasic.createGifImage(args)
         break
