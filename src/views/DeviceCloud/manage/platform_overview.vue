@@ -27,7 +27,7 @@
           </span>
         </el-dialog>
       </div>
-      <div
+      <!-- <div
         class="map_header"
         :style="{ height: queryForm.workGroupTreeShow ? '160px' : 'auto' }"
       >
@@ -146,7 +146,7 @@
             </el-col>
           </el-row>
         </div>
-      </div>
+      </div> -->
       <el-card shadow="hover">
         <el-row v-show="mapType == 'baidu'" :row="24">
           <el-col :span="leftRow" :xs="24">
@@ -209,7 +209,7 @@
                     </el-col>
                   </el-row>
                 </div>
-                <div
+                <!-- <div
                   class="card"
                   style="position: absolute; right: 100px; z-index: 1000"
                 >
@@ -289,7 +289,7 @@
                       <p>{{ warnCount }}</p>
                     </div>
                   </Card>
-                </div>
+                </div> -->
                 <baidu-map
                   id="baidu_map"
                   :ak="ak"
@@ -297,7 +297,56 @@
                   class="baidu_map"
                   :scroll-wheel-zoom="true"
                   :zoom="sizeZoom"
+                  @ready="handler"
                 >
+                  <div class="screen_top">
+                    <div class="screen_top_item">
+                      <router-link to="/dashboard/productlist">
+                        <p>{{ $translateTitle('home.pro_count') }}</p>
+                        <p style="color: #f8a75c">{{ _product_count }}</p>
+                      </router-link>
+                    </div>
+                    <div class="screen_top_item">
+                      <router-link to="/roles/applicationManagement">
+                        <p>{{ $translateTitle('home.app_count') }}</p>
+                        <p style="color: #efdb75">{{ _app_count }}</p>
+                      </router-link>
+                    </div>
+                    <div class="screen_top_item" @click="goDevice()">
+                      <p>{{ $translateTitle('home.dev_count') }}</p>
+                      <p style="color: #03fcfa">{{ _dev_count }}</p>
+                    </div>
+                    <div class="screen_top_item">
+                      <router-link to="/CloudOt/alarm">
+                        <p>
+                          {{
+                            $translateTitle('equipment.Total number of alarms')
+                          }}
+                        </p>
+                        <p style="color: #179fff">{{ warnCount }}</p>
+                      </router-link>
+                    </div>
+                  </div>
+                  <div class="screen_bottom">
+                    <div class="screen_bottom_title">设备告警</div>
+                    <topo-caltable :comp="comp" />
+                  </div>
+                  <div class="screen_right_bottom">
+                    <div class="screen_right_bottom_top">设备运行状况</div>
+                    <ve-pie
+                      :data="piechartData"
+                      :extend="pieextend"
+                      height="100%"
+                      :settings="piechartSettings"
+                      width="100%"
+                    />
+                  </div>
+                  <bm-map-type
+                    anchor="BMAP_ANCHOR_TOP_LEFT"
+                    :map-types="['BMAP_HYBRID_MAP', 'BMAP_NORMAL_MAP']"
+                  />
+                  <!-- 'BMAP_NORMAL_MAP' -->
+                  <!-- :map-style="{ style: 'midnight' }" -->
                   <bm-control>
                     <el-button size="mini" @click="sizeZoom = 19">
                       {{ $translateTitle('home.max') }}
@@ -313,15 +362,37 @@
                       size="mini"
                       @click="toggleFull()"
                     />
+                    <!--                    <bm-panorama-->
+                    <!--                      anchor="BMAP_ANCHOR_TOP_LEFT"-->
+                    <!--                      :offset="{ width: 500, height: 0 }"-->
+                    <!--                    />-->
                     <bm-overview-map :is-open="true" />
                     <bm-scale :offset="{ width: 260, height: 0 }" />
                     <bm-city-list :offset="{ width: 330, height: 0 }" />
-                    <bm-map-type
-                      anchor="BMAP_ANCHOR_TOP_LEFT"
-                      :map-types="['BMAP_NORMAL_MAP', 'BMAP_HYBRID_MAP']"
-                      :offset="{ width: 400, height: 0 }"
-                    />
+                    <!--                    <bm-map-type-->
+                    <!--                      anchor="BMAP_ANCHOR_TOP_LEFT"-->
+                    <!--                      :map-types="['BMAP_NORMAL_MAP', 'BMAP_HYBRID_MAP']"-->
+                    <!--                      :offset="{ width: 400, height: 0 }"-->
+                    <!--                    />-->
                   </bm-control>
+                  <!--                  <div-->
+                  <!--                    v-for="position in getPosition(_tableData)"-->
+                  <!--                    v-show="sizeZoom <= 8"-->
+                  <!--                    :key="position.objectId"-->
+                  <!--                  >-->
+                  <!--                    <bm-point-collection-->
+                  <!--                      v-if="sizeZoom <= 8"-->
+                  <!--                      color="red"-->
+                  <!--                      :points="[position]"-->
+                  <!--                      :shape="-->
+                  <!--                        position.icon == 1-->
+                  <!--                          ? 'BMAP_POINT_SHAPE_STAR'-->
+                  <!--                          : 'BMAP_POINT_SHAPE_WATERDROP'-->
+                  <!--                      "-->
+                  <!--                      size="BMAP_POINT_SIZE_SMALL"-->
+                  <!--                      @click="_goDevice(position)"-->
+                  <!--                    />-->
+                  <!--                  </div>-->
                   <bml-marker-clusterer :average-center="true">
                     <div v-for="(item, index) in _tableData" :key="index">
                       <bm-marker
@@ -648,6 +719,7 @@
   </div>
 </template>
 <script>
+  import topoCaltable from './component/topocompvue/TopoCaltable'
   import { postTopic, deleteTopic } from '@/api/Dlink'
   import icoPath1 from '../../../../public/assets/images/Device/1.png'
   import icoPath2 from '../../../../public/assets/images/Device/2.png'
@@ -696,8 +768,59 @@
       BmCityList,
       BmMarker,
       BmlMarkerClusterer,
+      topoCaltable,
     },
     data() {
+      this.piechartSettings = {
+        type: 'pie',
+      }
+      this.pieextend = {
+        series: {
+          type: 'pie',
+          radius: ['20%', '50%'],
+          center: ['50%', '50%'],
+          itemStyle: {
+            borderRadius: 2,
+            borderColor: '#fff',
+            borderWidth: 1,
+          },
+          // left: 10,
+          // top: '-12%',
+          // offsetY: 10,
+          // showAllSymbol: true,
+          // symbol: 'none', //去掉圆点
+          // smooth: true,
+        },
+        legend: {
+          left: 5,
+          top: 5,
+          textStyle: {
+            color: '#fff',
+          },
+        },
+        xAxis: {
+          axisLine: {
+            lineStyle: {
+              color: '#fff',
+            },
+          },
+        },
+        yAxis: {
+          axisLine: {
+            lineStyle: {
+              color: '#fff',
+            },
+          },
+        },
+        // grid: {
+        //   left: 10,
+        //   right: 0,
+        //   top: 0,
+        //   width: '96%',
+        //   height: '90%',
+        // },
+      }
+
       this.chartSettings = {
         radius: [5, 40],
         offsetY: 100,
@@ -714,6 +837,16 @@
       }
 
       return {
+        piechartData: {
+          columns: ['名称', '数量'],
+          rows: [
+            { 名称: '在线设备', 数量: 0 },
+            { 名称: '离线设备', 数量: 0 },
+          ],
+        },
+        comp: {
+          height: 390,
+        },
         queryParams: {},
         mapHeight: '800px',
         mapWidth: '800px',
@@ -803,7 +936,7 @@
         show: false,
         // sizeZoom: 6,
         // https://img-blog.csdnimg.cn/20200429215931435.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L0dhYnJpZWxfd2Vp,size_16,color_FFFFFF,t_70
-        sizeZoom: 5,
+        sizeZoom: 6,
         tableData: [],
         offlineData: [],
         onlineData: [],
@@ -845,9 +978,9 @@
         _app_count: 'dashboard/_app_count',
         _product_count: 'dashboard/_product_count',
         token: 'user/token',
-        _dev_online_count: 'dashboard/_dev_online_count',
+        _dev_online_count: 'dashboard/_dev_online_count', //在线设备
         _onlineData: 'dashboard/_onlineData',
-        _dev_off_count: 'dashboard/_dev_off_count',
+        _dev_off_count: 'dashboard/_dev_off_count', //离线设备
         _offlineData: 'dashboard/_offlineData',
         _ChartStatus: 'dashboard/_ChartStatus',
         _tableData: 'dashboard/_tableData',
@@ -874,10 +1007,30 @@
         deep: true,
         limit: true,
       },
+      _dev_online_count: {
+        handler: function (newVal) {
+          // console.log('这是在线数量', newVal)
+          this.piechartData.rows[0]['数量'] = newVal
+        },
+        deep: true,
+        limit: true,
+      },
+      _dev_off_count: {
+        handler: function (newVal) {
+          // console.log('这是离线数量', newVal)
+          this.piechartData.rows[1]['数量'] = newVal
+        },
+        deep: true,
+        limit: true,
+      },
     },
     mounted() {
       window.bh = ''
       window.kd = ''
+      this.piechartData.rows = [
+        { 名称: '在线设备', 数量: this._dev_online_count },
+        { 名称: '离线设备', 数量: this._dev_off_count },
+      ]
       this.initMapHeight()
       // setTimeout(() => {
       //   this.queryParams.forEach((e) => {
@@ -926,6 +1079,8 @@
        */
       handler({ BMap, map }) {
         console.log(BMap, map)
+        map.setMapType(BMAP_HYBRID_MAP)
+        // map.setMapStyleV2({ style: 'midnight' })
         // 自动获取展示的比例
         // var view = map.getViewport(eval(this._tableData))
         // this.sizeZoom = view.zoom;
@@ -953,7 +1108,7 @@
         this.$nextTick(async () => {
           // await this.getProduct()
           await this.queryData()
-          await this.setTreeFlag(true)
+          await this.setTreeFlag(false)
         })
       },
       async getWarnCount(
@@ -1519,7 +1674,96 @@
       .baidu_map {
         display: block;
         width: 100%;
-        height: calc(98vh - 20px);
+        height: calc(98vh - 120px);
+        position: relative;
+        .screen_top {
+          position: absolute;
+          width: 90%;
+          height: 90px;
+
+          // background-color: #ea1e63;
+          top: 40px;
+          left: 5%;
+          display: flex;
+          .screen_top_item {
+            width: 20%;
+            margin-left: 5%;
+            display: inline-block;
+            vertical-align: top;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: url('/assets/images/topo/screen/card.png') no-repeat;
+            background-size: 100% 100%;
+            cursor: pointer;
+            p {
+              display: inline-block;
+              padding-top: 10px;
+              height: 90px;
+              line-height: 90px;
+            }
+            p:nth-child(1) {
+              color: #fff;
+              font-size: 18px;
+              margin-right: 16px;
+            }
+            p:nth-child(2) {
+              font-size: 30px;
+              font-weight: bold;
+              // padding-top: 20px;
+              margin-right: 5px;
+            }
+          }
+        }
+        .screen_bottom {
+          position: absolute;
+          width: 80%;
+          height: 38%;
+          box-sizing: border-box;
+          // background-color: #00142f;
+          background: url('/assets/bg/bg_warning.png') no-repeat;
+          background-size: 100% 100%;
+          // background-color: #ea1e63;
+          bottom: 4px;
+          left: 4px;
+          display: flex;
+          .screen_bottom_title {
+            position: absolute;
+            left: 50%;
+            top: -15px;
+            width: 330px;
+            height: 30px;
+            text-align: center;
+            line-height: 30px;
+            background: url('/assets/bg/bg_title1.png') no-repeat;
+            background-size: 100% 100%;
+            transform: translateX(-50%);
+            font-size: 20px;
+            color: #fff;
+            z-index: 99999;
+          }
+        }
+        .screen_right_bottom {
+          position: absolute;
+          background-color: #00142f;
+          width: 19%;
+          height: 38%;
+          box-sizing: border-box;
+          bottom: 4px;
+          right: 4px;
+          background: url('/assets/bg/bg_warning.png') no-repeat;
+          background-size: 100% 100%;
+          .screen_right_bottom_top {
+            background: url('/assets/bg/bg_title.png') no-repeat;
+            background-size: 100% 100%;
+            width: 100%;
+            height: 40px;
+            line-height: 40px;
+            padding-left: 50px;
+            font-weight: bold;
+            color: #fff;
+          }
+        }
       }
 
       margin: 8px;
