@@ -17,6 +17,13 @@ import {
   query_object,
 } from '@/api/Parse'
 
+export async function queryMaterial(params) {
+  return request({
+    url: `/material`,
+    method: 'get',
+    params: params,
+  })
+}
 export async function queryMetaData(params) {
   return request({
     url: `/classes/MetaData`,
