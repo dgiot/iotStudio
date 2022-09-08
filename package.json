@@ -108,7 +108,7 @@
     "cross-env": "^5.0.5",
     "css-loader": "^3.5.3",
     "cz-conventional-changelog": "3.3.0",
-    "cz-customizable": "6.3.0",
+    "cz-customizable": "7.0.0",
     "element-ui": "2.15.6",
     "esbuild-loader": "^2.18.0",
     "eslint": "^6.8.0",
