@@ -36,9 +36,19 @@
             <el-form-item label="设备编号" label-width="200">
               <span>{{ devicename }}</span>
             </el-form-item>
-            <el-form-item :label="$translateTitle('alert.Alarm status')">
-              <el-radio v-model="status" label="1">已处理</el-radio>
-              <el-radio v-model="status" label="2">误报</el-radio>
+            <!-- 0 未确认 1 误报 2 手动恢复 3 自动恢复 -->
+            <el-form-item
+              v-if="status == 3"
+              :label="$translateTitle('alert.Alarm status')"
+            >
+              {{ '自动恢复' }}
+            </el-form-item>
+            <el-form-item
+              v-if="status < 3"
+              :label="$translateTitle('alert.Alarm status')"
+            >
+              <el-radio v-model="status" label="1">误报</el-radio>
+              <el-radio v-model="status" label="2">手动恢复</el-radio>
             </el-form-item>
             <el-form-item :label="$translateTitle('alert.Alarm remark')">
               <el-input v-model="process" type="textarea" />
@@ -80,11 +90,11 @@
               />
             </el-select>
           </el-form-item>
-          <el-form-item :label="$translateTitle('alert.isprocess')">
+          <el-form-item :label="$translateTitle('alert.Alarm status')">
             <el-select
-              v-model="queryForm.isprocess"
+              v-model="queryForm.status"
               clearable
-              :placeholder="$translateTitle('alert.isprocess')"
+              :placeholder="$translateTitle('alert.Alarm status')"
             >
               <el-option
                 v-for="(item, index) in processAll"
@@ -179,40 +189,24 @@
         show-overflow-tooltip
         sortable
       >
+        <!-- 0 未确认 1 误报 2 手动恢复 3 自动恢复 -->
         <template #default="{ row }">
-          <el-tag
-            effect="dark"
-            :type="row.content.alertstatus ? 'danger' : 'success'"
-          >
+          <el-tag effect="dark" :type="row.status > 1 ? 'success' : 'danger'">
             {{
-              row.content.alertstatus
-                ? $translateTitle('alert.start')
-                : $translateTitle('alert.stop')
+              row.status == 1
+                ? $translateTitle('Maintenance.Distort')
+                : row.status == 2
+                ? $translateTitle('Maintenance.Manualrecovery')
+                : row.status == 3
+                ? $translateTitle('Maintenance.Automaticrecovery')
+                : $translateTitle('Maintenance.Untreated')
             }}
           </el-tag>
         </template>
       </el-table-column>
       <el-table-column
         align="center"
-        :label="$translateTitle('alert.Alarm handling')"
-        show-overflow-tooltip
-        sortable
-      >
-        <template #default="{ row }">
-          <el-link effect="dark" :type="row.status == 1 ? 'success' : 'info'">
-            {{
-              row.status == 1
-                ? $translateTitle('Maintenance.Processed')
-                : row.status == 0
-                ? $translateTitle('Maintenance.Untreated')
-                : $translateTitle('Maintenance.Distort')
-            }}
-          </el-link>
-        </template>
-      </el-table-column>
-      <el-table-column
-        align="center"
-        :label="$translateTitle('alert.process')"
+        :label="$translateTitle('Maintenance.Remarks')"
         prop="process"
         show-overflow-tooltip
         sortable
@@ -328,16 +322,20 @@
         },
         processAll: [
           {
-            key: '未处理',
+            key: '未确认',
             value: 0,
           },
           {
-            key: '已处理',
+            key: '误报',
             value: 1,
           },
           {
-            key: '误报',
+            key: '手动恢复',
             value: 2,
+          },
+          {
+            key: '自动恢复',
+            value: 3,
           },
         ],
         list: [],
@@ -347,7 +345,7 @@
         total: 0,
         queryForm: {
           productName: '',
-          isprocess: '',
+          status: '',
           number: '',
           product: '',
           type: '',
@@ -473,12 +471,14 @@
       async showdynamicform(row) {
         localStorage.setItem('parse_objectid', row.deviceid)
         localStorage.setItem('parse_notificationid', row.objectId)
+        const { data } = await getView(row.content._viewid)
         this.alertId = row.objectId
         this.amisData = {}
         this.devicename = row.devaddr
         this.editRow = row
+        this.status = String(row.status)
+        this.process = row.process
         this.dynamicformView = true
-        const { data } = await getView(row.content._viewid)
         this.amisData = data
       },
       async showInfo(type, content, alertId) {
@@ -559,8 +559,8 @@
             where: {},
           }
         }
-        if (String(this.queryForm.isprocess + '').length > 0) {
-          this.queryPayload.where['status'] = this.queryForm.isprocess
+        if (String(this.queryForm.status + '').length > 0) {
+          this.queryPayload.where['status'] = this.queryForm.status
         }
         if (isNaN(this.queryPayload.where['status'])) {
           delete this.queryPayload.where['status']
