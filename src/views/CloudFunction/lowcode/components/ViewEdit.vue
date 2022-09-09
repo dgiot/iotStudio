@@ -12,7 +12,7 @@
           allow-create
           clearable
           default-first-option
-          :disabled="$route.query.id.length > 0"
+          :disabled="$route.query?.id?.length > 0"
           filterable
           style="width: 100%"
           @change="changeClass"
@@ -71,7 +71,7 @@
           allow-create
           clearable
           default-first-option
-          :disabled="$route.query.id.length > 0"
+          :disabled="$route.query?.id?.length > 0"
           filterable
           size="mini"
           style="width: 100%"

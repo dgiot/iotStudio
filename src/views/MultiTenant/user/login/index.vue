@@ -248,18 +248,21 @@
         ],
         programList: [
           {
+            img: 'http://www.dgiotcloud.cn/wp-content/uploads/2022090901575769.png',
+            name: '智慧厕所',
+            type: 2,
+            username: 'dgiot_st',
+            password: 'dgiot_st',
+          },
+          {
             img: 'https://www.dgiotcloud.cn/wp-content/uploads/2022080511362579.jpg',
             name: '工业设备租赁一体化运维平台',
             type: 1,
-            username: 'dgiot_admin',
-            password: 'dgiot_admin',
           },
           {
             img: 'https://www.dgiotcloud.cn/wp-content/uploads/2022080512380157.png',
             name: '智慧园区/智慧场馆数字驾驶舱',
             type: 2,
-            username: 'dgiot_dev',
-            password: 'dgiot_dev',
           },
           {
             img: 'https://www.dgiotcloud.cn/wp-content/uploads/202208221014537.png',
