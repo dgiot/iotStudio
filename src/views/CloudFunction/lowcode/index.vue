@@ -15,7 +15,7 @@
               allow-create
               clearable
               default-first-option
-              :disabled="$route.query.id.length > 0"
+              :disabled="$route.query?.id?.length > 0"
               filterable
               size="mini"
               @change="changeClass"
