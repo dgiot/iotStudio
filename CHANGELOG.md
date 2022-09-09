@@ -3,6 +3,7 @@
 
 ### Bug Fixes
 
+* **dashboard:** uniapp ([0d68db5](https://github.com/dgiot/dgiot-dashboard/commit/0d68db5a7244da5b4ea9d584de91f7fba2ba6177))
 * **equipmentCloud:** 设备视频监控 ([5ecad38](https://github.com/dgiot/dgiot-dashboard/commit/5ecad3830da60262fb7ce5887aea1dd29b0f4619))
 * konva cannot be edited ([2584459](https://github.com/dgiot/dgiot-dashboard/commit/25844596aaf7dabd5284e3ad1f91008099314229))
 * Object Model cannot be opened ([e3f087e](https://github.com/dgiot/dgiot-dashboard/commit/e3f087e13ab67c1b1b1bd1a45b40fe82c2ad812a))
