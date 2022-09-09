@@ -247,7 +247,7 @@
           >
             {{ setRowState(selectRow, row) }}
           </el-button>
-          <el-button type="text" @click="handleLowCode(row.objectId)">
+          <el-button type="text" @click="handleLowCode(row)">
             {{ $translateTitle('application.preview') }}
           </el-button>
           <el-button type="text" @click="handleEdit(row)">
@@ -609,6 +609,7 @@
         this.$refs['edit'].showEdit(this.queryForm)
       },
       async handleEdit(row) {
+        localStorage.setItem('parse_objectid', row.key)
         const loading = this.$baseLoading(1)
         const { data = {} } = await getView(row.objectId)
         if (['amis_view', 'amis', 'topo'].includes(row.type) == -1) {
@@ -648,10 +649,11 @@
           }
         )
       },
-      async handleLowCode(lowcodeId) {
+      async handleLowCode(row) {
+        localStorage.setItem('parse_objectid', row.key)
         const loading = this.$baseColorfullLoading(1)
         loading.close()
-        this.$dgiotBus.$emit('lowcodePreview', await getView(lowcodeId))
+        this.$dgiotBus.$emit('lowcodePreview', await getView(row.objectId))
       },
       async saveLowCode(lowcodeId, payload) {
         const loading = this.$baseColorfullLoading(1)
