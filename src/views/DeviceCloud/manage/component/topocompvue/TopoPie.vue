@@ -46,14 +46,15 @@
         series: {
           type: 'pie',
           radius: ['20%', '50%'],
+          center: ['50%', '50%'],
           itemStyle: {
             borderRadius: 2,
             borderColor: '#fff',
             borderWidth: 1,
           },
-          left: 10,
-          right: 0,
-          top: '-30%',
+          // left: 10,
+          // right: 0,
+          // top: '-30%',
           // offsetY: 10,
           // showAllSymbol: true,
           // symbol: 'none', //去掉圆点

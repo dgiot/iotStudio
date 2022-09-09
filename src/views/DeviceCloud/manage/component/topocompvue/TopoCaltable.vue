@@ -1,13 +1,10 @@
 <template>
-  <div
-    class="topoCaltable"
-    :style="{ width: comp.width + 'px', height: comp.height + 'px' }"
-  >
+  <div class="topoCaltable" :style="{ width: '100%', height: '100%' }">
     <div class="table_content">
       <div class="backround">
         <div class="toptitle">
-          <div class="item">报警时间</div>
           <div class="item">设备编号</div>
+          <div class="item">报警时间</div>
           <div class="item">状态</div>
           <div class="item">产品名称</div>
         </div>
@@ -22,10 +19,10 @@
               :key="index"
               class="table-item"
             >
+              <td class="table-item-content">{{ item.devaddr }}</td>
               <td class="table-item-content">
                 {{ $moment(item.createdAt).format('YYYY-MM-DD HH:mm:ss') }}
               </td>
-              <td class="table-item-content">{{ item.devaddr }}</td>
               <td class="table-item-content">
                 <el-tag
                   v-if="item.content.alertstatus"
@@ -78,7 +75,7 @@
         type: Object,
         default: () => ({
           type: 'line',
-          width: 262,
+          width: 400,
           hieght: 72,
         }),
       },
@@ -178,6 +175,13 @@
     },
     methods: {
       async fetchData(args = {}) {
+        // this.$route.query.type
+        if (this.$route.query.productid)
+          this.queryPayload.where = {
+            'content._productid': {
+              $regex: this.$route.query.productid,
+            },
+          }
         const { results = [], count = 0 } = await queryNotification(
           this.queryPayload
         )
@@ -196,7 +200,7 @@
       height: calc(100% - 40px);
       margin-top: 35px;
       margin-left: 2%;
-      background-color: #363b41;
+      background-color: #0b2266;
       display: flex;
       flex-direction: column;
       justify-content: center;
@@ -204,7 +208,7 @@
       color: #fff;
       overflow: hidden;
       ::v-deep .toptitle {
-        background-color: #001833;
+        background-color: #071753;
         width: 100%;
         display: flex;
         // background-color: gainsboro;
@@ -215,35 +219,36 @@
       }
       .item {
         width: 25%;
-        padding: 10px 0;
+        padding: 15px 0;
         // border-right: 2px solid gainsboro;
         text-align: center;
       }
       .backround {
         width: 100%;
         height: 100%;
-        background-color: #001833;
+        // background-color: #001833;
       }
       .table {
         height: 100%;
         display: flex;
         // overflow-y: auto;
         flex-direction: column;
-        border-left: 0.2px solid #ccc;
-        border-bottom: 0.2px solid #ccc;
-        border-right: 0.2px solid #ccc;
+        // border-left: 0.2px solid #ccc;
+        // border-bottom: 0.2px solid #ccc;
+        // border-right: 0.2px solid #ccc;
         .table-item:nth-child(2n) {
-          background-color: #001833;
+          background-color: #0b1b57;
         }
         .table-item:nth-child(2n + 1) {
-          background-color: #08223f;
+          background-color: #071753;
         }
         .table-item {
           display: flex;
           justify-content: center;
           align-items: center;
+          padding: 10px;
           // border-bottom: 0.1px solid #ccc;
-          border-top: 0.1px solid #ccc;
+          // border-top: 0.1px solid #ccc;
           width: 100%;
           // border-bottom: 0.2px solid #fff;
           .table-item-content {
@@ -257,12 +262,13 @@
       }
 
       /* 表格内背景颜色 */
-      ::v-deep .el-table .tableRowClassName:nth-child(2n + 1) {
-        background-color: #08223f !important;
-        // border: 0.1px solid #fff !important;
-      }
+
       ::v-deep .el-table .tableRowClassName:nth-child(2n) {
         background-color: #001833 !important;
+        // border: 0.1px solid #fff !important;
+      }
+      ::v-deep .el-table .tableRowClassName:nth-child(2n + 1) {
+        background-color: #08223f !important;
         // border: 0.1px solid #fff !important;
       }
       ::v-deep .el-table {
