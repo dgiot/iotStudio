@@ -348,6 +348,7 @@
       })
       this.$dgiotBus.$off('nodeEdit')
       this.$dgiotBus.$on('nodeEdit', async (node) => {
+        console.log('接收到编辑节点消息', node)
         this.editNode = node
         this.editFlag = true
         // this.editNode.setAttrs({
@@ -522,6 +523,8 @@
               decodeMqtt = JSON.parse(Base64.decode(Msg.payloadString))
             }
             // decodeMqtt = Msg.payloadString
+            // console.log('decodeMqtt.konva', canvas.stage)
+            // console.log(decodeMqtt)
             // const Shape = decodeMqtt.konva
             // const Text = canvas.stage.find('Text')
             // console.log('text', Text)

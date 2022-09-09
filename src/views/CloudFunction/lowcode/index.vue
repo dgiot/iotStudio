@@ -15,7 +15,7 @@
               allow-create
               clearable
               default-first-option
-              :disabled="classDisable"
+              :disabled="$route.query.id.length > 0"
               filterable
               size="mini"
               @change="changeClass"
@@ -54,7 +54,7 @@
               </el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="key">
+          <el-form-item v-show="false" label="key">
             <el-select
               v-model="queryForm.key"
               allow-create

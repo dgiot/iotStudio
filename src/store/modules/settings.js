@@ -50,7 +50,7 @@ const state = () => ({
   language: getToken('language') || i18n,
   theme: getToken('theme') || { ...defaultTheme },
   tag: getToken('tag') || {},
-  treeFlag: true,
+  treeFlag: false,
   extra: {
     first: '',
     transferRouteName: '',
