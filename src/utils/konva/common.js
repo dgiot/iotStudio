@@ -57,6 +57,11 @@ function evidenceEVent(type, event, node) {
       return topoPath.emitBus(node)
     }
   })
+  node.on(`touchend`, (e) => {
+    if (type == 'evidence') {
+      return topoPath.emitBus(node)
+    }
+  })
 }
 
 /**

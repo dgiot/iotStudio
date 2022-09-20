@@ -647,7 +647,7 @@
           // include: this.queryForm.include,
           order: '-createdAt',
           count: 'objectId',
-          where: { product: '21efa507f6' }, //product: '21efa507f6'
+          where: {}, //product: '21efa507f6'
         }
         console.log(this.$route.query)
         this.queryForm.name
