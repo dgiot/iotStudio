@@ -604,6 +604,7 @@ export default {
       share: '分享',
       config: '配置',
       dict: '字典',
+      file: '文件',
       decoder: '解码器',
       lowcode: '低代码',
       edit: '设备',
