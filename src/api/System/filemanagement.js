@@ -1,5 +1,15 @@
 import request from '@/utils/request/request'
 
+//emicp
+export async function getproductTree(params) {
+  return request({
+    url: `/producttree`,
+    method: 'get',
+  })
+  // return query_object('MetaData', params)
+}
+
+// Ô­½Ó¿Ú
 export function list_dir(path) {
   return request({
     url: 'list_dir',
