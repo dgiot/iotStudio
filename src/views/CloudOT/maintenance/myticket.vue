@@ -1,181 +1,54 @@
-<!--
-* @Author: h7ml
-* @Date: 2021-07-02 10:29:31
-* @LastEditors: h7ml
-* @LastEditTime: 2021-07-02 10:29:31
-* @Description:
-* @FilePath: src\views\Maintenance\myticket.vue
--->
 <template>
-  <div class="mycontainer">
-    <div class="ticker-dialog">
-      <div class="home_dialog">
-        <el-dialog
-          :append-to-body="true"
-          :title="detail.name"
-          :visible.sync="_deviceFlag"
-          width="100vh"
-        >
-          <change-info
-            ref="changeinfo"
-            :detail="detail"
-            :show-footer="isfooter"
-            :show-hard="ishard"
-            :step="step"
-          />
-          <span slot="footer" class="dialog-footer">
-            <el-button
-              v-show="detail.status == 0"
-              @click="set_deviceFlag(false)"
-            >
-              {{ $translateTitle('developer.cancel') }}
-            </el-button>
-            <el-button
-              v-show="detail.status == 0 && isfooter"
-              type="primary"
-              @click="dispatch()"
-            >
-              {{ $translateTitle('Maintenance.Dispatch') }}
-            </el-button>
-            <el-button v-show="detail.status == 1" @click="backChange(detail)">
-              {{ $translateTitle('Maintenance.back') }}
-            </el-button>
-
-            <el-button
-              v-show="detail.status == 2 && isfooter"
-              type="primary"
-              @click="Reassign(detail)"
-            >
-              {{ $translateTitle('Maintenance.Reassign') }}
-            </el-button>
-            <el-button
-              v-show="detail.status == 2 && isfooter"
-              type="primary"
-              @click="check()"
-            >
-              {{ $translateTitle('Maintenance.check') }}
-            </el-button>
-
-            <el-button
-              v-show="detail.status == 1 && isfooter"
-              type="primary"
-              @click="dealwith()"
-            >
-              {{ $translateTitle('Maintenance.deal with') }}
-            </el-button>
-          </span>
-        </el-dialog>
-        <el-dialog
-          :append-to-body="true"
-          :title="$translateTitle('Maintenance.create Ticket')"
-          :visible.sync="dialogFormVisible"
-          width="90vh"
-        >
-          <el-form
-            ref="form"
-            class="create-ticker"
-            label-width="auto"
-            :model="form"
-            :rules="rules"
-            size="medium "
+  <div class="comprehensive-table-container">
+    <div class="dialog">
+      <el-dialog
+        :append-to-body="true"
+        :title="title"
+        :visible.sync="showdeviceFlag"
+        width="100vh"
+      >
+        <Change-Step ref="ChangeStep" :detail="detail" :step="step" />
+        <span slot="footer" class="dialog-footer">
+          <el-button @click="showdeviceFlag = !showdeviceFlag">
+            {{ $translateTitle('tagsView.close') }}
+          </el-button>
+          <el-button
+            v-if="detail.status == 0"
+            plain
+            type="warning"
+            @click="backChange(detail)"
           >
-            <el-form-item
-              :label="$translateTitle('equipment.Products')"
-              prop="product"
-            >
-              <el-select
-                v-model="form.product"
-                :placeholder="
-                  $translateTitle('Maintenance.Please choose the product')
-                "
-                style="width: 100%"
-                @change="prodChange"
-              >
-                <el-option
-                  v-for="(item, index) in Product"
-                  v-show="item.objectId != 0"
-                  :key="index"
-                  :label="item.name"
-                  :value="item.objectId"
-                />
-              </el-select>
-            </el-form-item>
-            <el-form-item
-              :label="$translateTitle('Maintenance.Equipment name')"
-              prop="name"
-            >
-              <el-select
-                v-model="form.name"
-                :disabled="!Device.length"
-                :placeholder="
-                  Device.length == 0
-                    ? $translateTitle('Maintenance.Please choose the product')
-                    : $translateTitle('Maintenance.Please select a device')
-                "
-                style="width: 100%"
-                @change="deviceChange"
-              >
-                <el-option
-                  v-for="(item, index) in Device"
-                  v-show="item.objectId"
-                  :key="index"
-                  :label="item.name"
-                  :value="item.objectId"
-                />
-              </el-select>
-            </el-form-item>
-            <el-form-item
-              :label="$translateTitle('Maintenance.Ticket type')"
-              prop="type"
-            >
-              <el-input v-model="form.type" />
-            </el-form-item>
-            <el-form-item
-              :label="$translateTitle('Maintenance.Ticket description')"
-            >
-              <el-input v-model="form.description" type="textarea" />
-            </el-form-item>
-            <el-form-item :label="$translateTitle('Maintenance.photo')">
-              <el-upload
-                action="#"
-                :auto-upload="true"
-                :http-request="myUpload"
-                list-type="picture-card"
-              >
-                <i slot="default" class="el-icon-plus"></i>
-                <div v-for="(item, index) in form.photo" :key="index">
-                  <img
-                    alt=""
-                    class="el-upload-list__item-thumbnail"
-                    :src="item.url"
-                  />
-                </div>
-              </el-upload>
-              <el-dialog :append-to-body="true" :visible.sync="dialogVisible">
-                <img alt="" :src="dialogImageUrl" width="100%" />
-              </el-dialog>
-            </el-form-item>
-          </el-form>
-          <div slot="footer" class="dialog-footer">
-            <el-button type="primary" @click.native="submitForm('form')">
-              {{ $translateTitle('Maintenance.Create now') }}
-            </el-button>
-            <el-button @click="resetForm('form')">
-              {{ $translateTitle('Maintenance.Reset') }}
-            </el-button>
-          </div>
-        </el-dialog>
-      </div>
+            {{ $translateTitle('Maintenance.back') }}
+          </el-button>
+          <el-button
+            v-if="detail.status == 0"
+            plain
+            type="primary"
+            @click="receiveChange(detail)"
+          >
+            {{ $translateTitle('Maintenance.receive') }}
+          </el-button>
+          <el-button
+            v-if="detail.status == 1"
+            type="primary"
+            @click="dealwithChange(detail)"
+          >
+            {{ $translateTitle('Maintenance.deal with') }}
+          </el-button>
+        </span>
+      </el-dialog>
     </div>
-    <dgiot-query-form class="query-form">
+    <dgiot-query-form>
       <dgiot-query-form-top-panel>
         <el-form
+          ref="form"
           :inline="true"
-          label-width="auto"
+          label-width="75px"
           :model="queryForm"
+          size="mini"
           @submit.native.prevent
         >
-          <el-form-item :label="$translateTitle('Maintenance.number')">
+          <el-form-item :label="$translateTitle('Maintenance.Ticket number')">
             <el-input
               v-model.trim="queryForm.number"
               clearable
@@ -189,7 +62,7 @@
               :placeholder="$translateTitle('equipment.Products')"
             >
               <el-option
-                v-for="(item, index) in Product"
+                v-for="(item, index) in _Product"
                 v-show="item.objectId != 0"
                 :key="index"
                 :label="item.name"
@@ -197,21 +70,35 @@
               />
             </el-select>
           </el-form-item>
-
-          <el-form-item :label="$translateTitle('Maintenance.type')">
-            <el-input
+          <el-form-item :label="$translateTitle('Maintenance.Ticket type')">
+            <el-select
               v-model="queryForm.type"
               clearable
               :placeholder="$translateTitle('Maintenance.Ticket type')"
-            />
+            >
+              <el-option
+                v-for="(item, index) in tickettype"
+                :key="index"
+                :label="item.label"
+                :value="item.value"
+              />
+            </el-select>
           </el-form-item>
-          <!--          <el-form-item label="账号">-->
-          <!--            <el-input-->
-          <!--              v-model.trim="queryForm.account"-->
-          <!--              clearable-->
-          <!--              placeholder="请输入账号"-->
-          <!--            />-->
-          <!--          </el-form-item>-->
+          <el-form-item :label="$translateTitle('Maintenance.Ticket status')">
+            <el-select
+              v-model="queryForm.status"
+              clearable
+              :placeholder="$translateTitle('Maintenance.Ticket status')"
+              style="width: 100%"
+            >
+              <el-option
+                v-for="(item, index) in status"
+                :key="index"
+                :label="item.label"
+                :value="item.value"
+              />
+            </el-select>
+          </el-form-item>
           <el-form-item :label="$translateTitle('Maintenance.times')">
             <el-date-picker
               v-model="queryForm.searchDate"
@@ -222,19 +109,7 @@
               value-format="yyyy-MM-dd"
             />
           </el-form-item>
-          <el-form-item :label="$translateTitle('Maintenance.status')">
-            <el-select
-              v-model="queryForm.status"
-              clearable
-              :placeholder="$translateTitle('Maintenance.Ticket status')"
-            >
-              <el-option
-                v-for="item in status"
-                :key="item.key"
-                :label="$translateTitle(item.text)"
-                :value="item.key"
-              />
-            </el-select>
+          <el-form-item>
             <el-button
               icon="el-icon-search"
               size="mini"
@@ -243,86 +118,17 @@
             >
               {{ $translateTitle('Maintenance.search') }}
             </el-button>
-            <!--            <el-button-->
-            <!--              icon="el-icon-user"-->
-            <!--              type="info"-->
-            <!--              disabled-->
-            <!--              :size="created % 2 == 0 ? 'small' : 'medium'"-->
-            <!--              @click="handleCreated('created')"-->
-            <!--            >-->
-            <!--              {{ $translateTitle('Maintenance.I created') }}-->
-            <!--            </el-button>-->
-            <!--            <el-button-->
-            <!--              icon="el-icon-user-solid"-->
-            <!--              type="success"-->
-            <!--              :size="Assigned % 2 == 0 ? 'mini' : 'small'"-->
-            <!--              @click="handleCreated('Assigned')"-->
-            <!--            >-->
-            <!--              {{ $translateTitle('Maintenance.Assigned to me') }}-->
-            <!--            </el-button>-->
-          </el-form-item>
-          <el-form-item>
-            <el-button size="mini" type="text" @click="handleFold">
-              <span v-if="fold">
-                {{ $translateTitle('Maintenance.Unfold') }}
-              </span>
-              <span v-else>{{ $translateTitle('Maintenance.merge') }}</span>
-              <dgiot-icon
-                class="dgiot-dropdown"
-                :class="{ 'dgiot-dropdown-active': fold }"
-                icon="arrow-up-s-line"
-              />
-            </el-button>
-          </el-form-item>
-
-          <el-form-item v-show="!fold">
-            <el-button
-              icon="el-icon-circle-plus-outline"
-              size="mini"
-              type="primary"
-              @click="dialogFormVisible = !dialogFormVisible"
-            >
-              {{ $translateTitle('Maintenance.create Ticket') }}
-            </el-button>
-            <el-button
-              :disabled="!selectedList.length"
-              icon="el-icon-s-promotion"
-              size="mini"
-              type="primary"
-              @click="batchExport(selectedList)"
-            >
-              {{ $translateTitle('Maintenance.Export') }}
-            </el-button>
-            <el-button
-              :disabled="!selectedList.length"
-              icon="el-icon-delete"
-              size="mini"
-              type="danger"
-              @click="handleDelete(selectedList, 1)"
-            >
-              {{ $translateTitle('Maintenance.batch deletion') }}
-            </el-button>
           </el-form-item>
         </el-form>
       </dgiot-query-form-top-panel>
     </dgiot-query-form>
-
     <el-table
       ref="tableSort"
       v-loading="listLoading"
       border
       :data="list"
-      :height="height"
       stripe
-      @selection-change="changeBox"
     >
-      <el-table-column
-        align="center"
-        class-name="isCheck"
-        show-overflow-tooltip
-        type="selection"
-        width="55"
-      />
       <el-table-column
         align="center"
         :label="$translateTitle('Maintenance.Ticket number')"
@@ -331,6 +137,36 @@
         sortable
         width="120"
       />
+      <el-table-column
+        align="center"
+        :label="$translateTitle('equipment.Products')"
+        show-overflow-tooltip
+        sortable
+      >
+        <template #default="{ row }">
+          {{ row.info && row.info.productname ? row.info.productname : '' }}
+        </template>
+      </el-table-column>
+      <el-table-column
+        align="center"
+        :label="$translateTitle('Maintenance.Equipment name')"
+        show-overflow-tooltip
+        sortable
+      >
+        <template #default="{ row }">
+          {{ row.info && row.info.devicename ? row.info.devicename : '' }}
+        </template>
+      </el-table-column>
+      <el-table-column
+        align="center"
+        :label="$translateTitle('Maintenance.executor')"
+        show-overflow-tooltip
+        sortable
+      >
+        <template #default="{ row }">
+          {{ row.info && row.info.executorname ? row.info.executorname : '' }}
+        </template>
+      </el-table-column>
       <el-table-column
         align="center"
         :label="$translateTitle('Maintenance.Ticket type')"
@@ -348,26 +184,24 @@
           {{ getStatus(row.status, row) }}
         </template>
       </el-table-column>
-
       <el-table-column
         align="center"
-        :label="$translateTitle('equipment.Products')"
+        :label="$translateTitle('Maintenance.planstartdata')"
         show-overflow-tooltip
         sortable
       >
         <template #default="{ row }">
-          {{ row.info && row.info.productname ? row.info.productname : '' }}
+          {{ $moment(row.info.startdata).format('YYYY-MM-DD') }}
         </template>
       </el-table-column>
-
       <el-table-column
         align="center"
-        :label="$translateTitle('Maintenance.Equipment name')"
+        :label="$translateTitle('Maintenance.planenddata')"
         show-overflow-tooltip
         sortable
       >
         <template #default="{ row }">
-          {{ row.info && row.info.devicename ? row.info.devicename : '' }}
+          {{ $moment(row.info.completiondata).format('YYYY-MM-DD') }}
         </template>
       </el-table-column>
       <el-table-column
@@ -382,7 +216,7 @@
       </el-table-column>
       <el-table-column
         align="center"
-        :label="$translateTitle('Maintenance.the starting time')"
+        :label="$translateTitle('cloudTest.Creation time')"
         show-overflow-tooltip
         sortable
       >
@@ -392,56 +226,45 @@
       </el-table-column>
       <el-table-column
         align="center"
+        :label="$translateTitle('Maintenance.istimeout')"
+        show-overflow-tooltip
+        sortable
+      >
+        <template #default="{ row }">
+          <span v-html="getistimeout(row)"></span>
+        </template>
+      </el-table-column>
+      <el-table-column
+        align="center"
         fixed="right"
         :label="$translateTitle('Maintenance.operating')"
-        width="220"
+        width="260"
       >
         <template #default="{ row }">
           <el-button
+            v-if="row.status == 0 && username == row.info.executorname"
+            plain
+            size="mini"
+            type="primary"
+            @click="receive(row)"
+          >
+            {{ $translateTitle('Maintenance.receive') }}
+          </el-button>
+          <el-button
+            v-if="row.status == 1 && username == row.info.executorname"
+            size="mini"
+            type="primary"
+            @click="dealwith(row)"
+          >
+            {{ $translateTitle('Maintenance.deal with') }}
+          </el-button>
+          <el-button
+            v-else
             size="mini"
             type="primary"
             @click="showInfo(row, true, false)"
           >
             {{ $translateTitle('Maintenance.View') }}
-          </el-button>
-          <!--          <el-button-->
-          <!--            v-show="row.status == 0"-->
-          <!--            size="mini"-->
-          <!--            type="success"-->
-          <!--            @click="showInfo(row)"-->
-          <!--          >-->
-          <!--            {{ $translateTitle('Maintenance.Dispatch') }}-->
-          <!--          </el-button>-->
-          <el-button
-            v-show="row.status == 1"
-            size="mini"
-            type="success"
-            @click="showInfo(row)"
-          >
-            {{ $translateTitle('Maintenance.deal with') }}
-          </el-button>
-          <el-button
-            v-show="row.status == 2"
-            size="mini"
-            type="info"
-            @click="showInfo(row)"
-          >
-            {{ $translateTitle('Maintenance.Evaluation') }}
-          </el-button>
-          <!--          <el-button-->
-          <!--            v-show="row.status == 3"-->
-          <!--            type="info"-->
-          <!--            @click="showInfo(row, 3)"-->
-          <!--          >-->
-          <!--            {{ $translateTitle('Maintenance.deal with') }}-->
-          <!--          </el-button>-->
-          <el-button
-            v-show="row.status != 3"
-            size="mini"
-            type="danger"
-            @click="handleDelete(row, 2)"
-          >
-            {{ $translateTitle('Maintenance.delete') }}
           </el-button>
         </template>
       </el-table-column>
@@ -449,20 +272,12 @@
         <dgiot-empty />
       </template>
     </el-table>
-    <!--    <dgiot-Pagination-->
-    <!--      :limit.sync="queryForm.pageSize"-->
-    <!--      :page.sync="queryForm.pageNo"-->
-    <!--      :total="total"-->
-    <!--      @pagination="fetchData"-->
-    <!--    />-->
-    <el-pagination
-      :key="paginationKey + 'key' + total"
-      layout="total, sizes, prev, pager, next, jumper"
-      :page-size="total"
-      :page-sizes="[10, 20, 30, 50]"
+    <dgiot-Pagination
+      v-show="total > 0"
+      :limit.sync="queryForm.pageSize"
+      :page.sync="queryForm.pageNo"
       :total="total"
-      @current-change="channelCurrentChange"
-      @size-change="channelSizeChange"
+      @pagination="fetchData"
     />
   </div>
 </template>
@@ -471,35 +286,51 @@
   import { create_object, query_object, update_object } from '@/api/Parse'
   import { batch } from '@/api/Batch'
   import { queryDevice } from '@/api/Device'
+  import { usertree } from '@/api/User'
   import { mapGetters, mapMutations } from 'vuex'
-  import { queryProduct } from '@/api/Product'
-  import ChangeInfo from '@/views/CloudOT/maintenance/ChangeInfo'
+  import ChangeStep from '@/views/CloudOT/maintenance/ChangeStep'
   import { exlout, UploadImg } from '@/api/File'
+  import { getRoleuser, queryRoledepartment } from '@/api/Role'
+  import { Roletree } from '@/api/Menu'
 
   export default {
-    name: 'MyWork',
+    name: 'CreateTicket',
     components: {
-      ChangeInfo,
+      ChangeStep,
     },
     data() {
       return {
-        Product: {},
+        tickettype: [
+          {
+            label: '巡检',
+            value: '巡检',
+          },
+          {
+            label: '抢修',
+            value: '抢修',
+          },
+          {
+            label: '故障',
+            value: '故障',
+          },
+        ],
+        showdeviceFlag: false,
         created: 0,
         Assigned: 0,
+        loading: false,
+        user: [],
+        viewticket: false,
         form: {
-          receiveuseid: '',
-          productname: '',
-          devicename: '',
-          createdname: '',
-          receiveusername: '',
-          receiveuserphone: '',
           name: '',
           product: '',
+          device: '',
           type: '',
-          description: '',
-          photo: [],
-          objectId: '',
+          info: {
+            startdata: '',
+            completiondata: '',
+          },
         },
+        title: '',
         dialogFormVisible: false,
         fold: false,
         step: 1,
@@ -523,7 +354,7 @@
               trigger: 'change',
             },
           ],
-          name: [
+          'info.device': [
             {
               required: true,
               message: '请选择设备',
@@ -537,38 +368,59 @@
               trigger: 'change',
             },
           ],
+          'info.startdata': [
+            {
+              required: true,
+              message: '请选择开始时间',
+              trigger: 'change',
+            },
+          ],
+          'info.completiondata': [
+            {
+              required: true,
+              message: '请选择要求完成时间',
+              trigger: 'change',
+            },
+          ],
+          'info.principal': [
+            {
+              required: true,
+              message: '请选择负责人',
+              trigger: 'change',
+            },
+          ],
+          'info.executor': [
+            {
+              required: true,
+              message: '请选择执行人',
+              trigger: 'change',
+            },
+          ],
         },
         list: [],
         // aclObj: {},
         listLoading: false,
         layout: 'total, sizes, prev, pager, next, jumper',
-        length: 10,
-        start: 0,
         total: 0,
-        paginationKey: moment(new Date()).valueOf() + '',
         status: [
           {
-            key: 0,
-            text: 'Maintenance.To be assigned',
+            label: '待接收',
+            value: 0,
           },
           {
-            key: 1,
-            text: 'Maintenance.Assigned',
+            label: '处理中',
+            value: 1,
           },
           {
-            key: 2,
-            text: 'Maintenance.Processed',
-          },
-          {
-            key: 3,
-            text: 'Maintenance.Statement',
+            label: '已处理',
+            value: 2,
           },
         ],
         queryForm: {
           devicename: '',
           statusFlag: false,
           status: '',
-          number: this.$route.query.id || '',
+          number: '',
           product: '',
           type: '',
           pageNo: 1,
@@ -583,65 +435,49 @@
     },
     computed: {
       ...mapGetters({
+        _Product: 'user/_Product',
         objectid: 'user/objectId',
         role: 'acl/role',
-        currentDepartment: 'user/currentDepartment',
         username: 'user/username',
+        currentDepartment: 'user/currentDepartment',
       }),
-      _deviceFlag: {
+      _deviceStep: {
         get() {
-          console.log(
-            'this.$store.state.global._deviceFlag',
-            this.$store.state.global._deviceFlag
-          )
-          return this.$store.state.global._deviceFlag
+          return this.$store.state.global._deviceStep
         },
         set(v) {
-          this.set_deviceFlag(v)
+          this.set_deviceStep(v)
         },
-      },
-      aclObj() {
-        let aclObj = {}
-        this.role.map((e) => {
-          aclObj[`${'role' + ':' + e.name}`] = {
-            read: true,
-            write: true,
-          }
-        })
-        return aclObj
       },
     },
     watch: {
-      _deviceFlag: function (e) {
-        if (e == false) {
-          this.fetchData()
-        }
-      },
-      'queryForm.status': function (e) {
-        if (e != '') {
-          this.queryForm.statusFlag = true
-        } else {
-          this.queryForm.statusFlag = false
-        }
+      _deviceStep: function (e) {
+        if (e == -1) this.fetchData()
       },
     },
     created() {},
     mounted() {
-      // this.fetchData()
-      this.handleCreated('created')
+      this.fetchData()
     },
     methods: {
-      // 分页
-      channelSizeChange(val) {
-        this.length = val
-        // this.total = 0
-        this.fetchData()
+      getistimeout(row) {
+        let oldtime = new Date(row.info.completiondata).getTime()
+        if (new Date() > oldtime && row.status != 2) {
+          return `<span><font color="#FF0000"> 超时 </font></span>`
+        } else {
+          return `<span><font color="#0000FF"> 未超时 </font></span>`
+        }
       },
-      channelCurrentChange(val) {
-        // this.total = 0
-        if (val <= 1) this.total = 0
-        this.start = (val - 1) * this.length
-        this.fetchData()
+      async roleuser() {
+        let params = {
+          where: {
+            objectId: this.currentDepartment.objectId,
+          },
+          include: true,
+          limit: 10,
+        }
+        const { results } = await getRoleuser(params)
+        this.user = results
       },
       myUpload(content) {
         const file = content.file
@@ -653,10 +489,12 @@
           path: 'ticket',
           filename: 'ticket' + `${moment().format('x')}.${extension}`,
         }
+        dgiotlog.log('extension', params)
         UploadImg(params)
           .then((res) => {
             if (res.data.url) {
-              this.form.photo.push(res.data.url)
+              this.form.info.photo.push(res.data.url)
+              console.log('上传成功的回调', res.data.url, this.form.photo)
             } else {
               console.log('no up url ', res)
             }
@@ -665,170 +503,16 @@
             console.log('出错了', e)
           })
       },
-      submitForm(formName) {
-        this.$refs[formName].validate((valid) => {
-          if (valid) {
-            this.createdTicket(this.form)
-          } else {
-            console.log('error submit!!')
-            return false
-          }
-        })
-      },
-      async createdTicket(from) {
-        const setAcl = {}
-        // setAcl['*'] = {
-        //   read: true,
-        //   write: true,
-        // }
-        setAcl[this.objectid] = {
-          read: true,
-          write: true,
-        }
-        setAcl[`${'role' + ':' + this.currentDepartment.name}`] = {
-          read: true,
-          write: true,
-        }
-        const params = {
-          number: moment(new Date()).unix() + '',
-          type: from.type,
-          // status: 0,
-          // product: {
-          //   objectId: from.product,
-          //   __type: 'Pointer',
-          //   className: 'Product',
-          // },
-
-          // user: {
-          //   objectId: this.objectId,
-          //   __type: 'Pointer',
-          //   className: '_User',
-          // },
-          // ACL: this.aclObj,
-          status: 0,
-          ACL: _.merge(setAcl, this.aclObj),
-          info: {
-            photo: from.photo,
-            timeline: [
-              {
-                timestamp: moment(new Date()).format('YYYY-MM-DD HH:mm:ss'),
-                h4: '生成工单',
-                p: `${this.username}新建工单`,
-              },
-            ],
-            description: from.description,
-            step1: {},
-            step2: {},
-            step3: {},
-            step4: {},
-            productid: from.product,
-            productname: from.productname,
-            devicename: from.devicename,
-            deviceid: from.name,
-            createdname: this.username,
-            receiveusername: from.receiveusername,
-            receiveuseid: from.receiveuseid,
-            receiveuserphone: from.receiveuserphone,
-          },
-          device: {
-            objectId: from.name,
-            __type: 'Pointer',
-            className: 'Device',
-          },
-        }
-        const loading = this.$baseColorfullLoading()
-        const res = await create_object('Maintenance', params)
-        loading.close()
-        this.fetchData()
-        this.dialogFormVisible = false
-      },
-      resetForm(formName) {
-        this.$refs[formName].resetFields()
-      },
       changeBox(val) {
         this.selectedList = []
         val.forEach((item) => {
           this.selectedList.push(item)
         })
+        dgiotlog.log(this.selectedList)
       },
       ...mapMutations({
-        set_deviceFlag: 'global/set_deviceFlag',
+        set_deviceStep: 'global/set_deviceStep',
       }),
-      handleFold() {
-        this.fold = !this.fold
-        this.handleHeight()
-      },
-      /**
-       *
-       * @param row
-       * @return {Promise<void>}
-       */
-      async batchExport(row) {
-        try {
-          const params = {
-            results: [],
-          }
-          params['results'] = row
-          const res = await exlout(params)
-          this.$convertRes2Blob(res)
-          this.$message({
-            showClose: true,
-            duration: 2000,
-            message: this.$translateTitle('node.export success'),
-            type: 'success',
-          })
-        } catch (error) {
-          console.log(error)
-          this.$baseMessage(
-            this.$translateTitle('node.export error') + `${error}`,
-            'error',
-            'dgiot-hey-message-error'
-          )
-        }
-      },
-      handleDelete(row, type) {
-        let batchParams = []
-
-        if (type == 2) {
-          batchParams.push({
-            method: 'DELETE',
-            path: `/classes/Maintenance/${row.objectId}`,
-            body: {},
-          })
-        } else {
-          row.forEach((item) => {
-            batchParams.push({
-              method: 'DELETE',
-              path: `/classes/Maintenance/${item.objectId}`,
-              body: {},
-            })
-          })
-        }
-        this.$baseConfirm(
-          this.$translateTitle(
-            'Maintenance.Are you sure you want to delete the current item'
-          ),
-          null,
-          async () => {
-            const res = await batch(batchParams)
-            this.$baseMessage(
-              this.$translateTitle('Maintenance.successfully deleted'),
-              'success',
-              'dgiot-hey-message-success'
-            )
-            setTimeout(() => {
-              this.fetchData()
-            }, 1500)
-          }
-        )
-      },
-      handleHeight() {
-        if (this.fold) {
-          this.height = this.$baseTableHeight(0) - 20
-        } else {
-          this.height = this.$baseTableHeight(0) - 30
-        }
-      },
       getStatus(type = 0) {
         // type == 0 ? '' : ''
         switch (type) {
@@ -836,54 +520,53 @@
             return this.$translateTitle('Maintenance.To be assigned')
             break
           case 1:
-            return this.$translateTitle('Maintenance.Assigned')
+            return this.$translateTitle('Maintenance.processing')
             break
           case 2:
-            return this.$translateTitle('Maintenance.Processed')
+            return this.$translateTitle('Maintenance.processed')
             break
           case 3:
-            return this.$translateTitle('Maintenance.Statement')
+            return this.$translateTitle('Maintenance.returned')
             break
           default:
             return type
         }
       },
       showInfo(row, ishard = false, isfooter = true) {
+        this.title = this.$translateTitle('Maintenance.view Ticket')
+        this.detail = {}
+        this.showdeviceFlag = false
         this.ishard = ishard
         this.isfooter = isfooter
         let { status = 0 } = row
         this.detail = row
         this.step = status + 1
-        this.set_deviceFlag(true)
-        // switch (step) {
-        //   case -1:
-        //     alert(-1)
-        //     break
-        //   case 0:
-        //     alert(0)
-        //     break
-        //   case 1:
-        //     alert(1)
-        //     break
-        //   case 2:
-        //     alert(2)
-        //     break
-        // }
+        this.set_deviceStep(status)
+        this.showdeviceFlag = true
       },
-      // async handleDelete(objectId) {
-      //   const res = await del_object('Maintenance', objectId)
-      //   // console.log('res', res)
-      //   this.$message.success('删除成功')
-      //   this.fetchData()
-      // },
-      handleCreated(type) {
-        type == 'created' ? this.created++ : this.Assigned++
-        this.fetchData()
-        this.getProduct()
+      receive(row) {
+        this.title = this.$translateTitle('Maintenance.receive Ticket')
+        this.detail = {}
+        this.showdeviceFlag = false
+        this.ishard = true
+        this.isfooter = false
+        let { status = 0 } = row
+        this.detail = row
+        this.step = status + 1
+        this.set_deviceStep(status)
+        this.showdeviceFlag = true
       },
-      async getProduct() {
-        const { results = {} } = await queryProduct({})
-        this.Product = results
+      dealwith(row) {
+        this.title = this.$translateTitle('Maintenance.dealwith Ticket')
+        this.detail = {}
+        this.showdeviceFlag = false
+        this.ishard = true
+        this.isfooter = false
+        let { status = 0 } = row
+        this.detail = row
+        this.step = status + 1
+        this.set_deviceStep(status)
+        this.showdeviceFlag = true
       },
       async fetchData(args = {}) {
         if (!args.limit) {
@@ -892,55 +575,41 @@
         this.listLoading = false
         const loading = this.$baseColorfullLoading()
         let params = {
+          limit: args.limit,
           order: args.order,
-          skip: this.start,
-          limit: this.length,
-          keys: args.keys,
+          skip: args.skip,
           count: 'objectId',
           where: {
-            // info: {},
+            user: this.objectid,
+            status: {
+              $lt: 3,
+            },
           },
         }
-        this.Assigned % 2 == 0
-          ? (params.where['info.receiveuseid'] = this.objectid)
-          : ''
+        if (String(this.queryForm.status + '').length > 0) {
+          params.where['status'] = this.queryForm.status
+        }
         this.queryForm.number
           ? (params.where.number = { $regex: this.queryForm.number })
           : ''
         this.queryForm.product
-          ? (params.where['info.productid'] = {
-              $regex: this.queryForm.product,
-            })
+          ? (params.where['product'] = this.queryForm.product)
           : ''
         this.queryForm.type
           ? (params.where.type = { $regex: this.queryForm.type })
           : ''
         if (this.queryForm.searchDate?.length) {
-          params.where['createdAt'] = {
-            $gt: {
-              __type: 'Date',
-              iso: this.queryForm.searchDate[0],
-            },
+          params.where['info.startdata'] = {
+            $gt: new Date(this.queryForm.searchDate[0]).getTime(),
           }
-          params.where['updatedAt'] = {
-            $lt: {
-              __type: 'Date',
-              iso: this.queryForm.searchDate[1],
-            },
+          params.where['info.completiondata'] = {
+            $lt: new Date(this.queryForm.searchDate[1]).getTime(),
           }
         }
         await query_object('Maintenance', params)
           .then((res) => {
             const { results = [], count = 0 } = res
             this.list = results
-            this.list.forEach((e) => {
-              e._user = '暂无'
-              if (e.ACL) {
-                for (var key in e.ACL) {
-                  e._user = key.substr(0)
-                }
-              }
-            })
             this.total = count
             loading.close()
           })
@@ -949,31 +618,6 @@
             loading.close()
           })
       },
-      async prodChange(e) {
-        this.Device = []
-        this.Product.map((p) => {
-          if (p.objectId == e) {
-            this.form.productname = p.name
-          }
-        })
-        this.form.name = ''
-        const params = {
-          where: { product: e },
-        }
-        const { results } = await queryDevice(params)
-        this.Device = results
-      },
-      deviceChange(e) {
-        this.Device.map((p) => {
-          if (p.objectId == e) {
-            this.form.devicename = p.name
-          }
-        })
-      },
-      dispatch() {
-        this.$refs.changeinfo.$refs.step1.dispatchUser()
-        // console.log()
-      },
       async backChange(detail) {
         const { objectId, info } = detail
         info.timeline.push({
@@ -981,64 +625,53 @@
           h4: '已回退',
           p: `${this.username} 回退了流程`,
         })
-
         const params = {
-          status: 0,
+          status: 3,
           info: info,
         }
         const res = await update_object('Maintenance', objectId, params)
         if (res.updatedAt) {
-          this.set_deviceFlag(false)
+          this.set_deviceStep(-1)
         }
+        this.showdeviceFlag = false
       },
-      async Reassign(detail) {
+      //接收
+      async receiveChange(detail) {
         const { objectId, info } = detail
         info.timeline.push({
           timestamp: moment(new Date()).format('YYYY-MM-DD HH:mm:ss'),
-          h4: '已改派',
-          p: `${this.username} 改派了工单`,
+          h4: '已接收',
+          p: `${this.username} 接收了工单`,
         })
-
         const params = {
-          status: 0,
+          status: 1,
           info: info,
         }
         const res = await update_object('Maintenance', objectId, params)
         if (res.updatedAt) {
-          this.set_deviceFlag(false)
+          this.set_deviceStep(-1)
         }
+        this.showdeviceFlag = false
       },
-      dealwith() {
-        this.$refs.changeinfo.$refs.step2.dispatchUser()
-      },
-      check() {
-        this.$refs.changeinfo.$refs.step3.dispatchUser()
+      //处理
+      async dealwithChange(detail) {
+        const { objectId, info } = detail
+        info.timeline.push({
+          timestamp: moment(new Date()).format('YYYY-MM-DD HH:mm:ss'),
+          h4: '已处理',
+          p: `${this.username} 处理了工单`,
+        })
+        const params = {
+          status: 2,
+          info: info,
+        }
+        const res = await update_object('Maintenance', objectId, params)
+        if (res.updatedAt) {
+          this.set_deviceStep(-1)
+        }
+        this.showdeviceFlag = false
       },
     },
   }
 </script>
-<style lang="scss" scoped>
-  .mycontainer {
-    .ticker-dialog {
-      .create-ticker {
-        ::v-deep .el-select {
-          width: 100%;
-        }
-      }
-    }
-
-    .query-form {
-      margin-top: 10px;
-
-      ::v-deep {
-        .el-form-item__label-wrap {
-          margin-left: 10px;
-        }
-
-        .dialog-footer {
-          text-align: center;
-        }
-      }
-    }
-  }
-</style>
+<style lang="scss" scoped></style>

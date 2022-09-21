@@ -1121,7 +1121,7 @@ export default {
       'Ticket description': '工单描述',
       project: '所属项目',
       'Equipment name': '设备名称',
-      Initiator: '建单人',
+      Initiator: '创建人',
       'the starting time': '建单时间',
       operating: '操作',
       'To be assigned': '待分配',

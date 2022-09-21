@@ -64,7 +64,7 @@ module.exports = {
     'h7ml.icu',
   ],
   expiredTime: 60 * 10,
-  ignoreApi: ['Navigation', 'Notification', '_User'],
+  ignoreApi: ['Navigation', 'Notification', '_User', 'Maintenance'],
   cookieWhiteList: [
     'cdnResource',
     'language',
