@@ -2952,6 +2952,51 @@
         <el-tab-pane :label="$translateTitle('product.dict')" name="dict">
           <dgiot-dict />
         </el-tab-pane>
+        <!--文件-->
+        <el-tab-pane :label="$translateTitle('product.file')" name="file">
+          <!-- <dgiot-dict /> -->
+          <!----------------------------------------------------文件表格------------------>
+          <el-table
+            ref="tableRef"
+            v-loading="listLoading"
+            :cell-style="{ 'text-align': 'center' }"
+            :data="filelist"
+            :header-cell-style="{ 'text-align': 'center' }"
+            style="width: 100%"
+          >
+            <el-table-column
+              :label="$translateTitle('developer.filename')"
+              prop="name"
+              show-overflow-tooltip
+              sortable
+            />
+            <el-table-column
+              :label="$translateTitle('developer.filesize')"
+              prop="name"
+              show-overflow-tooltip
+              sortable
+              width="200"
+            >
+              <template #default="{ row }">
+                <span v-if="row.is_dir">{{ '-' }}</span>
+                <span v-else>{{ Math.round(row.size / 1024) + 'kb' }}</span>
+              </template>
+            </el-table-column>
+            <el-table-column
+              :label="$translateTitle('developer.filemtime')"
+              prop="name"
+              show-overflow-tooltip
+              sortable
+              width="260"
+            >
+              <template #default="{ row }">
+                <span>
+                  {{ $moment(row.mtime * 1000).format('YYYY-MM-DD HH:mm:ss') }}
+                </span>
+              </template>
+            </el-table-column>
+          </el-table>
+        </el-tab-pane>
       </el-tabs>
     </div>
 

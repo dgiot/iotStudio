@@ -1,5 +1,12 @@
 <template>
   <div class="resourcechannel resourcechannel-container">
+    <div class="filetree">
+      <el-tree
+        class="treelist"
+        :data="productList"
+        @node-click="handleNodeClick"
+      />
+    </div>
     <div class="firsttable">
       <dgiot-input
         ref="uploadFinish"
@@ -14,11 +21,12 @@
         size="small"
       >
         <el-form-item :label="$translateTitle('application.scene')">
-          <el-input v-model="fileParams.scene" />
+          <el-input v-model="fileParams.scene" disabled />
         </el-form-item>
         <el-form-item :label="$translateTitle('developer.path')">
           <el-input
             v-model="fileParams.path"
+            disabled
             :placeholder="$translateTitle('application.pathdescription')"
           />
         </el-form-item>
@@ -157,8 +165,12 @@
   </div>
 </template>
 <script>
-  import { delete_file, file_info, list_dir } from '@/api/System/filemanagement'
-
+  import {
+    delete_file,
+    file_info,
+    list_dir,
+    getproductTree,
+  } from '@/api/System/filemanagement'
   export default {
     data() {
       return {
@@ -177,13 +189,29 @@
         ViewLoading: false,
         detailView: false,
         detailinfo: {},
+        productList: [],
       }
     },
     watch: {},
     mounted() {
       this.get_filelist(this.parentfile)
+      this.getproductTree()
     },
     methods: {
+      handleNodeClick(data) {
+        console.log(data)
+        if (data.value) {
+          console.log(data.value)
+          this.$set(this.fileParams, 'path', `product/${data.value}`)
+          this.get_filelist(`product/${data.value}`)
+          // this.fileParams.path =
+        }
+      },
+      async getproductTree() {
+        const res = await getproductTree()
+        console.log('产品树', res)
+        this.productList = res.producttree
+      },
       breadcrumbClick(row) {
         if (row.name == '全部文件') {
           this.filebreadcrumb = [
@@ -377,8 +405,22 @@
     box-sizing: border-box;
     width: 100%;
     //height: 100%;
+    display: flex;
     height: calc(100vh - #{$base-top-bar-height} * 3 - 25px);
-
+    .filetree {
+      width: 20%;
+      height: 100%;
+      border: 0.5px solid #ccc;
+    }
+    .treelist {
+      margin-top: 10px;
+    }
+    .firsttable {
+      border: 0.5px solid #ccc;
+      width: 80%;
+      padding: 10px;
+      height: 100%;
+    }
     ::v-deep {
       .green_active {
         color: green;
@@ -386,6 +428,11 @@
 
       .dialog-footer {
         text-align: center;
+      }
+      .el-tree-node__label {
+        font-size: 16px;
+        margin: 2px;
+        display: inline-block;
       }
     }
 
