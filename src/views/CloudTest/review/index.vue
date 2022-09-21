@@ -49,21 +49,6 @@
               width="auto"
             >
               <template #default="{ row }">
-                <!--                <vue-aliplayer-v2-->
-                <!--                  v-if="types.video.includes(`${row.original.type}`)"-->
-                <!--                  :options="aliplayer"-->
-                <!--                  :source="$FileServe + row.original.path"-->
-                <!--                />-->
-                <!--                <el-image-->
-                <!--                  v-else-if="types.image.includes(`${row.original.type}`)"-->
-                <!--                  :preview-src-list="[$FileServe + row.original.path]"-->
-                <!--                  :src="$FileServe + row.original.path"-->
-                <!--                  style="width: 100px; height: 100px"-->
-                <!--                />-->
-                <!--                <av-bars-->
-                <!--                  v-else-if="types.audio.includes(`${row.original.type}`)"-->
-                <!--                  :audio-src="$FileServe + row.original.path"-->
-                <!--                />-->
                 <el-link :href="$FileServe + row.original.path" target="_blank">
                   {{
                     row.original.path.split('/')[
@@ -133,11 +118,6 @@
             </el-table-column>
           </el-table>
         </el-card>
-        <!--      <span slot="footer" class="dialog-footer">-->
-        <!--        <el-button type="primary" @click="evidenceDialog = false">-->
-        <!--          {{ $translateTitle('cloudTest.save evidence') }}-->
-        <!--        </el-button>-->
-        <!--      </span>-->
       </el-dialog>
       <dgiot-dialog :show.sync="activePopShow">
         <h2 slot="title">

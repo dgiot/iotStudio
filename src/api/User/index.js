@@ -174,3 +174,10 @@ export function disableuser(params) {
     params: params,
   })
 }
+
+export function usertree() {
+  return request({
+    url: '/usertree',
+    method: 'get',
+  })
+}

@@ -1,108 +1,274 @@
 <template>
-  <div v-if="detail" class="changeInfo">
-    <el-row
-      v-show="showHard == true"
-      class="row-bg"
-      justify="space-around"
-      type="flex"
-    >
-      <el-col :span="6">
+  <div class="changeInfo">
+    <el-row class="row-bg" justify="space-around" type="flex">
+      <el-col :span="8">
         <div class="grid-content bg-purple">
           {{ $translateTitle('Maintenance.Ticket number') }} :
           {{ detail.number }}
         </div>
       </el-col>
-      <el-col :span="5">
+      <el-col :span="6">
         <div class="grid-content bg-purple-light">
           {{ $translateTitle('Maintenance.Ticket type') }} : {{ detail.type }}
         </div>
       </el-col>
-      <el-col :span="7">
+      <el-col :span="10">
         <div class="grid-content bg-purple">
-          {{ $translateTitle('Maintenance.the starting time') }} :
+          {{ $translateTitle('cloudTest.Creation time') }} :
           {{ $moment(detail.createdAt).format('YYYY-MM-DD HH:mm:ss') }}
         </div>
       </el-col>
     </el-row>
     <el-steps
-      v-show="showHard == true"
+      v-show="step == 4"
+      :active="active"
+      class="steps"
+      finish-status="success"
+      simple
+    >
+      <el-step :title="$translateTitle('Maintenance.republish')" />
+      <el-step :title="$translateTitle('Maintenance.To be assigned')" />
+      <el-step :title="$translateTitle('Maintenance.processing')" />
+      <el-step :title="$translateTitle('Maintenance.Statement')" />
+    </el-steps>
+    <el-steps
+      v-show="step != 4"
       :active="step"
       class="steps"
       finish-status="success"
       simple
     >
       <el-step :title="$translateTitle('Maintenance.To be assigned')" />
-      <el-step :title="$translateTitle('Maintenance.Assigned')" />
-      <el-step :title="$translateTitle('Maintenance.Processed')" />
+      <el-step :title="$translateTitle('Maintenance.processing')" />
       <el-step :title="$translateTitle('Maintenance.Statement')" />
     </el-steps>
-    <step1
-      v-if="step === 1"
-      ref="step1"
-      :detail="detail"
-      :show-footer="showFooter"
-      :show-hard="showHard"
-      :step="step"
-      @change-step="handleSetStep"
-    />
-    <step2
-      v-if="step === 2"
-      ref="step2"
-      :detail="detail"
-      :show-footer="showFooter"
-      show-hard="showHard"
-      :step="step"
-      @change-step="handleSetStep"
-    />
-    <step3
-      v-if="step === 3"
-      ref="step3"
-      :detail="detail"
-      :show-footer="showFooter"
-      show-hard="showHard"
-      :step="step"
-      @change-step="handleSetStep"
-    />
-    <Step4
-      v-if="step === 4"
-      ref="step4"
-      :detail="detail"
-      :show-footer="showFooter"
-      show-hard="showHard"
-      :step="step"
-      @change-step="handleSetStep"
-    />
-  </div>
-  <div v-else class="empty">
-    <dgiot-empty />
+    <el-tabs v-model="activeName">
+      <el-tab-pane
+        :label="$translateTitle('Maintenance.Work order information')"
+        name="first"
+      >
+        <el-form
+          ref="form"
+          class="create-ticker"
+          label-width="auto"
+          :model="form"
+          :rules="rules"
+        >
+          <el-row :gutter="24">
+            <el-col :lg="12" :md="12" :sm="24" :xl="12" :xs="24">
+              <el-form-item
+                :label="$translateTitle('equipment.Products') + ': '"
+              >
+                <span>{{ form.info.productname }}</span>
+              </el-form-item>
+            </el-col>
+            <el-col :lg="12" :md="12" :sm="24" :xl="12" :xs="24">
+              <el-form-item
+                :label="$translateTitle('Maintenance.Equipment name') + ': '"
+              >
+                <span>{{ form.info.devicename }}</span>
+              </el-form-item>
+            </el-col>
+            <el-col :lg="12" :md="12" :sm="24" :xl="12" :xs="24">
+              <el-form-item
+                :label="$translateTitle('Maintenance.planstartdata') + ': '"
+              >
+                <span>
+                  {{ $moment(form.info.startdata).format('YYYY-MM-DD') }}
+                </span>
+              </el-form-item>
+            </el-col>
+            <el-col :lg="12" :md="12" :sm="24" :xl="12" :xs="24">
+              <el-form-item
+                :label="$translateTitle('Maintenance.planenddata') + ': '"
+              >
+                <span>
+                  {{ $moment(form.info.completiondata).format('YYYY-MM-DD') }}
+                </span>
+              </el-form-item>
+            </el-col>
+            <el-col :lg="12" :md="12" :sm="24" :xl="12" :xs="24">
+              <el-form-item
+                :label="$translateTitle('Maintenance.Initiator') + ': '"
+              >
+                <span>{{ form.info.createdname }}</span>
+              </el-form-item>
+            </el-col>
+            <el-col :lg="12" :md="12" :sm="24" :xl="12" :xs="24">
+              <el-form-item
+                :label="$translateTitle('Maintenance.principal') + ': '"
+              >
+                <el-select
+                  v-if="step == 4 && objectid == form.info.created"
+                  v-model="form.info.principal"
+                  :placeholder="$translateTitle('Maintenance.selectprincipal')"
+                  style="width: 60%"
+                  @change="principalChange"
+                >
+                  <el-option
+                    v-for="item in user"
+                    :key="item.objectId"
+                    :label="item.nick"
+                    :value="item.objectId"
+                  />
+                </el-select>
+                <span v-else>{{ form.info.principalname }}</span>
+              </el-form-item>
+            </el-col>
+            <el-col :lg="12" :md="12" :sm="24" :xl="12" :xs="24">
+              <el-form-item
+                :label="$translateTitle('Maintenance.executor') + ': '"
+              >
+                <el-select
+                  v-if="step == 4 && objectid == form.info.created"
+                  v-model="form.info.executor"
+                  :placeholder="$translateTitle('Maintenance.selectexecutor')"
+                  style="width: 60%"
+                  @change="executorChange"
+                >
+                  <el-option
+                    v-for="item in user"
+                    :key="item.objectId"
+                    :label="item.nick"
+                    :value="item.objectId"
+                  />
+                </el-select>
+                <span v-else>{{ form.info.executorname }}</span>
+              </el-form-item>
+            </el-col>
+            <el-col :lg="24" :md="24" :sm="24" :xl="24" :xs="24">
+              <el-form-item
+                :label="
+                  $translateTitle('Maintenance.Ticket description') + ': '
+                "
+                style="margin-top: 10px"
+              >
+                <el-input
+                  v-if="
+                    (form.status != 2 && objectid == form.info.executor) ||
+                    (form.status == 3 && objectid == form.info.created)
+                  "
+                  v-model="form.info.description"
+                  type="textarea"
+                />
+                <span v-else>
+                  {{ form.info.description }}
+                </span>
+              </el-form-item>
+            </el-col>
+            <el-col :lg="24" :md="24" :sm="24" :xl="24" :xs="24">
+              <el-form-item
+                :label="$translateTitle('Maintenance.photo') + ': '"
+                style="margin-top: 10px"
+              >
+                <el-upload
+                  v-if="
+                    (form.status != 2 && objectid == form.info.executor) ||
+                    (form.status == 3 && objectid == form.info.created)
+                  "
+                  action="#"
+                  :auto-upload="true"
+                  :http-request="myUpload"
+                  list-type="picture-card"
+                >
+                  <i slot="default" class="el-icon-plus"></i>
+                  <div v-for="(item, index) in form.info.photo" :key="index">
+                    <img
+                      alt=""
+                      class="el-upload-list__item-thumbnail"
+                      :src="item.url"
+                    />
+                  </div>
+                </el-upload>
+                <el-carousel v-else height="200px" :interval="2000" type="card">
+                  <el-carousel-item
+                    v-for="(item, index) in form.info.photo"
+                    :key="index"
+                  >
+                    <img
+                      :alt="item"
+                      :src="item"
+                      style="width: 100%; height: 100%"
+                      :title="item"
+                    />
+                  </el-carousel-item>
+                </el-carousel>
+              </el-form-item>
+            </el-col>
+            <el-col :lg="24" :md="24" :sm="24" :xl="24" :xs="24">
+              <el-form-item
+                :label="$translateTitle('Maintenance.Remarks') + ': '"
+                style="margin-top: 10px"
+              >
+                <el-input
+                  v-if="
+                    (form.status != 2 && objectid == form.info.executor) ||
+                    (form.status == 3 && objectid == form.info.created)
+                  "
+                  v-model="form.info.Remarks"
+                  :placeholder="
+                    $translateTitle(
+                      'Maintenance.Please record the processing content in detail!'
+                    )
+                  "
+                  style="margin-bottom: 20px"
+                  type="textarea"
+                />
+                <span v-else>
+                  {{ form.info.Remarks }}
+                </span>
+              </el-form-item>
+            </el-col>
+          </el-row>
+        </el-form>
+      </el-tab-pane>
+      <el-tab-pane
+        :label="$translateTitle('Maintenance.work process')"
+        name="second"
+        style="height: 90%; overflow-x: hidden; overflow-y: auto"
+      >
+        <el-card shadow="hover">
+          <template #header>
+            <el-radio-group v-model="reverse" class="card-header-radio">
+              <el-radio :label="false">
+                {{ $translateTitle('Maintenance.Positive order') }}
+              </el-radio>
+              <el-radio :label="true">
+                {{ $translateTitle('Maintenance.Reverse order') }}
+              </el-radio>
+            </el-radio-group>
+          </template>
+          <el-timeline :reverse="reverse">
+            <el-timeline-item
+              v-for="item in detail.info.timeline"
+              :key="item.timestamp"
+              placement="top"
+              :timestamp="item.timestamp"
+            >
+              <el-card>
+                <h4>{{ item.h4 }}</h4>
+                <p>{{ item.p }}</p>
+              </el-card>
+            </el-timeline-item>
+          </el-timeline>
+        </el-card>
+      </el-tab-pane>
+    </el-tabs>
   </div>
 </template>
 <script>
-  import Step1 from './components/Step1'
-  import Step2 from './components/Step2'
-  import Step3 from './components/Step3'
-  import Step4 from './components/Step4'
+  import { UploadImg } from '@/api/File'
+  import { getRoleuser } from '@/api/Role'
+  import { mapGetters, mapMutations } from 'vuex'
+  import { update_object } from '@/api/Parse'
 
   export default {
     name: 'ChangeStep',
-    components: {
-      Step1,
-      Step2,
-      Step3,
-      Step4,
-    },
+    components: {},
     props: {
       detail: {
         type: Object,
         default: () => {},
-      },
-      showFooter: {
-        type: Boolean,
-        default: false,
-      },
-      showHard: {
-        type: Boolean,
-        default: false,
       },
       step: {
         type: Number,
@@ -111,22 +277,81 @@
     },
     data() {
       return {
-        isStep: 0,
+        user: [],
+        activeName: 'first',
+        active: 1,
+        rules: {},
+        form: this.detail,
+        reverse: false,
       }
+    },
+    computed: {
+      ...mapGetters({
+        _Product: 'user/_Product',
+        objectid: 'user/objectId',
+        role: 'acl/role',
+        username: 'user/username',
+        currentDepartment: 'user/currentDepartment',
+      }),
+    },
+    watch: {
+      detail: {
+        handler(newData) {
+          this.form = newData
+        },
+        deep: true,
+      },
     },
     mounted() {
-      if (this.step == 4) {
-        // this.step = 0
-        this.isStep = 4
-      }
-      dgiotlog.log(this.step)
+      this.roleuser()
     },
     methods: {
-      next() {
-        if (this.isStep++ > 5) this.isStep = 0
+      async roleuser() {
+        let params = {
+          where: {
+            objectId: this.currentDepartment.objectId,
+          },
+          include: true,
+          limit: 10,
+        }
+        const { results } = await getRoleuser(params)
+        this.user = results
       },
-      handleSetStep(step, detail) {
-        if (detail) this.form = Object.assign(this.form, detail)
+      principalChange(e) {
+        this.user.map((p) => {
+          if (p.objectId == e) {
+            this.form.info.principalname = p.nick
+          }
+        })
+      },
+      executorChange(e) {
+        this.user.map((p) => {
+          if (p.objectId == e) {
+            this.form.info.executorname = p.nick
+          }
+        })
+      },
+      myUpload(content) {
+        const file = content.file
+        let extension = file.name.substring(file.name.lastIndexOf('.') + 1)
+        const params = {
+          file: file,
+          // scene: 'ticket',
+          path: 'ticket',
+          filename: 'ticket' + `${moment().format('x')}.${extension}`,
+        }
+        UploadImg(params)
+          .then((res) => {
+            if (res.data.url) {
+              this.form.info.photo.push(res.data.url)
+              console.log('???????', res.data.url, this.form.photo)
+            } else {
+              console.log('no up url ', res)
+            }
+          })
+          .catch((e) => {
+            console.log('???', e)
+          })
       },
     },
   }
