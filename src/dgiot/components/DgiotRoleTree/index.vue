@@ -35,7 +35,20 @@
       :style="{ 'max-height': maxHeight + 'px' }"
       @check-change="handleCheckClick"
       @node-click="handleNodeClick"
-    />
+    >
+      <span slot-scope="{ node }" class="span__">
+        <i class="el-icon-user-solid"></i>
+        <!-- el-icon-folder-opened -->
+        <!-- <svg-icon
+          v-if="data.icon"
+          :icon-class="data.icon"
+          style="font-size: 16px; display: inline"
+        /> -->
+        <span class="tree-node-span" style="fontsize: 16px">
+          {{ node.label }}
+        </span>
+      </span>
+    </el-tree>
   </div>
 </template>
 
@@ -369,6 +382,11 @@
     .el-checkbox__input.is-disabled.is-indeterminate .el-checkbox__inner {
       background-color: #409eff;
       border-color: #409eff;
+    }
+    .el-tree-node__label {
+      font-size: 16px;
+      margin: 4px;
+      // display: inline-block;
     }
   }
 </style>
