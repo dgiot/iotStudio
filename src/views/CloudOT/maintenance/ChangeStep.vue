@@ -221,7 +221,7 @@
         </el-form>
       </el-tab-pane>
       <el-tab-pane
-        v-if="form.type == '巡检'"
+        v-if="form.type == '宸℃'"
         :label="$translateTitle('Maintenance.inspection data')"
         name="second"
         style="height: 90%; overflow-x: hidden; overflow-y: auto"
@@ -390,7 +390,7 @@
       margin: 20px 0;
     }
   }
-  /* 数据卡片列表 */
+  /* 鏁版嵁鍗＄墖鍒楄〃 */
   .card_content {
     display: flex;
     flex-wrap: wrap;

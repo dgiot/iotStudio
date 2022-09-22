@@ -21,7 +21,7 @@
           :rules="rules"
         >
           <div v-if="Default.title" class="title-tips">
-            {{ $translateTitle('home.login') }}
+            {{ $translateTitle('home.login title') }}
           </div>
           <el-form-item prop="username" style="margin-top: 40px">
             <el-input
@@ -46,18 +46,9 @@
               :type="passwordType"
               @keyup.enter.native="handleLogin"
             >
-              <!--              <el-link-->
-              <!--                v-if="!form.password.length"-->
-              <!--                slot="append"-->
-              <!--                type="primary"-->
-              <!--                @click="forgotPwd()"-->
-              <!--              >-->
-              <!--                {{ $translateTitle('home.Forgot password') }}-->
-              <!--              </el-link>-->
               <template #prefix>
                 <dgiot-icon v-if="form.password.length" icon="lock-line" />
               </template>
-
               <template
                 v-if="passwordType === 'password' && form.password.length"
                 #suffix
@@ -78,20 +69,20 @@
               </template>
             </el-input>
           </el-form-item>
-          <el-form-item>
-            <el-input class="sbMc">
-              <el-button
-                slot="append"
-                class="login-btn"
-                :loading="loading"
-                type="primary"
-                @click.native="handleLogin"
-              >
-                {{ $translateTitle('home.login') }}
-              </el-button>
-            </el-input>
-          </el-form-item>
-
+          <!--          <el-form-item>-->
+          <!--            <el-input class="sbMc">-->
+          <div>
+            <el-button
+              slot="append"
+              class="login-btn"
+              :loading="loading"
+              @click.native="handleLogin"
+            >
+              {{ $translateTitle('home.login') }}
+            </el-button>
+          </div>
+          <!--            </el-input>-->
+          <!--          </el-form-item>-->
           <span>
             <router-link v-show="false" style="float: left" to="/register">
               <div style="margin-top: 20px">
@@ -104,9 +95,6 @@
           </span>
         </el-form>
       </el-col>
-      <!--      <el-col :lg="1" :md="1" :sm="24" :xl="1" :xs="24">-->
-      <!--        <div style="color: transparent">占位符</div>-->
-      <!--      </el-col>-->
     </el-row>
   </div>
 </template>
@@ -459,7 +447,7 @@
               clearInterval(this.interval)
               window.clearInterval(this.interval)
             }
-          }, 800)
+          }, 100)
         } catch (error) {
           console.log(error)
           this.$baseMessage(
@@ -486,10 +474,10 @@
     padding: 4.5vh;
     margin: calc((100vh - 475px) / 2) 5vw 5vw;
     overflow: hidden;
-    background: #fff;
+    background: #002d55;
     //background: url('http://dgiot-1253666439.cos.ap-shanghai-fsi.myqcloud.com/platform/assets/login_images/login_form.png');
     background-size: 100% 100%;
-    border: 8px solid #3cb2fb;
+    border: 1px solid #3cb2fb;
 
     .title {
       font-size: 54px;
@@ -501,7 +489,7 @@
       margin: 0 auto;
       font-size: 26px;
       font-weight: 400;
-      color: #096dd9;
+      color: #dcdbdb;
       text-align: center;
     }
 
@@ -513,13 +501,14 @@
 
         .el-input-group__append {
           color: #fff;
-          background-color: #409eff;
-          border-color: #409eff;
+          background-color: #4a7ca8;
+          //border-color: #409eff;
         }
       }
     }
 
     .login-btn {
+      background-color: #2f6fe7 !important;
       display: inherit;
       width: 100%;
       height: 50px;
@@ -527,6 +516,8 @@
       margin-top: 5px;
       text-align: center;
       border: 0;
+      font-size: 20px;
+      color: white !important;
 
       &:hover {
         opacity: 0.9;

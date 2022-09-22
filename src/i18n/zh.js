@@ -8,6 +8,7 @@ export default {
       currentConnections: '当前连接数',
     },
     home: {
+      'login title': '物联网平台',
       'department switch': '部门切换',
       'error log': '错误日志',
       search: '搜索',
@@ -29,7 +30,7 @@ export default {
       konva: '进入组态',
       updatedAt: '更新时间',
       preview: '查看产品',
-      login: '用户登录',
+      login: '登录',
       unit: '工程单位',
       scale: '服务规模',
       category: '所属行业',
