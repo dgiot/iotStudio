@@ -288,12 +288,13 @@
                   </el-button>
                 </el-descriptions-item>
                 <el-descriptions-item
-                  :label="$translateTitle('konva.Visualization')"
+                  :label="$translateTitle('konva.notificationtemplate')"
                 >
+                  <!--告警数量 -->
                   <el-button
                     :disabled="amisproductInfo.length == 0"
                     type="text"
-                    @click="activeName = 'view'"
+                    @click="activeName = 'notification'"
                   >
                     {{ amisproductInfo.length || 0 }}
                   </el-button>

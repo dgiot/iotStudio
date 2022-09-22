@@ -37,6 +37,7 @@
               allow-create
               clearable
               default-first-option
+              :disabled="viewForm.notification"
               filterable
               style="width: 100%"
               @change="fetchData()"

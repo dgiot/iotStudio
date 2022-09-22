@@ -1550,7 +1550,7 @@ export default {
         case 'view':
           this.viewForm = {
             class: 'Product',
-            type: 'amis',
+            // type: 'amis',
             key: this.$route.query.id || '',
             title: '',
             disabled: true,
@@ -1594,13 +1594,14 @@ export default {
             hiddenRow: [],
           }
           break
-        case 'first':
+        case 'notification':
           this.viewForm = {
             showRow: true,
             class: 'Product',
             type: 'notification',
             key: this.$route.query.id,
             title: '',
+            notification: true,
             disabled: true,
             data: {
               type: 'page',

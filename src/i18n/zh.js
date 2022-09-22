@@ -1061,6 +1061,7 @@ export default {
       fontSize: '字体大小',
       Configuration: '配置',
       Visualization: '可视化',
+      notificationtemplate: '告警模板',
       text: '文本内容',
       type: '类型',
       hide: '隐藏',
