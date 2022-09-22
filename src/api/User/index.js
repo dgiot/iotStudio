@@ -7,6 +7,12 @@ import {
 } from '@/api/Parse'
 import request from '@/utils/request/request'
 
+export function userTree() {
+  return request({
+    url: '/usertree',
+    method: 'get',
+  })
+}
 export async function queryUser(params) {
   return query_object('_User', params)
 }
