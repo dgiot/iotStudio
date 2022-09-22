@@ -9,51 +9,43 @@ import request from '@/utils/request/request'
 
 export function userTree() {
   return request({
-    url: '/usertree',
-    method: 'get',
+    url : '/usertree',
+    method : 'get',
   })
 }
-export async function queryUser(params) {
-  return query_object('_User', params)
-}
+export async function queryUser(params) { return query_object('_User', params) }
 
 export function EmployeesHired(params) {
   return request({
-    url: '/user',
-    method: 'post',
-    data: params,
+    url : '/user',
+    method : 'post',
+    data : params,
   })
 }
 
 export function EmployeeTurnover(params) {
   return request({
-    url: '/user',
-    method: 'DELETE',
-    data: params,
+    url : '/user',
+    method : 'DELETE',
+    data : params,
   })
 }
 
-export async function getUser(ObjectId) {
-  return get_object('_User', ObjectId)
-}
+export async function getUser(ObjectId) { return get_object('_User', ObjectId) }
 
-export async function delUser(ObjectId) {
-  return del_object('_User', ObjectId)
-}
+export async function delUser(ObjectId) { return del_object('_User', ObjectId) }
 
 export async function putUser(ObjectId, pamams) {
   return update_object('_User', ObjectId, pamams)
 }
 
-export async function postUser(params) {
-  return create_object('_User', params)
-}
+export async function postUser(params) { return create_object('_User', params) }
 
 export function Sitepro(pro) {
   return request({
-    url: '/classes/Site/' + pro,
-    method: 'get',
-    data: {},
+    url : '/classes/Site/' + pro,
+    method : 'get',
+    data : {},
   })
 }
 
@@ -70,66 +62,66 @@ export function Sitepro(pro) {
 
 export function logoutBtn() {
   return request({
-    url: 'user/logout',
-    method: 'post',
+    url : 'user/logout',
+    method : 'post',
   })
 }
 
 export function Phonelogin(phone, nationcode) {
   return request({
-    url: 'sendsms?account=' + phone + '&nationcode=' + nationcode,
-    method: 'post',
-    data: {},
+    url : 'sendsms?account=' + phone + '&nationcode=' + nationcode,
+    method : 'post',
+    data : {},
   })
 }
 
 export function Verify(actions, phone, code) {
   return request({
-    url: 'verify_code/' + actions + '?account=' + phone + '&code=' + code,
-    method: 'post',
-    data: {},
+    url : 'verify_code/' + actions + '?account=' + phone + '&code=' + code,
+    method : 'post',
+    data : {},
   })
 }
 
 export function passwordreset(account, code, password) {
   return request({
-    url: 'verify_code/passwordreset',
-    method: 'post',
-    params: {
-      account: account,
-      code: code,
+    url : 'verify_code/passwordreset',
+    method : 'post',
+    params : {
+      account : account,
+      code : code,
     },
-    data: {
-      password: password,
+    data : {
+      password : password,
     },
   })
 }
 
 export async function login(data) {
   return request({
-    headers: {
-      'Content-Type': 'text/plain',
+    headers : {
+      'Content-Type' : 'text/plain',
     },
-    url: '/login',
-    method: 'post',
+    url : '/login',
+    method : 'post',
     data,
   })
 }
 
 export async function jwtlogin(id_token) {
   return request({
-    headers: {
-      'Content-Type': 'text/plain',
+    headers : {
+      'Content-Type' : 'text/plain',
     },
-    url: `/jwtlogin?id_token=${id_token}`,
-    method: 'get',
+    url : `/jwtlogin?id_token=${id_token}`,
+    method : 'get',
   })
 }
 
 export async function socialLogin(data) {
   return request({
-    url: '/socialLogin',
-    method: 'post',
+    url : '/socialLogin',
+    method : 'post',
     data,
   })
 }
@@ -142,48 +134,48 @@ export async function socialLogin(data) {
 // }
 export function getUserInfo(params) {
   return request({
-    headers: { accept: 'application/json' },
-    url: '/classes/Navigation',
-    method: 'get',
-    params: params,
+    headers : {accept : 'application/json'},
+    url : '/classes/Navigation',
+    method : 'get',
+    params : params,
   })
 }
 
 export function logout() {
   return request({
-    url: '/logout',
-    method: 'post',
+    url : '/logout',
+    method : 'post',
   })
 }
 
 export function register(data) {
   return request({
-    url: '/register',
-    method: 'post',
+    url : '/register',
+    method : 'post',
     data,
   })
 }
 
 export function getRouterList(params) {
   return request({
-    headers: { accept: 'application/json' },
-    url: '/classes/Navigation',
-    method: 'get',
-    params: params,
+    headers : {accept : 'application/json'},
+    url : '/classes/Navigation',
+    method : 'get',
+    params : params,
   })
 }
 
 export function disableuser(params) {
   return request({
-    url: '/disableuser',
-    method: 'get',
-    params: params,
+    url : '/disableuser',
+    method : 'get',
+    params : params,
   })
 }
 
 export function usertree() {
   return request({
-    url: '/usertree',
-    method: 'get',
+    url : '/usertree',
+    method : 'get',
   })
 }
