@@ -119,15 +119,12 @@
         align="center"
         :label="$translateTitle('Maintenance.Ticket number')"
         prop="number"
-        show-overflow-tooltip
-        sortable
         width="120"
       />
       <el-table-column
         align="center"
         :label="$translateTitle('equipment.Products')"
         show-overflow-tooltip
-        sortable
       >
         <template #default="{ row }">
           {{ row.info && row.info.productname ? row.info.productname : '' }}
@@ -137,7 +134,6 @@
         align="center"
         :label="$translateTitle('Maintenance.Equipment name')"
         show-overflow-tooltip
-        sortable
       >
         <template #default="{ row }">
           {{ row.info && row.info.devicename ? row.info.devicename : '' }}
@@ -146,8 +142,6 @@
       <el-table-column
         align="center"
         :label="$translateTitle('Maintenance.executor')"
-        show-overflow-tooltip
-        sortable
       >
         <template #default="{ row }">
           {{ row.info && row.info.executorname ? row.info.executorname : '' }}
@@ -157,14 +151,12 @@
         align="center"
         :label="$translateTitle('Maintenance.Ticket type')"
         prop="type"
-        show-overflow-tooltip
-        sortable
+        width="100"
       />
       <el-table-column
         align="center"
         :label="$translateTitle('Maintenance.Ticket status')"
-        show-overflow-tooltip
-        sortable
+        width="100"
       >
         <template #default="{ row }">
           {{ getStatus(row.status, row) }}
@@ -173,7 +165,6 @@
       <el-table-column
         align="center"
         :label="$translateTitle('Maintenance.planstartdata')"
-        show-overflow-tooltip
         sortable
       >
         <template #default="{ row }">
@@ -183,7 +174,6 @@
       <el-table-column
         align="center"
         :label="$translateTitle('Maintenance.planenddata')"
-        show-overflow-tooltip
         sortable
       >
         <template #default="{ row }">
@@ -193,8 +183,6 @@
       <el-table-column
         align="center"
         :label="$translateTitle('Maintenance.Initiator')"
-        show-overflow-tooltip
-        sortable
       >
         <template #default="{ row }">
           {{ row.info && row.info.createdname ? row.info.createdname : '' }}
