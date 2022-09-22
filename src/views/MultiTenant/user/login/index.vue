@@ -361,18 +361,15 @@
        * @Description:
        */
       async defaultSet() {
-        console.log(`dgiot build time: ${dgiot.dateTime}`)
-        console.log(`startIframe time: ${Cookies.get('startIframe')}`)
         this.backgroundImage = Cookies.get('startIframe')
           ? 'https://s2.loli.net/2021/12/15/ciVTb7w62rxQ3a9.jpg'
-          : // 'https://s2.loli.net/2021/12/15/aJYcUGVixXhTML3.png'
-            // 'https://s2.loli.net/2021/12/15/eapG6iDP1tOSVFl.jpg'
-            this.backgroundimage
+          : this.backgroundimage
         const url =
           process.env.NODE_ENV === 'development'
             ? process.env.VUE_APP_URL
             : location.origin
         Cookies.set('fileServer', url, { expires: 60 * 1000 * 30 })
+        console.log('backgroundimage:', this.backgroundimage)
       },
       changeInfo(e) {
         this.$set(

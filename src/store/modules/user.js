@@ -90,19 +90,11 @@ async function queryAllMsg(commit, dispatch, data, type) {
         : hour < 18
         ? Vue.prototype.$translateTitle('route.下午好')
         : Vue.prototype.$translateTitle('route.晚上好')
-    Vue.prototype.$baseNotify(title, `${thisTime}！`)
-    console.groupCollapsed(
-      '%c login promise.all log',
-      'color:#009a61; font-size: 28px; font-weight: 300'
-    )
-    console.info('login promise.all log ->')
-    console.log(promiseRes)
-    console.groupEnd()
+    // Vue.prototype.$baseNotify(title, `${thisTime}！`)
     Cookies.set('handleRoute', 'true', { expires: 60 * 1000 * 30 })
 
     if (type == 'jwt') {
       // Cookies.set('jwtInfo', state, { expires: 1 })
-      console.log('jwt info', state)
       window.addEventListener('message', function (e) {
         const companyName = {
           value: state.extendFields.companyName,
@@ -118,8 +110,9 @@ async function queryAllMsg(commit, dispatch, data, type) {
           type: 'cookie',
           time: moment().format('YYYY:MM:DD  HH:mm:ss'),
         }
-        e.source.postMessage(companyName, e.origin)
-        e.source.postMessage(userId, e.origin)
+        // console.log('fds = ', companyName, e.origin)
+        // e.source.postMessage(companyName, e.origin)
+        // e.source.postMessage(userId, e.origin)
       })
       // this.$router.push(this.handleRoute())
     }
