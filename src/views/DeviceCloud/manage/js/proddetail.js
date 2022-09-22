@@ -21,7 +21,7 @@ import { getDictCount } from '@/api/Dict/index'
 import { getRule } from '@/api/Rules'
 import { postProductTemplet } from '@/api/ProductTemplet'
 import { Compile, subupadte } from '@/api/System/index'
-import { list_dir } from '@/api/System/filemanagement'
+import { list_dir, file_info, delete_file } from '@/api/System/filemanagement'
 import { setTimeout } from 'timers'
 import wmxdetail from '@/views/DeviceCloud/manage/component/wmxdetail'
 import profile from '@/views/DeviceCloud/manage/profile'
@@ -844,6 +844,11 @@ export default {
       },
       filelist: [],
       listLoading: false,
+      detailView: false,
+      ViewLoading: false,
+      detailinfo: {},
+      inputParams: {},
+      fileParams: { scene: 'app' },
     }
   },
   computed: {
@@ -901,7 +906,8 @@ export default {
     })
     if (this.$route.query.id) {
       let id = this.$route.query.id
-      this.get_filelist(`product/${id}`)
+      this.fileParams.path = `product/${id}`
+      this.get_filelist(`dgiot_file/product/${id}`) //dgiot_file/file  ///`product/${id}`
     }
     if (this.$route.query.activeName) {
       this.activeName = this.$route.query.activeName
@@ -915,6 +921,106 @@ export default {
     this.subdialogtimer = null
   },
   methods: {
+    uploadCkick() {
+      this.loading = true
+      console.log(this.inputParams)
+      // 触发子组件的点击事件
+      this.$refs['uploadFinish'].$refs.uploader.dispatchEvent(
+        new MouseEvent('click')
+      )
+      let id = this.$route.query.id
+      this.inputParams = {
+        file: '',
+        scene: this.fileParams.scene ? this.fileParams.scene : 'default',
+        path: this.fileParams.path ? this.fileParams.path : 'default',
+        filename: moment(new Date()).valueOf().toString(),
+      }
+    },
+    fileInfo(info) {
+      this.listLoading = true
+      let id = this.$route.query.id
+      if (info.url) {
+        this.$message({
+          showClose: true,
+          duration: 2000,
+          type: 'success',
+          message: '上传成功',
+        })
+        this.get_filelist(`dgiot_file/product/${id}`)
+      } else {
+        this.$message({
+          showClose: true,
+          duration: 2000,
+          type: 'error',
+          message: '上传失败',
+        })
+      }
+      this.listLoading = false
+    },
+    get_fileinfo(row) {
+      this.detailView = true
+      this.ViewLoading = true
+      file_info('files/' + row.path + '/' + row.name).then((res) => {
+        this.detailinfo = {}
+        if (res.data) {
+          this.detailinfo = res.data
+          this.detailinfo.url =
+            this.$FileServe + '/' + row.path + '/' + row.name
+        }
+        this.ViewLoading = false
+      })
+    },
+    delete_file(row) {
+      this.$confirm('此操作将永久删除该文件, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning',
+      })
+        .then(() => {
+          delete_file('files/' + row.path + '/' + row.name)
+            .then((res) => {
+              if (res.status == 'ok') {
+                this.$message({
+                  showClose: true,
+                  duration: 2000,
+                  type: 'success',
+                  message: '删除成功',
+                })
+                this.get_filelist(row.path)
+              } else {
+                this.$message({
+                  showClose: true,
+                  duration: 2000,
+                  type: 'error',
+                  message: res.message,
+                })
+              }
+            })
+            .catch(() => {
+              this.$message({
+                showClose: true,
+                duration: 2000,
+                type: 'error',
+                message: '删除失败',
+              })
+            })
+        })
+        .catch(() => {
+          this.$message({
+            showClose: true,
+            duration: 2000,
+            type: 'info',
+            message: '已取消删除',
+          })
+        })
+    },
+    download_file(row) {
+      window.open(this.$FileServe + '/' + row.path + '/' + row.name)
+    },
+    files(file) {
+      this.inputParams.filename = file.name
+      this.inputParams.file = file
+    },
     //获取文件列表
     get_filelist(path) {
       this.listLoading = true

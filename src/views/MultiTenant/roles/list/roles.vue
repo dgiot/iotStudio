@@ -38,8 +38,8 @@
                       type="primary"
                       @click.native="getRolesList()"
                     >
-                      <!-- 所有角色 -->
-                      {{ $translateTitle('product.allroles') }}
+                      <!-- 所有部门 -->
+                      {{ $translateTitle('product.alldepartment') }}
                     </el-button>
                   </el-form-item>
                   <el-form-item>
