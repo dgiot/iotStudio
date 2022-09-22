@@ -132,8 +132,16 @@
             :label="$translateTitle('Maintenance.principal')"
             prop="info.principal"
           >
+            <el-cascader
+              v-model="form.info.principal"
+              :options="user"
+              :placeholder="$translateTitle('Maintenance.selectprincipal')"
+              :show-all-levels="false"
+              style="width: 50%"
+              @change="handleChangeDepart"
+            />
             <!--            <span v-if="viewticket">{{ form.info.principalname }}</span>-->
-            <el-select
+            <!-- <el-select
               v-model="form.info.principal"
               :placeholder="$translateTitle('Maintenance.selectprincipal')"
               style="width: 50%"
@@ -145,14 +153,22 @@
                 :label="item.nick"
                 :value="item.objectId"
               />
-            </el-select>
+            </el-select> -->
           </el-form-item>
           <el-form-item
             :label="$translateTitle('Maintenance.executor')"
             prop="info.executor"
           >
+            <el-cascader
+              v-model="form.info.executor"
+              :options="user"
+              :placeholder="$translateTitle('Maintenance.selectexecutor')"
+              :show-all-levels="false"
+              style="width: 50%"
+              @change="handleChangeExecutor"
+            />
             <!--            <span v-if="viewticket">{{ form.info.executorname }}</span>-->
-            <el-select
+            <!-- <el-select
               v-model="form.info.executor"
               :placeholder="$translateTitle('Maintenance.selectexecutor')"
               style="width: 50%"
@@ -164,7 +180,7 @@
                 :label="item.nick"
                 :value="item.objectId"
               />
-            </el-select>
+            </el-select> -->
           </el-form-item>
           <el-form-item
             :label="$translateTitle('Maintenance.Ticket description')"
@@ -463,7 +479,8 @@
   import { mapGetters, mapMutations } from 'vuex'
   import ChangeStep from '../maintenance/ChangeStep'
   import { exlout, UploadImg } from '@/api/File'
-  import { getRoleuser, queryRoledepartment } from '@/api/Role'
+  import { roletree, getRoleuser, queryRoledepartment } from '@/api/Role'
+  import { userTree } from '@/api/User'
   import { Roletree } from '@/api/Menu'
 
   export default {
@@ -646,6 +663,18 @@
       this.fetchData()
     },
     methods: {
+      handleChangeExecutor(value) {
+        this.form.info.executor = value[value.length - 1]
+        this.form.info.executorname = value[value.length - 1].label
+      },
+      handleChangeDepart(value) {
+        this.form.info.principal = value[value.length - 1]
+        this.form.info.principalname = value[value.length - 1].label
+      },
+      async getRoletree() {
+        const res = await roletree()
+        this.roleList = res.results
+      },
       getistimeout(row) {
         let oldtime = new Date(row.info.completiondata).getTime()
         if (new Date() > oldtime && row.status != 2) {
@@ -683,8 +712,12 @@
           include: true,
           limit: 10,
         }
-        const { results } = await getRoleuser(params)
-        this.user = results
+        const res = await userTree()
+        console.log('人员树', res)
+        this.user = res.data.options
+        // const { results } = await getRoleuser(params)
+        // this.user = results
+        // this.impuser = results
       },
       myUpload(content) {
         const file = content.file
@@ -749,7 +782,7 @@
             className: 'Device',
           },
           user: {
-            objectId: from.info.executor,
+            objectId: from.info.executor.objectId,
             __type: 'Pointer',
             className: '_User',
           },
@@ -770,9 +803,9 @@
             createdname: this.username,
             startdata: new Date(from.info.startdata).getTime(),
             completiondata: new Date(from.info.completiondata).getTime(),
-            principal: from.info.principal,
+            principal: from.info.principal.objectId,
             principalname: from.info.principalname,
-            executor: from.info.executor,
+            executor: from.info.executor.objectId,
             executorname: from.info.executorname,
           },
         }

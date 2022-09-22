@@ -597,10 +597,15 @@
       //   this.$refs['edit'].showEdit(row)
       // },
       async handleOperation(row) {
-        let destId = JSON.parse(Base64.decode(localStorage.getItem('role')))
-          ?.vuexinfo[0]?.objectId
+        let destId =
+          JSON.parse(Base64.decode(localStorage.getItem('role')))?.vuexinfo[0]
+            ?.objectId || ''
+        let name =
+          JSON.parse(Base64.decode(localStorage.getItem('username')))
+            ?.vuexinfo || ''
         localStorage.setItem('parse_objectid', row.objectId)
-        localStorage.setItem('product_objectid', row.product.objectId)
+        localStorage.setItem('parse_name', name)
+        localStorage.setItem('parse_productid', row.product.objectId)
         const { results = [] } = await queryRelation({
           destClass: '_Role',
           destId: destId,
