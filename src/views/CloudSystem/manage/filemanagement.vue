@@ -194,7 +194,7 @@
     },
     watch: {},
     mounted() {
-      this.get_filelist(this.parentfile)
+      // this.get_filelist(this.parentfile)
       this.getproductTree()
     },
     methods: {
@@ -203,7 +203,7 @@
         if (data.value) {
           console.log(data.value)
           this.$set(this.fileParams, 'path', `product/${data.value}`)
-          this.get_filelist(`product/${data.value}`)
+          this.get_filelist(`dgiot_file/product/${data.value}`)
           // this.fileParams.path =
         }
       },
@@ -245,6 +245,15 @@
         }
       },
       uploadCkick() {
+        if (!this.fileParams.path) {
+          this.$message({
+            showClose: true,
+            duration: 2000,
+            type: 'error',
+            message: '未选择产品',
+          })
+          return
+        }
         this.loading = true
         // 触发子组件的点击事件
         this.$refs['uploadFinish'].$refs.uploader.dispatchEvent(
@@ -266,7 +275,7 @@
             type: 'success',
             message: '上传成功',
           })
-          this.get_filelist(this.parentfile)
+          this.get_filelist(`dgiot_file/${this.fileParams.path}`)
         } else {
           this.$message({
             showClose: true,

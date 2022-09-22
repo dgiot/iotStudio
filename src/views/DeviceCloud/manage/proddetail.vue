@@ -288,12 +288,13 @@
                   </el-button>
                 </el-descriptions-item>
                 <el-descriptions-item
-                  :label="$translateTitle('konva.Visualization')"
+                  :label="$translateTitle('konva.notificationtemplate')"
                 >
+                  <!--告警数量 -->
                   <el-button
                     :disabled="amisproductInfo.length == 0"
                     type="text"
-                    @click="activeName = 'view'"
+                    @click="activeName = 'notification'"
                   >
                     {{ amisproductInfo.length || 0 }}
                   </el-button>
@@ -2955,7 +2956,16 @@
         <!--文件-->
         <el-tab-pane :label="$translateTitle('product.file')" name="file">
           <!-- <dgiot-dict /> -->
+          <dgiot-input
+            ref="uploadFinish"
+            :params="inputParams"
+            @fileInfo="fileInfo"
+            @files="files"
+          />
           <!----------------------------------------------------文件表格------------------>
+          <el-button type="primary" @click.native="uploadCkick()">
+            {{ $translateTitle('application.uploadfile') }}
+          </el-button>
           <el-table
             ref="tableRef"
             v-loading="listLoading"
@@ -2995,7 +3005,79 @@
                 </span>
               </template>
             </el-table-column>
+            <el-table-column
+              fixed="right"
+              :label="$translateTitle('developer.operation')"
+              width="300"
+            >
+              <template #default="{ row }">
+                <el-button
+                  v-if="!row.is_dir"
+                  size="mini"
+                  type="primary"
+                  @click.native.stop="get_fileinfo(row)"
+                >
+                  <!-- 详情 -->
+                  {{ $translateTitle('application.detail') }}
+                </el-button>
+                <el-button
+                  v-if="!row.is_dir"
+                  size="mini"
+                  type="primary"
+                  @click.native.stop="download_file(row)"
+                >
+                  <!-- 下载 -->
+                  {{ $translateTitle('application.preview') }}
+                </el-button>
+                <el-button
+                  v-if="!row.is_dir"
+                  slot="reference"
+                  size="mini"
+                  type="danger"
+                  @click.native.stop="delete_file(row)"
+                >
+                  {{ $translateTitle('developer.delete') }}
+                </el-button>
+              </template>
+            </el-table-column>
           </el-table>
+          <el-dialog
+            append-to-body
+            :model="detailinfo"
+            title="文件信息"
+            :visible.sync="detailView"
+            width="30%"
+          >
+            <el-form v-loading="ViewLoading">
+              <el-form-item label="名称" label-width="200">
+                <span>{{ detailinfo.rename }}</span>
+              </el-form-item>
+              <el-form-item label="路径" label-width="200">
+                <span>{{ detailinfo.path }}</span>
+              </el-form-item>
+              <el-form-item label="url" label-width="200">
+                <span>{{ detailinfo.url }}</span>
+              </el-form-item>
+              <el-form-item label="MD5" label-width="200">
+                <span>{{ detailinfo.md5 }}</span>
+              </el-form-item>
+              <el-form-item label="场景" label-width="200">
+                <span>{{ detailinfo.scene }}</span>
+              </el-form-item>
+              <el-form-item label="大小" label-width="200">
+                <span>{{ Math.round(detailinfo.size / 1024) + 'kb' }}</span>
+              </el-form-item>
+              <el-form-item label="日期" label-width="200">
+                <span>
+                  {{
+                    $moment(detailinfo.timeStamp * 1000).format(
+                      'YYYY-MM-DD HH:mm:ss'
+                    )
+                  }}
+                </span>
+              </el-form-item>
+            </el-form>
+          </el-dialog>
         </el-tab-pane>
       </el-tabs>
     </div>
