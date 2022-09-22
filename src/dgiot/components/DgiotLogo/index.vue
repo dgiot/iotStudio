@@ -16,7 +16,7 @@
         class="title"
         :class="{ 'hidden-xs-only': theme.layout === 'horizontal' }"
       >
-        {{ name }}
+        <!--        {{ name }}-->
       </span>
     </router-link>
   </div>

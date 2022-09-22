@@ -275,7 +275,7 @@
           this.setCurrentDepartment(data)
           const { access_token: sessionToken, expires_in } =
             await departmentToken(data.name)
-          console.log(`部门：${data.name}\ntoken为${sessionToken}`)
+          // console.log(`部门：${data.name}\ntoken为${sessionToken}`)
           // Cookies.set('departmentToken', access_token, {
           //   expires: new Date(new Date().getTime() + expires_in),
           // })
@@ -284,25 +284,16 @@
           // this._setToken(access_token)
           const { name } = this.$route
           await this.reloadRouter(name, this.$route)
-          console.groupCollapsed(
-            '%ctree handleNodeClick',
-            'color:#009a61; font-size: 28px; font-weight: 300'
-          )
-          dgiotlog
-            .getDgiotlog('src/dgiot/components/DgiotRoleTree/index.vue')
-            .info('DgiotRoleTree ->', data, checked)
-          console.groupEnd()
-          if (!this.firstChild)
-            this.$baseNotify(
-              this.$translateTitle('message.Department has been switched to') +
-                data.depname,
-              this.$translateTitle('message.Tips'),
-              'success',
-              '',
-              5000
-            )
+          // if (!this.firstChild)
+          //   this.$baseNotify(
+          //     this.$translateTitle('message.Department has been switched to') +
+          //       data.depname,
+          //     this.$translateTitle('message.Tips'),
+          //     'success',
+          //     '',
+          //     5000
+          //   )
         } catch (error) {
-          dgiotlog.log(error)
           this.$baseMessage(
             this.$translateTitle('alert.Data request error') + `${error}`,
             'error',
@@ -311,16 +302,7 @@
         }
         this.firstChild = false
       },
-      handleCheckClick(data, checked) {
-        console.groupCollapsed(
-          '%ctree handleCheckClick',
-          'color:#009a61; font-size: 28px; font-weight: 300'
-        )
-        dgiotlog.log(data, checked, 'handleCheckClick')
-        dgiotlog.log(data)
-        dgiotlog.log(checked)
-        console.groupEnd()
-      },
+      handleCheckClick(data, checked) {},
       filterNode(value, data) {
         if (!value) return true
         return data.label.includes(value)

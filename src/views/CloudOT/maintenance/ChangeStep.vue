@@ -4,18 +4,18 @@
       <el-col :span="8">
         <div class="grid-content bg-purple">
           {{ $translateTitle('Maintenance.Ticket number') }} :
-          {{ detail.number }}
+          {{ form.number }}
         </div>
       </el-col>
       <el-col :span="6">
         <div class="grid-content bg-purple-light">
-          {{ $translateTitle('Maintenance.Ticket type') }} : {{ detail.type }}
+          {{ $translateTitle('Maintenance.Ticket type') }} : {{ form.type }}
         </div>
       </el-col>
       <el-col :span="10">
         <div class="grid-content bg-purple">
           {{ $translateTitle('cloudTest.Creation time') }} :
-          {{ $moment(detail.createdAt).format('YYYY-MM-DD HH:mm:ss') }}
+          {{ $moment(form.createdAt).format('YYYY-MM-DD HH:mm:ss') }}
         </div>
       </el-col>
     </el-row>
@@ -172,15 +172,13 @@
                   list-type="picture-card"
                 >
                   <i slot="default" class="el-icon-plus"></i>
-                  <div v-for="(item, index) in form.info.photo" :key="index">
-                    <img
-                      alt=""
-                      class="el-upload-list__item-thumbnail"
-                      :src="item.url"
-                    />
-                  </div>
                 </el-upload>
-                <el-carousel v-else height="200px" :interval="2000" type="card">
+                <el-carousel
+                  v-if="form.info.photo"
+                  height="200px"
+                  :interval="2000"
+                  type="card"
+                >
                   <el-carousel-item
                     v-for="(item, index) in form.info.photo"
                     :key="index"
@@ -223,8 +221,41 @@
         </el-form>
       </el-tab-pane>
       <el-tab-pane
-        :label="$translateTitle('Maintenance.work process')"
+        v-if="form.type == '巡检'"
+        :label="$translateTitle('Maintenance.inspection data')"
         name="second"
+        style="height: 90%; overflow-x: hidden; overflow-y: auto"
+      >
+        <div class="card_content">
+          <div
+            v-for="(item, key) in form.info.dynamicdata"
+            :key="key + 'd'"
+            class="card_content_item"
+          >
+            <div class="card_name">
+              <div>
+                {{ item.name }}
+              </div>
+              <div style="color: #e8b300">
+                {{ item.unit }}
+              </div>
+            </div>
+            <div class="card_value">
+              <input
+                v-model="item.number"
+                class="card_number"
+                :placeholder="item.name"
+                type="text"
+              />
+              <!-- disabled -->
+            </div>
+            <div class="card_time"></div>
+          </div>
+        </div>
+      </el-tab-pane>
+      <el-tab-pane
+        :label="$translateTitle('Maintenance.work process')"
+        name="third"
         style="height: 90%; overflow-x: hidden; overflow-y: auto"
       >
         <el-card shadow="hover">
@@ -240,7 +271,7 @@
           </template>
           <el-timeline :reverse="reverse">
             <el-timeline-item
-              v-for="item in detail.info.timeline"
+              v-for="item in form.info.timeline"
               :key="item.timestamp"
               placement="top"
               :timestamp="item.timestamp"
@@ -342,16 +373,13 @@
         }
         UploadImg(params)
           .then((res) => {
+            console.log(res)
             if (res.data.url) {
               this.form.info.photo.push(res.data.url)
-              console.log('???????', res.data.url, this.form.photo)
             } else {
-              console.log('no up url ', res)
             }
           })
-          .catch((e) => {
-            console.log('???', e)
-          })
+          .catch((e) => {})
       },
     },
   }
@@ -361,5 +389,42 @@
     .steps {
       margin: 20px 0;
     }
+  }
+  /* 数据卡片列表 */
+  .card_content {
+    display: flex;
+    flex-wrap: wrap;
+  }
+
+  .card_content_item {
+    width: 22%;
+    margin: 1%;
+    background-color: #fff;
+    box-shadow: 1px 1px 1px 1px #ccc;
+  }
+
+  .card_name {
+    display: flex;
+    justify-content: space-between;
+    padding: 0.5em 0.4em;
+  }
+
+  .card_value {
+    padding-left: 20%;
+    padding-top: 0.5em;
+    padding-bottom: 0.5em;
+  }
+
+  .card_number {
+    color: #1e49c5;
+    width: 80%;
+    border: 0;
+  }
+  .card_time {
+    height: 0.5em;
+    width: 100%;
+  }
+  input {
+    outline: none;
   }
 </style>
