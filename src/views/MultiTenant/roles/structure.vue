@@ -182,6 +182,24 @@
                     </template>
                   </el-table-column>
                   <el-table-column
+                    align="center"
+                    label="所属部门"
+                    prop="ACL"
+                    show-overflow-tooltip
+                    sortable
+                    width="180"
+                  >
+                    <template #default="{ row }">
+                      <el-tag
+                        v-for="(item, index) in row.roles"
+                        :key="index"
+                        effect="plain"
+                      >
+                        {{ item.depname }}
+                      </el-tag>
+                    </template>
+                  </el-table-column>
+                  <el-table-column
                     :label="$translateTitle('user.createdtime')"
                     :show-overflow-tooltip="true"
                   >

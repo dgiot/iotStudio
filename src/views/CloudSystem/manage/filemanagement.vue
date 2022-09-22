@@ -439,8 +439,8 @@
         text-align: center;
       }
       .el-tree-node__label {
-        font-size: 16px;
-        margin: 2px;
+        font-size: 18px;
+        margin: 4px;
         display: inline-block;
       }
     }
