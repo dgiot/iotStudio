@@ -20,16 +20,15 @@
           <el-input
             v-model="roleFormObj.depname"
             placeholder="请输入部门名称"
-            style="width: 75%"
           />
           <span style="float: right; font-size: 14px; color: #8492a6">
-            <el-button
+            <!-- <el-button
               v-if="insert == 0 || insert == 1"
               type="success"
               @click="addroles('roleFormObj')"
             >
               {{ $translateTitle('developer.determine') }}
-            </el-button>
+            </el-button> -->
           </span>
         </el-form-item>
         <el-form-item label="岗位" prop="dictvalue">
