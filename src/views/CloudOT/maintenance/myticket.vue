@@ -133,15 +133,12 @@
         align="center"
         :label="$translateTitle('Maintenance.Ticket number')"
         prop="number"
-        show-overflow-tooltip
-        sortable
         width="120"
       />
       <el-table-column
         align="center"
         :label="$translateTitle('equipment.Products')"
         show-overflow-tooltip
-        sortable
       >
         <template #default="{ row }">
           {{ row.info && row.info.productname ? row.info.productname : '' }}
@@ -151,7 +148,6 @@
         align="center"
         :label="$translateTitle('Maintenance.Equipment name')"
         show-overflow-tooltip
-        sortable
       >
         <template #default="{ row }">
           {{ row.info && row.info.devicename ? row.info.devicename : '' }}
@@ -160,8 +156,6 @@
       <el-table-column
         align="center"
         :label="$translateTitle('Maintenance.executor')"
-        show-overflow-tooltip
-        sortable
       >
         <template #default="{ row }">
           {{ row.info && row.info.executorname ? row.info.executorname : '' }}
@@ -171,14 +165,12 @@
         align="center"
         :label="$translateTitle('Maintenance.Ticket type')"
         prop="type"
-        show-overflow-tooltip
-        sortable
+        width="100"
       />
       <el-table-column
         align="center"
         :label="$translateTitle('Maintenance.Ticket status')"
-        show-overflow-tooltip
-        sortable
+        width="100"
       >
         <template #default="{ row }">
           {{ getStatus(row.status, row) }}
@@ -187,7 +179,6 @@
       <el-table-column
         align="center"
         :label="$translateTitle('Maintenance.planstartdata')"
-        show-overflow-tooltip
         sortable
       >
         <template #default="{ row }">
@@ -197,7 +188,6 @@
       <el-table-column
         align="center"
         :label="$translateTitle('Maintenance.planenddata')"
-        show-overflow-tooltip
         sortable
       >
         <template #default="{ row }">
@@ -207,8 +197,6 @@
       <el-table-column
         align="center"
         :label="$translateTitle('Maintenance.Initiator')"
-        show-overflow-tooltip
-        sortable
       >
         <template #default="{ row }">
           {{ row.info && row.info.createdname ? row.info.createdname : '' }}
@@ -227,8 +215,7 @@
       <el-table-column
         align="center"
         :label="$translateTitle('Maintenance.istimeout')"
-        show-overflow-tooltip
-        sortable
+        width="100"
       >
         <template #default="{ row }">
           <span v-html="getistimeout(row)"></span>
@@ -238,7 +225,7 @@
         align="center"
         fixed="right"
         :label="$translateTitle('Maintenance.operating')"
-        width="260"
+        width="200"
       >
         <template #default="{ row }">
           <el-button
@@ -478,30 +465,6 @@
         }
         const { results } = await getRoleuser(params)
         this.user = results
-      },
-      myUpload(content) {
-        const file = content.file
-        let extension = file.name.substring(file.name.lastIndexOf('.') + 1)
-
-        const params = {
-          file: file,
-          // scene: 'ticket',
-          path: 'ticket',
-          filename: 'ticket' + `${moment().format('x')}.${extension}`,
-        }
-        dgiotlog.log('extension', params)
-        UploadImg(params)
-          .then((res) => {
-            if (res.data.url) {
-              this.form.info.photo.push(res.data.url)
-              console.log('上传成功的回调', res.data.url, this.form.photo)
-            } else {
-              console.log('no up url ', res)
-            }
-          })
-          .catch((e) => {
-            console.log('出错了', e)
-          })
       },
       changeBox(val) {
         this.selectedList = []

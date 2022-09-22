@@ -665,6 +665,7 @@
           device: '',
           type: '',
           info: {
+            photo: [],
             startdata: '',
             completiondata: '',
           },
@@ -700,7 +701,7 @@
           .then((res) => {
             if (res.data.url) {
               this.form.info.photo.push(res.data.url)
-              console.log('上传成功的回调', res.data.url, this.form.photo)
+             // console.log('上传成功的回调', res.data.url, this.form.info.photo)
             } else {
               console.log('no up url ', res)
             }

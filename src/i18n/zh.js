@@ -1097,6 +1097,7 @@ export default {
       'Processing records': '处理记录',
       'Work order information': '工单信息',
       'work process': '工作流程',
+      'inspection data': '巡检检查表',
       'end time': '结束时间',
       'start time': '开始时间',
       'Ticket number': '工单编号',

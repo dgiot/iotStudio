@@ -1,114 +1,24 @@
 <template>
-  <div
-    ref="container"
-    class="login-container"
-    :style="{
-      backgroundImage: 'url(' + backgroundImage + ')',
-      backgroundRepeat: 'no-repeat',
-      backgroundSize: '100% 100%',
-    }"
-  >
-    <el-row v-if="isShow">
-      <el-col :lg="14" :md="11" :sm="24" :xl="14" :xs="24">
-        <div style="color: transparent">占位符</div>
-      </el-col>
-      <el-col :lg="9" :md="12" :sm="24" :xl="9" :xs="24">
-        <el-form
-          ref="form"
-          class="login-form"
-          label-position="left"
-          :model="form"
-          :rules="rules"
-        >
-          <div v-if="Default.title" class="title-tips">
-            {{ $translateTitle('home.login') }}
-          </div>
-          <el-form-item prop="username" style="margin-top: 40px">
-            <el-input
-              v-model.trim="form.username"
-              v-focus
-              :placeholder="$translateTitle('home.Please enter user name')"
-              tabindex="1"
-              type="text"
-            >
-              <template #prefix>
-                <dgiot-icon icon="user-line" />
-              </template>
-            </el-input>
-          </el-form-item>
-          <el-form-item prop="password">
-            <el-input
-              :key="passwordType"
-              ref="password"
-              v-model.trim="form.password"
-              :placeholder="$translateTitle('home.Please enter the password')"
-              tabindex="2"
-              :type="passwordType"
-              @keyup.enter.native="handleLogin"
-            >
-              <!--              <el-link-->
-              <!--                v-if="!form.password.length"-->
-              <!--                slot="append"-->
-              <!--                type="primary"-->
-              <!--                @click="forgotPwd()"-->
-              <!--              >-->
-              <!--                {{ $translateTitle('home.Forgot password') }}-->
-              <!--              </el-link>-->
-              <template #prefix>
-                <dgiot-icon v-if="form.password.length" icon="lock-line" />
-              </template>
-
-              <template
-                v-if="passwordType === 'password' && form.password.length"
-                #suffix
-              >
-                <dgiot-icon
-                  class="show-password"
-                  icon="eye-off-line"
-                  @click.native="handlePassword"
-                />
-              </template>
-              <template v-else #suffix>
-                <dgiot-icon
-                  v-if="form.password.length"
-                  class="show-password"
-                  icon="eye-line"
-                  @click.native="handlePassword"
-                />
-              </template>
-            </el-input>
-          </el-form-item>
-          <el-form-item>
-            <el-input class="sbMc">
-              <el-button
-                slot="append"
-                class="login-btn"
-                :loading="loading"
-                type="primary"
-                @click.native="handleLogin"
-              >
-                {{ $translateTitle('home.login') }}
-              </el-button>
-            </el-input>
-          </el-form-item>
-
-          <span>
-            <router-link v-show="false" style="float: left" to="/register">
-              <div style="margin-top: 20px">
-                {{ $translateTitle('home.registered') }}
-              </div>
-            </router-link>
-            <dgiot-language
-              style="float: right; margin-top: 20px; cursor: pointer"
-            />
-          </span>
-        </el-form>
-      </el-col>
-      <!--      <el-col :lg="1" :md="1" :sm="24" :xl="1" :xs="24">-->
-      <!--        <div style="color: transparent">占位符</div>-->
-      <!--      </el-col>-->
-    </el-row>
+  <!--  <div ref="container" v-loading="jwLoginFlag" class="login-container">-->
+  <!--  <div-->
+  <!--    v-loading="jwLoginFlag"-->
+  <!--    element-loading-background="rgba(255,255,255, 0)"-->
+  <!--    element-loading-spinner="el-icon-loading"-->
+  <!--    element-loading-text="加载中"-->
+  <!--    style="height: 100%; overflow: auto"-->
+  <!--  ></div>-->
+  <div id="loader-wrapper" style="">
+    <!--    <div id="loader"></div>-->
+    <div class="loader-section section-left"></div>
+    <div class="loader-section section-right"></div>
+    <div class="load_title" style="font-size: 16px !important">
+      <img
+        src="/assets/images/loading.gif"
+        style="width: 120px; height: 120px"
+      />
+    </div>
   </div>
+  <!--  </div>-->
 </template>
 
 <script>
@@ -238,6 +148,7 @@
       })
     },
     created() {
+      this.goHome()
       if (this.$route.query.id_token) {
         this.jwtlogin(this.$route.query.id_token)
       }
@@ -275,33 +186,6 @@
             type: 'cookie',
             time: moment().format('YYYY:MM:DD  HH:mm:ss'),
           }
-          // if (e.data.id_token) {
-          //   if (_.isEmpty(Cookies.get('handleRoute'))) {
-          //     this.jwtlogin(e.data.id_token)
-          //     this.goHome()
-          //   }
-          //   console.log(
-          //     `receive time: ${moment().format('YYYY:MM:DD HH:mm:ss')}`
-          //   )
-          //   console.groupCollapsed(
-          //     '%c iframe message',
-          //     'color:#009a61; font-size: 28px; font-weight: 300'
-          //   )
-          //   console.info('从' + e.origin + '收到消息： \n')
-          //   console.log(e.data)
-          //   e.source.postMessage(message, e.origin)
-          //   console.groupEnd()
-          //   Cookies.set('id_token', e.data.id_token, {
-          //     expires: 60 * 1000 * 30,
-          //   })
-          //   console.info(
-          //     `检测到页面存在 jwt token \n`,
-          //     e.data.id_token,
-          //     '\n采用jwt token 登录'
-          //   )
-          //   console.groupEnd()
-          //   Cookies.set('handleRoute', 'true', { expires: 60 * 1000 * 30 })
-          // }
         } catch (error) {
           console.log(error)
           this.$baseMessage(
@@ -323,8 +207,8 @@
         try {
           await setTimeout(() => {
             if (this.objectId) {
-              console.log('userid', this.objectId)
-              document.querySelector('.el-tree-node__content').click()
+              // console.log('userid', this.objectId)
+              // document.querySelector('.el-tree-node__content').click()
             }
           }, 1200)
         } catch (error) {
@@ -359,7 +243,6 @@
                 }
               )
               // await this.login({ username: 'feiiplat', password: 'feiiplat' })
-              await this.goHome()
             }
           })
         } catch (error) {
@@ -453,7 +336,6 @@
             try {
               this.loading = true
               await this.login(this.form)
-              await this.goHome()
             } finally {
               this.loading = false
             }
@@ -474,7 +356,6 @@
         try {
           this.interval = setInterval(async () => {
             if (Cookies.get('handleRoute') != '') {
-              console.log('handleRoute 存在，跳转页面')
               await this.$router.push(this.handleRoute())
               await this.routeDgiot()
               clearInterval(this.interval)
