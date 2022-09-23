@@ -421,7 +421,9 @@ const actions = {
       _userInfo
     )
     // console.log('查看数据', data)
-    const { sessionToken = '', roles = [], objectId = '' } = data
+    const { sessionToken = '', roles = [], objectId = '', tag = {} } = data
+    let homeScreen = tag.companyinfo?.homeScreen || 0
+    localStorage.setItem('homeScreen', homeScreen)
     // console.log('不是pc端', isPC())
     if (!isPC()) {
       window.jstoken?.setJsToken(

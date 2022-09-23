@@ -469,7 +469,7 @@
         this.companyinfo = Object.assign(tag.companyinfo, {
           _pcimg: this._pcimg || '',
           _mimg: this._mimg || '',
-          homeScreen: '',
+          // homeScreen: '',
         })
 
         dgiotlog.log('this.userinfo', this.userinfo)

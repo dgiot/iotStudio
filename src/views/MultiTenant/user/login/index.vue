@@ -108,7 +108,7 @@
    * @return {Promise<void>}
    * @Description:
    */
-  import backgroundImage from '../../../../../public/assets/images/platform/assets/login_images/background.jpg'
+  // import backgroundImage from '../../../../public/assets/images/platform/assets/login_images/background.jpg'
   import { mapActions, mapGetters, mapMutations } from 'vuex'
   import { isPassword } from '@/utils/data/validate'
   import { SiteDefault } from '@/api/License'
@@ -153,7 +153,7 @@
           than: this.$translateTitle('home.Password cannot be less than'),
           Bit: this.$translateTitle('home.Bit'),
         },
-        backgroundImage: backgroundImage,
+        backgroundImage: '',
         nodeEnv: process.env.NODE_ENV,
         form: {
           username: '',
@@ -471,7 +471,7 @@
   .login-form {
     position: relative;
     max-width: 100%;
-    padding: 4.5vh;
+    padding: 40px;
     margin: calc((100vh - 475px) / 2) 5vw 5vw;
     overflow: hidden;
     background: #002d55;

@@ -147,69 +147,80 @@
           </el-row>
         </div>
       </div> -->
-      <el-card shadow="hover">
-        <el-row v-show="mapType == 'baidu'" :row="24">
-          <el-col :span="leftRow" :xs="24">
-            <el-row :span="24">
-              <div class="chart_map" style="position: relative; width: 100%">
-                <div v-show="false" class="card_left">
-                  <el-row class="card_left-row" :gutter="24">
-                    <el-col class="card_left-row-col" :span="6">
-                      <Card
-                        class="card_left-row-col-card"
-                        style="background-color: #ffad33; border-color: #ffad33"
-                      >
-                        <div style="text-align: center">
-                          <Tag
-                            checkable
-                            color="warning"
-                            style="background: rgb(255, 173, 51)"
-                          >
-                            {{ offlineData.length || 0 }}
-                          </Tag>
-                          <p>{{ $translateTitle('zetadevices.offline') }}</p>
-                        </div>
-                      </Card>
-                    </el-col>
-                    <el-col class="card_left-row-col" :offset="2" :span="6">
-                      <Card
-                        class="card_left-row-col-card"
-                        style="background-color: #19be6b; border-color: #19be6b"
-                      >
-                        <div style="text-align: center">
-                          <Tag
-                            checkable
-                            color="success"
-                            style="background: rgb(25, 190, 107)"
-                          >
-                            {{ dev_online_count || 0 }}
-                          </Tag>
-                          <p>{{ $translateTitle('zetadevices.online') }}</p>
-                        </div>
-                      </Card>
-                    </el-col>
-                    <el-col class="card_left-row-col" :offset="2" :span="6">
-                      <Card
-                        class="card_left-row-col-card"
-                        style="background-color: #f16643; border-color: #f16643"
-                      >
-                        <div style="text-align: center">
-                          <Tag
-                            checkable
-                            color="error"
-                            style="background: rgb(241, 102, 67)"
-                          >
-                            {{ warnCount }}
-                          </Tag>
-                        </div>
-                        <p>
-                          {{ $translateTitle('leftbar.alarms') }}
-                        </p>
-                      </Card>
-                    </el-col>
-                  </el-row>
-                </div>
-                <!-- <div
+      <!-- 通用版本 -->
+      <div v-if="homeScreen == 0">
+        <el-card shadow="hover">
+          <el-row v-show="mapType == 'baidu'" :row="24">
+            <el-col :span="leftRow" :xs="24">
+              <el-row :span="24">
+                <div class="chart_map" style="position: relative; width: 100%">
+                  <div v-show="false" class="card_left">
+                    <el-row class="card_left-row" :gutter="24">
+                      <el-col class="card_left-row-col" :span="6">
+                        <Card
+                          class="card_left-row-col-card"
+                          style="
+                            background-color: #ffad33;
+                            border-color: #ffad33;
+                          "
+                        >
+                          <div style="text-align: center">
+                            <Tag
+                              checkable
+                              color="warning"
+                              style="background: rgb(255, 173, 51)"
+                            >
+                              {{ offlineData.length || 0 }}
+                            </Tag>
+                            <p>{{ $translateTitle('zetadevices.offline') }}</p>
+                          </div>
+                        </Card>
+                      </el-col>
+                      <el-col class="card_left-row-col" :offset="2" :span="6">
+                        <Card
+                          class="card_left-row-col-card"
+                          style="
+                            background-color: #19be6b;
+                            border-color: #19be6b;
+                          "
+                        >
+                          <div style="text-align: center">
+                            <Tag
+                              checkable
+                              color="success"
+                              style="background: rgb(25, 190, 107)"
+                            >
+                              {{ dev_online_count || 0 }}
+                            </Tag>
+                            <p>{{ $translateTitle('zetadevices.online') }}</p>
+                          </div>
+                        </Card>
+                      </el-col>
+                      <el-col class="card_left-row-col" :offset="2" :span="6">
+                        <Card
+                          class="card_left-row-col-card"
+                          style="
+                            background-color: #f16643;
+                            border-color: #f16643;
+                          "
+                        >
+                          <div style="text-align: center">
+                            <Tag
+                              checkable
+                              color="error"
+                              style="background: rgb(241, 102, 67)"
+                            >
+                              {{ warnCount }}
+                            </Tag>
+                          </div>
+                          <p>
+                            {{ $translateTitle('leftbar.alarms') }}
+                          </p>
+                        </Card>
+                      </el-col>
+                    </el-row>
+                  </div>
+                  <!-- <div
                   class="card"
                   style="position: absolute; right: 100px; z-index: 1000"
                 >
@@ -290,436 +301,524 @@
                     </div>
                   </Card>
                 </div> -->
-                <baidu-map
-                  id="baidu_map"
-                  :ak="ak"
-                  :center="center"
-                  class="baidu_map"
-                  :scroll-wheel-zoom="true"
-                  :zoom="sizeZoom"
-                  @ready="handler"
-                >
-                  <div class="screen_top">
-                    <div class="screen_top_item">
-                      <router-link to="/dashboard/productlist">
-                        <p>{{ $translateTitle('home.pro_count') }}</p>
-                        <p style="color: #f8a75c">{{ _product_count }}</p>
-                      </router-link>
+                  <baidu-map
+                    id="baidu_map"
+                    :ak="ak"
+                    :center="center"
+                    class="baidu_map"
+                    :scroll-wheel-zoom="true"
+                    :zoom="sizeZoom"
+                    @ready="handler"
+                  >
+                    <div class="screen_top">
+                      <div class="screen_top_item">
+                        <router-link to="/dashboard/productlist">
+                          <p>{{ $translateTitle('home.pro_count') }}</p>
+                          <p style="color: #f8a75c">{{ _product_count }}</p>
+                        </router-link>
+                      </div>
+                      <div class="screen_top_item">
+                        <router-link to="/roles/applicationManagement">
+                          <p>{{ $translateTitle('home.app_count') }}</p>
+                          <p style="color: #efdb75">{{ _app_count }}</p>
+                        </router-link>
+                      </div>
+                      <div class="screen_top_item" @click="goDevice()">
+                        <p>{{ $translateTitle('home.dev_count') }}</p>
+                        <p style="color: #03fcfa">{{ _dev_count }}</p>
+                      </div>
+                      <div class="screen_top_item">
+                        <router-link to="/CloudOt/alarm">
+                          <p>
+                            {{
+                              $translateTitle(
+                                'equipment.Total number of alarms'
+                              )
+                            }}
+                          </p>
+                          <p style="color: #179fff">{{ warnCount }}</p>
+                        </router-link>
+                      </div>
                     </div>
-                    <div class="screen_top_item">
-                      <router-link to="/roles/applicationManagement">
-                        <p>{{ $translateTitle('home.app_count') }}</p>
-                        <p style="color: #efdb75">{{ _app_count }}</p>
-                      </router-link>
+                    <div class="screen_bottom">
+                      <div class="screen_bottom_title">设备告警</div>
+                      <topo-caltable :comp="comp" />
                     </div>
-                    <div class="screen_top_item" @click="goDevice()">
-                      <p>{{ $translateTitle('home.dev_count') }}</p>
-                      <p style="color: #03fcfa">{{ _dev_count }}</p>
+                    <div class="screen_right_center">
+                      <div class="screen_right_center_top">工单列表</div>
+                      <work-order :comp="comp" />
                     </div>
-                    <div class="screen_top_item">
-                      <router-link to="/CloudOt/alarm">
-                        <p>
-                          {{
-                            $translateTitle('equipment.Total number of alarms')
-                          }}
-                        </p>
-                        <p style="color: #179fff">{{ warnCount }}</p>
-                      </router-link>
+                    <div class="screen_left_center">
+                      <div class="screen_left_center_top">告警列表</div>
+                      <topo-caltable :comp="comp" />
                     </div>
-                  </div>
-                  <div class="screen_bottom">
-                    <div class="screen_bottom_title">设备告警</div>
-                    <topo-caltable :comp="comp" />
-                  </div>
-                  <div class="screen_right_bottom">
-                    <div class="screen_right_bottom_top">设备运行状况</div>
-                    <ve-pie
-                      :data="piechartData"
-                      :extend="pieextend"
-                      height="100%"
-                      :settings="piechartSettings"
-                      width="100%"
+                    <div class="screen_right_bottom">
+                      <div class="screen_right_bottom_top">设备运行状况</div>
+                      <ve-pie
+                        :data="piechartData"
+                        :extend="pieextend"
+                        height="100%"
+                        :settings="piechartSettings"
+                        width="100%"
+                      />
+                    </div>
+                    <bm-map-type
+                      anchor="BMAP_ANCHOR_TOP_LEFT"
+                      :map-types="['BMAP_HYBRID_MAP', 'BMAP_NORMAL_MAP']"
                     />
-                  </div>
-                  <bm-map-type
-                    anchor="BMAP_ANCHOR_TOP_LEFT"
-                    :map-types="['BMAP_HYBRID_MAP', 'BMAP_NORMAL_MAP']"
-                  />
-                  <!-- 'BMAP_NORMAL_MAP' -->
-                  <!-- :map-style="{ style: 'midnight' }" -->
-                  <bm-control>
-                    <el-button size="mini" @click="sizeZoom = 19">
-                      {{ $translateTitle('home.max') }}
-                    </el-button>
-                    <el-button size="mini" @click="sizeZoom = 10">
-                      {{ $translateTitle('home.restore') }}
-                    </el-button>
-                    <el-button size="mini" @click="sizeZoom = 3">
-                      {{ $translateTitle('home.min') }}
-                    </el-button>
-                    <el-button
-                      class="ri-fullscreen-fill"
-                      size="mini"
-                      @click="toggleFull()"
-                    />
-                    <!--                    <bm-panorama-->
-                    <!--                      anchor="BMAP_ANCHOR_TOP_LEFT"-->
-                    <!--                      :offset="{ width: 500, height: 0 }"-->
+                    <!-- 'BMAP_NORMAL_MAP' -->
+                    <!-- :map-style="{ style: 'midnight' }" -->
+                    <bm-control>
+                      <el-button size="mini" @click="sizeZoom = 19">
+                        {{ $translateTitle('home.max') }}
+                      </el-button>
+                      <el-button size="mini" @click="sizeZoom = 10">
+                        {{ $translateTitle('home.restore') }}
+                      </el-button>
+                      <el-button size="mini" @click="sizeZoom = 3">
+                        {{ $translateTitle('home.min') }}
+                      </el-button>
+                      <el-button
+                        class="ri-fullscreen-fill"
+                        size="mini"
+                        @click="toggleFull()"
+                      />
+                      <!--                    <bm-panorama-->
+                      <!--                      anchor="BMAP_ANCHOR_TOP_LEFT"-->
+                      <!--                      :offset="{ width: 500, height: 0 }"-->
+                      <!--                    />-->
+                      <bm-overview-map :is-open="true" />
+                      <bm-scale :offset="{ width: 260, height: 0 }" />
+                      <bm-city-list :offset="{ width: 330, height: 0 }" />
+                      <!--                    <bm-map-type-->
+                      <!--                      anchor="BMAP_ANCHOR_TOP_LEFT"-->
+                      <!--                      :map-types="['BMAP_NORMAL_MAP', 'BMAP_HYBRID_MAP']"-->
+                      <!--                      :offset="{ width: 400, height: 0 }"-->
+                      <!--                    />-->
+                    </bm-control>
+                    <!--                  <div-->
+                    <!--                    v-for="position in getPosition(_tableData)"-->
+                    <!--                    v-show="sizeZoom <= 8"-->
+                    <!--                    :key="position.objectId"-->
+                    <!--                  >-->
+                    <!--                    <bm-point-collection-->
+                    <!--                      v-if="sizeZoom <= 8"-->
+                    <!--                      color="red"-->
+                    <!--                      :points="[position]"-->
+                    <!--                      :shape="-->
+                    <!--                        position.icon == 1-->
+                    <!--                          ? 'BMAP_POINT_SHAPE_STAR'-->
+                    <!--                          : 'BMAP_POINT_SHAPE_WATERDROP'-->
+                    <!--                      "-->
+                    <!--                      size="BMAP_POINT_SIZE_SMALL"-->
+                    <!--                      @click="_goDevice(position)"-->
                     <!--                    />-->
-                    <bm-overview-map :is-open="true" />
-                    <bm-scale :offset="{ width: 260, height: 0 }" />
-                    <bm-city-list :offset="{ width: 330, height: 0 }" />
-                    <!--                    <bm-map-type-->
-                    <!--                      anchor="BMAP_ANCHOR_TOP_LEFT"-->
-                    <!--                      :map-types="['BMAP_NORMAL_MAP', 'BMAP_HYBRID_MAP']"-->
-                    <!--                      :offset="{ width: 400, height: 0 }"-->
-                    <!--                    />-->
-                  </bm-control>
-                  <!--                  <div-->
-                  <!--                    v-for="position in getPosition(_tableData)"-->
-                  <!--                    v-show="sizeZoom <= 8"-->
-                  <!--                    :key="position.objectId"-->
-                  <!--                  >-->
-                  <!--                    <bm-point-collection-->
-                  <!--                      v-if="sizeZoom <= 8"-->
-                  <!--                      color="red"-->
-                  <!--                      :points="[position]"-->
-                  <!--                      :shape="-->
-                  <!--                        position.icon == 1-->
-                  <!--                          ? 'BMAP_POINT_SHAPE_STAR'-->
-                  <!--                          : 'BMAP_POINT_SHAPE_WATERDROP'-->
-                  <!--                      "-->
-                  <!--                      size="BMAP_POINT_SIZE_SMALL"-->
-                  <!--                      @click="_goDevice(position)"-->
-                  <!--                    />-->
-                  <!--                  </div>-->
-                  <bml-marker-clusterer :average-center="true">
-                    <div v-for="(item, index) in _tableData" :key="index">
-                      <bm-marker
-                        :ref="'bm_info' + index"
-                        :icon="{
-                          url:
-                            item.icon == 1
-                              ? icoPath.icoPath1
-                              : icoPath.icoPath2,
-                          size: { width: 100, height: 100 },
-                        }"
-                        :position="{
-                          lng: item.location.longitude,
-                          lat: item.location.latitude,
-                        }"
-                        @click="showDeatils(item, index)"
-                      >
-                        <bm-info-window
-                          :key="index"
+                    <!--                  </div>-->
+                    <bml-marker-clusterer :average-center="true">
+                      <div v-for="(item, index) in _tableData" :key="index">
+                        <bm-marker
+                          :ref="'bm_info' + index"
+                          :icon="{
+                            url:
+                              item.icon == 1
+                                ? icoPath.icoPath1
+                                : icoPath.icoPath2,
+                            size: { width: 100, height: 100 },
+                          }"
                           :position="{
                             lng: item.location.longitude,
                             lat: item.location.latitude,
                           }"
-                          :show="item.show"
-                          style="display: none"
-                          @close="closeInfo(item, index)"
+                          @click="showDeatils(item, index)"
                         >
-                          <div
-                            v-show="deviceInfo"
-                            class="deviceInfo"
-                            style="width: 400px"
+                          <bm-info-window
+                            :key="index"
+                            :position="{
+                              lng: item.location.longitude,
+                              lat: item.location.latitude,
+                            }"
+                            :show="item.show"
+                            style="display: none"
+                            @close="closeInfo(item, index)"
                           >
-                            <el-row :gutter="24">
-                              <el-col :span="6">
-                                <el-image
-                                  :preview-src-list="[`${productIco}`]"
-                                  :src="productIco"
-                                  style="width: 100px; height: 100px"
-                                >
-                                  <div slot="error" class="image-slot">
-                                    <i
-                                      class="el-icon-picture-outline empty"
-                                      style="width: 100px; height: 100px"
-                                    ></i>
-                                  </div>
-                                </el-image>
-                              </el-col>
-                              <el-col :span="18">
-                                <p :title="deviceInfo.name">
-                                  {{ $translateTitle('equipment.devicename') }}
-                                  ： {{ deviceInfo.name }}
-                                </p>
-                                <p>
-                                  {{ $translateTitle('equipment.address') }}
-                                  ： {{ deviceInfo.address }}
-                                </p>
-                                <p>
-                                  {{
-                                    $translateTitle('zetadevices.devicestatus')
-                                  }}
-                                  ：
-                                  <el-link
-                                    :type="
-                                      deviceInfo.status === 'ONLINE'
-                                        ? 'success'
-                                        : 'warning'
-                                    "
-                                    :underline="false"
+                            <div
+                              v-show="deviceInfo"
+                              class="deviceInfo"
+                              style="width: 400px"
+                            >
+                              <el-row :gutter="24">
+                                <el-col :span="6">
+                                  <el-image
+                                    :preview-src-list="[`${productIco}`]"
+                                    :src="productIco"
+                                    style="width: 100px; height: 100px"
                                   >
+                                    <div slot="error" class="image-slot">
+                                      <i
+                                        class="el-icon-picture-outline empty"
+                                        style="width: 100px; height: 100px"
+                                      ></i>
+                                    </div>
+                                  </el-image>
+                                </el-col>
+                                <el-col :span="18">
+                                  <p :title="deviceInfo.name">
                                     {{
-                                      deviceInfo.status === 'ONLINE'
-                                        ? $translateTitle('zetadevices.online')
-                                        : $translateTitle('zetadevices.offline')
+                                      $translateTitle('equipment.devicename')
                                     }}
-                                  </el-link>
-                                </p>
-                                <p>
-                                  <el-link
-                                    type="primary"
-                                    @click="goLink('real-time', item)"
-                                  >
+                                    ： {{ deviceInfo.name }}
+                                  </p>
+                                  <p>
+                                    {{ $translateTitle('equipment.address') }}
+                                    ： {{ deviceInfo.address }}
+                                  </p>
+                                  <p>
                                     {{
                                       $translateTitle(
-                                        'product.Device Information'
+                                        'zetadevices.devicestatus'
                                       )
                                     }}
-                                  </el-link>
-                                </p>
-                              </el-col>
-                            </el-row>
-                          </div>
-                        </bm-info-window>
-                      </bm-marker>
+                                    ：
+                                    <el-link
+                                      :type="
+                                        deviceInfo.status === 'ONLINE'
+                                          ? 'success'
+                                          : 'warning'
+                                      "
+                                      :underline="false"
+                                    >
+                                      {{
+                                        deviceInfo.status === 'ONLINE'
+                                          ? $translateTitle(
+                                              'zetadevices.online'
+                                            )
+                                          : $translateTitle(
+                                              'zetadevices.offline'
+                                            )
+                                      }}
+                                    </el-link>
+                                  </p>
+                                  <p>
+                                    <el-link
+                                      type="primary"
+                                      @click="goLink('real-time', item)"
+                                    >
+                                      {{
+                                        $translateTitle(
+                                          'product.Device Information'
+                                        )
+                                      }}
+                                    </el-link>
+                                  </p>
+                                </el-col>
+                              </el-row>
+                            </div>
+                          </bm-info-window>
+                        </bm-marker>
+                      </div>
+                    </bml-marker-clusterer>
+                    <bm-navigation anchor="BMAP_ANCHOR_TOP_RIGHT" />
+                    <bm-geolocation
+                      anchor="BMAP_ANCHOR_BOTTOM_RIGHT"
+                      :auto-location="true"
+                      :show-address-bar="true"
+                      :show-zoom-info="true"
+                    />
+                  </baidu-map>
+                </div>
+              </el-row>
+            </el-col>
+            <el-col :span="24 - leftRow" :xs="24">
+              <div class="home_card">
+                <el-tabs v-model="activeName" @tab-click="resizeTheChart">
+                  <el-tab-pane
+                    :label="$translateTitle('home.info')"
+                    name="first"
+                  >
+                    <div class="box-card">
+                      <el-card>
+                        <div slot="header" class="clearfix">
+                          <el-button>
+                            {{ $translateTitle('home.info') }}
+                          </el-button>
+                        </div>
+                        <div>
+                          <el-row :gutter="24">
+                            <el-col :span="24">
+                              <div class="grid-content bg-purple">
+                                <el-table
+                                  v-if="Product"
+                                  :cell-style="{ 'text-align': 'center' }"
+                                  :data="Product"
+                                  :header-cell-style="{
+                                    'text-align': 'center',
+                                  }"
+                                  :row-class-name="tableRowClassName"
+                                  style="width: 100%"
+                                >
+                                  <el-table-column
+                                    :label="$translateTitle('menu.icon')"
+                                    width="60"
+                                  >
+                                    <template #default="{ row }">
+                                      <el-image
+                                        :preview-src-list="[`${row.icon}`]"
+                                        :src="row.icon"
+                                        style="width: 26px; height: 26px"
+                                      >
+                                        <div slot="error" class="image-slot">
+                                          <i
+                                            class="el-icon-picture-outline"
+                                          ></i>
+                                        </div>
+                                      </el-image>
+                                    </template>
+                                  </el-table-column>
+                                  <el-table-column
+                                    :label="$translateTitle('task.productname')"
+                                    prop="name"
+                                    :show-overflow-tooltip="true"
+                                    width="120"
+                                  >
+                                    <template #default="{ row }">
+                                      <span @click="goDevice(row.name)">
+                                        {{ row.name }}
+                                      </span>
+                                    </template>
+                                  </el-table-column>
+
+                                  <el-table-column
+                                    :label="$translateTitle('home.dev_count')"
+                                  >
+                                    <template #default="{ row }">
+                                      <span @click="goDevice(row.name)">
+                                        {{ row.deviceChild.length }}
+                                      </span>
+                                    </template>
+                                  </el-table-column>
+                                </el-table>
+                              </div>
+                            </el-col>
+                          </el-row>
+                        </div>
+                      </el-card>
                     </div>
-                  </bml-marker-clusterer>
-                  <bm-navigation anchor="BMAP_ANCHOR_TOP_RIGHT" />
-                  <bm-geolocation
-                    anchor="BMAP_ANCHOR_BOTTOM_RIGHT"
-                    :auto-location="true"
-                    :show-address-bar="true"
-                    :show-zoom-info="true"
-                  />
-                </baidu-map>
+
+                    <el-col :md="24" :sm="24" :xl="24" :xs="24">
+                      <el-card class="box-card">
+                        <div slot="header" class="clearfix">
+                          <span>
+                            {{
+                              $translateTitle('equipment.Equipment Overview')
+                            }}
+                          </span>
+                          <el-button
+                            icon="el-icon-refresh"
+                            style="float: right; padding: 3px 0"
+                            type="text"
+                            @click="resizeTheChart()"
+                          />
+                        </div>
+                        <div class="text item">
+                          <dgiot-chart
+                            ref="charts"
+                            :data="_ChartStatus"
+                            :data-empty="!ChartStatus.rows"
+                            :extend="chartExtend"
+                            height="160px"
+                            :loading="loading"
+                            :settings="chartSettings"
+                            type="ring"
+                          />
+                        </div>
+                      </el-card>
+                    </el-col>
+                  </el-tab-pane>
+                  <el-tab-pane
+                    :label="$translateTitle('home.dev_unline')"
+                    name="second"
+                  >
+                    <div class="box-card">
+                      <el-card>
+                        <div slot="header" class="clearfix">
+                          <el-badge class="item" :value="_dev_off_count">
+                            <el-button
+                              size="small"
+                              @click="_goDevice('dev_unline')"
+                            >
+                              {{ $translateTitle('home.dev_unline') }}
+                            </el-button>
+                          </el-badge>
+                        </div>
+                        <div>
+                          <el-row :gutter="24">
+                            <el-col :span="24">
+                              <div class="grid-content bg-purple">
+                                <el-table
+                                  :cell-style="{ 'text-align': 'center' }"
+                                  class="_el-table"
+                                  :data="_offlineData"
+                                  :header-cell-style="{
+                                    'text-align': 'center',
+                                  }"
+                                  :row-class-name="tableRowClassName"
+                                  style="width: 100%"
+                                >
+                                  <el-table-column
+                                    :label="
+                                      $translateTitle('equipment.devicename')
+                                    "
+                                    prop="name"
+                                  >
+                                    <template #default="{ row }">
+                                      <span
+                                        :title="
+                                          row.name +
+                                          $translateTitle(
+                                            'home.Last online Time'
+                                          ) +
+                                          row.updatedAt
+                                        "
+                                        @click="showInfo(row.objectId)"
+                                      >
+                                        {{ row.name }}
+                                      </span>
+                                    </template>
+                                  </el-table-column>
+                                </el-table>
+                              </div>
+                            </el-col>
+                          </el-row>
+                        </div>
+                      </el-card>
+                    </div>
+                  </el-tab-pane>
+                  <el-tab-pane
+                    :label="$translateTitle('home.dev_online')"
+                    name="third"
+                  >
+                    <div class="box-card">
+                      <el-card>
+                        <div slot="header" class="clearfix">
+                          <el-badge class="item" :value="_dev_online_count">
+                            <el-button
+                              size="small"
+                              @click="_goDevice('dev_online')"
+                            >
+                              {{ $translateTitle('home.dev_online') }}
+                            </el-button>
+                          </el-badge>
+                        </div>
+                        <div>
+                          <el-row :gutter="24">
+                            <el-col :span="24">
+                              <div class="grid-content bg-purple">
+                                <el-table
+                                  :cell-style="{ 'text-align': 'center' }"
+                                  class="_el-table"
+                                  :data="_onlineData"
+                                  :header-cell-style="{
+                                    'text-align': 'center',
+                                  }"
+                                  :row-class-name="tableRowClassName"
+                                  style="width: 100%"
+                                >
+                                  <el-table-column
+                                    :label="
+                                      $translateTitle('equipment.devicename')
+                                    "
+                                    prop="name"
+                                  >
+                                    <template #default="{ row }">
+                                      <span
+                                        :title="
+                                          row.name +
+                                          $translateTitle(
+                                            'home.Last online Time'
+                                          ) +
+                                          row.updatedAt
+                                        "
+                                        @click="showInfo(row.objectId)"
+                                      >
+                                        {{ row.name }}
+                                      </span>
+                                    </template>
+                                  </el-table-column>
+                                </el-table>
+                              </div>
+                            </el-col>
+                          </el-row>
+                        </div>
+                      </el-card>
+                    </div>
+                  </el-tab-pane>
+                </el-tabs>
               </div>
-            </el-row>
-          </el-col>
-          <el-col :span="24 - leftRow" :xs="24">
-            <div class="home_card">
-              <el-tabs v-model="activeName" @tab-click="resizeTheChart">
-                <el-tab-pane :label="$translateTitle('home.info')" name="first">
-                  <div class="box-card">
-                    <el-card>
-                      <div slot="header" class="clearfix">
-                        <el-button>
-                          {{ $translateTitle('home.info') }}
-                        </el-button>
-                      </div>
-                      <div>
-                        <el-row :gutter="24">
-                          <el-col :span="24">
-                            <div class="grid-content bg-purple">
-                              <el-table
-                                v-if="Product"
-                                :cell-style="{ 'text-align': 'center' }"
-                                :data="Product"
-                                :header-cell-style="{ 'text-align': 'center' }"
-                                :row-class-name="tableRowClassName"
-                                style="width: 100%"
-                              >
-                                <el-table-column
-                                  :label="$translateTitle('menu.icon')"
-                                  width="60"
-                                >
-                                  <template #default="{ row }">
-                                    <el-image
-                                      :preview-src-list="[`${row.icon}`]"
-                                      :src="row.icon"
-                                      style="width: 26px; height: 26px"
-                                    >
-                                      <div slot="error" class="image-slot">
-                                        <i class="el-icon-picture-outline"></i>
-                                      </div>
-                                    </el-image>
-                                  </template>
-                                </el-table-column>
-                                <el-table-column
-                                  :label="$translateTitle('task.productname')"
-                                  prop="name"
-                                  :show-overflow-tooltip="true"
-                                  width="120"
-                                >
-                                  <template #default="{ row }">
-                                    <span @click="goDevice(row.name)">
-                                      {{ row.name }}
-                                    </span>
-                                  </template>
-                                </el-table-column>
-
-                                <el-table-column
-                                  :label="$translateTitle('home.dev_count')"
-                                >
-                                  <template #default="{ row }">
-                                    <span @click="goDevice(row.name)">
-                                      {{ row.deviceChild.length }}
-                                    </span>
-                                  </template>
-                                </el-table-column>
-                              </el-table>
-                            </div>
-                          </el-col>
-                        </el-row>
-                      </div>
-                    </el-card>
-                  </div>
-
-                  <el-col :md="24" :sm="24" :xl="24" :xs="24">
-                    <el-card class="box-card">
-                      <div slot="header" class="clearfix">
-                        <span>
-                          {{ $translateTitle('equipment.Equipment Overview') }}
-                        </span>
-                        <el-button
-                          icon="el-icon-refresh"
-                          style="float: right; padding: 3px 0"
-                          type="text"
-                          @click="resizeTheChart()"
-                        />
-                      </div>
-                      <div class="text item">
-                        <dgiot-chart
-                          ref="charts"
-                          :data="_ChartStatus"
-                          :data-empty="!ChartStatus.rows"
-                          :extend="chartExtend"
-                          height="160px"
-                          :loading="loading"
-                          :settings="chartSettings"
-                          type="ring"
-                        />
-                      </div>
-                    </el-card>
-                  </el-col>
-                </el-tab-pane>
-                <el-tab-pane
-                  :label="$translateTitle('home.dev_unline')"
-                  name="second"
-                >
-                  <div class="box-card">
-                    <el-card>
-                      <div slot="header" class="clearfix">
-                        <el-badge class="item" :value="_dev_off_count">
-                          <el-button
-                            size="small"
-                            @click="_goDevice('dev_unline')"
-                          >
-                            {{ $translateTitle('home.dev_unline') }}
-                          </el-button>
-                        </el-badge>
-                      </div>
-                      <div>
-                        <el-row :gutter="24">
-                          <el-col :span="24">
-                            <div class="grid-content bg-purple">
-                              <el-table
-                                :cell-style="{ 'text-align': 'center' }"
-                                class="_el-table"
-                                :data="_offlineData"
-                                :header-cell-style="{ 'text-align': 'center' }"
-                                :row-class-name="tableRowClassName"
-                                style="width: 100%"
-                              >
-                                <el-table-column
-                                  :label="
-                                    $translateTitle('equipment.devicename')
-                                  "
-                                  prop="name"
-                                >
-                                  <template #default="{ row }">
-                                    <span
-                                      :title="
-                                        row.name +
-                                        $translateTitle(
-                                          'home.Last online Time'
-                                        ) +
-                                        row.updatedAt
-                                      "
-                                      @click="showInfo(row.objectId)"
-                                    >
-                                      {{ row.name }}
-                                    </span>
-                                  </template>
-                                </el-table-column>
-                              </el-table>
-                            </div>
-                          </el-col>
-                        </el-row>
-                      </div>
-                    </el-card>
-                  </div>
-                </el-tab-pane>
-                <el-tab-pane
-                  :label="$translateTitle('home.dev_online')"
-                  name="third"
-                >
-                  <div class="box-card">
-                    <el-card>
-                      <div slot="header" class="clearfix">
-                        <el-badge class="item" :value="_dev_online_count">
-                          <el-button
-                            size="small"
-                            @click="_goDevice('dev_online')"
-                          >
-                            {{ $translateTitle('home.dev_online') }}
-                          </el-button>
-                        </el-badge>
-                      </div>
-                      <div>
-                        <el-row :gutter="24">
-                          <el-col :span="24">
-                            <div class="grid-content bg-purple">
-                              <el-table
-                                :cell-style="{ 'text-align': 'center' }"
-                                class="_el-table"
-                                :data="_onlineData"
-                                :header-cell-style="{ 'text-align': 'center' }"
-                                :row-class-name="tableRowClassName"
-                                style="width: 100%"
-                              >
-                                <el-table-column
-                                  :label="
-                                    $translateTitle('equipment.devicename')
-                                  "
-                                  prop="name"
-                                >
-                                  <template #default="{ row }">
-                                    <span
-                                      :title="
-                                        row.name +
-                                        $translateTitle(
-                                          'home.Last online Time'
-                                        ) +
-                                        row.updatedAt
-                                      "
-                                      @click="showInfo(row.objectId)"
-                                    >
-                                      {{ row.name }}
-                                    </span>
-                                  </template>
-                                </el-table-column>
-                              </el-table>
-                            </div>
-                          </el-col>
-                        </el-row>
-                      </div>
-                    </el-card>
-                  </div>
-                </el-tab-pane>
-              </el-tabs>
-            </div>
-          </el-col>
-        </el-row>
-      </el-card>
+            </el-col>
+          </el-row>
+        </el-card>
+      </div>
+      <div v-else-if="homeScreen == 1" class="baidu_map bg_screen1">
+        <div class="screen_top">
+          <div class="screen_top_item">
+            <router-link to="/dashboard/productlist">
+              <p>{{ $translateTitle('home.pro_count') }}</p>
+              <p style="color: #f8a75c">{{ _product_count }}</p>
+            </router-link>
+          </div>
+          <div class="screen_top_item">
+            <router-link to="/roles/applicationManagement">
+              <p>{{ $translateTitle('home.app_count') }}</p>
+              <p style="color: #efdb75">{{ _app_count }}</p>
+            </router-link>
+          </div>
+          <div class="screen_top_item" @click="goDevice()">
+            <p>{{ $translateTitle('home.dev_count') }}</p>
+            <p style="color: #03fcfa">{{ _dev_count }}</p>
+          </div>
+          <div class="screen_top_item">
+            <router-link to="/CloudOt/alarm">
+              <p>
+                {{ $translateTitle('equipment.Total number of alarms') }}
+              </p>
+              <p style="color: #179fff">{{ warnCount }}</p>
+            </router-link>
+          </div>
+        </div>
+        <div class="screen_center_center"></div>
+        <div class="screen_bottom">
+          <div class="screen_bottom_title">
+            {{ $translateTitle('equipment.list') }}
+          </div>
+          <screen-device :comp="comp" />
+          <!-- <topo-caltable :comp="comp" /> -->
+        </div>
+        <div class="screen_right_center">
+          <div class="screen_right_center_top">工单列表</div>
+          <work-order :comp="comp" />
+        </div>
+        <div class="screen_left_center">
+          <div class="screen_left_center_top">告警列表</div>
+          <topo-caltable :comp="comp" />
+        </div>
+        <div class="screen_right_bottom">
+          <div class="screen_right_bottom_top">设备运行状况</div>
+          <ve-pie
+            :data="piechartData"
+            :extend="pieextend"
+            height="100%"
+            :settings="piechartSettings"
+            width="100%"
+          />
+        </div>
+      </div>
     </div>
   </div>
 </template>
 <script>
   import topoCaltable from './component/topocompvue/TopoCaltable'
+  import ScreenDevice from './component/Screen/ScreenDevice'
+  import WorkOrder from './component/Screen/WorkOrder'
   import { postTopic, deleteTopic } from '@/api/Dlink'
   import icoPath1 from '../../../../public/assets/images/Device/1.png'
   import icoPath2 from '../../../../public/assets/images/Device/2.png'
@@ -769,6 +868,8 @@
       BmMarker,
       BmlMarkerClusterer,
       topoCaltable,
+      ScreenDevice,
+      WorkOrder,
     },
     data() {
       this.piechartSettings = {
@@ -837,6 +938,7 @@
       }
 
       return {
+        homeScreen: 0, //大屏版本
         piechartData: {
           columns: ['名称', '数量'],
           rows: [
@@ -1027,6 +1129,7 @@
     mounted() {
       window.bh = ''
       window.kd = ''
+      this.homeScreen = localStorage.getItem('homeScreen') || 0
       this.piechartData.rows = [
         { 名称: '在线设备', 数量: this._dev_online_count },
         { 名称: '离线设备', 数量: this._dev_off_count },
@@ -1575,6 +1678,160 @@
 </script>
 <style lang="scss" scoped>
   .platform {
+    .bg_screen1 {
+      background: url('/assets/bg/pageBg.png') no-repeat;
+      background-size: 100% 100%;
+    }
+    .baidu_map {
+      display: block;
+      width: 100%;
+      height: calc(98vh - 120px);
+      position: relative;
+      .screen_top {
+        position: absolute;
+        width: 90%;
+        height: 90px;
+
+        // background-color: #ea1e63;
+        top: 40px;
+        left: 5%;
+        display: flex;
+        .screen_top_item {
+          width: 20%;
+          margin-left: 5%;
+          display: inline-block;
+          vertical-align: top;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          background: url('/assets/images/topo/screen/card.png') no-repeat;
+          background-size: 100% 100%;
+          cursor: pointer;
+          p {
+            display: inline-block;
+            padding-top: 10px;
+            height: 90px;
+            line-height: 90px;
+          }
+          p:nth-child(1) {
+            color: #fff;
+            font-size: 18px;
+            margin-right: 16px;
+          }
+          p:nth-child(2) {
+            font-size: 30px;
+            font-weight: bold;
+            // padding-top: 20px;
+            margin-right: 5px;
+          }
+        }
+      }
+      .screen_bottom {
+        position: absolute;
+        width: 80%;
+        height: 38%;
+        box-sizing: border-box;
+        // background-color: #00142f;
+        background: url('/assets/bg/bg_warning.png') no-repeat;
+        background-size: 100% 100%;
+        // background-color: #ea1e63;
+        bottom: 4px;
+        left: 4px;
+        display: flex;
+        .screen_bottom_title {
+          position: absolute;
+          left: 50%;
+          top: -15px;
+          width: 330px;
+          height: 30px;
+          text-align: center;
+          line-height: 30px;
+          background: url('/assets/bg/bg_title1.png') no-repeat;
+          background-size: 100% 100%;
+          transform: translateX(-50%);
+          font-size: 20px;
+          color: #fff;
+          z-index: 99999;
+        }
+      }
+      .screen_right_bottom {
+        position: absolute;
+        background-color: #00142f;
+        width: 19%;
+        height: 38%;
+        box-sizing: border-box;
+        bottom: 4px;
+        right: 4px;
+        background: url('/assets/bg/bg_warning.png') no-repeat;
+        background-size: 100% 100%;
+        .screen_right_bottom_top {
+          background: url('/assets/bg/bg_title.png') no-repeat;
+          background-size: 100% 100%;
+          width: 100%;
+          height: 40px;
+          line-height: 40px;
+          padding-left: 50px;
+          font-weight: bold;
+          color: #fff;
+        }
+      }
+    }
+    // 大屏组件定位样式
+    .screen_center_center {
+      position: absolute;
+      background-color: #00142f;
+      width: 60%;
+      height: 50%;
+      box-sizing: border-box;
+      top: 10%;
+      left: 20%;
+      background: url('/assets/bg/screen_center.png') no-repeat;
+      background-size: 100% 100%;
+    }
+    .screen_left_center {
+      position: absolute;
+      background-color: #00142f;
+      width: 19%;
+      height: 38%;
+      box-sizing: border-box;
+      bottom: 40%;
+      left: 4px;
+      background: url('/assets/bg/bg_warning.png') no-repeat;
+      background-size: 100% 100%;
+      .screen_left_center_top {
+        position: absolute;
+        background: url('/assets/bg/bg_title.png') no-repeat;
+        background-size: 100% 100%;
+        width: 100%;
+        height: 40px;
+        line-height: 40px;
+        padding-left: 50px;
+        font-weight: bold;
+        color: #fff;
+      }
+    }
+    .screen_right_center {
+      position: absolute;
+      background-color: #00142f;
+      width: 19%;
+      height: 38%;
+      box-sizing: border-box;
+      bottom: 40%;
+      right: 4px;
+      background: url('/assets/bg/bg_warning.png') no-repeat;
+      background-size: 100% 100%;
+      .screen_right_center_top {
+        position: absolute;
+        background: url('/assets/bg/bg_title.png') no-repeat;
+        background-size: 100% 100%;
+        width: 100%;
+        height: 40px;
+        line-height: 40px;
+        padding-left: 50px;
+        font-weight: bold;
+        color: #fff;
+      }
+    }
     .map_header {
       height: auto;
 
@@ -1667,101 +1924,6 @@
                 text-align: center;
               }
             }
-          }
-        }
-      }
-
-      .baidu_map {
-        display: block;
-        width: 100%;
-        height: calc(98vh - 120px);
-        position: relative;
-        .screen_top {
-          position: absolute;
-          width: 90%;
-          height: 90px;
-
-          // background-color: #ea1e63;
-          top: 40px;
-          left: 5%;
-          display: flex;
-          .screen_top_item {
-            width: 20%;
-            margin-left: 5%;
-            display: inline-block;
-            vertical-align: top;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            background: url('/assets/images/topo/screen/card.png') no-repeat;
-            background-size: 100% 100%;
-            cursor: pointer;
-            p {
-              display: inline-block;
-              padding-top: 10px;
-              height: 90px;
-              line-height: 90px;
-            }
-            p:nth-child(1) {
-              color: #fff;
-              font-size: 18px;
-              margin-right: 16px;
-            }
-            p:nth-child(2) {
-              font-size: 30px;
-              font-weight: bold;
-              // padding-top: 20px;
-              margin-right: 5px;
-            }
-          }
-        }
-        .screen_bottom {
-          position: absolute;
-          width: 80%;
-          height: 38%;
-          box-sizing: border-box;
-          // background-color: #00142f;
-          background: url('/assets/bg/bg_warning.png') no-repeat;
-          background-size: 100% 100%;
-          // background-color: #ea1e63;
-          bottom: 4px;
-          left: 4px;
-          display: flex;
-          .screen_bottom_title {
-            position: absolute;
-            left: 50%;
-            top: -15px;
-            width: 330px;
-            height: 30px;
-            text-align: center;
-            line-height: 30px;
-            background: url('/assets/bg/bg_title1.png') no-repeat;
-            background-size: 100% 100%;
-            transform: translateX(-50%);
-            font-size: 20px;
-            color: #fff;
-            z-index: 99999;
-          }
-        }
-        .screen_right_bottom {
-          position: absolute;
-          background-color: #00142f;
-          width: 19%;
-          height: 38%;
-          box-sizing: border-box;
-          bottom: 4px;
-          right: 4px;
-          background: url('/assets/bg/bg_warning.png') no-repeat;
-          background-size: 100% 100%;
-          .screen_right_bottom_top {
-            background: url('/assets/bg/bg_title.png') no-repeat;
-            background-size: 100% 100%;
-            width: 100%;
-            height: 40px;
-            line-height: 40px;
-            padding-left: 50px;
-            font-weight: bold;
-            color: #fff;
           }
         }
       }
