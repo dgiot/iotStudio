@@ -1,4 +1,4 @@
-# [4.6.0](https://github.com/dgiot/dgiot-dashboard/compare/v4.5.9...v4.6.0) (2022-09-22)
+# [4.6.0](https://github.com/dgiot/dgiot-dashboard/compare/v4.5.9...v4.6.0) (2022-09-23)
 
 
 ### Bug Fixes
@@ -15,6 +15,7 @@
 * add ScrollList and Pie ([f7234d3](https://github.com/dgiot/dgiot-dashboard/commit/f7234d3e0e4b89a4390c8e8a59b5ec7e7b140348))
 * **cloudOperations:** 告警联动低代码 ([25feb81](https://github.com/dgiot/dgiot-dashboard/commit/25feb814003608caede037c20b81270217be91bb))
 * **cloudOperations:** 工单巡检动态数据 ([071750b](https://github.com/dgiot/dgiot-dashboard/commit/071750b8d75ee559319f76eefb8908252e3d0625))
+* **dashboard): feat(dashboard:** 新增列表 ([690c3f7](https://github.com/dgiot/dgiot-dashboard/commit/690c3f7f0fe2c511a5815f693be8a9a799f4bb02))
 * **equipmentCloud:** parse_objectid关联productid ([1a33b89](https://github.com/dgiot/dgiot-dashboard/commit/1a33b894b667ae4b44982e5db5216066c096e2d8))
 * index ([15ef1a5](https://github.com/dgiot/dgiot-dashboard/commit/15ef1a5868c8e04745b1b2261e2e28723d6d6c38))
 * login ([a6d033e](https://github.com/dgiot/dgiot-dashboard/commit/a6d033e7b3b0ff5d9d1f1372372560b8a3f9fa41))
