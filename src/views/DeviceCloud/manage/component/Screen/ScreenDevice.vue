@@ -3,57 +3,42 @@
     <div class="table_content">
       <div class="backround">
         <div class="toptitle">
-          <div class="item">设备编号</div>
-          <div class="item">报警时间</div>
+          <div class="item">设备名称</div>
+          <div class="item">设备地址</div>
+          <div class="item">安装位置</div>
           <div class="item">状态</div>
-          <div class="item">产品名称</div>
+          <div class="item">最后更新时间</div>
         </div>
         <vue-seamless-scroll
           class="seamless-warp"
           :class-option="optionHover"
-          :data="warnList"
+          :data="deviceList"
         >
           <table cellpadding="0" cellspacing="0" class="table">
             <tr
-              v-for="(item, index) in warnList"
+              v-for="(item, index) in deviceList"
               :key="index"
               class="table-item"
             >
+              <td class="table-item-content">{{ item.name }}</td>
               <td class="table-item-content">{{ item.devaddr }}</td>
-              <td class="table-item-content">
-                {{ $moment(item.createdAt).format('YYYY-MM-DD HH:mm:ss') }}
-              </td>
+              <td class="table-item-content">{{ item.address }}</td>
               <td class="table-item-content">
                 <el-tag
-                  v-if="item.content.alertstatus"
+                  v-if="item.status == 'OFFLINE'"
                   size="medium"
                   type="warning"
                 >
-                  告警产生
+                  离线
                 </el-tag>
-                <el-tag v-else size="medium" type="success">告警恢复</el-tag>
+                <el-tag v-else size="medium" type="success">在线</el-tag>
               </td>
-              <td class="table-item-content">{{ item.productname }}</td>
+
+              <td class="table-item-content">
+                {{ $moment(item.updatedAt).format('YYYY-MM-DD HH:mm:ss') }}
+              </td>
             </tr>
           </table>
-          <!-- <el-table
-            :border="false"
-            :cell-style="{ border: '0.2px solid #fff' }"
-            :data="listData"
-            :highlight-current-row="false"
-            row-class-name="tableRowClassName"
-            :show-header="status"
-          >
-            <el-table-column label="日期" prop="date" />
-            <el-table-column label="设备" prop="device" />
-            <el-table-column label="状态">
-              <template slot-scope="scope">
-                <el-tag v-if="scope.row.test" size="medium">恢复正常</el-tag>
-                <el-tag v-else size="medium" type="warning">发生报警</el-tag>
-              </template>
-            </el-table-column>
-            <el-table-column label="告警内容" prop="title" />
-          </el-table> -->
         </vue-seamless-scroll>
       </div>
     </div>
@@ -64,12 +49,13 @@
   // 原文链接：https://blog.csdn.net/weixin_55799355/article/details/124740977 自动滚动列表
   import { mapGetters } from 'vuex'
   import {
-    delNotification,
-    putNotification,
-    queryNotification,
-  } from '@/api/Notification'
+    putDevice,
+    querycompanyDevice,
+    postDevice,
+    delDevice,
+  } from '@/api/Device'
   export default {
-    name: 'TopoCaltable',
+    name: 'ScreenDevice',
     props: {
       comp: {
         type: Object,
@@ -85,11 +71,21 @@
         status: false,
         listData: [],
         warnList: [],
-        queryPayload: {
-          limit: 10,
-          order: '-createdAt',
+        deviceList: [],
+        queryForm: {
+          devicename: '',
+          statusFlag: false,
+          status: '',
+          number: '',
+          product: '',
+          type: '',
+          pageNo: 1,
+          pageSize: 20,
+          searchDate: [],
+          limt: 10,
           skip: 0,
-          count: 'objectId',
+          order: '-createdAt',
+          keys: 'count(*)',
         },
       }
     },
@@ -103,7 +99,7 @@
       optionHover() {
         return {
           step: 0.5, // 数值越大速度滚动越快
-          limitMoveNum: 5, // 开始无缝滚动的数据量 this.dataList.length
+          limitMoveNum: 4, // 开始无缝滚动的数据量 this.dataList.length
           hoverStop: true, // 是否开启鼠标悬停stop
           direction: 1, // 0向下 1向上 2向左 3向右
           openWatch: true, // 开启数据实时监控刷新dom
@@ -117,19 +113,46 @@
       this.fetchData()
     },
     methods: {
-      async fetchData(args = {}) {
-        // this.$route.query.type
-        if (this.$route.query.productid)
-          this.queryPayload.where = {
-            'content._productid': {
-              $regex: this.$route.query.productid,
-            },
-          }
-        const { results = [], count = 0 } = await queryNotification(
-          this.queryPayload
-        )
-        console.log('告警列表', results)
-        this.warnList = results
+      async fetchData() {
+        // this.listLoading = true
+        let params = {
+          skip: 0,
+          limit: 10,
+          // excludeKeys: this.queryForm.excludeKeys,
+          // include: this.queryForm.include,
+          order: '-createdAt',
+          count: 'objectId',
+          where: {},
+        }
+        // this.queryForm.product
+        //   ? (params.where.product = this.queryForm.product)
+        //   : ''
+        // this.queryForm.search
+        //   ? (params.where[this.queryForm.type] = {
+        //       $regex: this.queryForm.search,
+        //     })
+        //   : ''
+        // this.queryForm.status
+        //   ? (params.where.status = this.queryForm.status)
+        //   : ''
+        // this.queryForm.isEnable
+        //   ? (params.where.isEnable = this.queryForm.isEnable)
+        //   : ''
+        const { results: list = [], count: total = 0 } =
+          await querycompanyDevice(params, this.token)
+        list.forEach((item) => {
+          item.address = item.address == '' ? '---' : item.address
+          item.detail = item?.detail ? item.detail : {}
+          item.detail.address =
+            item?.detail && item?.detail?.address ? item.detail.address : '---'
+          item.isEdit = false
+          item.oldName = item.name
+        })
+        this.deviceList = list
+        this.total = total
+        this.listLoading = false
+        // 订阅处理所有的设备
+        // await this.subAllDevice()
       },
     },
   }
@@ -140,7 +163,7 @@
     .table_content {
       // position: absolute;
       width: 96%;
-      height: calc(100% - 45px);
+      height: calc(100% - 40px);
       margin-top: 35px;
       margin-left: 2%;
       background-color: #0b2266;
@@ -161,7 +184,8 @@
         // color: white;
       }
       .item {
-        width: 25%;
+        // width: 25%;
+        flex: 1;
         padding: 15px 0;
         // border-right: 2px solid gainsboro;
         text-align: center;

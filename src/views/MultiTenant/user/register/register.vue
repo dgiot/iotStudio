@@ -435,9 +435,9 @@
     }
   }
 </style>
-<style>
+<style scoped>
   .login-container .el-form-item__content {
-    margin-left: 20px !important;
+    /* margin-left: 20px !important; */
     border: 1px solid #cccccc;
     border-radius: 5px;
   }
