@@ -3,27 +3,45 @@
     <div class="table_content">
       <div class="backround">
         <div class="toptitle">
-          <div class="item">设备编号</div>
-          <div class="item">报警时间</div>
-          <div class="item">状态</div>
-          <div class="item">产品名称</div>
+          <div class="item">工单编号</div>
+          <div class="item">工单类型</div>
+          <div class="item">创建时间</div>
+          <div class="item">工单状态</div>
         </div>
         <vue-seamless-scroll
           class="seamless-warp"
           :class-option="optionHover"
-          :data="warnList"
+          :data="orderList"
         >
           <table cellpadding="0" cellspacing="0" class="table">
             <tr
-              v-for="(item, index) in warnList"
+              v-for="(item, index) in orderList"
               :key="index"
               class="table-item"
             >
-              <td class="table-item-content">{{ item.devaddr }}</td>
+              <td class="table-item-content">{{ item.number }}</td>
+              <td class="table-item-content">{{ item.type }}</td>
+
               <td class="table-item-content">
                 {{ $moment(item.createdAt).format('YYYY-MM-DD HH:mm:ss') }}
               </td>
               <td class="table-item-content">
+                <el-tag
+                  size="medium"
+                  :type="
+                    item.status == 0
+                      ? 'danger'
+                      : item.status == 1
+                      ? ''
+                      : item.status == 2
+                      ? 'success'
+                      : 'warning'
+                  "
+                >
+                  {{ getStatus(item.status) }}
+                </el-tag>
+              </td>
+              <!-- <td class="table-item-content">
                 <el-tag
                   v-if="item.content.alertstatus"
                   size="medium"
@@ -32,8 +50,7 @@
                   告警产生
                 </el-tag>
                 <el-tag v-else size="medium" type="success">告警恢复</el-tag>
-              </td>
-              <td class="table-item-content">{{ item.productname }}</td>
+              </td> -->
             </tr>
           </table>
           <!-- <el-table
@@ -68,8 +85,9 @@
     putNotification,
     queryNotification,
   } from '@/api/Notification'
+  import { create_object, query_object, update_object } from '@/api/Parse'
   export default {
-    name: 'TopoCaltable',
+    name: 'WorkOrder',
     props: {
       comp: {
         type: Object,
@@ -84,12 +102,27 @@
       return {
         status: false,
         listData: [],
-        warnList: [],
+        orderList: [],
         queryPayload: {
           limit: 10,
           order: '-createdAt',
           skip: 0,
           count: 'objectId',
+        },
+        queryForm: {
+          devicename: '',
+          statusFlag: false,
+          status: '',
+          number: '',
+          product: '',
+          type: '',
+          pageNo: 1,
+          pageSize: 20,
+          searchDate: [],
+          limt: 10,
+          skip: 0,
+          order: '-createdAt',
+          keys: 'count(*)',
         },
       }
     },
@@ -103,7 +136,7 @@
       optionHover() {
         return {
           step: 0.5, // 数值越大速度滚动越快
-          limitMoveNum: 5, // 开始无缝滚动的数据量 this.dataList.length
+          limitMoveNum: 3, // 开始无缝滚动的数据量 this.dataList.length
           hoverStop: true, // 是否开启鼠标悬停stop
           direction: 1, // 0向下 1向上 2向左 3向右
           openWatch: true, // 开启数据实时监控刷新dom
@@ -113,23 +146,79 @@
         }
       },
     },
-    created() {
+    mounted() {
       this.fetchData()
     },
     methods: {
       async fetchData(args = {}) {
-        // this.$route.query.type
-        if (this.$route.query.productid)
-          this.queryPayload.where = {
-            'content._productid': {
-              $regex: this.$route.query.productid,
+        if (!args.limit) {
+          args = this.queryForm
+        }
+        this.listLoading = false
+        // const loading = this.$baseColorfullLoading()
+        let params = {
+          limit: args.limit,
+          order: args.order,
+          skip: args.skip,
+          count: 'objectId',
+          where: {
+            user: this.objectid,
+            status: {
+              $lt: 3,
             },
-          }
-        const { results = [], count = 0 } = await queryNotification(
-          this.queryPayload
-        )
-        console.log('告警列表', results)
-        this.warnList = results
+          },
+        }
+        // if (String(this.queryForm.status + '').length > 0) {
+        //   params.where['status'] = this.queryForm.status
+        // }
+        // this.queryForm.number
+        //   ? (params.where.number = { $regex: this.queryForm.number })
+        //   : ''
+        // this.queryForm.product
+        //   ? (params.where['product'] = this.queryForm.product)
+        //   : ''
+        // this.queryForm.type
+        //   ? (params.where.type = { $regex: this.queryForm.type })
+        //   : ''
+        // if (this.queryForm.searchDate?.length) {
+        //   params.where['info.startdata'] = {
+        //     $gt: new Date(this.queryForm.searchDate[0]).getTime(),
+        //   }
+        //   params.where['info.completiondata'] = {
+        //     $lt: new Date(this.queryForm.searchDate[1]).getTime(),
+        //   }
+        // }
+        await query_object('Maintenance', params)
+          .then((res) => {
+            const { results = [], count = 0 } = res
+            console.log('工单', results)
+            this.orderList = results
+            this.total = count
+            // loading.close()
+          })
+          .catch((e) => {
+            this.$baseMessage(e, 'error', 'dgiot-hey-message-error')
+            // loading.close()
+          })
+      },
+      getStatus(type = 0) {
+        // type == 0 ? '' : ''
+        switch (type) {
+          case 0:
+            return this.$translateTitle('Maintenance.To be assigned') //待接收
+            break
+          case 1:
+            return this.$translateTitle('Maintenance.processing') //处理中
+            break
+          case 2:
+            return this.$translateTitle('Maintenance.processed') //已处理
+            break
+          case 3:
+            return this.$translateTitle('Maintenance.returned') //已回退
+            break
+          default:
+            return type
+        }
       },
     },
   }
