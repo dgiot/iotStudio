@@ -341,8 +341,10 @@
                       </div>
                     </div>
                     <div class="screen_bottom">
-                      <div class="screen_bottom_title">设备告警</div>
-                      <topo-caltable :comp="comp" />
+                      <div class="screen_bottom_title">
+                        {{ $translateTitle('equipment.list') }}
+                      </div>
+                      <screen-device :comp="comp" />
                     </div>
                     <div class="screen_right_center">
                       <div class="screen_right_center_top">工单列表</div>

@@ -440,10 +440,10 @@
         try {
           this.interval = setInterval(async () => {
             if (Cookies.get('handleRoute') != '') {
-              console.log('handleRoute 存在，跳转页面')
+              // console.log('handleRoute 存在，跳转页面')
+              await this.$router.push(this.handleRoute())
               const { results: Tree = [] } = await Roletree()
               this.setRoleTree(Tree)
-              await this.$router.push(this.handleRoute())
               clearInterval(this.interval)
               window.clearInterval(this.interval)
             }
