@@ -2,7 +2,7 @@
  *  build: 杭州数蛙科技有限公司 
  *  copyright: dgiot-dashboard 
  *  author: h7ml(h7ml@qq.com) 
- *  Time: 2022年09月23日18时31分35秒
+ *  Time: 2022年09月27日17时45分09秒
  */
 /*---------------------------------------------------------------------------------------------
  *  Copyright (c) Microsoft Corporation. All rights reserved.
@@ -410,8 +410,7 @@
 
 .monaco-tl-twistie.codicon-tree-item-loading::before {
 	/* Use steps to throttle FPS to reduce CPU usage */
-	-webkit-animation: codicon-spin 1.25s steps(30) infinite;
-	        animation: codicon-spin 1.25s steps(30) infinite;
+	animation: codicon-spin 1.25s steps(30) infinite;
 }
 
 /*---------------------------------------------------------------------------------------------
@@ -447,14 +446,10 @@
 }
 
 .monaco-progress-container.infinite .progress-bit {
-	-webkit-animation-name: progress;
-	        animation-name: progress;
-	-webkit-animation-duration: 4s;
-	        animation-duration: 4s;
-	-webkit-animation-iteration-count: infinite;
-	        animation-iteration-count: infinite;
-	-webkit-animation-timing-function: linear;
-	        animation-timing-function: linear;
+	animation-name: progress;
+	animation-duration: 4s;
+	animation-iteration-count: infinite;
+	animation-timing-function: linear;
 	transform: translate3d(0px, 0px, 0px);
 }
 
@@ -468,6 +463,5 @@
  *  50%: 5000% * 50% - 50% (set to center) = 2450%
  * 100%: 5000% * 100% - 100% (do not overflow) = 4900%
  */
-@-webkit-keyframes progress { from { transform: translateX(0%) scaleX(1) } 50% { transform: translateX(2500%) scaleX(3) } to { transform: translateX(4900%) scaleX(1) } }
 @keyframes progress { from { transform: translateX(0%) scaleX(1) } 50% { transform: translateX(2500%) scaleX(3) } to { transform: translateX(4900%) scaleX(1) } }
 

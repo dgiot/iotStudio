@@ -2,7 +2,7 @@
  *  build: 杭州数蛙科技有限公司 
  *  copyright: dgiot-dashboard 
  *  author: h7ml(h7ml@qq.com) 
- *  Time: 2022年09月23日18时31分35秒
+ *  Time: 2022年09月27日17时45分09秒
  */
 /*!
  * Vditor v3.8.17 - A markdown editor written in TypeScript.
@@ -86,14 +86,6 @@
  * @author <a href="http://vanessa.b3log.org">Liyuan Li</a>
  * @version 0.1.0.0, Jan 25, 2019
  */
-@-webkit-keyframes tooltip-appear {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
-}
 @keyframes tooltip-appear {
   from {
     opacity: 0;
@@ -151,14 +143,10 @@
 .vditor-tooltipped:focus::after {
   display: inline-block;
   text-decoration: none;
-  -webkit-animation-name: tooltip-appear;
-          animation-name: tooltip-appear;
-  -webkit-animation-duration: 0.15s;
-          animation-duration: 0.15s;
-  -webkit-animation-fill-mode: forwards;
-          animation-fill-mode: forwards;
-  -webkit-animation-timing-function: ease-in;
-          animation-timing-function: ease-in;
+  animation-name: tooltip-appear;
+  animation-duration: 0.15s;
+  animation-fill-mode: forwards;
+  animation-timing-function: ease-in;
 }
 .vditor-tooltipped__s::after,
 .vditor-tooltipped__se::after,
@@ -250,16 +238,6 @@
  * @author <a href="http://vanessa.b3log.org">Liyuan Li</a>
  * @version 1.0.0.0, Jan 22, 2020
  */
-@-webkit-keyframes scale-in {
-  0% {
-    opacity: 0;
-    transform: scale(0.5);
-  }
-  100% {
-    opacity: 1;
-    transform: scale(1);
-  }
-}
 @keyframes scale-in {
   0% {
     opacity: 0;
@@ -284,18 +262,14 @@
           user-select: none;
   max-width: 320px;
   min-width: 80px;
-  -webkit-animation-duration: 0.15s;
-          animation-duration: 0.15s;
-  -webkit-animation-name: scale-in;
-          animation-name: scale-in;
-  -webkit-animation-timing-function: cubic-bezier(0.2, 0, 0.13, 1.5);
-          animation-timing-function: cubic-bezier(0.2, 0, 0.13, 1.5);
+  animation-duration: 0.15s;
+  animation-name: scale-in;
+  animation-timing-function: cubic-bezier(0.2, 0, 0.13, 1.5);
   color: var(--toolbar-icon-color);
 }
 .vditor-panel--none {
   padding: 0;
-  -webkit-animation: none;
-          animation: none;
+  animation: none;
   min-width: auto;
   max-width: none;
   white-space: nowrap;
@@ -507,15 +481,6 @@
     color: var(--toolbar-icon-hover-color);
   }
 }
-@-webkit-keyframes slideInDown {
-  from {
-    transform: translate3d(0, -100%, 0);
-    visibility: visible;
-  }
-  to {
-    transform: translate3d(0, 0, 0);
-  }
-}
 @keyframes slideInDown {
   from {
     transform: translate3d(0, -100%, 0);
@@ -678,17 +643,14 @@
   position: absolute;
   font-size: 12px;
   top: 10px;
-  -webkit-animation-duration: 0.15s;
-          animation-duration: 0.15s;
-  -webkit-animation-fill-mode: both;
-          animation-fill-mode: both;
+  animation-duration: 0.15s;
+  animation-fill-mode: both;
   left: 50%;
   z-index: 5;
 }
 .vditor-tip--show {
   display: block;
-  -webkit-animation-name: slideInDown;
-          animation-name: slideInDown;
+  animation-name: slideInDown;
 }
 .vditor-tip__content {
   text-align: left;

@@ -2,7 +2,7 @@
  *  build: 杭州数蛙科技有限公司 
  *  copyright: dgiot-dashboard 
  *  author: h7ml(h7ml@qq.com) 
- *  Time: 2022年09月23日18时31分35秒
+ *  Time: 2022年09月27日17时45分09秒
  */
 /*---------------------------------------------------------------------------------------------
  *  Copyright (c) Microsoft Corporation. All rights reserved.
@@ -378,8 +378,7 @@
 .context-view.monaco-menu-container {
 	outline: 0;
 	border: none;
-	-webkit-animation: fadeIn 0.083s linear;
-	        animation: fadeIn 0.083s linear;
+	animation: fadeIn 0.083s linear;
 }
 
 .context-view.monaco-menu-container :focus,
@@ -543,7 +542,6 @@
 }
 
 .monaco-tl-twistie.codicon-loading::before {
-	-webkit-animation: codicon-spin 1.25s linear infinite;
-	        animation: codicon-spin 1.25s linear infinite;
+	animation: codicon-spin 1.25s linear infinite;
 }
 
