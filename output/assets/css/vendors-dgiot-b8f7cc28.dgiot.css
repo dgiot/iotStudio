@@ -2,7 +2,7 @@
  *  build: 杭州数蛙科技有限公司 
  *  copyright: dgiot-dashboard 
  *  author: h7ml(h7ml@qq.com) 
- *  Time: 2022年09月23日18时31分35秒
+ *  Time: 2022年09月27日17时45分09秒
  */
 /*---------------------------------------------------------------------------------------------
  *  Copyright (c) Microsoft Corporation. All rights reserved.
@@ -309,34 +309,12 @@
 	box-sizing: border-box;
 }
 
-@-webkit-keyframes monaco-cursor-smooth {
-	0%,
-	20% {
-		opacity: 1;
-	}
-	60%,
-	100% {
-		opacity: 0;
-	}
-}
-
 @keyframes monaco-cursor-smooth {
 	0%,
 	20% {
 		opacity: 1;
 	}
 	60%,
-	100% {
-		opacity: 0;
-	}
-}
-
-@-webkit-keyframes monaco-cursor-phase {
-	0%,
-	20% {
-		opacity: 1;
-	}
-	90%,
 	100% {
 		opacity: 0;
 	}
@@ -353,17 +331,6 @@
 	}
 }
 
-@-webkit-keyframes monaco-cursor-expand {
-	0%,
-	20% {
-		transform: scaleY(1);
-	}
-	80%,
-	100% {
-		transform: scaleY(0);
-	}
-}
-
 @keyframes monaco-cursor-expand {
 	0%,
 	20% {
@@ -376,17 +343,14 @@
 }
 
 .cursor-smooth {
-	-webkit-animation: monaco-cursor-smooth 0.5s ease-in-out 0s 20 alternate;
-	        animation: monaco-cursor-smooth 0.5s ease-in-out 0s 20 alternate;
+	animation: monaco-cursor-smooth 0.5s ease-in-out 0s 20 alternate;
 }
 
 .cursor-phase {
-	-webkit-animation: monaco-cursor-phase 0.5s ease-in-out 0s 20 alternate;
-	        animation: monaco-cursor-phase 0.5s ease-in-out 0s 20 alternate;
+	animation: monaco-cursor-phase 0.5s ease-in-out 0s 20 alternate;
 }
 
 .cursor-expand > .cursor {
-	-webkit-animation: monaco-cursor-expand 0.5s ease-in-out 0s 20 alternate;
-	        animation: monaco-cursor-expand 0.5s ease-in-out 0s 20 alternate;
+	animation: monaco-cursor-expand 0.5s ease-in-out 0s 20 alternate;
 }
 

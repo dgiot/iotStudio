@@ -2,7 +2,7 @@
  *  build: 杭州数蛙科技有限公司 
  *  copyright: dgiot-dashboard 
  *  author: h7ml(h7ml@qq.com) 
- *  Time: 2022年09月23日18时31分35秒
+ *  Time: 2022年09月27日17时45分09秒
  */
 @charset "UTF-8";
 /*!markdown
@@ -29417,12 +29417,10 @@ title: Grid Auto Columns
 }
 
 .auto-cols-min {
-  grid-auto-columns: -webkit-min-content;
   grid-auto-columns: min-content;
 }
 
 .auto-cols-max {
-  grid-auto-columns: -webkit-max-content;
   grid-auto-columns: max-content;
 }
 
@@ -29436,12 +29434,10 @@ title: Grid Auto Columns
   }
 
   .m\:auto-cols-min {
-    grid-auto-columns: -webkit-min-content;
     grid-auto-columns: min-content;
   }
 
   .m\:auto-cols-max {
-    grid-auto-columns: -webkit-max-content;
     grid-auto-columns: max-content;
   }
 
@@ -29455,12 +29451,10 @@ title: Grid Auto Columns
   }
 
   .pc\:auto-cols-min {
-    grid-auto-columns: -webkit-min-content;
     grid-auto-columns: min-content;
   }
 
   .pc\:auto-cols-max {
-    grid-auto-columns: -webkit-max-content;
     grid-auto-columns: max-content;
   }
 
@@ -29553,12 +29547,10 @@ title: Grid Auto Flow
 }
 
 .auto-rows-min {
-  grid-auto-rows: -webkit-min-content;
   grid-auto-rows: min-content;
 }
 
 .auto-rows-max {
-  grid-auto-rows: -webkit-max-content;
   grid-auto-rows: max-content;
 }
 
@@ -29572,12 +29564,10 @@ title: Grid Auto Flow
   }
 
   .m\:auto-rows-min {
-    grid-auto-rows: -webkit-min-content;
     grid-auto-rows: min-content;
   }
 
   .m\:auto-rows-max {
-    grid-auto-rows: -webkit-max-content;
     grid-auto-rows: max-content;
   }
 
@@ -29591,12 +29581,10 @@ title: Grid Auto Flow
   }
 
   .pc\:auto-rows-min {
-    grid-auto-rows: -webkit-min-content;
     grid-auto-rows: min-content;
   }
 
   .pc\:auto-rows-max {
-    grid-auto-rows: -webkit-max-content;
     grid-auto-rows: max-content;
   }
 
@@ -47197,13 +47185,11 @@ title: Width
 }
 
 .w-min {
-  width: -webkit-min-content;
   width: -moz-min-content;
   width: min-content;
 }
 
 .w-max {
-  width: -webkit-max-content;
   width: -moz-max-content;
   width: max-content;
 }
@@ -47217,13 +47203,11 @@ title: Width
 }
 
 .min-w-min {
-  min-width: -webkit-min-content;
   min-width: -moz-min-content;
   min-width: min-content;
 }
 
 .min-w-max {
-  min-width: -webkit-max-content;
   min-width: -moz-max-content;
   min-width: max-content;
 }
@@ -47285,13 +47269,11 @@ title: Width
 }
 
 .max-w-min {
-  max-width: -webkit-min-content;
   max-width: -moz-min-content;
   max-width: min-content;
 }
 
 .max-w-max {
-  max-width: -webkit-max-content;
   max-width: -moz-max-content;
   max-width: max-content;
 }
@@ -47578,13 +47560,11 @@ title: Width
   }
 
   .m\:w-min {
-    width: -webkit-min-content;
     width: -moz-min-content;
     width: min-content;
   }
 
   .m\:w-max {
-    width: -webkit-max-content;
     width: -moz-max-content;
     width: max-content;
   }
@@ -47598,13 +47578,11 @@ title: Width
   }
 
   .m\:min-w-min {
-    min-width: -webkit-min-content;
     min-width: -moz-min-content;
     min-width: min-content;
   }
 
   .m\:min-w-max {
-    min-width: -webkit-max-content;
     min-width: -moz-max-content;
     min-width: max-content;
   }
@@ -47666,13 +47644,11 @@ title: Width
   }
 
   .m\:max-w-min {
-    max-width: -webkit-min-content;
     max-width: -moz-min-content;
     max-width: min-content;
   }
 
   .m\:max-w-max {
-    max-width: -webkit-max-content;
     max-width: -moz-max-content;
     max-width: max-content;
   }
@@ -47959,13 +47935,11 @@ title: Width
   }
 
   .pc\:w-min {
-    width: -webkit-min-content;
     width: -moz-min-content;
     width: min-content;
   }
 
   .pc\:w-max {
-    width: -webkit-max-content;
     width: -moz-max-content;
     width: max-content;
   }
@@ -47979,13 +47953,11 @@ title: Width
   }
 
   .pc\:min-w-min {
-    min-width: -webkit-min-content;
     min-width: -moz-min-content;
     min-width: min-content;
   }
 
   .pc\:min-w-max {
-    min-width: -webkit-max-content;
     min-width: -moz-max-content;
     min-width: max-content;
   }
@@ -48047,13 +48019,11 @@ title: Width
   }
 
   .pc\:max-w-min {
-    max-width: -webkit-min-content;
     max-width: -moz-min-content;
     max-width: min-content;
   }
 
   .pc\:max-w-max {
-    max-width: -webkit-max-content;
     max-width: -moz-max-content;
     max-width: max-content;
   }
