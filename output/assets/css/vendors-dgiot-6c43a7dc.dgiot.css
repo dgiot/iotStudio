@@ -2,7 +2,7 @@
  *  build: 杭州数蛙科技有限公司 
  *  copyright: dgiot-dashboard 
  *  author: h7ml(h7ml@qq.com) 
- *  Time: 2022年09月23日18时31分35秒
+ *  Time: 2022年09月27日17时45分09秒
  */
 /*---------------------------------------------------------------------------------------------
  *  Copyright (c) Microsoft Corporation. All rights reserved.
@@ -20,23 +20,12 @@
 	z-index: 10000;
 }
 
-@-webkit-keyframes fadeIn {
-	from { opacity: 0; }
-	to { opacity: 1; }
-}
-
 @keyframes fadeIn {
 	from { opacity: 0; }
 	to { opacity: 1; }
 }
 .monaco-editor .monaco-editor-overlaymessage.fadeIn {
-	-webkit-animation: fadeIn 150ms ease-out;
-	        animation: fadeIn 150ms ease-out;
-}
-
-@-webkit-keyframes fadeOut {
-	from { opacity: 1; }
-	to { opacity: 0; }
+	animation: fadeIn 150ms ease-out;
 }
 
 @keyframes fadeOut {
@@ -44,8 +33,7 @@
 	to { opacity: 0; }
 }
 .monaco-editor .monaco-editor-overlaymessage.fadeOut {
-	-webkit-animation: fadeOut 100ms ease-out;
-	        animation: fadeOut 100ms ease-out;
+	animation: fadeOut 100ms ease-out;
 }
 
 .monaco-editor .monaco-editor-overlaymessage .message {
