@@ -2,7 +2,7 @@
  *  build: 杭州数蛙科技有限公司 
  *  copyright: dgiot-dashboard 
  *  author: h7ml(h7ml@qq.com) 
- *  Time: 2022年09月23日18时31分35秒
+ *  Time: 2022年09月27日17时45分09秒
  */
 /*---------------------------------------------------------------------------------------------
  *  Copyright (c) Microsoft Corporation. All rights reserved.
@@ -160,12 +160,6 @@
 	opacity: 0.5;
 }
 
-@-webkit-keyframes codicon-spin {
-	100% {
-		transform:rotate(360deg);
-	}
-}
-
 @keyframes codicon-spin {
 	100% {
 		transform:rotate(360deg);
@@ -177,8 +171,7 @@
 .codicon-gear.codicon-modifier-spin,
 .codicon-notebook-state-executing.codicon-modifier-spin {
 	/* Use steps to throttle FPS to reduce CPU usage */
-	-webkit-animation: codicon-spin 1.5s steps(30) infinite;
-	        animation: codicon-spin 1.5s steps(30) infinite;
+	animation: codicon-spin 1.5s steps(30) infinite;
 }
 
 .codicon-modifier-disabled {
@@ -188,10 +181,8 @@
 /* custom speed & easing for loading icon */
 .codicon-loading,
 .codicon-tree-item-loading::before {
-	-webkit-animation-duration: 1s !important;
-	        animation-duration: 1s !important;
-	-webkit-animation-timing-function: cubic-bezier(0.53, 0.21, 0.29, 0.67) !important;
-	        animation-timing-function: cubic-bezier(0.53, 0.21, 0.29, 0.67) !important;
+	animation-duration: 1s !important;
+	animation-timing-function: cubic-bezier(0.53, 0.21, 0.29, 0.67) !important;
 }
 
 /*---------------------------------------------------------------------------------------------
@@ -369,12 +360,10 @@
 /* Electron */
 
 .monaco-list-type-filter {
-	cursor: -webkit-grab;
 	cursor: grab;
 }
 
 .monaco-list-type-filter.dragging {
-	cursor: -webkit-grabbing;
 	cursor: grabbing;
 }
 
@@ -776,8 +765,7 @@
 	-webkit-user-select: text;
 	-ms-user-select: text;
 	box-sizing: initial;
-	-webkit-animation: fadein 100ms linear;
-	        animation: fadein 100ms linear;
+	animation: fadein 100ms linear;
 	line-height: 1.5em;
 }
 
@@ -1003,37 +991,23 @@
 
 /* Highlighting */
 .monaco-findInput.highlight-0 .controls {
-	-webkit-animation: monaco-findInput-highlight-0 100ms linear 0s;
-	        animation: monaco-findInput-highlight-0 100ms linear 0s;
+	animation: monaco-findInput-highlight-0 100ms linear 0s;
 }
 .monaco-findInput.highlight-1 .controls {
-	-webkit-animation: monaco-findInput-highlight-1 100ms linear 0s;
-	        animation: monaco-findInput-highlight-1 100ms linear 0s;
+	animation: monaco-findInput-highlight-1 100ms linear 0s;
 }
 .hc-black .monaco-findInput.highlight-0 .controls,
 .vs-dark  .monaco-findInput.highlight-0 .controls {
-	-webkit-animation: monaco-findInput-highlight-dark-0 100ms linear 0s;
-	        animation: monaco-findInput-highlight-dark-0 100ms linear 0s;
+	animation: monaco-findInput-highlight-dark-0 100ms linear 0s;
 }
 .hc-black .monaco-findInput.highlight-1 .controls,
 .vs-dark  .monaco-findInput.highlight-1 .controls {
-	-webkit-animation: monaco-findInput-highlight-dark-1 100ms linear 0s;
-	        animation: monaco-findInput-highlight-dark-1 100ms linear 0s;
-}
-
-@-webkit-keyframes monaco-findInput-highlight-0 {
-	0% { background: rgba(253, 255, 0, 0.8); }
-	100% { background: transparent; }
+	animation: monaco-findInput-highlight-dark-1 100ms linear 0s;
 }
 
 @keyframes monaco-findInput-highlight-0 {
 	0% { background: rgba(253, 255, 0, 0.8); }
 	100% { background: transparent; }
-}
-@-webkit-keyframes monaco-findInput-highlight-1 {
-	0% { background: rgba(253, 255, 0, 0.8); }
-	/* Made intentionally different such that the CSS minifier does not collapse the two animations into a single one*/
-	99% { background: transparent; }
 }
 @keyframes monaco-findInput-highlight-1 {
 	0% { background: rgba(253, 255, 0, 0.8); }
@@ -1041,19 +1015,9 @@
 	99% { background: transparent; }
 }
 
-@-webkit-keyframes monaco-findInput-highlight-dark-0 {
-	0% { background: rgba(255, 255, 255, 0.44); }
-	100% { background: transparent; }
-}
-
 @keyframes monaco-findInput-highlight-dark-0 {
 	0% { background: rgba(255, 255, 255, 0.44); }
 	100% { background: transparent; }
-}
-@-webkit-keyframes monaco-findInput-highlight-dark-1 {
-	0% { background: rgba(255, 255, 255, 0.44); }
-	/* Made intentionally different such that the CSS minifier does not collapse the two animations into a single one*/
-	99% { background: transparent; }
 }
 @keyframes monaco-findInput-highlight-dark-1 {
 	0% { background: rgba(255, 255, 255, 0.44); }
