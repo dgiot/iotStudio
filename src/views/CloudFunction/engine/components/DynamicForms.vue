@@ -12,15 +12,18 @@
         <span style="fontSize:16px"> {{options.Product.name}} </span>
       </el-form-item>
       <el-form-item :label="$translateTitle('rule.rule Id')">
+        <span v-if="formInline.flag">
+           {{formInline.ruleId}}
+        </span>
+        <span v-else-if="$route.query.title == '编辑'" style="fontSize:16px"> {{formInline.ruleId}} </span>
         <el-input
-          v-if="$route.query.title != '编辑'"
-          v-model="formInline.ruleId"
-          type="text"
+            v-else
+            v-model="formInline.ruleId"
+            type="text"
         />
-        <span v-if="$route.query.title == '编辑'" style="fontSize:16px"> {{formInline.ruleId}} </span>
       </el-form-item>
       <el-form-item :label="$translateTitle('rule.Remarks')">
-        <el-input v-model="formInline.remarks" type="text"/>
+        <el-input :disabled="formInline.flag" v-model="formInline.remarks" type="text"/>
       </el-form-item>
       <el-divider content-position="left">触发器(Trigger)</el-divider>
       <el-row :gutter="24">
@@ -42,7 +45,7 @@
                   },
                 ]"
               >
-                <el-select v-model="item.uri" placeholder="请选择触发方式">
+                <el-select :disabled="formInline.flag" v-model="item.uri" placeholder="请选择触发方式">
                   <el-option
                     v-for="item in options.Trigger"
                     :key="item.value"
@@ -53,137 +56,137 @@
               </el-form-item>
             </el-col>
             <!-- 定时触发-->
-            <el-col
-              v-if="item.uri === 'trigger/timer'"
-              :lg="6"
-              :md="8"
-              :sm="10"
-              :xl="10"
-              :xs="10"
-            >
-              <el-form-item
-                label="触发时间"
-                :prop="item + '.params.cron'"
-                :rules="[
-                  {
-                    required: true,
-                    message: '请填写触发时间',
-                    trigger: 'blur',
-                  },
-                ]"
-              >
-                <el-input
-                  v-model="item.params.cron"
-                  placeholder="请填写触发时间"
-                  style="width: 60%"
-                />
-              </el-form-item>
-            </el-col>
+<!--            <el-col-->
+<!--              v-if="item.uri === 'trigger/timer'"-->
+<!--              :lg="6"-->
+<!--              :md="8"-->
+<!--              :sm="10"-->
+<!--              :xl="10"-->
+<!--              :xs="10"-->
+<!--            >-->
+<!--              <el-form-item-->
+<!--                label="触发时间"-->
+<!--                :prop="item + '.params.cron'"-->
+<!--                :rules="[-->
+<!--                  {-->
+<!--                    required: true,-->
+<!--                    message: '请填写触发时间',-->
+<!--                    trigger: 'blur',-->
+<!--                  },-->
+<!--                ]"-->
+<!--              >-->
+<!--                <el-input-->
+<!--                  v-model="item.params.cron"-->
+<!--                  placeholder="请填写触发时间"-->
+<!--                  style="width: 60%"-->
+<!--                />-->
+<!--              </el-form-item>-->
+<!--            </el-col>-->
             <!--mqtt事件触发-->
-            <el-col
-              v-if="item.uri == 'trigger/mqtt/event'"
-              :lg="4"
-              :md="6"
-              :sm="8"
-              :xl="8"
-              :xs="8"
-            >
-              <el-form-item
-                label="mqtt事件"
-                :prop="item + '.params.mqtt'"
-                :rules="[
-                  {
-                    required: true,
-                    message: '请选择mqtt事件',
-                    trigger: 'change',
-                  },
-                ]"
-              >
-                <el-select
-                  v-model="item.params.mqtt"
-                  placeholder="请选择mqtt事件"
-                >
-                  <el-option
-                    v-for="_item in options.mqttEvent"
-                    :key="_item.lable"
-                    :label="_item.label"
-                    :value="_item.value"
-                  />
-                </el-select>
-              </el-form-item>
-            </el-col>
+<!--            <el-col-->
+<!--              v-if="item.uri == 'trigger/mqtt/event'"-->
+<!--              :lg="4"-->
+<!--              :md="6"-->
+<!--              :sm="8"-->
+<!--              :xl="8"-->
+<!--              :xs="8"-->
+<!--            >-->
+<!--              <el-form-item-->
+<!--                label="mqtt事件"-->
+<!--                :prop="item + '.params.mqtt'"-->
+<!--                :rules="[-->
+<!--                  {-->
+<!--                    required: true,-->
+<!--                    message: '请选择mqtt事件',-->
+<!--                    trigger: 'change',-->
+<!--                  },-->
+<!--                ]"-->
+<!--              >-->
+<!--                <el-select-->
+<!--                  v-model="item.params.mqtt"-->
+<!--                  placeholder="请选择mqtt事件"-->
+<!--                >-->
+<!--                  <el-option-->
+<!--                    v-for="_item in options.mqttEvent"-->
+<!--                    :key="_item.lable"-->
+<!--                    :label="_item.label"-->
+<!--                    :value="_item.value"-->
+<!--                  />-->
+<!--                </el-select>-->
+<!--              </el-form-item>-->
+<!--            </el-col>-->
             <!--设备事件触发-->
-            <el-col
-              v-if="
-                item.uri === 'trigger/product/event' ||
-                item.uri === 'trigger/mqtt/event'
-              "
-              :lg="4"
-              :md="6"
-              :sm="8"
-              :xl="8"
-              :xs="8"
-            >
-              <el-form-item
-                label="设备信息"
-                :prop="item + '.params.deviceName'"
-              >
-                <el-select
-                  v-model="item.params.deviceName"
-                  placeholder="请选择设备信息"
-                >
-                  <el-option
-                    v-for="deviceName in options.Device"
-                    :key="deviceName.objectId"
-                    :label="deviceName.name"
-                    :value="deviceName.objectId"
-                  >
-                    <span style="float: left">{{ deviceName.name }}</span>
-                    <span style="float: right; font-size: 13px; color: #8492a6">
-                      {{ deviceName.objectId }}
-                    </span>
-                  </el-option>
-                </el-select>
-              </el-form-item>
-            </el-col>
-            <el-col
-              v-if="
-                item.uri === 'trigger/product/event' ||
-                item.uri === 'trigger/mqtt/event'
-              "
-              :lg="4"
-              :md="6"
-              :sm="8"
-              :xl="8"
-              :xs="8"
-            >
-              <el-form-item
-                label="事件"
-                :prop="item + '.params.propertyName'"
-                :rules="[
-                  {
-                    required: true,
-                    message: '请选择物模型事件',
-                    trigger: 'change',
-                  },
-                ]"
-                label-width="80px"
-              >
-                <el-select
-                  v-model="item.params.propertyName"
-                  placeholder="请选择物模型事件"
-                  style="width: 100%"
-                >
-                  <el-option
-                    v-for="propertyName in options.properties"
-                    :key="propertyName.identifier"
-                    :label="propertyName.name"
-                    style="width: 100%"
-                    :value="propertyName.identifier"
-                  />
-                </el-select>
-              </el-form-item>
-            </el-col>
+<!--            <el-col-->
+<!--              v-if="-->
+<!--                item.urif === 'trigger/product/event' ||-->
+<!--                item.uri === 'trigger/mqtt/event'-->
+<!--              "-->
+<!--              :lg="4"-->
+<!--              :md="6"-->
+<!--              :sm="8"-->
+<!--              :xl="8"-->
+<!--              :xs="8"-->
+<!--            >-->
+<!--              <el-form-item-->
+<!--                label="设备信息"-->
+<!--                :prop="item + '.params.deviceName'"-->
+<!--              >-->
+<!--                <el-select-->
+<!--                  v-model="item.params.deviceName"-->
+<!--                  placeholder="请选择设备信息"-->
+<!--                >-->
+<!--                  <el-option-->
+<!--                    v-for="deviceName in options.Device"-->
+<!--                    :key="deviceName.objectId"-->
+<!--                    :label="deviceName.name"-->
+<!--                    :value="deviceName.objectId"-->
+<!--                  >-->
+<!--                    <span style="float: left">{{ deviceName.name }}</span>-->
+<!--                    <span style="float: right; font-size: 13px; color: #8492a6">-->
+<!--                      {{ deviceName.objectId }}-->
+<!--                    </span>-->
+<!--                  </el-option>-->
+<!--                </el-select>-->
+<!--              </el-form-item>-->
+<!--            </el-col>-->
+<!--            <el-col-->
+<!--              v-if="-->
+<!--                item.uri === 'trigger/product/event' ||-->
+<!--                item.uri === 'trigger/mqtt/event'-->
+<!--              "-->
+<!--              :lg="4"-->
+<!--              :md="6"-->
+<!--              :sm="8"-->
+<!--              :xl="8"-->
+<!--              :xs="8"-->
+<!--            >-->
+<!--              <el-form-item-->
+<!--                label="事件"-->
+<!--                :prop="item + '.params.propertyName'"-->
+<!--                :rules="[-->
+<!--                  {-->
+<!--                    required: true,-->
+<!--                    message: '请选择物模型事件',-->
+<!--                    trigger: 'change',-->
+<!--                  },-->
+<!--                ]"-->
+<!--                label-width="80px"-->
+<!--              >-->
+<!--                <el-select-->
+<!--                  v-model="item.params.propertyName"-->
+<!--                  placeholder="请选择物模型事件"-->
+<!--                  style="width: 100%"-->
+<!--                >-->
+<!--                  <el-option-->
+<!--                    v-for="propertyName in options.properties"-->
+<!--                    :key="propertyName.identifier"-->
+<!--                    :label="propertyName.name"-->
+<!--                    style="width: 100%"-->
+<!--                    :value="propertyName.identifier"-->
+<!--                  />-->
+<!--                </el-select>-->
+<!--              </el-form-item>-->
+<!--            </el-col>-->
 
             <!--设备属性触发-->
             <el-col
@@ -208,6 +211,7 @@
                 <el-select
                   v-model="item.params.deviceName"
                   placeholder="请选择设备"
+                  :disabled="formInline.flag"
                 >
                   <el-option
                     v-for="deviceName in options.Device"
@@ -247,6 +251,7 @@
                   v-model="item.params.propertyName"
                   placeholder="请选择物模型属性"
                   style="width: 100%"
+                  :disabled="formInline.flag"
                 >
                   <el-option
                     v-for="propert in options.properties"
@@ -280,6 +285,7 @@
                 ]"
               >
                 <el-select
+                    :disabled="formInline.flag"
                   v-model="item.params.compareType"
                   placeholder="请选择比较条件"
                   style="width: 100%"
@@ -315,6 +321,7 @@
                 ]"
               >
                 <el-input
+                    :disabled="formInline.flag"
                   v-model="item.params.compareValue"
                   placeholder="物模型比较值"
                 />
@@ -357,7 +364,7 @@
       <el-divider/>
 
       <el-form-item size="mini" label-width="0">
-        <el-button type="primary" @click="onSubmit">立即创建</el-button>
+        <el-button v-if="!formInline.flag" type="primary" @click="onSubmit">立即创建</el-button>
       </el-form-item>
     </el-form>
   </div>
@@ -385,54 +392,16 @@
         type: Object,
         default() {
           return {
-            type: 'IFTTT',
             trigger: {
-              uri: 'logical/or',
               items: [
                 {
-                  uri: 'trigger/product/event',
+                  uri: 'trigger/product/property',
                   params: {
                     productKey: '',
                   },
                 },
               ],
             },
-            condition: {
-              uri: 'logical/and',
-              items: [
-                {
-                  uri: 'condition/device/stateContinue',
-                  params: {
-                    stateName: '',
-                    duration: '',
-                    compareType: '',
-                    compareValue: '',
-                  },
-                },
-              ],
-            },
-            action: [
-              {
-                uri: 'action/device/setProperty',
-                params: {
-                  productKey: '',
-                  deviceName: '#',
-                  propertyItems: {
-                    Direction: '',
-                  },
-                },
-              },
-              {
-                uri: 'action/scene/trigger',
-                params: {
-                  automationRuleId: 'b362b597dacc4da58d63ec2abb95355d',
-                },
-              },
-              {
-                uri: 'action/event/triggerAlarm',
-                params: {},
-              },
-            ],
           }
         },
       },

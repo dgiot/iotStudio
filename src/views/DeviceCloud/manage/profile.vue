@@ -8,26 +8,69 @@
     <el-dialog
       :append-to-body="true"
       center
-      title="选择告警类型"
+      title="关联规则引擎"
       :visible.sync="Notification.show"
       width="30%"
     >
-      <span>
-        <el-radio v-model="Notification.detail.radio" label="start">
-          告警产生
-        </el-radio>
-        <el-radio v-model="Notification.detail.radio" label="stop">
-          告警恢复
-        </el-radio>
-      </span>
-      <span slot="footer" class="dialog-footer">
-        <el-button @click="Notification.show = false">取 消</el-button>
+      <div>
+        <!--        <el-radio v-model="Notification.detail.radio" label="start">-->
+        <!--          告警产生-->
+        <!--        </el-radio>-->
+        <!--        <el-radio v-model="Notification.detail.radio" label="stop">-->
+        <!--          告警恢复-->
+        <!--        </el-radio>-->
         <el-button
           type="primary"
-          @click.native="createdNotification(Notification.detail)"
+          @click.native="createdNotification(Notification.detail, 'start')"
         >
-          创 建
+          告警产生
         </el-button>
+        <el-button
+          type="primary"
+          @click.native="createdNotification(Notification.detail, 'stop')"
+        >
+          告警恢复
+        </el-button>
+      </div>
+      <div style="margin-top: 5px">
+        <el-table
+          :cell-class-name="getRowindex"
+          :data="engineData"
+          style="width: 100%; text-align: center"
+        >
+          <el-table-column
+            align="center"
+            label="类型"
+            prop="type"
+            width="100"
+          />
+          <el-table-column
+            align="center"
+            label="ID"
+            prop="ruleid"
+            show-overflow-tooltip
+          />
+          <el-table-column
+            align="center"
+            fixed="right"
+            :label="$translateTitle('developer.operation')"
+            width="100"
+          >
+            <template #default="{ row }">
+              <el-button
+                size="mini"
+                type="success"
+                @click.native="viewNotification(row)"
+              >
+                <!-- 查看 -->
+                {{ $translateTitle('equipment.see') }}
+              </el-button>
+            </template>
+          </el-table-column>
+        </el-table>
+      </div>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="Notification.show = false">关 闭</el-button>
       </span>
     </el-dialog>
 
@@ -365,6 +408,7 @@
 </template>
 <!--eslint-disable-->
 <script>
+  import { queryDict } from '@/api/Dict'
   import { queryCategory } from '@/api/Category'
   import { mapGetters, mapMutations } from 'vuex'
   import { putProduct } from '@/api/Product'
@@ -387,6 +431,7 @@
   import { setTimeout } from 'timers'
   import { post_tree } from '@/api/Logs'
   import dgiotViews from '@/views/CloudFunction/lowcode'
+  import {getRule} from "@/api/Rules";
 
   const context = require.context('./component/profile', true, /\.vue$/)
   let res_components = {}
@@ -405,6 +450,7 @@
     props: {},
     data() {
       return {
+        engineData: [],
         Notification: {
           show: false,
           detail: {},
@@ -626,15 +672,14 @@
     mounted() {
       this.$baseEventBus.$off('showNotificationSettings')
       this.$baseEventBus.$on('showNotificationSettings', (rows) => {
-        console.debug(rows)
         //  显示告警类型下拉框
+        this.orginRule(rows)
         this.Notification = { show: true, detail: rows }
       })
       this.$baseEventBus.$off('profileDialog')
       this.$baseEventBus.$on(
         'profileDialog',
         ({ config, type, flag, productInfo, parserType }) => {
-          console.log(config, type, flag, productInfo, parserType)
           this.productDetail = productInfo
           this.productInfo = productInfo
           this.parserType = type
@@ -699,8 +744,7 @@
       this.queryProduttemp({})
     },
     methods: {
-      async createdNotification(row) {
-        await console.log(row)
+      async createdNotification(row, flag) {
         await this.$router.push({
           path: '/rules_engine/addengine',
           query: {
@@ -709,9 +753,20 @@
             title: '编辑',
             type:
               'Notification_' +
-              this.Notification.detail.radio +
+                flag +
               '_' +
               this.$route.query.id,
+          },
+        })
+      },
+      async viewNotification(row) {
+        await this.$router.push({
+          path: '/rules_engine/addengine',
+          query: {
+            productid: this.$route.query.id,
+            title: '查看',
+            type: row.ruleid,
+            dictid: row.dictid,
           },
         })
       },
@@ -777,15 +832,12 @@
           )
           if (isLoading) loading.close()
         } catch (error) {
-          dgiotlog.log(error)
           this.$baseMessage(
             this.$translateTitle('alert.Data request error') + `${error}`,
             'error',
             'dgiot-hey-message-error'
           )
         }
-        // console.clear()
-        dgiotlog.log('productDetail', productDetail)
         this.producttempId = params.objectId
         this.productDetail = productDetail
         this.$refs.ProfileDescription.productDetail = productDetail
@@ -977,7 +1029,6 @@
         this.saveParse(rows, -1, false)
       },
       editorParser(config, type, flag) {
-        console.log('config', config, config, type, flag)
         const { objectId, thing = {} } = this.productDetail
         var _sourceDict = []
         var _sourceModule = []
@@ -1858,19 +1909,16 @@
               // resource[index].arr = []
               // resource[index].obj = {}
               if (this.$refs['sizeForm'].resource.value === resource.cType) {
-                console.info(resource, 'success cType')
-                console.info(rowData.dataSource, 'rowData.dataSource')
+
                 for (var o in rowData.dataSource) {
                   for (var j in resource.obj) {
                     if (o === j) resource.obj[o] = rowData.dataSource[j]
                   }
                 }
-                console.info(resource.obj, 'set resource.obj')
                 this.$refs['sizeForm'].resource.addchannel = resource.obj
               }
               this.$refs['sizeForm'].resource.changeData = rowData.dataSource
               if (resource.cType == rowData.dataForm.protocol) {
-                console.log(resource, 'success')
               }
             })
           })
@@ -1899,7 +1947,6 @@
           //   //   }
           //   // }
           // })
-          console.log('refs sizeForm', this.$refs['sizeForm']) // 子组件的实例
         })
       },
       addDas() {
@@ -2120,6 +2167,58 @@
             productid: id,
           },
         })
+      },
+      // 初始化规则引擎数据
+      async orginRule(row) {
+        let productid  = this.$route.query.id
+        try {
+          const params = {
+            order: 'createdAt',
+            keys: 'data',
+            where: {
+              key: {'$regex' : productid + '_' + row.objectId},
+            },
+          }
+          const { results = [] } = await queryDict(params)
+          let engineData = []
+          results.forEach(res=>{
+            if(res.data.args){
+              if(((res.data.args.ruleid).indexOf('start')) != -1){
+                res.data.args.type = '告警产生'
+              }else{
+                res.data.args.type = '告警恢复'
+              }
+              res.data.args.dictid = res.objectId
+              engineData.push(res.data.args)
+            }
+          })
+          this.engineData = engineData
+        } catch (error) {
+          this.$baseMessage(
+              this.$translateTitle('alert.Data request error') + `${error}`,
+              'error',
+              'dgiot-hey-message-error'
+          )
+        }
+      },
+      // 表格单个单元格class添加
+      getRowindex(row, rowIndex, columnIndex) {
+        if (row.columnIndex == 0) {
+          return 'firstcolumn'
+        }
+      },
+      detailRules(id) {
+        this.$router.push({
+          path: '/rules_engine/checkengine',
+          query: { id: id },
+        })
+      },
+      matched(metrics) {
+        var matched = 0
+        for (var i = 0; i < metrics.length; i++) {
+          matched += metrics[i].matched
+        }
+        return matched
       },
     },
   }
