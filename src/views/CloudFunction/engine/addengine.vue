@@ -481,6 +481,7 @@
 </template>
 <script>
   import DynamicForms from '@/views/CloudFunction/engine/components/DynamicForms' // 动态表单
+  import { getDict } from '@/api/Dict'
   var editor1
   var editor2
   import {
@@ -503,52 +504,16 @@
         ruleContent: {
           type: 'IFTTT',
           trigger: {
-            uri: 'logical/or',
+            uri: 'trigger/product/property',
             items: [
               {
-                uri: 'trigger/product/event',
+                uri: 'trigger/product/property',
                 params: {
                   productKey: '',
                 },
               },
             ],
           },
-          condition: {
-            uri: 'logical/and',
-            items: [
-              {
-                uri: 'condition/device/stateContinue',
-                params: {
-                  stateName: '',
-                  duration: '',
-                  compareType: '',
-                  compareValue: '',
-                },
-              },
-            ],
-          },
-          action: [
-            {
-              uri: 'action/device/setProperty',
-              params: {
-                productKey: '',
-                deviceName: '',
-                propertyItems: {
-                  Direction: '',
-                },
-              },
-            },
-            {
-              uri: 'action/scene/trigger',
-              params: {
-                automationRuleId: 'b362b597dacc4da58d63ec2abb95355d',
-              },
-            },
-            {
-              uri: 'action/event/triggerAlarm',
-              params: {},
-            },
-          ],
         },
         ruleId: this.$route.query.id || '',
         uid: this.$route.query.uid || '',
@@ -592,6 +557,7 @@
         dialogFormVisible: false,
         title: '',
         formInline: {
+          flag: false,
           user: '',
           region: '',
           enginesql:
@@ -673,6 +639,14 @@
       }
     },
     mounted() {
+      if (this.$route.query.dictid) {
+        getDict(this.$route.query.dictid).then((res) => {
+          this.formInline.ruleId = res.data.args.ruleid
+          this.formInline.remarks = res.data.args.description
+          this.formInline.flag = true
+          this.ruleContent = res.data.args
+        })
+      }
       if (this.$route.query.type && this.$route.query.uid) {
         this.queryRule(
           `rule:${this.$route.query.type}_${this.$route.query.uid}`
@@ -755,52 +729,15 @@
               ruleContent: {
                 type: 'IFTTT',
                 trigger: {
-                  uri: 'logical/or',
                   items: [
                     {
-                      uri: 'trigger/product/event',
+                      uri: 'trigger/product/property',
                       params: {
                         productKey: '',
                       },
                     },
                   ],
                 },
-                condition: {
-                  uri: 'logical/and',
-                  items: [
-                    {
-                      uri: 'condition/device/stateContinue',
-                      params: {
-                        stateName: '',
-                        duration: '',
-                        compareType: '',
-                        compareValue: '',
-                      },
-                    },
-                  ],
-                },
-                action: [
-                  {
-                    uri: 'action/device/setProperty',
-                    params: {
-                      productKey: '',
-                      deviceName: '',
-                      propertyItems: {
-                        Direction: '',
-                      },
-                    },
-                  },
-                  {
-                    uri: 'action/scene/trigger',
-                    params: {
-                      automationRuleId: 'b362b597dacc4da58d63ec2abb95355d',
-                    },
-                  },
-                  {
-                    uri: 'action/event/triggerAlarm',
-                    params: {},
-                  },
-                ],
               },
             },
           } = await get_rule_id(ruleId)
@@ -811,6 +748,7 @@
           editor1.setValue(this.formInline.enginesql)
           this.formInline.ruleId = data.id
           this.formInline.remarks = data.description
+          this.formInline.flag = false
           this.ruleContent = data.ruleContent
           editor1.setValue(data.rawsql)
         } catch (error) {

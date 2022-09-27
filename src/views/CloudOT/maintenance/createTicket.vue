@@ -1037,6 +1037,11 @@
         })
         const params = {
           status: 0,
+          user: {
+            objectId: info.executor.objectId,
+            __type: 'Pointer',
+            className: '_User',
+          },
           ACL: _.merge(setAcl, ACL),
           info: info,
         }
