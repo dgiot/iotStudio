@@ -12,7 +12,11 @@
 <template>
   <div class="runningState-container">
     <div class="runningState">
-      <div v-loading="loading" style="height: 80vh; overflow: scroll">
+      <!-- bg_logo ±³¾°logoµ×Í¼ -->
+      <div
+        v-loading="loading"
+        style="height: 80vh; overflow: scroll; width: 100%"
+      >
         <div
           v-for="(value, key, index) in machinelist"
           :key="index"
@@ -116,6 +120,12 @@
   .runningState-container {
     width: 100%;
     height: 100%;
+  }
+  .bg_logo {
+    background: url('/assets/images/logo/dgiot_logo.png') no-repeat;
+    background-size: 800px 800px;
+    background-position: center center;
+    // opacity: 0.5;
   }
 </style>
 <style lang="scss">

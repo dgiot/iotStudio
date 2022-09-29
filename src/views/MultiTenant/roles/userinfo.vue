@@ -359,7 +359,7 @@
             break
           case 'companyinfo.backgroundimage':
             this.companyinfo.backgroundimage = info.path
-            this.setBackgroundimage(info.path)
+            // this.setBackgroundimage(info.path)
             putProject(this.Default.objectId, { background: info.url })
               .then((res) => {
                 dgiotlog.log(res)

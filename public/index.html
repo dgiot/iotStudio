@@ -4,14 +4,14 @@
     <title><%= VUE_APP_TITLE %></title>
     <meta charset="utf-8" />
     <meta content="IE=edge" http-equiv="X-UA-Compatible" />
-    <meta name="referrer" content="no-referrer" /> 
+    <meta name="referrer" content="no-referrer" />
     <meta content="width=device-width,initial-scale=1.0" name="viewport" />
     <meta content="<%= VUE_APP_Keywords %>" name="keywords" />
     <meta content="<%= VUE_APP_Description %>" name="description" />
     <meta content="<%= VUE_APP_AUTHOR %>" name="author" />
     <meta content="Colby Fayock" property="og:site_name" />
-<!--    <meta name="referrer" content="never" />-->
-    <meta name="referrer" content="strict-origin-when-cross-origin">
+    <!--    <meta name="referrer" content="never" />-->
+    <meta name="referrer" content="strict-origin-when-cross-origin" />
     <!-- 引入og -->
     <% for(let property in htmlWebpackPlugin.options.ogConfig) { %>
     <meta
@@ -85,8 +85,14 @@
           charset="utf-8"
           src="https://hm.baidu.com/hm.js?24f17767262929947cc3631f99bfd274"
         ></script>
-        <script charset="utf-8" src="https://hm.baidu.com/hm.js?63a8829a4e6ec3086fa167642997d459"></script>
-        <script charset="utf-8" src="https://hm.baidu.com/hm.js?8e754b820097701efad85ba28794ec35"></script>
+        <script
+          charset="utf-8"
+          src="https://hm.baidu.com/hm.js?63a8829a4e6ec3086fa167642997d459"
+        ></script>
+        <script
+          charset="utf-8"
+          src="https://hm.baidu.com/hm.js?8e754b820097701efad85ba28794ec35"
+        ></script>
         <!--    pump-->
         <script
           charset="utf-8"
@@ -98,7 +104,10 @@
           src="https://hm.baidu.com/hm.js?32e7c4bdc95a01203a3c27102912a44e"
         ></script>
         <!--    cnzz-->
-        <script type="text/javascript" src="https://s4.cnzz.com/z_stat.php?id=1281131444&web_id=1281131444"></script>
+        <script
+          type="text/javascript"
+          src="https://s4.cnzz.com/z_stat.php?id=1281131444&web_id=1281131444"
+        ></script>
         <script type="text/javascript">
           document.write(
             unescape(

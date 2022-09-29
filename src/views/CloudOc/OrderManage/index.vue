@@ -11,7 +11,7 @@
 -->
 <template>
   <div ref="custom-table" class="index-container">
-    <dgiot-query-form>
+    <dgiot-query-form style="width: 100%; margin-left: 60px">
       <dgiot-query-form-left-panel>
         <el-form
           ref="form"
@@ -19,8 +19,27 @@
           :model="queryForm"
           @submit.native.prevent
         >
+          <el-form-item label="产品名称">
+            <el-select
+              v-model="queryForm.product"
+              clearable
+              placeholder="请选择产品"
+              @change="handleQuery()"
+            >
+              <el-option
+                v-for="item in product"
+                :key="item.objectId + 'j'"
+                :label="item.name"
+                :value="item.objectId"
+              />
+            </el-select>
+          </el-form-item>
           <el-form-item label="单据编号">
-            <el-input v-model="queryForm.name" placeholder="请输入单据编号" />
+            <el-input
+              v-model="queryForm.name"
+              clearable
+              placeholder="请输入单据编号"
+            />
           </el-form-item>
           <el-form-item label="订单状态">
             <el-select
@@ -31,6 +50,21 @@
             >
               <el-option
                 v-for="item in statusList"
+                :key="item.value + 'j'"
+                :label="item.label"
+                :value="item.value"
+              />
+            </el-select>
+          </el-form-item>
+          <el-form-item label="排序方式">
+            <el-select
+              v-model="queryForm.way"
+              clearable
+              placeholder="请选择排序方式"
+              @change="handleQuery"
+            >
+              <el-option
+                v-for="item in wayList"
                 :key="item.value + 'j'"
                 :label="item.label"
                 :value="item.value"
@@ -52,9 +86,11 @@
     </dgiot-query-form>
 
     <el-table
+      v-if="isPC"
       ref="tableSort"
       v-loading="listLoading"
       :border="border"
+      class="order_table"
       :data="list"
       :height="height"
       :size="lineHeight"
@@ -66,7 +102,6 @@
         align="center"
         label="序号"
         show-overflow-tooltip
-        sortable
         width="95"
       >
         <template #default="{ $index }">
@@ -77,7 +112,6 @@
         align="center"
         label="单据编号"
         prop="name"
-        sortable
         width="140"
       />
       <el-table-column
@@ -85,7 +119,6 @@
         label="单据类型"
         prop="devaddr"
         show-overflow-tooltip
-        sortable
         width="140"
       />
       <el-table-column
@@ -95,13 +128,7 @@
         show-overflow-tooltip
         width="140"
       />
-      <el-table-column
-        align="center"
-        label="物料表"
-        show-overflow-tooltip
-        sortable
-        width="140"
-      >
+      <el-table-column align="center" label="物料表" width="100">
         <template #default="{ row }">
           <el-button size="mini" type="info" @click="handleDetail(row)">
             查看
@@ -113,6 +140,7 @@
         label="单据状态"
         prop="content.baseInfo.Documents_state"
         show-overflow-tooltip
+        sortable
       />
       <el-table-column
         align="center"
@@ -120,13 +148,7 @@
         prop="content.baseInfo.Product_type"
         show-overflow-tooltip
       />
-      <el-table-column
-        align="center"
-        label="原料清单"
-        show-overflow-tooltip
-        sortable
-        width="140"
-      >
+      <el-table-column align="center" label="原料清单" width="100">
         <template #default="{ row }">
           <el-button size="mini" type="info" @click="handleMaterial(row)">
             查看
@@ -141,10 +163,16 @@
       />
       <el-table-column
         align="center"
+        label="车间"
+        prop="content.baseInfo.Material_List[0].Production_workshop"
+        show-overflow-tooltip
+      />
+      <el-table-column
+        align="center"
         label="工单状态"
         prop="realstatus"
         show-overflow-tooltip
-        width="140"
+        width="100"
       >
         <template slot-scope="scope">
           <el-tag v-if="scope.row.realstatus == 0" effect="dark" type="info">
@@ -209,23 +237,14 @@
         label="开始时间"
         prop="detail.taskstart"
         show-overflow-tooltip
-        width="140"
       />
       <el-table-column
         align="center"
         label="结束时间"
         prop="detail.taskend"
         show-overflow-tooltip
-        width="140"
       />
-      <el-table-column
-        align="center"
-        fixed="right"
-        label="操作"
-        show-overflow-tooltip
-        sortable
-        width="85"
-      >
+      <el-table-column align="center" fixed="right" label="操作">
         <template #default="{ row }">
           <el-button size="mini" type="primary" @click="handleOperation(row)">
             操作
@@ -234,9 +253,90 @@
         </template>
       </el-table-column>
     </el-table>
+    <div v-else class="order_cards">
+      <el-card v-for="(item, index) in list" :key="index" class="box-card">
+        <div slot="header" class="clearfix">
+          <span>{{ item.name }}</span>
+          <el-button
+            style="float: right; padding: 3px 0"
+            type="text"
+            @click="handleOperation(item)"
+          >
+            操作
+          </el-button>
+        </div>
+        <div class="text_item">
+          <div style="font-size: 12px">
+            开始时间:{{ item.detail.taskstart }}
+          </div>
+          <div style="font-size: 12px">结束时间:{{ item.detail.taskend }}</div>
+          <div style="padding: 10px">
+            <el-tag v-if="item.realstatus == 0" effect="dark" type="info">
+              未派发
+            </el-tag>
+            <el-tag
+              v-else-if="item.realstatus == 1"
+              effect="dark"
+              type="danger"
+            >
+              待开始
+            </el-tag>
+            <el-tag
+              v-else-if="item.realstatus == 2"
+              effect="dark"
+              type="warning"
+            >
+              加工中
+            </el-tag>
+            <el-tag v-else-if="item.realstatus == 3" effect="dark">
+              待首检
+            </el-tag>
+            <el-tag
+              v-else-if="item.realstatus == 4"
+              effect="dark"
+              type="success"
+            >
+              首检完成
+            </el-tag>
+            <el-tag v-else-if="item.realstatus == 5" effect="dark">
+              待尾检
+            </el-tag>
+            <el-tag
+              v-else-if="item.realstatus == 6"
+              effect="dark"
+              type="success"
+            >
+              尾检完成
+            </el-tag>
+            <el-tag
+              v-else-if="item.realstatus == 7"
+              effect="dark"
+              type="warning"
+            >
+              待入库
+            </el-tag>
+            <el-tag
+              v-else-if="item.realstatus == 8"
+              effect="dark"
+              type="success"
+            >
+              已入库
+            </el-tag>
+            <el-tag v-else-if="item.realstatus == 9" effect="dark">
+              已出库
+            </el-tag>
+            <el-tag v-else effect="dark" type="info">暂停中</el-tag>
+          </div>
+          <div class="text_item_btn">
+            <div @click="handleDetail(item)">物料表</div>
+            <div @click="handleMaterial(item)">原料清单</div>
+          </div>
+        </div>
+      </el-card>
+    </div>
     <el-pagination
       background
-      :current-page="queryForm.pageNo"
+      :current-page="pageNo"
       :layout="layout"
       :page-size="queryForm.pageSize"
       :total="total"
@@ -408,12 +508,12 @@
             flex-direction: row-reverse;
             font-size: 20px;
             cursor: pointer;
-            padding: 4px;
+            padding: 10px 4px 10px 4px;
           "
         >
           <span @click="handleCloseAmis">✖</span>
         </div>
-        <el-tabs v-model="activeName">
+        <el-tabs v-model="activeName" class="dialog_wrap_item_content">
           <el-tab-pane
             v-for="(item, index) in commandInfo.data"
             :key="index + 'i'"
@@ -436,6 +536,7 @@
   import { putView, queryView } from '@/api/View'
   import { queryRelation } from '@/api/Relation'
   import { queryMaterial } from '@/api/MetaData'
+  import { getProduct, queryProduct } from '@/api/Product'
   import {
     putDevice,
     querycompanyDevice,
@@ -455,7 +556,7 @@
         infoData: 'Empty',
         isFullscreen: false,
         border: true,
-        height: this.$baseTableHeight(0) + 20,
+        height: this.$baseTableHeight(0) - 40,
         stripe: true,
         lineHeight: 'mini',
         list: [],
@@ -464,6 +565,7 @@
         layout: 'total, sizes, prev, pager, next, jumper',
         total: 0,
         selectRows: '',
+        pageNo: 1,
         statusList: [
           {
             label: '未派发',
@@ -512,9 +614,22 @@
         ],
         queryForm: {
           skip: 0,
-          limit: 20,
+          limit: 10,
           name: '',
+          excludeKeys: '',
+          pageNo: 1,
+          way: '-createdAt',
         },
+        wayList: [
+          {
+            label: '创建时间',
+            value: '-createdAt',
+          },
+          {
+            label: '更新时间',
+            value: '-updatedAt',
+          },
+        ],
         wlList: [],
         wldialog: false,
         ylList: [],
@@ -523,6 +638,8 @@
           dialog: false,
         },
         activeName: '0',
+        product: [],
+        isPC: true,
       }
     },
     computed: {
@@ -540,11 +657,31 @@
     },
     watch: {},
     created() {
+      this.isPC = this.$ispc()
+      this.fetchProduct()
       this.fetchData()
+      // console.log('是否是pc端', this.$ispc())
     },
     mounted() {},
     destroyed() {},
     methods: {
+      /**
+       * @Author: dgiot-fe
+       * @Date: 2022-04-27 20:45:36
+       * @LastEditors:
+       * @param
+       * @return {Promise<void>}
+       * @Description:
+       */
+      async fetchProduct() {
+        try {
+          const { results = [] } = await queryProduct({
+            excludeKeys:
+              'children,thing,decoder,topics,productSecret,desc,view,category,producttemplet',
+          })
+          this.product = results
+        } catch (error) {}
+      },
       handleCloseAmis() {
         this.coordinate = {
           lng: 116.404,
@@ -633,13 +770,15 @@
         this.fetchData()
       },
       handleCurrentChange(val) {
+        this.pageNo = val
         this.queryForm.skip = Number(val - 1) * Number(this.queryForm.limit)
         this.fetchData()
       },
       async handleQuery() {
-        this.queryForm.limit = 20
+        this.pageNo = 1
+        this.queryForm.limit = 10
         this.queryForm.skip = 0
-        this.paginationKey = moment(new Date()).valueOf() + ''
+        // this.paginationKey = moment(new Date()).valueOf() + ''
         await this.fetchData()
       },
       async fetchData() {
@@ -648,15 +787,16 @@
         let params = {
           skip: this.queryForm.skip,
           limit: this.queryForm.limit,
-          excludeKeys: this.queryForm.excludeKeys,
+          excludeKeys: this.queryForm.excludeKeys || '',
           // include: this.queryForm.include,
-          order: '-createdAt',
+          order: this.queryForm.way,
           count: 'objectId',
           where: {}, //product: '21efa507f6'
         }
-        console.log(this.$route.query)
         this.queryForm.name
-          ? (params.where.name.$regex = this.queryForm.name)
+          ? (params.where.name = {
+              $regex: this.queryForm.name,
+            })
           : ''
         this.queryForm.realstatus
           ? (params.where.realstatus = this.queryForm.realstatus)
@@ -712,14 +852,67 @@
         top: 12%;
         left: 10%;
         width: 80%;
+        height: 85%;
         // height: 60%;
         background-color: #fff;
         box-sizing: border-box;
+        display: flex;
+        flex-direction: column;
+        z-index: 999;
+        .dialog_wrap_item_content {
+          height: 100%;
+          overflow: scroll;
+        }
       }
     }
     .dialog_index {
       position: absolute;
       z-index: inherit;
+    }
+    .order_table {
+      width: 90%;
+      margin: 10px auto;
+    }
+    .order_cards {
+      display: flex;
+      flex-wrap: wrap;
+      .box-card {
+        width: 200px;
+        margin-left: 20px;
+        margin-bottom: 10px;
+        .clearfix:before,
+        .clearfix:after {
+          display: table;
+          content: '';
+        }
+        .clearfix:after {
+          clear: both;
+        }
+        .text_item {
+          display: flex;
+          flex-direction: column;
+          justify-content: space-between;
+          .text_item_btn {
+            display: flex;
+            color: #1890ff;
+            justify-content: space-around;
+            div {
+              flex: 1;
+              padding: 5px 10px;
+              text-align: center;
+            }
+            div:nth-child(1) {
+              color: #fff;
+              background-color: #1890ff;
+            }
+            div:nth-child(2) {
+              margin-left: 4px;
+              color: #fff;
+              background-color: #1890ff;
+            }
+          }
+        }
+      }
     }
   }
 </style>
