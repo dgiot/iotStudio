@@ -7,8 +7,8 @@
  * @FilePath: \dgiot-dashboard\src\views\equipment_management\platform_overview.vue
 -->
 <template>
-  <div>
-    <div ref="platform" class="platform">
+  <div class="home_index">
+    <div ref="platform" class="platform" :style="{ width: screenWidth }">
       <div class="home_dialog">
         <el-dialog
           :append-to-body="true"
@@ -148,12 +148,15 @@
         </div>
       </div> -->
       <!-- 通用版本 -->
-      <div v-if="homeScreen == 0">
-        <el-card shadow="hover">
-          <el-row v-show="mapType == 'baidu'" :row="24">
-            <el-col :span="leftRow" :xs="24">
-              <el-row :span="24">
-                <div class="chart_map" style="position: relative; width: 100%">
+      <div v-if="homeScreen == 0" class="baidu_map">
+        <el-card shadow="hover" style="height: 100%">
+          <el-row v-show="mapType == 'baidu'" :row="24" style="height: 100%">
+            <el-col :span="leftRow" style="height: 100%" :xs="24">
+              <el-row :span="24" style="height: 100%">
+                <div
+                  class="chart_map"
+                  style="position: relative; width: 100%; height: 100%"
+                >
                   <div v-show="false" class="card_left">
                     <el-row class="card_left-row" :gutter="24">
                       <el-col class="card_left-row-col" :span="6">
@@ -761,6 +764,7 @@
         </el-card>
       </div>
       <div v-else-if="homeScreen == 1" class="baidu_map bg_screen1">
+        <!-- 顶部数量 -->
         <div class="screen_top">
           <div class="screen_top_item">
             <router-link to="/dashboard/productlist">
@@ -787,7 +791,19 @@
             </router-link>
           </div>
         </div>
-        <div class="screen_center_center"></div>
+        <!-- 3d底图背景 -->
+        <div
+          id="screen_center_bg"
+          class="screen_center_center"
+          :style="{
+            backgroundImage: 'url(' + background + ')',
+            backgroundRepeat: 'no-repeat',
+            backgroundSize: '100% 100%',
+          }"
+          @mouseenter="enter"
+          @mouseleave="leave"
+        ></div>
+        <!-- 底部设备列表 -->
         <div class="screen_bottom">
           <div class="screen_bottom_title">
             {{ $translateTitle('equipment.list') }}
@@ -795,14 +811,76 @@
           <screen-device :comp="comp" />
           <!-- <topo-caltable :comp="comp" /> -->
         </div>
+        <!-- 右侧工单列表 -->
         <div class="screen_right_center">
           <div class="screen_right_center_top">工单列表</div>
           <work-order :comp="comp" />
         </div>
+        <!-- 告警列表 -->
         <div class="screen_left_center">
           <div class="screen_left_center_top">告警列表</div>
           <topo-caltable :comp="comp" />
         </div>
+
+        <!-- 饼图设备在线离线数 -->
+        <div class="screen_right_bottom">
+          <div class="screen_right_bottom_top">设备运行状况</div>
+          <ve-pie
+            :data="piechartData"
+            :extend="pieextend"
+            height="100%"
+            :settings="piechartSettings"
+            width="100%"
+          />
+        </div>
+      </div>
+      <div v-else-if="homeScreen == 2" class="baidu_map bg_screen1">
+        <div class="screen_top">
+          <div class="screen_top_item">
+            <router-link to="/dashboard/productlist">
+              <p>{{ $translateTitle('home.pro_count') }}</p>
+              <p style="color: #f8a75c">{{ _product_count }}</p>
+            </router-link>
+          </div>
+          <div class="screen_top_item">
+            <router-link to="/roles/applicationManagement">
+              <p>{{ $translateTitle('home.app_count') }}</p>
+              <p style="color: #efdb75">{{ _app_count }}</p>
+            </router-link>
+          </div>
+          <div class="screen_top_item" @click="goDevice()">
+            <p>{{ $translateTitle('home.dev_count') }}</p>
+            <p style="color: #03fcfa">{{ _dev_count }}</p>
+          </div>
+          <div class="screen_top_item">
+            <router-link to="/CloudOt/alarm">
+              <p>
+                {{ $translateTitle('equipment.Total number of alarms') }}
+              </p>
+              <p style="color: #179fff">{{ warnCount }}</p>
+            </router-link>
+          </div>
+        </div>
+        <!-- 3d底图 -->
+        <div
+          id="screen_center_bg"
+          class="screen_center_center"
+          :style="{
+            backgroundImage: 'url(' + background + ')',
+            backgroundRepeat: 'no-repeat',
+            backgroundSize: '100% 100%',
+          }"
+          @mouseenter="enter"
+          @mouseleave="leave"
+        ></div>
+        <!-- 折线图设备在线离线数 -->
+        <div class="screen_left_bottom">
+          <div class="screen_left_bottom_top">数据分析</div>
+          <div class="screen_left_bottom_ctt">
+            <screen-line style="width: 100%; height: 100%" />
+          </div>
+        </div>
+        <!-- 饼图设备在线离线数 -->
         <div class="screen_right_bottom">
           <div class="screen_right_bottom_top">设备运行状况</div>
           <ve-pie
@@ -821,6 +899,7 @@
   import topoCaltable from './component/topocompvue/TopoCaltable'
   import ScreenDevice from './component/Screen/ScreenDevice'
   import WorkOrder from './component/Screen/WorkOrder'
+  import ScreenLine from './component/Screen/ScreenLine'
   import { postTopic, deleteTopic } from '@/api/Dlink'
   import icoPath1 from '../../../../public/assets/images/Device/1.png'
   import icoPath2 from '../../../../public/assets/images/Device/2.png'
@@ -872,6 +951,7 @@
       topoCaltable,
       ScreenDevice,
       WorkOrder,
+      ScreenLine,
     },
     data() {
       this.piechartSettings = {
@@ -941,6 +1021,7 @@
 
       return {
         homeScreen: 0, //大屏版本
+        backgroundimage: '',
         piechartData: {
           columns: ['名称', '数量'],
           rows: [
@@ -1068,6 +1149,7 @@
           starttime: '',
           project: '',
         },
+        screenWidth: '100%',
       }
     },
     computed: {
@@ -1129,9 +1211,23 @@
       },
     },
     mounted() {
+      let _this = this
+
+      // 监听窗口发生变化
+      // window.addEventListener('resize', function () {
+      //   // console.log('变化了')
+      //   // var dom = document.querySelector('.home_index')
+      //   // _this.screenWidth = dom.offsetWidth + 'px'
+      // })
       window.bh = ''
       window.kd = ''
       this.homeScreen = localStorage.getItem('homeScreen') || 0
+      let background = localStorage.getItem('background') || ''
+      this.background =
+        background == ''
+          ? '/assets/bg/screen_center.png'
+          : this.$FileServe + background
+      console.log('路径', this.$FileServe)
       this.piechartData.rows = [
         { 名称: '在线设备', 数量: this._dev_online_count },
         { 名称: '离线设备', 数量: this._dev_off_count },
@@ -1152,10 +1248,22 @@
       this.queryForm.account =
         this.language == 'zh' ? '全部产品' : 'All Products'
       this.initDgiotMqtt()
+      //监听鼠标滚动
+      // if (this.homeScreen == 1 || this.homeScreen == 2) {
+      //   window.addEventListener('mousewheel', this.handleScroll, true)
+      // }
+      //初始化大屏宽度,延迟等待
+      setTimeout(() => {
+        var dom = document.querySelector('.home_index')
+        this.screenWidth = dom.offsetWidth + 'px'
+      }, 2000)
+      // 监听窗口发生变化
       window.onresize = () => {
         return (() => {
           this.mapHeight = window.innerHeight * 0.8 + 'px'
           this.mapWidth = window.innerWidth * 0.98 + 'px'
+          var dom = document.querySelector('.home_index')
+          _this.screenWidth = dom.offsetWidth + 'px'
         })()
       }
     },
@@ -1165,6 +1273,7 @@
       // 取消订阅mqtt写法 2022-5-27 改为http写法
       // this.$dgiotBus.$emit('MqttUnbscribe', this.topicKey, this.subtopic)
     },
+
     activated() {
       // dgiotlog.log('keep-alive生效')
       this.resizeTheChart()
@@ -1173,6 +1282,28 @@
       this.resizeTheChart()
     },
     methods: {
+      enter() {
+        window.addEventListener('mousewheel', this.handleScroll, true)
+      },
+      leave() {
+        window.removeEventListener('mousewheel', this.handleScroll, true)
+      },
+      handleScroll(e) {
+        e = e || window.event
+        var box1 = document.querySelector('.screen_center_center')
+        // console.log('滚动了', e)
+        //判断滚轮滚动方向
+        //wheelDelta获取到鼠标滚动方向，向上滚是正值，向下是负值，但火狐不支持
+        //event.detail火狐支持，向上为负值，向下为正值
+        // return
+        if (e.wheelDelta > 0 || e.detail < 0) {
+          box1.style.width = box1.offsetWidth * 1.02 + 'px'
+          box1.style.height = box1.offsetHeight * 1.02 + 'px'
+        } else {
+          box1.style.width = box1.offsetWidth * 0.98 + 'px'
+          box1.style.height = box1.offsetHeight * 0.98 + 'px'
+        }
+      },
       async initMapHeight() {
         this.mapHeight = window.innerHeight * 0.7 + 'px'
         this.mapWidth = window.innerWidth * 0.98 + 'px'
@@ -1209,11 +1340,11 @@
        * @returns
        */
       initDgiotMqtt() {
+        this.setTreeFlag(false)
         // 页面加载完cdn 资源后执行。
         this.$nextTick(async () => {
           // await this.getProduct()
           await this.queryData()
-          await this.setTreeFlag(false)
         })
       },
       async getWarnCount(
@@ -1679,7 +1810,19 @@
   }
 </script>
 <style lang="scss" scoped>
+  .home_index {
+    width: 100%;
+    height: 100%;
+    position: relative;
+  }
   .platform {
+    box-sizing: border-box;
+    // width: 100%;
+    height: 94vh;
+    position: fixed;
+    // height: calc(100vh - #{$base-top-bar-height}* 3 - 25px);
+    padding: 10px 10px 2px 10px;
+    background-size: 100%;
     .bg_screen1 {
       background: url('/assets/bg/pageBg.png') no-repeat;
       background-size: 100% 100%;
@@ -1687,15 +1830,16 @@
     .baidu_map {
       display: block;
       width: 100%;
-      height: calc(98vh - 120px);
+      height: 100%;
       position: relative;
+      // position: absolute;
       .screen_top {
         position: absolute;
         width: 90%;
         height: 90px;
-
+        z-index: 99;
         // background-color: #ea1e63;
-        top: 40px;
+        top: 1%;
         left: 5%;
         display: flex;
         .screen_top_item {
@@ -1756,6 +1900,35 @@
           z-index: 99999;
         }
       }
+      //左下角折线图 23+2占比
+      .screen_left_bottom {
+        position: absolute;
+        background-color: #00142f;
+        width: 19%;
+        height: 38%;
+        box-sizing: border-box;
+        bottom: 4px;
+        left: 4px;
+        background: url('/assets/bg/bg_warning.png') no-repeat;
+        background-size: 100% 100%;
+        display: flex;
+        flex-direction: column;
+        .screen_left_bottom_top {
+          background: url('/assets/bg/bg_title.png') no-repeat;
+          background-size: 100% 100%;
+          width: 100%;
+          height: 40px;
+          line-height: 40px;
+          padding-left: 50px;
+          font-weight: bold;
+          color: #fff;
+        }
+        .screen_left_bottom_ctt {
+          width: 100%;
+          height: 100%;
+        }
+      }
+      // 右下角饼图
       .screen_right_bottom {
         position: absolute;
         background-color: #00142f;
@@ -1781,14 +1954,15 @@
     // 大屏组件定位样式
     .screen_center_center {
       position: absolute;
-      background-color: #00142f;
+      // background-color: #00142f;
       width: 60%;
       height: 50%;
       box-sizing: border-box;
       top: 10%;
-      left: 20%;
-      background: url('/assets/bg/screen_center.png') no-repeat;
-      background-size: 100% 100%;
+      left: 50%;
+      transform: translateX(-50%) scale(1);
+      // background: url('/assets/bg/screen_center.png') no-repeat;
+      // background-size: 100% 100%;
     }
     .screen_left_center {
       position: absolute;
@@ -1867,12 +2041,6 @@
       }
     }
 
-    box-sizing: border-box;
-    width: 100%;
-    //height: calc(100vh - #{$base-top-bar-height}* 3 - 25px);
-    padding: 10px;
-    background-size: 100%;
-
     .chart_map {
       .card_left {
         position: absolute;
@@ -1932,7 +2100,10 @@
 
       margin: 8px;
     }
-
+    .el-card {
+      width: 100%;
+      height: 100%;
+    }
     .home_card {
       ::v-deep {
         ._el-table {
@@ -2084,5 +2255,8 @@
     font-size: 40px;
     color: black;
     transition: all ease-in-out 0.3s;
+  }
+  ::v-deep .el-card__body {
+    height: 100%;
   }
 </style>

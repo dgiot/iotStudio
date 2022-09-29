@@ -8,7 +8,7 @@
       backgroundSize: '100% 100%',
     }"
   >
-    <el-row v-if="isShow">
+    <el-row v-if="isShow" style="position: absolute; width: 100%; height: 100%">
       <el-col :lg="14" :md="11" :sm="24" :xl="14" :xs="24">
         <div style="color: transparent">占位符</div>
       </el-col>
@@ -438,16 +438,17 @@
        */
       async goHome() {
         try {
-          this.interval = setInterval(async () => {
-            if (Cookies.get('handleRoute') != '') {
-              // console.log('handleRoute 存在，跳转页面')
-              await this.$router.push(this.handleRoute())
-              const { results: Tree = [] } = await Roletree()
-              this.setRoleTree(Tree)
-              clearInterval(this.interval)
-              window.clearInterval(this.interval)
-            }
-          }, 100)
+          // 浙里办iframe 延时性添加了定时器等待误删
+          // this.interval = setInterval(async () => {
+          if (Cookies.get('handleRoute') != '') {
+            console.log('handleRoute 存在，跳转页面')
+            const { results: Tree = [] } = await Roletree()
+            this.setRoleTree(Tree)
+            await this.$router.push(this.handleRoute())
+            // clearInterval(this.interval)
+            // window.clearInterval(this.interval)
+          }
+          // }, 100)
         } catch (error) {
           console.log(error)
           this.$baseMessage(
@@ -477,7 +478,8 @@
     background: #002d55;
     //background: url('http://dgiot-1253666439.cos.ap-shanghai-fsi.myqcloud.com/platform/assets/login_images/login_form.png');
     background-size: 100% 100%;
-    border: 1px solid #3cb2fb;
+    // border: 1px solid #3cb2fb;
+    box-shadow: 1px 1px 12px 2px rgba(5, 106, 190, 0.5);
 
     .title {
       font-size: 54px;

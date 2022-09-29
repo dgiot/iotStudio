@@ -26,6 +26,7 @@
               </template>
             </el-menu>
             <dgiot-role-switch
+              v-show="isDeptShow"
               :title="$translateTitle(`home.department switch`)"
             />
             <dgiot-error-log :title="$translateTitle(`home.error log`)" />
@@ -66,6 +67,7 @@
     data() {
       return {
         isShow: window.name != 'dgiot_iframe',
+        isDeptShow: true,
         activeMenu: '',
         menuTrigger: 'hover',
       }
@@ -95,6 +97,9 @@
       $route: {
         handler(route) {
           this.activeMenu = handleActivePath(route)
+          route.fullPath.indexOf('/index') >= 0
+            ? (this.isDeptShow = false)
+            : (this.isDeptShow = true)
         },
         immediate: true,
       },

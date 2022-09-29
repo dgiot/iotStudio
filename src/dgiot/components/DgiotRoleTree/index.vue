@@ -188,13 +188,13 @@
       this.$nextTick(() => {
         this.$refs.tree.setCurrentKey(this.currentDepartment.objectId)
       })
-      // this.$dgiotBus.$off('asyncTreeData')
+      this.$dgiotBus.$off('asyncTreeData')
       this.$dgiotBus.$on('asyncTreeData', () => {
         dgiotlog.error('asyncTreeData')
         this.asyncTreeData()
       })
       this.updateKey++
-      dgiotlog.log(this.roleTree)
+      // dgiotlog.log(this.roleTree)
     },
     methods: {
       ...mapMutations({

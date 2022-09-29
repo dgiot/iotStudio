@@ -1187,7 +1187,7 @@ export default {
       for (var k in this.dlinkTopic) {
         await this.mergeTable(k, this.dlinkTopic[k])
       }
-      dgiotlogger.error('mergeObj', this.mergeObj)
+      // dgiotlogger.error('mergeObj', this.mergeObj)
     },
     async topicChange(e) {
       if (e == 'user') await this.getTopic()
@@ -1279,18 +1279,20 @@ export default {
     async queryProductInfo(productId) {
       const res = await getProduct(productId)
       localStorage.setItem('product_objectid', productId)
-      const { thing = { properties: [], events: [], services: [], tags: [] } } =
+      let { thing = { properties: [], events: [], services: [], tags: [] } } =
         res
       _.merge({ properties: [], events: [], services: [], tags: [] }, thing)
-      const setThing = _.merge(
+      let setThing = _.merge(
         { properties: [], events: [], services: [], tags: [] },
         thing
       )
-      dgiotlogger.log('thing', setThing)
+      let config = _.merge(res.config, this.productdetail.config)
       this.productObj = res
-      this.modules.data = setThing
-      this.productdetail.thing = setThing
-      this.productdetail.config = res.config
+      this.$set(this.productdetail, 'thing', thing)
+      this.$set(this.productdetail, 'config', config)
+      this.modules.data = setThing //setThing
+      // this.productdetail.thing = setThing //setThing
+      // this.productdetail.config = res.config
     },
     async submitModules(type, form) {
       form.data.outputParams = []
