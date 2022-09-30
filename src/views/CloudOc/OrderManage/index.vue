@@ -12,77 +12,77 @@
 <template>
   <div ref="custom-table" class="index-container">
     <dgiot-query-form style="width: 100%; margin-left: 60px">
-      <dgiot-query-form-left-panel>
-        <el-form
-          ref="form"
-          :inline="true"
-          :model="queryForm"
-          @submit.native.prevent
-        >
-          <el-form-item label="产品名称">
-            <el-select
-              v-model="queryForm.product"
-              clearable
-              placeholder="请选择产品"
-              @change="handleQuery()"
-            >
-              <el-option
-                v-for="item in product"
-                :key="item.objectId + 'j'"
-                :label="item.name"
-                :value="item.objectId"
-              />
-            </el-select>
-          </el-form-item>
-          <el-form-item label="单据编号">
-            <el-input
-              v-model="queryForm.name"
-              clearable
-              placeholder="请输入单据编号"
+      <!-- <dgiot-query-form-left-panel> -->
+      <el-form
+        ref="form"
+        :inline="true"
+        :model="queryForm"
+        @submit.native.prevent
+      >
+        <el-form-item label="产品名称">
+          <el-select
+            v-model="queryForm.product"
+            clearable
+            placeholder="请选择产品"
+            @change="handleQuery()"
+          >
+            <el-option
+              v-for="item in product"
+              :key="item.objectId + 'j'"
+              :label="item.name"
+              :value="item.objectId"
             />
-          </el-form-item>
-          <el-form-item label="订单状态">
-            <el-select
-              v-model="queryForm.realstatus"
-              clearable
-              placeholder="请选择状态"
-              @change="handleQuery"
-            >
-              <el-option
-                v-for="item in statusList"
-                :key="item.value + 'j'"
-                :label="item.label"
-                :value="item.value"
-              />
-            </el-select>
-          </el-form-item>
-          <el-form-item label="排序方式">
-            <el-select
-              v-model="queryForm.way"
-              clearable
-              placeholder="请选择排序方式"
-              @change="handleQuery"
-            >
-              <el-option
-                v-for="item in wayList"
-                :key="item.value + 'j'"
-                :label="item.label"
-                :value="item.value"
-              />
-            </el-select>
-          </el-form-item>
-          <el-form-item>
-            <el-button
-              icon="el-icon-search"
-              native-type="submit"
-              type="primary"
-              @click="handleQuery"
-            >
-              查询
-            </el-button>
-          </el-form-item>
-        </el-form>
-      </dgiot-query-form-left-panel>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="单据编号">
+          <el-input
+            v-model="queryForm.name"
+            clearable
+            placeholder="请输入单据编号"
+          />
+        </el-form-item>
+        <el-form-item label="订单状态">
+          <el-select
+            v-model="queryForm.realstatus"
+            clearable
+            placeholder="请选择状态"
+            @change="handleQuery"
+          >
+            <el-option
+              v-for="item in statusList"
+              :key="item.value + 'j'"
+              :label="item.label"
+              :value="item.value"
+            />
+          </el-select>
+        </el-form-item>
+        <el-form-item label="排序方式">
+          <el-select
+            v-model="queryForm.way"
+            clearable
+            placeholder="请选择排序方式"
+            @change="handleQuery"
+          >
+            <el-option
+              v-for="item in wayList"
+              :key="item.value + 'j'"
+              :label="item.label"
+              :value="item.value"
+            />
+          </el-select>
+        </el-form-item>
+        <el-form-item>
+          <el-button
+            icon="el-icon-search"
+            native-type="submit"
+            type="primary"
+            @click="handleQuery"
+          >
+            查询
+          </el-button>
+        </el-form-item>
+      </el-form>
+      <!-- </dgiot-query-form-left-panel> -->
     </dgiot-query-form>
 
     <el-table
