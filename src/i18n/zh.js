@@ -758,6 +758,8 @@ export default {
       evidence: '取证',
       'evidence control': '取证控件',
       'basic element': '基本元件',
+      'print control': '打印控件',
+      'basic grid': '网格',
       'Add text content': '添加文本',
       text: '文本',
       'text button': '文本按钮',

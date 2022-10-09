@@ -86,51 +86,51 @@ const topoLable = {
       y: thing.y ? thing.y : randomXy(450, 10),
     }
     const topoId = uuid(5)
-    const topoThing = new Konva.Text({
-      x: Axis.x,
-      y: Axis.y,
-      text: `${thing.productid}_${uuid(3)}`,
-      // fontSize: 18,
-      fontFamily: 'Calibri',
-      fontSize: 12,
-      padding: 5,
-      fill: 'white',
-      width: 300,
-      scaleX: saleInfo.scaleX,
-      scaleY: saleInfo.scaleY,
-      align: 'center',
-      draggable: true,
-      attrs: {
-        hidden: thing.hidden,
-        id: `${thing.productid}_${uuid(4)}`,
-        name: 'thing',
-        x: Axis.x,
-        y: Axis.y,
-        draggable: true,
-      },
-      className: 'Label',
-      children: [
-        {
-          attrs: {
-            name: 'dblclick',
-          },
-          className: 'Tag',
-        },
-        {
-          attrs: {
-            id: `${thing.productid}_${topoId}`,
-            text: 'dgiot',
-            // fontSize: 50,
-            lineHeight: 1.2,
-            padding: 10,
-            fill: 'green',
-          },
-          className: 'Text',
-        },
-      ],
-    })
+    // const topoThing = new Konva.Text({
+    //   x: Axis.x,
+    //   y: Axis.y,
+    //   text: `${thing.productid}_${uuid(3)}`,
+    //   // fontSize: 18,
+    //   fontFamily: 'Calibri',
+    //   fontSize: 12,
+    //   padding: 5,
+    //   fill: 'white',
+    //   width: 300,
+    //   scaleX: saleInfo.scaleX,
+    //   scaleY: saleInfo.scaleY,
+    //   align: 'center',
+    //   draggable: true,
+    //   attrs: {
+    //     hidden: thing.hidden,
+    //     id: `${thing.productid}_${uuid(4)}`,
+    //     name: 'thing',
+    //     x: Axis.x,
+    //     y: Axis.y,
+    //     draggable: true,
+    //   },
+    //   className: 'Label',
+    //   children: [
+    //     {
+    //       attrs: {
+    //         name: 'dblclick',
+    //       },
+    //       className: 'Tag',
+    //     },
+    //     {
+    //       attrs: {
+    //         id: `${thing.productid}_${topoId}`,
+    //         text: 'dgiot',
+    //         // fontSize: 50,
+    //         lineHeight: 1.2,
+    //         padding: 10,
+    //         fill: 'green',
+    //       },
+    //       className: 'Text',
+    //     },
+    //   ],
+    // })
     console.log('topoLable')
-    console.log(topoThing)
+    // console.log(topoThing)
     // return topoLable
     var simpleLabel = new Konva.Label({
       name: 'thing',
@@ -160,13 +160,13 @@ const topoLable = {
         id: thing.productid + '_' + uuid(5) + '_text',
         text: 'dgiot_text' + topoId,
         fontSize: 12,
+        type: 'thing',
         lineHeight: 1.2,
         padding: 10,
         fontFamily: 'Calibri',
         fill: 'white',
       })
     )
-    console.log(simpleLabel)
     return simpleLabel
   },
   createdEvidence(args) {

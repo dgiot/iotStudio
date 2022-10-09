@@ -80,6 +80,24 @@
               <p><topo-scale /></p>
             </a>
           </a-dropdown>
+          <a-dropdown class="topo-header-top-query-left-panel-dropdown">
+            <a
+              class="ant-dropdown-link"
+              @click="
+                createLine({
+                  productid: $route.query.productid,
+                  hidden: false,
+                  type: 'line',
+                  data: {
+                    width: '100',
+                  },
+                })
+              "
+            >
+              <a-icon type="line" />
+              <p>{{ $translateTitle('topo.basic grid') }}</p>
+            </a>
+          </a-dropdown>
           <!--          <el-color-picker-->
           <!--            v-model="pickerColor"-->
           <!--            size="medium"-->
@@ -211,6 +229,7 @@
         setGraphNow: 'konva/setGraphNow',
         setGraphColor: 'konva/setGraphColor',
         setDrawParams: 'konva/setDrawParams',
+        createLine: 'topo/createLine',
       }),
       topoJson() {
         // 自动格式化代码

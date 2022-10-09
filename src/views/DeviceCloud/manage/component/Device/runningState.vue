@@ -12,7 +12,7 @@
 <template>
   <div class="runningState-container">
     <div class="runningState">
-      <!-- bg_logo ±³¾°logoµ×Í¼ -->
+      <!-- bg_logo èƒŒæ™¯logoåº•å›¾ -->
       <div
         v-loading="loading"
         style="height: 80vh; overflow: scroll; width: 100%"
