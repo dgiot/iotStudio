@@ -170,66 +170,70 @@
       <el-table-column
         align="center"
         label="工单状态"
-        prop="realstatus"
+        prop="detail.realstatus"
         show-overflow-tooltip
         width="100"
       >
         <template slot-scope="scope">
-          <el-tag v-if="scope.row.realstatus == 0" effect="dark" type="info">
-            未派发
-          </el-tag>
           <el-tag
-            v-else-if="scope.row.realstatus == 1"
+            v-if="scope.row.detail.realstatus == 1"
             effect="dark"
             type="danger"
           >
             待开始
           </el-tag>
           <el-tag
-            v-else-if="scope.row.realstatus == 2"
+            v-else-if="scope.row.detail.realstatus == 2"
             effect="dark"
             type="warning"
           >
             加工中
           </el-tag>
-          <el-tag v-else-if="scope.row.realstatus == 3" effect="dark">
+          <el-tag v-else-if="scope.row.detail.realstatus == 3" effect="dark">
             待首检
           </el-tag>
           <el-tag
-            v-else-if="scope.row.realstatus == 4"
+            v-else-if="scope.row.detail.realstatus == 4"
             effect="dark"
             type="success"
           >
             首检完成
           </el-tag>
-          <el-tag v-else-if="scope.row.realstatus == 5" effect="dark">
+          <el-tag v-else-if="scope.row.detail.realstatus == 5" effect="dark">
             待尾检
           </el-tag>
           <el-tag
-            v-else-if="scope.row.realstatus == 6"
+            v-else-if="scope.row.detail.realstatus == 6"
             effect="dark"
             type="success"
           >
             尾检完成
           </el-tag>
           <el-tag
-            v-else-if="scope.row.realstatus == 7"
+            v-else-if="scope.row.detail.realstatus == 7"
             effect="dark"
             type="warning"
           >
             待入库
           </el-tag>
           <el-tag
-            v-else-if="scope.row.realstatus == 8"
+            v-else-if="scope.row.detail.realstatus == 8"
             effect="dark"
             type="success"
           >
             已入库
           </el-tag>
-          <el-tag v-else-if="scope.row.realstatus == 9" effect="dark">
+          <el-tag v-else-if="scope.row.detail.realstatus == 9" effect="dark">
             已出库
           </el-tag>
-          <el-tag v-else effect="dark" type="info">暂停中</el-tag>
+          <el-tag
+            v-else-if="scope.row.detail.realstatus == 10"
+            effect="dark"
+            type="info"
+          >
+            暂停中
+          </el-tag>
+          <el-tag v-else effect="dark" type="info">未派发</el-tag>
         </template>
       </el-table-column>
       <el-table-column
@@ -518,6 +522,7 @@
             v-for="(item, index) in commandInfo.data"
             :key="index + 'i'"
             :label="item.title"
+            lazy="true"
             :name="index + ''"
           >
             <dgiot-amis
@@ -799,7 +804,7 @@
             })
           : ''
         this.queryForm.realstatus
-          ? (params.where.realstatus = this.queryForm.realstatus)
+          ? (params.where['detail.realstatus'] = this.queryForm.realstatus)
           : ''
         this.queryForm.product
           ? (params.where.product = this.queryForm.product)
