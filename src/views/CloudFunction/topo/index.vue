@@ -89,7 +89,12 @@
             label-width="80px"
             style="margin-right: 10px"
           >
-            <div v-if="editNode.attrs.name != 'sprite'">
+            <div
+              v-if="
+                editNode.attrs.name != 'sprite' &&
+                editNode.attrs.name != 'printer'
+              "
+            >
               <el-form-item label="颜色">
                 <el-input
                   v-model="editForm.fill"
@@ -122,6 +127,20 @@
                   type="number"
                   @input="handleEditKonva"
                 ></el-input>
+              </el-form-item>
+              <el-form-item label="字体类型">
+                <el-select
+                  v-model="editForm.fontFamily"
+                  @change="handleEditKonva"
+                  placeholder="请选择"
+                >
+                  <el-option
+                    v-for="item1 in fontfamilyList"
+                    :key="item1.value"
+                    :label="item1.label"
+                    :value="item1.value"
+                  ></el-option>
+                </el-select>
               </el-form-item>
               <el-form-item label="纵向偏移">
                 <el-input
@@ -191,6 +210,101 @@
                 ></el-color-picker>
               </el-form-item>
             </div>
+            <!-- 打印编辑 -->
+            <div v-if="editNode.attrs.name == 'printer'">
+              <el-form-item label="颜色">
+                <el-input
+                  v-model="editForm.fill"
+                  @input="handleEditKonva"
+                ></el-input>
+                <el-color-picker
+                  v-model="editForm.fill"
+                  color-format="rgb"
+                  :show-alpha="true"
+                  @active-change="colorChange($event, 'fill', true)"
+                ></el-color-picker>
+              </el-form-item>
+              <el-form-item label="文本内容">
+                <el-input
+                  v-model="editForm.text"
+                  @input="handleEditKonva"
+                ></el-input>
+              </el-form-item>
+              <el-form-item label="宽度">
+                <el-input
+                  v-model="editForm.width"
+                  type="number"
+                  @input="handleEditKonva"
+                ></el-input>
+              </el-form-item>
+              <el-form-item label="高度">
+                <el-input
+                  v-model="editForm.height"
+                  type="number"
+                  @input="handleEditKonva"
+                ></el-input>
+              </el-form-item>
+              <el-form-item label="字体大小">
+                <el-input
+                  v-model="editForm.fontSize"
+                  type="number"
+                  @input="handleEditKonva"
+                ></el-input>
+              </el-form-item>
+              <el-form-item label="字体类型">
+                <el-select
+                  v-model="editForm.fontFamily"
+                  @change="handleEditKonva"
+                  placeholder="请选择"
+                >
+                  <el-option
+                    v-for="item1 in fontfamilyList"
+                    :key="item1.value"
+                    :label="item1.label"
+                    :value="item1.value"
+                  ></el-option>
+                </el-select>
+              </el-form-item>
+              <el-form-item label="标签类型">
+                <el-select
+                  v-model="type"
+                  @change="handlePrintType"
+                  placeholder="请选择"
+                >
+                  <el-option
+                    v-for="item2 in printTypeList"
+                    :key="item2.value"
+                    :label="item2.label"
+                    :value="item2.value"
+                  ></el-option>
+                </el-select>
+              </el-form-item>
+              <el-form-item label="id">
+                <el-input v-model="id" @input="handlePrintType"></el-input>
+              </el-form-item>
+            </div>
+            <el-form-item
+              label="横坐标"
+              v-if="editNode.attrs.name != 'vuecomponent'"
+            >
+              <el-input
+                v-model="x"
+                type="number"
+                :step="1"
+                @input="handleEditPosition"
+              ></el-input>
+            </el-form-item>
+            <el-form-item
+              label="纵坐标"
+              v-if="editNode.attrs.name != 'vuecomponent'"
+            >
+              <el-input
+                v-model="y"
+                type="number"
+                :step="1"
+                @input="handleEditPosition"
+              ></el-input>
+            </el-form-item>
             <el-form-item
               label="比例大小"
               v-if="editNode.attrs.name == 'sprite'"
@@ -248,6 +362,64 @@
             value: '离线设备',
           },
         ],
+        fontfamilyList: [
+          {
+            label: '宋体',
+            value: '宋体',
+          },
+          {
+            label: '微软雅黑',
+            value: '微软雅黑',
+          },
+          {
+            label: '黑体',
+            value: '黑体',
+          },
+          {
+            label: '楷体',
+            value: '楷体',
+          },
+          {
+            label: 'Helvetica',
+            value: 'Helvetica',
+          },
+          {
+            label: 'Arial',
+            value: 'Arial',
+          },
+          {
+            label: 'Lucida Family',
+            value: 'Lucida Family',
+          },
+          {
+            label: 'Verdana',
+            value: 'Verdana',
+          },
+          {
+            label: 'Calibri',
+            value: 'Calibri',
+          },
+        ],
+        printTypeList: [
+          {
+            label: '静态文本',
+            value: 'label',
+          },
+          {
+            label: '图片',
+            value: 'image',
+          },
+          {
+            label: '条码',
+            value: 'scancode',
+          },
+          {
+            label: '文本替换值',
+            value: 'value',
+          },
+        ],
+        type: '',
+        id: '', //打印标签id
         router: '',
         viewInfo: {},
         defaultTopo: {
@@ -305,6 +477,8 @@
         },
         btmfill: '',
         scale: 1,
+        x: 0,
+        y: 0,
         driver: null,
         Stage: {},
         isFull: false,
@@ -369,10 +543,21 @@
           stroke: node.attrs.stroke || '', //描边颜色
           strokeWidth: node.attrs.strokeWidth || 0.1, //描边宽度
           text: node.attrs.text || '',
+          fontFamily: node.attrs.fontFamily || '',
           // x: node.attrs.x || 0,
           // y: node.attrs.y || 0,
         }
         this.btmfill = node.parent.children[0].attrs.fill
+        if (node.attrs.name == 'printer') {
+          this.x = node.attrs.x || ''
+          this.y = node.attrs.y || ''
+          this.type = node.attrs.type || ''
+          this.id = node.attrs.id || ''
+        } else {
+          this.x = node.parent.attrs.x || ''
+          this.y = node.parent.attrs.y || ''
+        }
+
         this.scale = node.attrs.scaleX
         // color: '',
       })
@@ -447,6 +632,18 @@
        * 编辑组态节点
        */
       handleEditKonva() {
+        if (this.editNode.attrs.name == 'printer') {
+          let params = {
+            width: Number(this.editForm.width),
+            height: Number(this.editForm.height),
+            text: this.editForm.text,
+            fill: this.editForm.fill,
+            fontSize: Number(this.editForm.fontSize),
+            fontFamily: this.editForm.fontFamily,
+          }
+          this.editNode.setAttrs(params)
+          return
+        }
         // console.log(this.editForm)
         this.editForm.width = Number(this.editForm.width)
         this.editForm.height = Number(this.editForm.height)
@@ -463,6 +660,23 @@
           return
         }
         this.editNode.setAttrs(this.editForm)
+      },
+      handlePrintType() {
+        let params = {
+          type: this.type,
+          id: this.id,
+        }
+        console.log(params)
+        this.editNode.setAttrs(params)
+      },
+      handleEditPosition() {
+        let params = {
+          x: Number(this.x),
+          y: Number(this.y),
+        }
+        if (this.editNode.attrs.name == 'printer') {
+          this.editNode.setAttrs(params)
+        } else if (this.editNode.parent) this.editNode.parent.setAttrs(params)
       },
       /**
        * 编辑修改底部颜色

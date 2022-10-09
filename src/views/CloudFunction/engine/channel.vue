@@ -247,6 +247,8 @@
       <div class="elpagination">
         <el-pagination
           :key="paginationKey + 'key' + total"
+          background
+          :current-page="pageNo"
           layout="total, sizes, prev, pager, next, jumper"
           :page-size="length"
           :page-sizes="[5, 10, 20, 30, 50]"
@@ -779,6 +781,7 @@
           children: 'children',
           label: 'label',
         },
+        pageNo: 1,
       }
     },
     ...mapGetters({
@@ -1161,6 +1164,7 @@
         // this.total = 0
         if (start == 0) {
           this.start = 0
+          this.pageNo = 1
         }
         const params = {
           count: 'objectId',
@@ -1350,13 +1354,12 @@
       channelSizeChange(val) {
         this.length = val
         // this.total = 0
-        this.Get_Re_Channel(1)
+        this.Get_Re_Channel(0)
         this.paginationKey = moment(new Date()).valueOf() + ''
       },
       channelCurrentChange(val) {
-        // this.total = 0
+        this.pageNo = val
         if (val <= 1) this.total = 0
-        console.log(val)
         this.start = (val - 1) * this.length
         this.Get_Re_Channel(1)
       },

@@ -160,6 +160,8 @@
 <style lang="scss" scoped>
   .topoCaltable {
     position: relative;
+    width: 100%;
+    height: 100%;
     .table_content {
       // position: absolute;
       width: 96%;
@@ -198,8 +200,9 @@
       .table {
         height: 100%;
         display: flex;
-        // overflow-y: auto;
+        // overflow-y: scroll;
         flex-direction: column;
+
         // border-left: 0.2px solid #ccc;
         // border-bottom: 0.2px solid #ccc;
         // border-right: 0.2px solid #ccc;
@@ -254,6 +257,7 @@
       // 原文链接：https://blog.csdn.net/weixin_47769562/article/details/119945415
       .seamless-warp {
         overflow: hidden;
+        height: 100%;
         -webkit-backface-visibility: hidden;
         -moz-backface-visibility: hidden;
         -ms-backface-visibility: hidden;

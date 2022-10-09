@@ -422,8 +422,10 @@ const actions = {
     )
     // console.log('查看数据', data)
     const { sessionToken = '', roles = [], objectId = '', tag = {} } = data
-    let homeScreen = tag.companyinfo?.homeScreen || 0
+    let homeScreen = tag.companyinfo?.homeScreen || 0 //大屏类型
+    let background = tag.companyinfo?.backgroundimage || '' //大屏背景图
     localStorage.setItem('homeScreen', homeScreen)
+    localStorage.setItem('background', background)
     // console.log('不是pc端', isPC())
     if (!isPC()) {
       window.jstoken?.setJsToken(

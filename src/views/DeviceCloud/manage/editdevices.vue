@@ -40,7 +40,7 @@
             v-loading="loading"
             style="box-sizing: border-box; padding: 10px; background: #ffffff"
           >
-            <!-- <h4>设备信息</h4> -->
+            <!-- <h4>设备信息</h4> bg_logo-->
             <div class="chartsinfo">
               <div
                 :style="{ height: Device == 'desktop' ? '50px' : '240px' }"
@@ -586,36 +586,31 @@
             class="demo-form-inline"
             size="small"
           >
-            <el-form-item
-              label="流类型"
-            >
-            <el-select
-              v-model="deviceInfo.detail.videoType"
-              placeholder="请选择"
-              size="mini"
-              style="width: 90px"
-            >
-              <el-option
-                v-for="(item, index) in videoOptions"
-                :key="index"
-                :label="item"
-                :value="item"
-              />
-            </el-select>
+            <el-form-item label="流类型">
+              <el-select
+                v-model="deviceInfo.detail.videoType"
+                placeholder="请选择"
+                size="mini"
+                style="width: 90px"
+              >
+                <el-option
+                  v-for="(item, index) in videoOptions"
+                  :key="index"
+                  :label="item"
+                  :value="item"
+                />
+              </el-select>
             </el-form-item>
-            <el-form-item
-              label="流地址"
-            >
+            <el-form-item label="流地址">
               <el-input
                 style="width: 900px"
                 v-model="deviceInfo.detail.videoSrc"
                 placeholder="流地址"
               />
             </el-form-item>
-            <el-button
-              type="primary"
-              @click="updatevideoSrc(deviceInfo)"
-            >播放</el-button>
+            <el-button type="primary" @click="updatevideoSrc(deviceInfo)">
+              播放
+            </el-button>
           </el-form>
           <dgiot-aliplayer
             v-if="activeName === 'video'"
@@ -741,6 +736,12 @@
     height: auto;
     padding: 10px;
     background: white;
+  }
+  .bg_logo {
+    background: url('/assets/images/logo/dgiot_logo1.png') no-repeat;
+    background-size: 300px 300px;
+    background-position: center center;
+    // opacity: 0.5;
   }
 </style>
 <style lang="scss">

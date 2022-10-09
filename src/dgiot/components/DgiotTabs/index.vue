@@ -1,5 +1,5 @@
 <template>
-  <div class="dgiot-tabs">
+  <div v-show="routeFlag" class="dgiot-tabs">
     <dgiot-fold v-if="layout === 'common'" />
     <el-tabs
       v-model="tabActive"
@@ -148,6 +148,7 @@
         top: 0,
         left: 0,
         hoverRoute: null,
+        routeFlag: true,
       }
     },
     computed: {
@@ -160,6 +161,9 @@
     watch: {
       $route: {
         handler(route) {
+          route.fullPath.indexOf('/index') >= 0
+            ? (this.routeFlag = false)
+            : (this.routeFlag = true)
           this.$nextTick(() => {
             this.addTabs(route)
           })
