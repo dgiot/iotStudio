@@ -241,6 +241,7 @@
         <el-button
           draggable="true"
           size="mini"
+          style="margin: 5px"
           type="primary"
           @click.native="
             createBasicThing({
@@ -262,6 +263,7 @@
         <el-button
           draggable="true"
           size="mini"
+          style="margin: 5px"
           type="primary"
           @click.native="
             createBasicThing({
@@ -304,60 +306,39 @@
         <el-divider />
         <!-- http://dev.iotn2n.com/dgiot_file/topo/png/pump.png -->
       </a-collapse-panel>
-
-      <!--      <a-collapse-panel key="4" :header="$translateTitle('topo.image')">-->
-      <!--        <div>-->
-      <!--          <el-collapse v-model="activeNames" accordion>-->
-      <!--            <el-collapse-item name="icon" title="iconfont">-->
-      <!--              <el-row :gutter="20">-->
-      <!--                <el-col-->
-      <!--                  v-for="(item, index) in iconfont.glyphs"-->
-      <!--                  v-show="index <= 11"-->
-      <!--                  :key="item.icon_id"-->
-      <!--                  :span="24"-->
-      <!--                >-->
-      <!--                  <i-->
-      <!--                    v-svg-drag="{ callback: coordinate }"-->
-      <!--                    @mousedown="moveSvg(item)"-->
-      <!--                  >-->
-      <!--                    <DgiotIconfont-->
-      <!--                      :name="item.font_class"-->
-      <!--                      :title="item.name"-->
-      <!--                      type="svg"-->
-      <!--                    />-->
-      <!--                  </i>-->
-      <!--                </el-col>-->
-      <!--              </el-row>-->
-      <!--            </el-collapse-item>-->
-      <!--            <el-collapse-item name="image" title="图标">-->
-      <!--              <el-row :gutter="20">-->
-      <!--                <el-col :span="24">-->
-      <!--                  <dgiot-query-form>-->
-      <!--                    <dgiot-query-form-top-panel>-->
-      <!--                      <el-form-->
-      <!--                        :inline="true"-->
-      <!--                        label-width="0"-->
-      <!--                        @submit.native.prevent-->
-      <!--                      >-->
-      <!--                        <el-form-item label="">-->
-      <!--                          <el-input v-model="queryForm.title" size="mini">-->
-      <!--                            <el-button-->
-      <!--                              slot="prepend"-->
-      <!--                              icon="el-icon-upload"-->
-      <!--                              type="success"-->
-      <!--                              @click="uploadCkick('img')"-->
-      <!--                            />-->
-      <!--                          </el-input>-->
-      <!--                        </el-form-item>-->
-      <!--                      </el-form>-->
-      <!--                    </dgiot-query-form-top-panel>-->
-      <!--                  </dgiot-query-form>-->
-      <!--                </el-col>-->
-      <!--              </el-row>-->
-      <!--            </el-collapse-item>-->
-      <!--          </el-collapse>-->
-      <!--        </div>-->
-      <!--      </a-collapse-panel>-->
+      <a-collapse-panel key="5" :header="$translateTitle('topo.print control')">
+        <el-button
+          draggable="true"
+          size="mini"
+          type="primary"
+          @click.native="
+            createBasicPrint({
+              productid: $route.query.productid,
+              type: 'printer',
+              hidden: false,
+            })
+          "
+        >
+          打印标签
+        </el-button>
+        <el-button
+          draggable="true"
+          size="mini"
+          style="margin: 10px"
+          type="primary"
+          @click.native="
+            createBasicRect({
+              productid: $route.query.productid,
+              type: 'printer',
+              hidden: false,
+            })
+          "
+        >
+          打印纸张
+        </el-button>
+        <el-divider />
+        <!-- http://dev.iotn2n.com/dgiot_file/topo/png/pump.png -->
+      </a-collapse-panel>
     </a-collapse>
   </div>
 </template>
@@ -496,6 +477,8 @@
         setDrawParams: 'konva/setDrawParams',
         createThing: 'topo/createThing',
         createBasicThing: 'topo/createBasicThing',
+        createBasicPrint: 'topo/createBasicPrint',
+        createBasicRect: 'topo/createBasicRect',
         createAmis: 'topo/createAmis',
         createHistory: 'topo/createHistory',
         setKonvaBg: 'topo/setKonvaBg',

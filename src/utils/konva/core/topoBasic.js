@@ -240,6 +240,53 @@ const topoBasic = {
     console.log('static', simpleLabel)
     return simpleLabel
   },
+  createPrint(thing, saleInfo, randomXy) {
+    console.log('传递内容', thing)
+    const Axis = {
+      x: thing.x ? thing.x : randomXy(600, 30),
+      y: thing.y ? thing.y : randomXy(450, 10),
+    }
+    const topoId = uuid(5)
+    let simpleLabel = new Konva.Text({
+      name: 'printer',
+      type: 'label',
+      x: Axis.x,
+      y: Axis.y,
+      opacity: 0.75,
+      draggable: true,
+      id: thing.productid + '_text' + topoId,
+      fontSize: 18,
+      fontFamily: 'Calibri',
+      fill: 'rgba(0, 0, 0, 1)',
+      width: 300,
+      height: 20,
+      align: 'left',
+      text: 'dgiot_text' + topoId,
+    })
+    return simpleLabel
+  },
+  createRect(thing, saleInfo, randomXy) {
+    console.log('传递内容', thing)
+    const Axis = {
+      x: thing.x ? thing.x : randomXy(600, 30),
+      y: thing.y ? thing.y : randomXy(450, 10),
+    }
+    const topoId = uuid(5)
+    let simpleLabel = new Konva.Rect({
+      name: 'printer',
+      type: 'paper',
+      x: Axis.x,
+      y: Axis.y,
+      opacity: 0.75,
+      draggable: true,
+      id: thing.productid + '_rect' + topoId,
+      width: 393,
+      height: 275,
+      stroke: 'black',
+      strokeWidth: 4,
+    })
+    return simpleLabel
+  },
   createImage(args) {
     console.info(
       'src/utils/konva/core/topoBasic.js',

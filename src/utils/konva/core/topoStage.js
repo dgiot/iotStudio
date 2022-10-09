@@ -543,6 +543,67 @@ const topoStage = {
         console.log('click', e.target.attrs)
       })
     })
+    console.log('line输出', stage.find('Line'))
+    stage.find('Line').forEach((node) => {
+      info['Line'] = stage.find('Line')
+      // node.setAttrs({
+      //   scaleX: args.saleInfo.scaleX,
+      //   scaleY: args.saleInfo.scaleY,
+      // })
+      node.on('contextmenu', (e) => {
+        canvas.contextmenu = e.target
+        canvas.clickItem = e.target
+        console.log('contextmenu', e.target)
+      })
+      // circle.on('touchend', function() {
+      //   writeMessage('Touchend circle');
+      // })
+      node.on('touchend', (e) => {
+        if (node.getAttr('bind_amis') && node.getAttr('amis_id').length > 0)
+          dgiotBus.$emit('nodeInfo', node)
+      })
+      /** */
+      node.on('click', (e) => {
+        console.log('点击弹出编辑框', e.evt.button, dbclickflag)
+        //判断是否点击鼠标左键和在编辑状态
+        if (dbclickflag) {
+          // clearTimeout(timer)
+          setTimeout(() => {
+            dbclickflag = false
+          }, 500)
+        }
+        if (!dbclickflag) {
+          dbclickflag = true
+          timer = setTimeout(() => {
+            if (
+              e.evt.button == 0 &&
+              window.location.hash.indexOf('type=device') < 0
+            ) {
+              dbclickflag = false
+              console.log('打开编辑框')
+              dgiotBus.$emit('nodeEdit', node)
+            }
+          }, 500)
+        }
+
+        if (node.getAttr('bind_amis') && node.getAttr('amis_id').length > 0)
+          dgiotBus.$emit('nodeInfo', node)
+        // canvas.contextmenu = {}
+        // canvas.clickItem = e.target
+        // console.log('click', e.target.attrs)
+        // 单击时，这里根据node bind 的控件类型，去展示对应的控件信息
+      })
+      node.on('dblclick', (e) => {
+        if (node.getAttr('bind_amis') && node.getAttr('amis_id').length > 0)
+          dgiotBus.$emit('nodeInfo', node)
+      })
+      node.on('mouseover', function (e) {
+        document.body.style.cursor = 'pointer'
+      })
+      node.on('mouseout', function (e) {
+        document.body.style.cursor = 'default'
+      })
+    })
 
     stage.find('Rect').forEach((node) => {
       if (

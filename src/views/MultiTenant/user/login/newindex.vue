@@ -71,7 +71,7 @@
           :rules="rules"
         >
           <div v-if="Default.title" class="title-tips">
-            {{ $translateTitle('home.login') }}
+            {{ $translateTitle('home.login title') }}
           </div>
           <el-form-item prop="username" style="margin-top: 40px">
             <el-input
@@ -96,18 +96,9 @@
               :type="passwordType"
               @keyup.enter.native="handleLogin"
             >
-              <!--              <el-link-->
-              <!--                v-if="!form.password.length"-->
-              <!--                slot="append"-->
-              <!--                type="primary"-->
-              <!--                @click="forgotPwd()"-->
-              <!--              >-->
-              <!--                {{ $translateTitle('home.Forgot password') }}-->
-              <!--              </el-link>-->
               <template #prefix>
                 <dgiot-icon v-if="form.password.length" icon="lock-line" />
               </template>
-
               <template
                 v-if="passwordType === 'password' && form.password.length"
                 #suffix
@@ -128,20 +119,20 @@
               </template>
             </el-input>
           </el-form-item>
-          <el-form-item>
-            <el-input class="sbMc">
-              <el-button
-                slot="append"
-                class="login-btn"
-                :loading="loading"
-                type="primary"
-                @click.native="handleLogin"
-              >
-                {{ $translateTitle('home.login') }}
-              </el-button>
-            </el-input>
-          </el-form-item>
-
+          <!--          <el-form-item>-->
+          <!--            <el-input class="sbMc">-->
+          <div>
+            <el-button
+              slot="append"
+              class="login-btn"
+              :loading="loading"
+              @click.native="handleLogin"
+            >
+              {{ $translateTitle('home.login') }}
+            </el-button>
+          </div>
+          <!--            </el-input>-->
+          <!--          </el-form-item>-->
           <span>
             <router-link v-show="false" style="float: left" to="/register">
               <div style="margin-top: 20px">
@@ -170,7 +161,7 @@
    * @return {Promise<void>}
    * @Description:
    */
-  import backgroundImage from '../../../../../public/assets/images/platform/assets/login_images/background.jpg'
+  // import backgroundImage from '../../../../../public/assets/images/platform/assets/login_images/background.jpg'
   import { mapActions, mapGetters, mapMutations } from 'vuex'
   import { isPassword } from '@/utils/data/validate'
   import { SiteDefault } from '@/api/License'
@@ -230,6 +221,10 @@
             name: '智慧能源',
           },
           {
+            id: 9,
+            name: '智慧农业',
+          },
+          {
             id: 5,
             name: '智慧物流',
           },
@@ -253,6 +248,13 @@
             type: 2,
             username: 'dgiot_st',
             password: 'dgiot_st',
+          },
+          {
+            img: 'http://www.dgiotcloud.cn/wp-content/uploads/2022092307512790.jpg',
+            name: '智慧农业',
+            type: 9,
+            username: 'dgiot_agr',
+            password: 'dgiot_agr',
           },
           {
             img: 'https://www.dgiotcloud.cn/wp-content/uploads/2022080511362579.jpg',
@@ -350,7 +352,7 @@
           than: this.$translateTitle('home.Password cannot be less than'),
           Bit: this.$translateTitle('home.Bit'),
         },
-        backgroundImage: backgroundImage,
+        backgroundImage: '',
         nodeEnv: process.env.NODE_ENV,
         form: {
           username: '',
@@ -694,13 +696,14 @@
   .login-form {
     position: relative;
     max-width: 100%;
-    padding: 4.5vh;
+    padding: 40px;
     margin: calc((100vh - 475px) / 2) 5vw 5vw;
     overflow: hidden;
-    background: #fff;
+    background: #002d55;
     //background: url('http://dgiot-1253666439.cos.ap-shanghai-fsi.myqcloud.com/platform/assets/login_images/login_form.png');
     background-size: 100% 100%;
-    border: 8px solid #3cb2fb;
+    // border: 1px solid #3cb2fb;
+    box-shadow: 1px 1px 12px 2px rgba(5, 106, 190, 0.5);
 
     .title {
       font-size: 54px;
@@ -712,7 +715,7 @@
       margin: 0 auto;
       font-size: 26px;
       font-weight: 400;
-      color: #096dd9;
+      color: #dcdbdb;
       text-align: center;
     }
 
@@ -724,13 +727,14 @@
 
         .el-input-group__append {
           color: #fff;
-          background-color: #409eff;
-          border-color: #409eff;
+          background-color: #4a7ca8;
+          //border-color: #409eff;
         }
       }
     }
 
     .login-btn {
+      background-color: #2f6fe7 !important;
       display: inherit;
       width: 100%;
       height: 50px;
@@ -738,6 +742,8 @@
       margin-top: 5px;
       text-align: center;
       border: 0;
+      font-size: 20px;
+      color: white !important;
 
       &:hover {
         opacity: 0.9;
@@ -841,6 +847,8 @@
       }
     }
   }
+
+  // 新样式
   .btn_back {
     width: 150px;
     height: 48px;

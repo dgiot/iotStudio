@@ -5,6 +5,7 @@ import device from './core/device'
 import topoVideo from './core/topoVideo'
 import topoBg from './core/topoBg'
 import topoImage from './core/topoImage'
+import topoLine from './core/topoLine'
 import topoStage from '@/utils/konva/core/topoStage'
 import canvas from '@/utils/konva/core/canvas'
 import topoPath from '@/utils/konva/core/topoPath'
@@ -14,6 +15,15 @@ function createThing(thing, saleInfo, randomXy, args) {
 }
 function createBasic(thing, saleInfo, randomXy, args) {
   return topoBasic.create(thing, saleInfo, randomXy, args)
+}
+function createPrint(thing, saleInfo, randomXy, args) {
+  return topoBasic.createPrint(thing, saleInfo, randomXy, args)
+}
+function createRect(thing, saleInfo, randomXy, args) {
+  return topoBasic.createRect(thing, saleInfo, randomXy, args)
+}
+function createLine(thing, args) {
+  return topoLine.create(thing, args)
 }
 
 function createHistory(thing, saleInfo, randomXy, args) {
@@ -102,6 +112,15 @@ function addNodeEvent(args) {
         break
       case 'createStatic':
         return createBasic(thing, saleInfo, randomXy, args)
+        break
+      case 'createPrint':
+        return createPrint(thing, saleInfo, randomXy, args)
+        break
+      case 'createRect':
+        return createRect(thing, saleInfo, randomXy, args)
+        break
+      case 'createLine':
+        return createLine(thing, args)
         break
       case 'createImage':
         return topoBasic.createImage(args)

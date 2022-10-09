@@ -214,7 +214,8 @@ const mutations = {
         canvas.contextmenu.attrs.name == 'konvaimage' ||
         canvas.contextmenu.attrs.name == 'staticimage' ||
         canvas.contextmenu.attrs.name == 'sprite' ||
-        canvas.contextmenu.attrs.name == 'vuecomponent'
+        canvas.contextmenu.attrs.name == 'vuecomponent' ||
+        canvas.contextmenu.attrs.name == 'printer'
       ) {
         contextmenu = canvas.contextmenu
       } else {
@@ -233,7 +234,8 @@ const mutations = {
         // canvas.contextmenu  所选node 节点
         if (
           canvas.contextmenu.attrs.type == 'static' ||
-          canvas.contextmenu.attrs.id.indexOf('text') >= 0
+          (canvas.contextmenu.attrs.id.indexOf('text') >= 0 &&
+            canvas.contextmenu.attrs.name != 'printer')
         ) {
           canvas.contextmenu.parent.zIndex(
             canvas.contextmenu.parent.parent.children.length - 1
@@ -243,6 +245,10 @@ const mutations = {
         console.log('索引层级', canvas.contextmenu.parent.children.length - 1)
         canvas.contextmenu.zIndex(canvas.contextmenu.parent.children.length - 1)
         return
+      } else if (handler == 'moveToBottom') {
+        if (canvas.contextmenu.attrs.name == 'printer') {
+          canvas.contextmenu.zIndex(2)
+        }
       }
       console.log('操作', handler)
       addNodeEvent({
@@ -387,6 +393,58 @@ const mutations = {
       y,
     })
   },
+  createBasicPrint(state, thing, x, y) {
+    console.log('thing内容', thing, x, y)
+    const simpleText = addNodeEvent({
+      type: 'createPrint',
+      thing,
+      saleInfo: {
+        scaleX: 100 * 0.01,
+        scaleY: 100 * 0.01,
+      },
+      randomXy,
+    })
+    canvas.layer.add(simpleText)
+    // canvas.layer.batchDraw()
+    // canvas.stage.batchDraw()
+    addNodeEvent({
+      type: 'handleChildren',
+      stage: canvas.stage,
+      layer: canvas.layer,
+      args: canvas.handlerArgs,
+      x,
+      y,
+    })
+  },
+  createBasicRect(state, thing, x, y) {
+    console.log('thing内容', thing, x, y)
+    const simpleText = addNodeEvent({
+      type: 'createRect',
+      thing,
+      saleInfo: {
+        scaleX: 100 * 0.01,
+        scaleY: 100 * 0.01,
+      },
+      randomXy,
+    })
+    canvas.layer.add(simpleText)
+    // canvas.layer.batchDraw()
+    // canvas.stage.batchDraw()
+    addNodeEvent({
+      type: 'handleChildren',
+      stage: canvas.stage,
+      layer: canvas.layer,
+      args: canvas.handlerArgs,
+      x,
+      y,
+    })
+  },
+  createLine(state, thing, x, y) {
+    addNodeEvent({
+      type: 'createLine',
+      thing,
+    })
+  },
   createHistory(state, thing, x, y) {
     const simpleText = addNodeEvent({
       type: 'createHistory',
@@ -488,6 +546,15 @@ const actions = {
   },
   createBasicThing({ commit }, args) {
     commit('createBasicThing', args)
+  },
+  createBasicPrint({ commit }, args) {
+    commit('createBasicThing', args)
+  },
+  createBasicRect({ commit }, args) {
+    commit('createBasicRect', args)
+  },
+  createLine({ commit }, args) {
+    commit('createLine', args)
   },
   createAmis({ commit }, args) {
     commit('createAmis', args)

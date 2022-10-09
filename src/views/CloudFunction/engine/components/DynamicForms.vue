@@ -435,7 +435,7 @@
           where: { product: productid },
         }
         const { results: Device = [] } = await queryDevice(params)
-        Device.push({
+        Device.unshift({
           objectId: '#',
           name: '所有设备',
         })
