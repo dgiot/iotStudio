@@ -241,13 +241,29 @@
         label="开始时间"
         prop="detail.taskstart"
         show-overflow-tooltip
-      />
+      >
+        <template #default="{ row }">
+          {{
+            row.detail.taskstart
+              ? $moment.unix(row.detail.taskstart).format('YYYY-MM-DD HH:mm:ss')
+              : ''
+          }}
+        </template>
+      </el-table-column>
       <el-table-column
         align="center"
         label="结束时间"
         prop="detail.taskend"
         show-overflow-tooltip
-      />
+      >
+        <template #default="{ row }">
+          {{
+            row.detail.taskend
+              ? $moment.unix(row.detail.taskend).format('YYYY-MM-DD HH:mm:ss')
+              : ''
+          }}
+        </template>
+      </el-table-column>
       <el-table-column align="center" fixed="right" label="操作">
         <template #default="{ row }">
           <el-button size="mini" type="primary" @click="handleOperation(row)">
@@ -623,7 +639,7 @@
           name: '',
           excludeKeys: '',
           pageNo: 1,
-          way: '-createdAt',
+          way: '-updatedAt',
         },
         wayList: [
           {

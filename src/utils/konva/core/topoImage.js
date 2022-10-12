@@ -18,7 +18,7 @@ const topoImage = {
       console.log(bgNode)
       // 只将背景图置底
       // 暂不清楚为啥不能直接 bgNode.getAttrs('src') 找到元素背景图
-      console.log('我找到背景图了', bgNode, bgNode.getAttrs('src').src)
+      // console.log('我找到背景图了', bgNode, bgNode.getAttrs('src').src)
       canvas.bgNode = konvaJson.findOne('#bg')
       canvas.bgNode.attrs = bgNode.attrs
       canvas.bgSrc = bgNode.getAttrs('src').src
