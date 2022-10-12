@@ -334,7 +334,7 @@
             })
           "
         >
-          打印纸张
+          打印矩形框
         </el-button>
         <el-divider />
         <!-- http://dev.iotn2n.com/dgiot_file/topo/png/pump.png -->

@@ -170,12 +170,6 @@ const topoLable = {
     return simpleLabel
   },
   createdEvidence(args) {
-    console.info(
-      'src/utils/konva/core/topoLable.js',
-      'createdEvidence',
-      args.path,
-      args
-    )
     const Axis = {
       x: 10 + args.path.index * 100 + canvas.randomXy(60, 10),
       y: 600 + canvas.randomXy(40, 10),

@@ -959,7 +959,10 @@ class konvaUtils {
     if (type != 'undefined') {
       let params = {}
       params[type] = text
-      var change = node.find(`#${nodeid}`)[0].setAttrs(params)
+      node.find(`#${nodeid}`).forEach((item) => {
+        item.setAttrs(params)
+        // var change = node.find(`#${nodeid}`)[0]
+      })
     }
     // in nodeid find node
     // in node.name event

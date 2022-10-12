@@ -43,7 +43,6 @@ function createAmis(thing, saleInfo, randomXy, args) {
  */
 function thingEVent(type, event, node) {
   node.on(`${event}`, (e) => {
-    console.log(type, e, event, node)
     if (type == 'thing') {
       return topoLable.on(node)
     }
@@ -82,11 +81,6 @@ function evidenceEVent(type, event, node) {
  * @description topo eventBus 消息路由函数方法
  */
 function addNodeEvent(args) {
-  console.groupCollapsed(
-    `%cKonvaBus ${args.type}`,
-    'color:#009a61; font-size: 28px; font-weight: 300'
-  )
-  dgiotlogger.info('addNodeEvent args:', args)
   console.groupEnd()
   const { type, event, node, thing, saleInfo, randomXy } = args
   /*
@@ -95,11 +89,6 @@ function addNodeEvent(args) {
    * click, dblclick, mouseover, tap, dbltap, touchstart etc
    */
   if (type) {
-    console.info(
-      'groupCollapsed',
-      type,
-      ['thing', 'amis', 'device'].indexOf(type)
-    )
     switch (type) {
       case 'handleChildren': // 公共图元处理函数
         return topoStage.handleChildren(args)

@@ -10,9 +10,39 @@
         v-show="!isDevice"
         class="konva-container-header hidden-xs-only"
       >
-        <topo-header :noTools="Boolean($route.query.noTools)" />
+        <topo-header
+          :noTools="Boolean($route.query.noTools)"
+          @createTemplate="createTemplate"
+        />
       </el-header>
-
+      <div style="position: absolute; left: 50%; top: 6px; display: flex">
+        <el-tooltip
+          class="item"
+          effect="dark"
+          :content="o.title"
+          placement="top"
+          v-for="(o, index) in viewList"
+          :key="index"
+        >
+          <div
+            :class="{ isactive: o.objectId == konvaId }"
+            style="
+              width: 30px;
+              height: 30px;
+              border-radius: 50%;
+              border: 1px solid #ccc;
+              text-align: center;
+              line-height: 30px;
+              margin-left: 10px;
+              cursor: pointer;
+              z-index: 99;
+            "
+            @click="handleChangeKonva(o)"
+          >
+            {{ index + 1 }}
+          </div>
+        </el-tooltip>
+      </div>
       <el-main class="konva-container-main">
         <el-row :gutter="gutter.gutter" class="user-content">
           <el-col
@@ -28,7 +58,6 @@
               :isDirver="Boolean($route.query.isDirver)"
             />
           </el-col>
-
           <el-col
             :lg="isDevice || isFull ? 24 : gutter.lg"
             :md="isDevice || isFull ? 24 : gutter.md"
@@ -279,8 +308,48 @@
                   ></el-option>
                 </el-select>
               </el-form-item>
+              <el-form-item label="编码内容位置">
+                <el-select
+                  v-model="align"
+                  @change="handlePrintType"
+                  placeholder="请选择"
+                >
+                  <el-option
+                    v-for="item3 in alignList"
+                    :key="item3.value"
+                    :label="item3.label"
+                    :value="item3.value"
+                  ></el-option>
+                </el-select>
+              </el-form-item>
+              <el-form-item label="编码格式">
+                <el-select
+                  v-model="format"
+                  @change="handlePrintType"
+                  placeholder="请选择"
+                >
+                  <el-option
+                    v-for="item4 in formatList"
+                    :key="item4.value"
+                    :label="item4.label"
+                    :value="item4.value"
+                  ></el-option>
+                </el-select>
+              </el-form-item>
               <el-form-item label="id">
-                <el-input v-model="id" @input="handlePrintType"></el-input>
+                <el-select
+                  v-model="id"
+                  @change="handlePrintType"
+                  placeholder="请选择"
+                >
+                  <el-option
+                    v-for="item3 in profileList"
+                    :key="item3.value"
+                    :label="item3.label"
+                    :value="item3.value"
+                  ></el-option>
+                </el-select>
+                <!-- <el-input v-model="id" @input="handlePrintType"></el-input> -->
               </el-form-item>
             </div>
             <el-form-item
@@ -329,7 +398,7 @@
   import { mapGetters, mapMutations } from 'vuex'
   import { _getTopo } from '@/api/Topo'
   import { getProduct } from '@/api/Product'
-  import { putView, getView, postView } from '@/api/View'
+  import { queryView, putView, getView, postView } from '@/api/View'
 
   import { isBase64 } from '@/utils'
   export default {
@@ -341,9 +410,12 @@
         subtopic: '',
         editFlag: false,
         direction: 'rtl',
+        viewList: [],
+        konvaId: '',
         editNode: {
           attrs: {},
         },
+        profileList: [],
         dataTypeList: [
           {
             label: '产品数量',
@@ -414,8 +486,182 @@
             value: 'scancode',
           },
           {
+            label: '条码字符串',
+            value: 'scancodetext',
+          },
+          {
             label: '文本替换值',
             value: 'value',
+          },
+          {
+            label: '打印纸张',
+            value: 'paper',
+          },
+        ],
+        align: '',
+        alignList: [
+          {
+            label: '顶部居左',
+            value: 0,
+          },
+          {
+            label: '顶部居中',
+            value: 1,
+          },
+          {
+            label: '顶部居右',
+            value: 2,
+          },
+          {
+            label: '底部居左',
+            value: 3,
+          },
+          {
+            label: '底部居中',
+            value: 4,
+          },
+          {
+            label: '底部居右',
+            value: 5,
+          },
+        ],
+        format: '',
+        formatList: [
+          {
+            label: 'UNSPECIFIED',
+            value: 0,
+          },
+          {
+            label: 'UPCA',
+            value: 1,
+          },
+          {
+            label: 'UPCE',
+            value: 2,
+          },
+          {
+            label: 'UPC_SUPPLEMENTAL_2DIGIT',
+            value: 3,
+          },
+          {
+            label: 'UPC_SUPPLEMENTAL_5DIGIT',
+            value: 4,
+          },
+          {
+            label: 'EAN13',
+            value: 5,
+          },
+          {
+            label: 'EAN8',
+            value: 6,
+          },
+          {
+            label: 'Interleaved2of5',
+            value: 7,
+          },
+          {
+            label: 'Standard2of5',
+            value: 8,
+          },
+          {
+            label: 'Industrial2of5',
+            value: 9,
+          },
+          {
+            label: 'CODE39',
+            value: 10,
+          },
+          {
+            label: 'CODE39Extended',
+            value: 11,
+          },
+          {
+            label: 'Codabar',
+            value: 12,
+          },
+          {
+            label: 'PostNet',
+            value: 13,
+          },
+          {
+            label: 'BOOKLAND',
+            value: 14,
+          },
+          {
+            label: 'ISBN',
+            value: 15,
+          },
+          {
+            label: 'JAN13',
+            value: 16,
+          },
+          {
+            label: 'MSI_Mod10',
+            value: 17,
+          },
+          {
+            label: 'MSI_2Mod10',
+            value: 18,
+          },
+          {
+            label: 'MSI_Mod11',
+            value: 19,
+          },
+          {
+            label: 'MSI_Mod11_Mod10',
+            value: 20,
+          },
+          {
+            label: 'Modified_Plessey',
+            value: 21,
+          },
+          {
+            label: 'CODE11',
+            value: 22,
+          },
+          {
+            label: 'USD8',
+            value: 23,
+          },
+          {
+            label: 'UCC12',
+            value: 24,
+          },
+          {
+            label: 'UCC13',
+            value: 25,
+          },
+          {
+            label: 'LOGMARS',
+            value: 26,
+          },
+          {
+            label: 'CODE128',
+            value: 27,
+          },
+          {
+            label: 'CODE128A',
+            value: 28,
+          },
+          {
+            label: 'CODE128B',
+            value: 29,
+          },
+          {
+            label: 'CODE128C',
+            value: 30,
+          },
+          {
+            label: 'ITF14',
+            value: 31,
+          },
+          {
+            label: 'CODE93',
+            value: 32,
+          },
+          {
+            label: 'TELEPEN',
+            value: 33,
           },
         ],
         type: '',
@@ -516,7 +762,36 @@
         },
       },
     },
-    mounted() {
+    async mounted() {
+      let params = {
+        count: 'objectId',
+        order: 'createdAt',
+        excludeKeys: 'data',
+        skip: 0,
+        where: {
+          class: { $regex: 'Product' },
+          type: { $regex: 'topo' },
+          key: { $regex: this.$route.query.productid },
+        },
+      }
+      if (!this.$route.query.viewid) {
+        let viewList = []
+        const { results = [] } = await queryView(params)
+        // console.log('查询topo列表', results)
+        results.forEach((item) => {
+          if (item.title == this.$route.query.productid) {
+            viewList.unshift(item)
+            this.konvaId == '' ? (this.konvaId = item.objectId) : ''
+          } else {
+            viewList.push(item)
+          }
+        })
+        if (this.konvaId == '' && viewList.length > 0) {
+          this.konvaId = viewList[0].objectId
+        }
+
+        this.viewList = viewList
+      }
       this.$nextTick(() => {
         this.handleKonva()
       })
@@ -539,7 +814,7 @@
           width: node.attrs.width || 42,
           height: node.attrs.height || 35,
           lineHeight: node.attrs.lineHeight || 0,
-          fontSize: node.attrs.fontSize || 14,
+          fontSize: node.attrs.fontSize || 12,
           stroke: node.attrs.stroke || '', //描边颜色
           strokeWidth: node.attrs.strokeWidth || 0.1, //描边宽度
           text: node.attrs.text || '',
@@ -628,6 +903,49 @@
           this.handleEditbtmKonva()
         }
       },
+      async handleQueryView() {
+        let params = {
+          count: 'objectId',
+          order: 'createdAt',
+          excludeKeys: 'data',
+          skip: 0,
+          where: {
+            class: { $regex: 'Product' },
+            type: { $regex: 'topo' },
+            key: { $regex: this.$route.query.productid },
+          },
+        }
+        if (!this.$route.query.viewid) {
+          let viewList = []
+          const { results = [] } = await queryView(params)
+          // console.log('查询topo列表', results)
+          results.forEach((item) => {
+            if (item.title == this.$route.query.productid) {
+              viewList.unshift(item)
+              this.konvaId == '' ? (this.konvaId = item.objectId) : ''
+            } else {
+              viewList.push(item)
+            }
+          })
+          if (this.konvaId == '' && viewList.length > 0) {
+            this.konvaId = viewList[0].objectId
+          }
+
+          this.viewList = viewList
+        }
+      },
+      async createTemplate() {
+        let params = {
+          data: this.defaultTopo,
+          language: 'zh',
+          class: 'Product',
+          type: 'topo',
+          title: this.viewList.length + 1 + '',
+          key: this.$route.query.productid,
+        }
+        const res = await postView(params)
+        this.handleQueryView()
+      },
       /**
        * 编辑组态节点
        */
@@ -638,7 +956,7 @@
             height: Number(this.editForm.height),
             text: this.editForm.text,
             fill: this.editForm.fill,
-            fontSize: Number(this.editForm.fontSize),
+            fontSize: Number(this.editForm.fontSize) || 12,
             fontFamily: this.editForm.fontFamily,
           }
           this.editNode.setAttrs(params)
@@ -648,7 +966,7 @@
         this.editForm.width = Number(this.editForm.width)
         this.editForm.height = Number(this.editForm.height)
         this.editForm.lineHeight = Number(this.editForm.lineHeight)
-        this.editForm.fontSize = Number(this.editForm.fontSize)
+        this.editForm.fontSize = Number(this.editForm.fontSize) || 12
         this.editForm.strokeWidth = Number(this.editForm.strokeWidth)
         // console.log(this.editForm)
         if (this.editNode.attrs.id == 'bg') {
@@ -665,6 +983,12 @@
         let params = {
           type: this.type,
           id: this.id,
+          align: this.align, //位置
+          format: this.format, //编码类型
+        }
+        if (params.type == 'scancodetext') {
+          params.id = params.id + '_barcode'
+          this.id = params.id
         }
         console.log(params)
         this.editNode.setAttrs(params)
@@ -687,6 +1011,9 @@
         }
         this.editNode.parent.children[0].setAttrs(params)
       },
+      /**
+       * 缩放
+       */
       handleEditSacle() {
         let params = {
           scaleX: Number(this.scale),
@@ -694,6 +1021,9 @@
         }
         this.editNode.setAttrs(params)
       },
+      /**
+       * 关闭样式编辑
+       */
       handleCloseEdit() {
         this.editFlag = false
       },
@@ -714,6 +1044,10 @@
             : query.page
         query.viewid = list[query.page].viewid
         this.$router.push({ path: this.$route.path, query })
+        this.handleKonva()
+      },
+      handleChangeKonva(o) {
+        this.konvaId = o.objectId
         this.handleKonva()
       },
       guide() {
@@ -763,7 +1097,23 @@
         })
       },
       async _updataTopo(objectId) {
-        this.viewInfo.data.konva = { Stage: JSON.parse(canvas.stage.toJSON()) }
+        // let stage = JSON.stringify(canvas.stage)
+        // console.log('第一次转化stage', stage)
+        // stage = stage.replace(/\\/g, '')
+        // stage = stage.substr(1)
+        // stage = stage.substring(0, stage.length - 1)
+        // console.log('stage', canvas.stage, stage)
+        this.viewInfo.data.konva = {
+          Stage: JSON.parse(canvas.stage.toJSON()),
+        }
+
+        this.viewInfo.data.konva.Stage?.children[0]?.children.forEach(
+          (item) => {
+            if (!item.attrs.fontSize) {
+              item.attrs.fontSize = 12
+            }
+          }
+        )
         try {
           await putView(objectId, {
             data: this.viewInfo.data,
@@ -792,17 +1142,30 @@
             devaddr: devaddr,
             viewid: viewid,
           }
+          if (!_this.$route.query.viewid && _this.konvaId) {
+            params.viewid = _this.konvaId
+          }
+          // console.log('paramsparamsparamsparamsparams', params)
           const { message = '', data = {} } = await _getTopo(params)
           // 绘制前不光需要获取到组态数据，还需要获取产品数据
-          const { results = [] } = await getProduct(
-            _this.$route.query.productid
-          )
-          _this.productconfig = results
-          console.groupCollapsed(
-            '%c productconfig',
-            'color:#009a61; font-size: 28px; font-weight: 300'
-          )
-          console.info('productconfig ->\n', _this.productconfig)
+          const productconfig = await getProduct(_this.$route.query.productid)
+
+          _this.productconfig = productconfig
+          let profile = productconfig.profile || {}
+          let profileList = []
+          for (let key in profile) {
+            let option = {
+              label: key,
+              value: key,
+            }
+            profileList.push(option)
+          }
+          this.profileList = profileList
+          // console.groupCollapsed(
+          //   '%c productconfig',
+          //   'color:#009a61; font-size: 28px; font-weight: 300'
+          // )
+          // console.info('productconfig ->\n', _this.productconfig)
           console.groupEnd()
           if (message == 'SUCCESS') {
             console.groupCollapsed(
@@ -834,14 +1197,13 @@
               id: 'kevCurrent',
             })
           } else {
-            console.log(this.$route)
             if (!this.$route.query.deviceid) {
               let params = {
                 data: this.defaultTopo,
                 language: 'zh',
                 class: 'Product',
                 type: 'topo',
-                title: '组态',
+                title: this.$route.query.productid,
                 key: this.$route.query.productid,
               }
               const res = await postView(params)
@@ -892,6 +1254,10 @@
   }
 </script>
 <style lang="scss" scoped>
+  .isactive {
+    color: #fff;
+    background-color: #1890ff;
+  }
   .konva-fullscreen {
     height: calc(100vh - #{$base-top-bar-height} * 3) !important;
 

@@ -760,6 +760,7 @@ export default {
       'basic element': '基本元件',
       'print control': '打印控件',
       'basic grid': '网格',
+      'create template': '模板创建',
       'Add text content': '添加文本',
       text: '文本',
       'text button': '文本按钮',

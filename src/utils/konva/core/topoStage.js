@@ -18,7 +18,7 @@ canvas.info = info
  */
 const topoStage = {
   handleChildren(args) {
-    console.log(args, 'args')
+    // console.log(args, 'args')
     const { layer } = canvas
     info['handleArray'] = args
     const { stage } = args
@@ -44,10 +44,10 @@ const topoStage = {
     let list = []
     stage.find('Label').forEach((node) => {
       info['Label'] = stage.find('Label')
-      console.log(
-        "['thing', 'amis', 'device'].indexOf(node.getAttr('name')) ",
-        ['thing', 'amis', 'device'].indexOf(node.getAttr('name'))
-      )
+      // console.log(
+      //   "['thing', 'amis', 'device'].indexOf(node.getAttr('name')) ",
+      //   ['thing', 'amis', 'device'].indexOf(node.getAttr('name'))
+      // )
       if (
         ['thing', 'amis', 'device'].indexOf(node.getAttr('name')) != -1 ||
         location.href.includes('evidence')
@@ -162,6 +162,7 @@ const topoStage = {
         // 单击时，这里根据node bind 的控件类型，去展示对应的控件信息
       })
       node.on('dblclick', (e) => {
+        // console.log('绑定该数据', node, node.getAttr('bind_amis'))
         if (node.getAttr('bind_amis') && node.getAttr('amis_id').length > 0)
           dgiotBus.$emit('nodeInfo', node)
       })

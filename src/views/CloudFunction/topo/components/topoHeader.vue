@@ -94,8 +94,14 @@
                 })
               "
             >
-              <a-icon type="line" />
+              <a-icon type="border-bottom" />
               <p>{{ $translateTitle('topo.basic grid') }}</p>
+            </a>
+          </a-dropdown>
+          <a-dropdown class="topo-header-top-query-left-panel-dropdown">
+            <a class="ant-dropdown-link" @click="createKonvaTemplate">
+              <a-icon type="plus-circle" />
+              <p>{{ $translateTitle('topo.create template') }}</p>
             </a>
           </a-dropdown>
           <!--          <el-color-picker-->
@@ -231,6 +237,10 @@
         setDrawParams: 'konva/setDrawParams',
         createLine: 'topo/createLine',
       }),
+      // 创建konva模板
+      createKonvaTemplate() {
+        this.$emit('createTemplate')
+      },
       topoJson() {
         // 自动格式化代码
         this.$nextTick(() => {
