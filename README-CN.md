@@ -16,9 +16,10 @@ DGIoT是国内首款轻量级工业物联网开源平台，我们致力于为5�
 + **垂直领域物联网平台**：快速部署私有化平台，千万级承载，运营级底座，全开放扩展
 
 ## 平台快速体验与技术交流微信群
-| 微信技术支持群 |电脑端https://prod.iotn2n.com| [QQ技术支持群](https://jq.qq.com/?_wv=1027&k=LipWZvDe)： 346566935   | 
+| 微信技术支持群 |官网 https://www.dgiotcloud.cn/| [QQ技术支持群](https://jq.qq.com/?_wv=1027&k=LipWZvDe)： 346566935   | 
 |:---:|:---:|:---:|
-| ![image](https://user-images.githubusercontent.com/51999461/148872364-3999b7f0-17c7-47ec-8a98-3f410ab5b58e.png) |**平台体验网址**</br><br/>https://prod.iotn2n.com<br/></br><br/>**账号密码均为：**</br><br/></br><font size=3>**dgiot_admin**</font>|<img src="http://dgiot-1253666439.cos.ap-shanghai-fsi.myqcloud.com/shuwa_tech/zh/QQ%E6%8A%80%E6%9C%AF%E7%BE%A4%E4%BA%8C%E7%BB%B4%E7%A0%81.png" width = "60%" /> |
+|<img src="https://prod.dgiotcloud.cn/dgiot_file/website/wx.jpg" width = "60%" /> |**平台体验网址**</br><br/>https://prod.dgiotcloud.cn<br/></br><br/>**账号密码按体验类型已默认填写**</br>|<img src="http://dgiot-1253666439.cos.ap-shanghai-fsi.myqcloud.com/shuwa_tech/zh/QQ%E6%8A%80%E6%9C%AF%E7%BE%A4%E4%BA%8C%E7%BB%B4%E7%A0%81.png" width = "60%" /> |
+
 ## 特色功能
 + 可视化组态编辑器
 + 低代码快速开发
@@ -82,9 +83,12 @@ pnpm dev
   | 用户名      | 密码        |
   | ----------- | ----------- |
   | dgiot_admin | dgiot_admin |
-
-- 设备详情预览
-  ![b87bd877-7cb6-f6b6-1eac-ae17b39bf928.png](https://dgiot-1253666439.cos.ap-shanghai-fsi.myqcloud.com/shuwa_tech/zh/frontend/web/b87bd877-7cb6-f6b6-1eac-ae17b39bf928.png)
+- 系统首页
+![](https://prod.dgiotcloud.cn/dgiot_file/website/head.png)
+- 设备组态预览
+![](https://prod.dgiotcloud.cn/dgiot_file/website/konva.png)
+- 设备详情实时数据查看
+  ![](https://prod.dgiotcloud.cn/dgiot_file/website/realcard.png)
 - [项目预览](https://tech.iotn2n.com/zh/frontend/web/#%E9%A1%B9%E7%9B%AE%E9%A2%84%E8%A7%88)
 - 打包
 
