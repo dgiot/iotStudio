@@ -24,11 +24,12 @@
           </el-input>
         </label>
         <baidu-map
+          id="container"
           :key="productdetail.config.location.latitude"
-          :ak="$dgiot.secret.baidu.map"
+          :ak="ak"
           :center="{
-            lng: productdetail.config.location.latitude,
-            lat: productdetail.config.location.longitude,
+            lng: productdetail.config.location.longitude,
+            lat: productdetail.config.location.latitude,
           }"
           :map-click="false"
           :scroll-wheel-zoom="true"
@@ -43,8 +44,8 @@
             :auto-viewport="true"
             :keyword="productdetail.config.address"
             :location="{
-              lng: productdetail.config.location.latitude,
-              lat: productdetail.config.location.longitude,
+              lng: productdetail.config.location.longitude,
+              lat: productdetail.config.location.latitude,
             }"
           />
           <bm-control>
