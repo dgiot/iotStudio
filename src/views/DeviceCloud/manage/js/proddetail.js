@@ -183,6 +183,7 @@ export default {
       }
     }
     return {
+      ak: this.$dgiot.secret.baidu.map,
       viewForm: {
         showRow: true,
         class: 'Product',
@@ -1057,7 +1058,7 @@ export default {
       })
     },
     inputAddress() {
-      const address = this.productdetail.config.addres
+      const address = this.productdetail.config.address
       // https://lbsyun.baidu.com/jsdemo.htm#wAddressParseSingle  根据位置解析
       var map = new BMapGL.Map('container')
       map.centerAndZoom(new BMapGL.Point(116.331398, 39.897445), 12)
