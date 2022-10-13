@@ -2,7 +2,7 @@
  *  build: 杭州数蛙科技有限公司 
  *  copyright: dgiot-dashboard 
  *  author: h7ml(h7ml@qq.com) 
- *  Time: 2022年10月12日13时37分41秒
+ *  Time: 2022年10月13日20时19分20秒
  */
 [data-v-7c917f6c]:export{menu-color:rgba(255,255,255,.95);menu-color-active:rgba(255,255,255,.95);menu-background:#282c34;column-second-menu-background:#fff}
 .dashboard-container main{position:relative;top:20px;height:100vh;margin:0 auto;text-align:center}
@@ -41,6 +41,11 @@
 [data-v-1be6655e]:export{menu-color:rgba(255,255,255,.95);menu-color-active:rgba(255,255,255,.95);menu-background:#282c34;column-second-menu-background:#fff}.topoCard[data-v-1be6655e]{position:relative}.topoCard .card_content[data-v-1be6655e]{position:absolute;width:100%;height:100%;display:flex;justify-content:center;align-items:center;color:#fff}
 .proddetail {
   padding: 0 20px;
+}
+.map{ 
+  flex: 1;
+  width: 100%;
+  height:60%;
 }
 .diaCollLeftCls {
   width: 100%;
@@ -365,6 +370,11 @@ display: flex;
 [data-v-7e7ca3c7]:export{menu-color:rgba(255,255,255,.95);menu-color-active:rgba(255,255,255,.95);menu-background:#282c34;column-second-menu-background:#fff}.group[data-v-7e7ca3c7]{position:relative;display:flex;margin:20px}.group .custom-tree-node[data-v-7e7ca3c7]{width:100%}.group .custom-tree-node .el-input[data-v-7e7ca3c7]{width:60%}.group .custom-tree-node i[data-v-7e7ca3c7]{margin-left:5px}.group[data-v-7e7ca3c7] .el-drawer__body{margin:30px;background:#fff !important}.group[data-v-7e7ca3c7] .el-tree-node__content{height:30px}@media screen and (max-width: 960px){.group[data-v-7e7ca3c7] .el-drawer{z-index:999;width:70% !important}}.group[data-v-7e7ca3c7] .setting{position:absolute;top:0;right:20px;font-size:20px;cursor:pointer}.group[data-v-7e7ca3c7] .el-header,.group[data-v-7e7ca3c7] .el-footer{background-color:#fff}.group[data-v-7e7ca3c7] .el-main{background-color:#fff}.group .tree[data-v-7e7ca3c7]{padding:0;margin:0;overflow:hidden;font-size:14px}.group .main[data-v-7e7ca3c7]{flex:1}
 .proddetail {
   padding: 0 20px;
+}
+.map{ 
+  flex: 1;
+  width: 100%;
+  height:60%;
 }
 .diaCollLeftCls {
   width: 100%;
