@@ -308,7 +308,7 @@
                   ></el-option>
                 </el-select>
               </el-form-item>
-              <el-form-item label="编码内容位置">
+              <el-form-item label="条码内容位置">
                 <el-select
                   v-model="align"
                   @change="handlePrintType"
@@ -322,7 +322,7 @@
                   ></el-option>
                 </el-select>
               </el-form-item>
-              <el-form-item label="编码格式">
+              <el-form-item label="条码格式">
                 <el-select
                   v-model="format"
                   @change="handlePrintType"
@@ -496,6 +496,10 @@
           {
             label: '打印纸张',
             value: 'paper',
+          },
+          {
+            label: '打印机',
+            value: 'printer',
           },
         ],
         align: '',

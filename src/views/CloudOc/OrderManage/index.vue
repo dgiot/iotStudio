@@ -812,16 +812,18 @@
           // include: this.queryForm.include,
           order: this.queryForm.way,
           count: 'objectId',
-          where: {}, //product: '21efa507f6'
+          where: {
+            state: 9,
+          }, //product: '21efa507f6'
         }
         this.queryForm.name
           ? (params.where.name = {
               $regex: this.queryForm.name,
             })
           : ''
-        this.queryForm.realstatus
-          ? (params.where['detail.realstatus'] = this.queryForm.realstatus)
-          : ''
+        if (String(this.queryForm.realstatus + '').length > 0) {
+          params.where['detail.realstatus'] = this.queryForm.realstatus
+        }
         this.queryForm.product
           ? (params.where.product = this.queryForm.product)
           : ''
