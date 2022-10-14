@@ -293,9 +293,10 @@
           //  根据下拉的表,查到对应表数据
           const params = {
             order: '-updatedAt',
+            excludeKeys:
+              'children,thing,decoder,topics,productSecret,view,category,producttemplet',
           }
           const { results = [] } = await this.$query_object(_class, params)
-          console.log(results)
           this.keys = results
         } catch (error) {
           console.log(error)
