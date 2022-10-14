@@ -891,7 +891,6 @@ export default {
       this.mqtt.router = this.$dgiotBus.router(this.$route.fullPath)
     })
     this.Industry()
-    this.Industry()
     // editor编辑器使用
     editor2 = ace.edit('editor2')
     editor2.session.setMode('ace/mode/text') // 设置语言
@@ -906,7 +905,7 @@ export default {
     if (this.$route.query.activeName) {
       this.activeName = this.$route.query.activeName
     }
-    // if (this.$route.query.id) this.queryProductInfo(this.$route.query.id) // 获取产品信息
+    if (this.$route.query.id) this.queryProductInfo(this.$route.query.id) // 获取产品信息
   },
   beforeDestroy() {
     window.clearInterval(this.subtimer)
@@ -917,7 +916,6 @@ export default {
   methods: {
     uploadCkick() {
       this.loading = true
-      console.log(this.inputParams)
       // 触发子组件的点击事件
       this.$refs['uploadFinish'].$refs.uploader.dispatchEvent(
         new MouseEvent('click')
@@ -1076,12 +1074,7 @@ export default {
         latitude: e.point.lat,
         longitude: e.point.lng,
       }
-      // this.center.lng = e.point.lng
-      // this.center.lat = e.point.lat
-      // this.addresspointer =
-      //   e.point.lng.toFixed(6) + ',' + e.point.lat.toFixed(6)
       const geocoder = new BMap.Geocoder() // 创建地址解析器的实例
-      //  let Marker = new BMap.Marker()
       geocoder.getLocation(e.point, (rs) => {
         this.productdetail.config.address = rs.address
       })
@@ -1096,12 +1089,6 @@ export default {
     },
     thingParameters(form, index, type) {
       this.editIndex = index
-      console.log(
-        'thingParameters',
-        form,
-        this.modules,
-        this.modules.data[this.modules[type]]
-      )
       // 向events 的 outputData 添加 输出参数
       this.modules.data[type].data.output.push(form)
       this.atbas.childrenDrawer = false
@@ -1280,15 +1267,12 @@ export default {
         { properties: [], events: [], services: [], tags: [] },
         thing
       )
-      // let config = _.merge(res.config, this.productdetail.config)
       this.productObj = res
-      let config = { ...this.productdetail.config, ...res.config }
-      this.$set(this.productdetail, 'thing', this.productObj.thing)
-      this.$set(this.productdetail, 'config', this.productObj.config)
-      // this.productdetail.config = config
+      // this.productdetail = res
+      // let config = { ...this.productdetail.config, ...res.config }
+      // this.$set(this.productdetail, 'thing', this.productObj.thing)
+      // this.$set(this.productdetail, 'config', this.productObj.config)
       this.modules.data = setThing //setThing
-      // this.productdetail.thing = setThing //setThing
-      // this.productdetail.config = res.config
     },
     async submitModules(type, form) {
       form.data.outputParams = []
@@ -1349,7 +1333,6 @@ export default {
           // await this.queryProductInfo(this.productObj.objectId) // 更新产品信息
           this.handleClose()
         } else {
-          console.log('error submit!!')
           return false
         }
       })
@@ -1365,60 +1348,6 @@ export default {
       })
       // this.codeFlag = false
     },
-    // feateditorAmis(config) {
-    //   // let productInfo = this.productInfo
-    //   // this.$baseEventBus.$emit('profileAmisDialog', {
-    //   //   config,
-    //   //   productInfo,
-    //   // })
-    //   this.viewForm = {
-    //     showRow: true,
-    //     class: 'Product',
-    //     type: 'notification',
-    //     key: this.$route.query.id,
-    //     title: '',
-    //     disabled: true,
-    //     data: {
-    //       type: 'page',
-    //       initApi: {
-    //         url: 'iotapi/classes/Device/parse_objectid',
-    //         method: 'get',
-    //         adaptor:
-    //           'return {\r\n  "status":0,\r\n  "msg":"",\r\n  "data":response.data.basedata\r\n  }',
-    //         headers: {
-    //           store: 'localStorage',
-    //           dgiotReplace: 'parse_objectid',
-    //         },
-    //         dataType: 'json',
-    //       },
-    //       body: [
-    //         {
-    //           type: 'form',
-    //           api: {
-    //             method: 'put',
-    //             url: 'iotapi/classes/Device/parse_objectid',
-    //             headers: {
-    //               store: 'localStorage',
-    //               dgiotReplace: 'parse_objectid',
-    //             },
-    //             dataType: 'json',
-    //             requestAdaptor:
-    //               'return {\r\n    ...api,\r\n    data: {\r\n        basedata:{ ...api.data}\r\n    }\r\n}',
-    //           },
-    //           body: [
-    //             {
-    //               type: 'input-text',
-    //               label: '设备名称',
-    //               name: 'name',
-    //             },
-    //           ],
-    //         },
-    //       ],
-    //     },
-    //     hiddenRow: ['class', 'key', 'createdAt'],
-    //   }
-    //   this.amisShow = !this.amisShow
-    // },
     ...mapMutations({
       setSizeForm: 'konva/setSizeForm',
     }),
@@ -2933,11 +2862,9 @@ export default {
             }
             this.$refs['sizeForm'].resource.changeData = rowData.dataSource
             if (resource.cType == rowData.dataForm.protocol) {
-              console.log(resource, 'success')
             }
           })
         })
-        console.log('refs sizeForm', this.$refs['sizeForm']) // 子组件的实例
       })
       // this.changeResource(obj.protocolType)
       // dgiotlog.log('this.sizeForm', this.sizeForm)
@@ -3381,7 +3308,7 @@ export default {
     // 得到产品详情
     getProDetail() {
       // 查询表单数据
-      this.query_notification()
+      // this.query_notification()
       editor = ace.edit('editor')
       editor.session.setMode('ace/mode/erlang') // 设置语言
       editor.setTheme('ace/theme/monokai') // 设置主题
@@ -3396,19 +3323,7 @@ export default {
       this.FromMachine = [{ name: 'ALL' }]
       this.$get_object('Product', this.productId)
         .then((response) => {
-          // console.log('response', response)
           if (response) {
-            this.productInfo = _.merge(response, {
-              decoder: { code: '' },
-              thing: { properties: [] },
-              config: {
-                address: '余杭区良渚平高创业城c1座',
-                location: {
-                  longitude: '120.161324',
-                  latitude: '30.262441',
-                },
-              },
-            })
             this.productName = response.name
             for (var key in response) {
               this.productdetail[key] = response[key]
@@ -3432,7 +3347,6 @@ export default {
                 this.$set(this.productdetail, 'categoryname', cat.name)
               })
             }
-
             this.form.Productname = response.name
             this.ProductSecret = response.productSecret
             this.form.Productkey = this.productId
@@ -3455,7 +3369,6 @@ export default {
                 properties: [],
               }
             }
-            dgiotlog.log('=====', this.wmxData)
             this.wmxData = []
             this.wmxDataBk = []
             this.wmxData = this.productdetail.thing.properties.filter(
@@ -3465,8 +3378,6 @@ export default {
               }
             )
             this.wmxDataBk = this.productdetail.thing.properties
-            dgiotlog.log('=====', this.wmxData)
-            // let array = []
             this.wmxDataBk.forEach((item) => {
               if (item.devicetype) {
                 let arr = {
@@ -3476,13 +3387,12 @@ export default {
               }
             })
             this.FromMachine = _.uniqBy(this.FromMachine, 'name')
-            // Object.assign(this.FromMachine, _.uniqBy(array, 'name'))
-            editor.setValue(Base64.decode(setdata))
-            editor.gotoLine(editor.session.getLength())
+            // editor.setValue(Base64.decode(setdata))
+            // editor.gotoLine(editor.session.getLength())
+
           }
         })
         .catch((err) => {
-          dgiotlog.log('err', err)
           this.$baseMessage('请求出错', err.error, 3000)
         })
     },
@@ -3764,7 +3674,6 @@ export default {
         this.wmxstart = 1
       }
       this.upKey = moment.now()
-      console.log(this.wmxData, ' this.wmxData ')
     },
     handleChange(value, direction, movedKeys) {
       // dgiotlog.log(value, direction, movedKeys);
@@ -3947,12 +3856,10 @@ export default {
       )
     },
     wmxSizeChange(val) {
-      console.log(this.wmxData)
       this.wmxstart = 1
       this.wmxPageSize = val
     },
     wmxCurrentChange(val) {
-      console.log(this.wmxData)
       this.wmxstart = val
     },
     eventsChange(val) {
@@ -4048,7 +3955,6 @@ export default {
     stopsub(value) {}, // topic增加
     subTopic(formName, isupdated) {
       this.$refs[formName].validate(async (valid) => {
-        console.log(this.topicDefault, isupdated)
         if (valid) {
           let message = ''
           if (isupdated != -1) {
@@ -4059,7 +3965,6 @@ export default {
             this.topicDefault[this.topicform.topic] = this.topicform.value
             message = '添加自定义topic成功'
           }
-          console.log(this.topicDefault)
           await putProduct(this.productId, {
             topics: this.topicDefault,
           })
@@ -4093,7 +3998,6 @@ export default {
       this.topicstart = val
     },
     updatetopic(row, index) {
-      console.log(row)
       this.topicform = row
       // this.topicform.profile = row.topic;
       // this.topicform.type = row.type;
@@ -4109,7 +4013,6 @@ export default {
         topicData.forEach((i) => {
           topic[i.id] = i.value
         })
-        console.log(this.topicDefault)
         await putProduct(this.productId, {
           topics: topic,
         })
