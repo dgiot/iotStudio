@@ -32,8 +32,8 @@
       return {
         iframeSrc:
           process.env.NODE_ENV !== 'development'
-            ? location.protocol + '//' + location.hostname + ':3000'
-            : 'http://43.128.230.212:3000/login',
+            ? location.protocol + '//' + location.hostname + '/dgiot_grafana'
+            : 'http://prod.dgiotcloud.cn/dgiot_grafana',
       }
     },
     computed: {
