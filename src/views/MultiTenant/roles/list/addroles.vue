@@ -31,11 +31,11 @@
             </el-button> -->
           </span>
         </el-form-item>
-        <el-form-item label="岗位" prop="dictvalue">
+        <el-form-item label="模板" prop="dictvalue">
           <el-select
             v-model="roleFormObj.dictvalue"
             :clearable="clearFlag"
-            placeholder="请选择角色模版"
+            placeholder="请选择部门模版"
             style="width: 100%"
           >
             <el-option
