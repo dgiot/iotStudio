@@ -1,6 +1,6 @@
 <template>
   <div class="proddetail">
-    <dgiot-profile v-show="false" :product-info="productInfo" />
+    <dgiot-profile v-show="false" :product-info="productdetail" />
     <el-dialog
       append-to-body
       :before-close="handleAddressClose"
@@ -135,7 +135,7 @@
                   <el-button
                     size="small"
                     type="primary"
-                    @click.native="setTemplate(productInfo)"
+                    @click.native="setTemplate(productdetail)"
                   >
                     {{ $translateTitle('product.Set as template') }}
                   </el-button>
@@ -281,11 +281,11 @@
                   :label="$translateTitle('product.physicalmodel')"
                 >
                   <el-button
-                    :disabled="productInfo.thing.properties.length == 0"
+                    :disabled="productdetail.thing.properties.length == 0"
                     type="text"
                     @click="activeName = 'third'"
                   >
-                    {{ productInfo.thing.properties.length || 0 }}
+                    {{ productdetail.thing.properties.length || 0 }}
                   </el-button>
                 </el-descriptions-item>
                 <el-descriptions-item
@@ -318,15 +318,27 @@
                     type="success"
                     @click="dialog_address = !dialog_address"
                   >
-                    {{ productdetail.config.address || '-' }}
+                    {{
+                      productdetail.config.address
+                        ? productdetail.config.address
+                        : '-'
+                    }}
                   </el-link>
                 </el-descriptions-item>
                 <el-descriptions-item
                   :label="$translateTitle('equipment.Longitude and latitude')"
                 >
                   <el-link type="success">
-                    {{ productdetail.config.location.latitude }}
-                    {{ productdetail.config.location.longitude }}
+                    {{
+                      productdetail.config.location
+                        ? productdetail.config.location.latitude
+                        : '-'
+                    }}
+                    {{
+                      productdetail.config.location
+                        ? productdetail.config.location.longitude
+                        : '-'
+                    }}
                   </el-link>
                 </el-descriptions-item>
               </el-descriptions>

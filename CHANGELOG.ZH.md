@@ -1,6 +1,11 @@
 ## [4.6.2](https://github.com/dgiot/dgiot-dashboard/compare/v4.6.1...v4.6.2) (2022-10-14)
 
 
+### Bug Fixes
+
+* **equipmentCloud:** config ([a7575d2](https://github.com/dgiot/dgiot-dashboard/commit/a7575d2f6f2aaa8fe60b542d28451833436a5dc0))
+
+
 ### Features
 
 * **cloudOperations:** 告警关联规则引擎修改 ([f61ef67](https://github.com/dgiot/dgiot-dashboard/commit/f61ef6716d84ac4ed8a7b011afe56d308b056f83))
