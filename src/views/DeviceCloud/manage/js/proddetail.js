@@ -1279,7 +1279,7 @@ export default {
     },
     async queryProductInfo(productId) {
       const res = await getProduct(productId)
-      localStorage.setItem('product_objectid', productId)
+      localStorage.setItem('parse_productid', productId)
       let { thing = { properties: [], events: [], services: [], tags: [] } } =
         res
       _.merge({ properties: [], events: [], services: [], tags: [] }, thing)
@@ -1287,10 +1287,12 @@ export default {
         { properties: [], events: [], services: [], tags: [] },
         thing
       )
-      let config = _.merge(res.config, this.productdetail.config)
+      // let config = _.merge(res.config, this.productdetail.config)
       this.productObj = res
-      this.$set(this.productdetail, 'thing', thing)
-      this.$set(this.productdetail, 'config', config)
+      let config = { ...this.productdetail.config, ...res.config }
+      this.$set(this.productdetail, 'thing', this.productObj.thing)
+      this.$set(this.productdetail, 'config', this.productObj.config)
+      // this.productdetail.config = config
       this.modules.data = setThing //setThing
       // this.productdetail.thing = setThing //setThing
       // this.productdetail.config = res.config
@@ -3389,18 +3391,11 @@ export default {
       this.FromMachine = [{ name: 'ALL' }]
       this.$get_object('Product', this.productId)
         .then((response) => {
-          dgiotlog.log('response', response)
+          // console.log('response', response)
           if (response) {
             this.productInfo = _.merge(response, {
               decoder: { code: '' },
               thing: { properties: [] },
-              config: {
-                address: '余杭区良渚平高创业城c1座',
-                location: {
-                  longitude: '120.161324',
-                  latitude: '30.262441',
-                },
-              },
             })
             this.productName = response.name
             for (var key in response) {
