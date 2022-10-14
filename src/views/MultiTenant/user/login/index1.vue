@@ -8,57 +8,7 @@
       backgroundSize: '100% 100%',
     }"
   >
-    <div v-show="bgShow" class="bg">
-      <!-- 原文链接：https://blog.csdn.net/chengqige/article/details/122643867 -->
-      <!-- https://res-mp.usr.cn/video/experience-video.mp4  http://www.dgiotcloud.cn/wp-content/uploads/2022090709555048.mp4-->
-      <video
-        autoplay
-        class="bg_video"
-        loop
-        muted="muted"
-        playsinline
-        preload="auto"
-        src="http://www.dgiotcloud.cn/wp-content/uploads/2022090710055845.mp4"
-        tabindex="-1"
-      ></video>
-      <div class="bg_wrap">
-        <div class="bg_top">
-          <div class="btn_back" @click="handleIn">
-            <div class="btn_back_in">官网</div>
-          </div>
-        </div>
-        <div class="bg_content">
-          <div v-infinite-scroll class="bg_content_left">
-            <div
-              v-for="(item, index) in typeList"
-              :key="index"
-              class="bg_content_left_item"
-              :class="
-                index == currentIndex
-                  ? 'experience-left-hover'
-                  : 'experience-left'
-              "
-              @click="handleChoose(item, index)"
-            >
-              <div>{{ item.name }}</div>
-            </div>
-          </div>
-          <div v-infinite-scroll class="bg_content_right">
-            <div
-              v-for="(o, i) in progList"
-              :key="i"
-              class="bg_content_right_item"
-              @click="handleChooseProgram(o)"
-            >
-              <img class="bg_content_right_item_img" :src="o.img" />
-              <div class="bg_content_right_item_name">{{ o.name }}</div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <el-row v-if="isShow">
-      <div class="btn_back" @click="bgShow = true">返回</div>
+    <el-row v-if="isShow" style="position: absolute; width: 100%; height: 100%">
       <el-col :lg="14" :md="11" :sm="24" :xl="14" :xs="24">
         <div style="color: transparent">占位符</div>
       </el-col>
@@ -145,9 +95,6 @@
           </span>
         </el-form>
       </el-col>
-      <!--      <el-col :lg="1" :md="1" :sm="24" :xl="1" :xs="24">-->
-      <!--        <div style="color: transparent">占位符</div>-->
-      <!--      </el-col>-->
     </el-row>
   </div>
 </template>
@@ -161,7 +108,7 @@
    * @return {Promise<void>}
    * @Description:
    */
-  // import backgroundImage from '../../../../../public/assets/images/platform/assets/login_images/background.jpg'
+  // import backgroundImage from '../../../../public/assets/images/platform/assets/login_images/background.jpg'
   import { mapActions, mapGetters, mapMutations } from 'vuex'
   import { isPassword } from '@/utils/data/validate'
   import { SiteDefault } from '@/api/License'
@@ -198,168 +145,6 @@
         }
       }
       return {
-        bgShow: true,
-        typeList: [
-          {
-            id: 0,
-            name: '全部',
-          },
-          {
-            id: 1,
-            name: '设备运维',
-          },
-          {
-            id: 2,
-            name: '智慧园区',
-          },
-          {
-            id: 3,
-            name: '智慧工厂',
-          },
-          {
-            id: 4,
-            name: '智慧能源',
-          },
-          {
-            id: 9,
-            name: '智慧农业',
-          },
-          {
-            id: 5,
-            name: '智慧物流',
-          },
-          {
-            id: 6,
-            name: '边缘主机',
-          },
-          {
-            id: 7,
-            name: '云检测',
-          },
-          {
-            id: 8,
-            name: '云压测',
-          },
-        ],
-        programList: [
-          {
-            img: 'http://www.dgiotcloud.cn/wp-content/uploads/2022090901575769.png',
-            name: '智慧厕所',
-            type: 2,
-            username: 'dgiot_st',
-            password: 'dgiot_st',
-          },
-          {
-            img: 'http://www.dgiotcloud.cn/wp-content/uploads/2022092307512790.jpg',
-            name: '智慧农业',
-            type: 9,
-            username: 'dgiot_agr',
-            password: 'dgiot_agr',
-          },
-          {
-            img: 'https://www.dgiotcloud.cn/wp-content/uploads/2022080511362579.jpg',
-            name: '工业设备租赁一体化运维平台',
-            type: 1,
-            username: 'dgiot_dl',
-            password: 'dgiot_dl',
-          },
-          {
-            img: 'https://www.dgiotcloud.cn/wp-content/uploads/2022080512380157.png',
-            name: '智慧园区/智慧场馆数字驾驶舱',
-            type: 2,
-            username: 'dgiot_spark',
-            password: 'dgiot_spark',
-          },
-          {
-            img: 'https://www.dgiotcloud.cn/wp-content/uploads/202208221014537.png',
-            name: '智慧监控-海康',
-            type: 2,
-            username: 'dgiot_smonitor',
-            password: 'dgiot_smonitor',
-          },
-          {
-            img: 'https://www.dgiotcloud.cn/wp-content/uploads/2022082210305987.png',
-            name: '弱电动环-浦洛斯',
-            type: 2,
-            username: 'dgiot_welec',
-            password: 'dgiot_welec',
-          },
-          {
-            img: 'https://www.dgiotcloud.cn/wp-content/uploads/2022082210005721.png',
-            name: '高配动环',
-            type: 2,
-            username: 'dgiot_helec',
-            password: 'dgiot_helec',
-          },
-          {
-            img: 'https://www.dgiotcloud.cn/wp-content/uploads/2022082210453148.png',
-            name: '能耗电表-正泰',
-            type: 2,
-            username: 'dgiot_emater',
-            password: 'dgiot_emater',
-          },
-          {
-            img: 'https://www.dgiotcloud.cn/wp-content/uploads/2022082210453148.png',
-            name: '能耗采集器-正泰',
-            type: 2,
-            username: 'dgiot_ecollect',
-            password: 'dgiot_ecollect',
-          },
-          {
-            img: 'https://www.dgiotcloud.cn/wp-content/uploads/2022082209463162.png',
-            name: '智慧广播-sonbs',
-            type: 2,
-            username: 'dgiot_sradio',
-            password: 'dgiot_sradio',
-          },
-          {
-            img: 'https://www.dgiotcloud.cn/wp-content/uploads/2022082608530468.jpg',
-            name: '数字工厂MES系统',
-            type: 3,
-          },
-          {
-            img: 'https://www.dgiotcloud.cn/wp-content/uploads/2022080910110444.png',
-            name: '水泵远程检测平台',
-            type: 3,
-          },
-          {
-            img: 'https://www.dgiotcloud.cn/wp-content/uploads/2022080910554595.png',
-            name: '多型太阳能板远程管控和多屏运维系统',
-            type: 4,
-          },
-          {
-            img: 'https://www.dgiotcloud.cn/wp-content/uploads/2022080511492543.png',
-            name: '千万级Zetag物流标签压测',
-            type: 5,
-          },
-          {
-            img: 'https://www.dgiotcloud.cn/wp-content/uploads/2022082512160365.png',
-            name: '边缘主机',
-            type: 6,
-          },
-          {
-            img: 'https://www.dgiotcloud.cn/wp-content/uploads/2022080910155274.png',
-            name: '水泵远程质量检测与质量对比系统',
-            type: 7,
-          },
-          {
-            img: 'https://www.dgiotcloud.cn/wp-content/uploads/202208051146353.png',
-            name: 'dgiot云压测',
-            type: 8,
-          },
-          {
-            img: 'https://www.dgiotcloud.cn/wp-content/uploads/2022080511413072.png',
-            name: '三千万电表集抄压测',
-            type: 8,
-          },
-          {
-            img: 'https://www.dgiotcloud.cn/wp-content/uploads/2022080511492543.png',
-            name: '千万级Zetag物流标签压测',
-            type: 8,
-          },
-        ], //方案列表
-        progList: [], //选中方案列表
-        currentIndex: 0,
         interval: null,
         isShow: window.name == 'dgiot_iframe' ? false : true,
         locationPath: location.href.split('/#')[0],
@@ -444,7 +229,6 @@
       })
     },
     created() {
-      this.progList = this.programList
       this.$removeToken()
       this.isShow = window.name == 'dgiot_iframe' ? false : true
       window.addEventListener('message', this.iframeLogin)
@@ -456,30 +240,6 @@
         setDefault: 'acl/setDefault',
         setRoleTree: 'user/setRoleTree',
       }),
-      handleIn() {
-        window.open('https://www.dgiotcloud.cn/')
-      },
-      handleChooseProgram(o) {
-        this.bgShow = false
-        this.form = {
-          username: o.username || '',
-          password: o.password || '',
-        }
-      },
-      handleChoose(item, index) {
-        this.currentIndex = index
-        let list = []
-        if (item.id == 0) {
-          this.progList = this.programList
-        } else {
-          this.programList.forEach((o) => {
-            if (o.type == item.id) {
-              list.push(o)
-            }
-          })
-          this.progList = list
-        }
-      },
       /**
        * @Author: dext7r
        * @Date: 2021-12-28 20:30:01
@@ -564,7 +324,10 @@
                   expires: 60 * 1000 * 30,
                 }
               )
-              await this.login({ username: 'feiiplat', password: 'feiiplat' })
+              await this.login({
+                username: 'yanshizhanghao',
+                password: 'yanshizhanghao',
+              })
               await this.goHome()
             }
           })
@@ -586,18 +349,15 @@
        * @Description:
        */
       async defaultSet() {
-        console.log(`dgiot build time: ${dgiot.dateTime}`)
-        console.log(`startIframe time: ${Cookies.get('startIframe')}`)
         this.backgroundImage = Cookies.get('startIframe')
           ? 'https://s2.loli.net/2021/12/15/ciVTb7w62rxQ3a9.jpg'
-          : // 'https://s2.loli.net/2021/12/15/aJYcUGVixXhTML3.png'
-            // 'https://s2.loli.net/2021/12/15/eapG6iDP1tOSVFl.jpg'
-            this.backgroundimage
+          : this.backgroundimage
         const url =
           process.env.NODE_ENV === 'development'
             ? process.env.VUE_APP_URL
             : location.origin
         Cookies.set('fileServer', url, { expires: 60 * 1000 * 30 })
+        console.log('backgroundimage:', this.backgroundimage)
       },
       changeInfo(e) {
         this.$set(
@@ -678,16 +438,17 @@
        */
       async goHome() {
         try {
-          this.interval = setInterval(async () => {
-            if (Cookies.get('handleRoute') != '') {
-              console.log('handleRoute 存在，跳转页面')
-              const { results: Tree = [] } = await Roletree()
-              this.setRoleTree(Tree)
-              await this.$router.push(this.handleRoute())
-              clearInterval(this.interval)
-              window.clearInterval(this.interval)
-            }
-          }, 800)
+          // 浙里办iframe 延时性添加了定时器等待误删
+          // this.interval = setInterval(async () => {
+          if (Cookies.get('handleRoute') != '') {
+            console.log('handleRoute 存在，跳转页面')
+            const { results: Tree = [] } = await Roletree()
+            this.setRoleTree(Tree)
+            await this.$router.push(this.handleRoute())
+            // clearInterval(this.interval)
+            // window.clearInterval(this.interval)
+          }
+          // }, 100)
         } catch (error) {
           console.log(error)
           this.$baseMessage(
@@ -704,7 +465,6 @@
 <style lang="scss" scoped>
   .login-container {
     height: 100vh;
-    position: relative;
     // background: url('') center center fixed no-repeat;
     background-size: cover;
   }
@@ -862,165 +622,5 @@
         }
       }
     }
-  }
-
-  // 新样式
-  .btn_back {
-    width: 150px;
-    height: 48px;
-    position: absolute;
-    right: 20px;
-    padding: 4px;
-    top: 48px;
-    background: url('/assets/bg/experience-back.png') no-repeat;
-    background-size: 100% 100%;
-    text-align: center;
-    font-size: 20px;
-    line-height: 48px;
-    color: #caf2ff;
-    font-weight: 600;
-    cursor: pointer;
-    box-sizing: border-box;
-    // margin-top: 48px;
-    // margin-left: 20px;
-  }
-  .btn_back_in {
-    height: 40px;
-    line-height: 40px;
-    // margin: 4px;
-    // border: 1px solid #ff0000;
-  }
-  // .btn_back_in:hover {
-  //   background: linear-gradient(#2298b6 10%, #001531 21%, #001531 100%);
-  //   // border-top: 2px solid #68d6fe;
-  //   // box-shadow: 0 0 2px 2px #68d6fe;
-  // }
-  .bg {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    // padding: 16px 16px 0 16px;
-    background-image: url('/assets/bg/pageBg.png');
-    background-size: cover;
-    background-position: center center;
-    z-index: 9999;
-    display: flex;
-    flex-direction: column;
-    .bg_video {
-      width: 100%;
-      height: 100%;
-      object-fit: fill;
-    }
-    .bg_wrap {
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      display: flex;
-      flex-direction: column;
-      position: absolute;
-    }
-    .bg_top {
-      width: 100%;
-      height: 100px;
-      background-image: url('/assets/bg/head.png'); //https://account.usr.cn/2.0.0/static/img/experience-top-bg.f206364.png
-      background-size: cover;
-      background-position: center center;
-      z-index: 100;
-      // background-color: #ff0000;
-    }
-    .bg_content {
-      flex: 1;
-      display: flex;
-      height: calc(100% - 100px);
-      padding-top: 40px;
-      padding-bottom: 40px;
-      // background-color: #ff0000;
-      .bg_content_left {
-        width: 600px;
-        height: 100%;
-        padding-left: 60px;
-        display: inline-block;
-        vertical-align: top;
-        overflow: auto;
-        // background-color: #ff0000;
-        .bg_content_left_item {
-          overflow: hidden;
-          text-overflow: ellipsis;
-          white-space: nowrap;
-          width: 100%;
-          display: inline-block;
-          width: 420px;
-          height: 72px;
-          margin-bottom: 30px;
-          font-weight: 500;
-          font-size: 20px;
-          text-align: center;
-          line-height: 72px;
-          color: #caf2ff;
-          cursor: pointer;
-        }
-        .bg_content_left_item:hover {
-          background: url('/assets/bg/experience-left-hover.png') no-repeat;
-          background-size: 100% 100%;
-        }
-        .experience-left-hover {
-          background: url('/assets/bg/experience-left-hover.png') no-repeat;
-          background-size: 100% 100%;
-        }
-        .experience-left {
-          background: url('/assets/bg/experience-left.png') no-repeat;
-          background-size: 100% 100%;
-        }
-      }
-      .bg_content_right {
-        flex: 1;
-        height: 100%;
-        display: flex;
-        flex-direction: row;
-        flex-wrap: wrap;
-        vertical-align: top;
-        overflow: auto;
-        .bg_content_right_item {
-          width: 500px;
-          height: 325px;
-          display: inline-block;
-          vertical-align: top;
-          background: url('/assets/bg/experience-box-bg.png') no-repeat;
-          background-size: 100% 100%;
-          margin-left: 50px;
-          margin-bottom: 50px;
-          text-align: center;
-          padding-top: 25px;
-          position: relative;
-          cursor: pointer;
-          .bg_content_right_item_img {
-            width: 460px;
-            height: 270px;
-          }
-          .bg_content_right_item_name {
-            position: absolute;
-            left: 20px;
-            bottom: 22px;
-            width: 460px;
-            height: 35px;
-            background: rgba(0, 0, 0, 0.7);
-            text-align: left;
-            font-size: 14px;
-            color: #fff;
-            letter-spacing: 0;
-            font-weight: 600;
-            line-height: 35px;
-            padding-left: 10px;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-            overflow: hidden;
-          }
-        }
-      }
-    }
-    // background-color: #ff0000;
   }
 </style>
