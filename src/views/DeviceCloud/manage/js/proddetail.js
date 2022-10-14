@@ -886,15 +886,12 @@ export default {
     },
   },
   mounted() {
-    this.query_notification()
-    this.getAllunit()
-    this.getDefaultTopic()
     this.$nextTick(() => {
       this.$refs._tabs.$children[0].$refs.tabs[3].style.display = 'none'
       this.mqtt.router = this.$dgiotBus.router(this.$route.fullPath)
     })
     this.Industry()
-    this.getAllunit()
+    this.Industry()
     // editor编辑器使用
     editor2 = ace.edit('editor2')
     editor2.session.setMode('ace/mode/text') // 设置语言
@@ -905,15 +902,11 @@ export default {
       enableSnippets: true,
       enableLiveAutocompletion: true, // 设置自动提示
     })
-    if (this.$route.query.id) {
-      let id = this.$route.query.id
-      this.fileParams.path = `product/${id}`
-      this.get_filelist(`dgiot_file/product/${id}`) //dgiot_file/file  ///`product/${id}`
-    }
+
     if (this.$route.query.activeName) {
       this.activeName = this.$route.query.activeName
     }
-    if (this.$route.query.id) this.queryProductInfo(this.$route.query.id) // 获取产品信息
+    // if (this.$route.query.id) this.queryProductInfo(this.$route.query.id) // 获取产品信息
   },
   beforeDestroy() {
     window.clearInterval(this.subtimer)
@@ -1647,11 +1640,16 @@ export default {
             },
             hiddenRow: ['class', 'key', 'createdAt'],
           }
+          this.query_notification()
           break
         case 'fiveth':
           this.getProductChannel()
           break
+        case 'third':
+          this.getAllunit()
+          break
         case 'second':
+          this.getDefaultTopic()
           this.getTopic()
           break
         case 'seven':
@@ -1662,6 +1660,13 @@ export default {
           break
         case 'eighth':
           this.isreload++
+          break
+        case 'file':
+          if (this.$route.query.id) {
+            let id = this.$route.query.id
+            this.fileParams.path = `product/${id}`
+            this.get_filelist(`dgiot_file/product/${id}`) //dgiot_file/file  ///`product/${id}`
+          }
           break
         default:
           window.clearInterval(this.subtimer)
@@ -3396,6 +3401,13 @@ export default {
             this.productInfo = _.merge(response, {
               decoder: { code: '' },
               thing: { properties: [] },
+              config: {
+                address: '余杭区良渚平高创业城c1座',
+                location: {
+                  longitude: '120.161324',
+                  latitude: '30.262441',
+                },
+              },
             })
             this.productName = response.name
             for (var key in response) {
