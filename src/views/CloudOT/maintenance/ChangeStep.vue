@@ -96,44 +96,53 @@
             </el-col>
             <el-col :lg="12" :md="12" :sm="24" :xl="12" :xs="24">
               <el-form-item
-                :label="$translateTitle('Maintenance.principal') + ': '"
+                :label="$translateTitle('Maintenance.advance') + ': '"
               >
-                <el-select
-                  v-if="step == 4 && objectid == form.info.created"
-                  v-model="form.info.principal"
-                  :placeholder="$translateTitle('Maintenance.selectprincipal')"
-                  style="width: 60%"
-                  @change="principalChange"
-                >
-                  <el-option
-                    v-for="item in user"
-                    :key="item.objectId"
-                    :label="item.nick"
-                    :value="item.objectId"
-                  />
-                </el-select>
-                <span v-else>{{ form.info.principalname }}</span>
+                <span>{{ form.info.advance }}</span>
               </el-form-item>
             </el-col>
+            <!--            <el-col :lg="12" :md="12" :sm="24" :xl="12" :xs="24">-->
+            <!--              <el-form-item-->
+            <!--                :label="$translateTitle('Maintenance.principal') + ': '"-->
+            <!--              >-->
+            <!--                <el-select-->
+            <!--                  v-if="step == 4 && objectid == form.info.created"-->
+            <!--                  v-model="form.info.principal"-->
+            <!--                  :placeholder="$translateTitle('Maintenance.selectprincipal')"-->
+            <!--                  style="width: 60%"-->
+            <!--                  @change="principalChange"-->
+            <!--                >-->
+            <!--                  <el-option-->
+            <!--                    v-for="item in user"-->
+            <!--                    :key="item.objectId"-->
+            <!--                    :label="item.nick"-->
+            <!--                    :value="item.objectId"-->
+            <!--                  />-->
+            <!--                </el-select>-->
+            <!--                <span v-else>{{ form.info.principalname }}</span>-->
+            <!--              </el-form-item>-->
+            <!--            </el-col>-->
             <el-col :lg="12" :md="12" :sm="24" :xl="12" :xs="24">
               <el-form-item
-                :label="$translateTitle('Maintenance.executor') + ': '"
+                :label="
+                  $translateTitle('Maintenance.maintenance_personnel') + ': '
+                "
               >
-                <el-select
-                  v-if="step == 4 && objectid == form.info.created"
-                  v-model="form.info.executor"
-                  :placeholder="$translateTitle('Maintenance.selectexecutor')"
-                  style="width: 60%"
-                  @change="executorChange"
-                >
-                  <el-option
-                    v-for="item in user"
-                    :key="item.objectId"
-                    :label="item.nick"
-                    :value="item.objectId"
-                  />
-                </el-select>
-                <span v-else>{{ form.info.executorname }}</span>
+                <!--                <el-select-->
+                <!--                  v-if="step == 4 && objectid == form.info.created"-->
+                <!--                  v-model="form.info.executor"-->
+                <!--                  :placeholder="$translateTitle('Maintenance.selectexecutor')"-->
+                <!--                  style="width: 60%"-->
+                <!--                  @change="executorChange"-->
+                <!--                >-->
+                <!--                  <el-option-->
+                <!--                    v-for="item in user"-->
+                <!--                    :key="item.objectId"-->
+                <!--                    :label="item.nick"-->
+                <!--                    :value="item.objectId"-->
+                <!--                  />-->
+                <!--                </el-select>-->
+                <span>{{ form.info.executorname }}</span>
               </el-form-item>
             </el-col>
             <el-col :lg="24" :md="24" :sm="24" :xl="24" :xs="24">
@@ -145,7 +154,7 @@
               >
                 <el-input
                   v-if="
-                    (form.status != 2 && objectid == form.info.executor) ||
+                    (form.status != 2 && objectid == form.info.executorid) ||
                     (form.status == 3 && objectid == form.info.created)
                   "
                   v-model="form.info.description"
@@ -156,43 +165,43 @@
                 </span>
               </el-form-item>
             </el-col>
-            <el-col :lg="24" :md="24" :sm="24" :xl="24" :xs="24">
-              <el-form-item
-                :label="$translateTitle('Maintenance.photo') + ': '"
-                style="margin-top: 10px"
-              >
-                <el-upload
-                  v-if="
-                    (form.status != 2 && objectid == form.info.executor) ||
-                    (form.status == 3 && objectid == form.info.created)
-                  "
-                  action="#"
-                  :auto-upload="true"
-                  :http-request="myUpload"
-                  list-type="picture-card"
-                >
-                  <i slot="default" class="el-icon-plus"></i>
-                </el-upload>
-                <el-carousel
-                  v-if="form.info.photo"
-                  height="200px"
-                  :interval="2000"
-                  type="card"
-                >
-                  <el-carousel-item
-                    v-for="(item, index) in form.info.photo"
-                    :key="index"
-                  >
-                    <img
-                      :alt="item"
-                      :src="item"
-                      style="width: 100%; height: 100%"
-                      :title="item"
-                    />
-                  </el-carousel-item>
-                </el-carousel>
-              </el-form-item>
-            </el-col>
+            <!--            <el-col :lg="24" :md="24" :sm="24" :xl="24" :xs="24">-->
+            <!--              <el-form-item-->
+            <!--                :label="$translateTitle('Maintenance.photo') + ': '"-->
+            <!--                style="margin-top: 10px"-->
+            <!--              >-->
+            <!--                <el-upload-->
+            <!--                  v-if="-->
+            <!--                    (form.status != 2 && objectid == form.info.executor) ||-->
+            <!--                    (form.status == 3 && objectid == form.info.created)-->
+            <!--                  "-->
+            <!--                  action="#"-->
+            <!--                  :auto-upload="true"-->
+            <!--                  :http-request="myUpload"-->
+            <!--                  list-type="picture-card"-->
+            <!--                >-->
+            <!--                  <i slot="default" class="el-icon-plus"></i>-->
+            <!--                </el-upload>-->
+            <!--                <el-carousel-->
+            <!--                  v-if="form.info.photo"-->
+            <!--                  height="200px"-->
+            <!--                  :interval="2000"-->
+            <!--                  type="card"-->
+            <!--                >-->
+            <!--                  <el-carousel-item-->
+            <!--                    v-for="(item, index) in form.info.photo"-->
+            <!--                    :key="index"-->
+            <!--                  >-->
+            <!--                    <img-->
+            <!--                      :alt="item"-->
+            <!--                      :src="item"-->
+            <!--                      style="width: 100%; height: 100%"-->
+            <!--                      :title="item"-->
+            <!--                    />-->
+            <!--                  </el-carousel-item>-->
+            <!--                </el-carousel>-->
+            <!--              </el-form-item>-->
+            <!--            </el-col>-->
             <el-col :lg="24" :md="24" :sm="24" :xl="24" :xs="24">
               <el-form-item
                 :label="$translateTitle('Maintenance.Remarks') + ': '"
@@ -200,7 +209,7 @@
               >
                 <el-input
                   v-if="
-                    (form.status != 2 && objectid == form.info.executor) ||
+                    (form.status != 2 && objectid == form.info.executorid) ||
                     (form.status == 3 && objectid == form.info.created)
                   "
                   v-model="form.info.Remarks"

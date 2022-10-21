@@ -12,7 +12,14 @@ import {
   query_object,
   update_object,
 } from '@/api/Parse'
-
+import request from '@/utils/request/request'
+//获取地图轨迹
+export async function getTrack(id) {
+  return request({
+    url: `/gps/track/${id}`,
+    method: 'get',
+  })
+}
 export async function queryView(params) {
   return query_object('View', params)
 }
