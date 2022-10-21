@@ -103,109 +103,67 @@
             </el-select>
           </el-form-item>
           <el-form-item
-            :label="$translateTitle('Maintenance.startdata')"
+            :label="$translateTitle('Maintenance.planstartdata')"
             prop="info.startdata"
           >
             <el-date-picker
               v-model="form.info.startdata"
               format="yyyy-MM-dd"
-              :placeholder="$translateTitle('Maintenance.startdata')"
+              :placeholder="$translateTitle('Maintenance.planstartdata')"
               style="width: 50%"
               type="date"
               value-format="yyyy-MM-dd"
             />
           </el-form-item>
           <el-form-item
-            :label="$translateTitle('Maintenance.completiondata')"
+            :label="$translateTitle('Maintenance.planenddata')"
             prop="info.completiondata"
           >
             <el-date-picker
               v-model="form.info.completiondata"
               format="yyyy-MM-dd"
-              :placeholder="$translateTitle('Maintenance.completiondata')"
+              :placeholder="$translateTitle('Maintenance.planenddata')"
               style="width: 50%"
               type="date"
               value-format="yyyy-MM-dd"
             />
           </el-form-item>
           <el-form-item
-            :label="$translateTitle('Maintenance.principal')"
-            prop="info.principal"
+            :label="$translateTitle('Maintenance.advance')"
+            prop="info.advance"
           >
-            <el-cascader
-              v-model="form.info.principal"
-              :options="user"
-              :placeholder="$translateTitle('Maintenance.selectprincipal')"
-              :show-all-levels="false"
-              style="width: 50%"
-              @change="handleChangeDepart"
-            />
-            <!--            <span v-if="viewticket">{{ form.info.principalname }}</span>-->
-            <!-- <el-select
-              v-model="form.info.principal"
-              :placeholder="$translateTitle('Maintenance.selectprincipal')"
-              style="width: 50%"
-              @change="principalChange"
-            >
-              <el-option
-                v-for="item in user"
-                :key="item.objectId"
-                :label="item.nick"
-                :value="item.objectId"
-              />
-            </el-select> -->
+            <el-input-number v-model="form.info.advance" />
           </el-form-item>
-          <el-form-item
-            :label="$translateTitle('Maintenance.executor')"
-            prop="info.executor"
-          >
-            <el-cascader
-              v-model="form.info.executor"
-              :options="user"
-              :placeholder="$translateTitle('Maintenance.selectexecutor')"
-              :show-all-levels="false"
-              style="width: 50%"
-              @change="handleChangeExecutor"
-            />
-            <!--            <span v-if="viewticket">{{ form.info.executorname }}</span>-->
-            <!-- <el-select
-              v-model="form.info.executor"
-              :placeholder="$translateTitle('Maintenance.selectexecutor')"
-              style="width: 50%"
-              @change="executorChange"
-            >
-              <el-option
-                v-for="item in user"
-                :key="item.objectId"
-                :label="item.nick"
-                :value="item.objectId"
-              />
-            </el-select> -->
-          </el-form-item>
+          <!--          <el-form-item-->
+          <!--            :label="$translateTitle('Maintenance.principal')"-->
+          <!--            prop="info.principal"-->
+          <!--          >-->
+          <!--            <el-cascader-->
+          <!--              v-model="form.info.principal"-->
+          <!--              :options="user"-->
+          <!--              :placeholder="$translateTitle('Maintenance.selectprincipal')"-->
+          <!--              :show-all-levels="false"-->
+          <!--              style="width: 50%"-->
+          <!--              @change="handleChangeDepart"-->
+          <!--            />-->
+          <!--          </el-form-item>-->
+          <!--          <el-form-item-->
+          <!--            :label="$translateTitle('Maintenance.executor')"-->
+          <!--            prop="info.executor"-->
+          <!--          >-->
+          <!--            <el-cascader-->
+          <!--              v-model="form.info.executor"-->
+          <!--              :options="user"-->
+          <!--              :placeholder="$translateTitle('Maintenance.selectexecutor')"-->
+          <!--              :show-all-levels="false"-->
+          <!--              style="width: 50%"-->
+          <!--              @change="handleChangeExecutor"-->
+          <!--            />-->
+          <!--          </el-form-item>-->
           <el-form-item
             :label="$translateTitle('Maintenance.Ticket description')"
           >
             <el-input v-model="form.info.description" type="textarea" />
-          </el-form-item>
-          <el-form-item :label="$translateTitle('Maintenance.photo')">
-            <el-upload
-              action="#"
-              :auto-upload="true"
-              :http-request="myUpload"
-              list-type="picture-card"
-            >
-              <i slot="default" class="el-icon-plus"></i>
-              <div v-for="(item, index) in form.info.photo" :key="index">
-                <img
-                  alt=""
-                  class="el-upload-list__item-thumbnail"
-                  :src="item.url"
-                />
-              </div>
-            </el-upload>
-            <el-dialog :append-to-body="true" :visible.sync="dialogVisible">
-              <img alt="" :src="dialogImageUrl" width="100%" />
-            </el-dialog>
           </el-form-item>
         </el-form>
         <div slot="footer" class="dialog-footer">
@@ -360,7 +318,7 @@
       </el-table-column>
       <el-table-column
         align="center"
-        :label="$translateTitle('Maintenance.executor')"
+        :label="$translateTitle('Maintenance.maintenance_personnel')"
       >
         <template #default="{ row }">
           {{ row.info && row.info.executorname ? row.info.executorname : '' }}
@@ -401,7 +359,7 @@
       </el-table-column>
       <el-table-column
         align="center"
-        :label="$translateTitle('Maintenance.Initiator')"
+        :label="$translateTitle('Maintenance.publisher')"
       >
         <template #default="{ row }">
           {{ row.info && row.info.createdname ? row.info.createdname : '' }}
@@ -518,6 +476,7 @@
           info: {
             startdata: '',
             completiondata: '',
+            advance: '1',
           },
         },
         title: '',
@@ -569,6 +528,13 @@
             {
               required: true,
               message: '请选择要求完成时间',
+              trigger: 'change',
+            },
+          ],
+          'info.advance': [
+            {
+              required: true,
+              message: '请输入提醒时间',
               trigger: 'change',
             },
           ],
@@ -697,6 +663,7 @@
             photo: [],
             startdata: '',
             completiondata: '',
+            advance: 7,
           },
         }
         this.viewticket = false
@@ -754,11 +721,11 @@
       },
       async createdTicket(from) {
         const setAcl = {}
-        setAcl[from.info.principal] = {
-          read: true,
-          write: true,
-        }
-        setAcl[from.info.executor] = {
+        // setAcl[from.info.principal] = {
+        //   read: true,
+        //   write: true,
+        // }
+        setAcl[from.info.executorid] = {
           read: true,
           write: true,
         }
@@ -782,12 +749,13 @@
             className: 'Device',
           },
           user: {
-            objectId: from.info.executor.objectId,
+            objectId: from.info.executorid,
             __type: 'Pointer',
             className: '_User',
           },
           // ACL: this.aclObj,
           info: {
+            advance: from.info.advance,
             photo: from.info.photo,
             timeline: [
               {
@@ -803,9 +771,9 @@
             createdname: this.username,
             startdata: new Date(from.info.startdata).getTime(),
             completiondata: new Date(from.info.completiondata).getTime(),
-            principal: from.info.principal.objectId,
-            principalname: from.info.principalname,
-            executor: from.info.executor.objectId,
+            // principal: from.info.principal.objectId,
+            // principalname: from.info.principalname,
+            executorid: from.info.executorid,
             executorname: from.info.executorname,
           },
         }
@@ -997,10 +965,12 @@
         this.Device = results
       },
       deviceChange(e) {
-        console.log('e', e)
         this.Device.map((p) => {
           if (p.objectId == e) {
+            console.log('device', p)
             this.form.info.devicename = p.name
+            this.form.info.executorname = p.maintenance_personnel.nick
+            this.form.info.executorid = p.maintenance_personnel.userid
           }
         })
       },
@@ -1022,11 +992,11 @@
       async dispatch(detail) {
         const { ACL, objectId, info } = detail
         const setAcl = {}
-        setAcl[info.principal] = {
-          read: true,
-          write: true,
-        }
-        setAcl[info.executor] = {
+        // setAcl[info.principal] = {
+        //   read: true,
+        //   write: true,
+        // }
+        setAcl[info.executorid] = {
           read: true,
           write: true,
         }
@@ -1038,7 +1008,7 @@
         const params = {
           status: 0,
           user: {
-            objectId: info.executor.objectId,
+            objectId: info.executorid,
             __type: 'Pointer',
             className: '_User',
           },

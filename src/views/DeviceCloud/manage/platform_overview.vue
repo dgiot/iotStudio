@@ -311,8 +311,27 @@
                     class="baidu_map"
                     :scroll-wheel-zoom="true"
                     :zoom="sizeZoom"
+                    @click="handleMapClick"
                     @ready="handler"
                   >
+                    <div class="screen_select">
+                      <select
+                        v-model="emicstatus"
+                        class="select_status"
+                        name="public-choice"
+                        placeholder="状态显示"
+                        @change="getSelectedTrack($event)"
+                      >
+                        <option
+                          v-for="(option, index) in emicstatusList"
+                          :key="index"
+                          class="select_option"
+                          :value="option.value"
+                        >
+                          {{ option.label }}
+                        </option>
+                      </select>
+                    </div>
                     <div class="screen_top">
                       <div class="screen_top_item">
                         <router-link to="/dashboard/productlist">
@@ -522,6 +541,12 @@
                         </bm-marker>
                       </div>
                     </bml-marker-clusterer>
+                    <bm-polyline
+                      :path="lineList"
+                      stroke-color="red"
+                      :stroke-opacity="5"
+                      :stroke-weight="4"
+                    />
                     <bm-navigation anchor="BMAP_ANCHOR_TOP_RIGHT" />
                     <bm-geolocation
                       anchor="BMAP_ANCHOR_BOTTOM_RIGHT"
@@ -905,13 +930,14 @@
   import icoPath1 from '../../../../public/assets/images/Device/1.png'
   import icoPath2 from '../../../../public/assets/images/Device/2.png'
   import { queryProduct } from '@/api/Product'
-  import { getDevice } from '@/api/Device'
+  import { getDevice, querycompanyDevice } from '@/api/Device'
   import { mapGetters, mapMutations } from 'vuex'
   import { getToken } from '@/api/Menu'
   import { Startdashboard } from '@/api/System/index'
   import { isBase64 } from '@/utils'
   import info from '@/components/Device/info'
   import { getDlinkJson } from '@/api/Dlink'
+  import { getTrack } from '@/api/View'
   import {
     BaiduMap,
     BmCityList,
@@ -927,6 +953,7 @@
     BmScale,
     BmLabel,
     BmPointCollection,
+    BmPolyline,
   } from 'vue-baidu-map'
   import { secret } from '@/config/secret.config'
 
@@ -949,6 +976,7 @@
       BmCityList,
       BmMarker,
       BmlMarkerClusterer,
+      BmPolyline,
       topoCaltable,
       ScreenDevice,
       WorkOrder,
@@ -1021,6 +1049,7 @@
       }
 
       return {
+        lineList: [],
         homeScreen: 0, //大屏版本
         backgroundimage: '',
         piechartData: {
@@ -1151,6 +1180,11 @@
           project: '',
         },
         screenWidth: '100%',
+        emicstatusList: [
+          { label: '战时状态', value: 'all' },
+          { label: '平时状态', value: '0' },
+        ],
+        emicstatus: '0',
       }
     },
     computed: {
@@ -1283,6 +1317,39 @@
       this.resizeTheChart()
     },
     methods: {
+      async handleMapClick(e) {
+        console.log('单击地图事件', e)
+
+        let location = {
+          __type: 'GeoPoint',
+          latitude: e.point.lat,
+          longitude: e.point.lng,
+        }
+        let params = {
+          limit: 10,
+          where: {
+            location: {
+              $nearSphere: location,
+              $maxDistanceInMiles: 10.0,
+            },
+          },
+        }
+        // const res = await querycompanyDevice(params)
+        // console.log('res', res)
+        // this.deviceInfo = await getDevice(row.objectId)
+      },
+      getSelectedTrack(e) {
+        console.log(e.target.value)
+        let id = e.target.value
+        if (id != '0') {
+          getTrack('7cd65c6745').then((res) => {
+            console.log('轨迹坐标', res)
+            this.lineList = res.results
+          })
+        } else {
+          this.lineList = []
+        }
+      },
       enter() {
         window.addEventListener('mousewheel', this.handleScroll, true)
       },
@@ -1447,6 +1514,11 @@
         // this.$forceUpdate()
       },
       async showDeatils(row, index) {
+        console.log('点击了')
+        getTrack(row.objectId).then((res) => {
+          console.log('轨迹坐标', res)
+          this.lineList = res.results
+        })
         const loading = this.$baseColorfullLoading(0)
         this.productIco = ''
         this.deviceInfo = await getDevice(row.objectId)
@@ -1834,13 +1906,40 @@
       height: 100%;
       position: relative;
       // position: absolute;
+      // 类型筛选
+      .screen_select {
+        position: absolute;
+        width: 300px;
+        height: 30px;
+        z-index: 99;
+        // background-color: #ea1e63;
+        top: 2px;
+        left: 22%;
+        display: flex;
+        // background-color: #0c162b;
+        color: #000000;
+        .select_status {
+          width: 120px;
+          height: 28px;
+          border-radius: 4px;
+          border: 0.5px solid #6abaf3;
+          background: -webkit-linear-gradient(left, #ffffff 0%, #ffffff 80%);
+          color: #000000;
+          .select_option {
+            background-color: #ffffff;
+            color: #000000;
+            width: 60px;
+            font-size: 15px !important;
+          }
+        }
+      }
       .screen_top {
         position: absolute;
         width: 90%;
         height: 90px;
         z-index: 99;
         // background-color: #ea1e63;
-        top: 1%;
+        top: 5%;
         left: 5%;
         display: flex;
         .screen_top_item {
