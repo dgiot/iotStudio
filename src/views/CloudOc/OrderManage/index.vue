@@ -287,62 +287,82 @@
         </div>
         <div class="text_item">
           <div style="font-size: 12px">
-            开始时间:{{ item.detail.taskstart }}
+            开始时间:
+            {{
+              item.detail.taskstart
+                ? $moment
+                    .unix(item.detail.taskstart)
+                    .format('YYYY-MM-DD HH:mm:ss')
+                : ''
+            }}
           </div>
-          <div style="font-size: 12px">结束时间:{{ item.detail.taskend }}</div>
+          <div style="font-size: 12px">
+            结束时间:
+            {{
+              item.detail.taskend
+                ? $moment
+                    .unix(item.detail.taskend)
+                    .format('YYYY-MM-DD HH:mm:ss')
+                : ''
+            }}
+          </div>
           <div style="padding: 10px">
-            <el-tag v-if="item.realstatus == 0" effect="dark" type="info">
+            <el-tag
+              v-if="item.detail.realstatus == 0"
+              effect="dark"
+              type="info"
+            >
               未派发
             </el-tag>
             <el-tag
-              v-else-if="item.realstatus == 1"
+              v-else-if="item.detail.realstatus == 1"
               effect="dark"
               type="danger"
             >
               待开始
             </el-tag>
             <el-tag
-              v-else-if="item.realstatus == 2"
+              v-else-if="item.detail.realstatus == 2"
               effect="dark"
               type="warning"
             >
               加工中
             </el-tag>
-            <el-tag v-else-if="item.realstatus == 3" effect="dark">
+            <el-tag v-else-if="item.detail.realstatus == 3" effect="dark">
               待首检
             </el-tag>
             <el-tag
-              v-else-if="item.realstatus == 4"
+              v-else-if="item.detail.realstatus == 4"
               effect="dark"
               type="success"
             >
               首检完成
             </el-tag>
-            <el-tag v-else-if="item.realstatus == 5" effect="dark">
+            <el-tag v-else-if="item.detail.realstatus == 5" effect="dark">
               待尾检
             </el-tag>
             <el-tag
-              v-else-if="item.realstatus == 6"
+              v-else-if="item.detail.realstatus == 6"
               effect="dark"
               type="success"
             >
               尾检完成
             </el-tag>
             <el-tag
-              v-else-if="item.realstatus == 7"
+              v-else-if="item.detail.realstatus == 7"
               effect="dark"
               type="warning"
             >
               待入库
             </el-tag>
             <el-tag
-              v-else-if="item.realstatus == 8"
+              v-else-if="item.detail.realstatus == 8"
               effect="dark"
               type="success"
             >
               已入库
             </el-tag>
-            <el-tag v-else-if="item.realstatus == 9" effect="dark">
+            <el-tag v-else-if="item.detail.realstatus == 9" effect="dark">
               已出库
             </el-tag>
             <el-tag v-else effect="dark" type="info">暂停中</el-tag>
