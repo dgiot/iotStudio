@@ -1514,11 +1514,11 @@
         // this.$forceUpdate()
       },
       async showDeatils(row, index) {
-        console.log('点击了')
-        getTrack(row.objectId).then((res) => {
-          console.log('轨迹坐标', res)
-          this.lineList = res.results
-        })
+        // console.log('点击了')
+        // getTrack(row.objectId).then((res) => {
+        //   console.log('轨迹坐标', res)
+        //   this.lineList = res.results
+        // })
         const loading = this.$baseColorfullLoading(0)
         this.productIco = ''
         this.deviceInfo = await getDevice(row.objectId)

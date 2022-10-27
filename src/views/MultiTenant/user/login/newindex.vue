@@ -708,7 +708,6 @@
     // background: url('') center center fixed no-repeat;
     background-size: cover;
   }
-
   .login-form {
     position: relative;
     max-width: 100%;
@@ -720,13 +719,11 @@
     background-size: 100% 100%;
     // border: 1px solid #3cb2fb;
     box-shadow: 1px 1px 12px 2px rgba(5, 106, 190, 0.5);
-
     .title {
       font-size: 54px;
       font-weight: 500;
       color: $base-color-white;
     }
-
     .title-tips {
       margin: 0 auto;
       font-size: 26px;
@@ -734,13 +731,11 @@
       color: #dcdbdb;
       text-align: center;
     }
-
     .sbMc {
       ::v-deep {
         .el-input__inner {
           display: none;
         }
-
         .el-input-group__append {
           color: #fff;
           background-color: #4a7ca8;
@@ -748,7 +743,6 @@
         }
       }
     }
-
     .login-btn {
       background-color: #2f6fe7 !important;
       display: inherit;
@@ -760,16 +754,13 @@
       border: 0;
       font-size: 20px;
       color: white !important;
-
       &:hover {
         opacity: 0.9;
       }
-
       .forget-passwordword {
         width: 100%;
         margin-top: 40px;
         text-align: left;
-
         .forget-password {
           width: 129px;
           height: 19px;
@@ -779,22 +770,18 @@
         }
       }
     }
-
     .tips {
       margin-bottom: 10px;
       font-size: $base-font-size-default;
       color: $base-color-white;
-
       span {
         &:first-of-type {
           margin-right: 16px;
         }
       }
     }
-
     .title-container {
       position: relative;
-
       .title {
         margin: 0 auto 40px auto;
         font-size: 34px;
@@ -803,7 +790,6 @@
         text-align: center;
       }
     }
-
     i {
       position: absolute;
       top: 8px;
@@ -814,7 +800,6 @@
       cursor: pointer;
       user-select: none;
     }
-
     .show-password {
       position: absolute;
       right: 25px;
@@ -824,7 +809,6 @@
       cursor: pointer;
       user-select: none;
     }
-
     ::v-deep {
       .el-form-item {
         padding-right: 0;
@@ -833,12 +817,10 @@
         background: transparent;
         border: 1px solid transparent;
         border-radius: 2px;
-
         &__content {
           min-height: $base-input-height;
           line-height: $base-input-height;
         }
-
         &__error {
           position: absolute;
           top: 100%;
@@ -848,10 +830,8 @@
           color: $base-color-red;
         }
       }
-
       .el-input {
         box-sizing: border-box;
-
         input {
           height: 48px;
           padding-left: 35px;
@@ -863,7 +843,6 @@
       }
     }
   }
-
   // 新样式
   .btn_back {
     width: 150px;
