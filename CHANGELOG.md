@@ -15,6 +15,7 @@
 * **dashboard:** update v4.6.2 ([2f344d5](https://github.com/dgiot/dgiot-dashboard/commit/2f344d5c43660950738926aeac7b9f7be3f56a49))
 * dgiot_grafana ([a9eb8ef](https://github.com/dgiot/dgiot-dashboard/commit/a9eb8ef9210bcba3b06905b37f3466015087204f))
 * index ([84ec4c3](https://github.com/dgiot/dgiot-dashboard/commit/84ec4c3a0c03016b7724d37a5784ce46bcafb04e))
+* yunweirenyuan ([f383fe3](https://github.com/dgiot/dgiot-dashboard/commit/f383fe3f64ec8ac5a1918ec9ac138e1b6f896fa8))
 
 
 
