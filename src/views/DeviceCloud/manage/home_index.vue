@@ -433,17 +433,6 @@
               <el-option label="关机" value="false" />
             </el-select>
           </el-form-item>
-          <el-form-item label="当前状态">
-            <el-select
-              v-model="queryForm.state"
-              clearable
-              placeholder="请选择当前状态"
-              @change="handleQuery()"
-            >
-              <el-option label="战时状态" value="1" />
-              <el-option label="平时状态" value="0" />
-            </el-select>
-          </el-form-item>
           <el-form-item label="运维人员">
             <el-cascader
               ref="myCascader1"
@@ -651,9 +640,6 @@
           </el-tag>
           <el-tag :type="row.status == 'ONLINE' ? 'success' : 'warning'">
             {{ row.status == 'ONLINE' ? '在线' : '离线' }}
-          </el-tag>
-          <el-tag :type="row.state == '0' ? 'success' : 'danger'">
-            {{ row.state == '0' ? '平时状态' : '战时状态' }}
           </el-tag>
         </template>
       </el-table-column>
