@@ -3324,6 +3324,18 @@ export default {
       this.$get_object('Product', this.productId)
         .then((response) => {
           if (response) {
+            this.productInfo = _.merge(response, {
+              decoder: { code: '' },
+              thing: { properties: [] },
+              config: {
+                address: response.config?.address || '余杭区良渚平高创业城c1座',
+                location: {
+                  longitude:
+                      response.config?.location?.longitude || '120.161324',
+                  latitude: response.config?.location?.latitude || '30.262441',
+                },
+              },
+            })
             this.productName = response.name
             for (var key in response) {
               this.productdetail[key] = response[key]
