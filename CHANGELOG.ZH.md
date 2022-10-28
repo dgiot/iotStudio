@@ -1,4 +1,4 @@
-## [4.6.2](https://github.com/dgiot/dgiot-dashboard/compare/v4.6.1...v4.6.2) (2022-10-14)
+## [4.6.2](https://github.com/dgiot/dgiot-dashboard/compare/v4.6.1...v4.6.2) (2022-10-21)
 
 
 ### Bug Fixes
@@ -9,6 +9,7 @@
 
 ### Features
 
+* **cloudOperations): fix(equipmentCloud:** 产品默认位置 ([28a8297](https://github.com/dgiot/dgiot-dashboard/commit/28a82977351e884cb9173950a044e77fc56fb07d))
 * **cloudOperations:** 告警关联规则引擎修改 ([f61ef67](https://github.com/dgiot/dgiot-dashboard/commit/f61ef6716d84ac4ed8a7b011afe56d308b056f83))
 * **dashboard:** update v4.6.2 ([2f344d5](https://github.com/dgiot/dgiot-dashboard/commit/2f344d5c43660950738926aeac7b9f7be3f56a49))
 * dgiot_grafana ([a9eb8ef](https://github.com/dgiot/dgiot-dashboard/commit/a9eb8ef9210bcba3b06905b37f3466015087204f))
