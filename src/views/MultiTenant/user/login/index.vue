@@ -96,6 +96,18 @@
         </el-form>
       </el-col>
     </el-row>
+    <!--    <div-->
+    <!--      style="-->
+    <!--        position: absolute;-->
+    <!--        bottom: 0;-->
+    <!--        right: 50%;-->
+    <!--        transform: translateX(50%);-->
+    <!--      "-->
+    <!--    >-->
+    <!--      <a href="https://beian.miit.gov.cn/" style="color: #fff" target="_blank">-->
+    <!--        © dgiot Corporation All Rights Reserved 浙ICP备16028958号-1-->
+    <!--      </a>-->
+    <!--    </div>-->
   </div>
 </template>
 
