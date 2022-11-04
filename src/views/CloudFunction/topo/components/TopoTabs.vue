@@ -101,7 +101,7 @@
         </el-button>
         <el-divider />
         <div style="text-align: left; margin: 10px; font-weight: 600">动图</div>
-        <img
+        <!-- <img
           draggable="true"
           size="mini"
           src="https://prod.dgiotcloud.cn/dgiot_file/topo/png/pump.gif"
@@ -115,7 +115,7 @@
               hidden: false,
             })
           "
-        />
+        /> -->
         <img
           draggable="true"
           size="mini"
@@ -193,7 +193,7 @@
         />
         <!-- -->
         <el-divider />
-        <el-button
+        <!-- <el-button
           draggable="true"
           size="mini"
           type="primary"
@@ -215,8 +215,17 @@
         >
           精灵图
         </el-button>
-        <el-divider />
-        <div style="text-align: left; margin: 10px; font-weight: 600">组件</div>
+        <el-divider /> -->
+
+        <!-- http://dev.iotn2n.com/dgiot_file/topo/png/pump.png -->
+      </a-collapse-panel>
+      <a-collapse-panel
+        key="5"
+        :header="$translateTitle('topo.screen element')"
+      >
+        <!-- <div style="text-align: left; margin: 10px; font-weight: 600">
+          大屏组件
+        </div> -->
         <el-button
           draggable="true"
           size="mini"
@@ -226,10 +235,12 @@
               productid: $route.query.productid,
               type: 'vuecomponent',
               data: {
+                id: 'line_historydata',
                 width: 400,
                 height: 260,
                 fill: 'rgba(30, 30, 30,0.7)',
                 text: '折线图',
+                source: 'api',
               },
               chart: 'line',
               hidden: false,
@@ -238,6 +249,7 @@
         >
           折线图
         </el-button>
+        <el-divider />
         <el-button
           draggable="true"
           size="mini"
@@ -252,14 +264,16 @@
                 height: 72,
                 fill: 'rgba(80, 190, 240, 0.2)',
                 text: '产品数量',
+                source: 'mqtt',
               },
-              chart: 'realcard',
+              chart: 'counter',
               hidden: false,
             })
           "
         >
           数据卡片
         </el-button>
+        <el-divider />
         <el-button
           draggable="true"
           size="mini"
@@ -270,17 +284,43 @@
               productid: $route.query.productid,
               type: 'vuecomponent',
               data: {
-                width: 240,
-                height: 240,
+                id: 'device_poweron_poweroff',
+                width: 350,
+                height: 300,
                 fill: 'rgba(30, 30, 30, 0.7)',
                 text: '饼图',
+                source: 'mqtt',
               },
               chart: 'pie',
               hidden: false,
             })
           "
         >
-          饼图
+          开关机饼图
+        </el-button>
+        <el-divider />
+        <el-button
+          draggable="true"
+          size="mini"
+          type="primary"
+          @click.native="
+            createBasicThing({
+              productid: $route.query.productid,
+              type: 'vuecomponent',
+              data: {
+                id: 'warning_list',
+                width: 550,
+                height: 350,
+                fill: 'rgba(30, 30, 30, 0.7)',
+                text: '轮播告警列表',
+                source: 'mqtt',
+              },
+              chart: 'list',
+              hidden: false,
+            })
+          "
+        >
+          告警列表
         </el-button>
         <el-button
           draggable="true"
@@ -291,22 +331,46 @@
               productid: $route.query.productid,
               type: 'vuecomponent',
               data: {
-                width: 420,
-                height: 260,
+                id: 'device_list',
+                width: 700,
+                height: 350,
                 fill: 'rgba(30, 30, 30, 0.7)',
-                text: '轮播告警列表',
+                text: '设备列表',
+                source: 'mqtt',
               },
-              chart: 'carousel',
+              chart: 'list',
               hidden: false,
             })
           "
         >
-          轮播告警列表
+          设备列表
+        </el-button>
+        <el-button
+          draggable="true"
+          size="mini"
+          type="primary"
+          @click.native="
+            createBasicThing({
+              productid: $route.query.productid,
+              type: 'vuecomponent',
+              data: {
+                id: 'workorder_list',
+                width: 500,
+                height: 350,
+                fill: 'rgba(30, 30, 30, 0.7)',
+                text: '设备列表',
+                source: 'api',
+              },
+              chart: 'list',
+              hidden: false,
+            })
+          "
+        >
+          工单列表
         </el-button>
         <el-divider />
-        <!-- http://dev.iotn2n.com/dgiot_file/topo/png/pump.png -->
       </a-collapse-panel>
-      <a-collapse-panel key="5" :header="$translateTitle('topo.print control')">
+      <a-collapse-panel key="6" :header="$translateTitle('topo.print control')">
         <el-button
           draggable="true"
           size="mini"

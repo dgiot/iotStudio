@@ -173,50 +173,6 @@ const topoBasic = {
           // draggable: true,
         })
       )
-      // simpleLabel.add(
-      //   new Konva.Path({
-      //     name: 'evidence',
-      //     id: thing.productid + '_konvaimage' + topoId,
-      //     evidenceList: [],
-      //     icon: args.path.icon,
-      //     type: args.path.type,
-      //     x: Axis.x,
-      //     y: Axis.y,
-      //     width: 36,
-      //     height: 36,
-      //     draggable: true,
-      //     data: 'M7 9v6h4l5 5V4l-5 5H7z',
-      //     handler: 'dblclick',
-      //     fill: '#0ff',
-      //     size: 36,
-      //     scale: {
-      //       x: 2,
-      //       y: 2,
-      //     },
-      //   })
-      // )
-      // var animations = {
-      //   idle: [
-      //     // x, y, width, height (4 frames)
-      //     2, 2, 70, 119, 71, 2, 74, 119, 146, 2, 81, 119, 226, 2, 76, 119,
-      //   ],
-      //   punch: [
-      //     // x, y, width, height (4 frames)
-      //     2, 138, 74, 122, 76, 138, 84, 122, 346, 138, 120, 122,
-      //   ],
-      // }
-      // var imageObj = new Image()
-      // simpleLabel.add(
-      //   new Konva.Sprite({
-      //     x: 50,
-      //     y: 50,
-      //     image: imageObj,
-      //     animation: 'idle',
-      //     animations: animations,
-      //     frameRate: 7,
-      //     frameIndex: 0,
-      //   })
-      // )
       console.log(' console.log(simpleLabel)', simpleLabel)
       return simpleLabel
       // let konvaImage = topoBasic.createImage(thing, saleInfo, randomXy, Axis)
@@ -424,8 +380,9 @@ const topoBasic = {
       type: args.chart,
       fill: args.data.fill || 'rgba(30, 30, 30,0.7)',
       text: args.text,
+      source: args.data.source,
       name: 'vuecomponent',
-      id: args.productid + '_vuecomponent' + topoId,
+      id: args.data.id || 'vue_component_' + topoId,
       draggable: true,
     })
 

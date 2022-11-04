@@ -14,3 +14,9 @@ export async function getTable() {
     method: 'get',
   })
 }
+export async function getViews() {
+  return request({
+    url: '/dlinkjson?type=Views',
+    method: 'get',
+  })
+}
