@@ -284,7 +284,7 @@
           :model="form"
           :rules="rules"
         >
-          <el-form-item v-show="form.type == 'add'" label="所属厂家">
+          <el-form-item label="所属部门">
             <el-input v-model="currentDepartment.name" disabled readonly />
           </el-form-item>
           <el-form-item label="所属产品" prop="product">
@@ -304,9 +304,6 @@
               />
             </el-select>
           </el-form-item>
-          <el-form-item label="设备名称" prop="name">
-            <el-input v-model="form.name" placeholder="请输入设备名称" />
-          </el-form-item>
           <el-form-item label="设备地址" prop="devaddr">
             <el-input
               v-model="form.devaddr"
@@ -314,10 +311,28 @@
               placeholder="请输入设备地址"
             />
           </el-form-item>
+          <el-form-item label="设备名称" prop="name">
+            <el-input v-model="form.name" placeholder="请输入设备名称" />
+          </el-form-item>
           <el-form-item label="资产编号">
             <el-input
               v-model="form.detail.assetNum"
               placeholder="请输入资产编号"
+            />
+          </el-form-item>
+          <el-form-item
+            :label="$translateTitle('Maintenance.maintenance_personnel')"
+          >
+            <el-cascader
+              ref="myCascader"
+              v-model="form.detail.executor"
+              :options="user"
+              :placeholder="
+                $translateTitle('Maintenance.selectmaintenance_personnel')
+              "
+              :show-all-levels="false"
+              style="width: 100%"
+              @change="handleChangeExecutor"
             />
           </el-form-item>
           <el-form-item label="安装位置" prop="address">
@@ -418,6 +433,19 @@
               <el-option label="关机" value="false" />
             </el-select>
           </el-form-item>
+          <el-form-item label="运维人员">
+            <el-cascader
+              ref="myCascader1"
+              v-model="queryForm.executor"
+              :options="user"
+              :placeholder="
+                $translateTitle('Maintenance.selectmaintenance_personnel')
+              "
+              :show-all-levels="false"
+              style="width: 100%"
+              @change="handleQuery()"
+            />
+          </el-form-item>
           <el-form-item>
             <el-button
               icon="el-icon-search"
@@ -430,7 +458,7 @@
             <el-button
               icon="el-icon-plus"
               type="primary"
-              @click.native="form.sync = true"
+              @click.native="handleAdd"
             >
               新增
             </el-button>
@@ -467,7 +495,7 @@
         prop="name"
         show-overflow-tooltip
         sortable
-        width="160"
+        width="auto"
       >
         <template slot="header">
           <span>设备名称</span>
@@ -508,13 +536,21 @@
         sortable
         width="120"
       />
+      <!--      <el-table-column-->
+      <!--        align="center"-->
+      <!--        label="资产编号"-->
+      <!--        prop="detail.assetNum"-->
+      <!--        show-overflow-tooltip-->
+      <!--        sortable-->
+      <!--        width="120"-->
+      <!--      />-->
       <el-table-column
         align="center"
-        label="资产编号"
-        prop="detail.assetNum"
+        :label="$translateTitle('Maintenance.maintenance_personnel')"
+        prop="detail.executorname"
         show-overflow-tooltip
         sortable
-        width="120"
+        width="130"
       />
       <el-table-column
         align="center"
@@ -550,7 +586,7 @@
         prop="product.objectId"
         show-overflow-tooltip
         sortable
-        width="120"
+        width="auto"
       >
         <template #default="{ row }">
           {{ getProductName(row.product.objectId) }}
@@ -562,7 +598,7 @@
         prop="ACL"
         show-overflow-tooltip
         sortable
-        width="120"
+        width="auto"
       >
         <template #default="{ row }">
           <el-tag
@@ -581,7 +617,7 @@
         prop="status"
         show-overflow-tooltip
         sortable
-        width="180"
+        width="220"
       >
         <template slot="header">
           <span>状态</span>
@@ -592,6 +628,8 @@
                 1. 开机关机属于网关子设备
                 <br />
                 2. 在线离线属于网关网络状态
+                <br />
+                3. 战时平时属于现场状态
               </div>
             </div>
           </el-tooltip>
@@ -624,6 +662,7 @@
         align="center"
         fixed="right"
         :label="$translateTitle('developer.operation')"
+        width="260"
       >
         <template #default="{ row }">
           <el-button size="mini" type="text" @click="konvaDevice(row)">
@@ -650,6 +689,11 @@
             <a class="el-icon-more" @click.prevent></a>
             <template #overlay>
               <a-menu>
+                <a-menu-item>
+                  <el-button size="mini" type="text" @click="handleEdit(row)">
+                    修改
+                  </el-button>
+                </a-menu-item>
                 <a-menu-item>
                   <el-button
                     size="mini"
@@ -698,6 +742,7 @@
   import { mapActions, mapGetters, mapMutations } from 'vuex'
   import TableEdit from '@/views/DeviceCloud/empty/tableEdit'
   import { getProduct, queryProduct } from '@/api/Product'
+  import { userTree } from '@/api/User'
   import {
     BaiduMap,
     BmCityList,
@@ -800,6 +845,7 @@
           keyword: '余杭区良渚平高创业城c1座',
           location: '杭州',
         },
+        user: [],
         form: {
           sync: false,
           type: 'add',
@@ -862,6 +908,7 @@
           status: this.$route.query.status ? this.$route.query.status : '',
           skip: 0,
           limit: 10,
+          state: '',
         },
       }
     },
@@ -882,6 +929,7 @@
       this.fetchData()
     },
     mounted() {
+      this.roleuser()
       this.vueComponents = []
       this.vueFlag = false
       this.$dgiotBus.$off('vueComponent')
@@ -1130,6 +1178,10 @@
                 read: true,
                 write: true,
               }
+              setAcl[this.form.detail.executorid] = {
+                read: true,
+                write: true,
+              }
               const params = {
                 name: this.form.name,
                 devaddr: this.form.devaddr,
@@ -1146,6 +1198,11 @@
                 // route: {},
                 isEnable: true,
                 status: 'ONLINE',
+                detail: {
+                  executor: this.form.detail.executor,
+                  executorid: this.form.detail.executorid,
+                  executorname: this.form.detail.executorname,
+                },
               }
               if (params.address == '') {
                 delete params.address
@@ -1153,6 +1210,7 @@
               }
               params.detail.devType = this.productDetail.devType
               params.detail.category = this.productDetail.category.objectId
+              // console.log('params', params)
               const { error = '', objectId = '' } = await postDevice(params)
               if (error) {
                 this.$message({
@@ -1170,21 +1228,17 @@
                   duration: 2000,
                 })
                 this.form.sync = false
-                this.resetForm(formName)
+                // this.resetForm(formName)
                 this.fetchData()
               }
             } else {
               const params = {
                 name: this.form.name,
-                devaddr: this.form.devaddr,
                 address: this.form.address,
                 location: this.location,
                 detail: this.form.detail,
               }
-              const { error = '' } = await putDevice(
-                this.editRow.objectId,
-                params
-              )
+              const { error = '' } = await putDevice(this.form.objectId, params)
               if (error) {
                 this.$message({
                   type: 'error',
@@ -1201,7 +1255,7 @@
                   duration: 2000,
                 })
                 this.form.sync = false
-                this.resetForm(formName)
+                // this.resetForm(formName)
                 this.fetchData()
               }
             }
@@ -1211,7 +1265,26 @@
         })
       },
       resetForm(formName) {
+        console.log(formName)
         this.$refs[formName].resetFields()
+      },
+      async roleuser() {
+        let params = {
+          where: {
+            objectId: this.currentDepartment.objectId,
+          },
+          include: true,
+          limit: 10,
+        }
+        const res = await userTree()
+        console.log('人员树', res)
+        this.user = res.data.options
+      },
+      handleChangeExecutor(value) {
+        this.form.detail.executorid =
+          this.$refs.myCascader.getCheckedNodes()[0].value
+        this.form.detail.executorname =
+          this.$refs.myCascader.getCheckedNodes()[0].label
       },
       handleCloseAmis() {
         this.coordinate = {
@@ -1361,10 +1434,22 @@
         })
       },
       handleAdd() {
-        this.$refs['edit'].showEdit()
+        this.form.type = 'add'
+        this.form.sync = true
+        // this.$refs['edit'].showEdit()
       },
       handleEdit(row) {
-        this.$refs['edit'].showEdit(row)
+        // this.form = row
+        for (let i in row) {
+          this.form[i] = row[i]
+          console.log(i)
+        }
+        // this.$set(this.form, 'detail.executor', row.detail.executor)
+        this.form.type = 'edit'
+        console.log(this.form)
+        this.form.sync = true
+        // this.roleuser()
+        // this.$refs['edit'].showEdit(row)
       },
       handleDetail(row) {},
       handleSizeChange(val) {
@@ -1406,6 +1491,11 @@
         this.queryForm.isEnable
           ? (params.where.isEnable = this.queryForm.isEnable)
           : ''
+        this.queryForm.state ? (params.where.state = this.queryForm.state) : ''
+        if (this.queryForm.executor) {
+          params.where['detail.executorid'] =
+            this.$refs.myCascader1.getCheckedNodes()[0].value
+        }
         const { results: list = [], count: total = 0 } =
           await querycompanyDevice(params, this.token)
         list.forEach((item) => {

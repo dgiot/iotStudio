@@ -9,7 +9,10 @@
           :model="queryForm"
           size="mini"
         >
-          <el-form-item :label="$translateTitle('product.Table Name')">
+          <el-form-item
+            :label="$translateTitle('product.Bind Table Name')"
+            label-width="80px"
+          >
             <el-select
               v-model="queryForm.class"
               allow-create
@@ -22,29 +25,7 @@
             >
               <el-option
                 v-for="item in DbaTable"
-                :key="item.className"
-                :label="item.className"
-                :value="item.className"
-              />
-            </el-select>
-          </el-form-item>
-          <el-form-item :label="$translateTitle('product.title')">
-            <el-input v-model="queryForm.title" />
-          </el-form-item>
-          <el-form-item :label="$translateTitle('rule.Type')">
-            <el-select
-              v-model="queryForm.type"
-              allow-create
-              clearable
-              default-first-option
-              :disabled="viewForm.notification"
-              filterable
-              style="width: 100%"
-              @change="fetchData()"
-            >
-              <el-option
-                v-for="item in Types"
-                :key="item.label"
+                :key="item.value"
                 :label="item.label"
                 :value="item.value"
               >
@@ -55,7 +36,7 @@
               </el-option>
             </el-select>
           </el-form-item>
-          <el-form-item v-show="false" label="key">
+          <el-form-item label="表单Id" label-width="60px">
             <el-select
               v-model="queryForm.key"
               allow-create
@@ -86,6 +67,60 @@
               </el-option>
             </el-select>
           </el-form-item>
+          <el-form-item :label="$translateTitle('product.title')">
+            <el-input v-model="queryForm.title" />
+          </el-form-item>
+          <el-form-item label="渲染框架" label-width="80px">
+            <el-select
+              v-model="queryForm.flag"
+              allow-create
+              clearable
+              default-first-option
+              filterable
+              style="width: 100%"
+              @change="changeFlag"
+            >
+              <el-option
+                v-for="item in flags"
+                :key="item.label"
+                :label="item.label"
+                :value="item.value"
+              >
+                <span style="float: left">{{ item.label }}</span>
+                <span style="float: right; font-size: 13px; color: #8492a6">
+                  {{ item.value }}
+                </span>
+              </el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item
+            :label="$translateTitle('rule.Typetemplate')"
+            label-width="80px"
+          >
+            <el-select
+              v-model="queryForm.type"
+              allow-create
+              clearable
+              default-first-option
+              :disabled="viewForm.notification"
+              filterable
+              style="width: 100%"
+              @change="fetchData()"
+            >
+              <el-option
+                v-for="item in Types"
+                :key="item.label"
+                :label="item.label"
+                :value="item.value"
+              >
+                <span style="float: left">{{ item.label }}</span>
+                <span style="float: right; font-size: 13px; color: #8492a6">
+                  {{ item.value }}
+                </span>
+              </el-option>
+            </el-select>
+          </el-form-item>
+
           <el-form-item :label="$translateTitle('home.language')">
             <el-select
               v-model="queryForm.language"
@@ -104,9 +139,9 @@
               />
             </el-select>
           </el-form-item>
-          <el-form-item label="id">
+          <!-- <el-form-item label="id">
             <el-input v-model="queryForm.objectId" size="mini" />
-          </el-form-item>
+          </el-form-item> -->
           <el-form-item>
             <el-button icon="el-icon-plus" type="primary" @click="handleAdd" />
             <el-button
@@ -194,7 +229,7 @@
       />
       <el-table-column
         align="center"
-        :label="$translateTitle('rule.Type')"
+        :label="$translateTitle('rule.Typetemplate')"
         prop="type"
         show-overflow-tooltip
         width="auto"
@@ -207,6 +242,26 @@
         show-overflow-tooltip
         width="auto"
       />
+      <el-table-column
+        align="center"
+        label="渲染框架"
+        show-overflow-tooltip
+        width="140"
+      >
+        <template #default="{ row, $index }">
+          <Select v-model="row.flag" @on-change="switchflag(row)">
+            <Option
+              v-for="item in flags"
+              :key="item.value"
+              :placement="$index == 0 ? 'top-start' : 'bottom-start'"
+              style="z-index: 999"
+              :value="item.value"
+            >
+              {{ item.label }}
+            </Option>
+          </Select>
+        </template>
+      </el-table-column>
       <el-table-column
         align="center"
         :label="$translateTitle('home.language')"
@@ -272,10 +327,11 @@
   </div>
 </template>
 <script>
-  import { getTable } from '@/api/Dba'
+  import { getTable, getViews } from '@/api/Dba'
   import { mapMutations } from 'vuex'
   import lowcodeDesign from '@/views/CloudFunction/lowcode/components/index'
   import { queryView, putView, postView, delView, getView } from '@/api/View'
+  import { getDlinkJson } from '@/api/Dlink'
   import ViewEdit from './components/ViewEdit'
 
   const defaultQuery = {
@@ -363,47 +419,57 @@
           { label: 'english', value: 'en' },
           { label: '日本語', value: 'jp' },
         ],
+        flags: [
+          {
+            value: 'Amis',
+            label: '动态表单',
+          },
+          {
+            value: 'Konva',
+            label: '工业组态',
+          },
+        ],
         Types: [
-          {
-            value: 'amis',
-            label: '低代码',
-          },
-          {
-            value: 'notification',
-            label: '告警联动',
-          },
-          {
-            value: 'reportFrom',
-            label: '报告表单',
-          },
-          {
-            value: 'deviceInfo',
-            label: '设备信息',
-          },
-          {
-            value: 'amis_view',
-            label: '低代码预览',
-          },
-          {
-            value: 'pressureconfig',
-            label: '压测配置',
-          },
-          {
-            value: 'topo',
-            label: '组态',
-          },
-          {
-            value: 'profile',
-            label: '设备控制',
-          },
-          {
-            value: 'content',
-            label: '数据展示',
-          },
-          {
-            value: 'sms_template',
-            label: '短信模板',
-          },
+          // {
+          //   value: 'amis',
+          //   label: '低代码',
+          // },
+          // {
+          //   value: 'notification',
+          //   label: '告警联动',
+          // },
+          // {
+          //   value: 'reportFrom',
+          //   label: '报告表单',
+          // },
+          // {
+          //   value: 'deviceInfo',
+          //   label: '设备信息',
+          // },
+          // {
+          //   value: 'amis_view',
+          //   label: '低代码预览',
+          // },
+          // {
+          //   value: 'pressureconfig',
+          //   label: '压测配置',
+          // },
+          // {
+          //   value: 'topo',
+          //   label: '组态',
+          // },
+          // {
+          //   value: 'profile',
+          //   label: '设备控制',
+          // },
+          // {
+          //   value: 'content',
+          //   label: '数据展示',
+          // },
+          // {
+          //   value: 'sms_template',
+          //   label: '短信模板',
+          // },
         ],
         DbaTable: [],
         keys: [],
@@ -514,6 +580,13 @@
         set_amisJson: 'amis/set_amisJson',
         setTreeFlag: 'settings/setTreeFlag',
       }),
+      async changeFlag(params) {
+        console.log(params)
+        const res = await getDlinkJson(params, { subtype: 'all' })
+        console.log('列表', res)
+        this.Types = res
+        this.fetchData()
+      },
       async switchlanguage(v) {
         if (!v.language) {
           return false
@@ -522,6 +595,19 @@
         this.$message({
           type: 'success',
           message: '语言类型修改成功',
+          showClose: true,
+        })
+      },
+      async switchflag(v) {
+        console.log(v)
+        // return
+        if (!v.flag) {
+          return false
+        }
+        await putView(v.objectId, { flag: v.flag })
+        this.$message({
+          type: 'success',
+          message: '修改成功',
           showClose: true,
         })
       },
@@ -592,8 +678,8 @@
        */
       async featchTable() {
         try {
-          const { results: table = [] } = await getTable()
-          this.DbaTable = table
+          const res = await getViews()
+          this.DbaTable = res
         } catch (error) {
           console.log(error)
         }
@@ -613,13 +699,28 @@
         localStorage.setItem('parse_objectid', row.key)
         const loading = this.$baseLoading(1)
         const { data = {} } = await getView(row.objectId)
-        if (['amis_view', 'amis', 'topo'].includes(row.type) == -1) {
-          this.$router.push({
-            path: '/Topo?productid',
-            query: {
-              productid: row.key,
-            },
-          })
+        if (row.flag == 'Konva') {
+          console.log('跳转', row)
+          // Topo?productid=3faa32ba66
+          if (row.type == 'Dashboard') {
+            this.$router.push({
+              path: '/Topo',
+              query: {
+                viewid: row.objectId,
+                dashboard: true,
+                // productid: row.key || 'none',
+              },
+            })
+          } else if (row.type.toLowerCase() == 'topo') {
+            this.$router.push({
+              path: '/Topo',
+              query: {
+                // viewid: row.objectId,
+                // dashboard: true,
+                productid: row.key,
+              },
+            })
+          }
         } else {
           this.$router.push({
             path: `/design/editor/amis/`,
@@ -678,6 +779,9 @@
           : ''
         this.queryForm.key
           ? (this.queryPayload.where.key = { $regex: this.queryForm.key })
+          : ''
+        this.queryForm.flag
+          ? (this.queryPayload.where.flag = { $regex: this.queryForm.flag })
           : ''
         this.queryForm.objectId
           ? (this.queryPayload.where.objectId = {

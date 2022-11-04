@@ -314,24 +314,6 @@
                     @click="handleMapClick"
                     @ready="handler"
                   >
-                    <div class="screen_select">
-                      <select
-                        v-model="emicstatus"
-                        class="select_status"
-                        name="public-choice"
-                        placeholder="状态显示"
-                        @change="getSelectedTrack($event)"
-                      >
-                        <option
-                          v-for="(option, index) in emicstatusList"
-                          :key="index"
-                          class="select_option"
-                          :value="option.value"
-                        >
-                          {{ option.label }}
-                        </option>
-                      </select>
-                    </div>
                     <div class="screen_top">
                       <div class="screen_top_item">
                         <router-link to="/dashboard/productlist">
@@ -541,12 +523,6 @@
                         </bm-marker>
                       </div>
                     </bml-marker-clusterer>
-                    <bm-polyline
-                      :path="lineList"
-                      stroke-color="red"
-                      :stroke-opacity="5"
-                      :stroke-weight="4"
-                    />
                     <bm-navigation anchor="BMAP_ANCHOR_TOP_RIGHT" />
                     <bm-geolocation
                       anchor="BMAP_ANCHOR_BOTTOM_RIGHT"

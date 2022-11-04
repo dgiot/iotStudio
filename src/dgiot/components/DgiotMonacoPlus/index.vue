@@ -215,7 +215,7 @@
         return this.$refs.monacoEditor.$refs
       },
       setValue(value) {
-        console.log(value)
+        // console.log(value)
         // eslint-disable-next-line vue/no-mutating-props
         // this.$refs.monacoEditor.content = value
         console.log(this.$refs.monacoEditor)

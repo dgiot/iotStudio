@@ -122,13 +122,25 @@ const topoBg = {
             }
           )
         )
-        yoda.setAttrs({
-          id: 'bg',
-          type: 'bg-image',
-          width: 1200,
-          height: 700,
-          src: bgSrc,
-        })
+        // console.log('11111这是大屏设置', window.location)
+        if (window.location.hash.indexOf('dashboard=true') >= 0) {
+          yoda.setAttrs({
+            id: 'bg',
+            type: 'bg-image',
+            width: 1900,
+            height: 900,
+            src: bgSrc,
+          })
+        } else {
+          yoda.setAttrs({
+            id: 'bg',
+            type: 'bg-image',
+            width: 1200,
+            height: 700,
+            src: bgSrc,
+          })
+        }
+
         // removeBg(canvas.json.file)
         layer.add(yoda)
         console.warn(yoda)
