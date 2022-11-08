@@ -795,6 +795,8 @@
         }
 
         this.viewList = viewList
+      } else {
+        this.konvaId = this.$route.query.viewid
       }
       this.$nextTick(() => {
         this.handleKonva()
@@ -981,6 +983,26 @@
           this.editNode.setAttrs(editForm)
           return
         }
+        if (this.editNode.attrs.type == 'counter') {
+          let data = { ...this.editForm }
+          data.id =
+            data.text == '产品数量'
+              ? 'product_counter'
+              : data.text == '设备数量'
+              ? 'device_counter'
+              : data.text == '在线设备'
+              ? 'device_online_counter'
+              : data.text == '离线设备'
+              ? 'device_offline_counter'
+              : data.text == '开机设备'
+              ? 'device_poweron_counter'
+              : data.text == '关机设备'
+              ? 'device_poweroff_counter'
+              : 'selectnone'
+          console.log('datavue', data)
+          this.editNode.setAttrs(data)
+          return
+        }
         this.editNode.setAttrs(this.editForm)
       },
       handlePrintType() {
@@ -1149,12 +1171,34 @@
           if (!_this.$route.query.viewid && _this.konvaId) {
             params.viewid = _this.konvaId
           }
-          // console.log('paramsparamsparamsparamsparams', params)
+          if (this.$route.query.dashboard) {
+            const res = await getView(this.$route.query.viewid)
+            this.viewInfo = res
+            console.log('请求view', res)
+            await _this.initKonva({
+              data: res.data.konva.Stage,
+              id: 'kevCurrent',
+            })
+            // loading.close()
+
+            _this.productconfig = productconfig || {}
+            let profile = productconfig.profile || {}
+            let profileList = []
+            for (let key in profile) {
+              let option = {
+                label: key,
+                value: key,
+              }
+              profileList.push(option)
+            }
+            this.profileList = profileList
+            return
+          }
           const { message = '', data = {} } = await _getTopo(params)
           // 绘制前不光需要获取到组态数据，还需要获取产品数据
           const productconfig = await getProduct(_this.$route.query.productid)
 
-          _this.productconfig = productconfig
+          _this.productconfig = productconfig || {}
           let profile = productconfig.profile || {}
           let profileList = []
           for (let key in profile) {
@@ -1165,6 +1209,9 @@
             profileList.push(option)
           }
           this.profileList = profileList
+          // }
+          // console.log('paramsparamsparamsparamsparams', params)
+
           // console.groupCollapsed(
           //   '%c productconfig',
           //   'color:#009a61; font-size: 28px; font-weight: 300'

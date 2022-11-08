@@ -90,12 +90,6 @@
       }
     },
     computed: {
-      ...mapGetters({
-        _product_count: 'dashboard/_product_count',
-        _dev_count: 'dashboard/_dev_count', //设备总数
-        _dev_online_count: 'dashboard/_dev_online_count', //在线
-        _dev_off_count: 'dashboard/_dev_off_count', //离线
-      }),
       optionHover() {
         return {
           step: 0.5, // 数值越大速度滚动越快

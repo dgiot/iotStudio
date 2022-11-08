@@ -6,7 +6,7 @@
     @close="close"
   >
     <el-form ref="form" label-width="80px" :model="form" :rules="rules">
-      <el-form-item label="表名" prop="class">
+      <el-form-item label="绑定表单名" prop="class">
         <el-select
           v-model="form.class"
           allow-create
@@ -19,25 +19,7 @@
         >
           <el-option
             v-for="item in DbaTable"
-            :key="item.className"
-            :label="item.className"
-            :value="item.className"
-          />
-        </el-select>
-      </el-form-item>
-      <el-form-item label="类型" prop="type">
-        <el-select
-          v-model="form.type"
-          allow-create
-          clearable
-          default-first-option
-          filterable
-          style="width: 100%"
-          @change="changeType"
-        >
-          <el-option
-            v-for="item in Types"
-            :key="item.label"
+            :key="item.value"
             :label="item.label"
             :value="item.value"
           >
@@ -48,24 +30,7 @@
           </el-option>
         </el-select>
       </el-form-item>
-      <el-form-item :label="$translateTitle('home.language')">
-        <el-select
-          v-model="form.language"
-          allow-create
-          clearable
-          default-first-option
-          filterable
-          style="width: 100%"
-        >
-          <el-option
-            v-for="item in lang"
-            :key="item.value"
-            :label="item.label"
-            :value="item.value"
-          />
-        </el-select>
-      </el-form-item>
-      <el-form-item label="key" prop="key">
+      <el-form-item label="绑定表单Id" prop="key">
         <el-select
           v-model="form.key"
           allow-create
@@ -95,9 +60,28 @@
           </el-option>
         </el-select>
       </el-form-item>
+
       <el-form-item :label="$translateTitle('product.title')" prop="title">
         <el-input v-model="form.title" />
       </el-form-item>
+      <el-form-item :label="$translateTitle('home.language')">
+        <el-select
+          v-model="form.language"
+          allow-create
+          clearable
+          default-first-option
+          filterable
+          style="width: 100%"
+        >
+          <el-option
+            v-for="item in lang"
+            :key="item.value"
+            :label="item.label"
+            :value="item.value"
+          />
+        </el-select>
+      </el-form-item>
+
       <!--      <el-form-item :label="$translateTitle('task.data')" prop="data">-->
       <!--        <el-tabs-->
       <!--          v-model="activeName"-->
@@ -124,6 +108,52 @@
       <!--          </el-tab-pane>-->
       <!--        </el-tabs>-->
       <!--      </el-form-item>-->
+      <el-form-item label="渲染框架" prop="flag">
+        <el-select
+          v-model="form.flag"
+          allow-create
+          clearable
+          default-first-option
+          filterable
+          style="width: 100%"
+          @change="changeFlag"
+        >
+          <el-option
+            v-for="item in flags"
+            :key="item.label"
+            :label="item.label"
+            :value="item.value"
+          >
+            <span style="float: left">{{ item.label }}</span>
+            <span style="float: right; font-size: 13px; color: #8492a6">
+              {{ item.value }}
+            </span>
+          </el-option>
+        </el-select>
+      </el-form-item>
+      <el-form-item label="参考模板" prop="type">
+        <el-select
+          v-model="form.type"
+          allow-create
+          clearable
+          default-first-option
+          filterable
+          style="width: 100%"
+          @change="changeType"
+        >
+          <el-option
+            v-for="item in Types"
+            :key="item.label"
+            :label="item.label"
+            :value="item.value"
+          >
+            <span style="float: left">{{ item.label }}</span>
+            <span style="float: right; font-size: 13px; color: #8492a6">
+              {{ item.value }}
+            </span>
+          </el-option>
+        </el-select>
+      </el-form-item>
       <el-form-item :label="$translateTitle('task.data')" prop="data">
         <div style="height: 30vh; overflow: auto">
           <dgiot-monaco-plus
@@ -161,47 +191,61 @@
         ],
         upKey: new Date().getMilliseconds(),
         DbaTable: [],
+        flags: [
+          {
+            value: 'Amis',
+            label: '动态表单',
+          },
+          {
+            value: 'Konva',
+            label: '工业组态',
+          },
+        ],
         Types: [
-          {
-            value: 'amis',
-            label: '低代码',
-          },
-          {
-            value: 'notification',
-            label: '告警联动',
-          },
-          {
-            value: 'reportFrom',
-            label: '报告表单',
-          },
-          {
-            value: 'deviceInfo',
-            label: '设备信息',
-          },
-          {
-            value: 'amis_view',
-            label: '低代码预览',
-          },
-          {
-            value: 'topo',
-            label: '组态',
-          },
-          {
-            value: 'profile',
-            label: '设备控制',
-          },
-          {
-            value: 'content',
-            label: '数据展示',
-          },
-          {
-            value: 'pressureconfig',
-            label: '压测配置',
-          },
-          {
-            value: 'sms_template',
-            label: '短信模板',
-          },
+          // {
+          //   value: 'amis',
+          //   label: '低代码',
+          // },
+          // {
+          //   value: 'notification',
+          //   label: '告警联动',
+          // },
+          // {
+          //   value: 'reportFrom',
+          //   label: '报告表单',
+          // },
+          // {
+          //   value: 'deviceInfo',
+          //   label: '设备信息',
+          // },
+          // {
+          //   value: 'amis_view',
+          //   label: '低代码预览',
+          // },
+          // {
+          //   value: 'topo',
+          //   label: '组态',
+          // },
+          // {
+          //   value: 'dashboard',
+          //   label: '大屏',
+          // },
+          // {
+          //   value: 'profile',
+          //   label: '设备控制',
+          // },
+          // {
+          //   value: 'content',
+          //   label: '数据展示',
+          // },
+          // {
+          //   value: 'pressureconfig',
+          //   label: '压测配置',
+          // },
+          // {
+          //   value: 'sms_template',
+          //   label: '短信模板',
+          // },
         ],
         keys: [],
         activeName: 'first',
@@ -213,6 +257,7 @@
           class: 'Product',
           title: '',
           author: '',
+          flag: '',
         },
         rules: {
           title: [{ required: true, trigger: 'blur', message: '请输入标题' }],
@@ -257,14 +302,18 @@
        * @Description:
        */
       async changeType(params) {
+        console.log(params)
+        // if (params == 'topo') {
+        //   this.form.flag = 'knova'
+        // } else {
+        //   this.form.flag = 'amis'
+        // }
         this.codes = {}
         this.form.data = {}
-        const type = params
-          .trim()
-          .toLowerCase()
-          .replace(params[0], params[0].toUpperCase())
+        //  .toLowerCase()
+        // const type = params.trim().replace(params[0], params[0].toUpperCase())
         try {
-          const res = await getDlinkJson(type)
+          const res = await getDlinkJson(this.form.flag, { subtype: params })
           this.form.data = res || {}
           this.codes = JSON.stringify(this.form.data, null, 4)
           this.upKey = new Date().getMilliseconds()
@@ -277,6 +326,12 @@
             'dgiot-hey-message-error'
           )
         }
+      },
+      async changeFlag(params) {
+        console.log(params)
+        const res = await getDlinkJson(params, { subtype: 'all' })
+        console.log('列表', res)
+        this.Types = res
       },
       /**
        * @Author: dgiot-fe
@@ -293,8 +348,20 @@
           //  根据下拉的表,查到对应表数据
           const params = {
             order: '-updatedAt',
-            excludeKeys:
-              'children,thing,decoder,topics,productSecret,view,category,producttemplet',
+            // // keys: 'objectId',
+            // excludeKeys:
+            //   'children,thing,decoder,topics,productSecret,view,category,producttemplet',
+          }
+          switch (_class) {
+            case 'Notification':
+              params.keys = 'objectId'
+              break
+            case 'Product':
+              params.keys = 'objectId,name'
+              break
+            case 'Maintenance':
+              params.keys = 'objectId,name'
+              break
           }
           const { results = [] } = await this.$query_object(_class, params)
           this.keys = results

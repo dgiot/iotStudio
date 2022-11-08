@@ -11,10 +11,11 @@ import request from '@/utils/request/request'
  * @param type
  * @returns {Promise<*>}
  */
-export async function getDlinkJson(type = 'Topic') {
+export async function getDlinkJson(type = 'Topic', params) {
   return request({
     url: `dlinkjson?type=${type}`,
     method: 'get',
+    params,
   })
 }
 

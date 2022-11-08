@@ -77,7 +77,29 @@
         )
       },
     },
-    watch: {},
+    watch: {
+      $route: {
+        handler: async function (val, oldVal) {
+          console.log('变化了', val)
+          let viewid = val.path.split('/')[val.path.split('/').length - 1]
+          const { data = {} } = await getView(viewid)
+          this.viewData = data
+          console.log('view表单', data)
+          if (JSON.stringify(this.viewData) != '{}') {
+            this.commandInfo.dialog = true
+            this.loading = false
+          } else {
+            this.$baseMessage(
+              '未找到该低代码模板',
+              'info',
+              'dgiot-hey-message-error'
+            )
+          }
+        },
+        // 深度观察监听
+        deep: true,
+      },
+    },
     async created() {
       this.isPC = this.$ispc()
       // this.fetchProduct()
