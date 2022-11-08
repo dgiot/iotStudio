@@ -886,11 +886,15 @@ export default {
     },
   },
   mounted() {
+    this.query_notification()
+    this.getAllunit()
+    this.getDefaultTopic()
     this.$nextTick(() => {
       this.$refs._tabs.$children[0].$refs.tabs[3].style.display = 'none'
       this.mqtt.router = this.$dgiotBus.router(this.$route.fullPath)
     })
     this.Industry()
+    this.getAllunit()
     // editor编辑器使用
     editor2 = ace.edit('editor2')
     editor2.session.setMode('ace/mode/text') // 设置语言
@@ -901,7 +905,11 @@ export default {
       enableSnippets: true,
       enableLiveAutocompletion: true, // 设置自动提示
     })
-
+    if (this.$route.query.id) {
+      let id = this.$route.query.id
+      this.fileParams.path = `product/${id}`
+      this.get_filelist(`dgiot_file/product/${id}`) //dgiot_file/file  ///`product/${id}`
+    }
     if (this.$route.query.activeName) {
       this.activeName = this.$route.query.activeName
     }
@@ -1268,11 +1276,13 @@ export default {
         thing
       )
       this.productObj = res
-      // this.productdetail = res
-      // let config = { ...this.productdetail.config, ...res.config }
-      // this.$set(this.productdetail, 'thing', this.productObj.thing)
-      // this.$set(this.productdetail, 'config', this.productObj.config)
+      let config = { ...this.productdetail.config, ...res.config }
+      this.$set(this.productdetail, 'thing', this.productObj.thing)
+      this.$set(this.productdetail, 'config', this.productObj.config)
+      // this.productdetail.config = config
       this.modules.data = setThing //setThing
+      // this.productdetail.thing = setThing //setThing
+      // this.productdetail.config = res.config
     },
     async submitModules(type, form) {
       form.data.outputParams = []
@@ -1569,16 +1579,11 @@ export default {
             },
             hiddenRow: ['class', 'key', 'createdAt'],
           }
-          this.query_notification()
           break
         case 'fiveth':
           this.getProductChannel()
           break
-        case 'third':
-          this.getAllunit()
-          break
         case 'second':
-          this.getDefaultTopic()
           this.getTopic()
           break
         case 'seven':
@@ -1589,13 +1594,6 @@ export default {
           break
         case 'eighth':
           this.isreload++
-          break
-        case 'file':
-          if (this.$route.query.id) {
-            let id = this.$route.query.id
-            this.fileParams.path = `product/${id}`
-            this.get_filelist(`dgiot_file/product/${id}`) //dgiot_file/file  ///`product/${id}`
-          }
           break
         default:
           window.clearInterval(this.subtimer)
@@ -3308,7 +3306,7 @@ export default {
     // 得到产品详情
     getProDetail() {
       // 查询表单数据
-      // this.query_notification()
+      this.query_notification()
       editor = ace.edit('editor')
       editor.session.setMode('ace/mode/erlang') // 设置语言
       editor.setTheme('ace/theme/monokai') // 设置主题
@@ -3323,6 +3321,7 @@ export default {
       this.FromMachine = [{ name: 'ALL' }]
       this.$get_object('Product', this.productId)
         .then((response) => {
+          console.log('response', response)
           if (response) {
             this.productInfo = _.merge(response, {
               decoder: { code: '' },
@@ -3331,7 +3330,7 @@ export default {
                 address: response.config?.address || '余杭区良渚平高创业城c1座',
                 location: {
                   longitude:
-                      response.config?.location?.longitude || '120.161324',
+                    response.config?.location?.longitude || '120.161324',
                   latitude: response.config?.location?.latitude || '30.262441',
                 },
               },
@@ -3359,6 +3358,7 @@ export default {
                 this.$set(this.productdetail, 'categoryname', cat.name)
               })
             }
+
             this.form.Productname = response.name
             this.ProductSecret = response.productSecret
             this.form.Productkey = this.productId
@@ -3399,9 +3399,9 @@ export default {
               }
             })
             this.FromMachine = _.uniqBy(this.FromMachine, 'name')
-            // editor.setValue(Base64.decode(setdata))
-            // editor.gotoLine(editor.session.getLength())
-
+            // Object.assign(this.FromMachine, _.uniqBy(array, 'name'))
+            editor.setValue(Base64.decode(setdata))
+            editor.gotoLine(editor.session.getLength())
           }
         })
         .catch((err) => {
