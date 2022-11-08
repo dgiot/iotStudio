@@ -300,8 +300,8 @@ const topoBasic = {
     simpleImage = new Konva.Image({
       name: 'staticimage',
       id: args.productid + '_staticimage' + topoId,
-      x: Axis.x,
-      y: Axis.y,
+      x: 100,
+      y: 100,
       image: imageObj,
       width: args.data.width,
       height: args.data.height,
@@ -372,6 +372,35 @@ const topoBasic = {
 
     let vueComponet = ''
     const topoId = uuid(5)
+    if (args.data.src) {
+      console.log('1111111触发了', args)
+      let src = args.data.src
+      if (src.indexOf('http') < 0) {
+        console.log(' this.$FileServe', Vue.prototype.$FileServe)
+        src = Vue.prototype.$FileServe + src
+      }
+      var imageObj = new Image()
+      imageObj.src = src
+      // imageObj.onload = () => {
+      var simpleImage = new Konva.Image({
+        id: args.data.id || 'vue_component_' + topoId,
+        x: 100,
+        y: 100,
+        image: imageObj,
+        width: args.data.width,
+        height: args.data.height,
+        type: args.chart,
+        source: args.data.source,
+        name: 'vuecomponent',
+        text: args.data.text,
+        // handler: 'dblclick',
+        draggable: true,
+      })
+      simpleImage.setAttrs({
+        src: src,
+      })
+      return simpleImage
+    }
     vueComponet = new Konva.Rect({
       x: 100,
       y: 100,
@@ -379,10 +408,67 @@ const topoBasic = {
       height: args.data.height || 200,
       type: args.chart,
       fill: args.data.fill || 'rgba(30, 30, 30,0.7)',
-      text: args.text,
+      text: args.data.text,
       source: args.data.source,
       name: 'vuecomponent',
       id: args.data.id || 'vue_component_' + topoId,
+      draggable: true,
+    })
+
+    // vueComponet.setAttrs({
+    //   src: args.image,
+    // })
+
+    return vueComponet
+  },
+  createAmisComponent(args) {
+    console.info(
+      'src/utils/konva/core/topoBasic.js',
+      'gifImage',
+      // args.path,
+      args
+    )
+    if (args.data.src) {
+      let src = args.data.src
+      if (src.indexOf('http') < 0) {
+        console.log(' this.$FileServe', Vue.prototype.$FileServe)
+        src = Vue.prototype.$FileServe + src
+      }
+      var imageObj = new Image()
+      imageObj.src = src
+      // imageObj.onload = () => {
+      var simpleImage = new Konva.Image({
+        id: args.data.id || 'amis_component_' + topoId,
+        x: 100,
+        y: 100,
+        image: imageObj,
+        width: args.data.width,
+        height: args.data.height,
+        type: args.chart,
+        source: args.data.source,
+        name: 'amiscomponent',
+        text: args.data.text,
+        // handler: 'dblclick',
+        draggable: true,
+      })
+      simpleImage.setAttrs({
+        src: src,
+      })
+      return simpleImage
+    }
+    let vueComponet = ''
+    const topoId = uuid(5)
+    vueComponet = new Konva.Rect({
+      x: 100,
+      y: 100,
+      width: args.data.width || 300,
+      height: args.data.height || 200,
+      type: args.chart,
+      fill: args.data.fill || 'rgba(30, 30, 30,0.7)',
+      text: args.data.text,
+      source: args.data.source,
+      name: 'amiscomponent',
+      id: args.data.id || 'amis_component_' + topoId,
       draggable: true,
     })
 

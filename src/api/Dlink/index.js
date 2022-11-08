@@ -22,7 +22,7 @@ export async function getDlinkJson(type = 'Topic', params) {
 export async function deleteTopic(
   Topic = '$dg/user/router/thing/111/cmd/delete'
 ) {
-  console.warn(`${location.href} unSubscribe ${Topic}`)
+  // console.warn(`${location.href} unSubscribe ${Topic}`)
   return {
     code: 200,
     msg: 'success',

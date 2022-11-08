@@ -215,6 +215,7 @@ const mutations = {
         canvas.contextmenu.attrs.name == 'staticimage' ||
         canvas.contextmenu.attrs.name == 'sprite' ||
         canvas.contextmenu.attrs.name == 'vuecomponent' ||
+        canvas.contextmenu.attrs.name == 'amiscomponent' ||
         canvas.contextmenu.attrs.name == 'printer'
       ) {
         contextmenu = canvas.contextmenu
@@ -316,7 +317,8 @@ const mutations = {
       thing.type == 'knovaimage' ||
       thing.type == 'staticimage' ||
       thing.type == 'gifimage' ||
-      thing.type == 'vuecomponent'
+      thing.type == 'vuecomponent' ||
+      thing.type == 'amiscomponent'
     ) {
       console.log('konvaimage', thing)
       // state.createdEvidence = Evidence
@@ -344,6 +346,15 @@ const mutations = {
         simpleImage = addNodeEvent(
           _.merge(canvas.handlerArgs, {
             type: 'createVueComponent',
+            chart: thing.chart,
+            data: thing.data,
+            productid: thing.productid,
+          })
+        )
+      } else if (thing.type == 'amiscomponent') {
+        simpleImage = addNodeEvent(
+          _.merge(canvas.handlerArgs, {
+            type: 'createAmisComponent',
             chart: thing.chart,
             data: thing.data,
             productid: thing.productid,
