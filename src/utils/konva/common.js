@@ -123,6 +123,9 @@ function addNodeEvent(args) {
       case 'createVueComponent':
         return topoBasic.createVueComponent(args)
         break
+      case 'createAmisComponent':
+        return topoBasic.createAmisComponent(args)
+        break
       case 'createHistory': // 历史数据按钮
         return createHistory(thing, saleInfo, randomXy, args)
         break

@@ -449,8 +449,8 @@
         editRow: {},
         viewForm: {
           showRow: false,
-          class: 'Product',
-          type: 'amis',
+          class: '',
+          type: '',
           // key: this.$route.query.id,
           key: '',
           title: '',

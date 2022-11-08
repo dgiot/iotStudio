@@ -150,14 +150,47 @@
                   @input="handleEditKonva"
                 ></el-input>
               </el-form-item>
-              <el-form-item label="字体大小">
+              <el-form-item
+                v-if="editNode.attrs.name == 'amiscomponent'"
+                label="低代码绑定"
+              >
+                <el-select
+                  v-model="screenViewId"
+                  @change="handleEditViewId"
+                  placeholder="请选择"
+                >
+                  <el-option
+                    v-for="item in screenViewList"
+                    :key="item.value"
+                    :label="item.title"
+                    :value="item.objectId"
+                  ></el-option>
+                </el-select>
+              </el-form-item>
+              <el-form-item
+                label="字体大小"
+                v-if="
+                  editNode.attrs.name != 'amiscomponent' &&
+                  editNode.attrs.name != 'vuecomponent' &&
+                  editNode.attrs.name != 'konvaimage' &&
+                  editNode.attrs.name != 'staticimage'
+                "
+              >
                 <el-input
                   v-model="editForm.fontSize"
                   type="number"
                   @input="handleEditKonva"
                 ></el-input>
               </el-form-item>
-              <el-form-item label="字体类型">
+              <el-form-item
+                label="字体类型"
+                v-if="
+                  editNode.attrs.name != 'amiscomponent' &&
+                  editNode.attrs.name != 'vuecomponent' &&
+                  editNode.attrs.name != 'konvaimage' &&
+                  editNode.attrs.name != 'staticimage'
+                "
+              >
                 <el-select
                   v-model="editForm.fontFamily"
                   @change="handleEditKonva"
@@ -171,7 +204,15 @@
                   ></el-option>
                 </el-select>
               </el-form-item>
-              <el-form-item label="纵向偏移">
+              <el-form-item
+                label="纵向偏移"
+                v-if="
+                  editNode.attrs.name != 'amiscomponent' &&
+                  editNode.attrs.name != 'vuecomponent' &&
+                  editNode.attrs.name != 'konvaimage' &&
+                  editNode.attrs.name != 'staticimage'
+                "
+              >
                 <el-input
                   v-model="editForm.lineHeight"
                   type="number"
@@ -179,7 +220,15 @@
                   @input="handleEditKonva"
                 ></el-input>
               </el-form-item>
-              <el-form-item label="描边颜色">
+              <el-form-item
+                label="描边颜色"
+                v-if="
+                  editNode.attrs.name != 'amiscomponent' &&
+                  editNode.attrs.name != 'vuecomponent' &&
+                  editNode.attrs.name != 'konvaimage' &&
+                  editNode.attrs.name != 'staticimage'
+                "
+              >
                 <el-input
                   v-model="editForm.stroke"
                   @input="handleEditKonva"
@@ -191,7 +240,15 @@
                   @active-change="colorChange($event, 'stroke', true)"
                 ></el-color-picker>
               </el-form-item>
-              <el-form-item label="描边宽度">
+              <el-form-item
+                label="描边宽度"
+                v-if="
+                  editNode.attrs.name != 'amiscomponent' &&
+                  editNode.attrs.name != 'vuecomponent' &&
+                  editNode.attrs.name != 'konvaimage' &&
+                  editNode.attrs.name != 'staticimage'
+                "
+              >
                 <el-input
                   v-model="editForm.strokeWidth"
                   type="number"
@@ -200,7 +257,10 @@
                 ></el-input>
               </el-form-item>
               <el-form-item
-                v-if="editNode.attrs.name == 'vuecomponent'"
+                v-if="
+                  editNode.attrs.name == 'vuecomponent' &&
+                  editNode.attrs.type == 'counter'
+                "
                 label="绑定类型"
               >
                 <el-select
@@ -225,7 +285,12 @@
 
               <el-form-item
                 label="底部颜色"
-                v-if="editNode.attrs.name != 'vuecomponent'"
+                v-if="
+                  editNode.attrs.name != 'amiscomponent' &&
+                  editNode.attrs.name != 'vuecomponent' &&
+                  editNode.attrs.name != 'konvaimage' &&
+                  editNode.attrs.name != 'staticimage'
+                "
               >
                 <el-input
                   v-model="btmfill"
@@ -354,7 +419,12 @@
             </div>
             <el-form-item
               label="横坐标"
-              v-if="editNode.attrs.name != 'vuecomponent'"
+              v-if="
+                editNode.attrs.name != 'amiscomponent' &&
+                editNode.attrs.name != 'vuecomponent' &&
+                editNode.attrs.name != 'konvaimage' &&
+                editNode.attrs.name != 'staticimage'
+              "
             >
               <el-input
                 v-model="x"
@@ -365,7 +435,12 @@
             </el-form-item>
             <el-form-item
               label="纵坐标"
-              v-if="editNode.attrs.name != 'vuecomponent'"
+              v-if="
+                editNode.attrs.name != 'amiscomponent' &&
+                editNode.attrs.name != 'vuecomponent' &&
+                editNode.attrs.name != 'konvaimage' &&
+                editNode.attrs.name != 'staticimage'
+              "
             >
               <el-input
                 v-model="y"
@@ -411,6 +486,8 @@
         editFlag: false,
         direction: 'rtl',
         viewList: [],
+        screenViewList: [],
+        screenViewId: '',
         konvaId: '',
         editNode: {
           attrs: {},
@@ -432,6 +509,14 @@
           {
             label: '离线设备',
             value: '离线设备',
+          },
+          {
+            label: '开机设备',
+            value: '开机设备',
+          },
+          {
+            label: '关机设备',
+            value: '关机设备',
           },
         ],
         fontfamilyList: [
@@ -478,9 +563,13 @@
             value: 'label',
           },
           {
-            label: '图片',
-            value: 'image',
+            label: '文本替换值',
+            value: 'value',
           },
+          // {
+          //   label: '图片',
+          //   value: 'image',
+          // },
           {
             label: '条码',
             value: 'scancode',
@@ -488,10 +577,6 @@
           {
             label: '条码字符串',
             value: 'scancodetext',
-          },
-          {
-            label: '文本替换值',
-            value: 'value',
           },
           {
             label: '打印纸张',
@@ -725,7 +810,7 @@
           strokeWidth: 0, //描边宽度
           text: '', //文本内容
         },
-        btmfill: '',
+        btmfill: '', //底部背景颜色
         scale: 1,
         x: 0,
         y: 0,
@@ -778,6 +863,20 @@
           key: { $regex: this.$route.query.productid },
         },
       }
+      if (this.$route.query.viewid) {
+        let param = {
+          count: 'objectId',
+          order: 'createdAt',
+          excludeKeys: 'data',
+          skip: 0,
+          limit: 50,
+          where: { flag: { $regex: 'Amis' } },
+        }
+        let screenViewList = await queryView(param)
+        console.log('screenViewList', screenViewList)
+        this.screenViewList = screenViewList.results
+      }
+
       if (!this.$route.query.viewid) {
         let viewList = []
         const { results = [] } = await queryView(params)
@@ -827,6 +926,9 @@
           fontFamily: node.attrs.fontFamily || '',
           // x: node.attrs.x || 0,
           // y: node.attrs.y || 0,
+        }
+        if (node.attrs.name == 'amiscomponent') {
+          this.screenViewId = node.attrs.id
         }
         this.btmfill = node.parent.children[0].attrs.fill
         if (node.attrs.name == 'printer') {
@@ -896,6 +998,13 @@
         setTreeFlag: 'settings/setTreeFlag',
         createdEvidence: 'topo/createdEvidence',
       }),
+      handleEditViewId(e) {
+        console.log(e, this.editForm)
+        let params = {
+          id: e,
+        }
+        this.editNode.setAttrs(params)
+      },
       /**
        * 改变背景颜色
        */

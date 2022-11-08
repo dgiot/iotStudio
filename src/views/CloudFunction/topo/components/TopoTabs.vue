@@ -22,6 +22,7 @@
         <Background />
       </a-collapse-panel>
       <a-collapse-panel
+        v-if="!$route.query.dashboard"
         key="2"
         :header="$translateTitle('product.button control')"
       >
@@ -73,6 +74,7 @@
         <!--        </el-button>-->
       </a-collapse-panel>
       <a-collapse-panel
+        v-if="!$route.query.dashboard"
         key="3"
         :header="$translateTitle('topo.evidence control')"
       >
@@ -274,7 +276,7 @@
           数据卡片
         </el-button>
         <el-divider />
-        <el-button
+        <!-- <el-button
           draggable="true"
           size="mini"
           style="margin: 5px"
@@ -297,9 +299,42 @@
           "
         >
           开关机饼图
-        </el-button>
+        </el-button> -->
+        <div style="text-align: left; margin: 10px; font-weight: 600">
+          开关机饼图
+        </div>
+        <img
+          draggable="true"
+          size="mini"
+          :src="$FileServe + '/dgiot_file/topo/png/turnonoffpie.png'"
+          style="
+            width: 70px;
+            height: 60px;
+            display: inline-block;
+            margin-left: 20px;
+            margin-top: 10px;
+          "
+          type="primary"
+          @click="
+            createBasicThing({
+              productid: $route.query.productid,
+              type: 'vuecomponent',
+              data: {
+                id: 'device_poweron_poweroff',
+                width: 350,
+                height: 300,
+                fill: 'rgba(30, 30, 30, 0.7)',
+                text: '开关机饼图',
+                source: 'mqtt',
+                src: '/dgiot_file/topo/png/turnonoffpie.png',
+              },
+              chart: 'pie',
+              hidden: false,
+            })
+          "
+        />
         <el-divider />
-        <el-button
+        <!-- <el-button
           draggable="true"
           size="mini"
           type="primary"
@@ -312,8 +347,8 @@
                 width: 550,
                 height: 350,
                 fill: 'rgba(30, 30, 30, 0.7)',
-                text: '轮播告警列表',
-                source: 'mqtt',
+                text: '告警列表',
+                source: 'api',
               },
               chart: 'list',
               hidden: false,
@@ -321,8 +356,41 @@
           "
         >
           告警列表
-        </el-button>
-        <el-button
+        </el-button> -->
+        <div style="text-align: left; margin: 10px; font-weight: 600">
+          告警列表
+        </div>
+        <img
+          draggable="true"
+          size="mini"
+          :src="$FileServe + '/dgiot_file/topo/png/warninglist.png'"
+          style="
+            width: 70px;
+            height: 40px;
+            display: inline-block;
+            margin-left: 20px;
+            margin-top: 10px;
+          "
+          type="primary"
+          @click="
+            createBasicThing({
+              productid: $route.query.productid,
+              type: 'vuecomponent',
+              data: {
+                id: 'warning_list',
+                width: 400,
+                height: 350,
+                fill: 'rgba(30, 30, 30, 0.7)',
+                text: '告警列表',
+                source: 'api',
+                src: '/dgiot_file/topo/png/warninglist.png',
+              },
+              chart: 'list',
+              hidden: false,
+            })
+          "
+        />
+        <!-- <el-button
           draggable="true"
           size="mini"
           type="primary"
@@ -336,7 +404,7 @@
                 height: 350,
                 fill: 'rgba(30, 30, 30, 0.7)',
                 text: '设备列表',
-                source: 'mqtt',
+                source: 'api',
               },
               chart: 'list',
               hidden: false,
@@ -344,8 +412,75 @@
           "
         >
           设备列表
-        </el-button>
-        <el-button
+        </el-button> -->
+        <div style="text-align: left; margin: 10px; font-weight: 600">
+          设备列表
+        </div>
+        <img
+          draggable="true"
+          size="mini"
+          :src="$FileServe + '/dgiot_file/topo/png/devicelist.png'"
+          style="
+            width: 70px;
+            height: 40px;
+            display: inline-block;
+            margin-left: 20px;
+            margin-top: 10px;
+          "
+          type="primary"
+          @click="
+            createBasicThing({
+              productid: $route.query.productid,
+              type: 'vuecomponent',
+              data: {
+                id: 'device_list',
+                width: 700,
+                height: 350,
+                fill: 'rgba(30, 30, 30, 0.7)',
+                text: '设备列表',
+                source: 'api',
+                src: '/dgiot_file/topo/png/devicelist.png',
+              },
+              chart: 'list',
+              hidden: false,
+            })
+          "
+        />
+        <div style="text-align: left; margin: 10px; font-weight: 600">
+          工单列表
+        </div>
+        <img
+          draggable="true"
+          size="mini"
+          :src="$FileServe + '/dgiot_file/topo/png/workorderlist.png'"
+          style="
+            width: 70px;
+            height: 40px;
+            display: inline-block;
+            margin-left: 20px;
+            margin-top: 10px;
+          "
+          type="primary"
+          @click="
+            createBasicThing({
+              productid: $route.query.productid,
+              type: 'vuecomponent',
+              data: {
+                id: 'workorder_list',
+                width: 400,
+                height: 350,
+                fill: 'rgba(30, 30, 30, 0.7)',
+                text: '工单列表',
+                source: 'api',
+                src: '/dgiot_file/topo/png/workorderlist.png',
+              },
+              chart: 'list',
+              hidden: false,
+            })
+          "
+        />
+        <!-- /dgiot_file/topo/png/devicelist.png -->
+        <!-- <el-button
           draggable="true"
           size="mini"
           type="primary"
@@ -358,7 +493,7 @@
                 width: 500,
                 height: 350,
                 fill: 'rgba(30, 30, 30, 0.7)',
-                text: '设备列表',
+                text: '工单列表',
                 source: 'api',
               },
               chart: 'list',
@@ -367,10 +502,106 @@
           "
         >
           工单列表
-        </el-button>
+        </el-button> -->
+        <el-divider />
+        <div style="text-align: left; margin: 10px; font-weight: 600">
+          视频监控
+        </div>
+        <!-- <el-button
+          draggable="true"
+          size="mini"
+          type="primary"
+          @click.native="
+            createBasicThing({
+              productid: $route.query.productid,
+              type: 'vuecomponent',
+              data: {
+                id: 'videolive',
+                width: 500,
+                height: 350,
+                fill: 'rgba(30, 30, 30, 0.7)',
+                text: '视频监控',
+                source: 'api',
+                src: 'https://dev.iotn2n.com/dgiot_file/topo/png/videolive.png',
+              },
+              chart: 'liveboard',
+              hidden: false,
+            })
+          "
+        >
+          视频监控
+        </el-button> -->
+        <!-- staticimage -->
+        <img
+          draggable="true"
+          size="mini"
+          :src="$FileServe + '/dgiot_file/topo/png/videolive.png'"
+          style="
+            width: 70px;
+            height: 40px;
+            display: inline-block;
+            margin-left: 20px;
+            margin-top: 10px;
+          "
+          type="primary"
+          @click="
+            createBasicThing({
+              productid: $route.query.productid,
+              type: 'vuecomponent',
+              data: {
+                id: 'videolive',
+                width: 500,
+                height: 350,
+                fill: 'rgba(30, 30, 30, 0.7)',
+                text: '视频监控',
+                source: 'api',
+                src: '/dgiot_file/topo/png/videolive.png',
+              },
+              chart: 'liveboard',
+              hidden: false,
+            })
+          "
+        />
+        <el-divider />
+        <div style="text-align: left; margin: 10px; font-weight: 600">
+          低代码视图组件
+        </div>
+        <img
+          draggable="true"
+          size="mini"
+          :src="$FileServe + '/dgiot_file/topo/png/amiscomponent.png'"
+          style="
+            width: 70px;
+            height: 40px;
+            display: inline-block;
+            margin-left: 20px;
+          "
+          type="primary"
+          @click="
+            createBasicThing({
+              productid: $route.query.productid,
+              type: 'amiscomponent',
+              data: {
+                id: `a8d787d0ec`, //amis_${new Date().getTime()}
+                width: 500,
+                height: 350,
+                fill: 'rgba(23, 37, 76, 0.7)',
+                text: '低代码视图组件',
+                source: 'api',
+                src: '/dgiot_file/topo/png/amiscomponent.png',
+              },
+              chart: 'amisview',
+              hidden: false,
+            })
+          "
+        />
         <el-divider />
       </a-collapse-panel>
-      <a-collapse-panel key="6" :header="$translateTitle('topo.print control')">
+      <a-collapse-panel
+        v-if="!$route.query.dashboard"
+        key="6"
+        :header="$translateTitle('topo.print control')"
+      >
         <el-button
           draggable="true"
           size="mini"
