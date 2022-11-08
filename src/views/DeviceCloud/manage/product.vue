@@ -396,7 +396,7 @@
                     </el-input>
                   </el-col>
                 </el-row>
-                <span v-else>{{ product.category.name }}</span>
+                <span v-else>{{ form.categoryname }}</span>
               </el-form-item>
               <el-form-item
                 :label="$translateTitle('product.dynamicregistration')"
@@ -2484,7 +2484,9 @@
       )
       this.form.netType = row.netType
       this.form.devType = row.devType
-      this.form.categoryname = row.category ? row.category.name : ''
+      const {name} = await getCategory(row.category.objectId)
+      // this.form.categoryname = name
+      this.$set(this.form, 'categoryname' ,name)
       this.form.productSecret = row.productSecret
       this.form.nodeType = row.nodeType
       if (row.icon) {
