@@ -1,8 +1,10 @@
-## [4.6.3](https://github.com/dgiot/dgiot-dashboard/compare/v4.6.1...v4.6.3) (2022-10-28)
+## [4.6.3](https://github.com/dgiot/dgiot-dashboard/compare/v4.6.1...v4.6.3) (2022-11-08)
 
 
 ### Bug Fixes
 
+* amisPage ([8b87ed5](https://github.com/dgiot/dgiot-dashboard/commit/8b87ed53c6ff71f6117618819ad5bd6ddbbbe1be))
+* categoryname ([81105b7](https://github.com/dgiot/dgiot-dashboard/commit/81105b72452c28b5cd275cdf61428d174bf048ce))
 * **equipmentCloud:** 产品默认位置 ([0c95658](https://github.com/dgiot/dgiot-dashboard/commit/0c95658e11747babaf7b8ceab921fab368cdfac1))
 * **equipmentCloud:** config ([a7575d2](https://github.com/dgiot/dgiot-dashboard/commit/a7575d2f6f2aaa8fe60b542d28451833436a5dc0))
 * location ([59f42aa](https://github.com/dgiot/dgiot-dashboard/commit/59f42aa8adc4095667e2837388938ec791d3b047))

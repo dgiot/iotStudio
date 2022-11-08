@@ -1416,14 +1416,14 @@ export default {
         operatetype: 'readCoils',
         originaltype: 'short16_AB',
         slaveid: '0X10',
-        collection: '%s',
-        control: '%d',
+        collection: '%{s}',
+        control: '%{d}',
         nobound: [],
         editdatatype: false,
         iscount: '0',
         countstrategy: 20,
         countround: 'all',
-        countcollection: '%s',
+        countcollection: '%{s}',
       }
     },
     changeValue(formName) {
@@ -3439,7 +3439,7 @@ export default {
       if (type) {
         this.wmxdialogVisible = false
         await this.$refs['sizeForm'].$refs['sizeForm'].resetFields()
-        await this.$refs['sizeForm'].$refs['sizeForm'].clearValidate()
+        // await this.$refs['sizeForm'].$refs['sizeForm'].clearValidate()
         await this.setSizeForm(this.getFormOrginalData())
         this.$refs['sizeForm'].resource.disabled = false
         await this.handleChildClick(this.tabsChild)
