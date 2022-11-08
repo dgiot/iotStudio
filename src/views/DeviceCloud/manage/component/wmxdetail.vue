@@ -731,25 +731,25 @@
                     1. 采集值 设备上行数据经采集公式计算后显示 。
                     <br />
 
-                    公式中的%s为占位符，是固定字段。
+                    公式中的%{s}为占位符，是固定字段。
                     <br />
 
                     如：
                     <br />
 
-                    加：%s+10
+                    加：%{s}+10
                     <br />
 
-                    减：%s-10
+                    减：%{s}-10
                     <br />
 
-                    乘：%s*10
+                    乘：%{s}*10
                     <br />
 
-                    除：%s/10
+                    除：%{s}/10
                     <br />
 
-                    余数：%s%10
+                    余数：%{s}%10
                     <br />
 
                     2. 计算值 添加变量按钮,
@@ -757,21 +757,21 @@
                     复制对应的标识符
                     <br />
 
-                    例：pressure_out
+                    例：%%{pressure_out}
                     <br />
-                    加：pressure_out+10
-                    <br />
-
-                    减：pressure_out-10
+                    加：%%{pressure_out}+10
                     <br />
 
-                    乘：pressure_out*10
+                    减：%%{pressure_out}-10
                     <br />
 
-                    除：pressure_out/10
+                    乘：%%{pressure_out}*10
                     <br />
 
-                    余数：pressure_out%10
+                    除：%%{pressure_out}/10
+                    <br />
+
+                    余数：%%{pressure_out}%10
                     <br />
 
                     3. 复杂值 ：关闭本弹窗后使用物解析处理
@@ -782,7 +782,7 @@
                 <el-form-item label="采集公式">
                   <el-input
                     v-model="sizeForm.collection"
-                    placeholder="%s"
+                    placeholder="%{s}"
                     :rows="1"
                     style="width: 90%"
                     type="textarea"
@@ -795,25 +795,25 @@
                     1. 采集值: 主动向设备写数据经控制公式计算后下发 。
                     <br />
 
-                    公式中的%s为占位符，是固定字段。
+                    公式中的%{d}为占位符，是固定字段。
                     <br />
 
                     如：
                     <br />
 
-                    加：%s+10
+                    加：%{d}+10
                     <br />
 
-                    减：%s-10
+                    减：%{d}-10
                     <br />
 
-                    乘：%s*10
+                    乘：%{d}*10
                     <br />
 
-                    除：%s/10
+                    除：%{d}/10
                     <br />
 
-                    余数：%s%10
+                    余数：%{d}%10
                     <br />
 
                     2. 计算值: 点击添加变量按钮,
@@ -821,21 +821,21 @@
                     复制对应的标识符
                     <br />
 
-                    例：pressure_out
+                    例：%%{pressure_out}
                     <br />
-                    加：pressure_out+10
-                    <br />
-
-                    减：pressure_out-10
+                    加：%%{pressure_out}+10
                     <br />
 
-                    乘：pressure_out*10
+                    减：%%{pressure_out}-10
                     <br />
 
-                    除：pressure_out/10
+                    乘：%%{pressure_out}*10
                     <br />
 
-                    余数：pressure_out%10
+                    除：%%{pressure_out}/10
+                    <br />
+
+                    余数：%%{pressure_out}%10
                     <br />
 
                     3. 复杂值 ：关闭本弹窗后使用物解析处理
@@ -846,7 +846,7 @@
                 <el-form-item label="控制公式">
                   <el-input
                     v-model="sizeForm.control"
-                    placeholder="%s"
+                    placeholder="%{s}"
                     :rows="1"
                     style="width: 90%"
                     type="textarea"
