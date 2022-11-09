@@ -383,7 +383,7 @@
         console.log(this.$refs.monacoCode.$refs.monacoEditor.editor.getValue())
         this.$refs['form'].validate(async (valid) => {
           if (valid) {
-            const { title, type, key } = this.form
+            const { title, type, key, flag } = this.form
             const params = {
               data: JSON.parse(
                 this.$refs.monacoCode.$refs.monacoEditor.editor.getValue()
@@ -393,6 +393,7 @@
               title,
               type,
               key,
+              flag,
             }
             if (this.type == 'add') {
               const res = await postView(params)
