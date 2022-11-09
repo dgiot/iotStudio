@@ -1490,11 +1490,6 @@
         // this.$forceUpdate()
       },
       async showDeatils(row, index) {
-        // console.log('点击了')
-        // getTrack(row.objectId).then((res) => {
-        //   console.log('轨迹坐标', res)
-        //   this.lineList = res.results
-        // })
         const loading = this.$baseColorfullLoading(0)
         this.productIco = ''
         this.deviceInfo = await getDevice(row.objectId)
@@ -1674,7 +1669,6 @@
         // 本地mqtt 存在问题,在请求4秒后手动关闭所有loading
         // await this.$subscribe(this.subtopic)
         //  改为后端订阅
-
         this.$dgiotBus.$on(
           this.$dgiotBus.getTopicKeyBypage('dashboard'),
           (res) => {

@@ -198,8 +198,8 @@ const topoStage = {
       if (node.attrs.type == 'konvaimage') {
         let item = node.attrs
         list.push(item)
-        console.log('这是图片1111111', node)
-        console.log('进行图片展示', node)
+        // console.log('这是图片1111111', node)
+        // console.log('进行图片展示', node)
         if (window.location.hash.indexOf('type=device') < 0) {
           let image = new Image()
           node.setAttrs({
@@ -244,8 +244,9 @@ const topoStage = {
         // BgimageObj.src = bgSrc
         // layer.batchDraw()
         // stage.batchDraw()
-      }
-      if (node.attrs.type == 'staticimage') {
+        // if (node.attrs.type == 'staticimage')
+      } else {
+        console.log('11111111')
         let image = new Image()
         node.setAttrs({
           image: image,
