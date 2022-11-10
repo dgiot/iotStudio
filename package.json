@@ -134,7 +134,7 @@
     "react-dom": "16.14.0",
     "rimraf": "3.0.2",
     "sass": "~1.32.13",
-    "sass-loader": "^10.2.0",
+    "sass-loader": "^13.2.0",
     "shelljs": "0.8.4",
     "speed-measure-webpack-plugin": "1.5.0",
     "standard-version": "^9.3.2",
