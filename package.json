@@ -118,7 +118,7 @@
     "fork-ts-checker-webpack-plugin": "6.5.0",
     "hard-source-webpack-plugin": "0.13.1",
     "http-proxy-middleware": "^2.0.6",
-    "husky": "8.0.1",
+    "husky": "8.0.2",
     "increase-memory-limit": "^1.0.7",
     "indent-string": "5.0.0",
     "lighthouse": "8.6.0",
