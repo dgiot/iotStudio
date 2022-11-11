@@ -987,7 +987,9 @@
         const { results = [] } = await queryView({
           where: {
             class: 'Product',
-            type: { $in: ['amis', 'profile', 'content'] },
+            type: {
+              $in: ['amis', 'profile', 'content', 'Amis', 'Profile', 'Content'],
+            },
             key: row.product.objectId,
           },
         })

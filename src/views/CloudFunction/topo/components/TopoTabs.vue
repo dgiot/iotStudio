@@ -760,11 +760,15 @@
           file: '',
           scene: 'app',
           path: 'product/topo/',
-          filename: `${this.$route.query.productid}_bg`,
+          filename: this.$route.query.productid
+            ? `${this.$route.query.productid}_bg`
+            : `${new Date().getTime()}_bg`,
         }
       },
       files(file, type) {
-        this.inputParams.filename = `${this.$route.query.productid}_bg`
+        this.inputParams.filename = this.$route.query.productid
+          ? `${this.$route.query.productid}_bg`
+          : `${new Date().getTime()}_bg`
         this.inputParams.file = file
       },
       ...mapMutations({
