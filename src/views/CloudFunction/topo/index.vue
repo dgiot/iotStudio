@@ -157,6 +157,7 @@
                 <el-select
                   v-model="screenViewId"
                   @change="handleEditViewId"
+                  filterable
                   placeholder="请选择"
                 >
                   <el-option
@@ -869,7 +870,6 @@
           order: 'createdAt',
           excludeKeys: 'data',
           skip: 0,
-          limit: 50,
           where: { flag: { $regex: 'Amis' } },
         }
         let screenViewList = await queryView(param)
