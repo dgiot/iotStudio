@@ -71,7 +71,7 @@
     "vditor": "^3.8.15",
     "vue": "^2.5.17",
     "vue-amis-sdk": "1.10.3",
-    "vue-audio-visual": "^2.4.0",
+    "vue-audio-visual": "^3.0.1",
     "vue-contextmenu": "1.5.11",
     "vue-infinite-scroll": "^2.0.2",
     "vue-seamless-scroll": "^1.1.23",
