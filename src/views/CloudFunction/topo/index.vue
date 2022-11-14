@@ -771,16 +771,16 @@
                     id: 'Layer_Thing',
                   },
                   children: [
-                    {
-                      attrs: {
-                        height: '700',
-                        id: 'bg',
-                        src: '/dgiot_file/knova/knova_bg.png?timestamp=1635422987361',
-                        type: 'bg-image',
-                        width: '1200',
-                      },
-                      className: 'Image',
-                    },
+                    // {
+                    //   attrs: {
+                    //     height: '700',
+                    //     id: 'bg',
+                    //     src: '/dgiot_file/knova/knova_bg.png?timestamp=1635422987361',
+                    //     type: 'bg-image',
+                    //     width: '1200',
+                    //   },
+                    //   className: 'Image',
+                    // },
                     {
                       attrs: {
                         draggable: true,
@@ -860,7 +860,7 @@
         skip: 0,
         where: {
           class: { $regex: 'Product' },
-          type: { $regex: 'topo' },
+          type: { $regex: 'Topo' },
           key: { $regex: this.$route.query.productid },
         },
       }
@@ -1026,7 +1026,7 @@
           skip: 0,
           where: {
             class: { $regex: 'Product' },
-            type: { $regex: 'topo' },
+            type: { $regex: 'Topo' },
             key: { $regex: this.$route.query.productid },
           },
         }
@@ -1054,7 +1054,8 @@
           data: this.defaultTopo,
           language: 'zh',
           class: 'Product',
-          type: 'topo',
+          flag: 'Konva',
+          type: 'Topo',
           title: this.viewList.length + 1 + '',
           key: this.$route.query.productid,
         }
@@ -1362,7 +1363,8 @@
                 data: this.defaultTopo,
                 language: 'zh',
                 class: 'Product',
-                type: 'topo',
+                type: 'Topo',
+                flag: 'Konva',
                 title: this.$route.query.productid,
                 key: this.$route.query.productid,
               }
