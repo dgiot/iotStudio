@@ -54,7 +54,7 @@ const topoBg = {
         id: '不刪除',
       })
       // removeBg(canvas.json.file)
-      layer.add(yoda)
+      // layer.add(yoda)
       console.warn(yoda)
       // yoda.zIndex(-211111)
       yoda.moveToBottom()

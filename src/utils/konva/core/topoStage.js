@@ -156,15 +156,16 @@ const topoStage = {
 
         if (node.getAttr('bind_amis') && node.getAttr('amis_id').length > 0)
           dgiotBus.$emit('nodeInfo', node)
+
         // canvas.contextmenu = {}
         // canvas.clickItem = e.target
         // console.log('click', e.target.attrs)
         // 单击时，这里根据node bind 的控件类型，去展示对应的控件信息
       })
       node.on('dblclick', (e) => {
-        // console.log('绑定该数据', node, node.getAttr('bind_amis'))
-        if (node.getAttr('bind_amis') && node.getAttr('amis_id').length > 0)
-          dgiotBus.$emit('nodeInfo', node)
+        console.log('绑定该数据1111111', node, node.getAttr('bind_amis'))
+        // if (node.getAttr('bind_amis') && node.getAttr('amis_id').length > 0)
+        //   dgiotBus.$emit('nodeInfo', node)
       })
       node.on('mouseover', function (e) {
         document.body.style.cursor = 'pointer'
@@ -246,7 +247,7 @@ const topoStage = {
         // stage.batchDraw()
         // if (node.attrs.type == 'staticimage')
       } else {
-        console.log('11111111')
+        // console.log('11111111')
         let image = new Image()
         node.setAttrs({
           image: image,
@@ -473,10 +474,10 @@ const topoStage = {
       // circle.on('touchend', function() {
       //   writeMessage('Touchend circle');
       // })
-      node.on('touchend', (e) => {
-        if (node.getAttr('bind_amis') && node.getAttr('amis_id').length > 0)
-          dgiotBus.$emit('nodeInfo', node)
-      })
+      // node.on('touchend', (e) => {
+      //   if (node.getAttr('bind_amis') && node.getAttr('amis_id').length > 0)
+      //     dgiotBus.$emit('nodeInfo', node)
+      // })
       /** */
       node.on('click', (e) => {
         console.log('点击弹出编辑框', e.evt.button, dbclickflag)
@@ -501,17 +502,17 @@ const topoStage = {
           }, 500)
         }
 
-        if (node.getAttr('bind_amis') && node.getAttr('amis_id').length > 0)
-          dgiotBus.$emit('nodeInfo', node)
+        // if (node.getAttr('bind_amis') && node.getAttr('amis_id').length > 0)
+        //   dgiotBus.$emit('nodeInfo', node)
         // canvas.contextmenu = {}
         // canvas.clickItem = e.target
         // console.log('click', e.target.attrs)
         // 单击时，这里根据node bind 的控件类型，去展示对应的控件信息
       })
-      node.on('dblclick', (e) => {
-        if (node.getAttr('bind_amis') && node.getAttr('amis_id').length > 0)
-          dgiotBus.$emit('nodeInfo', node)
-      })
+      // node.on('dblclick', (e) => {
+      //   if (node.getAttr('bind_amis') && node.getAttr('amis_id').length > 0)
+      //     dgiotBus.$emit('nodeInfo', node)
+      // })
       node.on('mouseover', function (e) {
         document.body.style.cursor = 'pointer'
       })

@@ -343,23 +343,19 @@ const mutations = {
           })
         )
       } else if (thing.type == 'vuecomponent') {
-        simpleImage = addNodeEvent(
-          _.merge(canvas.handlerArgs, {
-            type: 'createVueComponent',
-            chart: thing.chart,
-            data: thing.data,
-            productid: thing.productid,
-          })
-        )
+        simpleImage = addNodeEvent({
+          type: 'createVueComponent',
+          chart: thing.chart,
+          data: thing.data,
+          productid: thing.productid,
+        })
       } else if (thing.type == 'amiscomponent') {
-        simpleImage = addNodeEvent(
-          _.merge(canvas.handlerArgs, {
-            type: 'createAmisComponent',
-            chart: thing.chart,
-            data: thing.data,
-            productid: thing.productid,
-          })
-        )
+        simpleImage = addNodeEvent({
+          type: 'createAmisComponent',
+          chart: thing.chart,
+          data: thing.data,
+          productid: thing.productid,
+        })
       } else if (thing.type == 'gifimage') {
         simpleImage = addNodeEvent(
           _.merge(canvas.handlerArgs, {
