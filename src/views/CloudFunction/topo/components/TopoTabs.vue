@@ -505,32 +505,220 @@
         </el-button> -->
         <el-divider />
         <div style="text-align: left; margin: 10px; font-weight: 600">
-          视频监控
+          设备地图
         </div>
-        <!-- <el-button
+        <img
           draggable="true"
           size="mini"
+          :src="$FileServe + '/dgiot_file/topo/png/baidumap.png'"
+          style="
+            width: 70px;
+            height: 40px;
+            display: inline-block;
+            margin-left: 20px;
+            margin-top: 10px;
+          "
           type="primary"
-          @click.native="
+          @click="
             createBasicThing({
               productid: $route.query.productid,
               type: 'vuecomponent',
               data: {
-                id: 'videolive',
-                width: 500,
-                height: 350,
+                id: 'baidumap',
+                width: 1800,
+                height: 630,
+                x: 40,
+                y: 230,
                 fill: 'rgba(30, 30, 30, 0.7)',
-                text: '视频监控',
+                text: '设备地图',
                 source: 'api',
-                src: 'https://dev.iotn2n.com/dgiot_file/topo/png/videolive.png',
+                src: '/dgiot_file/topo/png/baidumap.png',
               },
-              chart: 'liveboard',
+              chart: 'map',
               hidden: false,
             })
           "
-        >
+        />
+        <el-divider />
+        <!-- <div style="text-align: left; margin: 10px; font-weight: 600">
+          数据统计卡片组
+        </div>
+        <img
+          draggable="true"
+          size="mini"
+          :src="$FileServe + '/dgiot_file/topo/png/countvalue.png'"
+          style="
+            width: 70px;
+            height: 40px;
+            display: inline-block;
+            margin-left: 20px;
+            margin-top: 10px;
+          "
+          type="primary"
+          @click="
+            createBasicThing({
+              productid: $route.query.productid,
+              type: 'vuecomponent',
+              data: {
+                id: 'all_countvalue',
+                width: 1800,
+                height: 220,
+                x: 40,
+                y: 5,
+                fill: 'rgba(30, 30, 30, 0.7)',
+                text: '基本数据统计卡片组',
+                source: 'api',
+                src: '/dgiot_file/topo/png/countvalue.png',
+              },
+              chart: 'count',
+              hidden: false,
+            })
+          "
+        /> -->
+        <div style="text-align: left; margin: 10px; font-weight: 600">
+          产品数量
+        </div>
+        <img
+          draggable="true"
+          size="mini"
+          :src="$FileServe + '/dgiot_file/topo/png/product_count.png'"
+          style="
+            width: 70px;
+            height: 40px;
+            display: inline-block;
+            margin-left: 20px;
+            margin-top: 10px;
+          "
+          type="primary"
+          @click="
+            createBasicThing({
+              productid: $route.query.productid,
+              type: 'vuecomponent',
+              data: {
+                id: 'product_count',
+                width: 400,
+                height: 215,
+                x: 40,
+                y: 5,
+                fill: 'rgba(30, 30, 30, 0.7)',
+                text: '',
+                source: 'api',
+                src: '/dgiot_file/topo/png/product_count.png',
+              },
+              chart: 'count',
+              hidden: false,
+            })
+          "
+        />
+        <div style="text-align: left; margin: 10px; font-weight: 600">
+          设备数量
+        </div>
+        <img
+          draggable="true"
+          size="mini"
+          :src="$FileServe + '/dgiot_file/topo/png/device_count.png'"
+          style="
+            width: 70px;
+            height: 40px;
+            display: inline-block;
+            margin-left: 20px;
+            margin-top: 10px;
+          "
+          type="primary"
+          @click="
+            createBasicThing({
+              productid: $route.query.productid,
+              type: 'vuecomponent',
+              data: {
+                id: 'device_count',
+                width: 400,
+                height: 215,
+                x: 490,
+                y: 5,
+                fill: 'rgba(30, 30, 30, 0.7)',
+                text: '',
+                source: 'api',
+                src: '/dgiot_file/topo/png/device_count.png',
+              },
+              chart: 'count',
+              hidden: false,
+            })
+          "
+        />
+        <div style="text-align: left; margin: 10px; font-weight: 600">
+          告警数量
+        </div>
+        <img
+          draggable="true"
+          size="mini"
+          :src="$FileServe + '/dgiot_file/topo/png/warning_count.png'"
+          style="
+            width: 70px;
+            height: 40px;
+            display: inline-block;
+            margin-left: 20px;
+            margin-top: 10px;
+          "
+          type="primary"
+          @click="
+            createBasicThing({
+              productid: $route.query.productid,
+              type: 'vuecomponent',
+              data: {
+                id: 'warning_count',
+                width: 400,
+                height: 215,
+                x: 940,
+                y: 5,
+                fill: 'rgba(30, 30, 30, 0.7)',
+                text: '',
+                source: 'api',
+                src: '/dgiot_file/topo/png/warning_count.png',
+              },
+              chart: 'count',
+              hidden: false,
+            })
+          "
+        />
+        <div style="text-align: left; margin: 10px; font-weight: 600">
+          工单数量
+        </div>
+        <img
+          draggable="true"
+          size="mini"
+          :src="$FileServe + '/dgiot_file/topo/png/order_count.png'"
+          style="
+            width: 70px;
+            height: 40px;
+            display: inline-block;
+            margin-left: 20px;
+            margin-top: 10px;
+          "
+          type="primary"
+          @click="
+            createBasicThing({
+              productid: $route.query.productid,
+              type: 'vuecomponent',
+              data: {
+                id: 'order_count',
+                width: 400,
+                height: 215,
+                x: 1390,
+                y: 5,
+                fill: 'rgba(30, 30, 30, 0.7)',
+                text: '',
+                source: 'api',
+                src: '/dgiot_file/topo/png/order_count.png',
+              },
+              chart: 'count',
+              hidden: false,
+            })
+          "
+        />
+        <el-divider />
+        <div style="text-align: left; margin: 10px; font-weight: 600">
           视频监控
-        </el-button> -->
+        </div>
         <!-- staticimage -->
         <img
           draggable="true"

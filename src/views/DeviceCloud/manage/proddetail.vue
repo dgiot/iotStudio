@@ -1374,6 +1374,7 @@
                               row.dataType.specs &&
                               (row.dataType.type == 'double' ||
                                 row.dataType.type == 'float' ||
+                                row.dataType.type == 'long' ||
                                 row.dataType.type == 'int')
                             "
                           >
@@ -1384,7 +1385,7 @@
                               row.dataType.specs.max
                             }}
                           </span>
-                          <span v-else-if="row.dataType.type == 'string'">
+                          <span v-else-if="row.dataType.type == 'text'">
                             {{
                               $translateTitle('product.datalength') +
                               ':' +

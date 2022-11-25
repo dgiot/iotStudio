@@ -98,7 +98,7 @@ const topoBasic = {
       fontSize: 12,
       padding: 5,
       fill: 'white',
-      width: 300,
+      width: 170,
       scaleX: saleInfo.scaleX,
       scaleY: saleInfo.scaleY,
       align: 'center',
@@ -186,7 +186,7 @@ const topoBasic = {
         fontSize: 20,
         fontWeight: 800,
         lineHeight: 1.2,
-        width: 300,
+        width: 170,
         padding: 10,
         fontFamily: 'Calibri',
         fill: '#e63f32',
@@ -384,8 +384,8 @@ const topoBasic = {
       // imageObj.onload = () => {
       var simpleImage = new Konva.Image({
         id: args.data.id || 'vue_component_' + topoId,
-        x: 100,
-        y: 100,
+        x: args.data.x || 100,
+        y: args.data.y || 100,
         image: imageObj,
         width: args.data.width,
         height: args.data.height,

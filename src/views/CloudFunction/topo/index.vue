@@ -277,7 +277,12 @@
                   ></el-option>
                 </el-select>
               </el-form-item>
-              <el-form-item v-else label="文本内容">
+              <el-form-item
+                v-else
+                :label="
+                  editNode.attrs.type == 'count' ? '跳转路径' : '文本内容'
+                "
+              >
                 <el-input
                   v-model="editForm.text"
                   @input="handleEditKonva"
@@ -461,6 +466,24 @@
                 @input="handleEditSacle"
               ></el-input>
             </el-form-item>
+            <el-form-item v-if="editNode.attrs.type == 'thing'">
+              <span slot="label">
+                <span style="color: red">绑定物模型</span>
+              </span>
+              <el-select
+                v-model="editForm.id"
+                filterable
+                @change="handleBindWmx"
+                placeholder="请选择"
+              >
+                <el-option
+                  v-for="(itemwmx, index) in wmxList"
+                  :key="itemwmx.value + index"
+                  :label="itemwmx.label"
+                  :value="itemwmx.value"
+                ></el-option>
+              </el-select>
+            </el-form-item>
           </el-form>
         </el-drawer>
       </el-main>
@@ -472,7 +495,7 @@
   import 'element-ui/lib/theme-chalk/display.css'
   import requiremodule from '@/utils/file/requiremodule'
   import { mapGetters, mapMutations } from 'vuex'
-  import { _getTopo } from '@/api/Topo'
+  import { _getTopo, edit_konva_thing, get_konva_thing } from '@/api/Topo'
   import { getProduct } from '@/api/Product'
   import { queryView, putView, getView, postView } from '@/api/View'
 
@@ -763,7 +786,7 @@
             Stage: {
               attrs: {
                 height: 700,
-                width: 1520,
+                width: 1200,
               },
               children: [
                 {
@@ -830,6 +853,7 @@
         },
         productid: this.$route.query.productid || '',
         viewid: this.$route.query.viewid || '',
+        wmxList: [],
       }
     },
     computed: {
@@ -864,18 +888,18 @@
           key: { $regex: this.$route.query.productid },
         },
       }
-      if (this.$route.query.viewid) {
-        let param = {
-          count: 'objectId',
-          order: 'createdAt',
-          excludeKeys: 'data',
-          skip: 0,
-          where: { flag: { $regex: 'Amis' } },
-        }
-        let screenViewList = await queryView(param)
-        console.log('screenViewList', screenViewList)
-        this.screenViewList = screenViewList.results
+      // if (this.$route.query.viewid) {
+      let param = {
+        count: 'objectId',
+        order: 'createdAt',
+        excludeKeys: 'data',
+        skip: 0,
+        where: { flag: { $regex: 'Amis' } },
       }
+      let screenViewList = await queryView(param)
+      console.log('screenViewList', screenViewList)
+      this.screenViewList = screenViewList.results
+      // }
 
       if (!this.$route.query.viewid) {
         let viewList = []
@@ -915,6 +939,7 @@
         //   // y: -0,
         // })
         this.editForm = {
+          id: node.attrs.id || '',
           fill: node.attrs.fill || '',
           width: node.attrs.width || 42,
           height: node.attrs.height || 35,
@@ -1062,6 +1087,20 @@
         const res = await postView(params)
         this.handleQueryView()
       },
+      handleBindWmx(e) {
+        // console.log('选择内容', e)
+        // let id = `${this.$route.query.productid}_${this.editForm.id}_text`
+        this.editNode.setAttrs(this.editForm)
+        // let params = {
+        //   identifier: this.editForm.id,
+        //   name: this.editForm.text,
+        //   productid: this.$route.query.productid,
+        //   shapeid: this.editForm.id,
+        // }
+        // edit_konva_thing(params).then((res) => {
+        //   // this.handleCloseSub()
+        // })
+      },
       /**
        * 编辑组态节点
        */
@@ -1108,11 +1147,12 @@
               ? 'device_poweron_counter'
               : data.text == '关机设备'
               ? 'device_poweroff_counter'
-              : 'selectnone'
+              : this.editNode.attrs.id
           console.log('datavue', data)
           this.editNode.setAttrs(data)
           return
         }
+        console.log(this.editForm)
         this.editNode.setAttrs(this.editForm)
       },
       handlePrintType() {
@@ -1307,7 +1347,17 @@
           const { message = '', data = {} } = await _getTopo(params)
           // 绘制前不光需要获取到组态数据，还需要获取产品数据
           const productconfig = await getProduct(_this.$route.query.productid)
-
+          console.log('productconfigproductconfigproductconfig', productconfig)
+          let wmxList = productconfig.thing?.properties || []
+          let nowlist = []
+          wmxList.forEach((wmxitem) => {
+            let current = {
+              label: wmxitem.name,
+              value: `${this.$route.query.productid}_${wmxitem.identifier}_text`,
+            }
+            nowlist.push(current)
+          })
+          _this.wmxList = nowlist
           _this.productconfig = productconfig || {}
           let profile = productconfig.profile || {}
           let profileList = []

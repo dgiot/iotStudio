@@ -48,7 +48,7 @@ const topoLable = {
     //   params,
     //   Vue.prototype.$baseEventBus.$emit(params.busTopicKey, params.msg)
     // )
-    Vue.prototype.$baseEventBus.$emit(params.busTopicKey, params.msg)
+    // Vue.prototype.$baseEventBus.$emit(params.busTopicKey, params.msg)
   },
   contextMenu(args) {
     if (canvas.Layering.indexOf(args.handler) > 0) {

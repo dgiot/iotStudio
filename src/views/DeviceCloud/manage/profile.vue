@@ -431,7 +431,7 @@
   import { setTimeout } from 'timers'
   import { post_tree } from '@/api/Logs'
   import dgiotViews from '@/views/CloudFunction/lowcode'
-  import {getRule} from "@/api/Rules";
+  import { getRule } from '@/api/Rules'
 
   const context = require.context('./component/profile', true, /\.vue$/)
   let res_components = {}

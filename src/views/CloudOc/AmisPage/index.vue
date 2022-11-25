@@ -20,7 +20,7 @@
       top="5vh"
       :visible.sync="commandInfo.dialog"
     -->
-    <div v-show="commandInfo.dialog" class="dialog_wrap">
+    <div v-if="commandInfo.dialog" class="dialog_wrap">
       <dgiot-amis modal-append-to-body :schema="viewData" :show-help="false" />
     </div>
   </div>
@@ -80,6 +80,8 @@
     watch: {
       $route: {
         handler: async function (val, oldVal) {
+          this.loading = true
+          this.commandInfo.dialog = false
           console.log('变化了', val)
           let viewid = val.path.split('/')[val.path.split('/').length - 1]
           const { data = {} } = await getView(viewid)
@@ -107,6 +109,8 @@
       // console.log('是否是pc端', this.$ispc())
     },
     async mounted() {
+      this.loading = true
+      this.commandInfo.dialog = false
       let destId =
         JSON.parse(Base64.decode(localStorage.getItem('role')))?.vuexinfo[0]
           ?.objectId || ''
