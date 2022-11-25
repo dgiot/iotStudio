@@ -1,4 +1,4 @@
-## [4.6.3](https://github.com/dgiot/dgiot-dashboard/compare/v4.6.1...v4.6.3) (2022-11-08)
+# [4.7.0](https://github.com/dgiot/dgiot-dashboard/compare/v4.6.1...v4.7.0) (2022-11-15)
 
 
 ### Bug Fixes
@@ -8,6 +8,8 @@
 * **equipmentCloud:** 产品默认位置 ([0c95658](https://github.com/dgiot/dgiot-dashboard/commit/0c95658e11747babaf7b8ceab921fab368cdfac1))
 * **equipmentCloud:** config ([a7575d2](https://github.com/dgiot/dgiot-dashboard/commit/a7575d2f6f2aaa8fe60b542d28451833436a5dc0))
 * location ([59f42aa](https://github.com/dgiot/dgiot-dashboard/commit/59f42aa8adc4095667e2837388938ec791d3b047))
+* topo ([80f2ac2](https://github.com/dgiot/dgiot-dashboard/commit/80f2ac2c2c67ae45e7a9f7397fa8700a3ffc1c79))
+* Topo ([b2f2e14](https://github.com/dgiot/dgiot-dashboard/commit/b2f2e14dbfc01781e69b2be225b4c843ceca4b59))
 
 
 ### Features
@@ -15,10 +17,12 @@
 * **cloudOperations): fix(equipmentCloud:** 产品默认位置 ([28a8297](https://github.com/dgiot/dgiot-dashboard/commit/28a82977351e884cb9173950a044e77fc56fb07d))
 * **cloudOperations:** 告警关联规则引擎修改 ([f61ef67](https://github.com/dgiot/dgiot-dashboard/commit/f61ef6716d84ac4ed8a7b011afe56d308b056f83))
 * **dashboard:** 4.6.3 ([a33ee69](https://github.com/dgiot/dgiot-dashboard/commit/a33ee6927f7816f142238d151c47174ff4d23d9f))
+* **dashboard:** 4.7.0 ([bb3473e](https://github.com/dgiot/dgiot-dashboard/commit/bb3473e7e03bca740b21cd673507a65b66a6edd6))
 * **dashboard:** update v4.6.2 ([2f344d5](https://github.com/dgiot/dgiot-dashboard/commit/2f344d5c43660950738926aeac7b9f7be3f56a49))
 * dgiot_grafana ([a9eb8ef](https://github.com/dgiot/dgiot-dashboard/commit/a9eb8ef9210bcba3b06905b37f3466015087204f))
 * index ([84ec4c3](https://github.com/dgiot/dgiot-dashboard/commit/84ec4c3a0c03016b7724d37a5784ce46bcafb04e))
 * realtimedata ([42ad3e5](https://github.com/dgiot/dgiot-dashboard/commit/42ad3e58bfa006f3ed5a7e9b8058aa8db739393e))
+* topo ([87de66d](https://github.com/dgiot/dgiot-dashboard/commit/87de66d4c6898cb2ac4b1cc630b8316c86fec9f6))
 * yunweirenyuan ([f383fe3](https://github.com/dgiot/dgiot-dashboard/commit/f383fe3f64ec8ac5a1918ec9ac138e1b6f896fa8))
 
 
