@@ -98,7 +98,7 @@ const topoBg = {
         // canvas.bgNode = {}
       })
       const BgimageObj = new Image()
-      const bgSrc = src.includes('//') ? src : Cookies.get('fileServer') + src
+      const bgSrc = src.includes('//') ? src : src // Cookies.get('fileServer') +
       // bgNode.on('contextmenu', (e) => {
       //   console.log('组态底图点击触发了鼠标右键事件 现在没有写处理事件 可能用得上 contextmenu', e.target)
       // })

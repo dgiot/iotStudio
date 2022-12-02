@@ -206,7 +206,9 @@ const topoStage = {
           node.setAttrs({
             image: image,
           })
-          image.src = node.attrs.src
+          image.src = node.attrs.src.includes('//')
+            ? node.attrs.src
+            : Vue.prototype.$FileServe + node.attrs.src
         }
 
         // }
@@ -252,7 +254,10 @@ const topoStage = {
         node.setAttrs({
           image: image,
         })
-        image.src = node.attrs.src
+        console.log('查看', Vue.prototype.$FileServe, node.attrs.src)
+        image.src = node.attrs.src.includes('//')
+          ? node.attrs.src
+          : Vue.prototype.$FileServe + node.attrs.src
       }
       node.on('contextmenu', (e) => {
         canvas.contextmenu = e.target

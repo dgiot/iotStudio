@@ -206,7 +206,7 @@
           skip: 0,
           where: {
             key: this.$route.query.productid,
-            type: 'amis',
+            type: 'Amis',
           },
         })
         this.amisDict = amisDict

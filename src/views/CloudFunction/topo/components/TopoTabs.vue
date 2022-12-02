@@ -121,7 +121,7 @@
         <img
           draggable="true"
           size="mini"
-          src="https://mp0.usr.cn/uploads/drawimg/1612317621248_0251.gif"
+          :src="$FileServe + '/dgiot_file/topo/gif/pump.gif'"
           style="
             width: 40px;
             height: 40px;
@@ -133,8 +133,11 @@
             createBasicThing({
               productid: $route.query.productid,
               type: 'knovaimage',
-              image:
-                'https://mp0.usr.cn/uploads/drawimg/1612317621248_0251.gif',
+              image: '/dgiot_file/topo/gif/pump.gif',
+              data: {
+                width: 180,
+                height: 200,
+              },
               hidden: false,
             })
           "
@@ -146,7 +149,7 @@
         <img
           draggable="true"
           size="mini"
-          src="https://mp0.usr.cn/uploads/drawimg/1612317616625_0334.png"
+          :src="$FileServe + '/dgiot_file/topo/static/datawindow.png'"
           style="
             width: 40px;
             height: 40px;
@@ -162,8 +165,7 @@
                 width: 180,
                 height: 200,
               },
-              image:
-                'https://mp0.usr.cn/uploads/drawimg/1612317616625_0334.png',
+              image: '/dgiot_file/topo/static/datawindow.png',
               hidden: false,
             })
           "
@@ -276,30 +278,6 @@
           数据卡片
         </el-button>
         <el-divider />
-        <!-- <el-button
-          draggable="true"
-          size="mini"
-          style="margin: 5px"
-          type="primary"
-          @click.native="
-            createBasicThing({
-              productid: $route.query.productid,
-              type: 'vuecomponent',
-              data: {
-                id: 'device_poweron_poweroff',
-                width: 350,
-                height: 300,
-                fill: 'rgba(30, 30, 30, 0.7)',
-                text: '饼图',
-                source: 'mqtt',
-              },
-              chart: 'pie',
-              hidden: false,
-            })
-          "
-        >
-          开关机饼图
-        </el-button> -->
         <div style="text-align: left; margin: 10px; font-weight: 600">
           开关机饼图
         </div>
@@ -827,6 +805,8 @@
 </template>
 
 <script>
+  import addNodeEvent from '@/utils/konva/common'
+  import canvas from '@/utils/konva/core/canvas'
   import createThing from '@/utils/konva/createThing'
   import { mapMutations } from 'vuex'
   import getSvgPath from '@/utils/konva/getSvgPath'
@@ -901,7 +881,52 @@
     created() {
       // this.fetchData()
     },
-    mounted() {},
+    mounted() {
+      this.$dgiotBus.$off('copyNode')
+      this.$dgiotBus.$on('copyNode', (e) => {
+        console.log('接收节点', e)
+        if (
+          e.attrs.type == 'thing' ||
+          e.attrs.type == 'static' ||
+          e.parent.attrs.name == 'amis'
+        ) {
+          //实时数据
+          let data = e.parent.attrs
+          data.x = data.x - 10
+          data.y = data.y - 10
+          var simpleLabel = new Konva.Label(data)
+          simpleLabel.add(new Konva.Tag(e.parent.children[0].attrs))
+          simpleLabel.add(new Konva.Text(e.parent.children[1].attrs))
+          canvas.layer.add(simpleLabel)
+        } else if (
+          e.attrs.type == 'konvaimage' ||
+          e.attrs.type == 'staticimage'
+        ) {
+          // 控制绑定
+          let data = e.attrs
+          data.x = data.x - 10
+          data.y = data.y - 10
+          // var imageObj = new Image()
+          // imageObj.src = data.src
+          // data.image = imageObj
+          var simpleImage = new Konva.Image(data)
+          canvas.layer.add(simpleImage)
+        } else if (e.attrs.type == 'label') {
+          // 控制绑定
+          let data = e.attrs
+          data.x = data.x - 10
+          data.y = data.y - 10
+          var simpleText = new Konva.Text(data)
+          canvas.layer.add(simpleText)
+        }
+        addNodeEvent({
+          type: 'handleChildren',
+          stage: canvas.stage,
+          layer: canvas.layer,
+          args: canvas.handlerArgs,
+        })
+      })
+    },
     beforeCreate() {}, //生命周期 - 创建之前
     beforeMount() {}, //生命周期 - 挂载之前
     beforeUpdate() {}, //生命周期 - 更新之前

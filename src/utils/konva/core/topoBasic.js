@@ -245,7 +245,7 @@ const topoBasic = {
   createImage(args) {
     console.info(
       'src/utils/konva/core/topoBasic.js',
-      'createdEvidence',
+      'createdGIf',
       // args.path,
       args
     )
@@ -375,10 +375,10 @@ const topoBasic = {
     if (args.data.src) {
       console.log('1111111触发了', args)
       let src = args.data.src
-      if (src.indexOf('http') < 0) {
-        console.log(' this.$FileServe', Vue.prototype.$FileServe)
-        src = Vue.prototype.$FileServe + src
-      }
+      // if (src.indexOf('http') < 0) {
+      //   console.log(' this.$FileServe', Vue.prototype.$FileServe)
+      //   src = Vue.prototype.$FileServe + src
+      // }
       var imageObj = new Image()
       imageObj.src = src
       // imageObj.onload = () => {
@@ -430,10 +430,10 @@ const topoBasic = {
     )
     if (args.data.src) {
       let src = args.data.src
-      if (src.indexOf('http') < 0) {
-        console.log(' this.$FileServe', Vue.prototype.$FileServe)
-        src = Vue.prototype.$FileServe + src
-      }
+      // if (src.indexOf('http') < 0) {
+      //   console.log(' this.$FileServe', Vue.prototype.$FileServe)
+      //   src = Vue.prototype.$FileServe + src
+      // }
       var imageObj = new Image()
       imageObj.src = src
       // imageObj.onload = () => {

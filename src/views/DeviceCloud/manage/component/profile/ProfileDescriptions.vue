@@ -392,15 +392,15 @@
     methods: {
       async handletabs(tabs) {
         this.viewForm = {
-          class: 'ProductTemplet',
-          type: 'amis',
+          class: '', //ProductTemplet
+          type: 'Amis',
           key: this.productId,
           title: '',
           disabled: true,
           data: {
             type: 'page',
             initApi: {
-              url: 'iotapi/classes/Device/parse_objectid',
+              url: '/iotapi/classes/Device/parse_objectid',
               method: 'get',
               adaptor:
                 'return {\r\n  "status":0,\r\n  "msg":"",\r\n  "data":response.data.basedata\r\n  }',
@@ -415,7 +415,7 @@
                 type: 'form',
                 api: {
                   method: 'put',
-                  url: 'iotapi/classes/Device/parse_objectid',
+                  url: '/iotapi/classes/Device/parse_objectid',
                   headers: {
                     store: 'localStorage',
                     dgiotReplace: 'parse_objectid',
