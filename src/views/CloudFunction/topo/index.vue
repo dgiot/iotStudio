@@ -485,6 +485,12 @@
               </el-select>
             </el-form-item>
           </el-form>
+          <el-button
+            @click="copyNode"
+            style="position: absolute; bottom: 10px; left: 10px"
+          >
+            复制节点
+          </el-button>
         </el-drawer>
       </el-main>
     </el-container>
@@ -1023,6 +1029,10 @@
         setTreeFlag: 'settings/setTreeFlag',
         createdEvidence: 'topo/createdEvidence',
       }),
+      copyNode() {
+        // console.log(this.editNode)
+        this.$dgiotBus.$emit('copyNode', this.editNode)
+      },
       handleEditViewId(e) {
         console.log(e, this.editForm)
         let params = {
@@ -1347,7 +1357,7 @@
           const { message = '', data = {} } = await _getTopo(params)
           // 绘制前不光需要获取到组态数据，还需要获取产品数据
           const productconfig = await getProduct(_this.$route.query.productid)
-          console.log('productconfigproductconfigproductconfig', productconfig)
+          // console.log('productconfigproductconfigproductconfig', productconfig)
           let wmxList = productconfig.thing?.properties || []
           let nowlist = []
           wmxList.forEach((wmxitem) => {

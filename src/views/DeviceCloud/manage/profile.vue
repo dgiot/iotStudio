@@ -205,19 +205,29 @@
               v-for="(item, index) in categorysonList"
               :key="index"
               class="infinite-list-item"
+              :class="linkType == item.name ? 'select_category_product' : ''"
               disabled
               @click.stop="categorysonChange(item)"
             >
-              <el-link :type="linkType == item.name ? 'success' : ''">
-                {{ item.name }}&nbsp;&nbsp;&nbsp;
-              </el-link>
-              <el-button
+              <div>{{ item.name }}</div>
+              <i
+                class="el-icon-plus"
+                style="color: #fff"
+                @click.stop="addproducttemp(item)"
+              ></i>
+              <!-- <el-button
                 class="el-icon-plus"
                 plain
                 size="mini"
+                style="color: #fff"
                 type="text"
-                @click.stop="addproducttemp(item)"
-              />
+               
+              /> -->
+              <!-- <div>+</div> -->
+              <!-- <el-link :type="linkType == item.name ? 'success' : ''">
+                {{ item.name }}&nbsp;&nbsp;&nbsp;
+              </el-link>
+             -->
             </li>
           </ul>
         </el-col>
@@ -751,11 +761,7 @@
             productid: this.$route.query.id,
             uid: row.objectId,
             title: '编辑',
-            type:
-              'Notification_' +
-                flag +
-              '_' +
-              this.$route.query.id,
+            type: 'Notification_' + flag + '_' + this.$route.query.id,
           },
         })
       },
@@ -1909,7 +1915,6 @@
               // resource[index].arr = []
               // resource[index].obj = {}
               if (this.$refs['sizeForm'].resource.value === resource.cType) {
-
                 for (var o in rowData.dataSource) {
                   for (var j in resource.obj) {
                     if (o === j) resource.obj[o] = rowData.dataSource[j]
@@ -2170,22 +2175,22 @@
       },
       // 初始化规则引擎数据
       async orginRule(row) {
-        let productid  = this.$route.query.id
+        let productid = this.$route.query.id
         try {
           const params = {
             order: 'createdAt',
             keys: 'data',
             where: {
-              key: {'$regex' : productid + '_' + row.objectId},
+              key: { $regex: productid + '_' + row.objectId },
             },
           }
           const { results = [] } = await queryDict(params)
           let engineData = []
-          results.forEach(res=>{
-            if(res.data.args){
-              if(((res.data.args.ruleid).indexOf('start')) != -1){
+          results.forEach((res) => {
+            if (res.data.args) {
+              if (res.data.args.ruleid.indexOf('start') != -1) {
                 res.data.args.type = '告警产生'
-              }else{
+              } else {
                 res.data.args.type = '告警恢复'
               }
               res.data.args.dictid = res.objectId
@@ -2195,9 +2200,9 @@
           this.engineData = engineData
         } catch (error) {
           this.$baseMessage(
-              this.$translateTitle('alert.Data request error') + `${error}`,
-              'error',
-              'dgiot-hey-message-error'
+            this.$translateTitle('alert.Data request error') + `${error}`,
+            'error',
+            'dgiot-hey-message-error'
           )
         }
       },
@@ -2242,12 +2247,16 @@
       .infinite-list-item {
         display: flex;
         align-items: center;
-        justify-content: center;
+        justify-content: space-between;
+        padding: 0 10px;
         height: 40px;
         margin: 10px;
-        color: #7dbcfc;
+        color: #fff;
         cursor: pointer;
-        background: #e8f3fe;
+        background: linear-gradient(to right, #1066b6, #409eff); //#1890ff
+      }
+      .select_category_product {
+        background: linear-gradient(to right, #000, #888);
       }
     }
   }

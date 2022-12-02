@@ -511,7 +511,7 @@ export default {
           order: '-createdAt',
           skip: 0,
           where: {
-            reportId: this.nowItem.objectId,
+            reportId: this.nowItem.objectId, //view 视图 objectId
             'original.controlid': this.evidenceList.node.attrs.id,
           },
         }
