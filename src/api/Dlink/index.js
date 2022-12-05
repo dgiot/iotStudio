@@ -77,3 +77,19 @@ export async function postTopic(Topic = '$dg/user/router/') {
   Vue.prototype.$mqttInfo = mqttInfo
   return submessage
 }
+
+export async function nopostTopic(Topic = '$dg/user/router/') {
+  const mqttInfo = {
+    href: location.href,
+    topic: Topic,
+    topicKey:
+      typeof Topic == 'string'
+        ? Vue.prototype.$dgiotBus.getTopicKeyBypage(Topic.split('/')[2])
+        : Topic,
+    splitTopicKey: typeof Topic == 'string' ? Topic.split('/')[2] : Topic,
+  }
+  // MqttSubscribe
+  window.mqttInfo = window.dgiot.mqttInfo = mqttInfo
+  Vue.prototype.$mqttInfo = mqttInfo
+  return mqttInfo
+}

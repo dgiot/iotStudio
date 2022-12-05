@@ -38,6 +38,7 @@ import {
   deleteTopic as unSubscribe,
   getTopic,
   postTopic as subscribe,
+  nopostTopic,
 } from '@/api/Dlink/index'
 // https://www.jianshu.com/p/abdee4e7875a
 /**
@@ -567,6 +568,7 @@ export default {
     // 订阅方法挂载到全局变量上 2022年5月27日
     Vue.prototype.$getTopic = getTopic
     Vue.prototype.$subscribe = subscribe
+    Vue.prototype.$nopostsubscribe = nopostTopic
     Vue.prototype.$unSubscribe = unSubscribe
     // 全局配置环境变量
     Vue.prototype.$dgiot = window.dgiot

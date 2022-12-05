@@ -3228,6 +3228,7 @@
     </el-dialog>
     <!---日志订阅弹窗-->
     <el-dialog
+      v-if="subdialog"
       :append-to-body="true"
       :before-close="handleCloseSubdialog"
       :close-on-click-modal="false"
@@ -3239,7 +3240,6 @@
         :channel-id="channelname"
         :list="msgList"
         :msg="submessage"
-        :product="channelInfo"
         :refresh-key="refreshFlag"
       />
     </el-dialog>

@@ -80,7 +80,7 @@
           />
         </a-tab-pane>
 
-        <a-tab-pane key="device" :disabled="!product.length">
+        <a-tab-pane key="device">
           <span slot="tab">
             <dgiot-icon icon="traffic-light-line" />
             {{ $translateTitle('system.Accurate log') }}
@@ -171,6 +171,8 @@
 </template>
 <script>
   import { queryDevice } from '@/api/Device/index'
+  import { subupadte } from '@/api/System'
+  import { queryProduct } from '@/api/Product'
 
   export default {
     name: 'MqttLog',
@@ -183,15 +185,10 @@
       },
       msg: {
         type: String,
-        default: '',
+        default: 'Starting the log' + `\n`,
         required: false,
       },
       list: {
-        type: Array,
-        default: () => [],
-        required: false,
-      },
-      product: {
         type: Array,
         default: () => [],
         required: false,
@@ -204,6 +201,7 @@
     },
     data() {
       return {
+        product: [],
         router: '',
         pubtopic: '',
         topicKey: '',
@@ -235,29 +233,6 @@
           this.queryDevice()
         }
       },
-      // topicKey: {
-      //   handler: function (newVal, oldval) {
-      //     console.log('newVal topicKey', newVal)
-      //     console.log('oldval topicKey', oldval)
-      //     let _this = this
-      //     if (newVal) {
-      //       this.$dgiotBus.$off(newVal)
-      //       this.$dgiotBus.$on(newVal, (res) => {
-      //         console.error(res)
-      //         const { payloadString } = res
-      //         this.mqttMsg(payload)
-      //       })
-      //     }
-      //     if (oldval) {
-      //       // 取消订阅
-      //       _this.submessage = ''
-      //       _this.msgList = []
-      //       _this.logKey = '99'
-      //     }
-      //   },
-      //   deep: true,
-      //   limit: true,
-      // },
     },
     mounted() {},
     async beforeDestroy() {
@@ -265,28 +240,34 @@
       await this.$unSubscribe(this.subtopic)
     },
     methods: {
-      stopchannel(val) {
+      async stopchannel(val) {
         if (val == 'device') {
+          this.productinformation(this.channelId)
           this.$dgiotBus.$emit(
             'MqttUnbscribe',
             this.$dgiotBus.router(this.$route.fullPath),
             '$dg/user/' + this.channelId + '/#'
           )
+        } else if (val == 'editor') {
+          subupadte(this.channelId, 'start_logger')
+          let subtopic = '$dg/user/channel/' + this.channelId + '/#'
+          await this.$nopostsubscribe(subtopic)
+          _this = this
+          _this.msg = 'Starting the log' + `\n`
+          this.$dgiotBus.$off(this.$mqttInfo.topicKey)
+          this.$dgiotBus.$on(this.$mqttInfo.topicKey, (res) => {
+            const { payloadString } = res
+            this.mqttMsg(payloadString)
+          })
         }
       },
       mqttMsg(Msg) {
-        // this.msgList.push({
-        //   timestamp: moment().format('x'),
-        //   msg: Msg,
-        // })
         this.editorKey = moment().format('x')
         this.deviceLog += Msg + `\n`
-        // subdialog.setValue(this.submessage)
-        // subdialog.gotoLine(subdialog.session.getLength())
       },
       async subscriptionlog(devaddr) {
         this.editorKey = moment().format('x')
-        this.deviceLog = 'Log is true' + `\n`
+        this.deviceLog = 'Starting the log' + `\n`
         this.pubtopic =
           'channel/' +
           this.channelId +
@@ -299,31 +280,38 @@
         console.log(this.$mqttInfo)
         this.$dgiotBus.$off(this.$mqttInfo.topicKey)
         this.$dgiotBus.$on(this.$mqttInfo.topicKey, (res) => {
-          console.log(res)
           const { payloadString } = res
           //  过滤登录时候，首页mqtt乱码的情况
           this.mqttMsg(payloadString)
         })
-        // this.router = this.$dgiotBus.router(location.href)
-        // this.topicKey = this.$dgiotBus.topicKey(this.router, this.subtopic)
-        // let subInfo = {
-        //   router: this.router,
-        //   topic: this.subtopic,
-        //   qos: 2,
-        //   ttl: 1000 * 60 * 60 * 3,
-        // }
-        // this.$dgiotBus.$emit('MqttSubscribe', subInfo)
-        // setTimeout(() => {
-        //   this.$dgiotBus.$emit(
-        //     `MqttPublish`,
-        //     this.pubtopic,
-        //     JSON.parse(JSON.stringify({ action: 'start_logger' })),
-        //     0,
-        //     false
-        //   )
-        //   this.editorKey = this.subtopic.split('log')[1]
-        // }, 500)
+
         this.dialogVisible = !this.dialogVisible
+      },
+      async productinformation(ChannelId) {
+        try {
+          const params = {
+            order: '-createdAt',
+            skip: 0,
+            where: {
+              $relatedTo: {
+                object: {
+                  __type: 'Pointer',
+                  className: 'Channel',
+                  objectId: ChannelId,
+                },
+                key: 'product',
+              },
+            },
+          }
+          const { results = [], count: total = 0 } = await queryProduct(params)
+          this.product = results
+        } catch (error) {
+          this.$baseMessage(
+            this.$translateTitle('alert.Data request error') + `${error}`,
+            'error',
+            'dgiot-hey-message-error'
+          )
+        }
       },
       async queryDevice() {
         try {

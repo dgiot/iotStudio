@@ -233,14 +233,6 @@
             >
               {{ $translateTitle('developer.delete') }}
             </el-button>
-            <!--            <el-button-->
-            <!--              type="goon"-->
-            <!--              size="mini"-->
-            <!--              @click="productinformation(row.objectId)"-->
-            <!--            >-->
-            <!--              &lt;!&ndash; 订阅日志 &ndash;&gt;-->
-            <!--              {{ $translateTitle('product.productinformation') }}-->
-            <!--            </el-button>-->
           </template>
         </el-table-column>
       </el-table>
@@ -549,6 +541,7 @@
       </span>
     </el-dialog>
     <a-drawer
+      v-if="subdialog"
       :append-to-body="true"
       placement="right"
       :title="channelname + '日志'"
@@ -560,7 +553,6 @@
         :channel-id="channelname"
         :list="msgList"
         :msg="submessage"
-        :product="channelInfo"
         :refresh-key="refreshFlag"
       />
     </a-drawer>
@@ -581,64 +573,6 @@
           </el-button>
         </dgiot-query-form-left-panel>
       </dgiot-query-form>
-
-      <el-table
-        :data="channelInfo"
-        height="60vh"
-        stripe
-        style="width: 100%"
-        @selection-change="handleSelectionChange"
-      >
-        <el-table-column align="center" type="index" />
-        <el-table-column type="selection" width="50" />
-        <el-table-column
-          align="center"
-          :label="$translateTitle('developer.channelname')"
-          prop="name"
-          show-overflow-tooltip
-          sortable
-        />
-        <el-table-column
-          align="center"
-          :label="$translateTitle('developer.servicetype')"
-          prop="devType"
-          show-overflow-tooltip
-          sortable
-        />
-        <el-table-column
-          align="center"
-          :label="$translateTitle('developer.describe')"
-          prop="desc"
-          show-overflow-tooltip
-          sortable
-        />
-        <el-table-column
-          align="center"
-          :label="$translateTitle('developer.operation')"
-          prop="objectId"
-          show-overflow-tooltip
-          sortable
-        >
-          <template #default="{ row }">
-            <el-button
-              size="mini"
-              type="danger"
-              @click="deleteRelation(channelInfo, row.objectId)"
-            >
-              {{ $translateTitle('developer.remove') }}
-            </el-button>
-          </template>
-        </el-table-column>
-      </el-table>
-      <el-pagination
-        :current-page="pagination.currentPage"
-        :layout="pagination.layout"
-        :page-size="pagination.size"
-        :page-sizes="pagination.sizes"
-        :total="pagination.total"
-        @current-change="handleCurrentChange"
-        @size-change="handleSizeChange"
-      />
     </el-dialog>
   </div>
 </template>
@@ -701,7 +635,7 @@
         topotopic: '',
         refreshFlag: '99',
         msgList: [],
-        submessage: '',
+        submessage: 'Starting the log' + `\n`,
         subtopic: '',
         pubtopic: '',
         channeindex: 0,
@@ -1524,32 +1458,21 @@
         })
         this.refreshFlag = moment().format('x')
         this.submessage += Msg + `\n`
-        // subdialog.setValue(this.submessage)
-        // subdialog.gotoLine(subdialog.session.getLength())
       },
       async subProTopic(row) {
-        this.productinformation(row.objectId)
         this.subdialog = true
         this.subdialogid = row.objectId
+        this.channelid = row.objectId
         this.channelname = row.objectId
         this.subtopic = '$dg/user/channel/' + row.objectId + '/#'
         this.msgList = []
-        this.submessage = ''
-        this.msgList = []
-        let subInfo = {
-          router: this.router,
-          topic: this.subtopic,
-          qos: 2,
-          ttl: 1000 * 60 * 60 * 3,
-        }
-        await this.$subscribe(this.subtopic)
+        await this.$nopostsubscribe(this.subtopic)
         console.log(this.$mqttInfo)
         subupadte(row.objectId, 'start_logger')
         this.msgList = []
-        this.submessage = ''
+        this.submessage = 'Starting the log' + `\n`
         this.$dgiotBus.$off(this.$mqttInfo.topicKey)
         this.$dgiotBus.$on(this.$mqttInfo.topicKey, (res) => {
-          console.log(res)
           const { payloadString } = res
           //  过滤登录时候，首页mqtt乱码的情况
           this.mqttMsg(payloadString)
@@ -1559,7 +1482,7 @@
       async handleCloseSubdialog() {
         this.$dgiotBus.$off(this.$mqttInfo.topicKey)
         this.msgList = []
-        this.submessage = ''
+        this.submessage = 'Starting the log' + `\n`
         subupadte(this.channelid, 'stop_logger')
         // this.$dgiotBus.$emit('MqttUnbscribe', this.topicKey, this.subtopic)
         await this.$unSubscribe(this.subtopic)

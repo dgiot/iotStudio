@@ -745,7 +745,7 @@ export default {
       topicKey: '',
       refreshFlag: '99',
       msgList: [],
-      submessage: '',
+      submessage: 'Starting the log' + `\n`,
       mqtt: {
         router: '',
         subtopic: '',
@@ -3927,28 +3927,17 @@ export default {
       this.subdialogid = row.objectId
       this.channelname = row.objectId
       this.mqtt.subtopic = '$dg/user/channel/' + row.objectId + '/#'
-      let subInfo = {
-        router: this.mqtt.router,
-        topic: this.mqtt.subtopic,
-        qos: 2,
-        ttl: 1000 * 60 * 60 * 3,
-      }
-      this.$dgiotBus.$off(this.$mqttInfo.topicKey)
-      await this.$subscribe(this.subtopic)
+      await this.$nopostsubscribe(this.mqtt.subtopic)
       subupadte(row.objectId, 'start_logger')
-      // this.topicKey = this.$dgiotBus.topicKey(
-      //   this.mqtt.router,
-      //   this.mqtt.subtopic
-      // )
-
-      this.submessage = ''
       this.msgList = []
+      this.submessage = 'Starting the log' + `\n`
+      this.$dgiotBus.$off(this.$mqttInfo.topicKey)
       this.$dgiotBus.$on(this.$mqttInfo.topicKey, (res) => {
-        this.mqttMsg(res.payloadString)
+        const { payloadString } = res
+        this.mqttMsg(payloadString)
       })
     },
     mqttMsg(Msg) {
-      // console.error(Msg)
       this.msgList.push({
         timestamp: moment().format('x'),
         msg: Msg,
@@ -3960,7 +3949,7 @@ export default {
     handleCloseSubdialog() {
       subupadte(this.channelid, 'stop_logger')
       this.msgList = []
-      this.submessage = []
+      this.submessage = ''
       this.subdialog = false
     },
     // 停止topic刷新
