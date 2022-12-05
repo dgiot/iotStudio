@@ -1244,7 +1244,7 @@
         // console.error('this.topicKey', this.$mqttInfo.topicKey)
         // console.log('是否是pc端', this.$ispc())
         if (this.$route.query.type == 'device') {
-          await this.$subscribe(this.subtopic)
+          await this.$nopostsubscribe(this.subtopic)
         }
         this.$dgiotBus.$off('$dg/user/konva')
         this.$dgiotBus.$on('$dg/user/konva', (Msg) => {

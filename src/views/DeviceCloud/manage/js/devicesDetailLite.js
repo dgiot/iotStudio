@@ -441,7 +441,7 @@ export default {
      */
     async subRealtimedata() {
       try {
-        await this.$subscribe(this.subtopic)
+        await this.$nopostsubscribe(this.subtopic)
         // mqtt 消息回调
         console.groupCollapsed(
           `%c mqtt 订阅日志`,

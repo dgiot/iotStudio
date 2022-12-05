@@ -216,7 +216,7 @@ export default {
       let subtopic = `$dg/user/realtimecard/${params.parentId.objectId}/report` // 设备实时数据topic
       try {
         // mqtt 消息回调
-        await this.$subscribe(subtopic)
+        await this.$nopostsubscribe(subtopic)
         this.$dgiotBus.$off(this.$mqttInfo.topicKey) // dgiotBus 关闭事件
         this.$dgiotBus.$on(this.$mqttInfo.topicKey, (mqttMsg) => {
           const { data = [] } = JSON.parse(Base64.decode(mqttMsg.payloadString))

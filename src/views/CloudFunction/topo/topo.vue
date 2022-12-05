@@ -755,7 +755,7 @@
         _this.subtopic = `$dg/user/konva/${
           _this?.$route?.query?.deviceid || 'test'
         }/report`
-        await _this.$subscribe(_this.subtopic)
+        await _this.$nopostsubscribe(_this.subtopic)
         _this.handleMqttMsg()
         // 处理消息
       },

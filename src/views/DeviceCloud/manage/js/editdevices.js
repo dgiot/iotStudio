@@ -452,7 +452,7 @@ export default {
         //   qos: 0,
         //   ttl: 1000 * 60 * 60 * 3,
         // })
-        await this.$subscribe(this.subtopic)
+        await this.$nopostsubscribe(this.subtopic)
         console.log(this.$mqttInfo)
         // mqtt 消息回调
         console.groupCollapsed(
