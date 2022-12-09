@@ -1,3 +1,12 @@
+## [4.7.1](https://github.com/dgiot/dgiot-dashboard/compare/v4.7.0...v4.7.1) (2022-11-25)
+
+
+### Features
+
+* docker ([07d18b7](https://github.com/dgiot/dgiot-dashboard/commit/07d18b7cb8049703fc8c4b6ef0d87cb362c28b7a))
+
+
+
 # [4.7.0](https://github.com/dgiot/dgiot-dashboard/compare/v4.6.1...v4.7.0) (2022-11-15)
 
 
