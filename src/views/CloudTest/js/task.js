@@ -46,8 +46,15 @@ export default {
       thirdtbKey: moment(new Date()).valueOf(),
       original: {},
       collectionInfo: {},
-      drawxnqxPath: '',
-      profiledrawxnqxPath: '',
+      loadfilepath: '',
+      performancefilepath: '',
+      loadremark1: '',
+      loadremark2: '',
+      loadremark3: '',
+      performanceremark1: '',
+      performanceremark2: '',
+      performanceremark3: '',
+      drawdata: {},
       thingdata: [],
       realtimedata: [],
       thingcolumns: [],
@@ -225,7 +232,7 @@ export default {
           if (params.profile.istcp) {
             getDevice(params.objectId).then((res) => {
               this.historyEvidence = res.profile.historicaldata
-              this.drawxnqxPath = res.profile.drawxnqxPath
+              this.drawdata = res.profile.drawdata
             })
           }
           if (data) {
@@ -235,14 +242,7 @@ export default {
             this.CardDevice()
           }
         })
-      } catch (error) {
-        console.log(error)
-        this.$baseMessage(
-          this.$translateTitle('alert.Data request error') + `${error}`,
-          'error',
-          'dgiot-hey-message-error'
-        )
-      }
+      } catch (error) {}
     },
     collectiontable(resData) {
       let _this = this
@@ -361,14 +361,7 @@ export default {
         )
         await this.saveThingdata()
         // this.featHistoryEvidence(this.collectionInfo.objectId)
-      } catch (error) {
-        console.log(error)
-        this.$baseMessage(
-          this.$translateTitle('alert.Data request error') + `${error}`,
-          'error',
-          'dgiot-hey-message-error'
-        )
-      }
+      } catch (error) {}
     },
     /**
      * @Author: dext7r
@@ -385,14 +378,7 @@ export default {
           original: this.historyInfo.original,
         }
         const res = await putEvidence(this.historyInfo.objectId, Evidence)
-      } catch (error) {
-        console.log(error)
-        this.$baseMessage(
-          this.$translateTitle('alert.Data request error') + `${error}`,
-          'error',
-          'dgiot-hey-message-error'
-        )
-      }
+      } catch (error) {}
     },
     submitForm(formName) {
       const aclKey1 = 'role' + ':' + this.currentDepartment.name
@@ -460,27 +446,28 @@ export default {
           this.historyEvidence = results[0].original.avgs ?? this.historydata
           this.collectionInfo.profile.historicaldata = this.historyEvidence
           this.historyInfo = results[0]
-          this.drawxnqxPath =
-            results[0].original.path ?? this.profiledrawxnqxPath
+          this.loadfilepath =
+            results[0].original.drawdata.loadfilepath ??
+            this.drawdata.loadfilepath
+          this.performancefilepath =
+            results[0].original.drawdata.performancefilepath ??
+            this.drawdata.performancefilepath
+          this.performanceremark1 =
+            results[0].original.drawdata.performanceremark1
+          this.performanceremark2 =
+            results[0].original.drawdata.performanceremark2
+          this.performanceremark3 =
+            results[0].original.drawdata.performanceremark3
+          this.loadremark1 = results[0].original.drawdata.loadremark1
+          this.loadremark2 = results[0].original.drawdata.loadremark2
+          this.loadremark3 = results[0].original.drawdata.loadremark3
         } else {
           this.historyEvidence = this.historydata
-          this.drawxnqxPath = this.profiledrawxnqxPath
+          this.loadfilepath = this.drawdata.loadfilepath
+          this.performancefilepath = this.drawdata.performancefilepath
         }
-        // await this.drawxnqx(this.collectionInfo.objectId, this.historyEvidence)
-        this.$baseMessage(
-          this.$translateTitle('alert.Data request successfully'),
-          'success',
-          'dgiot-hey-message-success'
-        )
         loading.close()
-      } catch (error) {
-        console.log(error)
-        this.$baseMessage(
-          this.$translateTitle('alert.Data request error') + `${error}`,
-          'error',
-          'dgiot-hey-message-error'
-        )
-      }
+      } catch (error) {}
     },
     /**
      * @Author: h7ml
@@ -503,14 +490,7 @@ export default {
             message: row.profile.message,
           },
         })
-      } catch (error) {
-        console.log(error)
-        this.$baseMessage(
-          this.$translateTitle('alert.Data request error') + `${error}`,
-          'error',
-          'dgiot-hey-message-error'
-        )
-      }
+      } catch (error) {}
     },
     /**
      * @Author: h7ml
@@ -538,14 +518,7 @@ export default {
             const res = await putDevice(row.objectId, params)
             this.fetchData()
             loading.close()
-          } catch (error) {
-            console.log(error)
-            this.$baseMessage(
-              this.$translateTitle('alert.Data request error') + `${error}`,
-              'error',
-              'dgiot-hey-message-error'
-            )
-          }
+          } catch (error) {}
         }
       )
     },
@@ -586,14 +559,7 @@ export default {
             const res = await putDevice(row.objectId, params)
             _this.fetchData()
             loading.close()
-          } catch (error) {
-            console.log(error)
-            _this.$baseMessage(
-              this.$translateTitle('alert.Data request error') + `${error}`,
-              'error',
-              'dgiot-hey-message-error'
-            )
-          }
+          } catch (error) {}
         }
       )
     },
@@ -612,14 +578,7 @@ export default {
         ele.setAttribute('download', 'download') //用于设置下载文件的文件名
         ele.click()
         // window.location.href = this.$FileServe + url
-      } catch (error) {
-        console.log(error)
-        this.$baseMessage(
-          this.$translateTitle('alert.Data request error') + `${error}`,
-          'error',
-          'dgiot-hey-message-error'
-        )
-      }
+      } catch (error) {}
     },
     /**
      * @Author: h7ml
@@ -640,14 +599,7 @@ export default {
             step: 3,
           },
         })
-      } catch (error) {
-        console.log(error)
-        this.$baseMessage(
-          this.$translateTitle('alert.Data request error') + `${error}`,
-          'error',
-          'dgiot-hey-message-error'
-        )
-      }
+      } catch (error) {}
     },
     /**
      * @Author: h7ml
@@ -669,11 +621,6 @@ export default {
         const loading = this.$baseColorfullLoading()
         const { code, msg, path } = await generatereport(row.objectId)
         if (code == 200 && path) {
-          this.$baseMessage(
-            this.$translateTitle('alert.Data request successfully'),
-            'success',
-            'dgiot-hey-message-success'
-          )
           setTimeout(() => {
             const params = {
               profile: _.merge(row.profile, {
@@ -691,14 +638,7 @@ export default {
           this.$baseMessage(`${msg}`, 'error', 'dgiot-hey-message-error')
         }
         loading.close()
-      } catch (error) {
-        console.log(error)
-        this.$baseMessage(
-          this.$translateTitle('alert.Data request error') + `${error}`,
-          'error',
-          'dgiot-hey-message-error'
-        )
-      }
+      } catch (error) {}
     },
     async handleManagement(row) {
       this.$refs['lowcodeDesign'].withHeader = true
@@ -740,21 +680,9 @@ export default {
       try {
         const loading = this.$baseColorfullLoading()
         const res = await delDevice(taskid)
-        this.$baseMessage(
-          this.$translateTitle('user.successfully deleted'),
-          'success',
-          'dgiot-hey-message-success'
-        )
         loading.close()
         this.fetchData()
-      } catch (error) {
-        console.log(error)
-        this.$baseMessage(
-          this.$translateTitle('user.error deleted') + `${error}`,
-          'error',
-          'dgiot-hey-message-error'
-        )
-      }
+      } catch (error) {}
     },
     async fetchData() {
       this.list = { forensics: [], examination: [] }
@@ -805,6 +733,7 @@ export default {
      */
     async visibleInfo(params) {
       let _this = this
+      _this.activeName1 = 'first'
       _this.collectionInfo = params
       _this.CardDevice(params.parentId.objectId)
       _this.subRealtimedata(params)
@@ -827,6 +756,9 @@ export default {
             }
           }
         }
+        this.checkdecisiontype = params.basedata.checkdecisiontype
+          ? params.basedata.checkdecisiontype
+          : ''
         const { table = [] } = await postHead({
           items: items,
           productid: params.parentId.product.objectId,
@@ -839,17 +771,10 @@ export default {
           _this.historycolumns = params.profile.historicaldatacolumns
         }
         _this.historydata = params.profile.historicaldata
-        _this.profiledrawxnqxPath = params.profile.drawxnqxPath
+        _this.drawdata = params.profile.drawdata
         _this.featHistoryEvidence(this.collectionInfo.objectId)
         _this.visible = true
-      } catch (error) {
-        console.log(error)
-        _this.$baseMessage(
-          _this.$translateTitle('alert.Data request error') + `${error}`,
-          'error',
-          'dgiot-hey-message-error'
-        )
-      }
+      } catch (error) {}
     },
     /**
      * @Author: dext7r
@@ -891,14 +816,7 @@ export default {
         console.log('message', message)
         console.log('pubTopic', pubTopic)
         console.groupEnd()
-      } catch (error) {
-        console.log(error)
-        this.$baseMessage(
-          this.$translateTitle('alert.Data request error') + `${error}`,
-          'error',
-          'dgiot-hey-message-error'
-        )
-      }
+      } catch (error) {}
     },
     /**
      * @Author: dext7r
@@ -934,14 +852,7 @@ export default {
           0,
           false
         ) // 开始采集
-      } catch (error) {
-        console.log(error)
-        _this.$baseMessage(
-          _this.$translateTitle('alert.Data request error') + `${error}`,
-          'error',
-          'dgiot-hey-message-error'
-        )
-      }
+      } catch (error) {}
       // _this.subRealtimedata(params)
     },
     /**
@@ -959,7 +870,7 @@ export default {
             return item.prop !== 'timestamp'
           }),
           historicaldata: historyEvidence,
-          drawxnqxPath: this.drawxnqxPath,
+          drawdata: this.drawdata,
         }),
       }
       if (type) this.visible = false
@@ -968,20 +879,8 @@ export default {
         if (!collectionInfo.profile.istcp) {
           await putDevice(collectionInfo.objectId, _profile)
         }
-        this.$baseMessage(
-          this.$translateTitle('alert.Data request successfully'),
-          'success',
-          'dgiot-hey-message-success'
-        )
         loading.close()
-      } catch (error) {
-        console.log(error)
-        this.$baseMessage(
-          this.$translateTitle('alert.Data request error') + `${error}`,
-          'error',
-          'dgiot-hey-message-error'
-        )
-      }
+      } catch (error) {}
     },
     /**
      * @Author: dext7r
@@ -992,7 +891,6 @@ export default {
      * @Description: 计算平均值
      */
     async drawxnqx(taskid, thingdata) {
-      this.drawxnqxPath = ''
       try {
         const data = thingdata // 要處理下
         const params = {
@@ -1008,29 +906,24 @@ export default {
         if (Number(code) == 200) {
           this.historyEvidenceid = evidenceid ?? ''
           this.historyEvidence = original.avgs ?? []
-          this.drawxnqxPath = `${original.path}?t=${moment(new Date()).format(
-            'x'
-          )}`
+          this.loadfilepath = `${original.drawdata.loadfilepath}?t=${moment(
+            new Date()
+          ).format('x')}`
+          this.performancefilepath = `${
+            original.drawdata.performancefilepath
+          }?t=${moment(new Date()).format('x')}`
+          this.performanceremark1 = original.drawdata.performanceremark1
+          this.performanceremark2 = original.drawdata.performanceremark2
+          this.performanceremark3 = original.drawdata.performanceremark3
           this.original = original ?? {}
+          this.drawdata = original.drawdata
           // https://www.lodashjs.com/docs/lodash.filter
           this.historycolumns = _.filter(this.thingcolumns, function (item) {
             return item.prop !== 'timestamp'
           })
         } else {
-          this.$baseMessage(
-            this.$translateTitle('alert.Data request error') + `${error}`,
-            'error',
-            'dgiot-hey-message-error'
-          )
         }
-      } catch (error) {
-        console.log(error)
-        this.$baseMessage(
-          this.$translateTitle('alert.Data request error') + `${error}`,
-          'error',
-          'dgiot-hey-message-error'
-        )
-      }
+      } catch (error) {}
     },
     /**
      * @Author: dext7r
