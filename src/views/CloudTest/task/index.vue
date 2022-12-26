@@ -58,8 +58,8 @@
                 >
                   采集数据
                 </el-button>
+                <!--                  :disabled="thingdata.length == 0"-->
                 <el-button
-                  :disabled="thingdata.length == 0"
                   type="primary"
                   @click.native="drawxnqx(collectionInfo.objectId, thingdata)"
                 >
@@ -218,9 +218,9 @@
               >
                 <el-card>
                   <el-image
-                    :key="drawxnqxPath"
-                    :preview-src-list="[$FileServe + drawxnqxPath]"
-                    :src="$FileServe + drawxnqxPath"
+                    :key="performancefilepath"
+                    :preview-src-list="[$FileServe + performancefilepath]"
+                    :src="$FileServe + performancefilepath"
                   >
                     <div slot="error" class="image-slot">
                       <el-image
@@ -231,6 +231,48 @@
                       />
                     </div>
                   </el-image>
+                  <a-descriptions bordered>
+                    <a-descriptions-item label="备注" :span="12">
+                      <p>
+                        {{ performanceremark1 }}
+                      </p>
+                      <p>
+                        {{ performanceremark2 }}
+                      </p>
+                      <p>
+                        {{ performanceremark3 }}
+                      </p>
+                    </a-descriptions-item>
+                  </a-descriptions>
+                </el-card>
+                <el-card>
+                  <el-image
+                    :key="loadfilepath"
+                    :preview-src-list="[$FileServe + loadfilepath]"
+                    :src="$FileServe + loadfilepath"
+                  >
+                    <div slot="error" class="image-slot">
+                      <el-image
+                        class="dgiot-data-empty"
+                        :src="
+                          require('../../../../public/assets/images/platform/assets/empty_images/data_empty.png')
+                        "
+                      />
+                    </div>
+                  </el-image>
+                  <a-descriptions bordered>
+                    <a-descriptions-item label="备注" :span="12">
+                      <p>
+                        {{ loadremark1 }}
+                      </p>
+                      <p>
+                        {{ loadremark2 }}
+                      </p>
+                      <p>
+                        {{ loadremark3 }}
+                      </p>
+                    </a-descriptions-item>
+                  </a-descriptions>
                 </el-card>
               </el-tab-pane>
             </el-tabs>

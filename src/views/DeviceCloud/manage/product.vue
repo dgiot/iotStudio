@@ -205,8 +205,7 @@
 
             <a-card-meta
               :title="o.name"
-              @click.native="deviceToDetail(o)"
-              :description="o.desc"
+              :description="o.devType"
             >
               <template #avatar>
                 <el-image
@@ -229,11 +228,6 @@
                 <br/>
                 {{ o.objectId }}
               </template>
-              <!--              <template #title>-->
-              <!--                <div>-->
-              <!--                  <span>{{ o.name }}</span>-->
-              <!--                </div>-->
-              <!--              </template>-->
             </a-card-meta>
             <el-descriptions
               :column="4"
@@ -278,12 +272,6 @@
                   {{ o.poweroff_counts || 0 }}
                 </el-link>
               </el-descriptions-item>
-              <!--              <el-descriptions-item :label="$translateTitle('product.addingtime')" :title="o.updatedAt">-->
-              <!--                {{ $moment(o.createdAt).format("YYYY-MM-DD") }}-->
-              <!--              </el-descriptions-item>-->
-              <!--              <el-descriptions-item :contentStyle="{'text-align': 'center'}" label="描述" :title="o.desc">-->
-              <!--                {{ o.desc }}-->
-              <!--              </el-descriptions-item>-->
             </el-descriptions>
           </a-card>
         </el-col>
