@@ -102,54 +102,94 @@
           静态文本框
         </el-button>
         <el-divider />
-        <div style="text-align: left; margin: 10px; font-weight: 600">动图</div>
-        <!-- <img
-          draggable="true"
-          size="mini"
-          src="https://prod.dgiotcloud.cn/dgiot_file/topo/png/pump.gif"
-          style="width: 40px; height: 40px; display: inline-block"
-          type="primary"
-          @click="
-            createBasicThing({
-              productid: $route.query.productid,
-              type: 'knovaimage',
-              image: 'https://prod.dgiotcloud.cn/dgiot_file/topo/png/pump.gif',
-              hidden: false,
-            })
-          "
-        /> -->
-        <img
-          draggable="true"
-          size="mini"
-          :src="$FileServe + '/dgiot_file/topo/gif/pump.gif'"
+        <div
           style="
-            width: 40px;
-            height: 40px;
+            text-align: left;
+            margin: 10px;
+            font-weight: 600;
+            display: flex;
+            justify-content: space-between;
+          "
+        >
+          <div style="font-size: 18px">动图</div>
+          <el-button type="primary" @click="handleUploadImg('gif')">
+            动图上传
+          </el-button>
+        </div>
+        <img
+          v-for="(o, index) in gifList"
+          :key="index + o.mtime"
+          draggable="true"
+          size="mini"
+          :src="$FileServe + o.src"
+          style="
+            width: 50px;
+            height: 50px;
             display: inline-block;
             margin-left: 20px;
+            margin-top: 10px;
+            background-color: #f1f3f4;
           "
           type="primary"
           @click="
             createBasicThing({
               productid: $route.query.productid,
               type: 'knovaimage',
-              image: '/dgiot_file/topo/gif/pump.gif',
+              image: o.src,
               data: {
-                width: 180,
-                height: 200,
+                width: o.width,
+                height: o.height,
               },
               hidden: false,
             })
           "
         />
         <el-divider />
-        <div style="text-align: left; margin: 10px; font-weight: 600">
-          静态图
+        <div
+          style="
+            text-align: left;
+            margin: 10px;
+            font-weight: 600;
+            display: flex;
+            justify-content: space-between;
+          "
+        >
+          <div style="font-size: 18px">静图</div>
+          <el-button type="primary" @click="handleUploadImg('static')">
+            静图上传
+          </el-button>
         </div>
         <img
+          v-for="(item, index) in staticList"
+          :key="index + item.mtime"
           draggable="true"
           size="mini"
-          :src="$FileServe + '/dgiot_file/topo/static/datawindow.png'"
+          :src="$FileServe + item.src"
+          style="
+            width: 40px;
+            height: 40px;
+            display: inline-block;
+            margin-left: 20px;
+            margin-top: 10px;
+          "
+          type="primary"
+          @click="
+            createBasicThing({
+              productid: $route.query.productid,
+              type: 'staticimage',
+              data: {
+                width: item.width,
+                height: item.height,
+              },
+              image: item.src,
+              hidden: false,
+            })
+          "
+        />
+        <!-- <img
+          draggable="true"
+          size="mini"
+          :src="$FileServe + '/dgiot_file/topo/static/bg_top.png'"
           style="
             width: 40px;
             height: 40px;
@@ -162,39 +202,14 @@
               productid: $route.query.productid,
               type: 'staticimage',
               data: {
-                width: 180,
-                height: 200,
+                width: 1900,
+                height: 90,
               },
-              image: '/dgiot_file/topo/static/datawindow.png',
+              image: '/dgiot_file/topo/static/bg_top.png',
               hidden: false,
             })
           "
-        />
-        <img
-          draggable="true"
-          size="mini"
-          src=" https://ucloud-web-sh.oss-cn-shanghai.aliyuncs.com/cloud/web/prod/screen/assets/1650512783877_0362.png"
-          style="
-            width: 60px;
-            height: 20px;
-            display: inline-block;
-            margin-left: 20px;
-          "
-          type="primary"
-          @click="
-            createBasicThing({
-              productid: $route.query.productid,
-              type: 'staticimage',
-              data: {
-                width: 420,
-                height: 35,
-              },
-              image:
-                ' https://ucloud-web-sh.oss-cn-shanghai.aliyuncs.com/cloud/web/prod/screen/assets/1650512783877_0362.png',
-              hidden: false,
-            })
-          "
-        />
+        /> -->
         <!-- -->
         <el-divider />
         <!-- <el-button
@@ -312,29 +327,6 @@
           "
         />
         <el-divider />
-        <!-- <el-button
-          draggable="true"
-          size="mini"
-          type="primary"
-          @click.native="
-            createBasicThing({
-              productid: $route.query.productid,
-              type: 'vuecomponent',
-              data: {
-                id: 'warning_list',
-                width: 550,
-                height: 350,
-                fill: 'rgba(30, 30, 30, 0.7)',
-                text: '告警列表',
-                source: 'api',
-              },
-              chart: 'list',
-              hidden: false,
-            })
-          "
-        >
-          告警列表
-        </el-button> -->
         <div style="text-align: left; margin: 10px; font-weight: 600">
           告警列表
         </div>
@@ -518,41 +510,6 @@
           "
         />
         <el-divider />
-        <!-- <div style="text-align: left; margin: 10px; font-weight: 600">
-          数据统计卡片组
-        </div>
-        <img
-          draggable="true"
-          size="mini"
-          :src="$FileServe + '/dgiot_file/topo/png/countvalue.png'"
-          style="
-            width: 70px;
-            height: 40px;
-            display: inline-block;
-            margin-left: 20px;
-            margin-top: 10px;
-          "
-          type="primary"
-          @click="
-            createBasicThing({
-              productid: $route.query.productid,
-              type: 'vuecomponent',
-              data: {
-                id: 'all_countvalue',
-                width: 1800,
-                height: 220,
-                x: 40,
-                y: 5,
-                fill: 'rgba(30, 30, 30, 0.7)',
-                text: '基本数据统计卡片组',
-                source: 'api',
-                src: '/dgiot_file/topo/png/countvalue.png',
-              },
-              chart: 'count',
-              hidden: false,
-            })
-          "
-        /> -->
         <div style="text-align: left; margin: 10px; font-weight: 600">
           产品数量
         </div>
@@ -801,21 +758,35 @@
         <!-- http://dev.iotn2n.com/dgiot_file/topo/png/pump.png -->
       </a-collapse-panel>
     </a-collapse>
+    <input
+      id="file"
+      ref="file"
+      accept="image/gif,image/jpeg,image/png,image/jpg"
+      style="display: none"
+      type="file"
+      @change="getFileData($event)"
+    />
   </div>
 </template>
 
 <script>
+  import { UploadTopoImg } from '@/api/File'
   import addNodeEvent from '@/utils/konva/common'
   import canvas from '@/utils/konva/core/canvas'
   import createThing from '@/utils/konva/createThing'
-  import { mapMutations } from 'vuex'
+  import { mapMutations, mapGetters } from 'vuex'
   import getSvgPath from '@/utils/konva/getSvgPath'
   import Thing from '@/views/CloudFunction/topo/components/Thing'
   import Amis from '@/views/CloudFunction/topo/components/Amis'
   // import TopoThing from '@/views/topo/components/TopoThing'
   import Background from '@/views/CloudFunction/topo/components/Background'
   import Evidence from '@/views/CloudFunction/topo/components/TopoEvidence'
-
+  import {
+    delete_file,
+    file_info,
+    list_dir,
+    getproductTree,
+  } from '@/api/System/filemanagement'
   const regUrl =
     /(\/\/)?[\w-]+(\.[\w-]+)+([\w.,@?^=%&:/~+#-]*[\w@?^=%&/~+#-])?$/
   // const { cdn } = require('../../../config')
@@ -875,11 +846,19 @@
         images: [],
         imgParams: {},
         activeNames: 'icon',
+        staticList: [],
+        gifList: [],
+        uploadType: '', //上传类型
       }
     },
-    computed: {},
-    created() {
-      // this.fetchData()
+    computed: {
+      ...mapGetters({
+        token: 'user/token',
+      }),
+    },
+    async created() {
+      this.initImage('static')
+      this.initImage('gif')
     },
     mounted() {
       this.$dgiotBus.$off('copyNode')
@@ -935,6 +914,92 @@
     destroyed() {}, //生命周期 - 销毁完成
     activated() {},
     methods: {
+      async initImage(type) {
+        let res = await list_dir(`dgiot_file/topo/${type}`) //this.get_filelist()
+        // console.log('动态图片列表', resgif.data)
+        let List = []
+        res.data.forEach((element) => {
+          var img = new Image()
+          // $FileServe + '/dgiot_file/topo/png/amiscomponent.png
+          img.src = `${this.$FileServe}/${element.path}/${element.name}`
+          // console.log('图片宽高', img.width, img.height)
+          let item = {
+            mtime: element.mtime,
+            src: `/${element.path}/${element.name}`,
+            width: img.width == 0 ? 200 : img.width,
+            height: img.height == 0 ? 200 : img.height,
+          }
+          List.push(item)
+          // img.src = this.$
+        })
+        if (type == 'gif') {
+          this.gifList = List
+        } else if (type == 'static') {
+          this.staticList = List
+        }
+      },
+      handleUploadImg(type) {
+        // console.log(this.$refs.file)
+        this.uploadType = type
+        this.$refs.file.click()
+      },
+      getFileData(e) {
+        // console.log(e.target.files[0])
+        // return
+        let file = e.target.files[0]
+        var data = new FormData()
+        let time = new Date().getTime()
+        data.append('file', file)
+        data.append('scene', 'app')
+        data.append('filename', file.name)
+        // data.append("timestamp", time);
+        data.append('output', 'json')
+        data.append('path', `dgiot_file/topo/${this.uploadType}`)
+        console.log('token', this.token)
+        // store.getters['user/token'],
+        data.append('auth_token', this.token)
+        data.append('code', '')
+        data.append('submit', 'upload')
+        UploadTopoImg(data)
+          .then(async (res) => {
+            var img = new Image()
+            // $FileServe + '/dgiot_file/topo/png/amiscomponent.png
+            img.src = res.data.url
+            console.log(res)
+            let item = {
+              mtime: res.data.mtime,
+              src: res.data.path,
+              width: img.width == 0 ? 200 : img.width,
+              height: img.height == 0 ? 200 : img.height,
+            }
+            if (this.uploadType == 'static') {
+              this.createBasicThing({
+                productid: this.$route.query.productid,
+                type: 'staticimage',
+                data: {
+                  width: item.width,
+                  height: item.height,
+                },
+                image: item.src,
+                hidden: false,
+              })
+              this.initImage('static')
+            } else if (this.uploadType == 'gif') {
+              this.createBasicThing({
+                productid: this.$route.query.productid,
+                type: 'knovaimage',
+                image: item.src,
+                data: {
+                  width: item.width,
+                  height: item.height,
+                },
+                hidden: false,
+              })
+              this.initImage('gif')
+            }
+          })
+          .catch((err) => {})
+      },
       handleDragStart(e) {
         e.dataTransfer.setData('index', e.target)
         this.$dgiotBus.$emit('dgiotDragStart', e)
@@ -964,6 +1029,11 @@
           thingid: 'thingid',
         })
       },
+      // async get_filelist(path) {
+      //   // this.listLoading = true
+      //   let res = await list_dir(path)
+      //   return res
+      // },
       uploadCkick(type) {
         this.upImgType = type
         this.$refs['uploadFinish'].$refs.uploader.dispatchEvent(

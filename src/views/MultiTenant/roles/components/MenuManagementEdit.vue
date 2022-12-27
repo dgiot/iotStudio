@@ -54,21 +54,25 @@
           </template>
         </el-input>
       </el-form-item>
-      <el-form-item label="路径" prop="url">
+      <el-form-item v-show="!form.meta.isAmis" label="路径" prop="url">
         <el-input v-model="form.url">
           <template slot="prepend">
             <dgiot-icon icon="route-fill" />
           </template>
         </el-input>
       </el-form-item>
-      <el-form-item label="vue文件路径" prop="meta.component">
+      <el-form-item
+        v-show="!form.meta.isAmis"
+        label="vue文件路径"
+        prop="meta.component"
+      >
         <el-input v-model="form.meta.component">
           <template slot="prepend">
             <dgiot-icon icon="vuejs-fill" />
           </template>
         </el-input>
       </el-form-item>
-      <el-form-item label="重定向" prop="redirect">
+      <el-form-item v-show="!form.meta.isAmis" label="重定向" prop="redirect">
         <el-input v-model="form.meta.redirect">
           <template slot="prepend">
             <dgiot-icon icon="infrared-thermometer-fill" />
@@ -82,7 +86,27 @@
           </template>
         </el-input>
       </el-form-item>
-      <el-form-item label="icon图标" prop="meta.icon">
+      <el-form-item label="低代码绑定">
+        <el-select
+          v-model="form.meta.viewid"
+          filterable
+          placeholder="请选择"
+          size="medium"
+          @change="handleSelectViewId"
+        >
+          <el-option
+            v-for="item in viewlist"
+            :key="item.value"
+            :label="item.title"
+            :value="item.objectId"
+          />
+        </el-select>
+      </el-form-item>
+      <el-form-item
+        v-show="!form.meta.isAmis"
+        label="icon图标"
+        prop="meta.icon"
+      >
         <el-input
           v-model="form.meta.icon"
           style="cursor: pointer"
@@ -115,7 +139,7 @@
           </el-popover>
         </el-input>
       </el-form-item>
-      <el-form-item label="badge" prop="badge">
+      <el-form-item v-show="!form.meta.isAmis" label="badge" prop="badge">
         <el-input v-model="form.meta.badge">
           <template slot="prepend">
             <dgiot-icon icon="notification-badge-fill" />
@@ -123,16 +147,25 @@
         </el-input>
       </el-form-item>
       <el-form-item
+        v-show="!form.meta.isAmis"
         label="隐藏"
         prop="hidden"
         title="隐藏后将不在菜单列表中展示，但是可以被访问"
       >
         <el-switch v-model="form.meta.hidden" />
       </el-form-item>
+      <el-form-item
+        label="低代码"
+        prop="hidden"
+        title="设置路由是否绑定了低代码页面"
+      >
+        <el-switch v-model="form.meta.isAmis" @change="changeSwitch" />
+      </el-form-item>
       <!--      <el-form-item label="始终显示当前节点" prop="alwaysShow">-->
       <!--        <el-switch v-model="form.meta.alwaysShow" />-->
       <!--      </el-form-item>-->
       <el-form-item
+        v-show="!form.meta.isAmis"
         label="固定"
         prop="noClosable"
         title="除首页外,其他页面不建议选择此项"
@@ -140,6 +173,7 @@
         <el-switch v-model="form.meta.noClosable" />
       </el-form-item>
       <el-form-item
+        v-show="!form.meta.isAmis"
         label="无缓存"
         prop="noKeepAlive"
         title="开启后该页面的数据将不被缓存"
@@ -171,6 +205,14 @@
     components: {
       DgiotIconSelector,
       menuCollapse,
+    },
+    props: {
+      viewlist: {
+        type: Array,
+        default: () => {
+          return []
+        },
+      },
     },
     data() {
       return {
@@ -293,10 +335,22 @@
         ObjectId: 'user/objectId',
       }),
     },
-    mounted() {
+    async mounted() {
       // this.queryRouter()
     },
     methods: {
+      changeSwitch(e) {
+        if (this.form.meta.isAmis) {
+          this.form.meta.component = `@/views/CloudOc/AmisPage/index`
+        }
+      },
+      handleSelectViewId(e) {
+        console.log(e)
+        this.form.url = `/amis/View/${e}`
+        this.form.meta.component = `@/views/CloudOc/AmisPage/index`
+        this.form.meta.isAmis = true
+        console.log('查看提交数据', this.form)
+      },
       async queryRouter() {
         const { results } = await queryMenu({})
         this.router = results
@@ -364,13 +418,15 @@
               noClosable: false,
               noKeepAlive: false,
               tabHidden: false,
+              viewid: '',
+              isAmis: false,
             },
           }
           this.menuid = row.objectId
         } else if (type == 'editMenu') {
           this.form = row
         } else {
-          dgiotlog.log('row', row)
+          // dgiotlog.log('row', row)
           this.form = {
             orderBy: row.orderBy,
             name: '',
@@ -387,6 +443,8 @@
               noClosable: false,
               noKeepAlive: false,
               tabHidden: false,
+              viewid: '',
+              isAmis: false,
             },
           }
         }
@@ -404,6 +462,19 @@
             if (this.form.objectId) {
               this._putMenu(this.form.objectId, this.form)
             } else {
+              let role = JSON.parse(
+                Base64.decode(localStorage.getItem('role'))
+              )?.vuexinfo
+              let ACL = {}
+              role.forEach((item) => {
+                ACL[`role:${item.name}`] = {
+                  read: true,
+                  write: true,
+                }
+              })
+              this.form.ACL = ACL
+              console.log(this.form, ACL)
+              // return
               this._addMenu(this.form)
             }
           }
@@ -420,30 +491,30 @@
         const { updatedAt } = await putMenu(objectId, params)
         dgiotlog.log('updatedAt', updatedAt)
         if (updatedAt) {
-          this.closeDialog()
+          this.closeDialog('edit')
         }
       },
-      closeDialog() {
+      closeDialog(type = '') {
         this.menuid = ''
-        this.$emit('fetch-data')
+        this.$emit('fetch-data', type)
         this.$refs['form'].resetFields()
         this.dialogFormVisible = false
         this.form = this.$options.data().form
       },
       async _addMenu(form) {
-        const aclKey = '*'
-        const aclKey1 = 'role:admin'
-        const setAcl = {}
-        setAcl[aclKey] = {
-          read: true,
-          write: true,
-        }
-        setAcl[aclKey1] = {
-          read: true,
-          write: true,
-        }
+        // const aclKey = '*'
+        // const aclKey1 = 'role:admin'
+        // const setAcl = {}
+        // setAcl[aclKey] = {
+        //   read: true,
+        //   write: true,
+        // }
+        // setAcl[aclKey1] = {
+        //   read: true,
+        //   write: true,
+        // }
         let params = {
-          ACL: setAcl,
+          ACL: form.ACL,
           meta: form.meta,
           name: form.name,
           parent: {
@@ -476,7 +547,12 @@
             type: 'success',
           })
 
-          this.closeDialog()
+          params.objectId = res.objectId
+          params.createdAt = res.createdAt
+          // return
+          let data = JSON.parse(JSON.stringify(params))
+          // console.log('paramsparamsparams', data)
+          this.closeDialog(data)
         }
       },
     },

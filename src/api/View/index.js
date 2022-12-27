@@ -20,6 +20,22 @@ export async function getTrack(id) {
     method: 'get',
   })
 }
+
+export function getTopo(params) {
+  return request({
+    url: `/topo`,
+    method: 'get',
+    params,
+  })
+}
+export function postAmis(params, data) {
+  return request({
+    url: `/amis`,
+    method: 'post',
+    params,
+    data,
+  })
+}
 export async function queryView(params) {
   return query_object('View', params)
 }

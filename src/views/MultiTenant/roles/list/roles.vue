@@ -305,7 +305,7 @@
     <el-drawer
       v-drawerDrag
       append-to-body
-      size="80%"
+      size="90%"
       :visible.sync="dynamicform.visible"
     >
       <dgiot-views

@@ -25,6 +25,7 @@
           :key="index"
         >
           <div
+            v-show="!isDevice"
             :class="{ isactive: o.objectId == konvaId }"
             style="
               width: 30px;
@@ -500,7 +501,7 @@
   import steps from './js/guide'
   import 'element-ui/lib/theme-chalk/display.css'
   import requiremodule from '@/utils/file/requiremodule'
-  import { mapGetters, mapMutations } from 'vuex'
+  import { mapGetters, mapMutations, mapActions } from 'vuex'
   import { _getTopo, edit_konva_thing, get_konva_thing } from '@/api/Topo'
   import { getProduct } from '@/api/Product'
   import { queryView, putView, getView, postView } from '@/api/View'
@@ -800,16 +801,6 @@
                     id: 'Layer_Thing',
                   },
                   children: [
-                    // {
-                    //   attrs: {
-                    //     height: '700',
-                    //     id: 'bg',
-                    //     src: '/dgiot_file/knova/knova_bg.png?timestamp=1635422987361',
-                    //     type: 'bg-image',
-                    //     width: '1200',
-                    //   },
-                    //   className: 'Image',
-                    // },
                     {
                       attrs: {
                         draggable: true,
@@ -883,6 +874,8 @@
       },
     },
     async mounted() {
+      // console.log('document.body.style.zoom', document.body.style.zoom)
+      // document.body.style.zoom = 1
       let params = {
         count: 'objectId',
         order: 'createdAt',
@@ -929,6 +922,11 @@
       }
       this.$nextTick(() => {
         this.handleKonva()
+        // if (this.$route.query.dashboard) {
+        //   setTimeout(() => {
+        //     this.setSale(90)
+        //   }, 2500)
+        // }
       })
       this.$dgiotBus.$off('nodeEdit')
       this.$dgiotBus.$on('nodeEdit', async (node) => {
@@ -955,8 +953,6 @@
           strokeWidth: node.attrs.strokeWidth || 0.1, //描边宽度
           text: node.attrs.text || '',
           fontFamily: node.attrs.fontFamily || '',
-          // x: node.attrs.x || 0,
-          // y: node.attrs.y || 0,
         }
         if (node.attrs.name == 'amiscomponent') {
           this.screenViewId = node.attrs.id
@@ -1028,6 +1024,9 @@
         createThing: 'topo/createThing',
         setTreeFlag: 'settings/setTreeFlag',
         createdEvidence: 'topo/createdEvidence',
+      }),
+      ...mapActions({
+        setSale: 'topo/setSale',
       }),
       copyNode() {
         // console.log(this.editNode)

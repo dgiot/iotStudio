@@ -254,11 +254,12 @@ const topoStage = {
         node.setAttrs({
           image: image,
         })
-        console.log('查看', Vue.prototype.$FileServe, node.attrs.src)
+        // console.log('查看', node.attrs.src)
         image.src = node.attrs.src.includes('//')
           ? node.attrs.src
           : Vue.prototype.$FileServe + node.attrs.src
       }
+      // layer.batchDraw()
       node.on('contextmenu', (e) => {
         canvas.contextmenu = e.target
         console.log('contextmenu', e.target)
@@ -588,7 +589,13 @@ const topoStage = {
       console.info('vue组件信息', list)
       dgiotBus.$emit('vueComponent', list, true)
     }
-
+    console.log('进行了这里')
+    canvas.layer.batchDraw()
+    // canvas.stage.batchDraw()
+    setTimeout(() => {
+      canvas.layer.batchDraw()
+      // canvas.stage.batchDraw()
+    }, 1500)
     console.groupCollapsed(
       '%ctopoStage log',
       'color:#009a61; font-size: 28px; font-weight: 300'
