@@ -214,6 +214,7 @@
       <el-button style="margin: 0 20px" type="text" @click="handleTypeClick">
         {{ type == 'preview' ? '编辑' : '预览' }}
       </el-button>
+      {{ ruleForm.objectId }}
       <el-input
         v-model="filterText"
         placeholder="输入关键字搜索文件"

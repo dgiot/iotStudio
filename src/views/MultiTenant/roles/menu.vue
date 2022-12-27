@@ -41,6 +41,9 @@
                 <!-- 导出菜单 -->
                 {{ $translateTitle('product.Export menu') }}
               </el-button>
+              <el-button size="mini" type="primary" @click="fetchData">
+                刷新
+              </el-button>
               <input
                 v-show="false"
                 id="fileExport"
@@ -65,12 +68,7 @@
           size="mini"
           :tree-props="{ children: 'children', hasChildren: 'hasChildren' }"
         >
-          <el-table-column
-            align="center"
-            fixed
-            :label="$translateTitle('product.title')"
-            width="200"
-          >
+          <el-table-column align="center" fixed label="标题" width="200">
             <template #default="{ row }">
               <span>
                 {{ row.meta.title }}
@@ -81,25 +79,46 @@
             align="center"
             :label="$translateTitle('user.name')"
             prop="name"
+            width="auto"
           />
+          <el-table-column
+            align="center"
+            label="所属部门"
+            prop="ACL"
+            show-overflow-tooltip
+            sortable
+            :width="160"
+          >
+            <template #default="{ row }">
+              <el-tag
+                v-for="(item, index) in getAcl(row.ACL)"
+                :key="index"
+                effect="plain"
+                :type="item"
+              >
+                {{ item }}
+              </el-tag>
+            </template>
+          </el-table-column>
           <el-table-column
             align="center"
             :label="$translateTitle('developer.path')"
             prop="url"
             show-overflow-tooltip
-            width="220"
+            width="200"
           />
           <el-table-column
             align="center"
             :label="$translateTitle('menu.sort')"
             prop="orderBy"
             sortable
+            width="80"
           />
           <el-table-column
             align="center"
             :label="'vue ' + $translateTitle('developer.filepath')"
             show-overflow-tooltip
-            width="400"
+            width="350"
           >
             <template #default="{ row }">
               <span>
@@ -111,7 +130,7 @@
             align="center"
             :label="$translateTitle('developer.redirect')"
             show-overflow-tooltip
-            width="200"
+            width="180"
           >
             <template #default="{ row }">
               <span>
@@ -123,7 +142,7 @@
             align="center"
             :label="$translateTitle('task.Advancedconfiguration')"
             show-overflow-tooltip
-            :width="200"
+            :width="100"
           >
             <template #default="{ row }">
               <el-popover placement="top" trigger="hover">
@@ -186,34 +205,65 @@
               </el-popover>
             </template>
           </el-table-column>
+          <el-table-column align="center" label="低代码" width="200">
+            <template #default="{ row }">
+              <el-button
+                v-if="row.meta.isAmis == true"
+                size="mini"
+                title="绑定低代码表单"
+                type="primary"
+                @click="dynamicForm(row)"
+              >
+                绑定
+              </el-button>
+              <el-button
+                v-if="row.meta.isAmis == true && row.meta.viewid"
+                type="info"
+                @click="handleLowCode(row)"
+              >
+                {{ $translateTitle('application.preview') }}
+              </el-button>
+            </template>
+          </el-table-column>
           <el-table-column
             align="center"
             fixed="right"
             :label="$translateTitle('developer.operation')"
-            width="220px"
+            width="auto"
           >
             <template #default="{ row }">
               <el-button
-                icon="el-icon-plus"
                 size="mini"
                 :title="$translateTitle('menu.childrenmenu')"
                 type="primary"
                 @click="handleEdit(row, 'addChildMenu')"
-              />
+              >
+                添加
+              </el-button>
               <el-button
-                icon="el-icon-edit"
                 size="mini"
                 :title="$translateTitle('developer.edit')"
                 type="success"
                 @click="handleEdit(row, 'editMenu')"
-              />
+              >
+                编辑
+              </el-button>
               <el-button
-                icon="el-icon-delete"
                 size="mini"
                 :title="$translateTitle('developer.delete') + row.meta.title"
                 type="danger"
                 @click="handleDelete(row)"
-              />
+              >
+                删除
+              </el-button>
+              <el-button
+                size="mini"
+                :title="$translateTitle('developer.delete') + row.meta.title"
+                type="warning"
+                @click="showTree(row, row.objectId, row.ACL)"
+              >
+                迁移
+              </el-button>
             </template>
           </el-table-column>
           <template #empty>
@@ -227,19 +277,71 @@
         </el-table>
       </el-col>
     </el-row>
-    <edit ref="edit" @fetch-data="fetchData" />
+    <!-- 迁移 -->
+    <el-dialog
+      :append-to-body="true"
+      top="5vh"
+      :visible.sync="popoverVisible"
+      width="40vh"
+    >
+      <div class="deviceTree">
+        <p style="text-align: center; font-size: 18px">迁移:</p>
+        <el-tree
+          accordion
+          :data="roleTree"
+          :expand-on-click-node="false"
+          node-key="index"
+          :props="roleProps"
+        >
+          <!-- @node-click="handleNodeClick" -->
+          <!-- eslint-disable-next-line -->
+          <div slot-scope="{ node, data }" class="custom-tree-node">
+            <span
+              :class="{
+                selected: data.objectId == curDepartmentId,
+              }"
+              @click="transferAcl(data)"
+            >
+              {{ node.label }}
+            </span>
+          </div>
+        </el-tree>
+      </div>
+    </el-dialog>
+    <!-- 绑定 -->
+    <el-drawer
+      v-drawerDrag
+      append-to-body
+      size="90%"
+      :visible.sync="bindvisible"
+    >
+      <dgiot-views
+        ref="dgiotView"
+        :bind-row="editRow"
+        :class-disable="true"
+        :type="'menu'"
+        :view-form="viewForm"
+        @BusRole="BusRole"
+        @bindamismenu="bindAmisMenu"
+      />
+    </el-drawer>
+    <edit ref="edit" :viewlist="ViewList" @fetch-data="fetchData" />
+    <lowcodeDesign ref="lowcodeDesign" @objectId="lowcodeId" />
   </div>
 </template>
 
 <script>
+  import { mapGetters } from 'vuex'
   import Edit from './components/MenuManagementEdit'
   import { utc2beijing } from '@/utils'
-  import { queryMenu } from '@/api/Menu/index'
+  import { queryMenu, putMenu } from '@/api/Menu/index'
   import { ExportParse, ImportParse } from '@/api/Export'
-
+  import { queryView, getView } from '@/api/View'
+  import dgiotViews from '@/views/CloudFunction/lowcode'
+  import lowcodeDesign from '@/views/CloudFunction/lowcode/components/index'
   export default {
     name: 'TreeTableDemo',
-    components: { Edit },
+    components: { Edit, dgiotViews, lowcodeDesign },
     data() {
       return {
         tableHeight: this.$baseTableHeight(0) + 46,
@@ -342,9 +444,70 @@
         inputDOM: '',
         size: '',
         formData: '',
+        ViewList: [],
+        changerow: {},
+        popoverVisible: false,
+        curDepartmentId: '',
+        roleProps: {
+          children: 'children',
+          label: 'name',
+        },
+        bindvisible: false,
+        editRow: {},
+        viewForm: {
+          class: '',
+          flag: 'Amis',
+          type: 'Amis',
+          title: '',
+          key: '',
+          data: {
+            type: 'page',
+            initApi: {
+              url: 'iotapi/classes/Device/parse_objectid',
+              method: 'get',
+              adaptor:
+                'return {\r\n  "status":0,\r\n  "msg":"",\r\n  "data":response.data.basedata\r\n  }',
+              headers: {
+                store: 'localStorage',
+                dgiotReplace: 'parse_objectid',
+              },
+              dataType: 'json',
+            },
+            body: [
+              {
+                type: 'form',
+                api: {
+                  method: 'put',
+                  url: 'iotapi/classes/Device/parse_objectid',
+                  headers: {
+                    store: 'localStorage',
+                    dgiotReplace: 'parse_objectid',
+                  },
+                  dataType: 'json',
+                  requestAdaptor:
+                    'return {\r\n    ...api,\r\n    data: {\r\n        basedata:{ ...api.data}\r\n    }\r\n}',
+                },
+                body: [
+                  {
+                    type: 'input-text',
+                    label: '设备名称',
+                    name: 'name',
+                  },
+                ],
+              },
+            ],
+          },
+          disabled: false,
+          hiddenRow: [],
+        },
+        lowcodeId: '',
       }
     },
+
     computed: {
+      ...mapGetters({
+        roleTree: 'user/roleTree',
+      }),
       treeData() {
         const cloneData = JSON.parse(JSON.stringify(this.data))
         var Tree = [] // 对源数据深度克隆
@@ -352,6 +515,7 @@
           const branchArr = cloneData.filter(
             (child) => father.objectId == child.parent
           ) // 返回每一项的子级数组
+          // console.log('branchArr', branchArr)
           branchArr.length > 0 ? (father.children = branchArr) : '' // 如果存在子级，则给父级添加一个children属性，并赋值
           father.parent == 0 ? (father.parent = '0') : ''
           return father.parent == 0 // 返回第一层
@@ -379,13 +543,130 @@
         this.reset()
       },
     },
-    mounted() {
+    async mounted() {
+      let param = {
+        count: 'objectId',
+        order: 'createdAt',
+        excludeKeys: 'data',
+        skip: 0,
+        where: {
+          flag: { $regex: 'Amis' },
+          type: {
+            $regex: 'Amis',
+          },
+        },
+      }
+      let ViewList = await queryView(param)
+      console.log('screenViewList', ViewList)
+      this.ViewList = ViewList.results
       this.fetchData()
       this.originmenuurl = []
       this.getoriginmenu(this.$router.options.routes)
       this.getRole()
     },
     methods: {
+      async handleLowCode(row) {
+        localStorage.setItem('parse_objectid', row.meta.viewid)
+        const loading = this.$baseColorfullLoading(1)
+        loading.close()
+        this.$dgiotBus.$emit('lowcodePreview', await getView(row.meta.viewid))
+      },
+      async bindAmisMenu(amisrow, menurow) {
+        console.log(amisrow, menurow)
+        menurow.meta.viewid = amisrow.objectId
+        menurow.url = `/amis/View/${amisrow.objectId}`
+        menurow.meta.component = `@/views/CloudOc/AmisPage/index`
+        menurow.meta.isAmis = true
+        const loading = this.$baseColorfullLoading(1)
+
+        // return
+        let params = JSON.parse(JSON.stringify(menurow))
+        delete params.createtime
+        delete params.objectId
+        delete params.ACL
+        delete params.parent
+        // console.log('menurow', menurow, 'amisrow', params)
+        // return
+        await putMenu(menurow.objectId, params)
+        console.log('修改行', params, menurow)
+        this.editRow = menurow
+        loading.close()
+        this.$message({
+          showClose: true,
+          type: 'success',
+          message: '绑定成功',
+        })
+      },
+      BusRole() {},
+      async dynamicForm(form) {
+        // console.log(form)
+        // await this.querySelectRow(form)
+        // console.log(this.selectRow)
+        this.editRow = form
+        // 查找view类型id为当前角色id的
+        console.log(form)
+        // this.viewForm.key = form.objectId
+        this.bindvisible = true
+        this.$nextTick(() => {
+          this.$refs.dgiotView.fetchData()
+          console.log(this.$refs.dgiotView)
+        })
+      },
+      // 获取部门
+      getAcl(ACL) {
+        let name = []
+        for (let a in ACL) {
+          if (a == '*') {
+            delete ACL[a]
+          } else if (a.split(':')[1]) {
+            name.push(a.split(':')[1])
+          }
+        }
+        return name
+      },
+      // 迁移菜单
+      transferAcl(data) {
+        const aclKey1 = 'role' + ':' + data.name
+        const aclObj = {}
+        aclObj[aclKey1] = {
+          read: true,
+          write: true,
+        }
+        const parmas = {
+          ACL: aclObj,
+        }
+        this.$confirm(
+          this.$translateTitle(`确定要将该菜单迁移到` + data.name + '吗'),
+          '提示',
+          {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            type: 'warning',
+          }
+        ).then(async () => {
+          console.log(
+            'this.changerow.objectId, parmas',
+            this.changerow.objectId,
+            parmas
+          )
+          // return
+          await putMenu(this.changerow.objectId, parmas)
+          this.$message({
+            showClose: true,
+            type: 'success',
+            message: this.$translateTitle(`迁移成功`),
+          })
+          this.popoverVisible = false
+          this.fetchData()
+        })
+        dgiotlog.log(data.name)
+      },
+      // 弹出迁移弹窗
+      showTree(row, objectId, acl) {
+        this.changerow = row
+        this.deciceCompany = acl
+        this.popoverVisible = !this.popoverVisible
+      },
       toggleExpandAll(flag) {
         this.refreshTable = false
         this.isdefaultExpandAll = !flag
@@ -527,7 +808,12 @@
                 type: 'success',
                 message: '删除成功!',
               })
-              this.fetchData()
+              this.data.forEach((item, index) => {
+                if (row.objectId == item.objectId) {
+                  this.data.splice(index, 1)
+                }
+              })
+              // this.fetchData()
             }
           })
         } else {
@@ -553,12 +839,24 @@
       //     })
       //   }
       // },
-      async fetchData() {
+      async fetchData(type = '') {
+        // if (type == 'edit') {
+        //   return
+        // } else
+        if (type && type.objectId) {
+          type.createtime = utc2beijing(type.createdAt)
+          delete type.createdAt
+          type.parent = type.parent.objectId
+          console.log('添加', type)
+          this.data.push(type)
+          return
+        }
         this.data = []
         this.listLoading = true
         const { results } = await queryMenu({})
         results.map((item) => {
           var obj = {}
+          obj.ACL = item.ACL
           obj.objectId = item.objectId
           obj.alias = item.alias
           obj.name = item.name
@@ -574,8 +872,10 @@
             createdAt,
             orderBy,
             url,
+            ACL,
           } = items
           var obj = {}
+          obj.ACL = ACL
           obj.name = name
           obj.meta = meta
           obj.objectId = objectId
@@ -584,7 +884,7 @@
           obj.createtime = utc2beijing(createdAt)
           obj.orderBy = orderBy
           obj.url = url
-
+          console.log('obj111111', obj)
           this.data.push(obj)
         })
 

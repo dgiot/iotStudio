@@ -975,6 +975,7 @@ class konvaUtils {
    */
   loadKonva(node, disableNodeType = ['Layer']) {
     try {
+      // console.log('node', node)
       if (disableNodeType.indexOf(node.getClassName()) != -1) {
         const nodes = node.getChildren()
         this.nodeTag.push(nodes)
@@ -984,13 +985,24 @@ class konvaUtils {
           _node.setAttrs({
             draggable: false,
           })
+          // console.log('触发了', _node)
+          // if (_node.attrs.src) {
+          //   let image = new Image()
+          //   _node.setAttrs({
+          //     image: image,
+          //   })
+          //   image.src = node.attrs.src.includes('//')
+          //     ? node.attrs.src
+          //     : this.$FileServe + node.attrs.src
+          //   node.batchDraw()
+          // }
         })
       } else {
-        console.warn(
-          `node is ${node} \n disableNodeType ${node.getClassName()}`
-        )
+        // console.warn(
+        //   `node is ${node} \n disableNodeType ${node.getClassName()}`
+        // )
       }
-      this.consoeInfo(`禁用${node.getClassName()}成功`)
+      // this.consoeInfo(`禁用${node.getClassName()}成功`)
     } catch (e) {
       console.error(e)
     }

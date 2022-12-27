@@ -98,7 +98,11 @@ export async function KonvaBus(args) {
     layer: layer,
     args: canvas.handlerArgs,
   })
-  stage.batchDraw()
+  console.log('json', json)
+  setTimeout(() => {
+    layer.batchDraw()
+    stage.batchDraw()
+  }, 2000)
 
   if (canvas?.json?.attrs?.height)
     saleInfo.height = Number(canvas.json.attrs.height)

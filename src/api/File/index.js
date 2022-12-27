@@ -9,7 +9,23 @@ export function Delete(params) {
     params: params,
   })
 }
+export async function UploadTopoImg(formData) {
+  let url = 'upload'
+  const { NODE_ENV = 'development' } = process.env
 
+  NODE_ENV == 'development'
+    ? (url = `${process.env.VUE_APP_URL}/upload`)
+    : (url = location.origin + '/upload')
+  return axios
+    .post(url, formData, {
+      Accept: 'application/json',
+      'Content-Type': 'application/json; charset=utf-8',
+    })
+    .catch((e) => {
+      console.log(e)
+      return { data: {} }
+    })
+}
 /**
  *
  * @param file

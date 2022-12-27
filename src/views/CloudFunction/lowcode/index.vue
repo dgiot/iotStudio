@@ -213,6 +213,25 @@
         </template>
       </el-table-column>
       <el-table-column
+        align="center"
+        label="所属部门"
+        prop="ACL"
+        show-overflow-tooltip
+        sortable
+        width="auto"
+      >
+        <template #default="{ row }">
+          <el-tag
+            v-for="(item, index) in getAcl(row.ACL)"
+            :key="index"
+            effect="plain"
+            :type="item"
+          >
+            {{ item }}
+          </el-tag>
+        </template>
+      </el-table-column>
+      <el-table-column
         v-show="!queryForm.hiddenRow.includes('class')"
         align="center"
         :label="$translateTitle('product.Table Name')"
@@ -286,36 +305,87 @@
         align="center"
         :label="$translateTitle('node.operation')"
         show-overflow-tooltip
-        width="auto"
+        width="360"
       >
         <template #default="{ row }">
           <el-button
+            v-show="type == 'menu' && row.objectId != bindRow.meta.viewid"
+            type="default"
+            @click="handleBindMenu(row)"
+          >
+            绑定
+          </el-button>
+          <el-button
+            v-show="type == 'menu' && row.objectId == bindRow.meta.viewid"
+            disabled
+            type="info"
+          >
+            已绑定
+          </el-button>
+          <el-button
             v-show="queryForm.showRow"
-            type="text"
+            type="primary"
             @click="handleNotification(row)"
           >
             关联
           </el-button>
           <el-button
             v-show="type === 'role'"
-            type="text"
+            type="default"
             @click="handleRelation(row, setRowState(selectRow, row))"
           >
             {{ setRowState(selectRow, row) }}
           </el-button>
-          <el-button type="text" @click="handleLowCode(row)">
+          <el-button type="primary" @click="handleLowCode(row)">
             {{ $translateTitle('application.preview') }}
           </el-button>
-          <el-button type="text" @click="handleEdit(row)">
+
+          <el-button type="success" @click="handleEdit(row)">
             {{ $translateTitle('product.Design') }}
           </el-button>
+          <el-button
+            type="warning"
+            @click="showTree(row, row.objectId, row.ACL)"
+          >
+            {{ $translateTitle('product.transfer') }}
+          </el-button>
           <!--          <el-button type="text" @click="handleEdit(row)">编辑</el-button>-->
-          <el-button type="text" @click="handleDelete(row)">
+          <el-button type="danger" @click="handleDelete(row)">
             {{ $translateTitle('task.Delete') }}
           </el-button>
         </template>
       </el-table-column>
     </el-table>
+    <el-dialog
+      :append-to-body="true"
+      top="5vh"
+      :visible.sync="popoverVisible"
+      width="40vh"
+    >
+      <div class="deviceTree">
+        <p style="text-align: center; font-size: 18px">迁移:</p>
+        <el-tree
+          accordion
+          :data="roleTree"
+          :expand-on-click-node="false"
+          node-key="index"
+          :props="roleProps"
+        >
+          <!-- @node-click="handleNodeClick" -->
+          <!-- eslint-disable-next-line -->
+          <div slot-scope="{ node, data }" class="custom-tree-node">
+            <span
+              :class="{
+                selected: data.objectId == curDepartmentId,
+              }"
+              @click="transferAcl(data)"
+            >
+              {{ node.label }}
+            </span>
+          </div>
+        </el-tree>
+      </div>
+    </el-dialog>
     <dgiot-parser-pagination
       :pagination="paginations"
       :query-payload="queryPayload"
@@ -328,7 +398,7 @@
 </template>
 <script>
   import { getTable, getViews } from '@/api/Dba'
-  import { mapMutations } from 'vuex'
+  import { mapMutations, mapGetters } from 'vuex'
   import lowcodeDesign from '@/views/CloudFunction/lowcode/components/index'
   import { queryView, putView, postView, delView, getView } from '@/api/View'
   import { getDlinkJson } from '@/api/Dlink'
@@ -411,9 +481,17 @@
         type: Array,
         default: () => {},
       },
+      bindRow: {
+        required: false,
+        type: Object,
+        default: () => {
+          return {}
+        },
+      },
     },
     data() {
       return {
+        bindRow1: this.bindRow,
         lang: [
           { label: '中文简体', value: 'zh' },
           { label: 'english', value: 'en' },
@@ -519,7 +597,34 @@
         imageList: [],
         listLoading: true,
         selectRows: '',
+        changerow: {},
+        popoverVisible: false,
+        curDepartmentId: '',
+        roleProps: {
+          children: 'children',
+          label: 'name',
+        },
       }
+    },
+    computed: {
+      ...mapGetters({
+        // routes: 'routes/routes',
+        // _tableDict: 'global/_tableDict',
+        // token: 'user/token',
+        roleTree: 'user/roleTree',
+        // language: 'settings/language',
+        // _product: 'user/_Product',
+        // _role: 'acl/role',
+        // currentDepartment: 'user/currentDepartment',
+      }),
+    },
+    watch: {
+      bindRow: {
+        handler(newValue) {
+          this.bindRow1 = newValue
+        },
+        deep: true,
+      },
     },
     created() {
       this.setTreeFlag(false)
@@ -580,6 +685,63 @@
         set_amisJson: 'amis/set_amisJson',
         setTreeFlag: 'settings/setTreeFlag',
       }),
+      handleBindMenu(row) {
+        // console.log('row', row, this.bindRow)
+        this.$emit('bindamismenu', row, this.bindRow)
+      },
+      // 迁移设备
+      transferAcl(data) {
+        const aclKey1 = 'role' + ':' + data.name
+        const aclObj = {}
+        aclObj[aclKey1] = {
+          read: true,
+          write: true,
+        }
+        const parmas = {
+          ACL: aclObj,
+        }
+        this.$confirm(
+          this.$translateTitle(`确定要将视图迁移到` + data.name + '吗'),
+          '提示',
+          {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            type: 'warning',
+          }
+        ).then(async () => {
+          console.log(
+            'this.changerow.objectId, parmas',
+            this.changerow.objectId,
+            parmas
+          )
+          // return
+          await putView(this.changerow.objectId, parmas)
+          this.$message({
+            showClose: true,
+            type: 'success',
+            message: this.$translateTitle(`迁移成功`),
+          })
+          this.popoverVisible = false
+          this.fetchData()
+        })
+        dgiotlog.log(data.name)
+      },
+      showTree(row, objectId, acl) {
+        this.changerow = row
+        this.deciceCompany = acl
+        this.popoverVisible = !this.popoverVisible
+      },
+      getAcl(ACL) {
+        let name = []
+        for (let a in ACL) {
+          if (a == '*') {
+            delete ACL[a]
+          } else if (a.split(':')[1]) {
+            name.push(a.split(':')[1])
+          }
+        }
+        return name
+      },
       async changeFlag(params) {
         console.log(params)
         const res = await getDlinkJson(params, { subtype: 'all' })

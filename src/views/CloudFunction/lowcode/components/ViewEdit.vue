@@ -302,7 +302,7 @@
        * @Description:
        */
       async changeType(params) {
-        console.log(params)
+        // console.log(params)
         // if (params == 'topo') {
         //   this.form.flag = 'knova'
         // } else {
@@ -380,11 +380,22 @@
         this.dialogFormVisible = false
       },
       save() {
-        console.log(this.$refs.monacoCode.$refs.monacoEditor.editor.getValue())
+        // console.log(this.$refs.monacoCode.$refs.monacoEditor.editor.getValue())
         this.$refs['form'].validate(async (valid) => {
           if (valid) {
+            let role = JSON.parse(
+              Base64.decode(localStorage.getItem('role'))
+            )?.vuexinfo
+            let ACL = {}
+            role.forEach((item) => {
+              ACL[`role:${item.name}`] = {
+                read: true,
+                write: true,
+              }
+            })
             const { title, type, key, flag } = this.form
             const params = {
+              ACL: ACL,
               data: JSON.parse(
                 this.$refs.monacoCode.$refs.monacoEditor.editor.getValue()
               ),
@@ -395,7 +406,23 @@
               key,
               flag,
             }
+            // console.log('this.type', this.type)
             if (this.type == 'add') {
+              if (params.type == 'Topo') {
+                if (!params.key) {
+                  this.$message({
+                    showClose: true,
+                    duration: 2000,
+                    message: '请绑定表单Id',
+                    type: 'error',
+                  })
+                  return
+                }
+              }
+              params.ACL['*'] = {
+                read: true,
+                write: false,
+              }
               const res = await postView(params)
               this.$message({
                 showClose: true,

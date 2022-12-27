@@ -14,12 +14,16 @@
       v-drawerDrag
       append-to-body
       :before-close="handleClose"
-      size="90%"
+      :size="size"
       :title="objectId"
       :visible.sync="flag"
       :with-header="withHeader"
     >
-      <topo v-if="type === 'topo'" :code="code.konva" :object-id="objectId" />
+      <topo
+        v-if="type === 'Topo' || type === 'Dashboard'"
+        :code="code.konva"
+        :object-id="objectId"
+      />
       <amis v-else :code="code" :object-id="objectId" />
     </el-drawer>
   </div>
@@ -39,6 +43,7 @@
     data() {
       return {
         withHeader: true,
+        size: '80%',
         types: [
           'amis',
           'deviceInfo',
@@ -61,6 +66,11 @@
       this.$dgiotBus.$on('lowcodePreview', (params) => {
         const amisEnv = {}
         const { type, data, objectId, class: _class } = params
+        if (type == 'Dashboard') {
+          this.size = '100%'
+        } else {
+          this.size = '80%'
+        }
         if (_class == 'Device') {
           // const { headers = { store: 'localStorage' } } = data.initApi
           // 设置amis中的变量参数。

@@ -528,6 +528,7 @@ export default {
       Template: '模版',
       Viewtheplatform: '查看台体',
       itemname: '项目名称',
+      transfer: '迁移',
       Design: '设计',
       code: '编码',
       newapi: '新增API',

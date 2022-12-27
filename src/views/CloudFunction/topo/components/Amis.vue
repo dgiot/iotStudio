@@ -173,17 +173,17 @@
       },
       async bind_amis(args) {
         this.amisNode.node.setAttrs({
-          fill: 'red',
+          // fill: 'red',
           bind_amis: true,
           amis_id: args.objectId,
         })
         this.amisNode.node.children[1].setAttrs({
-          text: args.title,
+          // text: args.title,
           bind_amis: true,
           amis_id: args.objectId,
         })
         this.amisNode.node.children[0].setAttrs({
-          fill: '#1e83d4',
+          // fill: '#1e83d4',
           bind_amis: true,
           amis_id: args.objectId,
         })
@@ -206,7 +206,7 @@
           skip: 0,
           where: {
             key: this.$route.query.productid,
-            type: 'Amis',
+            type: { $in: ['Amis', 'Profile', 'Content'] },
           },
         })
         this.amisDict = amisDict
