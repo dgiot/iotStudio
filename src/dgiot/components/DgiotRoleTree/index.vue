@@ -180,6 +180,7 @@
         /**
          * @description 用户登录时,默认请求一次的接口
          */
+        const info = await postCookie(store.getters['user/token'])
         if (!this.currentDepartment?.objectId) await this.disposable()
         await this.$refs.tree.setCurrentKey(this.currentDepartment.objectId)
       })
@@ -223,8 +224,8 @@
         }
         const { results: permission = [] } = await Permission()
         const chart = await getDlinkJson('ChartType')
-        const info = await postCookie(store.getters['user/token'])
-        console.log(info)
+
+        // console.log(info)
         this.setPermission(permission)
         // const protocol = await getProtocol()
         // protocol做排序处理

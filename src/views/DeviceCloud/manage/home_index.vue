@@ -88,6 +88,7 @@
         </el-tabs>
       </el-dialog>
       <el-dialog
+        v-if="dialog_device"
         append-to-body
         :before-close="closeMap"
         class="map_dialog"
@@ -123,7 +124,7 @@
           </label>
           <baidu-map
             :ak="$dgiot.secret.baidu.map"
-            :center="{ lng: 116.404, lat: 39.915 }"
+            :center="{ lng: mapLabel.position.lng, lat: mapLabel.position.lat }"
             :map-click="false"
             :scroll-wheel-zoom="true"
             style="height: 300px"
@@ -152,8 +153,15 @@
               />
             </bm-control>
             <bml-marker-clusterer>
-              <bm-marker>1</bm-marker>
-              <bm-label>1</bm-label>
+              <!-- latitude: '120.161324',
+          longitude: '30.262441', -->
+              <bm-marker
+                :position="{
+                  lng: location.longitude,
+                  lat: location.latitude,
+                }"
+              />
+              <!-- <bm-label>1</bm-label> -->
             </bml-marker-clusterer>
             <bm-navigation anchor="BMAP_ANCHOR_TOP_RIGHT" />
             <bm-geolocation
@@ -797,6 +805,15 @@
     },
     data() {
       return {
+        location: {
+          __type: 'GeoPoint',
+          latitude: '120.161324',
+          longitude: '30.262441',
+        },
+        position: {
+          lat: '120.161324',
+          lng: '30.262441',
+        },
         productDetail: {},
         activeName: '0',
         vueComponents: [],
@@ -1042,12 +1059,18 @@
       },
       showAdddress(item) {
         this.editRow = item
-        this.map.keyword = item?.address ? item.address : this.map.keyword
+        this.map.keyword = '' //item?.address ? item.address : this.map.keyword
         this.form.address = item?.address ? item.address : this.form.keyword
-        const position = {
+        let position = {
           lng: Number(item.location.longitude),
           lat: Number(item.location.latitude),
         }
+        this.location = {
+          __type: 'GeoPoint',
+          latitude: Number(item.location.latitude),
+          longitude: Number(item.location.longitude),
+        }
+        console.log('this.location', this.location)
         this.mapLabel = {
           content: item.name,
           style: {
@@ -1136,7 +1159,11 @@
         const geocoder = new BMap.Geocoder() // 创建地址解析器的实例
         //  let Marker = new BMap.Marker()
         geocoder.getLocation(e.point, (rs) => {
-          this.form.address = rs.address
+          console.log('rs', rs, rs.surroundingPois.length)
+          let title =
+            rs.surroundingPois.length >= 1 ? rs.surroundingPois[0].title : ''
+          this.form.address = rs.address + title
+
           // this.add.site = rs.address;
           //  Marker.closeInfoWindow()
           //   dgiotlog.log(rs)
