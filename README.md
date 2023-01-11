@@ -58,19 +58,19 @@ git clone -b master https://github.com.cnpmjs.org/dgiot/dgiot-dashboard.git
 ```bash
 cd dgiot-dashboard
 
-npm i -g pnpm --registry=https://registry.npmmirror.com
+npm install yarn -g
 
-pnpm config set registry https://registry.npmmirror.com
+yarn config set registry https://registry.npm.taobao.org -g
 
-pnpm -v
+yarn -v
 
-pnpm install
+yarn install
 ```
 
 - 运行
 
 ```bash
-pnpm dev
+yarn dev
 ```
 
 - 运行成功
@@ -93,7 +93,7 @@ pnpm dev
 - 打包
 
 ```bash
-pnpm build
+yarn build
 ```
 
 
