@@ -96,6 +96,11 @@ export async function UploadImg(params) {
 }
 
 async function DeleteImg(params) {
+  let reg = /\/$/
+  console.log(reg.test(params.path))
+  if (!reg.test(params.path)) {
+    params.path = params.path + '/'
+  }
   return await Delete({ path: 'files/' + params.path + params.filename })
 }
 

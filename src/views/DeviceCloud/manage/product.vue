@@ -2570,9 +2570,9 @@
                 read: true,
                 write: true,
               }
-              setAcl['*'] = {
-                read: true,
-              }
+              // setAcl['*'] = {
+              //   read: true,
+              // }
               const addparams = {
                   productSecret: productSecret,
                   ACL: setAcl,

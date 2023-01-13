@@ -97,7 +97,7 @@ const topoBasic = {
       fontFamily: 'Calibri',
       fontSize: 12,
       padding: 5,
-      fill: 'white',
+      fill: 'rgba(255,255,255,1)',
       width: 170,
       scaleX: saleInfo.scaleX,
       scaleY: saleInfo.scaleY,
@@ -138,7 +138,6 @@ const topoBasic = {
 
     var simpleLabel = new Konva.Label({
       name: 'thing',
-      opacity: 0.75,
       x: Axis.x,
       y: Axis.y,
       draggable: true,
@@ -152,9 +151,11 @@ const topoBasic = {
     })
     simpleLabel.add(
       new Konva.Tag({
-        fill: 'rgba(0, 0, 0, 0)',
+        fill: 'rgba(0, 0, 0, 1)',
         attrs: {
           name: 'dblclick',
+          width: 170,
+          height: 35,
         },
       })
     )
@@ -187,6 +188,7 @@ const topoBasic = {
         fontWeight: 800,
         lineHeight: 1.2,
         width: 170,
+        height: 35,
         padding: 10,
         fontFamily: 'Calibri',
         fill: '#e63f32',
@@ -303,8 +305,8 @@ const topoBasic = {
       x: 100,
       y: 100,
       image: imageObj,
-      width: args.data.width,
-      height: args.data.height,
+      width: args.data.width || 100,
+      height: args.data.height || 35,
       type: 'staticimage',
       // handler: 'dblclick',
       draggable: true,

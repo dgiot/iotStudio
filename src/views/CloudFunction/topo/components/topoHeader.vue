@@ -41,6 +41,12 @@
               <p>{{ $translateTitle('konva.save') }}</p>
             </a>
           </a-dropdown>
+          <a-dropdown class="topo-header-top-query-left-panel-dropdown">
+            <a class="ant-dropdown-link" @click="copyTopo">
+              <a-icon type="copy" />
+              <p>{{ $translateTitle('konva.copy') }}</p>
+            </a>
+          </a-dropdown>
           <a-dropdown
             v-if="Boolean($route.query.noTools)"
             class="topo-header-top-query-left-panel-dropdown"
@@ -71,7 +77,7 @@
               <p>{{ $translateTitle('konva.share') }}</p>
             </a>
           </a-dropdown>
-          <a-dropdown
+          <!-- <a-dropdown
             v-show="!noTools"
             class="topo-header-top-query-left-panel-dropdown"
           >
@@ -79,7 +85,7 @@
               <a-icon type="plus" />
               <p><topo-scale /></p>
             </a>
-          </a-dropdown>
+          </a-dropdown> -->
           <a-dropdown class="topo-header-top-query-left-panel-dropdown">
             <a
               class="ant-dropdown-link"
@@ -258,6 +264,10 @@
       saveTopo() {
         this.$dgiotBus.$emit('busUpdata')
         this.$dgiotBus.$emit('_busUpdata')
+      },
+      copyTopo() {
+        this.$dgiotBus.$emit('busCopy')
+        this.$dgiotBus.$emit('_busCopy')
       },
       preview() {
         this.$nextTick(() => {
