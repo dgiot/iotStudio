@@ -251,7 +251,10 @@ const mutations = {
         canvas.contextmenu.zIndex(canvas.contextmenu.parent.children.length - 1)
         return
       } else if (handler == 'moveToBottom') {
-        if (canvas.contextmenu.attrs.name == 'printer') {
+        if (
+          canvas.contextmenu.attrs.name == 'printer' ||
+          canvas.contextmenu.attrs.name == 'staticimage'
+        ) {
           canvas.contextmenu.zIndex(2)
         }
       }

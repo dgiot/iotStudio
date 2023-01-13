@@ -45,7 +45,6 @@ router.beforeEach(async (to, from, next) => {
   let hasToken = store.getters['user/token']
 
   if (!loginInterception) hasToken = true
-
   if (hasToken) {
     if (store.getters['routes/routes'].length) {
       // 这里判断下存储的路由表  并且过滤掉白名单

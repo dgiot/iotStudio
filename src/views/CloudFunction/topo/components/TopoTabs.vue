@@ -118,7 +118,7 @@
         </div>
         <img
           v-for="(o, index) in gifList"
-          :key="index + o.mtime"
+          :key="o.md5 + index"
           draggable="true"
           size="mini"
           :src="$FileServe + o.src"
@@ -161,7 +161,7 @@
         </div>
         <img
           v-for="(item, index) in staticList"
-          :key="index + item.mtime"
+          :key="item.md5 + index"
           draggable="true"
           size="mini"
           :src="$FileServe + item.src"
@@ -186,32 +186,49 @@
             })
           "
         />
-        <!-- <img
+        <el-divider />
+        <el-divider />
+        <div
+          style="
+            text-align: left;
+            margin: 10px;
+            font-weight: 600;
+            display: flex;
+            justify-content: space-between;
+          "
+        >
+          <div style="font-size: 18px">时间</div>
+        </div>
+        <img
           draggable="true"
           size="mini"
-          :src="$FileServe + '/dgiot_file/topo/static/bg_top.png'"
+          :src="$FileServe + '/dgiot_file/topo/png/realtime.png'"
           style="
-            width: 40px;
-            height: 40px;
+            width: 70px;
+            height: 20px;
             display: inline-block;
             margin-left: 20px;
+            margin-top: 10px;
           "
           type="primary"
           @click="
             createBasicThing({
               productid: $route.query.productid,
-              type: 'staticimage',
+              type: 'vuecomponent',
               data: {
-                width: 1900,
-                height: 90,
+                id: 'realtime',
+                width: 170,
+                height: 25,
+                fill: 'rgba(30, 30, 30, 0.7)',
+                text: '当前时间',
+                source: 'api',
+                src: '/dgiot_file/topo/png/realtime.png',
               },
-              image: '/dgiot_file/topo/static/bg_top.png',
+              chart: 'realtime',
               hidden: false,
             })
           "
-        /> -->
-        <!-- -->
-        <el-divider />
+        />
         <!-- <el-button
           draggable="true"
           size="mini"
@@ -246,27 +263,18 @@
           大屏组件
         </div> -->
         <el-button
+          v-if="$route.query.dashboard"
           draggable="true"
           size="mini"
-          type="primary"
+          type="danger"
           @click.native="
-            createBasicThing({
-              productid: $route.query.productid,
-              type: 'vuecomponent',
-              data: {
-                id: 'line_historydata',
-                width: 400,
-                height: 260,
-                fill: 'rgba(30, 30, 30,0.7)',
-                text: '折线图',
-                source: 'api',
-              },
-              chart: 'line',
+            createRealData({
+              type: 'realdata',
               hidden: false,
             })
           "
         >
-          折线图
+          实时数据源
         </el-button>
         <el-divider />
         <el-button
@@ -292,6 +300,69 @@
         >
           数据卡片
         </el-button>
+        <div style="text-align: left; margin: 10px; font-weight: 600">
+          历史统计图表
+        </div>
+        <img
+          draggable="true"
+          size="mini"
+          :src="$FileServe + '/dgiot_file/topo/png/devicebar.png'"
+          style="
+            width: 70px;
+            height: 60px;
+            display: inline-block;
+            margin-left: 20px;
+            margin-top: 10px;
+          "
+          type="primary"
+          @click="
+            createBasicThing({
+              productid: $route.query.productid,
+              type: 'vuecomponent',
+              data: {
+                id: 'bar_historydata',
+                width: 525,
+                height: 380,
+                fill: 'rgba(30, 30, 30, 0.7)',
+                text: '设备历史数据柱状图',
+                source: 'api',
+                src: '/dgiot_file/topo/png/devicebar.png',
+              },
+              chart: 'devicebar',
+              hidden: false,
+            })
+          "
+        />
+        <img
+          draggable="true"
+          size="mini"
+          :src="$FileServe + '/dgiot_file/topo/png/deviceline.png'"
+          style="
+            width: 70px;
+            height: 60px;
+            display: inline-block;
+            margin-left: 20px;
+            margin-top: 10px;
+          "
+          type="primary"
+          @click="
+            createBasicThing({
+              productid: $route.query.productid,
+              type: 'vuecomponent',
+              data: {
+                id: 'line_historydata',
+                width: 400,
+                height: 260,
+                fill: 'rgba(30, 30, 30, 0.7)',
+                text: '设备历史数据折线图',
+                source: 'api',
+                src: '/dgiot_file/topo/png/deviceline.png',
+              },
+              chart: 'line',
+              hidden: false,
+            })
+          "
+        />
         <el-divider />
         <div style="text-align: left; margin: 10px; font-weight: 600">
           开关机饼图
@@ -328,7 +399,7 @@
         />
         <el-divider />
         <div style="text-align: left; margin: 10px; font-weight: 600">
-          告警列表
+          告警模板
         </div>
         <img
           draggable="true"
@@ -354,6 +425,35 @@
                 text: '告警列表',
                 source: 'api',
                 src: '/dgiot_file/topo/png/warninglist.png',
+              },
+              chart: 'list',
+              hidden: false,
+            })
+          "
+        />
+        <img
+          draggable="true"
+          size="mini"
+          :src="$FileServe + '/dgiot_file/topo/png/warninglist1.png'"
+          style="
+            width: 70px;
+            height: 40px;
+            display: inline-block;
+            margin-left: 20px;
+            margin-top: 10px;
+          "
+          type="primary"
+          @click="
+            createBasicThing({
+              productid: $route.query.productid,
+              type: 'vuecomponent',
+              data: {
+                id: 'warning_list1',
+                width: 290,
+                height: 210,
+                text: '告警列表',
+                source: 'api',
+                src: '/dgiot_file/topo/png/warninglist1.png',
               },
               chart: 'list',
               hidden: false,
@@ -500,7 +600,7 @@
                 x: 40,
                 y: 230,
                 fill: 'rgba(30, 30, 30, 0.7)',
-                text: '设备地图',
+                text: '',
                 source: 'api',
                 src: '/dgiot_file/topo/png/baidumap.png',
               },
@@ -676,7 +776,7 @@
                 width: 500,
                 height: 350,
                 fill: 'rgba(30, 30, 30, 0.7)',
-                text: '视频监控',
+                text: '',
                 source: 'api',
                 src: '/dgiot_file/topo/png/videolive.png',
               },
@@ -866,11 +966,12 @@
         console.log('接收节点', e)
         if (
           e.attrs.type == 'thing' ||
+          e.attrs.type == 'realdata' ||
           e.attrs.type == 'static' ||
           e.parent.attrs.name == 'amis'
         ) {
           //实时数据
-          let data = e.parent.attrs
+          let data = JSON.parse(JSON.stringify(e.parent.attrs))
           data.x = data.x - 10
           data.y = data.y - 10
           var simpleLabel = new Konva.Label(data)
@@ -882,7 +983,7 @@
           e.attrs.type == 'staticimage'
         ) {
           // 控制绑定
-          let data = e.attrs
+          let data = JSON.parse(JSON.stringify(e.attrs)) //e.attrs
           data.x = data.x - 10
           data.y = data.y - 10
           // var imageObj = new Image()
@@ -892,7 +993,7 @@
           canvas.layer.add(simpleImage)
         } else if (e.attrs.type == 'label') {
           // 控制绑定
-          let data = e.attrs
+          let data = JSON.parse(JSON.stringify(e.attrs))
           data.x = data.x - 10
           data.y = data.y - 10
           var simpleText = new Konva.Text(data)
@@ -914,6 +1015,77 @@
     destroyed() {}, //生命周期 - 销毁完成
     activated() {},
     methods: {
+      // 创建实时数据源节点
+      createRealData(data) {
+        var simpleLabel = new Konva.Label({
+          name: 'realdata',
+          x: 100,
+          y: 100,
+          draggable: true,
+          id: 'dgiot_text' + new Date().getTime(),
+        })
+        simpleLabel.add(
+          new Konva.Tag({
+            fill: 'rgba(255,0,0,1)',
+            attrs: {
+              name: 'dblclick',
+              width: 170,
+              height: 45,
+            },
+          })
+        )
+        simpleLabel.add(
+          new Konva.Text({
+            id: 'realdata_text_' + new Date().getTime(),
+            text: 'dgiot_text_123',
+            screen_wmxid: '',
+            screen_deviceid: '',
+            screen_productid: '',
+            fontSize: 20,
+            type: 'realdata',
+            lineHeight: 1.2,
+            width: 170,
+            height: 45,
+            padding: 10,
+            fontFamily: 'Calibri',
+            fill: 'rgba(255,255,255,1)',
+            x: 0,
+            y: 0,
+          })
+        )
+        this.addinitKonva(simpleLabel)
+      },
+      addinitKonva(node) {
+        canvas.layer.add(node)
+        addNodeEvent({
+          type: 'handleChildren',
+          stage: canvas.stage,
+          layer: canvas.layer,
+          args: canvas.handlerArgs,
+        })
+      },
+      createStaticText(data) {
+        let attrs = {
+          id: data.productid || `text_${new Date().getTime()}`,
+          type: data.type,
+          x: 20,
+          y: 60,
+          text: '静态文本内容',
+          fontSize: 18,
+          fontFamily: 'Calibri',
+          fill: '#fff',
+          width: 200,
+          draggable: true,
+        }
+        let simpleLabel = new Konva.Text(attrs)
+        canvas.layer.add(simpleLabel)
+        addNodeEvent({
+          type: 'handleChildren',
+          stage: canvas.stage,
+          layer: canvas.layer,
+          args: canvas.handlerArgs,
+        })
+      },
       async initImage(type) {
         let res = await list_dir(`dgiot_file/topo/${type}`) //this.get_filelist()
         // console.log('动态图片列表', resgif.data)
@@ -926,8 +1098,8 @@
           let item = {
             mtime: element.mtime,
             src: `/${element.path}/${element.name}`,
-            width: img.width == 0 ? 200 : img.width,
-            height: img.height == 0 ? 200 : img.height,
+            width: img.width == 0 ? 200 : img.width + 10,
+            height: img.height == 0 ? 200 : img.height + 10,
           }
           List.push(item)
           // img.src = this.$
@@ -969,8 +1141,8 @@
             let item = {
               mtime: res.data.mtime,
               src: res.data.path,
-              width: img.width == 0 ? 200 : img.width,
-              height: img.height == 0 ? 200 : img.height,
+              width: img.width == 0 ? 200 : img.width + 10,
+              height: img.height == 0 ? 150 : img.height + 10,
             }
             if (this.uploadType == 'static') {
               this.createBasicThing({

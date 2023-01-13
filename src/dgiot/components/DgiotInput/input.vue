@@ -59,7 +59,7 @@
         const type = name.split('.').pop().toLowerCase()
         this.$emit('files', file, type)
         const params = this.params
-        dgiotlog.log('extension', params)
+        // dgiotlog.log('extension', params)
         try {
           UploadImg(params)
             .then((res) => {

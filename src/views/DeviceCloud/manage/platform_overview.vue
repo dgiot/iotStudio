@@ -1867,7 +1867,7 @@
     padding: 10px 10px 2px 10px;
     background-size: 100%;
     .bg_screen1 {
-      background: url('/assets/bg/pageBg.png') no-repeat;
+      background: url('../../../../public/assets/bg/pageBg.png') no-repeat;
       background-size: 100% 100%;
     }
     .baidu_map {
@@ -1920,7 +1920,8 @@
           display: flex;
           justify-content: center;
           align-items: center;
-          background: url('/assets/images/topo/screen/card.png') no-repeat;
+          background: url('../../../../public/assets/images/topo/screen/card.png')
+            no-repeat;
           background-size: 100% 100%;
           cursor: pointer;
           p {
@@ -1948,7 +1949,7 @@
         height: 38%;
         box-sizing: border-box;
         // background-color: #00142f;
-        background: url('/assets/bg/bg_warning.png') no-repeat;
+        background: url('../../../../public/assets/bg/bg_warning.png') no-repeat;
         background-size: 100% 100%;
         // background-color: #ea1e63;
         bottom: 4px;
@@ -1962,7 +1963,8 @@
           height: 30px;
           text-align: center;
           line-height: 30px;
-          background: url('/assets/bg/bg_title1.png') no-repeat;
+          background: url('../../../../public/assets/bg/bg_title1.png')
+            no-repeat;
           background-size: 100% 100%;
           transform: translateX(-50%);
           font-size: 20px;
@@ -1979,12 +1981,12 @@
         box-sizing: border-box;
         bottom: 4px;
         left: 4px;
-        background: url('/assets/bg/bg_warning.png') no-repeat;
+        background: url('../../../../public/assets/bg/bg_warning.png') no-repeat;
         background-size: 100% 100%;
         display: flex;
         flex-direction: column;
         .screen_left_bottom_top {
-          background: url('/assets/bg/bg_title.png') no-repeat;
+          background: url('../../../../public/assets/bg/bg_title.png') no-repeat;
           background-size: 100% 100%;
           width: 100%;
           height: 40px;
@@ -2007,10 +2009,10 @@
         box-sizing: border-box;
         bottom: 4px;
         right: 4px;
-        background: url('/assets/bg/bg_warning.png') no-repeat;
+        background: url('../../../../public/assets/bg/bg_warning.png') no-repeat;
         background-size: 100% 100%;
         .screen_right_bottom_top {
-          background: url('/assets/bg/bg_title.png') no-repeat;
+          background: url('../../../../public/assets/bg/bg_title.png') no-repeat;
           background-size: 100% 100%;
           width: 100%;
           height: 40px;
@@ -2042,11 +2044,11 @@
       box-sizing: border-box;
       bottom: 40%;
       left: 4px;
-      background: url('/assets/bg/bg_warning.png') no-repeat;
+      background: url('../../../../public/assets/bg/bg_warning.png') no-repeat;
       background-size: 100% 100%;
       .screen_left_center_top {
         position: absolute;
-        background: url('/assets/bg/bg_title.png') no-repeat;
+        background: url('../../../../public/assets/bg/bg_title.png') no-repeat;
         background-size: 100% 100%;
         width: 100%;
         height: 40px;
@@ -2064,11 +2066,11 @@
       box-sizing: border-box;
       bottom: 40%;
       right: 4px;
-      background: url('/assets/bg/bg_warning.png') no-repeat;
+      background: url('../../../../public/assets/bg/bg_warning.png') no-repeat;
       background-size: 100% 100%;
       .screen_right_center_top {
         position: absolute;
-        background: url('/assets/bg/bg_title.png') no-repeat;
+        background: url('../../../../public/assets/bg/bg_title.png') no-repeat;
         background-size: 100% 100%;
         width: 100%;
         height: 40px;

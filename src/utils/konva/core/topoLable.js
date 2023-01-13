@@ -134,7 +134,6 @@ const topoLable = {
     // return topoLable
     var simpleLabel = new Konva.Label({
       name: 'thing',
-      opacity: 0.75,
       x: Axis.x,
       y: Axis.y,
       draggable: true,

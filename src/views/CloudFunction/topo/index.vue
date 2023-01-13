@@ -125,7 +125,7 @@
                 editNode.attrs.name != 'printer'
               "
             >
-              <el-form-item label="颜色">
+              <el-form-item label="颜色" v-if="!editNode.attrs.src">
                 <el-input
                   v-model="editForm.fill"
                   @input="handleEditKonva"
@@ -137,14 +137,32 @@
                   @active-change="colorChange($event, 'fill', true)"
                 ></el-color-picker>
               </el-form-item>
-              <el-form-item label="宽度">
+              <el-form-item
+                label="组件颜色"
+                v-if="
+                  editNode.attrs.type == 'count' &&
+                  editNode.attrs.source == 'api'
+                "
+              >
+                <el-input
+                  v-model="editForm.color"
+                  @input="handleEditKonva"
+                ></el-input>
+                <el-color-picker
+                  v-model="editForm.color"
+                  color-format="rgb"
+                  :show-alpha="true"
+                  @active-change="colorChange($event, 'color', true)"
+                ></el-color-picker>
+              </el-form-item>
+              <el-form-item class="item_block" label="宽度">
                 <el-input
                   v-model="editForm.width"
                   type="number"
                   @input="handleEditKonva"
                 ></el-input>
               </el-form-item>
-              <el-form-item label="高度">
+              <el-form-item class="item_block" label="高度">
                 <el-input
                   v-model="editForm.height"
                   type="number"
@@ -170,6 +188,7 @@
                 </el-select>
               </el-form-item>
               <el-form-item
+                class="item_block"
                 label="字体大小"
                 v-if="
                   editNode.attrs.name != 'amiscomponent' &&
@@ -185,6 +204,7 @@
                 ></el-input>
               </el-form-item>
               <el-form-item
+                class="item_block"
                 label="字体类型"
                 v-if="
                   editNode.attrs.name != 'amiscomponent' &&
@@ -207,6 +227,7 @@
                 </el-select>
               </el-form-item>
               <el-form-item
+                class="item_block"
                 label="纵向偏移"
                 v-if="
                   editNode.attrs.name != 'amiscomponent' &&
@@ -217,6 +238,24 @@
               >
                 <el-input
                   v-model="editForm.lineHeight"
+                  type="number"
+                  :step="0.1"
+                  @input="handleEditKonva"
+                ></el-input>
+              </el-form-item>
+
+              <el-form-item
+                class="item_block"
+                label="描边宽度"
+                v-if="
+                  editNode.attrs.name != 'amiscomponent' &&
+                  editNode.attrs.name != 'vuecomponent' &&
+                  editNode.attrs.name != 'konvaimage' &&
+                  editNode.attrs.name != 'staticimage'
+                "
+              >
+                <el-input
+                  v-model="editForm.strokeWidth"
                   type="number"
                   :step="0.1"
                   @input="handleEditKonva"
@@ -243,22 +282,6 @@
                 ></el-color-picker>
               </el-form-item>
               <el-form-item
-                label="描边宽度"
-                v-if="
-                  editNode.attrs.name != 'amiscomponent' &&
-                  editNode.attrs.name != 'vuecomponent' &&
-                  editNode.attrs.name != 'konvaimage' &&
-                  editNode.attrs.name != 'staticimage'
-                "
-              >
-                <el-input
-                  v-model="editForm.strokeWidth"
-                  type="number"
-                  :step="0.1"
-                  @input="handleEditKonva"
-                ></el-input>
-              </el-form-item>
-              <el-form-item
                 v-if="
                   editNode.attrs.name == 'vuecomponent' &&
                   editNode.attrs.type == 'counter'
@@ -281,7 +304,13 @@
               <el-form-item
                 v-else
                 :label="
-                  editNode.attrs.type == 'count' ? '跳转路径' : '文本内容'
+                  editNode.attrs.type == 'count'
+                    ? '跳转路径'
+                    : editNode.attrs.type == 'liveboard'
+                    ? '地址/m3u8'
+                    : editNode.attrs.type == 'map'
+                    ? '地图密钥'
+                    : '文本内容'
                 "
               >
                 <el-input
@@ -425,6 +454,7 @@
               </el-form-item>
             </div>
             <el-form-item
+              class="item_block"
               label="横坐标"
               v-if="
                 editNode.attrs.name != 'amiscomponent' &&
@@ -442,6 +472,7 @@
             </el-form-item>
             <el-form-item
               label="纵坐标"
+              class="item_block"
               v-if="
                 editNode.attrs.name != 'amiscomponent' &&
                 editNode.attrs.name != 'vuecomponent' &&
@@ -485,6 +516,68 @@
                 ></el-option>
               </el-select>
             </el-form-item>
+            <div
+              v-if="editNode.attrs.type == 'realdata'"
+              style="border-top: 1px solid #000"
+            >
+              <h3 style="font-weight: 600; margin: 10px">数据源绑定</h3>
+              <el-form-item v-if="editNode.attrs.type == 'realdata'">
+                <span slot="label">
+                  <span style="color: red">产品选择</span>
+                </span>
+                <el-select
+                  v-model="screen_productid"
+                  filterable
+                  @change="handleBindProduct"
+                  placeholder="请选择"
+                >
+                  <el-option
+                    v-for="(product, index) in screenproductList"
+                    :key="product.value + index"
+                    :label="product.label"
+                    :value="product.value"
+                  ></el-option>
+                </el-select>
+              </el-form-item>
+              <el-form-item v-if="editNode.attrs.type == 'realdata'">
+                <span slot="label">
+                  <span style="color: red">设备选择</span>
+                </span>
+                <el-select
+                  v-model="screen_deviceid"
+                  :disabled="screen_productid == ''"
+                  filterable
+                  @change="handleBindDevice"
+                  placeholder="请选择"
+                >
+                  <el-option
+                    v-for="(itemdevice, index) in screendeviceList"
+                    :key="itemdevice.value + index"
+                    :label="itemdevice.label"
+                    :value="itemdevice.value"
+                  ></el-option>
+                </el-select>
+              </el-form-item>
+              <el-form-item v-if="editNode.attrs.type == 'realdata'">
+                <span slot="label">
+                  <span style="color: red">绑定物模型</span>
+                </span>
+                <el-select
+                  v-model="screen_wmxid"
+                  :disabled="screen_deviceid == ''"
+                  filterable
+                  @change="handleBindDeviceWmx"
+                  placeholder="请选择"
+                >
+                  <el-option
+                    v-for="(itemscreenwmx, index) in screenwmxList"
+                    :key="itemscreenwmx.value + index"
+                    :label="itemscreenwmx.label"
+                    :value="itemscreenwmx.value"
+                  ></el-option>
+                </el-select>
+              </el-form-item>
+            </div>
           </el-form>
           <el-button
             @click="copyNode"
@@ -503,10 +596,11 @@
   import requiremodule from '@/utils/file/requiremodule'
   import { mapGetters, mapMutations, mapActions } from 'vuex'
   import { _getTopo, edit_konva_thing, get_konva_thing } from '@/api/Topo'
-  import { getProduct } from '@/api/Product'
+  import { getProduct, queryProduct } from '@/api/Product'
   import { queryView, putView, getView, postView } from '@/api/View'
 
   import { isBase64 } from '@/utils'
+  import { queryDevice } from '../../../api/Device'
   export default {
     components: {
       ...requiremodule(require.context('./components', true, /\.vue$/)),
@@ -566,6 +660,10 @@
           {
             label: '楷体',
             value: '楷体',
+          },
+          {
+            label: 'Helvetica Neue',
+            value: 'Helvetica Neue',
           },
           {
             label: 'Helvetica',
@@ -851,6 +949,12 @@
         productid: this.$route.query.productid || '',
         viewid: this.$route.query.viewid || '',
         wmxList: [],
+        screenproductList: [],
+        screendeviceList: [],
+        screenwmxList: [],
+        screen_productid: '',
+        screen_deviceid: '',
+        screen_wmxid: '',
       }
     },
     computed: {
@@ -933,6 +1037,15 @@
         console.log('接收到编辑节点消息', node)
         this.editNode = node
         this.editFlag = true
+        if (node.attrs.type == 'realdata') {
+          this.screen_productid = node.attrs.screen_productid || ''
+          this.screen_deviceid = node.attrs.screen_deviceid || ''
+          this.screen_wmxid = node.attrs.screen_wmxid || ''
+          if (this.screen_productid) {
+            this.handlegetScreenWmxList(this.screen_productid)
+            this.handleQueryDeviceList(this.screen_productid)
+          }
+        }
         // this.editNode.setAttrs({
         //   fill: '#091322',
         //   width: 80,
@@ -945,7 +1058,7 @@
         this.editForm = {
           id: node.attrs.id || '',
           fill: node.attrs.fill || '',
-          width: node.attrs.width || 42,
+          width: node.attrs.width || 100,
           height: node.attrs.height || 35,
           lineHeight: node.attrs.lineHeight || 0,
           fontSize: node.attrs.fontSize || 12,
@@ -953,6 +1066,10 @@
           strokeWidth: node.attrs.strokeWidth || 0.1, //描边宽度
           text: node.attrs.text || '',
           fontFamily: node.attrs.fontFamily || '',
+          color: node.attrs.color,
+        }
+        if (!node.attrs.color) {
+          delete this.editForm['color']
         }
         if (node.attrs.name == 'amiscomponent') {
           this.screenViewId = node.attrs.id
@@ -975,6 +1092,12 @@
       this.$dgiotBus.$on('_busUpdata', async () => {
         if (this.viewInfo.objectId) {
           await this._updataTopo(this.viewInfo.objectId)
+        }
+      })
+      this.$dgiotBus.$off('_busCopy')
+      this.$dgiotBus.$on('_busCopy', async () => {
+        if (this.viewInfo.objectId) {
+          await this._copyTopo()
         }
       })
       this.subtopic = `$dg/user/konva/${this.$route.query.deviceid}/report` //组态订阅主题
@@ -1096,19 +1219,69 @@
         const res = await postView(params)
         this.handleQueryView()
       },
+      // 查找设备列表
+      async handleQueryDeviceList(id) {
+        let params = {
+          skip: 0,
+          limit: 100,
+          order: '-createdAt',
+          count: 'objectId',
+          where: { product: id },
+        }
+        let res = await queryDevice(params)
+        let nowlist = []
+        res.results.forEach((item) => {
+          let current = {
+            label: item.name,
+            value: item.objectId,
+          }
+          nowlist.push(current)
+        })
+        this.screendeviceList = nowlist
+      },
+      async handlegetScreenWmxList(id) {
+        let productdetail = await getProduct(id)
+        let wmxList = productdetail.thing?.properties || []
+        let nowlist = []
+        wmxList.forEach((wmxitem) => {
+          let current = {
+            label: wmxitem.name,
+            value: wmxitem.identifier,
+          }
+          nowlist.push(current)
+        })
+        this.screenwmxList = nowlist
+      },
+      // 大屏绑定产品
+      handleBindProduct(e) {
+        console.log(e)
+        let data = {
+          screen_productid: e,
+        }
+        this.editNode.setAttrs(data)
+        this.handlegetScreenWmxList(e)
+        this.handleQueryDeviceList(e)
+      },
+      handleBindDevice(e) {
+        console.log(e)
+        let id = e + '_' + this.screen_wmxid + '_text'
+        let data = {
+          id,
+          screen_deviceid: e,
+        }
+        this.editNode.setAttrs(data)
+      },
+      handleBindDeviceWmx(e) {
+        console.log(e)
+        let id = this.screen_deviceid + '_' + e + '_text'
+        let data = {
+          id,
+          screen_wmxid: e,
+        }
+        this.editNode.setAttrs(data)
+      },
       handleBindWmx(e) {
-        // console.log('选择内容', e)
-        // let id = `${this.$route.query.productid}_${this.editForm.id}_text`
         this.editNode.setAttrs(this.editForm)
-        // let params = {
-        //   identifier: this.editForm.id,
-        //   name: this.editForm.text,
-        //   productid: this.$route.query.productid,
-        //   shapeid: this.editForm.id,
-        // }
-        // edit_konva_thing(params).then((res) => {
-        //   // this.handleCloseSub()
-        // })
       },
       /**
        * 编辑组态节点
@@ -1281,6 +1454,34 @@
           }
         })
       },
+      async _copyTopo() {
+        let data = {
+          konva: {
+            Stage: JSON.parse(canvas.stage.toJSON()),
+          },
+          type: 'page',
+        }
+        data.konva.Stage?.children[0]?.children.forEach((item) => {
+          if (!item.attrs.fontSize) {
+            item.attrs.fontSize = 12
+          }
+        })
+        // console.log('当前stage', data)
+        // 原文链接：https://blog.csdn.net/m0_51066449/article/details/125686925
+        let oInput = document.createElement('input')
+        // 将想要复制的值
+        oInput.value = JSON.stringify(data)
+        // 页面底部追加输入框
+        document.body.appendChild(oInput)
+        // 选中输入框
+        oInput.select()
+        // 执行浏览器复制命令
+        document.execCommand('Copy')
+        // 弹出复制成功信息
+        this.$baseMessage('复制成功', 'success', 'dgiot-hey-message-success')
+        // 复制后移除输入框
+        oInput.remove()
+      },
       async _updataTopo(objectId) {
         // let stage = JSON.stringify(canvas.stage)
         // console.log('第一次转化stage', stage)
@@ -1309,6 +1510,23 @@
             'dgiot-hey-message-success'
           )
         } catch (e) {}
+      },
+      async handlequeryProduct() {
+        let params = {
+          skip: 0,
+          count: 'objectId',
+          order: '-updatedAt',
+        }
+        const res = await queryProduct(params)
+        let screenproductList = []
+        res.results.forEach((item) => {
+          let option = {
+            label: item.name,
+            value: item.objectId,
+          }
+          screenproductList.push(option)
+        })
+        this.screenproductList = screenproductList
       },
       async handleKonva() {
         let _this = this
@@ -1339,7 +1557,8 @@
               id: 'kevCurrent',
             })
             // loading.close()
-
+            // 产品列表
+            this.handlequeryProduct()
             _this.productconfig = productconfig || {}
             let profile = productconfig.profile || {}
             let profileList = []
@@ -1351,6 +1570,7 @@
               profileList.push(option)
             }
             this.profileList = profileList
+
             return
           }
           const { message = '', data = {} } = await _getTopo(params)
@@ -1475,6 +1695,10 @@
   }
 </script>
 <style lang="scss" scoped>
+  .item_block {
+    display: inline-block;
+    width: 50%;
+  }
   .isactive {
     color: #fff;
     background-color: #1890ff;

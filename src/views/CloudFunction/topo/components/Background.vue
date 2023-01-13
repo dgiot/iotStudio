@@ -14,7 +14,7 @@
         v-for="url in urls"
         :key="url"
         lazy
-        :src="url"
+        :src="$FileServe + url"
         @click.native="setKonvaBg(url)"
       />
     </div>
@@ -34,7 +34,7 @@
         BackgroundDialog: false,
         infoData: 'Background',
         BackgroundArgs: {},
-        urls: ['//img7.ddove.com/upload/20181127/134600237598.jpg'],
+        urls: ['/dgiot_file/topo/index/bg_1.png'],
       }
     },
     methods: {

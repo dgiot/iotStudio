@@ -1078,6 +1078,7 @@ export default {
       right: '右侧',
       left: '左侧',
       save: '保存',
+      copy: '复制',
       data: '数据',
       card: '卡片',
       edit: '编辑',

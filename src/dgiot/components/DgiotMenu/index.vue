@@ -9,15 +9,15 @@
         style="height: 86vh"
       >
         <dgiot-menu
-          v-for="route in item.children"
-          :key="route.path"
+          v-for="(route, index) in item.children"
+          :key="route.path + index"
           :item="route"
         />
       </el-scrollbar>
       <template v-else>
         <dgiot-menu
-          v-for="route in item.children"
-          :key="route.path"
+          v-for="(route, index) in item.children"
+          :key="route.path + index"
           :item="route"
         />
       </template>
