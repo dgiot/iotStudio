@@ -2,10 +2,10 @@
  *  build: 杭州数蛙科技有限公司 
  *  copyright: dgiot-dashboard 
  *  author: h7ml(h7ml@qq.com) 
- *  Time: 2023年01月13日09时57分37秒
+ *  Time: 2023年01月26日19时48分15秒
  */
 /*!
- * Vditor v3.8.18 - A markdown editor written in TypeScript.
+ * Vditor v3.9.0 - A markdown editor written in TypeScript.
  *
  * MIT License
  *
@@ -987,6 +987,7 @@
 .vditor-reset .language-mindmap,
 .vditor-reset .language-plantuml,
 .vditor-reset .language-mermaid,
+.vditor-reset .language-markmap,
 .vditor-reset .language-abc,
 .vditor-reset .language-flowchart,
 .vditor-reset .language-graphviz {
@@ -1002,6 +1003,7 @@
   height: 420px;
 }
 .vditor-reset .language-mermaid,
+.vditor-reset .language-markmap,
 .vditor-reset .language-flowchart,
 .vditor-reset .language-graphviz {
   text-align: center;
