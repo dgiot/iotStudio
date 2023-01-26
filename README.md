@@ -35,8 +35,8 @@ dgiot 前端框架
 
 | 源码平台 | 源码地址                                                                                      |
 | -------- | --------------------------------------------------------------------------------------------- |
-| github   | [https://github.com/dgiot/dgiot-dashboard](https://github.com/dgiot/dgiot-dashboard?from=git) |
-| gitee    | [https://gitee.com/dgiiot/dgiot-dashboard](https://gitee.com/dgiiot/dgiot-dashboard?from=git) |
+| github   | [https://github.com/dgiot/iotStudio](https://github.com/dgiot/iotStudio?from=git) |
+| gitee    | [https://gitee.com/dgiot/iotStudio](https://gitee.com/dgiot/iotStudio?from=git) |
   
 ## 小程序体验 
 
@@ -50,7 +50,7 @@ dgiot 前端框架
 - 获取项目代码
 
 ```bash
-git clone -b master https://github.com.cnpmjs.org/dgiot/dgiot-dashboard.git
+git clone -b master https://github.com/dgiot/iotStudio.git
 ```
 
 - 安装依赖
