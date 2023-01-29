@@ -1,9 +1,9 @@
-# dgiot-dashboard 轻量级工业物联网平台
+# iotStudio 轻量级工业物联网管理后台
 <p align="center">
-  <img src="https://img.shields.io/github/commit-activity/m/dgiot/dgiot-dashboard" alt="ommit-activity">
-	<img src="https://badgen.net/badge/package/%40dgiot%2Fdgiot-dashboard/blue"
+  <img src="https://img.shields.io/github/commit-activity/m/dgiot/iotStudio" alt="ommit-activity">
+	<img src="https://badgen.net/badge/package/%40dgiot%2FiotStudio/blue"
 	alt="package" maxretrytimes="3" class="m-1 transition-all duration-1000">
-  <img src="https://img.shields.io/github/release/dgiot/dgiot-dashboard?color=brightgreen" alt="release">
+  <img src="https://img.shields.io/github/release/dgiot/iotStudio?color=brightgreen" alt="release">
 
 
   
@@ -56,7 +56,7 @@ git clone -b master https://github.com/dgiot/iotStudio.git
 - 安装依赖
 
 ```bash
-cd dgiot-dashboard
+cd iotStudio
 
 npm install yarn -g
 
