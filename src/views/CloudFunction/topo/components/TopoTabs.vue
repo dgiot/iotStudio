@@ -1042,6 +1042,7 @@
             screen_deviceid: '',
             screen_productid: '',
             fontSize: 20,
+            source: 'mqtt',
             type: 'realdata',
             lineHeight: 1.2,
             width: 170,
