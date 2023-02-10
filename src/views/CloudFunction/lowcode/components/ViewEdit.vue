@@ -419,10 +419,10 @@
                   return
                 }
               }
-              params.ACL['*'] = {
-                read: true,
-                write: false,
-              }
+              // params.ACL['*'] = {
+              //   read: true,
+              //   write: false,
+              // }
               const res = await postView(params)
               this.$message({
                 showClose: true,

@@ -102,11 +102,7 @@
           />
         </el-select>
       </el-form-item>
-      <el-form-item
-        v-show="!form.meta.isAmis"
-        label="icon图标"
-        prop="meta.icon"
-      >
+      <el-form-item label="icon图标" prop="meta.icon">
         <el-input
           v-model="form.meta.icon"
           style="cursor: pointer"

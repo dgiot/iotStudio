@@ -2,7 +2,7 @@
   <div :key="productId">
     <a-tabs default-active-key="物模型" type="card" @change="handletabs">
       <a-tab-pane key="物模型" :disabled="!productId" tab="物模型">
-        <dgiot-query-form-left-panel>
+        <dgiot-query-form-left-panel style="margin: 10px 0; padding-left: 0">
           <el-button
             :disabled="!productId"
             size="small"
@@ -35,7 +35,7 @@
               ? dictTableList
               : []
           "
-          :header-cell-style="{ 'text-align': 'center' }"
+          :header-cell-style="{ 'text-align': 'center', background: '#1970c4' }"
           highlight-current-row
           row-key="objectId"
           size="medium"
@@ -260,7 +260,7 @@
           />
         </div>
       </a-tab-pane>
-      <a-tab-pane key="低代码" :disabled="!productId" tab="低代码">
+      <!-- <a-tab-pane key="低代码" :disabled="!productId" tab="低代码">
         <dgiot-views :view-form="viewForm" />
       </a-tab-pane>
       <a-tab-pane key="组态" :disabled="!productId" tab="组态">
@@ -271,7 +271,7 @@
       </a-tab-pane>
       <a-tab-pane key="字典" :disabled="!productId" tab="字典">
         <dgiot-dict :dict-form="dictForm" />
-      </a-tab-pane>
+      </a-tab-pane> -->
     </a-tabs>
   </div>
 </template>
