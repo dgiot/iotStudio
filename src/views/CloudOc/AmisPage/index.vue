@@ -11,6 +11,7 @@
 -->
 <template>
   <div ref="custom-table" v-loading="loading" class="index-container">
+    <el-button class="editAmis" @click="handleToEdit">编辑</el-button>
     <!-- 低代码表单渲染 
     append-to-body
       :before-close="handleCloseAmis"
@@ -62,6 +63,7 @@
         isPC: true,
         loading: true,
         viewData: {},
+        viewId: '',
       }
     },
     computed: {
@@ -84,6 +86,7 @@
           this.commandInfo.dialog = false
           console.log('变化了', val)
           let viewid = val.path.split('/')[val.path.split('/').length - 1]
+          this.viewId = viewid
           const { data = {} } = await getView(viewid)
           this.viewData = data
           console.log('view表单', data)
@@ -120,6 +123,7 @@
       localStorage.setItem('parse_name', name)
       localStorage.setItem('parse_deptid', destId)
       let viewid = location.hash.split('/')[location.hash.split('/').length - 1]
+      this.viewId = viewid
       const { data = {} } = await getView(viewid)
       this.viewData = data
       console.log('view表单', data)
@@ -135,6 +139,18 @@
       }
     },
     destroyed() {},
+    methods: {
+      handleToEdit() {
+        console.log('this.viewData', this.viewData)
+        this.$router.push({
+          path: `/design/editor/amis/`,
+          query: {
+            viewId: this.viewId,
+            type: this.viewData.type,
+          },
+        })
+      },
+    },
   }
 </script>
 
@@ -146,6 +162,11 @@
       height: 100%;
       width: 100%;
       overflow: scroll;
+    }
+    .editAmis {
+      position: fixed;
+      top: 70px;
+      right: 40px;
     }
   }
 </style>

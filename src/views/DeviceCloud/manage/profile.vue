@@ -170,13 +170,17 @@
                   slot="append"
                   icon="el-icon-search"
                   size="mini"
-                  style="padding: 0 !important; margin: 0 !important"
+                  style="
+                    padding: 0 !important;
+                    margin: 0 !important;
+                    color: #fff;
+                  "
                   @click="queryProduttemp({})"
                 />
               </el-input>
             </el-form-item>
           </el-form>
-
+          <!-- 
           <el-button
             v-show="!$lodash.isEmpty(productDetail)"
             size="mini"
@@ -191,7 +195,7 @@
                 ? $translateTitle('alert.Exit Full Screen')
                 : $translateTitle('alert.full screen')
             }}
-          </el-button>
+          </el-button> -->
         </dgiot-query-form-top-panel>
       </dgiot-query-form>
       <el-row :gutter="24">
@@ -237,7 +241,10 @@
             v-loading="listLoading"
             :cell-style="{ 'text-align': 'center' }"
             :data="proTableData"
-            :header-cell-style="{ 'text-align': 'center' }"
+            :header-cell-style="{
+              'text-align': 'center',
+              background: '#1970c4',
+            }"
             :height="tableHeight"
             highlight-current-row
             size="medium"
@@ -2229,6 +2236,14 @@
   }
 </script>
 <style lang="scss" scoped>
+  ::v-deep .el-table th .cell {
+    color: #fff !important;
+  }
+  ::v-deep .el-input-group__append,
+  .el-input-group__prepend {
+    background-color: #237dd4;
+    border: 0;
+  }
   .devproduct {
     ::v-deep .el-table--enable-row-hover .el-table__body tr:hover > td {
       color: #f19944;

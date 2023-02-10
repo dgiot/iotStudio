@@ -389,6 +389,7 @@
             <el-select
               v-model="queryForm.product"
               clearable
+              filterable
               placeholder="请选择产品"
               @change="handleQuery()"
             >

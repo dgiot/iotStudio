@@ -198,7 +198,12 @@
                   </el-tag>
                 </p>
                 <div slot="reference" class="name-wrapper">
-                  <el-tag size="medium">
+                  <el-image
+                    v-if="row.meta.icon.indexOf('dgiot_file') >= 0"
+                    :src="$FileServe + row.meta.icon"
+                    style="width: 30px; height: 30px"
+                  />
+                  <el-tag v-else size="medium">
                     <dgiot-icon v-if="row.meta.icon" :icon="row.meta.icon" />
                   </el-tag>
                 </div>
@@ -884,7 +889,6 @@
           obj.createtime = utc2beijing(createdAt)
           obj.orderBy = orderBy
           obj.url = url
-          console.log('obj111111', obj)
           this.data.push(obj)
         })
 
