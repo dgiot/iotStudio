@@ -820,6 +820,38 @@
         />
         <el-divider />
       </a-collapse-panel>
+      <a-collapse-panel key="7" :header="'3D模型'">
+        <img
+          draggable="true"
+          size="mini"
+          :src="$FileServe + '/dgiot_file/topo/3d/3d_people.png'"
+          style="
+            width: 70px;
+            height: 60px;
+            display: inline-block;
+            margin-left: 20px;
+            margin-top: 10px;
+          "
+          type="primary"
+          @click="
+            createBasicThing({
+              productid: $route.query.productid,
+              type: 'vuecomponent',
+              data: {
+                id: '3d_fbx',
+                width: 525,
+                height: 380,
+                fill: 'rgba(30, 30, 30, 0.7)',
+                text: '/dgiot_file/3d/dancing.fbx',
+                source: 'api',
+                src: '/dgiot_file/topo/3d/3d_people.png',
+              },
+              chart: '3d',
+              hidden: false,
+            })
+          "
+        />
+      </a-collapse-panel>
       <a-collapse-panel
         v-if="!$route.query.dashboard"
         key="6"
