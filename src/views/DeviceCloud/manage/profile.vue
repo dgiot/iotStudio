@@ -180,60 +180,46 @@
               </el-input>
             </el-form-item>
           </el-form>
-          <!-- 
           <el-button
-            v-show="!$lodash.isEmpty(productDetail)"
-            size="mini"
+            icon="el-icon-plus"
             type="primary"
-            @click="isFullscreen = !isFullscreen"
+            @click="addproducttemp()"
           >
-            <dgiot-icon
-              :icon="isFullscreen ? 'fullscreen-exit-fill' : 'fullscreen-fill'"
-            />
-            {{
-              isFullscreen
-                ? $translateTitle('alert.Exit Full Screen')
-                : $translateTitle('alert.full screen')
-            }}
-          </el-button> -->
+            添加
+          </el-button>
+         
         </dgiot-query-form-top-panel>
       </dgiot-query-form>
       <el-row :gutter="24">
         <el-col :lg="4" :md="5" :sm="6" :xl="3" :xs="4">
-          <ul
-            class="infinite-list"
-            style="overflow: auto"
-            :style="{ height: tableHeight + 'px' }"
-          >
-            <li
-              v-for="(item, index) in categorysonList"
-              :key="index"
-              class="infinite-list-item"
-              :class="linkType == item.name ? 'select_category_product' : ''"
-              disabled
-              @click.stop="categorysonChange(item)"
-            >
-              <div>{{ item.name }}</div>
-              <i
-                class="el-icon-plus"
-                style="color: #fff"
-                @click.stop="addproducttemp(item)"
-              ></i>
-              <!-- <el-button
-                class="el-icon-plus"
-                plain
-                size="mini"
-                style="color: #fff"
-                type="text"
-               
-              /> -->
-              <!-- <div>+</div> -->
-              <!-- <el-link :type="linkType == item.name ? 'success' : ''">
-                {{ item.name }}&nbsp;&nbsp;&nbsp;
-              </el-link>
-             -->
-            </li>
-          </ul>
+          <div>
+            <el-tree
+              :data="categorytree"
+              :props="defaultProps"
+              @node-click="categorysonChange"
+            />
+          </div>
+          <!--          <ul-->
+          <!--            class="infinite-list"-->
+          <!--            style="overflow: auto"-->
+          <!--            :style="{ height: tableHeight + 'px' }"-->
+          <!--          >-->
+          <!--            <li-->
+          <!--              v-for="(item, index) in categorysonList"-->
+          <!--              :key="index"-->
+          <!--              class="infinite-list-item"-->
+          <!--              :class="linkType == item.name ? 'select_category_product' : ''"-->
+          <!--              disabled-->
+          <!--              @click.stop="categorysonChange(item)"-->
+          <!--            >-->
+          <!--              <div>{{ item.name }}</div>-->
+          <!--              <i-->
+          <!--                class="el-icon-plus"-->
+          <!--                style="color: #fff"-->
+          <!--                @click.stop="addproducttemp(item)"-->
+          <!--              ></i>-->
+          <!--            </li>-->
+          <!--          </ul>-->
         </el-col>
         <el-col :lg="5" :md="6" :sm="6" :xl="3" :xs="4">
           <el-table
@@ -241,10 +227,7 @@
             v-loading="listLoading"
             :cell-style="{ 'text-align': 'center' }"
             :data="proTableData"
-            :header-cell-style="{
-              'text-align': 'center',
-              background: '#1970c4',
-            }"
+            :header-cell-style="{ 'text-align': 'center' }"
             :height="tableHeight"
             highlight-current-row
             size="medium"
@@ -347,11 +330,9 @@
             <el-form-item :label="$translateTitle('product.classification')">
               <el-input
                 v-model="form.categoryname"
-                :disabled="addflag"
                 :placeholder="$translateTitle('product.pleaseselectyourcate')"
-                @focus="showTree = !showTree"
               />
-              <div v-if="showTree">
+              <div>
                 <el-tree
                   :data="categorytree"
                   :props="defaultProps"
@@ -759,6 +740,7 @@
       this.querycategorylist()
       this.featchTable()
       this.queryProduttemp({})
+      this.fetchData()
     },
     methods: {
       async createdNotification(row, flag) {
@@ -894,8 +876,7 @@
         this.linkType = data.name
         this.queryProduttemp({ category: data.objectId })
       },
-      addproducttemp(data) {
-        this.fetchData()
+      addproducttemp() {
         this.addflag = true
         this.form = {
           name: '',
@@ -903,16 +884,12 @@
           thing: {},
           config: {},
           nodeType: 0,
-          netType: '',
-          categoryname: data.name,
-          categoryid: data.objectId,
+          netType: ''
         }
         this.dialogFormVisible = true
         this.producttempId = moment(new Date()).valueOf().toString()
       },
       editproducttemp(row) {
-        dgiotlog.log('row', row)
-        this.fetchData()
         this.addflag = false
         this.form = row
         this.producttempId = row.objectId

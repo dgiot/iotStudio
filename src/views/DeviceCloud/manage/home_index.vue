@@ -926,7 +926,7 @@
           all: true,
           status: this.$route.query.status ? this.$route.query.status : '',
           skip: 0,
-          limit: 10,
+          limit: 20,
           state: '',
         },
       }

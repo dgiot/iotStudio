@@ -1,10 +1,10 @@
 {
   "name": "@dgiot/dgiot-dashboard",
-  "version": "4.7.5",
+  "version": "4.7.6",
   "author": "xxb",
   "license": "MPL-2.0",
   "private": false,
-  "homepage": "https://github.com/dgiot/dgiot-dashboard.git",
+  "homepage": "https://github.com/dgiot/iotStudio.git",
   "scripts": {
     "dev": "vue-cli-service serve",
     "start": "vue-cli-service serve",
@@ -56,7 +56,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/dgiot/dgiot-dashboard.git"
+    "url": "git+https://github.com/dgiot/iotStudio.git"
   },
   "dependencies": {
     "@dgiot/dgiot-component": "0.0.3",
@@ -177,7 +177,7 @@
   },
   "description": "<p align=\"center\">   <img src=\"https://img.shields.io/github/commit-activity/m/dgiot/dgiot-dashboard\" alt=\"ommit-activity\"> \t<img src=\"https://badgen.net/badge/package/%40dgiot%2Fdgiot-dashboard/blue\" \talt=\"package\" maxretrytimes=\"3\" class=\"m-1 transition-all duration-1000\"> \t<img src=\"https://badgen.net/npm/v/@dgiot/dgiot-dashboard\" alt=\"Npm Version\" \tmaxretrytimes=\"3\" class=\"m-1 transition-all duration-1000\"> \t<img src=\"https://badgen.net/npm/node/@dgiot/dgiot-mqtt-dashboard\" alt=\"Node Version\" \tmaxretrytimes=\"3\" class=\"m-1 transition-all duration-1000\"> \t<br> \t<img src=\"https://badgen.net/jsdelivr/hits/npm/@dgiot/dgiot-dashboard\" \talt=\"Jsdeliver Month Downloads\" maxretrytimes=\"3\" class=\"m-1 transition-all duration-1000\"> \t<img src=\"https://badgen.net/npm/types/@dgiot/dgiot-dashboard\" alt=\"Type Support\" \tmaxretrytimes=\"3\" class=\"m-1 transition-all duration-1000\">   <img src=\"https://img.shields.io/badge/Community-DGIOT-yellow\" alt=\"Community\">   <img src=\"https://img.shields.io/docker/pulls/dgiot/dgiot-dashboard\" alt=\"docker\"> \t<br> \t<img src=\"https://img.shields.io/librariesio/release/npm/@dgiot/dgiot-dashboard\" \talt=\"Outdated Dep\" maxretrytimes=\"3\" class=\"m-1 transition-all duration-1000\"> \t<img src=\"https://img.shields.io/snyk/vulnerabilities/npm/@dgiot/dgiot-dashboard\" \talt=\"Vulnerablities\" maxretrytimes=\"3\" class=\"m-1 transition-all duration-1000\">   <img src=\"https://img.shields.io/github/release/dgiot/dgiot-dashboard?color=brightgreen\" alt=\"release\">   <img src=\"https://img.shields.io/github/license/dgiot/dgiot-dashboard\" alt=\"license\">   <img src=\"https://img.shields.io/travis/dgiot/dgiot-dashboard/master\" alt=\"travis\"> <p>",
   "bugs": {
-    "url": "https://github.com/dgiot/dgiot-dashboard/issues"
+    "url": "https://github.com/dgiot/iotStudio/issues"
   },
   "main": ".eslintrc.js",
   "keywords": []

@@ -344,7 +344,6 @@
                     v-model="sizeForm.truevalue"
                     :placeholder="$translateTitle('product.attribute')"
                     readonly
-                    type="number"
                   />
                 </el-form-item>
               </el-col>
@@ -364,7 +363,6 @@
                     v-model="sizeForm.falsevalue"
                     :placeholder="$translateTitle('product.attribute')"
                     readonly
-                    type="number"
                   />
                 </el-form-item>
               </el-col>
@@ -1310,8 +1308,8 @@
     },
     async created() {
       if (this.sizeForm.type == 'bool') {
-        this.$set(this.sizeForm, 'truevalue', 1)
-        this.$set(this.sizeForm, 'falsevalue', 0)
+        this.$set(this.sizeForm, 'truevalue', true)
+        this.$set(this.sizeForm, 'falsevalue', false)
       }
       await this.queryProtocol()
       /**
@@ -2120,8 +2118,8 @@
                 dataType: {
                   type: sizeForm.type.toLowerCase(),
                   specs: {
-                    0: sizeForm.false,
-                    1: sizeForm.true,
+                    false: sizeForm.false,
+                    true: sizeForm.true,
                   },
                   das: das,
                 },
