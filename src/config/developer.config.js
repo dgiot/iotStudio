@@ -8,21 +8,21 @@ module.exports = {
      */
     {
       path: 'iotapi',
-      target: 'http://1.117.219.8',
+      target: 'http://127.0.0.1:5080',
     },
     /**
      * @description 静态资源目录。开发使用
      */
     {
       path: 'dgiot_dashboard',
-      target: 'http://1.117.219.8',
+      target: 'https://prod.dgiotcloud.cn',
     },
     /**
      * @description dgiot_file文件资源目录。开发使用
      */
     {
       path: 'dgiot_file',
-      target: 'http://1.117.219.8',
+      target: 'https://prod.dgiotcloud.cn',
     },
     /**
      * @description amis server 开发使用
