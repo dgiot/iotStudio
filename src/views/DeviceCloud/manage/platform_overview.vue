@@ -1665,7 +1665,10 @@
         // })
         // console.log(this.queryParams, 'queryParams')
         const Startdashboardid = '32511dbfe5'
-        await Startdashboard(this.queryParams, Startdashboardid)
+        setTimeout(async () => {
+          await Startdashboard(this.queryParams, Startdashboardid)
+        }, 2000)
+
         // 本地mqtt 存在问题,在请求4秒后手动关闭所有loading
         // await this.$subscribe(this.subtopic)
         //  改为后端订阅

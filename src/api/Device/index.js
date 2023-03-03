@@ -16,6 +16,13 @@ import {
   update_object,
 } from '@/api/Parse'
 
+export async function queryAmisDevice(params) {
+  return request({
+    url: `/amis/Device`,
+    method: 'get',
+    params: params,
+  })
+}
 export async function queryDevice(params) {
   return query_object('Device', params)
 }
