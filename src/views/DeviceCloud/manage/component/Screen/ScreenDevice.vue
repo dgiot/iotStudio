@@ -51,9 +51,12 @@
   import {
     putDevice,
     querycompanyDevice,
+    queryAmisDevice,
     postDevice,
     delDevice,
   } from '@/api/Device'
+  import { getDlinkJson } from '@/api/Dlink'
+  import { Startdashboard } from '@/api/System/index'
   export default {
     name: 'ScreenDevice',
     props: {
@@ -110,8 +113,8 @@
       async fetchData() {
         // this.listLoading = true
         let params = {
-          skip: 0,
-          limit: 10,
+          page: 1,
+          prePage: 10,
           // excludeKeys: this.queryForm.excludeKeys,
           // include: this.queryForm.include,
           order: '-createdAt',
@@ -132,8 +135,9 @@
         // this.queryForm.isEnable
         //   ? (params.where.isEnable = this.queryForm.isEnable)
         //   : ''
-        const { results: list = [], count: total = 0 } =
-          await querycompanyDevice(params, this.token)
+        let res = await queryAmisDevice(params)
+        let list = res.data.items
+        let total = res.data.total
         list.forEach((item) => {
           item.address = item.address == '' ? '---' : item.address
           item.detail = item?.detail ? item.detail : {}
@@ -145,6 +149,7 @@
         this.deviceList = list
         this.total = total
         this.listLoading = false
+
         // 订阅处理所有的设备
         // await this.subAllDevice()
       },

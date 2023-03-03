@@ -227,7 +227,10 @@
             v-loading="listLoading"
             :cell-style="{ 'text-align': 'center' }"
             :data="proTableData"
-            :header-cell-style="{ 'text-align': 'center' }"
+            :header-cell-style="{
+              'text-align': 'center',
+              background: '#1970c4',
+            }"
             :height="tableHeight"
             highlight-current-row
             size="medium"

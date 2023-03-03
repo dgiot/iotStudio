@@ -27,12 +27,13 @@
               v-if="item.meta.icon && item.meta.icon.includes('dgiot')"
               :alt="$FileServe"
               :src="$FileServe + item.meta.icon"
-              style="float: left; width: 16px; height: 16px"
+              style="width: 16px; height: 16px"
             >
+              <!-- float: left;  -->
               <img
                 slot="error"
                 :src="$FileServe + item.meta.icon"
-                style="float: left; width: 16px; height: 16px"
+                style="width: 16px; height: 16px"
                 :title="$FileServe + item.meta.icon"
               />
             </el-image>
