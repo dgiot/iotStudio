@@ -187,7 +187,6 @@
           >
             添加
           </el-button>
-         
         </dgiot-query-form-top-panel>
       </dgiot-query-form>
       <el-row :gutter="24">
@@ -887,7 +886,7 @@
           thing: {},
           config: {},
           nodeType: 0,
-          netType: ''
+          netType: '',
         }
         this.dialogFormVisible = true
         this.producttempId = moment(new Date()).valueOf().toString()
