@@ -459,6 +459,7 @@
                   <el-select
                     style="width: 100%"
                     v-model="childrenForm.device"
+                    searchable
                     v-el-select-loadmore="loadmore"
                     :disabled="!ischange"
                     :placeholder="$translateTitle('product.equipment')"

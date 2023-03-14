@@ -962,8 +962,8 @@ export default {
       // devices.notEqualTo('objectId', this.deviceid)
       // devices.notEqualTo('parentId', this.deviceid)
       const params = {
-        limit: this.dirlength,
-        skip: (this.dirstart - 1) * this.dirlength,
+        // limit: this.dirlength,
+        // skip: (this.dirstart - 1) * this.dirlength,
         count: 'objectId',
         where: {
           product: val,
