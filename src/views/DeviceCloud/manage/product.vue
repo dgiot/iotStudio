@@ -24,7 +24,7 @@
       <!--      />-->
     </el-dialog>
     <el-dialog :append-to-body="true" :visible.sync="parserView">
-      <f-render v-model="formConfig" :config="formConfig" pure/>
+      <f-render v-model="formConfig" :config="formConfig" pure />
     </el-dialog>
     <el-dialog
       :append-to-body="true"
@@ -606,7 +606,7 @@
                           class="el-icon-search"
                           native-type="submit"
                           type="primary"
-                          @click="queryprodut({})"
+                          @click="queryprodutTemplate()"
                         />
                       </el-form-item>
                     </el-form>
@@ -1426,6 +1426,7 @@
     },
     data() {
       return {
+        ids: [],
         v: {
           skip: 0,
           layout: 'total, sizes, prev, pager, next, jumper',
@@ -1468,7 +1469,7 @@
           parserTableList: [],
           tableLoading: false,
         },
-      paginationKey: moment(new Date()).valueOf() + '',
+        paginationKey: moment(new Date()).valueOf() + '',
         queryForm: {
           name: '',
           category: '',
@@ -1740,7 +1741,7 @@
       const { project = '' } = this.$route.query
       this.formInline.productname = project
       this.searchProduct(0)
-    this.paginationKey = moment(new Date()).valueOf() + ''
+      this.paginationKey = moment(new Date()).valueOf() + ''
     },
     beforeDestroy() {
       this.projectName = ''
@@ -2168,318 +2169,322 @@
           if (start == 0) this.start = 0
 
           var category = []
-        if (this.formInline.productname) {
-          this.queryForm.limit = 8
-          this.queryForm.skip = 0
-        }
-        // 优化下查询条件,新增忽略字段
-        let params = {
-          count: 'objectId',
-          order: '-updatedAt',
-          skip: this.queryForm.skip,
-          limit: this.queryForm.limit,
-          where: {},
-          excludeKeys:
-            'children,thing,decoder,topics,productSecret,view,category,producttemplet',
-        }
-        this.formInline.productname
-          ? (params.where.name = {$regex: this.formInline.productname})
-          : ''
-        const {results = [], count = 0} = await this.$query_object(
-          'Product',
-          params
-        )
-        // dgiotlog.log("results", results)
-        if (results) {
-          results.map((items) => {
-            if (
-              items.category != '' &&
-              items.category &&
-              items.devType != 'report'
-            ) {
-              category.push(items.category)
-            }
-          })
+          if (this.formInline.productname) {
+            this.queryForm.limit = 8
+            this.queryForm.skip = 0
+          }
+          // 优化下查询条件,新增忽略字段
+          let params = {
+            count: 'objectId',
+            order: '-updatedAt',
+            skip: this.queryForm.skip,
+            limit: this.queryForm.limit,
+            where: {},
+            excludeKeys:
+              'children,thing,decoder,topics,productSecret,view,category,producttemplet',
+          }
+          this.formInline.productname
+            ? (params.where.name = { $regex: this.formInline.productname })
+            : ''
+          const { results = [], count = 0 } = await this.$query_object(
+            'Product',
+            params
+          )
+          // dgiotlog.log("results", results)
+          if (results) {
+            results.map((items) => {
+              if (
+                items.category != '' &&
+                items.category &&
+                items.devType != 'report'
+              ) {
+                category.push(items.category)
+              }
+            })
+            this.listLoading = false
+            this.proTableData = results
+            this.total = count
+          }
+        } catch (error) {
           this.listLoading = false
-          this.proTableData = results
-          this.total = count
+          dgiotlog.log(error)
+          this.$baseMessage(
+            this.$translateTitle('alert.Data request error') + `${error}`,
+            'error',
+            'dgiot-hey-message-error'
+          )
         }
-      } catch (error) {
-        this.listLoading = false
-        dgiotlog.log(error)
-        this.$baseMessage(
-          this.$translateTitle('alert.Data request error') + `${error}`,
-          'error',
-          'dgiot-hey-message-error'
+      },
+      handleClose() {
+        this.dialogFormVisible = false
+      },
+      // 选择产品模板
+      async chooseTemplate(row) {
+        this.selectedRow = row
+        // const res = await this.getcategoryname(row.category)
+        this.$set(
+          this.form,
+          'categoryid',
+          row?.category?.objectId ? row.category.objectId : '0'
         )
-      }
-    },
-    handleClose() {
-      this.dialogFormVisible = false
-    },
-    // 选择产品模板
-    async chooseTemplate(row) {
-      this.selectedRow = row
-      // const res = await this.getcategoryname(row.category)
-      this.$set(
-        this.form,
-        'categoryid',
-        row?.category?.objectId ? row.category.objectId : '0'
-      )
-      this.$set(
-        this.form,
-        'categoryname',
-        row?.category?.name ? row.category.name + '/' + row.name : row.name
-      )
-      this.$set(this.form, 'producttempid', row.objectId)
-      this.form.thing = row.thing ? row.thing : {}
-      // try {
-      //   const res = await this.getcategoryname(row.category)
-      // }catch (e) {
-      //   this.$message({
-      //     type:'error',
-      //     message:e,
-      //     duration:true,
-      //   })
-      // }
-      this.cascaderDrawer = !this.cascaderDrawer
-    },
-    async getcategoryname(category) {
-      const {name} = await getCategory(category.parent.objectId)
-      const returnName =
-        name == '所有领域' ? category.name : name + '/' + category.name
-      return returnName
-    },
-    // 关闭dialog 事件
-    handleCloseDialogForm() {
-      this.dialogFormVisible = false
-      // 重置表单
-      this.$nextTick(() => {
-        this.$refs['form'].resetFields()
-      })
-    },
-    properties(things, type = 'things') {
-      this.descriptions.tableLoading = true
-      dgiotlog.log(things)
-      this.descriptions.things = things
-      this.descriptions.tableType = type
-      setTimeout(() => (this.descriptions.tableLoading = false), 1200)
-    },
-    // 添加产品弹窗
-    addproduct() {
-      this.Get_Re_Channel()
-      this.queryprodut({})
-      this.custom_status = 'add'
-      // return false
-      this.moduleTitle = this.$translateTitle('product.createproduct')
-      this.imageUrl = ''
-      this.form = {
-        dynamicReg: true,
-        name: '',
-        type: 1,
-        category: '',
-        nodeType: 3,
-        desc: '',
-        netType: ' ',
-        devType: '',
-        productSecret: '',
-        relationApp: this.currentDepartment.name,
-        roles: [],
-        categoryname: '',
-        config: {
-          checkList: ['konva', 'amis'],
-          address: '余杭区良渚平高创业城c1座',
-          location: {latitude: '120.161324', longitude: '30.262441', __type: 'GeoPoint'}
-        },
-      }
-      this.productid = moment(new Date()).valueOf().toString()
-      this.dialogFormVisible = true
-    },
-    getParent(id, origin, returnarr) {
-      origin.map((item) => {
-        if (id == item.id) {
-          returnarr.unshift(item.value)
-          this.getParent(item.parentid, origin, returnarr)
-        } else if (item.parentid == 0 && item.id == id) {
-          returnarr.unshift(item.value)
-        }
-      })
-      this.form.category = returnarr[0]
-      return returnarr
-    },
-    // 查找Industry父级
-    getIndustryParent(type, originarr) {
-      originarr.map((item) => {
-        if (item.value == type) {
-          this.getParent(item.id, originarr, [])
-        }
-      })
-    },
-    async editorParser(ObjectId) {
-      this.parserFromId = ObjectId
-      try {
-        const {
-          config = {
-            parser: [],
-          },
-          thing = {},
-        } = await getProduct(ObjectId)
-        this.parserTableList = config
-        dgiotlog.log(this.parserTableList)
-        this.parserDict = _.merge(thing, config)
-      } catch (e) {
-        this.parserTableList = {parser: []}
-        dgiotlog.log('eeeeeeeeeeeee', e)
-      }
-      this.parserTable = true
-    },
-    editParse(index, row) {
-      this.formConfig = row
-      this.editIndex = index
-      this.dialogVisible = true
-    },
-    async saveParse(list, type = -1) {
-      if (type + 2 > 0) {
-        this.parserTableList.parser[type] = _.merge({}, list)
-      }
-      try {
-        const res = await putProduct(this.parserFromId, {
-          config: type + 2 > 0 ? this.parserTableList : list,
-        })
-        this.$message({
-          showClose: true,
-          message: this.$translateTitle(
-            'user.Save the template successfully'
-          ),
-          duration: 2000,
-          type: 'success',
-        })
-        this.dialogVisible = false
-        this.parserTable = false
-      } catch (e) {
-        this.$baseMessage(
-          this.$translateTitle('user.Save the template error') + `${e}`,
-          'error',
-          'dgiot-hey-message-error'
+        this.$set(
+          this.form,
+          'categoryname',
+          row?.category?.name ? row.category.name + '/' + row.name : row.name
         )
-        dgiotlog.log(e, 'eeee')
-      }
-      dgiotlog.log(list)
-    },
-    previewParse(row) {
-      this.parserView = true
-      this.formConfig = row
-      dgiotlog.log('previewParse', row)
-    },
-    addParse(row) {
-      row['parser'].push({
-        name: uuid(6),
-        enname: uuid(6),
-        config: {},
-      })
-    },
-    deleteParse(index, rows) {
-      rows.splice(index, 1)
-    },
-    async editorDict(ObjectId) {
-      // const loading = this.$baseColorfullLoading()
-      this.getAllunit()
-      const row = await getProduct(ObjectId)
-      // loading.close()
-      const {config = {basedate: {}}} = row
-      this.productInfo = row
-      dgiotlog.log(' this.parserDict', this.parserDict)
-      this.editDictTempId = ObjectId
-      this.dictTempForm = {
-        name: '',
-        cType: '',
-        enable: '1',
-        description: '',
-        params: [],
-      }
-      this.title_temp_dialog = '创建字典模板'
-      dgiotlog.log(config)
-      if (config.basedate && config.basedate.name) {
-        this.title_temp_dialog = '修改字典模板'
-        this.dictTempForm = config.basedate
-      }
-      this.rule = {
-        name: [
-          {
-            required: true,
-            message: '请输入字典模板名称',
-            trigger: 'blur',
+        this.$set(this.form, 'producttempid', row.objectId)
+        this.form.thing = row.thing ? row.thing : {}
+        // try {
+        //   const res = await this.getcategoryname(row.category)
+        // }catch (e) {
+        //   this.$message({
+        //     type:'error',
+        //     message:e,
+        //     duration:true,
+        //   })
+        // }
+        this.cascaderDrawer = !this.cascaderDrawer
+      },
+      async getcategoryname(category) {
+        const { name } = await getCategory(category.parent.objectId)
+        const returnName =
+          name == '所有领域' ? category.name : name + '/' + category.name
+        return returnName
+      },
+      // 关闭dialog 事件
+      handleCloseDialogForm() {
+        this.dialogFormVisible = false
+        // 重置表单
+        this.$nextTick(() => {
+          this.$refs['form'].resetFields()
+        })
+      },
+      properties(things, type = 'things') {
+        this.descriptions.tableLoading = true
+        dgiotlog.log(things)
+        this.descriptions.things = things
+        this.descriptions.tableType = type
+        setTimeout(() => (this.descriptions.tableLoading = false), 1200)
+      },
+      // 添加产品弹窗
+      addproduct() {
+        this.Get_Re_Channel()
+        this.queryprodut({})
+        this.custom_status = 'add'
+        // return false
+        this.moduleTitle = this.$translateTitle('product.createproduct')
+        this.imageUrl = ''
+        this.form = {
+          dynamicReg: true,
+          name: '',
+          type: 1,
+          category: '',
+          nodeType: 3,
+          desc: '',
+          netType: ' ',
+          devType: '',
+          productSecret: '',
+          relationApp: this.currentDepartment.name,
+          roles: [],
+          categoryname: '',
+          config: {
+            checkList: ['konva', 'amis'],
+            address: '余杭区良渚平高创业城c1座',
+            location: {
+              latitude: '120.161324',
+              longitude: '30.262441',
+              __type: 'GeoPoint',
+            },
           },
-        ],
-        cType: [
-          {
-            required: true,
-            message: '请输入字典模板类型',
-            trigger: 'blur',
-          },
-        ],
-        enable: [
-          {
-            required: true,
-            message: '请选择状态',
-            trigger: 'change',
-          },
-        ],
-      }
-      dgiotlog.log(this.dictTempForm, 'config')
-      this.dictVisible = true
-    },
-    async editorProduct(editorProductid) {
-      this.Get_Re_Channel()
-      const loading = this.$baseColorfullLoading()
-      const row = await getProduct(editorProductid)
-      this.form = row
-      loading.close()
-      this.product = row
-      this.imageUrl = ''
-      this.moduleTitle = this.$translateTitle('product.editproduct')
-      this.custom_status = 'edit'
-      this.custom_row = row
-      this.dialogFormVisible = true
-      this.productid = row.objectId
-      this.form.desc = row.desc
-      this.form.category = row.category
-      this.form.producttemplet = row.producttemplet
-      this.form.config = _.merge(row.config, {checkList: []})
-      this.form.name = row.name
-      this.form.nodeType = row.nodeType
-      this.form.dynamicReg = row.dynamicReg
-      this.$set(this.form, 'type', row.channel ? row.channel.type : '')
-      this.$set(
-        this.form,
-        'tdchannel',
-        row.channel ? row.channel.tdchannel : ''
-      )
-      this.$set(
-        this.form,
-        'taskchannel',
-        row.channel ? row.channel.taskchannel : ''
-      )
-      this.$set(
-        this.form,
-        'otherchannel',
-        row.channel ? row.channel.otherchannel : ''
-      )
-      this.$set(
-        this.form,
-        'storageStrategy',
-        row.channel ? row.channel.storageStrategy : ''
-      )
-      this.form.netType = row.netType
-      this.form.devType = row.devType
-      const {name} = await getCategory(row.category.objectId)
-      // this.form.categoryname = name
-      this.$set(this.form, 'categoryname' ,name)
-      this.form.productSecret = row.productSecret
-      this.form.nodeType = row.nodeType
-      if (row.icon) {
-        this.imageUrl = row.icon
-      }
+        }
+        this.productid = moment(new Date()).valueOf().toString()
+        this.dialogFormVisible = true
+      },
+      getParent(id, origin, returnarr) {
+        origin.map((item) => {
+          if (id == item.id) {
+            returnarr.unshift(item.value)
+            this.getParent(item.parentid, origin, returnarr)
+          } else if (item.parentid == 0 && item.id == id) {
+            returnarr.unshift(item.value)
+          }
+        })
+        this.form.category = returnarr[0]
+        return returnarr
+      },
+      // 查找Industry父级
+      getIndustryParent(type, originarr) {
+        originarr.map((item) => {
+          if (item.value == type) {
+            this.getParent(item.id, originarr, [])
+          }
+        })
+      },
+      async editorParser(ObjectId) {
+        this.parserFromId = ObjectId
+        try {
+          const {
+            config = {
+              parser: [],
+            },
+            thing = {},
+          } = await getProduct(ObjectId)
+          this.parserTableList = config
+          dgiotlog.log(this.parserTableList)
+          this.parserDict = _.merge(thing, config)
+        } catch (e) {
+          this.parserTableList = { parser: [] }
+          dgiotlog.log('eeeeeeeeeeeee', e)
+        }
+        this.parserTable = true
+      },
+      editParse(index, row) {
+        this.formConfig = row
+        this.editIndex = index
+        this.dialogVisible = true
+      },
+      async saveParse(list, type = -1) {
+        if (type + 2 > 0) {
+          this.parserTableList.parser[type] = _.merge({}, list)
+        }
+        try {
+          const res = await putProduct(this.parserFromId, {
+            config: type + 2 > 0 ? this.parserTableList : list,
+          })
+          this.$message({
+            showClose: true,
+            message: this.$translateTitle(
+              'user.Save the template successfully'
+            ),
+            duration: 2000,
+            type: 'success',
+          })
+          this.dialogVisible = false
+          this.parserTable = false
+        } catch (e) {
+          this.$baseMessage(
+            this.$translateTitle('user.Save the template error') + `${e}`,
+            'error',
+            'dgiot-hey-message-error'
+          )
+          dgiotlog.log(e, 'eeee')
+        }
+        dgiotlog.log(list)
+      },
+      previewParse(row) {
+        this.parserView = true
+        this.formConfig = row
+        dgiotlog.log('previewParse', row)
+      },
+      addParse(row) {
+        row['parser'].push({
+          name: uuid(6),
+          enname: uuid(6),
+          config: {},
+        })
+      },
+      deleteParse(index, rows) {
+        rows.splice(index, 1)
+      },
+      async editorDict(ObjectId) {
+        // const loading = this.$baseColorfullLoading()
+        this.getAllunit()
+        const row = await getProduct(ObjectId)
+        // loading.close()
+        const { config = { basedate: {} } } = row
+        this.productInfo = row
+        dgiotlog.log(' this.parserDict', this.parserDict)
+        this.editDictTempId = ObjectId
+        this.dictTempForm = {
+          name: '',
+          cType: '',
+          enable: '1',
+          description: '',
+          params: [],
+        }
+        this.title_temp_dialog = '创建字典模板'
+        dgiotlog.log(config)
+        if (config.basedate && config.basedate.name) {
+          this.title_temp_dialog = '修改字典模板'
+          this.dictTempForm = config.basedate
+        }
+        this.rule = {
+          name: [
+            {
+              required: true,
+              message: '请输入字典模板名称',
+              trigger: 'blur',
+            },
+          ],
+          cType: [
+            {
+              required: true,
+              message: '请输入字典模板类型',
+              trigger: 'blur',
+            },
+          ],
+          enable: [
+            {
+              required: true,
+              message: '请选择状态',
+              trigger: 'change',
+            },
+          ],
+        }
+        dgiotlog.log(this.dictTempForm, 'config')
+        this.dictVisible = true
+      },
+      async editorProduct(editorProductid) {
+        this.Get_Re_Channel()
+        const loading = this.$baseColorfullLoading()
+        const row = await getProduct(editorProductid)
+        this.form = row
+        loading.close()
+        this.product = row
+        this.imageUrl = ''
+        this.moduleTitle = this.$translateTitle('product.editproduct')
+        this.custom_status = 'edit'
+        this.custom_row = row
+        this.dialogFormVisible = true
+        this.productid = row.objectId
+        this.form.desc = row.desc
+        this.form.category = row.category
+        this.form.producttemplet = row.producttemplet
+        this.form.config = _.merge(row.config, { checkList: [] })
+        this.form.name = row.name
+        this.form.nodeType = row.nodeType
+        this.form.dynamicReg = row.dynamicReg
+        this.$set(this.form, 'type', row.channel ? row.channel.type : '')
+        this.$set(
+          this.form,
+          'tdchannel',
+          row.channel ? row.channel.tdchannel : ''
+        )
+        this.$set(
+          this.form,
+          'taskchannel',
+          row.channel ? row.channel.taskchannel : ''
+        )
+        this.$set(
+          this.form,
+          'otherchannel',
+          row.channel ? row.channel.otherchannel : ''
+        )
+        this.$set(
+          this.form,
+          'storageStrategy',
+          row.channel ? row.channel.storageStrategy : ''
+        )
+        this.form.netType = row.netType
+        this.form.devType = row.devType
+        const { name } = await getCategory(row.category.objectId)
+        // this.form.categoryname = name
+        this.$set(this.form, 'categoryname', name)
+        this.form.productSecret = row.productSecret
+        this.form.nodeType = row.nodeType
+        if (row.icon) {
+          this.imageUrl = row.icon
+        }
         // this.form.relationApp = this.currentDepartment.name
         dgiotlog.log('form', this.form)
       },
@@ -2490,9 +2495,29 @@
           where: { level: { $in: [0, 1] } },
         }
         const { results } = await queryCategory(parsms)
-        this.queryprodut({})
+        console.log('改变', this.queryForm)
+        // ids.push  改变 queryForm.category
+        if (this.queryForm.category) {
+          let ids = this.ids.concat()
+          ids.push(this.queryForm.category)
+          this.queryprodut({ categorys: ids })
+        } else {
+          this.queryprodut({})
+        }
+
         this.categoryList = results
         dgiotlog.log('this', this.categoryList)
+      },
+      queryprodutTemplate() {
+        if (this.queryForm.category) {
+          let ids = this.ids.concat()
+
+          ids.push(this.queryForm.category)
+          // let ids = i
+          this.queryprodut({ categorys: ids })
+        } else {
+          this.queryprodut({})
+        }
       },
       handleCateSearch(objectId) {
         this.queryForm.category = objectId
@@ -2516,7 +2541,8 @@
             res.results.forEach((result) => {
               ids.push(result.objectId)
             })
-            dgiotlog.log('ids', ids)
+            console.log('ids', ids)
+            this.ids = ids
             this.queryprodut({ categorys: ids })
           })
         }
@@ -2665,7 +2691,7 @@
         this.resetProductForm()
         this.$refs['form'].resetFields()
         this.searchProduct()
-      this.paginationKey = moment(new Date()).valueOf() + ''
+        this.paginationKey = moment(new Date()).valueOf() + ''
       },
       resetProductForm() {
         this.form = {
@@ -2728,7 +2754,7 @@
                   // row._self.$refs[`popover-${index}`].doClose()
                   setTimeout(() => {
                     this.searchProduct()
-                  this.paginationKey = moment(new Date()).valueOf() + ''
+                    this.paginationKey = moment(new Date()).valueOf() + ''
                   }, 1000)
                 }
               })
@@ -2736,7 +2762,7 @@
           })
           setTimeout(() => {
             this.searchProduct()
-          this.paginationKey = moment(new Date()).valueOf() + ''
+            this.paginationKey = moment(new Date()).valueOf() + ''
           }, 1000)
           // this.$baseMessage(
           //   this.$translateTitle('Maintenance.successfully deleted'),

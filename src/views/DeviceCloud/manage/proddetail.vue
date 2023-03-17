@@ -1436,6 +1436,7 @@
                     </el-table>
                     <!--功能定义分页-->
                     <el-pagination
+                      :current-page="currentPage"
                       layout="total, sizes, prev, pager, next, jumper"
                       :page-size="wmxPageSize"
                       :page-sizes="[10, 20, 30, 50]"

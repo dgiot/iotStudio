@@ -183,6 +183,7 @@ export default {
       }
     }
     return {
+      currentPage: 1,
       ak: this.$dgiot.secret.baidu.map,
       viewForm: {
         showRow: true,
@@ -3685,6 +3686,7 @@ export default {
         )
         this.wmxstart = 1
       }
+      this.currentPage = 1
       this.upKey = moment.now()
     },
     handleChange(value, direction, movedKeys) {
@@ -3872,7 +3874,9 @@ export default {
       this.wmxPageSize = val
     },
     wmxCurrentChange(val) {
+      this.currentPage = val
       this.wmxstart = val
+      // console.log('val', val, this.currentPage)
     },
     eventsChange(val) {
       this.eventsStart = 1
