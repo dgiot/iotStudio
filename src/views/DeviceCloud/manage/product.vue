@@ -203,10 +203,7 @@
               </el-row>
             </template>
 
-            <a-card-meta
-              :title="o.name"
-              :description="o.devType"
-            >
+            <a-card-meta :title="o.name" :description="o.devType">
               <template #avatar>
                 <el-image
                   style="height: 40px"
@@ -2606,6 +2603,7 @@
                   decoder: {},
                   config: {
                     checkList: this.form.config.checkList,
+                    interval: -1,
                   },
                 },
                 params = _.merge(initparams, addparams)
