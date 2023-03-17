@@ -201,6 +201,10 @@
                 >
                   {{ $translateTitle('button.Reverse election') }}
                 </el-button>
+                <!-- 刷新接口权限树 -->
+                <el-button size="mini" type="primary" @click="refresh()">
+                  {{ $translateTitle('button.refresh') }}
+                </el-button>
                 <!--                <el-button-->
                 <!--                  size="mini"-->
                 <!--                  type="primary"-->
@@ -436,6 +440,7 @@
     saveRole,
     saveRoletemp,
   } from '@/api/Role/index'
+  import { Permission } from '@/api/Permission'
   import { mapGetters, mapMutations } from 'vuex'
   import addroles from '@/views/MultiTenant/roles/list/addroles'
   import dgiotViews from '@/views/CloudFunction/lowcode'
@@ -602,6 +607,15 @@
     },
 
     methods: {
+      ...mapMutations({     
+        setPermission: 'user/setPermission',
+      }),
+      // 刷新权限分配树
+      async refresh() {
+        const { results: permission = [] } = await Permission()
+        this.setPermission(permission)
+        this.getRoleschema()
+      },
       async BusRole({ row, type }) {
         const destId = this.editRow.objectId
         const srcId = row.objectId
@@ -694,7 +708,7 @@
           })
         }
       },
-      ...mapMutations({}),
+      // ...mapMutations({}),
       change(e) {
         dgiotlog.log('src/views/MultiTenant/roles/list/roles.vue', e)
         if (e) {
@@ -839,7 +853,6 @@
         }
       },
       async getDetailmenu(row, column, event, cell) {
-        console.log(row)
         this.editRow = row
         this.roleList.forEach((roles) => {
           roles.disabled = true
@@ -983,7 +996,7 @@
       },
       // 获取权限
       getRoleschema() {
-        dgiotlog.log(
+        console.log(
           'src/views/MultiTenant/roles/list/roles.vue',
           'this.Permission',
           this.Permission

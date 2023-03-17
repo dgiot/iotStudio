@@ -967,6 +967,13 @@ export default {
         count: 'objectId',
         where: {
           product: val,
+          parentId: {
+            $ne: {
+              __type: 'Pointer',
+              className: 'Device',
+              objectId: this.$route.query.deviceid,
+            },
+          },
         },
       }
       this.$queryDevice(params).then((response) => {
