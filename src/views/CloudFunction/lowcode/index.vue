@@ -268,7 +268,25 @@
         width="140"
       >
         <template #default="{ row, $index }">
-          <Select v-model="row.flag" @on-change="switchflag(row)">
+          <el-select
+            v-model="row.flag"
+            allow-create
+            default-first-option
+            filterable
+            placeholder="请选择"
+            size="mini"
+            style="width: 95%"
+            @change="switchflag(row)"
+          >
+            <el-option
+              v-for="item in flags"
+              :key="item.value"
+              :label="item.label"
+              size="mini"
+              :value="item.value"
+            />
+          </el-select>
+          <!-- <Select v-model="row.flag" allow-create @on-change="switchflag(row)">
             <Option
               v-for="item in flags"
               :key="item.value"
@@ -278,7 +296,7 @@
             >
               {{ item.label }}
             </Option>
-          </Select>
+          </Select> -->
         </template>
       </el-table-column>
       <el-table-column
@@ -299,6 +317,23 @@
               {{ item.label }}
             </Option>
           </Select>
+        </template>
+      </el-table-column>
+      <el-table-column
+        v-if="type != 'menu' && type != 'role'"
+        align="center"
+        :label="$translateTitle('task.data')"
+        show-overflow-tooltip
+        width="120"
+      >
+        <template #default="{ row }">
+          <el-button
+            v-show="type != 'menu' && type != 'role'"
+            type="info"
+            @click="handleToViewTemplate(row)"
+          >
+            查看
+          </el-button>
         </template>
       </el-table-column>
       <el-table-column
@@ -335,6 +370,13 @@
             @click="handleRelation(row, setRowState(selectRow, row))"
           >
             {{ setRowState(selectRow, row) }}
+          </el-button>
+          <el-button
+            v-show="type != 'menu' && type != 'role'"
+            type="default"
+            @click="handleToViewGit(row)"
+          >
+            日志
           </el-button>
           <el-button type="primary" @click="handleLowCode(row)">
             {{ $translateTitle('application.preview') }}
@@ -856,6 +898,30 @@
         // this.$refs['edit'].row = this.queryForm
         this.$refs['edit'].dialogFormVisible = true
         this.$refs['edit'].showEdit(this.queryForm)
+      },
+      //查看文本替换模板
+      handleToViewTemplate(row) {
+        localStorage.setItem('parse_viewid', row.objectId)
+        this.$router.push({
+          path: '/viewtemplate',
+          query: {
+            viewid: row.objectId,
+            viewtemplate: true,
+            // productid: row.key || 'none',
+          },
+        })
+      },
+      // 查看视图日志
+      handleToViewGit(row) {
+        localStorage.setItem('parse_viewid', row.objectId)
+        this.$router.push({
+          path: '/viewgit',
+          query: {
+            viewid: row.objectId,
+            viewgit: true,
+            // productid: row.key || 'none',
+          },
+        })
       },
       async handleEdit(row) {
         localStorage.setItem('parse_objectid', row.key)

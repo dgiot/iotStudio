@@ -183,6 +183,20 @@ export default {
       }
     }
     return {
+      cachList: [
+        {
+          label: '3',
+          val: 3,
+        },
+        {
+          label: '有缓存',
+          val: -1,
+        },
+        {
+          label: '无缓存',
+          val: 0,
+        },
+      ],
       currentPage: 1,
       ak: this.$dgiot.secret.baidu.map,
       viewForm: {
@@ -1039,7 +1053,7 @@ export default {
         config: productdetail.config,
       })
       this.$message({
-        message: '物模型缓存延时修改成功',
+        message: '物模型延时修改成功',
         type: 'success',
         showClose: true,
         duration: 1500,

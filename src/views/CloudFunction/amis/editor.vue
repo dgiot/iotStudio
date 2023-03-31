@@ -43,7 +43,7 @@
 </template>
 
 <script>
-  import { putView, getView } from '@/api/View'
+  import { putView, getView, getEditView } from '@/api/View'
   export default {
     name: 'Editor',
     data() {

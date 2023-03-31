@@ -59,6 +59,7 @@
             <el-select
               v-model="queryForm.product"
               clearable
+              filterable
               :placeholder="$translateTitle('equipment.Products')"
             >
               <el-option
@@ -75,6 +76,7 @@
               v-model="queryForm.type"
               clearable
               :placeholder="$translateTitle('Maintenance.Ticket type')"
+              style="width: 100%"
             >
               <el-option
                 v-for="(item, index) in tickettype"
@@ -155,7 +157,7 @@
       </el-table-column>
       <el-table-column
         align="center"
-        :label="$translateTitle('Maintenance.executor')"
+        :label="$translateTitle('Maintenance.maintenance_personnel')"
       >
         <template #default="{ row }">
           {{ row.info && row.info.executorname ? row.info.executorname : '' }}
@@ -259,13 +261,23 @@
         <dgiot-empty />
       </template>
     </el-table>
-    <dgiot-Pagination
+    <el-pagination
+      background
+      :current-page="queryForm.pageNo"
+      layout="total, sizes, prev, pager, next, jumper"
+      :page-size="queryForm.limit"
+      :page-sizes="[5, 10, 20, 50, 100]"
+      :total="total"
+      @current-change="handleCurrentChange"
+      @size-change="handleSizeChange"
+    />
+    <!-- <dgiot-Pagination
       v-show="total > 0"
       :limit.sync="queryForm.pageSize"
       :page.sync="queryForm.pageNo"
       :total="total"
       @pagination="fetchData"
-    />
+    /> -->
   </div>
 </template>
 
@@ -413,7 +425,7 @@
           pageNo: 1,
           pageSize: 20,
           searchDate: [],
-          limt: 10,
+          limit: 10,
           skip: 0,
           order: '-createdAt',
           keys: 'count(*)',
@@ -447,6 +459,17 @@
       this.fetchData()
     },
     methods: {
+      handleCurrentChange(e) {
+        console.log(e)
+        this.queryForm.pageNo = e
+        this.fetchData()
+      },
+      handleSizeChange(e) {
+        console.log(e)
+        this.queryForm.limit = e
+        this.queryForm.pageNo = 1
+        this.fetchData()
+      },
       getistimeout(row) {
         let oldtime = new Date(row.info.completiondata).getTime()
         if (new Date() > oldtime && row.status != 2) {
@@ -538,12 +561,12 @@
         this.listLoading = false
         const loading = this.$baseColorfullLoading()
         let params = {
-          limit: args.limit,
-          order: args.order,
-          skip: args.skip,
+          limit: this.queryForm.limit,
+          order: this.queryForm.order,
+          skip: (this.queryForm.pageNo - 1) * this.queryForm.limit,
           count: 'objectId',
           where: {
-            user: this.objectid,
+            // user: this.objectid,
             status: {
               $lt: 3,
             },

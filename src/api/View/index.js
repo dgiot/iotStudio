@@ -20,6 +20,20 @@ export async function getTrack(id) {
     method: 'get',
   })
 }
+export async function getAmisView(ObjectId, params) {
+  return request({
+    url: `/amis/View/${ObjectId}`,
+    method: 'get',
+    params,
+  })
+}
+export async function getEditView(ObjectId, params) {
+  return request({
+    url: `/classes/View/${ObjectId}`,
+    method: 'get',
+    params,
+  })
+}
 
 export function getTopo(params) {
   return request({
