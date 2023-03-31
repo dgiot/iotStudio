@@ -303,13 +303,31 @@
                 <el-descriptions-item
                   :label="$translateTitle('product.productinterval')"
                 >
-                  <el-input
+                  <el-select
+                    v-model="productdetail.config.interval"
+                    allow-create
+                    default-first-option
+                    filterable
+                    placeholder="请选择"
+                    size="mini"
+                    style="width: 95%"
+                    @change="blurinterval(productdetail)"
+                  >
+                    <el-option
+                      v-for="item in cachList"
+                      :key="item.val"
+                      :label="item.label"
+                      size="mini"
+                      :value="item.val"
+                    />
+                  </el-select>
+                  <!-- <el-input
                     v-model="productdetail.config.interval"
                     size="mini"
                     style="margin: 0 auto"
                     type="number"
                     @blur="blurinterval(productdetail)"
-                  />
+                  /> -->
                 </el-descriptions-item>
                 <el-descriptions-item
                   :label="$translateTitle('equipment.address')"

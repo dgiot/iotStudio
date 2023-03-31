@@ -419,13 +419,31 @@
         <dgiot-empty />
       </template>
     </el-table>
-    <dgiot-Pagination
+    <el-pagination
+      background
+      :current-page="queryForm.pageNo"
+      layout="total, sizes, prev, pager, next, jumper"
+      :page-size="queryForm.limit"
+      :total="total"
+      @current-change="handleCurrentChange"
+      @size-change="handleSizeChange"
+    />
+    <!-- <el-pagination
+      @size-change="handleSizeChange"
+      @current-change="handleCurrentChange"
+      :current-page="currentPage4"
+      :page-sizes="[5, 10, 20, 50]"
+      :page-size="100"
+      layout="total, sizes, prev, pager, next, jumper"
+      :total="total"
+    ></el-pagination> -->
+    <!-- <dgiot-Pagination
       v-show="total > 0"
       :limit.sync="queryForm.pageSize"
       :page.sync="queryForm.pageNo"
       :total="total"
       @pagination="fetchData"
-    />
+    /> -->
   </div>
 </template>
 
@@ -440,7 +458,6 @@
   import { roletree, getRoleuser, queryRoledepartment } from '@/api/Role'
   import { userTree } from '@/api/User'
   import { Roletree } from '@/api/Menu'
-
   export default {
     name: 'CreateTicket',
     components: {
@@ -448,6 +465,7 @@
     },
     data() {
       return {
+        ACL: {},
         tickettype: [
           {
             label: '巡检',
@@ -586,7 +604,7 @@
           pageNo: 1,
           pageSize: 20,
           searchDate: [],
-          limt: 10,
+          limit: 10,
           skip: 0,
           order: '-createdAt',
           keys: 'count(*)',
@@ -629,6 +647,17 @@
       this.fetchData()
     },
     methods: {
+      handleCurrentChange(e) {
+        console.log(e)
+        this.queryForm.pageNo = e
+        this.fetchData()
+      },
+      handleSizeChange(e) {
+        console.log(e)
+        this.queryForm.limit = e
+        this.queryForm.pageNo = 1
+        this.fetchData()
+      },
       handleChangeExecutor(value) {
         this.form.info.executor = value[value.length - 1]
         this.form.info.executorname = value[value.length - 1].label
@@ -720,19 +749,22 @@
         })
       },
       async createdTicket(from) {
-        const setAcl = {}
+        let setAcl = this.ACL
         // setAcl[from.info.principal] = {
         //   read: true,
         //   write: true,
         // }
-        setAcl[from.info.executorid] = {
-          read: true,
-          write: true,
-        }
-        setAcl[this.objectid] = {
-          read: true,
-          write: true,
-        }
+        // if (from.info.executorid) {
+        //   setAcl[from.info.executorid] = {
+        //     read: true,
+        //     write: true,
+        //   }
+        // }
+
+        // setAcl[this.objectid] = {
+        //   read: true,
+        //   write: true,
+        // }
         const params = {
           number: moment(new Date()).unix() + '',
           type: from.type,
@@ -897,12 +929,12 @@
         this.listLoading = false
         const loading = this.$baseColorfullLoading()
         let params = {
-          limit: args.limit,
-          order: args.order,
-          skip: args.skip,
+          limit: this.queryForm.limit,
+          order: this.queryForm.order,
+          skip: (this.queryForm.pageNo - 1) * this.queryForm.limit,
           count: 'objectId',
           where: {
-            'info.created': this.objectid,
+            // 'info.created': this.objectid,
           },
         }
         if (String(this.queryForm.status + '').length > 0) {
@@ -965,9 +997,11 @@
         this.Device = results
       },
       deviceChange(e) {
+        // console.log(e)
         this.Device.map((p) => {
           if (p.objectId == e) {
             console.log('device', p)
+            this.ACL = p.ACL
             this.form.info.devicename = p.name
             this.form.info.executorname = p.maintenance_personnel.nick
             this.form.info.executorid = p.maintenance_personnel.userid
