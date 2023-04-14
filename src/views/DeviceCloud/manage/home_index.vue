@@ -487,6 +487,7 @@
       element-loading-spinner="el-icon-loading"
       :element-loading-text="$translateTitle('developer.Waitingtoreturn')"
       :gutter="20"
+      max-height="600"
     >
       <el-table-column
         align="center"
@@ -835,6 +836,7 @@
         topoFlag: false,
         routerInfo: {},
         paginationKey: moment(new Date()).valueOf() + '',
+        isFresh: true,
         upkey: moment(new Date()).valueOf() + '',
         dialog_device: false,
         mapLabel: {
@@ -1209,9 +1211,11 @@
                 read: true,
                 write: true,
               }
-              setAcl[this.form.detail.executorid] = {
-                read: true,
-                write: true,
+              if (this.form.detail.executorid) {
+                setAcl[this.form.detail.executorid] = {
+                  read: true,
+                  write: true,
+                }
               }
               const params = {
                 name: this.form.name,
@@ -1552,12 +1556,15 @@
           const parseString = JSON.parse(Msg.payloadString)
           if (parseString) {
             const topicsKeys = Object.keys(parseString)
-            console.groupCollapsed(
-              `%c收到devicestate消息 ${topicsKeys}`,
-              'color:#009a61; font-size: 28px; font-weight: 300'
-            )
+            console.log(topicsKeys)
+            // console.groupCollapsed(
+            //   `%c收到devicestate消息 ${topicsKeys}`,
+            //   'color:#009a61; font-size: 28px; font-weight: 300'
+            // )
             args.key = topicsKeys[0]
             args.parseString = parseString
+            // if (_this.isFresh) {
+            //   _this.isFresh = false
             _this.list.forEach((t) => {
               topicsKeys.forEach((j) => {
                 if (t.objectId == j) {
@@ -1567,14 +1574,42 @@
                   args.name = t.name
                   args.Info = parseString[j]
                   args.mergeInfo = mergeInfo
-                  _this.upkey = moment(new Date()).valueOf() + ''
+                  _this.refreshTable()
+                  // const beforeScrollTop =
+                  //   this.$refs.tableSort.$el.querySelector(
+                  //     'div.el-table__body-wrapper'
+                  //   ).scrollTop
+                  // _this.upkey = moment(new Date()).valueOf() + ''
+                  // setTimeout(() => {
+                  //   this.$refs.tableSort.$el.querySelector(
+                  //     'div.el-table__body-wrapper'
+                  //   ).scrollTop = beforeScrollTop
+                  // }, 0)
                 }
               })
             })
+            // }
           }
           console.info(args)
           console.groupEnd()
         })
+      },
+
+      /**
+       * 刷新table,防止滚动条跑到最上面
+       */
+      refreshTable() {
+        const beforeScrollTop = this.$refs.tableSort.$el.querySelector(
+          'div.el-table__body-wrapper'
+        ).scrollTop
+        // console.log('查看滚动距离', beforeScrollTop)
+        // this.upkey = Math.random()
+        setTimeout(() => {
+          this.$refs.tableSort.$el.querySelector(
+            'div.el-table__body-wrapper'
+          ).scrollTop = beforeScrollTop
+          // this.isFresh = true
+        }, 0)
       },
     },
   }

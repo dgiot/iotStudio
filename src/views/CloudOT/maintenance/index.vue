@@ -141,7 +141,7 @@
       </el-table-column>
       <el-table-column
         align="center"
-        :label="$translateTitle('Maintenance.executor')"
+        :label="$translateTitle('Maintenance.maintenance_personnel')"
       >
         <template #default="{ row }">
           {{ row.info && row.info.executorname ? row.info.executorname : '' }}
@@ -218,13 +218,22 @@
         <dgiot-empty />
       </template>
     </el-table>
-    <dgiot-Pagination
+    <el-pagination
+      background
+      :current-page="queryForm.pageNo"
+      layout="total, sizes, prev, pager, next, jumper"
+      :page-size="queryForm.limit"
+      :total="total"
+      @current-change="handleCurrentChange"
+      @size-change="handleSizeChange"
+    />
+    <!-- <dgiot-Pagination
       v-show="total > 0"
       :limit.sync="queryForm.pageSize"
       :page.sync="queryForm.pageNo"
       :total="total"
       @pagination="fetchData"
-    />
+    /> -->
   </div>
 </template>
 
@@ -376,7 +385,7 @@
           pageNo: 1,
           pageSize: 20,
           searchDate: [],
-          limt: 10,
+          limit: 10,
           skip: 0,
           order: '-createdAt',
           keys: 'count(*)',
@@ -430,6 +439,17 @@
       this.fetchData()
     },
     methods: {
+      handleCurrentChange(e) {
+        console.log(e)
+        this.queryForm.pageNo = e
+        this.fetchData()
+      },
+      handleSizeChange(e) {
+        console.log(e)
+        this.queryForm.limit = e
+        this.queryForm.pageNo = 1
+        this.fetchData()
+      },
       getistimeout(completiondata) {
         let oldtime = new Date(completiondata).getTime()
         if (new Date() > oldtime) {
@@ -695,9 +715,9 @@
         this.listLoading = false
         const loading = this.$baseColorfullLoading()
         let params = {
-          limit: args.limit,
-          order: args.order,
-          skip: args.skip,
+          limit: this.queryForm.limit,
+          order: this.queryForm.order,
+          skip: (this.queryForm.pageNo - 1) * this.queryForm.limit,
           count: 'objectId',
           where: {},
         }

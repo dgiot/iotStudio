@@ -1,5 +1,33 @@
 import request from '@/utils/request/request'
 
+export function resourceLicense() {
+  return request({
+    url: 'license',
+    method: 'get',
+  })
+}
+export function importLicense(file) {
+  let formData = new FormData()
+  // formData.append('className', className)
+  formData.append('file', file)
+  // console.log('formdata', formData, className, file)
+  return request({
+    url: 'license',
+    method: 'post',
+    headers: {
+      'Content-Type': 'multipart/form-data',
+      accept: 'application/json',
+    },
+    data: formData,
+  })
+  // return request({
+  //   url:'license',
+  //   method:'post',
+  //   header:{
+  //     'Content-Type': 'multipart/form-data'
+  //   }
+  // })
+}
 export function resourceTypes() {
   return request({
     url: 'resource_types',

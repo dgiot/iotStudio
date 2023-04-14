@@ -183,6 +183,7 @@ export default {
       }
     }
     return {
+      currentChannelPage: 1,
       cachList: [
         {
           label: '3',
@@ -1910,8 +1911,8 @@ export default {
     // 物接入选择通道
     showAllChannel(label = '') {
       dgiotlog.log(this.allChannelstart, this.allChannellength)
-      this.allChanneltotal = 0
-      this.allchannelData = []
+      // this.allChanneltotal = 0
+      // this.allchannelData = []
       this.channeltype = 1
       this.innerVisible = true
       const type = { $in: ['1', '3'] }
@@ -1966,8 +1967,8 @@ export default {
 
     // 物存储选择通道
     resourceShowAllChannel() {
-      this.allChanneltotal = 0
-      this.allchannelData = []
+      // this.allChanneltotal = 0
+      // this.allchannelData = []
       this.channeltype = 0
       this.innerVisible = true
       const type = { $in: ['2'] }
@@ -2095,11 +2096,25 @@ export default {
 
     allChannelSizeChange(val) {
       this.allChannellength = val
-      this.showAllChannel('Channel')
+      this.currentChannelPage = 1
+      this.allChannelstart = 0
+      console.log(this.channeltype)
+      if ((this.channeltype == 1)) {
+        this.showAllChannel('Channel')
+      } else {
+        this.resourceShowAllChannel()
+      }
+      // this.showAllChannel('Channel')
     },
     allChannelCurrentChange(val) {
+      this.currentChannelPage = val
       this.allChannelstart = (val - 1) * this.allChannellength
-      this.showAllChannel('Channel')
+      console.log(this.allChannelstart)
+      if ((this.channeltype == 1)) {
+        this.showAllChannel('Channel')
+      } else {
+        this.resourceShowAllChannel()
+      }
     },
 
     // 自定义模型弹窗
