@@ -28,7 +28,7 @@
 </template>
 
 <script>
-  import { getView } from '@/api/View'
+  import { getView, getAmisView } from '@/api/View'
   import TableEdit from '@/views/DeviceCloud/empty/tableEdit'
   export default {
     name: 'Index',
@@ -87,8 +87,8 @@
           console.log('变化了', val)
           let viewid = val.path.split('/')[val.path.split('/').length - 1]
           this.viewId = viewid
-          const { data = {} } = await getView(viewid)
-          this.viewData = data
+          const { data = {} } = await getAmisView(viewid, { mode: 1 })
+          this.viewData = data.data
           console.log('view表单', data)
           if (JSON.stringify(this.viewData) != '{}') {
             this.commandInfo.dialog = true
@@ -124,8 +124,8 @@
       localStorage.setItem('parse_deptid', destId)
       let viewid = location.hash.split('/')[location.hash.split('/').length - 1]
       this.viewId = viewid
-      const { data = {} } = await getView(viewid)
-      this.viewData = data
+      const { data = {} } = await getAmisView(viewid, { mode: 1 })
+      this.viewData = data.data
       console.log('view表单', data)
       if (JSON.stringify(this.viewData) != '{}') {
         this.commandInfo.dialog = true

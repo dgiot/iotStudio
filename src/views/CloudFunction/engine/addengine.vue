@@ -355,22 +355,50 @@
                         </el-tooltip>
                       </span>
                     </span>
-                    <el-select v-model="params.resources" style="width: 100%">
+                    <el-select
+                      v-model="params.resources"
+                      style="width: 100%"
+                      @change="changeResources"
+                    >
                       <el-option
                         v-for="item in resources"
                         :key="item.id"
                         :label="item.description"
                         :value="item.id"
                       >
-                        <span style="float: left">
+                        <!-- <span style="float: left">
                           <i v-if="item.description">
                             {{ item.description }}
                           </i>
                         </span>
                         <span style="float: right; color: #8492a6">
                           {{ item.id }}
-                        </span>
+                        </span> -->
                       </el-option>
+                    </el-select>
+                  </el-form-item>
+                  <el-form-item label="消息重定向">
+                    <span slot="label">
+                      <span class="span-box">
+                        <i class="icon-dd-schetit" />
+                        <span>消息重定向</span>
+                        <el-tooltip
+                          class="item"
+                          content="消息重定向"
+                          effect="dark"
+                          placement="top-start"
+                        >
+                          <i class="el-icon-question"></i>
+                        </el-tooltip>
+                      </span>
+                    </span>
+                    <el-select v-model="params.republish" style="width: 100%">
+                      <el-option
+                        v-for="item in republish"
+                        :key="item.value"
+                        :label="item.label"
+                        :value="item.value"
+                      />
                     </el-select>
                   </el-form-item>
                   <el-form-item :label="$translateTitle('rule.target_qos')">
@@ -440,6 +468,7 @@
                       v-if="aisleRow.name"
                       @click="editFom('formInline')"
                     >
+                      <!-- 编辑 -->
                       {{ $translateTitle('button.modify') }}
                     </el-button>
                     <el-button
@@ -501,6 +530,20 @@
     },
     data() {
       return {
+        republish: [
+          {
+            label: '消费组重定向',
+            value: 'channel',
+          },
+          {
+            label: 'mqtt重定向',
+            value: 'mqtt',
+          },
+          {
+            label: 'dclient重定向',
+            value: 'dclient',
+          },
+        ],
         ruleContent: {
           type: 'IFTTT',
           trigger: {
@@ -529,6 +572,7 @@
           $resource: '',
           resources: '',
           channel: '',
+          republish: 'channel',
         },
         dialogVisible: false,
         resourceform: {
@@ -767,16 +811,22 @@
         })
       },
       editFom(formName) {
-        console.log(this.params)
+        this.aisleRow.params.resources = this.params.resources
+        // console.log('响应动作列表', this.actionData)
         this.aisleRow.name = this.params.name
         this.aisleRow.params.payload_tmpl = this.params.payload_tmpl
         this.aisleRow.params.target_qos = this.params.target_qos
         this.aisleRow.params.target_topic = this.params.target_topic
-        this.aisleRow.params.$resource = this.params.$resource
-        this.aisleRow.params.resources = this.params.resources
+        this.aisleRow.params.$resource = this.params.resources
+        // this.aisleRow.params.resources = this.params.resources
         this.aisleRow.params.channel = this.params.channel
+        this.aisleRow.params.republish = this.params.republish
         this.dialogFormVisible = !this.dialogFormVisible
         this.aisleRow = {}
+      },
+      changeResources(e) {
+        console.log(e, this.params, this.resources)
+        // this.$set(this.params, 'resources', e)
       },
       resetForm(formName) {
         this.$refs[formName].resetFields()
@@ -788,6 +838,7 @@
           name: 'dgiot',
           params: {
             $resource: row.resources,
+            resources: row.resources,
             target_topic: row.target_topic,
             target_qos: row.target_qos,
             payload_tmpl: row.payload_tmpl,
@@ -980,9 +1031,11 @@
             target_qosSelect: [-1, 0, 1, 2],
             target_topic: this.aisleRow.params.target_topic,
             $resource: this.aisleRow.params.$resource,
-            resources: this.aisleRow.params.$resource,
+            resources: this.aisleRow.params.resources,
             channel: this.aisleRow.params.channel,
+            republish: this.aisleRow.params.republish,
           }
+          console.log('修改的params', this.params)
         }
         this.dialogFormVisible = true
       },
@@ -1024,6 +1077,7 @@
       },
       // 编辑通道关联
       editAisle(row) {
+        console.log('查看行', row)
         this.aisleRow = row
         this.addresouce()
       },

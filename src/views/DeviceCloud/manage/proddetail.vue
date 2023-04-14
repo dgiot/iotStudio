@@ -3235,6 +3235,7 @@
         </el-table>
         <div class="elpagination" style="margin-top: 20px">
           <el-pagination
+            :current-page="currentChannelPage"
             layout="total, sizes, prev, pager, next, jumper"
             :page-size="allChannellength"
             :page-sizes="[10, 20, 30, 50]"
