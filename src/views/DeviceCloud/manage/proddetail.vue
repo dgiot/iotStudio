@@ -1840,7 +1840,6 @@
                     >
                       {{ $translateTitle('product.viewobjectmodel') }}
                     </el-button>
-
                     <!-- 新增自定义属性 -->
                     <el-button
                       size="small"

@@ -1473,7 +1473,9 @@ export default {
       }
     },
     async handleChildClick(e) {
-      await this.queryProductInfo(this.$route.query.id)
+      const res = await getProduct(this.$route.query.id)
+      this.productObj = res
+      // await this.queryProductInfo(this.$route.query.id)
       const {
         properties = [],
         events = [],
@@ -2099,7 +2101,7 @@ export default {
       this.currentChannelPage = 1
       this.allChannelstart = 0
       console.log(this.channeltype)
-      if ((this.channeltype == 1)) {
+      if (this.channeltype == 1) {
         this.showAllChannel('Channel')
       } else {
         this.resourceShowAllChannel()
@@ -2110,7 +2112,7 @@ export default {
       this.currentChannelPage = val
       this.allChannelstart = (val - 1) * this.allChannellength
       console.log(this.allChannelstart)
-      if ((this.channeltype == 1)) {
+      if (this.channeltype == 1) {
         this.showAllChannel('Channel')
       } else {
         this.resourceShowAllChannel()
@@ -2439,7 +2441,7 @@ export default {
         case 'tags':
           this.wmxdialogVisible = true
           // this.modules.visible = true
-          // this.modules.type = type
+          this.modules.type = 'tags'
           break
       }
       this.$nextTick(() => {
@@ -3885,7 +3887,32 @@ export default {
               'success',
               'dgiot-hey-message-success'
             )
-            await this.getProDetail()
+            if (this.tabsChild != 'properties') {
+              const res = await getProduct(this.$route.query.id)
+              this.productObj = res
+              const {
+                properties = [],
+                events = [],
+                services = [],
+                tags = [],
+              } = this.productObj.thing
+              switch (this.tabsChild) {
+                case 'events':
+                  this.modules.data.events = events || []
+                  break
+                case 'services':
+                  this.modules.data.services = services || []
+                  break
+                case 'tags':
+                  this.modules.data.tags = tags || []
+                  break
+                default:
+                  break
+              }
+            }else{
+              await this.getProDetail()
+            }
+            // await this.getProDetail()
             // await this.queryProductInfo(this.$route.query.id)
           } else
             this.$baseMessage(

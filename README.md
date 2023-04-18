@@ -73,6 +73,12 @@ yarn install
 yarn dev
 ```
 
+- 打包
+
+```bash
+yarn build
+```
+
 - 运行成功
   ![b65e47b3-afcf-9bf4-4190-ab6c557ef217.png](https://dgiot-1253666439.cos.ap-shanghai-fsi.myqcloud.com/shuwa_tech/zh/frontend/web/b65e47b3-afcf-9bf4-4190-ab6c557ef217.png)
 
