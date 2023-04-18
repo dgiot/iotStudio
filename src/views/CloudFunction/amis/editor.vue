@@ -43,7 +43,7 @@
 </template>
 
 <script>
-  import { putView, getView, getEditView } from '@/api/View'
+  import { putView, getView, getAmisView } from '@/api/View'
   export default {
     name: 'Editor',
     data() {
@@ -77,11 +77,8 @@
         const amisEnv = {}
         try {
           const loading = this.$baseLoading(1)
-          const {
-            data,
-            class: _class,
-            key: parse_objectid,
-          } = await getView(viewId)
+          const res = await getAmisView(viewId, { mode: 1 })
+          const { data, class: _class, key: parse_objectid } = res.data
           if (_class == 'Device') {
             // const { headers = { store: 'localStorage' } } = data.initApi
             // 设置amis中的变量参数。
