@@ -12,17 +12,18 @@
 <template>
   <div ref="custom-table" v-loading="loading" class="index-container">
     <el-button class="editAmis" @click="handleToEdit">编辑</el-button>
-    <!-- 低代码表单渲染 
-    append-to-body
-      :before-close="handleCloseAmis"
-      center
-      class="dialog_wrap"
-      custom-class="dialog_index"
-      top="5vh"
-      :visible.sync="commandInfo.dialog"
-    -->
     <div v-if="commandInfo.dialog" class="dialog_wrap">
-      <dgiot-amis modal-append-to-body :schema="viewData" :show-help="false" />
+      <topo
+        v-if="showType === 'Konva'"
+        :code="viewData.konva"
+        :object-id="viewId"
+      />
+      <dgiot-amis
+        v-else
+        modal-append-to-body
+        :schema="viewData"
+        :show-help="false"
+      />
     </div>
   </div>
 </template>
@@ -30,10 +31,12 @@
 <script>
   import { getView, getAmisView } from '@/api/View'
   import TableEdit from '@/views/DeviceCloud/empty/tableEdit'
+  import topo from '@/views/CloudFunction/lowcode/components/dgiotKonva'
   export default {
     name: 'Index',
     components: {
       TableEdit,
+      topo,
     },
     props: {},
     data() {
@@ -64,6 +67,9 @@
         loading: true,
         viewData: {},
         viewId: '',
+        showType: '',
+        type: '',
+        key: '',
       }
     },
     computed: {
@@ -91,6 +97,9 @@
           this.viewData = data.data
           console.log('view表单', data)
           if (JSON.stringify(this.viewData) != '{}') {
+            this.showType = data.flag
+            this.type = data.type
+            this.key = data.key
             this.commandInfo.dialog = true
             this.loading = false
           } else {
@@ -128,6 +137,9 @@
       this.viewData = data.data
       console.log('view表单', data)
       if (JSON.stringify(this.viewData) != '{}') {
+        this.showType = data.flag
+        this.type = data.type
+        this.key = data.key
         this.commandInfo.dialog = true
         this.loading = false
       } else {
@@ -141,14 +153,36 @@
     destroyed() {},
     methods: {
       handleToEdit() {
-        console.log('this.viewData', this.viewData)
-        this.$router.push({
-          path: `/design/editor/amis/`,
-          query: {
-            viewId: this.viewId,
-            type: this.viewData.type,
-          },
-        })
+        console.log('this.viewData', this.showType, this.type)
+        if (this.showType == 'Konva') {
+          if (this.type == 'Dashboard') {
+            this.$router.push({
+              path: '/Topo',
+              query: {
+                viewid: this.viewId,
+                dashboard: true,
+                // productid: row.key || 'none',
+              },
+            })
+          } else if (this.type.toLowerCase() == 'topo') {
+            this.$router.push({
+              path: '/Topo',
+              query: {
+                // viewid: row.objectId,
+                // dashboard: true,
+                productid: this.key,
+              },
+            })
+          }
+        } else {
+          this.$router.push({
+            path: `/design/editor/amis/`,
+            query: {
+              viewId: this.viewId,
+              type: this.viewData.type,
+            },
+          })
+        }
       },
     },
   }

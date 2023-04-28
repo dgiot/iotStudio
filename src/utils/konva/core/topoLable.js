@@ -64,8 +64,15 @@ const topoLable = {
       // canvas.layer.batchDraw()
       // canvas.stage.batchDraw()
       if (args.handler === 'remove') {
-        if (args.contextmenu.args) args.contextmenu.args.destroy()
-        if (args.contextmenu) args.contextmenu.destroy()
+        console.log('查看删除', args.contextmenu, args.contextmenu.args)
+        // return
+        if (args.contextmenu.args) {
+          console.log('args.contextmenu.args')
+          args.contextmenu.args.destroy()
+        } else if (args.contextmenu) {
+          console.log('args.contextmenu')
+          args.contextmenu.destroy()
+        }
       }
     } else {
       console.log(args)

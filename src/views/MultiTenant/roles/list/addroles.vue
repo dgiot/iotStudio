@@ -10,7 +10,19 @@
         :rules="roleFormRules"
       >
         <el-form-item v-if="!isStructures" label="父级部门" prop="ParentId">
-          <el-input v-model="currentDepartment.depname" readonly />
+          <!-- <el-input v-model="currentDepartment.depname" readonly /> -->
+          <el-cascader
+            v-model="parentDepname"
+            filterable
+            :options="roleTree"
+            :props="{
+              expandTrigger: 'hover',
+              checkStrictly: true,
+              value: 'objectId',
+            }"
+            style="width: 100%"
+            @change="handleChange"
+          />
         </el-form-item>
 
         <!--        <el-form-item label="角色名" prop="name">-->
@@ -85,6 +97,7 @@
     data() {
       return {
         isloading: '',
+        parentDepname: [],
         treeModu: [],
         treeprops: {
           value: 'name',
@@ -171,19 +184,35 @@
       ...mapGetters({
         currentDepartment: 'user/currentDepartment',
       }),
+      roleTree: {
+        get: function () {
+          return this.$store.state.user.roleTree
+        },
+        set: function (v) {
+          return this.setRoleTree(v)
+        },
+      },
     },
     mounted() {
       this.searchAllOption()
-      if (this.deptData?.objectId) {
-        dgiotlog.log(this.deptData)
-        this.isloading = this.$baseLoading(3)
-        this.getData(this.deptData)
-        setTimeout(() => {
-          this.isloading.close()
-        }, 1500)
-      }
+      // if (this.deptData?.objectId) {
+      //   dgiotlog.log(this.deptData)
+      //   this.isloading = this.$baseLoading(3)
+      //   this.getData(this.deptData)
+      //   setTimeout(() => {
+      //     this.isloading.close()
+      //   }, 1500)
+      // }
     },
     methods: {
+      ...mapMutations({
+        setRoleTree: 'user/setRoleTree',
+      }),
+      handleChange(value) {
+        this.parentDepname = value
+        console.log(value, this.parentDepname)
+        this.roleFormObj.ParentId = value[value.length - 1]
+      },
       handleChangeDeptId(e) {
         this.roleList.forEach((r) => {
           if (r.objectId == e) {
@@ -295,6 +324,15 @@
         })
       },
       addroles(formName) {
+        if (this.parentDepname.length <= 0) {
+          this.$message({
+            message: '请选择父级部门',
+            type: 'error',
+            showClose: true,
+            duration: 2000,
+          })
+          return
+        }
         this.$refs[formName].validate(async (valid) => {
           dgiotlog.log(this.$refs[formName], this.roleFormObj)
           if (valid) {
@@ -309,6 +347,8 @@
               parent: this.roleFormObj.ParentId,
               tempname: this.roleFormObj.dictvalue,
             }
+            console.log('提交参数', params)
+            // return
             try {
               const res = await addRoles(params)
               if (res?.createdAt?.length) {

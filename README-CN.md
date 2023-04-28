@@ -95,11 +95,6 @@ yarn build
 ![](https://prod.dgiotcloud.cn/dgiot_file/website/konva.png)
 - 设备详情实时数据查看
   ![](https://prod.dgiotcloud.cn/dgiot_file/website/realcard.png)
-- [项目预览](https://tech.iotn2n.com/zh/frontend/web/#%E9%A1%B9%E7%9B%AE%E9%A2%84%E8%A7%88)
-- 打包
-
-```bash
-yarn build
-```
+- [项目预览](https://prod.dgiotcloud.cn)
 
 

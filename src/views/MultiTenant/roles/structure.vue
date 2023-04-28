@@ -292,7 +292,7 @@
         center
         :title="
           $translateTitle('Maintenance.The current user department') +
-          leavingUser.role.depname
+          leavingUser.roles[0].depname
         "
         :visible.sync="leaving"
         width="30%"
@@ -964,7 +964,7 @@
                 },
                 delfilter: {
                   where: {
-                    depname: this.leavingUser.role.depname,
+                    depname: this.leavingUser.roles[0].depname,
                   },
                 },
                 userid: this.leavingUser.objectId,
