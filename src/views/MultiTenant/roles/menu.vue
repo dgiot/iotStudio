@@ -514,6 +514,7 @@
         roleTree: 'user/roleTree',
       }),
       treeData() {
+        console.log('this.data', this.data)
         const cloneData = JSON.parse(JSON.stringify(this.data))
         var Tree = [] // 对源数据深度克隆
         Tree = cloneData.filter((father) => {
@@ -555,9 +556,9 @@
         excludeKeys: 'data',
         skip: 0,
         where: {
-          flag: { $regex: 'Amis' },
+          // flag: { $regex: 'Amis' },
           type: {
-            $regex: 'Amis',
+            $in: ['Amis', 'Dashboard'],
           },
         },
       }
@@ -858,7 +859,10 @@
         }
         this.data = []
         this.listLoading = true
-        const { results } = await queryMenu({})
+        let { results } = await queryMenu({})
+        results = results.sort((a, b) => {
+          return a.orderBy - b.orderBy
+        })
         results.map((item) => {
           var obj = {}
           obj.ACL = item.ACL

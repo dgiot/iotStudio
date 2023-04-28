@@ -274,6 +274,10 @@
               >
                 {{ $translateTitle('button.Reverse election') }}
               </el-button>
+              <!-- 刷新菜单权限树 -->
+              <el-button size="mini" type="primary" @click="refreshMenu()">
+                {{ $translateTitle('button.refresh') }}
+              </el-button>
               <!--              <el-button-->
               <!--                size="mini"-->
               <!--                type="primary"-->
@@ -441,6 +445,7 @@
     saveRoletemp,
   } from '@/api/Role/index'
   import { Permission } from '@/api/Permission'
+  import { queryMenu } from '@/api/Menu/index'
   import { mapGetters, mapMutations } from 'vuex'
   import addroles from '@/views/MultiTenant/roles/list/addroles'
   import dgiotViews from '@/views/CloudFunction/lowcode'
@@ -607,14 +612,26 @@
     },
 
     methods: {
-      ...mapMutations({     
+      ...mapMutations({
         setPermission: 'user/setPermission',
+        setMenu: 'user/setMenu',
       }),
       // 刷新权限分配树
       async refresh() {
         const { results: permission = [] } = await Permission()
         this.setPermission(permission)
         this.getRoleschema()
+      },
+      async refreshMenu() {
+        const userMenu = await queryMenu({}) //Promise.all([queryMenu({})])
+        // console.log(userMenu)
+        const promiseRes = {
+          Menu: userMenu?.results ?? [],
+        }
+        // console.log('promiseRes', promiseRes)
+        this.setMenu(promiseRes.Menu)
+        this.getMenu()
+        // commit('setMenu', promiseRes.Menu)
       },
       async BusRole({ row, type }) {
         const destId = this.editRow.objectId

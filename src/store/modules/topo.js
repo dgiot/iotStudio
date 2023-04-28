@@ -212,7 +212,7 @@ const mutations = {
     if (canvas.contextmenu.attrs.id == 'bg') return
     if (handler == 'remove') {
       let contextmenu = ''
-      console.log('当前节点', canvas.contextmenu)
+
       if (
         canvas.contextmenu.attrs.name == 'evidence' ||
         canvas.contextmenu.attrs.name == 'konvaimage' ||
@@ -222,10 +222,14 @@ const mutations = {
         canvas.contextmenu.attrs.name == 'amiscomponent' ||
         canvas.contextmenu.attrs.name == 'printer'
       ) {
+        console.log('无children')
         contextmenu = canvas.contextmenu
-      } else {
+      } else if (!canvas.contextmenu.children) {
         contextmenu = canvas.contextmenu.getParent()
+      } else {
+        contextmenu = canvas.contextmenu
       }
+      console.log('当前节点', contextmenu)
       addNodeEvent({
         type: 'contextMenu',
         stage: canvas.stage,
@@ -234,28 +238,42 @@ const mutations = {
         contextmenu, //canvas.contextmenu,
         handler,
       })
+      return
     } else {
       if (handler == 'moveToTop') {
         // canvas.contextmenu  所选node 节点
+        console.log('查看', canvas.contextmenu)
+        // ||
+        //   (canvas.contextmenu.attrs.id.indexOf('text') >= 0 &&
+        //     canvas.contextmenu.attrs.name != 'printer')
         if (
           canvas.contextmenu.attrs.type == 'static' ||
-          (canvas.contextmenu.attrs.id.indexOf('text') >= 0 &&
-            canvas.contextmenu.attrs.name != 'printer')
+          canvas.contextmenu.attrs.type == 'realdata' ||
+          canvas.contextmenu.attrs.type == 'thing'
         ) {
           canvas.contextmenu.parent.zIndex(
             canvas.contextmenu.parent.parent.children.length - 1
           )
-          return
+          // return
         }
         console.log('索引层级', canvas.contextmenu.parent.children.length - 1)
         canvas.contextmenu.zIndex(canvas.contextmenu.parent.children.length - 1)
-        return
+        // return
       } else if (handler == 'moveToBottom') {
+        console.log('查看置底', canvas.contextmenu)
         if (
+          canvas.contextmenu.attrs.type == 'static' ||
+          canvas.contextmenu.attrs.type == 'realdata' ||
+          canvas.contextmenu.attrs.type == 'thing'
+        ) {
+          canvas.contextmenu.parent.zIndex(2)
+          // return
+        } else if (
           canvas.contextmenu.attrs.name == 'printer' ||
           canvas.contextmenu.attrs.name == 'staticimage'
         ) {
           canvas.contextmenu.zIndex(2)
+          // return
         }
       }
       console.log('操作', handler)

@@ -24,16 +24,17 @@
           :rules="addrules"
           size="mini"
         >
+          <!-- {{ $translateTitle('product.export') }} -->
           <div class="dialog-footer" style="margin: 15px">
             <el-button
               :disabled="checkedChannels.length <= 0"
               type="primary"
               @click="saveJSON"
             >
-              {{ $translateTitle('product.export') }}
+              导出License
             </el-button>
             <el-button type="primary" @click="importFile">
-              {{ $translateTitle('product.import') }}
+              导入License
             </el-button>
             <!-- <el-button
           v-if="active == 2"
@@ -144,25 +145,7 @@
           :rules="addrules"
           size="mini"
         >
-          <div class="dialog-footer" style="margin: 15px">
-            <!-- <el-button
-              :disabled="checkedChannels.length <= 0"
-              type="primary"
-              @click="saveJSON"
-            >
-              {{ $translateTitle('product.export') }}
-            </el-button> -->
-            <!-- <el-button
-          v-if="active == 2"
-          type="primary"
-          @click.native="addchannelForm('addchannel')"
-        >
-          {{ $translateTitle('developer.create') }}
-        </el-button>
-        <el-button v-if="active == 2" type="info" @click="active = 1">
-          上一步
-        </el-button> -->
-          </div>
+          <div class="dialog-footer" style="margin: 15px"></div>
 
           <el-row>
             <el-col :span="24">
