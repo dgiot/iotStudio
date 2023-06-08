@@ -1,0 +1,174 @@
+name: deploy
+on:
+  push:
+    branches: [ master,dev ]
+  workflow_dispatch:
+
+# 设置上海时区
+env:
+  TZ: Asia/Shanghai
+
+jobs:
+  build:
+    name: build 🚀
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [ latest,current,stable ]
+    steps:
+      - name: Checkout 🚀
+        uses: actions/checkout@v2
+      - name: Use Node.js ${{ matrix.node-version }} 🚀
+        uses: actions/setup-node@v2
+      - name: Cache yarn modules  🚀
+        uses: actions/cache@v2
+        env:
+          cache-name: cache-yarn-modules
+        with:
+          path: '**/node_modules'
+          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ matrix.node-version }}-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-build-${{ env.cache-name }}-${{ matrix.node-version }}-
+      - name: Install dependencies  🚀
+        run: yarn install
+      - name: Generate files  🚀
+        run: yarn build
+
+#  sync:
+#    name: sync gitee 🚀
+#    runs-on: ubuntu-latest
+#    steps:
+#      - name: Checkout 🚀
+#        uses: actions/checkout@v2
+#      - name: Sync dgiot-dashboard 🚀
+#        uses: Yikun/hub-mirror-action@master
+#        with:
+#          src: github/dgiot
+#          dst: gitee/dgiiot
+#          dst_key: ${{ secrets.PRIVATE_KEY }}
+#          dst_token: ${{ secrets.GIT_TOKEN }}
+#          static_list: "dgiot-dashboard" # 只同步这个项目 https://github.com/Yikun/hub-mirror-action#%E9%BB%91%E7%99%BD%E5%90%8D%E5%8D%95
+  deploy:
+    name: deploy 🚀
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [ latest ]
+    steps:
+      - name: Checkout 🚀
+        uses: actions/checkout@v2
+      - name: Use Node.js ${{ matrix.node-version }} 🚀
+        uses: actions/setup-node@v2
+      - name: Cache yarn modules  🚀
+        uses: actions/cache@v2
+        env:
+          cache-name: cache-yarn-modules
+        with:
+          path: '**/node_modules'
+          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ matrix.node-version }}-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-build-${{ env.cache-name }}-${{ matrix.node-version }}-
+      - name: yarn script 🚀
+        run: |
+          yarn install
+          yarn build &> /dev/null
+          cp -r README.md README-CN.md CHANGELOG.md LICENSE dist
+      - name: Deploy to github www 🚀
+        uses: JamesIves/github-pages-deploy-action@releases/v3
+        with:
+          ACCESS_TOKEN: ${{ secrets.GIT_TOKEN }}
+          BRANCH: www
+          FOLDER: dist
+      - name: Upload  dashboard 🚀
+        uses: actions/upload-artifact@v2
+        with:
+          name: dashboard
+          path: dist
+      - name: cdn static 🚀
+        run: |
+          cd dist
+          wget https://dgiot-release-1306147891.cos.ap-nanjing.myqcloud.com/v4.4.0/dgiot_dashboard.tar.gz &> /dev/null
+          tar xf dgiot_dashboard.tar.gz &> /dev/null
+          wget https://dgiot-release-1306147891.cos.ap-nanjing.myqcloud.com/v4.4.0/dgiot_swagger.tar.gz &> /dev/null
+          tar xf dgiot_swagger.tar.gz &> /dev/null
+          wget https://dgiot-release-1306147891.cos.ap-nanjing.myqcloud.com/v4.4.0/dgiot_file.tar.gz &> /dev/null
+          tar xf dgiot_file.tar.gz &> /dev/null
+          rm -rf dgiot_dashboard.tar.gz dgiot_swagger.tar.gz dgiot_file.tar.gz &> /dev/null
+          wget http://dev.iotn2n.com/swagger.json &> /dev/null
+          wget https://raw.githubusercontent.com/dgiot/dgiot-dashboard/251eb208615d55bfde630e26a3f957591ae09f7e/public/netlify.toml &> /dev/null
+      - name: Deploy to github gh-pages 🚀
+        uses: JamesIves/github-pages-deploy-action@releases/v3
+        with:
+          ACCESS_TOKEN: ${{ secrets.GIT_TOKEN }}
+          BRANCH: gh-pages
+          FOLDER: dist
+#      - name: Deploy to Netlify  🚀
+#        uses: nwtgck/actions-netlify@v1.2
+#        with:
+#          publish-dir: './dist'
+#          production-branch: master
+#          github-token: ${{ secrets.GIT_TOKEN }}
+#          deploy-message: "Deploy from GitHub Actions"
+#          enable-pull-request-comment: false
+#          enable-commit-comment: true
+#          netlify-config-path: './dist/netlify.toml'
+#          overwrites-pull-request-comment: false
+#        env:
+#          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+#          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+      - name: Deploy to surge 🚀
+        uses: dswistowski/surge-sh-action@v1
+        with:
+          domain: 'dgiot-dashboard.surge.sh'
+          project: './dist'
+          login: ${{ secrets.surge_login }}
+          token: ${{ secrets.surge_token }}
+      - name: Upload surge service and generate preview URL 🚀
+        id: deploy
+        run: |
+          export GITHUB_SHA=${{ github.sha }}
+          export GITHUB_SHA_SUB=${GITHUB_SHA: 0: 7 }
+          export DEPLOY_DOMAIN=https://dgiot-dashboard-$GITHUB_SHA_SUB.surge.sh
+          npx surge --project ./dist --domain $DEPLOY_DOMAIN --token ${{ secrets.surge_token }}
+          echo the preview URL is $DEPLOY_DOMAIN
+          echo "::set-output name=url::$DEPLOY_DOMAIN"
+      #      - name: Deploy to vercel 🚀
+      #        uses: amondnet/vercel-action@v20
+      #        with:
+      #          vercel-token: ${{ secrets.VERCEL_TOKEN }}
+      #          github-token: ${{ secrets.GIT_TOKEN }}
+      #          vercel-args: '--prod' #Optional
+      #          vercel-org-id: ${{ secrets.ORG_ID}}
+      #          vercel-project-id: ${{ secrets.PROJECT_ID}}
+      #          working-directory: ./dev
+      #      # 使用云开发 Github Action 部署
+      #      - name: Deploy CloudBase 🚀
+      #        uses: TencentCloudBase/cloudbase-action@v1.1.0
+      #        with:
+      #          # 云开发的访问密钥 secretId 和 secretKey
+      #          secretId: ${{ secrets.SECRET_ID }}
+      #          secretKey: ${{ secrets.SECRET_KEY }}
+      #          # 云开发的环境id
+      #          envId: ${{ secrets.ENV_ID }}
+      #          # Github 项目静态文件的路径
+      #          staticSrcPath: ./dev
+      - name: Accurics Scan 🚀
+        id: accurics-scan
+        uses: docker://accurics/terrascan-action:latest
+        with:
+          only_warn: true
+          verbose: true
+          webhook_url: https://app.accurics.com/v1/api/terrascan
+          webhook_token: d73c0d62-aab9-4d65-940d-2e6b690a48a7
+      - name: Upload  🚀
+        uses: actions/upload-artifact@v2
+        with:
+          name: dgiot-dashboard
+          path: dist
+      - name: lighthouse 🚀
+        uses: treosh/lighthouse-ci-action@v2
+        with:
+          runs: 5
+          uploadArtifacts: true
+          configPath: './.github/workflows/setup/lighthouse-audit.json'
+    needs: build

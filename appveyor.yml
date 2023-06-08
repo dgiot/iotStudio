@@ -1,0 +1,12 @@
+# http://www.appveyor.com/docs/appveyor-yml
+environment:
+  matrix:
+    - nodejs_version: "16"
+
+install:
+  - ps: Install-Product node $env:nodejs_version
+  - npm config get registry
+#  - npm install --legacy-peer-deps
+test_script:
+  - npm install --legacy-peer-deps
+build: off

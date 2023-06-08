@@ -1,0 +1,47 @@
+{
+  "ci": {
+    "collect": {
+      "staticDistDir": "."
+    },
+    "assert": {
+      "assertions": {
+        "categories:performance": [
+          "error",
+          {
+            "minScore": 0.8
+          }
+        ],
+        "first-contentful-paint": [
+          "error",
+          {
+            "maxNumericValue": 1000
+          }
+        ],
+        "interactive": [
+          "error",
+          {
+            "maxNumericValue": 1500
+          }
+        ],
+        "resource-summary:font:count": [
+          "error",
+          {
+            "maxNumericValue": 1
+          }
+        ],
+        "resource-summary:script:size": [
+          "error",
+          {
+            "maxNumericValue": 150000
+          }
+        ],
+        "resource-summary:stylesheet:size": [
+          "error",
+          {
+            "maxNumericValue": 100000
+          }
+        ]
+      }
+    }
+  }
+}
