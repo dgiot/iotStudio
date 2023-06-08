@@ -1,0 +1,94 @@
+{
+  "RegionId": "cn-shanghai",
+  "RuleId": "37edf416df5c41a384d8e265d020e25e",
+  "RuleName": "温度告警规则",
+  "RuleContent": {
+    "type": "IFTTT",
+    "trigger": {
+      "uri": "logical/or",
+      "items": [
+        {
+          "uri": "trigger/product/event",
+          "params": {
+            "productKey": "a1lcmeFVu97",
+            "compareType": "!=",
+            "compareValue": "55",
+            "propertyName": "Payload",
+            "eventCode": "OnSync"
+          }
+        },
+        {
+          "uri": "trigger/product/property",
+          "params": {
+            "productKey": "a11Ecu7de6V"
+          }
+        },
+        {
+          "uri": "trigger/timer",
+          "params": {
+            "cron": "0 0 3 3 0",
+            "cronType": "linux"
+          }
+        }
+      ]
+    },
+    "condition": {
+      "uri": "logical/and",
+      "items": [
+        {
+          "uri": "condition/device/stateContinue",
+          "params": {
+            "stateName": "event.status",
+            "duration": 8,
+            "compareType": "==",
+            "compareValue": 1
+          }
+        },
+        {
+          "uri": "condition/device/property",
+          "params": {
+            "productKey": "a1lcmeFVu97",
+            "deviceName": "csk84X8upjtNlkdyrry8",
+            "propertyName": "Direction",
+            "compareType": "==",
+            "compareValue": 1
+          }
+        },
+        {
+          "uri": "condition/device/property",
+          "params": {
+            "productKey": "a1lcmeFVu97",
+            "deviceName": "csk84X8upjtNlkdyrry8",
+            "propertyName": "Direction",
+            "compareType": "==",
+            "compareValue": 0
+          }
+        }
+      ]
+    },
+    "action": [
+      {
+        "uri": "action/device/setProperty",
+        "params": {
+          "productKey": "a1lcmeFVu97",
+          "deviceName": "kEdtCEM8p9bYJYUO1rDI",
+          "propertyItems": {
+            "Direction": 1
+          }
+        }
+      },
+      {
+        "uri": "action/scene/trigger",
+        "params": {
+          "automationRuleId": "b362b597dacc4da58d63ec2abb95355d"
+        }
+      },
+      {
+        "uri": "action/event/triggerAlarm",
+        "params": {}
+      }
+    ]
+  },
+  "SceneType": "IFTTT",
+  "RuntimeEnv": ""
+}

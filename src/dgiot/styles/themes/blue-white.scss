@@ -1,0 +1,273 @@
+/**
+ * @description 蓝-白
+ */
+
+body.dgiot-theme-blue-white {
+  $base-menu-background: #fff;
+  $base-color-blue: #1890ff;
+  $base-color-blue-light: mix($base-color-white, $base-color-blue, 90%);
+
+  @import '../default.scss';
+
+  @mixin container {
+    color: #515a6e !important;
+    background: $base-menu-background !important;
+  }
+
+  @mixin container-column {
+    color: #515a6e !important;
+    background: #f7f9ff !important;
+  }
+
+  @mixin active {
+    &:hover {
+      color: $base-color-blue !important;
+      background-color: $base-color-blue-light !important;
+    }
+
+    &.is-active {
+      color: $base-color-blue !important;
+      background-color: $base-color-blue-light !important;
+    }
+  }
+
+  .logo-container-common,
+  .logo-container-vertical,
+  .logo-container-horizontal,
+  .logo-container-comprehensive,
+  .logo-container-float {
+    @include container;
+
+    .title,
+    .dgiot-icon {
+      @include container;
+    }
+  }
+
+  .logo-container-column {
+    @include container;
+
+    .title {
+      @include container;
+    }
+
+    .logo,
+    .dgiot-icon {
+      @include container-column;
+    }
+  }
+
+  .dgiot-column-bar-container {
+    .el-tabs {
+      @include container-column;
+
+      .el-tabs__nav-wrap.is-left {
+        background: #f7faff !important;
+      }
+
+      .el-tabs__item,
+      .el-tabs__nav {
+        @include container-column;
+      }
+
+      .el-tabs__header .el-tabs__item.is-active {
+        color: $base-color-white !important;
+        background: $base-color-blue !important;
+      }
+    }
+
+    .el-menu {
+      .el-menu-item.is-active,
+      .el-submenu__title.is-active,
+      .el-menu-item:hover,
+      .el-submenu__title:hover {
+        i {
+          color: $base-color-blue !important;
+        }
+
+        color: $base-color-blue !important;
+        background-color: $base-color-blue-light !important;
+      }
+    }
+
+    &-card {
+      .el-tabs {
+        .el-tabs__header .el-tabs__item {
+          &.is-active {
+            background: transparent !important;
+
+            .dgiot-column-grid {
+              background: $base-color-blue !important;
+            }
+          }
+        }
+      }
+    }
+
+    &-arrow {
+      .el-tabs {
+        .el-tabs__item {
+          &.is-active {
+            color: $base-color-black !important;
+            background: transparent !important;
+
+            .dgiot-column-grid {
+              background: transparent !important;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .dgiot-layout-vertical,
+  .dgiot-layout-horizontal,
+  .dgiot-layout-comprehensive,
+  .dgiot-layout-common,
+  .dgiot-layout-float {
+    .el-menu {
+      @include container;
+
+      .el-submenu__title {
+        @include container;
+      }
+
+      .el-menu-item {
+        @include container;
+      }
+    }
+
+    .dgiot-side-bar,
+    .comprehensive-bar-container {
+      @include container;
+      box-shadow: 0 1px 4px rgba(0, 21, 41, 0.08) !important;
+
+      .el-menu-item {
+        @include active;
+      }
+    }
+  }
+
+  .dgiot-layout-float {
+    .el-scrollbar__view .el-menu--collapse.el-menu li.el-submenu.is-active {
+      .el-submenu__title {
+        background-color: transparent !important;
+      }
+
+      > .el-submenu__title {
+        color: $base-color-blue !important;
+        background-color: $base-color-blue-light !important;
+      }
+    }
+  }
+
+  .dgiot-header {
+    @include container;
+
+    .right-panel {
+      .user-name,
+      .user-name *,
+      > i,
+      > div > i,
+      > span > i,
+      > div > span > i,
+      > svg,
+      > div > svg,
+      > span > svg,
+      > div > span > svg {
+        @include container;
+      }
+    }
+
+    .dgiot-main {
+      @include container;
+
+      .ri-notification-line {
+        color: #515a6e !important;
+      }
+
+      .el-menu {
+        &--horizontal {
+          .el-menu-item {
+            &.is-active {
+              @include active;
+            }
+          }
+
+          .el-submenu,
+          .el-menu-item {
+            @include active;
+          }
+        }
+      }
+    }
+  }
+
+  .dgiot-tabs {
+    &-more {
+      &-active,
+      &:hover {
+        .dgiot-tabs-more-icon {
+          .box:before,
+          .box:after {
+            background: $base-color-blue !important;
+          }
+        }
+      }
+    }
+
+    .dgiot-tabs-content-card {
+      .el-tabs__header {
+        .el-tabs__item {
+          &.is-active {
+            color: $base-color-blue !important;
+            background: $base-color-blue-light-9 !important;
+            border: 1px solid $base-color-blue !important;
+          }
+
+          &:hover {
+            border: 1px solid $base-color-blue !important;
+          }
+        }
+      }
+    }
+
+    .dgiot-tabs-content-smart {
+      .el-tabs__header {
+        .el-tabs__item {
+          &.is-active {
+            background: $base-color-blue-light-9 !important;
+          }
+
+          &:after {
+            background-color: $base-color-blue !important;
+          }
+
+          &:hover {
+            background: $base-color-blue-light-9 !important;
+          }
+        }
+      }
+    }
+
+    .dgiot-tabs-content-smooth {
+      .el-tabs__header {
+        .el-tabs__item {
+          &.is-active {
+            color: $base-color-blue !important;
+            background: $base-color-blue-light-9 !important;
+
+            &:hover {
+              color: $base-color-blue !important;
+              background: $base-color-blue-light-9 !important;
+            }
+          }
+
+          &:hover {
+            color: $base-color-black !important;
+          }
+        }
+      }
+    }
+  }
+}

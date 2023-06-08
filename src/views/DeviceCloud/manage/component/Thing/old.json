@@ -1,0 +1,71 @@
+{
+  "item": {
+    "name": "tags1",
+    "devicetype": "tags1",
+    "dataForm": {
+      "round": "all",
+      "data": "null",
+      "address": "0X10",
+      "rate": 1,
+      "offset": 0,
+      "order": 0,
+      "protocol": "",
+      "operatetype": "readCoils",
+      "originaltype": "short16_AB",
+      "slaveid": "0X10",
+      "collection": "%s",
+      "control": "%d",
+      "strategy": "20",
+      "iscount": "0",
+      "countstrategy": 20,
+      "countround": "all",
+      "countcollection": "%s"
+    },
+    "required": true,
+    "accessMode": "r",
+    "isshow": true,
+    "identifier": "tags1",
+    "dataType": {
+      "type": "int",
+      "specs": {
+        "max": "",
+        "min": "",
+        "step": "",
+        "precision": 3,
+        "unit": ""
+      },
+      "das": []
+    },
+    "dataSource": {},
+    "moduleType": "tags",
+    "updateAt": "1647053943057"
+  },
+  "productid": "dd12968e37",
+  "events": {
+    "outputParams": [],
+    "name": "功能名称",
+    "identifier": "标识符",
+    "types": "warning",
+    "output": [
+      {
+        "name": "参数名称",
+        "unit": "ml/min",
+        "isread": "rw",
+        "dataType": "int32",
+        "identifier": "标识符",
+        "min": "1",
+        "max": "3",
+        "step": "2"
+      }
+    ],
+    "describe": "描述",
+    "dataForm": {
+      "order": "1647054511934"
+    },
+    "dataType": {
+      "type": "events"
+    },
+    "moduleType": "events",
+    "updateAt": "1647054511934"
+  }
+}
