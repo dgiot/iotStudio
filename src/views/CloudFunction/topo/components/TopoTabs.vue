@@ -609,6 +609,38 @@
             })
           "
         />
+        <img
+          draggable="true"
+          size="mini"
+          :src="$FileServe + '/dgiot_file/topo/png/sgmap.png'"
+          style="
+            width: 70px;
+            height: 40px;
+            display: inline-block;
+            margin-left: 20px;
+            margin-top: 10px;
+          "
+          type="primary"
+          @click="
+            createBasicThing({
+              productid: $route.query.productid,
+              type: 'vuecomponent',
+              data: {
+                id: 'sgmap',
+                width: 1800,
+                height: 630,
+                x: 40,
+                y: 230,
+                fill: 'rgba(30, 30, 30, 0.7)',
+                text: '',
+                source: 'api',
+                src: '/dgiot_file/topo/png/sgmap.png',
+              },
+              chart: 'map',
+              hidden: false,
+            })
+          "
+        />
         <el-divider />
         <div style="text-align: left; margin: 10px; font-weight: 600">
           产品数量
