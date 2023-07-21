@@ -161,14 +161,14 @@
       <el-table-column
         align="center"
         :label="$translateTitle('alert.productname')"
-        prop="productname"
+        prop="content.productname"
         show-overflow-tooltip
         sortable
       />
       <el-table-column
         align="center"
         :label="$translateTitle('equipment.devicenumber')"
-        prop="devaddr"
+        prop="device.devaddr"
         show-overflow-tooltip
         sortable
       />
@@ -268,7 +268,7 @@
         paginations: { layout: 'total, sizes, prev, pager, next, jumper' },
         queryPayload: {
           excludeKeys: 'dynamicform',
-          include: '',
+          include: 'device',
           order: '-createdAt',
           limit: 10,
           skip: 0,
@@ -544,6 +544,7 @@
             order: args.order,
             skip: args.skip,
             count: args.keys,
+            include: 'device',
             where: {
               'content._productid': {
                 $regex: this.queryForm.productName,
@@ -556,6 +557,7 @@
             order: args.order,
             skip: args.skip,
             count: 'objectId',
+            include: 'device',
             where: {},
           }
         }

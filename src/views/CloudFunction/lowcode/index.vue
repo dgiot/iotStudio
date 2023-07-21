@@ -981,6 +981,7 @@
       },
       async handleLowCode(row) {
         localStorage.setItem('parse_objectid', row.key)
+        localStorage.setItem('parse_view_objectid', row.objectId)
         const loading = this.$baseColorfullLoading(1)
         loading.close()
         this.$dgiotBus.$emit('lowcodePreview', await getView(row.objectId))
