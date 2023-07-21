@@ -1,4 +1,0 @@
-User-agent: *
-Disallow:
-# *** 杭州数蛙科技有限公司 ***
-# *** www.iotn2n.com ***

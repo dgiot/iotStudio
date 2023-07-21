@@ -1508,7 +1508,7 @@
           limit: this.queryForm.limit,
           excludeKeys: this.queryForm.excludeKeys,
           // include: this.queryForm.include,
-          order: '-createdAt',
+          order: '-updatedAt',
           count: 'objectId',
           where: {},
         }

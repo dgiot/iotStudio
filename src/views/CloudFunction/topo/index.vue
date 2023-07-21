@@ -643,6 +643,14 @@
             label: '关机设备',
             value: '关机设备',
           },
+          {
+            label: '平时设备',
+            value: '平时设备',
+          },
+          {
+            label: '战时设备',
+            value: '战时设备',
+          },
         ],
         fontfamilyList: [
           {
@@ -1329,6 +1337,10 @@
               ? 'device_poweron_counter'
               : data.text == '关机设备'
               ? 'device_poweroff_counter'
+              : data.text == '平时设备'
+              ? 'device_peace_counter'
+              : data.text == '战时设备'
+              ? 'device_war_counter'
               : this.editNode.attrs.id
           console.log('datavue', data)
           this.editNode.setAttrs(data)
