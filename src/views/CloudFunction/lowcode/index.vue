@@ -184,7 +184,7 @@
         :label="$translateTitle('product.title')"
         prop="title"
         show-overflow-tooltip
-        width="200px"
+        width="160px"
       >
         <template #default="{ row }">
           <el-form :model="row">
@@ -265,7 +265,7 @@
         align="center"
         label="渲染框架"
         show-overflow-tooltip
-        width="140"
+        width="120"
       >
         <template #default="{ row, $index }">
           <el-select
@@ -303,7 +303,7 @@
         align="center"
         :label="$translateTitle('home.language')"
         show-overflow-tooltip
-        width="140"
+        width="100"
       >
         <template #default="{ row, $index }">
           <Select v-model="row.language" @on-change="switchlanguage(row)">
@@ -324,7 +324,7 @@
         align="center"
         :label="$translateTitle('task.data')"
         show-overflow-tooltip
-        width="120"
+        width="100"
       >
         <template #default="{ row }">
           <el-button
@@ -337,10 +337,21 @@
         </template>
       </el-table-column>
       <el-table-column
+        v-if="type != 'menu' && type != 'role'"
+        align="center"
+        label="图片"
+        show-overflow-tooltip
+        width="80"
+      >
+        <template #default="{ row }">
+          <img :src="row.icon" style="width: 50px" />
+        </template>
+      </el-table-column>
+      <el-table-column
         align="center"
         :label="$translateTitle('node.operation')"
         show-overflow-tooltip
-        width="360"
+        width="420"
       >
         <template #default="{ row }">
           <el-button
@@ -377,6 +388,13 @@
             @click="handleToViewGit(row)"
           >
             日志
+          </el-button>
+          <el-button
+            v-show="type != 'menu' && type != 'role'"
+            type="default"
+            @click="handleToViewIcon(row)"
+          >
+            图片
           </el-button>
           <el-button type="primary" @click="handleLowCode(row)">
             {{ $translateTitle('application.preview') }}
@@ -436,6 +454,34 @@
     />
     <view-edit ref="edit" @fetch-data="fetchData" />
     <lowcodeDesign ref="lowcodeDesign" @objectId="lowcodeId" />
+    <el-drawer
+      ref="drawer"
+      append-to-body
+      title="上传图片"
+      :visible.sync="drawer.visible"
+    >
+      <div style="padding: 0 20px">
+        <el-form ref="uploadProForm" :model="formIcon">
+          <el-upload
+            ref="fileUpload"
+            accept=".png, .jpg, .jpeg"
+            :action="uploadAction"
+            :auto-upload="false"
+            :before-upload="beforeFileUpload"
+            :data="uploadData"
+            :file-list="fileList"
+            :headers="uploadHeaders"
+            :on-change="handleChange"
+            :on-error="handleUploadError"
+            :on-success="handleUploadSuccess"
+            :with-credentials="true"
+          >
+            <img v-if="imageUrl" class="avatar" :src="imageUrl" />
+            <i v-else class="el-icon-plus avatar-uploader-icon"></i>
+          </el-upload>
+        </el-form>
+      </div>
+    </el-drawer>
   </div>
 </template>
 <script>
@@ -445,6 +491,8 @@
   import { queryView, putView, postView, delView, getView } from '@/api/View'
   import { getDlinkJson } from '@/api/Dlink'
   import ViewEdit from './components/ViewEdit'
+  import { UploadTopoImg } from '@/api/File'
+  import request from '@/utils/request/request'
 
   const defaultQuery = {
     class: '',
@@ -646,6 +694,17 @@
           children: 'children',
           label: 'name',
         },
+        drawer: {
+          visible: false,
+        },
+        formIcon: {},
+        uploadHeaders: {
+          sessionToken: Cookies.get('access_token'),
+        },
+        uploadAction: '',
+        uploadData: {},
+        fileList: [],
+        imageUrl: null,
       }
     },
     computed: {
@@ -658,6 +717,7 @@
         // _product: 'user/_Product',
         // _role: 'acl/role',
         // currentDepartment: 'user/currentDepartment',
+        token: 'user/token',
       }),
     },
     watch: {
@@ -922,6 +982,113 @@
             // productid: row.key || 'none',
           },
         })
+      },
+      //上传图片
+      handleToViewIcon(row) {
+        localStorage.setItem('parse_viewid', row.objectId)
+        this.drawer.visible = true
+      },
+      deleteImgsrc() {
+        // event.stopPropagation()
+        this.imageUrl = ''
+      },
+      submitUpload(file) {
+        // this.uploadAction = Cookies.get('apiserver') + '/product?appid=' + Cookies.get("appids");
+
+        if (this.fileList.length == 0) {
+          return
+        }
+
+        this.uploadAction = '/upload'
+        // this.uploadAction = 'http://cad.iotn2n.com:5080/product?appid=' + Cookies.get("appids");
+
+        let ext = null
+        let i = file.name.lastIndexOf('.')
+        if (i >= 0) {
+          ext = file.name.substring(i)
+        }
+        let path = '/dgiot_file/amis/'
+        if (ext == '.png') {
+          path += 'png/'
+        } else {
+          path += 'jpg/'
+        }
+
+        console.log('文件路径', path)
+
+        this.uploadData.auth_token = this.token
+        this.uploadData.scene = 'app'
+        this.uploadData.path = path
+        this.uploadData.output = 'json'
+        this.uploadData.submit = 'upload'
+
+        this.fileList.splice(0, this.fileList.length)
+
+        this.fileList.push(file)
+
+        this.$nextTick(() => {
+          // dgiotlog.log('uploadHeaders',this.uploadHeaders);
+
+          //this.uploadData.appid = Cookies.get('appids')
+          // this.uploadData.key = "key";
+
+          console.log(this.fileList)
+          console.log(this.uploadData)
+          this.$refs.fileUpload.submit()
+          //this.uploadData.file = this.fileList
+          //UploadTopoImg(this.uploadData)
+        })
+      },
+      beforeFileUpload(file) {
+        console.log('上传之前', file)
+
+        console.log('处理之后', file)
+        return true
+      },
+      async handleUploadSuccess(response, file, fileList) {
+        // dgiotlog.log('### Success response', response)
+
+        let ext = null
+        let i = file.name.lastIndexOf('.')
+        if (i >= 0) {
+          ext = file.name.substring(i)
+        }
+        let path = '/dgiot_file/amis/'
+        if (ext == '.png') {
+          path += 'png/'
+        } else {
+          path += 'jpg/'
+        }
+        let viewID = localStorage.getItem('parse_viewid')
+        console.log('viewID', viewID)
+        await putView(viewID, {
+          icon: path + file.name,
+        })
+
+        this.imageUrl = URL.createObjectURL(file.raw)
+        this.$message({
+          type: 'success',
+          message: '图片上传成功',
+          showClose: true,
+          duration: 2000,
+        })
+        this.$refs['uploadProForm'].resetFields()
+      },
+      handleUploadError(err, file, fileList) {
+        this.$message({
+          message: err,
+          showClose: true,
+          duration: 2000,
+        })
+      },
+      handleChange(file, fileList) {
+        console.log('选中了文件', file)
+        if (fileList.length > 0) {
+          this.fileList = [fileList[fileList.length - 1]] // 展示最后一次选择的文件
+        }
+
+        console.log(this.fileList)
+        this.submitUpload(file)
       },
       async handleEdit(row) {
         localStorage.setItem('parse_objectid', row.key)

@@ -25,6 +25,13 @@ module.exports = {
       target: 'https://dev.dgiotcloud.cn',
     },
     /**
+     * @description dgiot_file文件资源目录。开发使用
+     */
+    {
+      path: 'upload',
+      target: 'http://dev.dgiotcloud.cn',
+    },
+    /**
      * @description amis server 开发使用
      */
     {

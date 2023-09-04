@@ -885,6 +885,40 @@
         />
         <el-divider />
       </a-collapse-panel>
+      <a-collapse-panel key="99" :header="'低代码组件'">
+        <img
+          v-for="item in lowCodeArray"
+          :key="item.objectId"
+          draggable="true"
+          size="mini"
+          :src="$FileServe + item.icon"
+          style="
+            width: 70px;
+            height: 60px;
+            display: inline-block;
+            margin-left: 20px;
+            margin-top: 10px;
+          "
+          type="primary"
+          @click="
+            createBasicThing({
+              productid: $route.query.productid,
+              type: 'amiscomponent',
+              data: {
+                id: item.objectId, //amis_${new Date().getTime()}
+                width: 500,
+                height: 350,
+                fill: 'rgba(23, 37, 76, 0.7)',
+                text: item.title,
+                source: 'api',
+                src: item.icon,
+              },
+              chart: 'amisview',
+              hidden: false,
+            })
+          "
+        />
+      </a-collapse-panel>
       <a-collapse-panel key="7" :header="'3D模型'">
         <img
           draggable="true"
@@ -968,6 +1002,7 @@
 
 <script>
   import { UploadTopoImg } from '@/api/File'
+  import { getViewList } from '@/api/View'
   import addNodeEvent from '@/utils/konva/common'
   import canvas from '@/utils/konva/core/canvas'
   import createThing from '@/utils/konva/createThing'
@@ -1046,6 +1081,7 @@
         staticList: [],
         gifList: [],
         uploadType: '', //上传类型
+        lowCodeArray: [], //低代码组件列表
       }
     },
     computed: {
@@ -1056,6 +1092,7 @@
     async created() {
       this.initImage('static')
       this.initImage('gif')
+      this.fetchViewList()
     },
     mounted() {
       this.$dgiotBus.$off('copyNode')
@@ -1212,6 +1249,37 @@
         // console.log(this.$refs.file)
         this.uploadType = type
         this.$refs.file.click()
+      },
+      async fetchViewList() {
+        this.lowCodeArray.splice(0, this.lowCodeArray.length)
+
+        let formSearch = {
+          skip: 0,
+          limit: 20,
+          include: 'category',
+          order: '-updatedAt',
+          count: 'objectId',
+          excludeKeys: '',
+          where: {},
+        }
+
+        formSearch.where.class = { $regex: 'Product' }
+        formSearch.where.type = { $regex: 'Amis' }
+        await getViewList(formSearch)
+          .then((response) => {
+            const { count = 0, results = [] } = response
+
+            for (let k in results) {
+              let item = results[k]
+
+              this.lowCodeArray.push(item)
+            }
+
+            console.log(results)
+          })
+          .catch((_) => {
+            console.log(_)
+          })
       },
       getFileData(e) {
         // console.log(e.target.files[0])

@@ -381,6 +381,9 @@ const mutations = {
           data: thing.data,
           productid: thing.productid,
         })
+        console.log('%c 添加amis低代码节点', 'background:#ff00ff;')
+        console.log(simpleImage)
+        console.log(thing)
       } else if (thing.type == 'gifimage') {
         simpleImage = addNodeEvent(
           _.merge(canvas.handlerArgs, {
