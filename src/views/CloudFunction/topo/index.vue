@@ -169,21 +169,41 @@
                   @input="handleEditKonva"
                 ></el-input>
               </el-form-item>
-              <el-form-item
-                v-if="editNode.attrs.name == 'amiscomponent'"
-                label="低代码绑定"
-              >
+              <el-form-item 
+                v-if="editNode.attrs.name == 'amiscomponent'">
+                <span slot="label">
+                  <span style="color: red">产品选择</span>
+                </span>
                 <el-select
-                  v-model="screenViewId"
-                  @change="handleEditViewId"
+                  v-model="screen_productid"
                   filterable
+                  @change="handleBindProduct"
                   placeholder="请选择"
                 >
                   <el-option
-                    v-for="item in screenViewList"
-                    :key="item.value"
-                    :label="item.title"
-                    :value="item.objectId"
+                    v-for="(product, index) in screenproductList"
+                    :key="product.value + index"
+                    :label="product.label"
+                    :value="product.value"
+                  ></el-option>
+                </el-select>
+              </el-form-item>
+              <el-form-item v-if="editNode.attrs.name == 'amiscomponent'">
+                <span slot="label">
+                  <span style="color: red">设备选择</span>
+                </span>
+                <el-select
+                  v-model="screen_deviceid"
+                  :disabled="screen_productid == ''"
+                  filterable
+                  @change="handleBindDeviceAndView"
+                  placeholder="请选择"
+                >
+                  <el-option
+                    v-for="(itemdevice, index) in screendeviceList"
+                    :key="itemdevice.value + index"
+                    :label="itemdevice.label"
+                    :value="itemdevice.value"
                   ></el-option>
                 </el-select>
               </el-form-item>
@@ -958,6 +978,7 @@
         viewid: this.$route.query.viewid || '',
         wmxList: [],
         screenproductList: [],
+        screenproductId: '',
         screendeviceList: [],
         screenwmxList: [],
         screen_productid: '',
@@ -1051,6 +1072,12 @@
           this.screen_wmxid = node.attrs.screen_wmxid || ''
           if (this.screen_productid) {
             this.handlegetScreenWmxList(this.screen_productid)
+            this.handleQueryDeviceList(this.screen_productid)
+          }
+        } else if (node.attrs.name == 'amiscomponent') {
+          this.screen_productid = node.attrs.screen_productid || ''
+          this.screen_deviceid = node.attrs.screen_deviceid || ''
+          if (this.screen_productid) {
             this.handleQueryDeviceList(this.screen_productid)
           }
         }
@@ -1262,7 +1289,8 @@
       },
       // 大屏绑定产品
       handleBindProduct(e) {
-        console.log(e)
+        console.log('%c 绑定产品id %s', 'background:#ffff00;', e)
+        console.log(this.editNode)
         let data = {
           screen_productid: e,
         }
@@ -1271,7 +1299,8 @@
         this.handleQueryDeviceList(e)
       },
       handleBindDevice(e) {
-        console.log(e)
+        console.log('%c 绑定设备id %s', 'background:#ffff00;', e)
+        console.log(this.editNode)
         let id = e + '_' + this.screen_wmxid + '_text'
         let data = {
           id,
@@ -1280,11 +1309,23 @@
         this.editNode.setAttrs(data)
       },
       handleBindDeviceWmx(e) {
-        console.log(e)
+        console.log('%c 绑定设备物模型id %s', 'background:#ffff00;', e)
+        console.log(this.editNode)
+
         let id = this.screen_deviceid + '_' + e + '_text'
         let data = {
           id,
           screen_wmxid: e,
+        }
+        this.editNode.setAttrs(data)
+      },
+      handleBindDeviceAndView(e) {
+        console.log('%c 绑定设备低代码 %s', 'background:#ffff00;', e)
+        console.log(this.editNode)
+        //let id = e + '_' + this.screen_wmxid + '_text'
+        let data = {
+          //id,
+          screen_deviceid: e,
         }
         this.editNode.setAttrs(data)
       },

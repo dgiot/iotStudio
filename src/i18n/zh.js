@@ -761,6 +761,7 @@ export default {
       'evidence control': '取证控件',
       'basic element': '基本元件',
       'screen element': '大屏组件',
+      'lowcode element': '低代码组件',
       'print control': '打印控件',
       'basic grid': '网格',
       'create template': '模板创建',
