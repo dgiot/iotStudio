@@ -426,6 +426,7 @@ const actions = {
     let background = tag.companyinfo?.backgroundimage || '' //大屏背景图
     localStorage.setItem('homeScreen', homeScreen)
     localStorage.setItem('background', background)
+    localStorage.setItem('rolename', roles[0].name)
     // console.log('不是pc端', isPC())
     if (!isPC()) {
       window.jstoken?.setJsToken(

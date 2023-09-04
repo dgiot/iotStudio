@@ -537,11 +537,11 @@
               </el-select>
             </el-form-item>
             <div
-              v-if="editNode.attrs.type == 'realdata'"
+              v-if="editNode.attrs.type == 'realdata' || editNode.attrs.type == 'data_config'"
               style="border-top: 1px solid #000"
             >
               <h3 style="font-weight: 600; margin: 10px">数据源绑定</h3>
-              <el-form-item v-if="editNode.attrs.type == 'realdata'">
+              <el-form-item v-if="editNode.attrs.type == 'realdata' || editNode.attrs.type == 'data_config'">
                 <span slot="label">
                   <span style="color: red">产品选择</span>
                 </span>
@@ -559,7 +559,7 @@
                   ></el-option>
                 </el-select>
               </el-form-item>
-              <el-form-item v-if="editNode.attrs.type == 'realdata'">
+              <el-form-item v-if="editNode.attrs.type == 'realdata' || editNode.attrs.type == 'data_config'">
                 <span slot="label">
                   <span style="color: red">设备选择</span>
                 </span>
@@ -1066,7 +1066,7 @@
         console.log('接收到编辑节点消息', node)
         this.editNode = node
         this.editFlag = true
-        if (node.attrs.type == 'realdata') {
+        if (node.attrs.type == 'realdata' || node.attrs.type == 'data_config') {
           this.screen_productid = node.attrs.screen_productid || ''
           this.screen_deviceid = node.attrs.screen_deviceid || ''
           this.screen_wmxid = node.attrs.screen_wmxid || ''
@@ -1258,8 +1258,8 @@
       async handleQueryDeviceList(id) {
         let params = {
           skip: 0,
-          limit: 100,
-          order: '-createdAt',
+          limit: 1000,
+          order: 'name',
           count: 'objectId',
           where: { product: id },
         }
