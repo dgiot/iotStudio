@@ -35,6 +35,14 @@ export async function getEditView(ObjectId, params) {
   })
 }
 
+export async function getViewList(params) {
+  return request({
+    url: '/classes/View/',
+    method: 'get',
+    params,
+  })
+}
+
 export function getTopo(params) {
   return request({
     url: `/topo`,

@@ -430,6 +430,7 @@ const topoBasic = {
       // args.path,
       args
     )
+    console.log(args)
     if (args.data.src) {
       let src = args.data.src
       // if (src.indexOf('http') < 0) {
@@ -439,6 +440,9 @@ const topoBasic = {
       var imageObj = new Image()
       imageObj.src = src
       // imageObj.onload = () => {
+
+      console.log(args.data.id)
+
       var simpleImage = new Konva.Image({
         id: args.data.id || 'amis_component_' + topoId,
         x: 100,
@@ -456,6 +460,7 @@ const topoBasic = {
       simpleImage.setAttrs({
         src: src,
       })
+      console.log(simpleImage)
       return simpleImage
     }
     let vueComponet = ''
