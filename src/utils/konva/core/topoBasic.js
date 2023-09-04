@@ -82,8 +82,6 @@ const topoBasic = {
    */
   create(thing, saleInfo, randomXy) {
     console.log('传递内容', thing)
-
-    console.log('传递内容', thing)
     const Axis = {
       x: thing.x ? thing.x : randomXy(600, 30),
       y: thing.y ? thing.y : randomXy(450, 10),
@@ -191,7 +189,7 @@ const topoBasic = {
         height: 35,
         padding: 10,
         fontFamily: 'Calibri',
-        fill: '#e63f32',
+        fill: '#ffffff',
         type: thing.type,
       })
     )
@@ -430,7 +428,6 @@ const topoBasic = {
       // args.path,
       args
     )
-    console.log(args)
     if (args.data.src) {
       let src = args.data.src
       // if (src.indexOf('http') < 0) {
@@ -440,9 +437,6 @@ const topoBasic = {
       var imageObj = new Image()
       imageObj.src = src
       // imageObj.onload = () => {
-
-      console.log(args.data.id)
-
       var simpleImage = new Konva.Image({
         id: args.data.id || 'amis_component_' + topoId,
         x: 100,
@@ -460,7 +454,6 @@ const topoBasic = {
       simpleImage.setAttrs({
         src: src,
       })
-      console.log(simpleImage)
       return simpleImage
     }
     let vueComponet = ''

@@ -92,7 +92,7 @@ const amis = {
       fontFamily: 'Calibri',
       fontSize: 12,
       padding: 5,
-      fill: 'white',
+      fill: 'rgba(255,255,255,1)',
       width: 300,
       scaleX: saleInfo.scaleX,
       scaleY: saleInfo.scaleY,
@@ -146,7 +146,7 @@ const amis = {
     })
     simpleLabel.add(
       new Konva.Tag({
-        fill: '#ccc',
+        fill: 'rgb(0,0,0)',
         attrs: {
           name: 'dblclick',
         },
@@ -161,10 +161,11 @@ const amis = {
         lineHeight: 1.2,
         padding: 10,
         fontFamily: 'Calibri',
-        fill: 'white',
+        fill: 'rgba(255,255,255,1)',
+        type: thing.type,
       })
     )
-    console.log(simpleLabel)
+ 
     return simpleLabel
   },
   createdamis(args) {

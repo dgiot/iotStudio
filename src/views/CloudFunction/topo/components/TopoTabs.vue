@@ -280,6 +280,21 @@
         <el-button
           draggable="true"
           size="mini"
+          type="primary"
+          @click.native="
+            createAmis({
+              productid: $route.query.productid,
+              hidden: false,
+              type: 'data_config',
+            })
+          "
+        >
+          数据配置
+        </el-button>
+        <el-divider />
+        <el-button
+          draggable="true"
+          size="mini"
           style="margin: 5px"
           type="primary"
           @click.native="
@@ -300,6 +315,7 @@
         >
           数据卡片
         </el-button>
+        <el-divider />
         <div style="text-align: left; margin: 10px; font-weight: 600">
           历史统计图表
         </div>
@@ -397,6 +413,7 @@
             })
           "
         />
+        <el-divider />
         <div style="text-align: left; margin: 10px; font-weight: 600">
           在离线饼图
         </div>
@@ -493,6 +510,7 @@
             })
           "
         />
+        <el-divider />
         <!-- <el-button
           draggable="true"
           size="mini"
@@ -549,6 +567,7 @@
             })
           "
         />
+        <el-divider />
         <div style="text-align: left; margin: 10px; font-weight: 600">
           工单列表
         </div>
@@ -710,6 +729,7 @@
             })
           "
         />
+        <el-divider />
         <div style="text-align: left; margin: 10px; font-weight: 600">
           设备数量
         </div>
@@ -745,6 +765,7 @@
             })
           "
         />
+        <el-divider />
         <div style="text-align: left; margin: 10px; font-weight: 600">
           告警数量
         </div>
@@ -780,6 +801,7 @@
             })
           "
         />
+        <el-divider />
         <div style="text-align: left; margin: 10px; font-weight: 600">
           工单数量
         </div>
