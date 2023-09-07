@@ -165,7 +165,7 @@ const amis = {
         type: thing.type,
       })
     )
- 
+
     return simpleLabel
   },
   createdamis(args) {
