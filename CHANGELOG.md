@@ -1,4 +1,4 @@
-## [4.8.4](https://github.com/dgiot/iotStudio/compare/v4.7.2...v4.8.4) (2023-08-11)
+## [4.8.4](https://github.com/dgiot/iotStudio/compare/v4.7.2...v4.8.4) (2023-09-04)
 
 
 ### Bug Fixes
@@ -11,6 +11,7 @@
 
 ### Features
 
+* add 数据配置” ([cf8d74b](https://github.com/dgiot/iotStudio/commit/cf8d74bfe2be2d6e193df4dd155b493bf06c405e))
 * add sgmap ([a6f3bdd](https://github.com/dgiot/iotStudio/commit/a6f3bdd13cc1144a0eba9e1737afd67f7be9d333))
 * profile ([9475af3](https://github.com/dgiot/iotStudio/commit/9475af3af45b9f28280a06e4be0ee9718440c1d9))
 * update 4.8.3 ([1371c77](https://github.com/dgiot/iotStudio/commit/1371c77fd502a79a7d2d5fb59688a3613b887cf8))
