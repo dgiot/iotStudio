@@ -1277,7 +1277,7 @@
 
         let formSearch = {
           skip: 0,
-          limit: 20,
+          limit: 120,
           include: 'category',
           order: '-updatedAt',
           count: 'objectId',
@@ -1287,6 +1287,7 @@
 
         formSearch.where.class = { $regex: 'Product' }
         formSearch.where.type = { $regex: 'Amis' }
+        formSearch.where.icon = { $exists: true }
         await getViewList(formSearch)
           .then((response) => {
             const { count = 0, results = [] } = response
