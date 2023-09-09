@@ -428,6 +428,7 @@ const topoBasic = {
       // args.path,
       args
     )
+    const topoId = uuid(5)
     if (args.data.src) {
       let src = args.data.src
       // if (src.indexOf('http') < 0) {
@@ -436,9 +437,9 @@ const topoBasic = {
       // }
       var imageObj = new Image()
       imageObj.src = src
-      // imageObj.onload = () => {
       var simpleImage = new Konva.Image({
-        id: args.data.id || 'amis_component_' + topoId,
+        id: 'amis_' + topoId,
+        amisid: args.data.id,
         x: 100,
         y: 100,
         image: imageObj,
@@ -457,7 +458,6 @@ const topoBasic = {
       return simpleImage
     }
     let vueComponet = ''
-    const topoId = uuid(5)
     vueComponet = new Konva.Rect({
       x: 100,
       y: 100,
@@ -468,7 +468,8 @@ const topoBasic = {
       text: args.data.text,
       source: args.data.source,
       name: 'amiscomponent',
-      id: args.data.id || 'amis_component_' + topoId,
+      id: 'amis_' + topoId,
+      amisid: args.data.id,
       draggable: true,
     })
 
