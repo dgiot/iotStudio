@@ -416,7 +416,7 @@
                 slot="prepend"
               >
                 <el-option label="设备名称" value="name" />
-                <el-option label="资产编号" value="detail.assetNum" />
+                <el-option label="设备编号" value="detail.assetNum" />
                 <el-option label="设备地址" value="devaddr" />
               </el-select>
             </el-input>
@@ -547,14 +547,14 @@
         sortable
         width="120"
       />
-      <!--      <el-table-column-->
-      <!--        align="center"-->
-      <!--        label="资产编号"-->
-      <!--        prop="detail.assetNum"-->
-      <!--        show-overflow-tooltip-->
-      <!--        sortable-->
-      <!--        width="120"-->
-      <!--      />-->
+      <el-table-column
+        align="center"
+        label="设备编号"
+        prop="detail.assetNum"
+        show-overflow-tooltip
+        sortable
+        width="120"
+      />
       <el-table-column
         align="center"
         :label="$translateTitle('Maintenance.maintenance_personnel')"
@@ -915,8 +915,7 @@
         selectRows: '',
         queryForm: {
           type: 'name',
-          excludeKeys:
-            'channel,children,config,thing,decoder,data,basedata,content',
+          excludeKeys: 'channel,children,config,thing,decoder,data,content',
           include: 'product',
           product: this.$route.query.product ? this.$route.query.product : '',
           title: '',

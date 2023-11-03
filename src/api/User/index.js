@@ -57,6 +57,14 @@ export function Sitepro(pro) {
   })
 }
 
+export function checkoutToken(tempToken) {
+  return request({
+    url: '/checkoutToken?tempToken=' + tempToken,
+    method: 'get',
+    data: {},
+  })
+}
+
 // export function login(username, password) {
 //   return request({
 //     url: 'auth/login',
