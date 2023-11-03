@@ -15,6 +15,8 @@ import DgiotProgress from 'nprogress'
 // import 'nprogress/nprogress.css'
 import getPageTitle from '@/utils/vue/pageTitle'
 import { toLoginRoute } from '@/utils/router/routes'
+import { checkoutToken, login } from '@/api/User'
+
 import {
   authentication,
   loginInterception,
@@ -28,6 +30,7 @@ DgiotProgress.configure({
   trickleSpeed: 200,
   showSpinner: false,
 })
+
 router.beforeEach(async (to, from, next) => {
   window.errRoute = null
   store.dispatch('routes/setRoutesOpenTime', {
@@ -36,19 +39,39 @@ router.beforeEach(async (to, from, next) => {
   })
   if (to.name == '404') {
     window.errRoute = to
-    console.log('dgiot router log---')
-    console.log(to)
+   
     return false
+  }
+  if (to.query.tempToken) {
+    let checkoutflag = false
+    await checkoutToken(to.query.tempToken).then((res) => {
+      if (res.code == 200) {
+        checkoutflag = true
+      }
+    })
+    if (checkoutflag) {
+      Vue.prototype.$baseMessage(
+        Vue.prototype.$translateTitle(`token有效,登录跳转中`),
+        'success'
+      )
+      await store.dispatch('user/login', {
+        username: 'dgiot',
+        password: 'w9943535dsgfgdsgdsertet',
+      })
+    } else {
+      Vue.prototype.$baseMessage(
+        Vue.prototype.$translateTitle(`token已失效。`),
+        'error'
+      )
+    }
   }
   const { showProgressBar } = store.getters['settings/theme']
   if (showProgressBar) DgiotProgress.start()
-  let hasToken = store.getters['user/token']
-
+  // let hasToken = store.getters['user/token']
+  let hasToken = localStorage.getItem('sessionToken')
   if (!loginInterception) hasToken = true
   if (hasToken) {
     if (store.getters['routes/routes'].length) {
-      // 这里判断下存储的路由表  并且过滤掉白名单
-      // dgiotlog.log(store.getters['routes/routes'])
       // 禁止已登录用户返回登录页
       if (to.path === '/login') {
         next({
@@ -83,16 +106,7 @@ router.beforeEach(async (to, from, next) => {
     }
   } else {
     if (routesWhiteList.includes(to.path)) {
-      // 设置游客路由(不需要可以删除)
-      if (supportVisit && !store.getters['routes/routes'].length) {
-        await store.dispatch('routes/setRoutes', 'visit')
-        next({
-          ...to,
-          replace: true,
-        })
-      } else {
-        next()
-      }
+      next()
     } else {
       next(toLoginRoute(to))
     }
