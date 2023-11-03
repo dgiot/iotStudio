@@ -427,6 +427,7 @@ const actions = {
     localStorage.setItem('homeScreen', homeScreen)
     localStorage.setItem('background', background)
     localStorage.setItem('rolename', roles[0].name)
+    localStorage.setItem('sessionToken', sessionToken)
     // console.log('不是pc端', isPC())
     if (!isPC()) {
       window.jstoken?.setJsToken(

@@ -1,6 +1,6 @@
 {
   "name": "@dgiot/dgiot-dashboard",
-  "version": "4.8.5",
+  "version": "4.8.6",
   "author": "xxb",
   "license": "MPL-2.0",
   "private": false,
@@ -65,8 +65,10 @@
     "@material/icon-button": "13.0.0",
     "amis": "1.9.1-beta.11",
     "amis-editor": "4.1.0-beta.24",
+    "cache-loader": "^4.1.0",
     "driver.js": "^0.9.8",
     "pnpm": "^7.3.0",
+    "rc-input-number": "7.3.11",
     "register-service-worker": "1.7.2",
     "resize-detector": "0.3.0",
     "vditor": "^3.8.15",

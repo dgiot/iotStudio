@@ -125,6 +125,7 @@
   import { isPassword } from '@/utils/data/validate'
   import { SiteDefault } from '@/api/License'
   import { Roletree } from '@/api/Menu'
+  import { checkoutToken, getUser } from '@/api/User'
 
   export default {
     name: 'Login',
@@ -240,7 +241,7 @@
         await this.init()
       })
     },
-    created() {
+    async created() {
       this.$removeToken()
       this.isShow = window.name == 'dgiot_iframe' ? false : true
       window.addEventListener('message', this.iframeLogin)

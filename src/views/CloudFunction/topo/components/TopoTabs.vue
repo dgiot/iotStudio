@@ -873,6 +873,39 @@
           "
         />
         <el-divider />
+        <div style="text-align: left; margin: 10px; font-weight: 600">
+          低代码视图组件
+        </div>
+        <img
+          draggable="true"
+          size="mini"
+          :src="$FileServe + '/dgiot_file/topo/png/amiscomponent.png'"
+          style="
+            width: 70px;
+            height: 40px;
+            display: inline-block;
+            margin-left: 20px;
+          "
+          type="primary"
+          @click="
+            createBasicThing({
+              productid: $route.query.productid,
+              type: 'amiscomponent',
+              data: {
+                id: `a8d787d0ec`, //amis_${new Date().getTime()}
+                width: 500,
+                height: 350,
+                fill: 'rgba(23, 37, 76, 0.7)',
+                text: '低代码视图组件',
+                source: 'api',
+                src: '/dgiot_file/topo/png/amiscomponent.png',
+              },
+              chart: 'amisview',
+              hidden: false,
+            })
+          "
+        />
+        <el-divider />
       </a-collapse-panel>
       <a-collapse-panel key="99" :header="'低代码组件'">
         <img
