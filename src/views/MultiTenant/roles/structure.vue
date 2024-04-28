@@ -373,9 +373,13 @@
         if (value === '') {
           callback(new Error('请输入密码'))
         } else {
-          if (!/^\w{4,20}$/.test(value)) {
+          if (
+            !/^(?=.*[A-Za-z])(?=.*\d)(?=.*[$@$!%*#?&])[A-Za-z\d$@$!%*#?&]{8,}$/.test(
+              value
+            )
+          ) {
             // if (!/^([\w]|[.]){6,10}$/.test(value)) {
-            callback(new Error('密码长度必须大于4位'))
+            callback(new Error('至少8个字符，大小写数字及特殊字符'))
           }
           callback()
         }

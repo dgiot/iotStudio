@@ -1,4 +1,4 @@
-## [4.8.4](https://github.com/dgiot/iotStudio/compare/v4.7.2...v4.8.4) (2023-09-04)
+## [4.8.6](https://github.com/dgiot/iotStudio/compare/v4.7.2...v4.8.6) (2023-11-03)
 
 
 ### Bug Fixes
@@ -13,6 +13,9 @@
 
 * add 数据配置” ([cf8d74b](https://github.com/dgiot/iotStudio/commit/cf8d74bfe2be2d6e193df4dd155b493bf06c405e))
 * add sgmap ([a6f3bdd](https://github.com/dgiot/iotStudio/commit/a6f3bdd13cc1144a0eba9e1737afd67f7be9d333))
+* amis icon ([a44b599](https://github.com/dgiot/iotStudio/commit/a44b599a0ce3721693a46e4e5dfb75e3996a7a6d))
+* amisview ([a3311b8](https://github.com/dgiot/iotStudio/commit/a3311b8690cd42982bec01a20640deaad3cdb810))
+* other login ([006a560](https://github.com/dgiot/iotStudio/commit/006a5607f1df346eae57d1fc9fb69742790844aa))
 * profile ([9475af3](https://github.com/dgiot/iotStudio/commit/9475af3af45b9f28280a06e4be0ee9718440c1d9))
 * update 4.8.3 ([1371c77](https://github.com/dgiot/iotStudio/commit/1371c77fd502a79a7d2d5fb59688a3613b887cf8))
 

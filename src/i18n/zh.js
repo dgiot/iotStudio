@@ -239,7 +239,7 @@ export default {
       action: '动作',
       stop: '停止',
       start: '启动',
-      trace: '消息跟踪',
+      trace: '在线调试',
       alert: '告警设置',
       tracetype: '类型',
       instruct: '设备指令',

@@ -392,12 +392,30 @@ export default {
       dirlength: 20,
       selectproduct: '',
       watchNum: 0,
+      chartType: [
+        { type: 'line', name: '折线图' },
+        { type: 'histogram', name: '柱状图' },
+        { type: 'bar', name: '条形图' },
+        { type: 'pie', name: '饼图' },
+        { type: 'ring', name: '环图' },
+        { type: 'waterfall', name: '瀑布图' },
+        { type: 'funnel', name: '漏斗图' },
+        { type: 'radar', name: '雷达图' },
+        { type: 'map', name: '地图' },
+        { type: 'sankey', name: '桑基图' },
+        { type: 'heatmap', name: '热力图' },
+        { type: 'scatter', name: '散点图' },
+        { type: 'candle', name: 'k线图' },
+        { type: 'gauge', name: '仪表盘' },
+        { type: 'tree', name: '树图' },
+        { type: 'liquidfill', name: '水球图' },
+        { type: 'wordcloud', name: '词云图' },
+      ],
     }
   },
   computed: {
     ...mapGetters({
       Device: 'settings/device',
-      chartType: 'product/chartType',
     }),
   },
   watch: {

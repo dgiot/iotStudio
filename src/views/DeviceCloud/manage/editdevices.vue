@@ -79,6 +79,7 @@
                       />
                     </el-form-item>
                     <el-form-item :label="$translateTitle('developer.type')">
+
                       <el-select
                         v-model="params.style"
                         placeholder="请选择"

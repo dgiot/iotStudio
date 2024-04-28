@@ -34,10 +34,10 @@
           <dgiot-role-switch
             :title="$translateTitle(`home.department switch`)"
           />
-          <dgiot-error-log :title="$translateTitle(`home.error log`)" />
+          <!--          <dgiot-error-log :title="$translateTitle(`home.error log`)" />-->
           <dgiot-notice :title="$translateTitle(`home.notice`)" />
           <dgiot-full-screen :title="$translateTitle(`home.full screen`)" />
-          <dgiot-doc :title="$translateTitle(`home.full screen`)" />
+          <!--          <dgiot-doc :title="$translateTitle(`home.full screen`)" />-->
           <dgiot-language :title="$translateTitle(`home.language`)" />
           <dgiot-theme :title="$translateTitle(`home.theme`)" />
           <dgiot-refresh :title="$translateTitle(`home.refresh`)" />

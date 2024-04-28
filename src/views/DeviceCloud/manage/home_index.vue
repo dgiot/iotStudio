@@ -416,8 +416,7 @@
                 slot="prepend"
               >
                 <el-option label="设备名称" value="name" />
-                <el-option label="设备编号" value="detail.assetNum" />
-                <el-option label="设备地址" value="devaddr" />
+                <el-option label="设备编号" value="devaddr" />
               </el-select>
             </el-input>
           </el-form-item>
@@ -541,20 +540,20 @@
       </el-table-column>
       <el-table-column
         align="center"
-        label="设备地址"
+        label="设备编号"
         prop="devaddr"
         show-overflow-tooltip
         sortable
-        width="120"
+        width="180"
       />
-      <el-table-column
-        align="center"
-        label="设备编号"
-        prop="detail.assetNum"
-        show-overflow-tooltip
-        sortable
-        width="120"
-      />
+      <!--      <el-table-column-->
+      <!--        align="center"-->
+      <!--        label="设备编号"-->
+      <!--        prop="detail.assetNum"-->
+      <!--        show-overflow-tooltip-->
+      <!--        sortable-->
+      <!--        width="120"-->
+      <!--      />-->
       <el-table-column
         align="center"
         :label="$translateTitle('Maintenance.maintenance_personnel')"
@@ -676,9 +675,9 @@
         width="260"
       >
         <template #default="{ row }">
-          <el-button size="mini" type="text" @click="konvaDevice(row)">
-            设备面板
-          </el-button>
+          <!--          <el-button size="mini" type="text" @click="konvaDevice(row)">-->
+          <!--            设备面板-->
+          <!--          </el-button>-->
           <el-button size="mini" type="text" @click="info(row)">
             设备信息
           </el-button>

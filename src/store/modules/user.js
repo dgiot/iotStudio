@@ -420,14 +420,17 @@ const actions = {
       },
       _userInfo
     )
-    // console.log('查看数据', data)
-    const { sessionToken = '', roles = [], objectId = '', tag = {} } = data
+    const {
+      error = '',
+      sessionToken = '',
+      roles = [],
+      objectId = '',
+      tag = {},
+    } = data
     let homeScreen = tag.companyinfo?.homeScreen || 0 //大屏类型
     let background = tag.companyinfo?.backgroundimage || '' //大屏背景图
     localStorage.setItem('homeScreen', homeScreen)
     localStorage.setItem('background', background)
-    localStorage.setItem('rolename', roles[0].name)
-    localStorage.setItem('sessionToken', sessionToken)
     // console.log('不是pc端', isPC())
     if (!isPC()) {
       window.jstoken?.setJsToken(
@@ -437,16 +440,26 @@ const actions = {
       )
     }
     if (sessionToken) {
+      localStorage.setItem('rolename', roles[0].name)
+      localStorage.setItem('sessionToken', sessionToken)
       await queryAllMsg(commit, dispatch, data, 'ajax')
       await departmentToken(roles[0].name)
       commit('setLoginInfo', userInfo)
     } else {
-      Vue.prototype.$baseMessage(
-        Vue.prototype.$translateTitle(
-          `route.登录失败，可能是密码错误或者账号被禁用！请与平台管理员联系。`
-        ),
-        'error'
-      )
+
+      if (error.indexOf('locked') > 0) {
+        Vue.prototype.$baseMessage(
+          Vue.prototype.$translateTitle(
+            `route.由于多次登录失败，您的帐户被锁定。请在10分钟后再试。`
+          ),
+          'error'
+        )
+      } else {
+        Vue.prototype.$baseMessage(
+          Vue.prototype.$translateTitle(`route.账号/密码错误请检查后重试`),
+          'error'
+        )
+      }
       return Promise.reject()
     }
   },

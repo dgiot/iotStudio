@@ -17,7 +17,7 @@
       :height="height"
       style="width: 100%; margin-top: 20px"
     >
-      <el-table-column :label="$translateTitle('node.nodename')" prop="name" />
+      <el-table-column :label="$translateTitle('node.nodename')" prop="node" />
       <el-table-column
         :label="'Erlang/' + $translateTitle('node.OTPversion')"
         prop="otp_release"

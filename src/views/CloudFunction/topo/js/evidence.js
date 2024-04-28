@@ -363,6 +363,7 @@ export default {
           'dgiot-hey-message-error'
         )
       }
+      event.target.value = ''
     },
     utc2beijing(utc_datetime) {
       // 转为正常的时间格式 年-月-日 时:分:秒

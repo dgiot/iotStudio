@@ -397,7 +397,7 @@
             图片
           </el-button>
           <el-button type="primary" @click="handleLowCode(row)">
-            {{ $translateTitle('application.preview') }}
+            {{ $translateTitle('article.view') }}
           </el-button>
 
           <el-button type="success" @click="handleEdit(row)">

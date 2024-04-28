@@ -126,8 +126,8 @@ instance.interceptors.request.use(
     let { headers = {} } = config
     _.merge(headers, {
       departmentToken: departmentToken,
-      author: 'h7ml',
-      email: 'h7ml@qq.com',
+      author: 'dgiot',
+      email: 'dgiot@iotn2n.com',
       platform: 'web',
     })
     headers[`${tokenName}`] = usertoken
