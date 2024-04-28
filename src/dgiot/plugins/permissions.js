@@ -39,38 +39,42 @@ router.beforeEach(async (to, from, next) => {
   })
   if (to.name == '404') {
     window.errRoute = to
-   
     return false
   }
   if (to.query.tempToken) {
-    let checkoutflag = false
-    await checkoutToken(to.query.tempToken).then((res) => {
-      if (res.code == 200) {
-        checkoutflag = true
-      }
-    })
-    if (checkoutflag) {
-      Vue.prototype.$baseMessage(
-        Vue.prototype.$translateTitle(`token有效,登录跳转中`),
-        'success'
-      )
-      await store.dispatch('user/login', {
-        username: 'dgiot',
-        password: 'w9943535dsgfgdsgdsertet',
-      })
+    let hasToken = localStorage.getItem('sessionToken')
+    if (!loginInterception) hasToken = true
+    if (hasToken) {
     } else {
-      Vue.prototype.$baseMessage(
-        Vue.prototype.$translateTitle(`token已失效。`),
-        'error'
-      )
+      let checkoutflag = false
+      await checkoutToken(to.query.tempToken).then((res) => {
+        if (res.code == 200) {
+          checkoutflag = true
+        }
+      })
+      if (checkoutflag) {
+        Vue.prototype.$baseMessage(
+          Vue.prototype.$translateTitle(`token有效,登录跳转中`),
+          'success'
+        )
+        await store.dispatch('user/login', {
+          username: 'dgiot',
+          password: 'w9943535dsgfgdsgdsertet',
+        })
+      } else {
+        Vue.prototype.$baseMessage(
+          Vue.prototype.$translateTitle(`token已失效。`),
+          'error'
+        )
+      }
     }
   }
   const { showProgressBar } = store.getters['settings/theme']
   if (showProgressBar) DgiotProgress.start()
   // let hasToken = store.getters['user/token']
-  let hasToken = localStorage.getItem('sessionToken')
-  if (!loginInterception) hasToken = true
-  if (hasToken) {
+  let hasToken1 = localStorage.getItem('sessionToken')
+  if (!loginInterception) hasToken1 = true
+  if (hasToken1) {
     if (store.getters['routes/routes'].length) {
       // 禁止已登录用户返回登录页
       if (to.path === '/login') {

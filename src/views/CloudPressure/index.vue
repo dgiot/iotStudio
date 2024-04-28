@@ -634,6 +634,7 @@
         const previerUrl = `${location.protocol}//${location.hostname}/onlinePreview?url=${encodeUrl}`
         window.open(previerUrl, '_blank')
       },
+      // 下载PLC模板
       async download(row) {
         window.location = row.docxUrl
       },

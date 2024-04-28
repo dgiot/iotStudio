@@ -48,6 +48,7 @@ module.exports = {
   refreshSession: true,
   noCookiePages: [
     '',
+    '/',
     '/login',
     '/jwtLogin',
     '/quick',

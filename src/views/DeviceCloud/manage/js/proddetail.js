@@ -48,7 +48,7 @@ import {
   BmScale,
   BmView,
 } from 'vue-baidu-map'
-import { putDevice } from '../../../../api/Device'
+import {ImportWmx} from "../../../../api/Export";
 
 var editor
 var editor1
@@ -183,6 +183,17 @@ export default {
       }
     }
     return {
+      // 协议列表
+      protocollist:[
+        {
+          name:"DLINK协议",
+          type:"dlink"
+        },
+        {
+          name:"PLC协议",
+          type:"plc"
+        }
+      ],
       currentChannelPage: 1,
       cachList: [
         {
@@ -688,7 +699,9 @@ export default {
       ProductSecret: '',
       dynamicReg: false,
       dialog_address: false,
+      importwmx: false,
       productId: '',
+      importtype: '',
       productName: '',
       productdetail: {
         config: {
@@ -3302,7 +3315,71 @@ export default {
 
       this.editorList[index].setValue(this.wmxData[leftPos].dataForm.collection)
     },
+    // 下载模板
+    async download(type) {
+      let ele = document.createElement('a')
+      ele.target = '_blank'
+      switch (type) {
+        case 'plc':
+          ele.href = window.location.origin + '/dgiot_file/product/csv/plc_template.csv'
+          ele.download = 'plc_template.csv'
+          break
+        case 'dlink':
+          ele.href = window.location.origin + '/dgiot_file/product/csv/dlink_template.csv'
+          ele.download = 'dlink_template.csv'
+          break
+      }
+      ele.click()
+      ele = null
+    },
+    // 导入物模型弹窗
+    async openImport() {
+      this.importwmx = true
+      // const protocol = await getProtocol()
+      // console.log(protocol)
+      // this.protocollist = protocol
+    }, // 导入物模型
+    async handleImport(type) {
+      this.importtype = type
+      await this.$refs.uploader.click()
+    },
+    async doUpload(event) {
+      const parseFile = event.target.files[0]
+      const loading = this.$baseColorfullLoading(3)
+      try {
+        console.log('event', event)
+        console.log('event', parseFile)
+        const res = await ImportWmx(this.importtype, this.productId, parseFile)
+        loading.close()
+        console.log('eresresrror', res)
 
+        if(res.code == 200){
+          this.$message({
+            showClose: true,
+            message: this.$translateTitle(
+                '导入物模型成功'
+            ),
+            duration: 2000,
+            type: 'success',
+          })
+          this.getProDetail()
+          this.importwmx = false
+        }else{
+          this.$message({
+            showClose: true,
+            message: this.$translateTitle(
+                '导入失败，请检查导入模板是否正确'
+            ),
+            duration: 2000,
+            type: 'error',
+          })
+        }
+      } catch (error) {
+        loading.close()
+        this.$baseMessage(error, 'error', '导入失败，请检查导入模板是否正确')
+      }
+        event.target.value = '';
+    },
     // 李宏杰添加结束
 
     // 查看物模型模板

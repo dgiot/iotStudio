@@ -71,3 +71,25 @@ export async function ImportParse(className, file) {
     data: formData,
   })
 }
+
+/**
+ * @description 导入物模型
+ * @param params
+ * @return {Promise<*|ElMessageComponent>}
+ */
+export async function ImportWmx(type, productid, file) {
+  let formData = new FormData()
+  formData.append('type', type)
+  formData.append('objectId', productid)
+  formData.append('file', file)
+  console.log('formdata', formData, productid, file)
+  return request({
+    url: 'import_wmxdata',
+    method: 'post',
+    headers: {
+      'Content-Type': 'multipart/form-data',
+      accept: 'application/json',
+    },
+    data: formData,
+  })
+}

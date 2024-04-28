@@ -404,7 +404,7 @@
             // keys: 'Time,msg,domain',
             include: '',
             where: {
-              deviceid: this.deviceid ? this.deviceid : '',
+              deviceid: this.queryForm.deviceid ? this.queryForm.deviceid : '',
               domain: this.queryForm.domain.length
                 ? // ? {
                   //     $all: this.queryForm.domain.split(

@@ -150,7 +150,7 @@
         }
       }
       const validatePassword = (rule, value, callback) => {
-        let pwdlength = 4
+        let pwdlength = 8
         if (!isPassword(value, pwdlength)) {
           callback(new Error(this.info.than + pwdlength + this.info.Bit))
         } else {

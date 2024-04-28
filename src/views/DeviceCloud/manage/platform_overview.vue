@@ -906,7 +906,8 @@
   import icoPath1 from '../../../../public/assets/images/Device/1.png'
   import icoPath2 from '../../../../public/assets/images/Device/2.png'
   import { queryProduct } from '@/api/Product'
-  import { getDevice, querycompanyDevice } from '@/api/Device'
+  import { getDevice, queryDevice, querycompanyDevice } from '@/api/Device'
+  import { queryNotification } from '@/api/Notification'
   import { mapGetters, mapMutations } from 'vuex'
   import { getToken } from '@/api/Menu'
   import { Startdashboard } from '@/api/System/index'
@@ -1223,7 +1224,7 @@
     },
     mounted() {
       let _this = this
-
+      _this.getcard()
       // 监听窗口发生变化
       // window.addEventListener('resize', function () {
       //   // console.log('变化了')
@@ -1716,8 +1717,37 @@
           }
         })
       },
+      async getcard() {
+        const { count } = await queryProduct({
+          count: 'objectId',
+          order: '-updatedAt',
+          keys: 'name,icon',
+          where: {},
+        })
+        this.set_product_count(count)
+        this.getdev_count()
+        this.getnot_count()
+      },
+      async getdev_count() {
+        const { count } = await queryDevice({
+          count: 'objectId',
+          order: '-updatedAt',
+          keys: 'name,icon',
+          where: {},
+        })
+        this.set_dev_count(count)
+      },
+      async getnot_count() {
+        const { count } = await queryNotification({
+          count: 'objectId',
+          order: '-updatedAt',
+          keys: 'name,icon',
+          where: {},
+        })
+        this.warnCount = count
+      },
       async getProduct() {
-        const { results } = await queryProduct({
+        const { count, results } = await queryProduct({
           count: 'objectId',
           order: '-updatedAt',
           keys: 'name,icon',

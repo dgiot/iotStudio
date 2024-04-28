@@ -73,12 +73,12 @@ const actions = {
     const { results } = await getRouterList()
     const cookie = Cookies.get('dgiot_auth_token') !== 'undefined'
     if (!results && cookie) {
-      Vue.prototype.$baseMessage(
-        '路由未正常返回！',
-        'error',
-        false,
-        'dgiot-hey-message-error'
-      )
+      // Vue.prototype.$baseMessage(
+      //   '路由未正常返回！',
+      //   'error',
+      //   false,
+      //   'dgiot-hey-message-error'
+      // )
       return false
     }
     /**
