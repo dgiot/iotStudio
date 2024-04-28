@@ -37,7 +37,13 @@
         @onChange="onChange"
       />
     </el-drawer>
-    <dgiot-input ref="uploadFinish" accept=".csv" @fileInfo="fileInfo" />
+    <dgiot-input
+      ref="uploadFinish"
+      accept=".csv"
+      :params="inputParams"
+      @fileInfo="fileInfo"
+      @files="files"
+    />
     <div class="firsttable">
       <el-form
         class="demo-form-inline"
@@ -445,6 +451,15 @@
                         :value="item.value"
                       />
                     </el-select>
+                    <div v-show="getFromType(item, j) == 'upload'">
+                      <el-button
+                        type="primary"
+                        @click.native="uploadCkick(item)"
+                      >
+                        {{ $translateTitle('application.uploadfile') }}
+                      </el-button>
+                      <span>{{ addchannel[item.showname + 'filename'] }}</span>
+                    </div>
                   </template>
                 </el-table-column>
                 <el-table-column
@@ -807,9 +822,13 @@
         var res = 'input'
         for (var i in item.table) {
           if (item.table[i].title.zh == column) {
-            res = item.table[i].enum?.length ? 'select' : 'input'
-            if (type === 'select') return item.table[i].enum
-            else return res
+            if (item.table[i].type == 'upload') {
+              return 'upload'
+            } else {
+              res = item.table[i].enum?.length ? 'select' : 'input'
+              if (type === 'select') return item.table[i].enum
+              else return res
+            }
           }
         }
       },

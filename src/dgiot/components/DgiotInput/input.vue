@@ -77,6 +77,7 @@
         } catch (e) {
           dgiotlog.log(e)
         }
+        event.target.value = ''
       },
       //文件删除操作
       remove() {

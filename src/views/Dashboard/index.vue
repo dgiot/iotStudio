@@ -1,25 +1,26 @@
 <template>
   <div class="dashboard-container">
     <div class="main">
-      <a-tabs class="tabs" default-active-key="iframe">
-        <a-tab-pane key="iframe" :tab="$translateTitle('leftbar.monitor')">
-          <iframe
-            v-show="dashboardrul != '' && dashboardrul"
-            id="iframe"
-            class="iframe"
-            frameborder="0"
-            height="700"
-            width="100%"
-          />
-        </a-tab-pane>
-        <a-tab-pane
-          key="chart"
-          force-render
-          :tab="$translateTitle('equipment.chart')"
-        >
-          <empty />
-        </a-tab-pane>
-      </a-tabs>
+      <!--      <a-tabs class="tabs" default-active-key="iframe">-->
+      <!--        <a-tab-pane key="iframe" :tab="$translateTitle('leftbar.monitor')">-->
+      <!--          -->
+      <!--        </a-tab-pane>-->
+      <!--                <a-tab-pane-->
+      <!--                  key="chart"-->
+      <!--                  force-render-->
+      <!--                  :tab="$translateTitle('equipment.chart')"-->
+      <!--                >-->
+      <!--                  <empty />-->
+      <!--                </a-tab-pane>-->
+      <!--      </a-tabs>-->
+      <iframe
+        v-show="dashboardrul != '' && dashboardrul"
+        id="iframe"
+        class="iframe"
+        frameborder="0"
+        height="780"
+        width="100%"
+      />
     </div>
   </div>
 </template>
@@ -42,7 +43,7 @@
           date2: '',
         },
         refresh: '',
-        dashboardrul: 'http://47.105.106.54:3000/',
+        dashboardrul: 'http://192.168.1.122:3000/',
         timerefesh: {
           val1: '15s',
           val2: '30s',

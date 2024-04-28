@@ -1,6 +1,42 @@
 <template>
   <div class="proddetail">
+    <input
+      ref="uploader"
+      accept=".csv"
+      style="display: none"
+      type="file"
+      @change="doUpload($event)"
+    />
     <dgiot-profile v-show="false" :product-info="productInfo" />
+    <!--    导入物模型-->
+    <el-dialog
+      :append-to-body="true"
+      :close-on-click-modal="false"
+      title="导入物模型"
+      :visible.sync="importwmx"
+      width="50%"
+    >
+      <div>
+        <el-table :data="protocollist" height="400" style="width: 100%">
+          <el-table-column label="协议类型">
+            <template #default="{ row }">
+              <span>{{ row.name }}</span>
+            </template>
+          </el-table-column>
+          <el-table-column v-slot="{ row }" label="下载模板">
+            <el-button type="primary" @click.native="download(row.type)">
+              下载模板
+            </el-button>
+          </el-table-column>
+          <el-table-column v-slot="{ row }" label="导入">
+            <el-button type="primary" @click.native="handleImport(row.type)">
+              <!-- 导入物模型 -->
+              导入
+            </el-button>
+          </el-table-column>
+        </el-table>
+      </div>
+    </el-dialog>
     <el-dialog
       append-to-body
       :before-close="handleAddressClose"
@@ -1233,6 +1269,12 @@
                     <dgiot-query-form class="query-form">
                       <dgiot-query-form-right-panel style="width: 100%">
                         <div class="stripe-panel">
+                          <el-button
+                            type="primary"
+                            @click.native="openImport()"
+                          >
+                            导入物模型
+                          </el-button>
                           <el-button
                             size="small"
                             type="primary"
@@ -2642,7 +2684,7 @@
               id="editor"
               class="ace_editor ace-monokai ace_dark"
               style="min-height: 600px; margin-bottom: 0"
-            ><textarea class="ace_text-input" /></pre>
+            ><textarea class="ace_text-input"/></pre>
             <div style="background: #ffffff">
               <label id="plug-name2" />
             </div>
@@ -2660,7 +2702,7 @@
               id="editor2"
               class="ace_editor"
               style="min-height: 300px; margin-top: 0; margin-bottom: 0"
-            ><textarea class="ace_text-input" /></pre>
+            ><textarea class="ace_text-input"/></pre>
           </div>
         </el-tab-pane>
         <!--物接入-->
@@ -2822,8 +2864,8 @@
                     class="ace_editor"
                     style="min-height: 400px"
                   ><el-input
-                    class="ace_text-input"
-                    type="textarea"
+                      class="ace_text-input"
+                      type="textarea"
                   /></pre>
                   <el-button
                     slot="reference"
@@ -3158,8 +3200,8 @@
           <label id="plug-name" />
         </div>
         <pre id="editor1" class="ace_editor" style="min-height: 400px"><textarea
-          class="ace_text-input"
-          style="overflow:scroll"
+            class="ace_text-input"
+            style="overflow:scroll"
         /></pre>
       </div>
       <span slot="footer" class="dialog-footer" style="height: 30px">
@@ -3284,8 +3326,8 @@
                     class="ace_editor"
                     style="min-height: 600px"
                   ><el-input
-                    class="ace_text-input"
-                    type="textarea"
+                      class="ace_text-input"
+                      type="textarea"
                   /></pre>
                 </el-form-item>
               </div>
@@ -3301,8 +3343,8 @@
                     class="ace_editor"
                     style="min-height: 600px"
                   ><el-input
-                    class="ace_text-input"
-                    type="textarea"
+                      class="ace_text-input"
+                      type="textarea"
                   /></pre>
                 </el-form-item>
               </div>
@@ -3420,7 +3462,7 @@
                   :id="item.name"
                   class="ace_editor3"
                   style="min-height: 300px; margin-top: 0; margin-bottom: 0"
-                ><textarea class="ace_text-input" /></pre>
+                ><textarea class="ace_text-input"/></pre>
               </div>
             </el-tab-pane>
           </el-tabs>

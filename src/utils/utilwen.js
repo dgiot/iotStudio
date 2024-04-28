@@ -55,7 +55,7 @@ Vue.mixin(dgiotMixin)
 Vue.use(Bus)
 
 const Headers = {
-  sessionToken: store ? store.getters['user/token'] : '',
+  sessionToken: store ? store.getters['user/token'] : 'undefined',
 }
 
 function moreHttp(option) {

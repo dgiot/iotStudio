@@ -161,7 +161,7 @@
       <el-table-column
         align="center"
         :label="$translateTitle('alert.productname')"
-        prop="content.productname"
+        prop="productname"
         show-overflow-tooltip
         sortable
       />

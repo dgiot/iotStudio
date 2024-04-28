@@ -86,13 +86,13 @@
         </template>
       </el-table-column>
     </el-table>
-    <dgiot-Pagination
-      v-show="count"
-      :limit.sync="queryForm.pageSize"
-      :page.sync="queryForm.pageNo"
-      :total="count"
-      @pagination="getcontrolrole"
-    />
+    <!--    <dgiot-Pagination-->
+    <!--      v-show="count"-->
+    <!--      :limit.sync="queryForm.pageSize"-->
+    <!--      :page.sync="queryForm.pageNo"-->
+    <!--      :total="count"-->
+    <!--      @pagination="getcontrolrole"-->
+    <!--    />-->
     <!--编辑权限弹窗-->
     <el-dialog
       :append-to-body="true"
@@ -164,7 +164,7 @@
           product: '',
           type: '',
           searchDate: [],
-          limit: 100,
+          limit: 500,
           skip: 0,
           order: '-createdAt',
           keys: 'count(*)',

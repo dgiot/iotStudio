@@ -14,6 +14,10 @@
         </td>
         <td>{{ devicedetail.objectId }}</td>
         <td class="cloumn">
+          {{ '设备名称' }}
+        </td>
+        <td>{{ devicedetail.name }}</td>
+        <td class="cloumn">
           {{ $translateTitle('equipment.devicenumber') + ':' }}
         </td>
         <td>{{ devicedetail.devaddr }}</td>
@@ -22,16 +26,6 @@
         </td>
         <td>
           {{ devicedetail.address ? devicedetail.address : '' }}
-        </td>
-        <td class="cloumn">
-          {{ $translateTitle('equipment.state') + ':' }}
-        </td>
-        <!-- <td  :class="devicedetail.status"  v-if="devicedetail.status=='ACTIVE'">{{$translateTitle('product.active')}}</td>
-         <td  :class="devicedetail.status" v-else-if="devicedetail.status=='UNACTIVE'">{{$translateTitle('product.unactive')}}</td>
-         <td  :class="devicedetail.status" v-else-if="devicedetail.status=='ONLINE'">{{$translateTitle('product.online')}}</td>
-        <td  :class="devicedetail.status"  v-else>{{$translateTitle('product.offline')}}</td>-->
-        <td class="ACTIVE">
-          {{ $translateTitle('product.active') }}
         </td>
       </tr>
 
@@ -78,14 +72,16 @@
           {{ $translateTitle('application.secretkey') + ':' }}
         </td>
         <td>{{ devicedetail.deviceSecret || '-' }}</td>
-        <!--        <td class="cloumn">-->
-        <!--          {{ $translateTitle('node.operation') + ':' }}-->
-        <!--        </td>-->
-        <!--        <td>-->
-        <!--          <el-link plain size="mini" @click="handleDelete(devicedetail)">-->
-        <!--            {{ $translateTitle('konva.delete') }}-->
-        <!--          </el-link>-->
-        <!--        </td>-->
+        <td class="cloumn">
+          {{ '经纬度' }}
+        </td>
+        <td>
+          {{
+            devicedetail.location.latitude +
+            ',' +
+            devicedetail.location.longitude
+          }}
+        </td>
       </tr>
     </table>
     <el-table
