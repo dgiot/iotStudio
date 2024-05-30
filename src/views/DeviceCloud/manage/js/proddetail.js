@@ -192,6 +192,10 @@ export default {
         {
           name:"PLC协议",
           type:"plc"
+        },
+        {
+          name:"MODBUSX TCP协议",
+          type:"modbusxtcp"
         }
       ],
       currentChannelPage: 1,
@@ -3327,6 +3331,10 @@ export default {
         case 'dlink':
           ele.href = window.location.origin + '/dgiot_file/product/csv/dlink_template.csv'
           ele.download = 'dlink_template.csv'
+          break
+        case 'modbusxtcp':
+          ele.href = window.location.origin + '/dgiot_file/product/csv/modbusxtcp_template.csv'
+          ele.download = 'modbusxtcp_template.csv'
           break
       }
       ele.click()
