@@ -446,7 +446,6 @@ const actions = {
       await departmentToken(roles[0].name)
       commit('setLoginInfo', userInfo)
     } else {
-
       if (error.indexOf('locked') > 0) {
         Vue.prototype.$baseMessage(
           Vue.prototype.$translateTitle(
