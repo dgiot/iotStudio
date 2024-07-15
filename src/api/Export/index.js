@@ -40,7 +40,7 @@ export async function ExportParse(className, params) {
   console.log('_token', _token)
   // eslint-disable-next-line no-undef
   return axios
-    .post(`iotapi/export_data?classname=${className}`, params, {
+    .post(`/iotapi/export_data?classname=${className}`, params, {
       responseType: 'blob',
       headers: {
         Accept: 'application/json',

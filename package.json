@@ -1,7 +1,7 @@
 {
   "name": "@dgiot/dgiot-dashboard",
-  "version": "4.8.6",
-  "author": "xxb",
+  "version": "4.8.7",
+  "author": "dgiot",
   "license": "MPL-2.0",
   "private": false,
   "homepage": "https://github.com/dgiot/iotStudio.git",
