@@ -82,10 +82,12 @@
       :title="wmxSituation + '自定义属性'"
       top="5vh"
       :visible.sync="wmxdialogVisible"
-      width="60%"
+      width="80%"
     >
       <dgiot-wmx
+        :key="upKey"
         ref="sizeForm"
+        :moduletype="moduletype"
         :size-form1="sizeForm"
         @addDas="addDas"
         @addDomain="addDomain"
@@ -418,6 +420,7 @@
   import { postDict } from '@/api/Dict'
   import { getHashClass } from '@/api/Hash'
   import { getTable } from '@/api/Dba'
+  import {postThing, putThing} from '@/api/Product/index'
   import {
     delProductTemplet,
     getProductTemplet,
@@ -432,6 +435,7 @@
   import { post_tree } from '@/api/Logs'
   import dgiotViews from '@/views/CloudFunction/lowcode'
   import { getRule } from '@/api/Rules'
+  import {dgiotlog} from "@/utils/dgiotLog";
 
   const context = require.context('./component/profile', true, /\.vue$/)
   let res_components = {}
@@ -450,6 +454,8 @@
     props: {},
     data() {
       return {
+        moduletype: 'properties',
+        upKey: moment.now(),
         engineData: [],
         Notification: {
           show: false,
@@ -1952,173 +1958,30 @@
         }
       },
       // 物模型提交
-      submitFormwmx(sizeForm) {
-        var das = []
-        sizeForm.daslist.map((items) => {
-          var newval = items['addr']
-          das.push(newval)
-        })
-        dgiotlog.log('sizeForm', sizeForm)
-        var obj = {
-          name: sizeForm.name,
-          devicetype: sizeForm.devicetype,
-          dataForm: {
-            round: sizeForm.round,
-            data: sizeForm.dinumber,
-            address: sizeForm.dis,
-            rate: sizeForm.rate,
-            offset: sizeForm.offset,
-            order: sizeForm.order,
-            protocol: sizeForm.protocol,
-            operatetype: sizeForm.operatetype,
-            originaltype: sizeForm.originaltype,
-            slaveid: sizeForm.slaveid,
-            collection: sizeForm.collection,
-            control: sizeForm.control,
-            strategy: sizeForm.strategy,
-            iscount: sizeForm.iscount,
-            countstrategy: sizeForm.countstrategy,
-            countround: sizeForm.countround,
-            countcollection: sizeForm.countcollection,
-          },
-          ico: sizeForm.ico,
-          required: true,
-          accessMode: sizeForm.isread,
-          isshow: sizeForm.isshow,
-          identifier: sizeForm.identifier,
-        }
-        // 提交之前需要先判断类型
-        if (
-          sizeForm.type == 'float' ||
-          sizeForm.type == 'double' ||
-          sizeForm.type == 'int' ||
-          sizeForm.type == 'long'
-        ) {
-          var obj1 = {
-            dataType: {
-              type: sizeForm.type.toLowerCase(),
-              specs: {
-                max: sizeForm.endnumber,
-                min: sizeForm.startnumber,
-                step: sizeForm.step,
-                precision: Number(sizeForm.precision),
-                unit: sizeForm.unit == '' ? '' : sizeForm.unit,
-              },
-              das: das,
-            },
-          }
-          Object.assign(obj, obj1)
-        } else if (sizeForm.type == 'image') {
-          obj1 = {
-            dataType: {
-              das: das,
-              type: sizeForm.type.toLowerCase(),
-              imagevalue: sizeForm.imagevalue,
-              specs: {},
-            },
-          }
-          Object.assign(obj, obj1)
-        } else if (sizeForm.type == 'bool') {
-          obj1 = {
-            dataType: {
-              das: das,
-              type: sizeForm.type.toLowerCase(),
-              specs: {
-                0: sizeForm.false,
-                1: sizeForm.true,
-              },
-            },
-          }
-          Object.assign(obj, obj1)
-        } else if (sizeForm.type == 'enum') {
-          var specs = {}
-          sizeForm.struct.map((items) => {
-            var newkey = items['attribute']
-            specs[newkey] = items['attributevalue']
-          })
-          obj1 = {
-            dataType: {
-              das: das,
-              type: sizeForm.type.toLowerCase(),
-              specs: specs,
-            },
-          }
-          Object.assign(obj, obj1)
-        } else if (sizeForm.type == 'struct') {
-          obj1 = {
-            dataType: {
-              das: das,
-              type: sizeForm.type.toLowerCase(),
-              specs: sizeForm.struct,
-            },
-          }
-          Object.assign(obj, obj1)
-        } else if (sizeForm.type == 'text') {
-          obj1 = {
-            dataType: {
-              das: das,
-              type: sizeForm.type.toLowerCase(),
-              size: sizeForm.string,
-              specs: {},
-            },
-          }
-          Object.assign(obj, obj1)
-        } else if (sizeForm.type == 'date') {
-          obj1 = {
-            dataType: {
-              das: das,
-              type: sizeForm.type.toLowerCase(),
-              specs: {},
-            },
-          }
-          Object.assign(obj, obj1)
-        } else if (sizeForm.type == 'geopoint') {
-          obj1 = {
-            dataType: {
-              das: das,
-              type: sizeForm.type.toLowerCase(),
-              gpstype: sizeForm.gpstype,
-              specs: {},
-            },
-          }
-          Object.assign(obj, obj1)
-        }
-        delete obj.index
-        dgiotlog.log('obj', obj)
+      submitFormwmx(obj) {
         // 检测到
-        // if (this.wmxSituation == '新增') {
-        // dgiotlog.log("新增");
         if (this.wmxSituation == '新增') {
-          // dgiotlog.log("新增");
+          console.log("新增");
           this.productDetail.thing.properties.unshift(obj)
         } else if (this.wmxSituation == '编辑') {
-          // dgiotlog.log("编辑", obj);
+          console.log('编辑')
           this.productDetail.thing.properties[this.modifyIndex] = obj
           this.thingKey = moment(new Date()).valueOf().toString()
         }
-        dgiotlog.log(this.wmxSituation, this.productDetail.thing.properties)
+        console.log(this.wmxSituation, this.productDetail.thing.properties)
         let data = {
           thing: { properties: this.productDetail.thing.properties },
         }
         putProductTemplet(this.producttempId, data).then((res) => {
           if (res.updatedAt) {
             this.$message({
+              showClose: true,
+              duration: 2000,
               type: 'success',
-              showClose: true,
-              duration: 2000,
               message: this.wmxSituation + '成功',
-            })
-            // this.getProDetail()
-          } else {
-            this.$message({
-              type: 'warning',
-              showClose: true,
-              duration: 2000,
-              message: this.wmxSituation + '失败',
             })
           }
         })
-        // }
         this.wmxdialogVisible = false
       },
       // 查看物模型模板

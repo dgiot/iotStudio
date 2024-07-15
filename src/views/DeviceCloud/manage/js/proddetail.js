@@ -2384,7 +2384,7 @@ export default {
     },
     // 物模型提交
     submitForm(obj) {
-      dgiotlog.log('obj', obj)
+      console.log('obj', obj)
       let data = {
         item: obj,
         productid: this.productId,

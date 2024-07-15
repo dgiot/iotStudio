@@ -14,7 +14,6 @@
 
       <el-main class="konva-container-main">
         <el-row :gutter="gutter.gutter">
-          <!--       明诚发布注释18 到 27 行-->
           <el-col
             class="hidden-xs-only konva-container-main-allocation"
             :lg="isDevice ? 0 : 4"

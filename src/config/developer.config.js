@@ -8,28 +8,28 @@ module.exports = {
      */
     {
       path: 'iotapi',
-      target: 'https://dev.dgiotcloud.cn',
+      target: 'http://192.168.1.150',
     },
     /**
      * @description 静态资源目录。开发使用
      */
     {
       path: 'dgiot_dashboard',
-      target: 'https://dev.dgiotcloud.cn',
+      target: 'http://192.168.1.150',
     },
     /**
      * @description dgiot_file文件资源目录。开发使用
      */
     {
       path: 'dgiot_file',
-      target: 'https://dev.dgiotcloud.cn',
+      target: 'http://192.168.1.150',
     },
     /**
      * @description dgiot_file文件资源目录。开发使用
      */
     {
       path: 'upload',
-      target: 'http://dev.dgiotcloud.cn',
+      target: 'http://192.168.1.150',
     },
     /**
      * @description amis server 开发使用
