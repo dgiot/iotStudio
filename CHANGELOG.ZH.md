@@ -1,10 +1,11 @@
-## [4.8.7](https://github.com/dgiot/iotStudio/compare/v4.8.6...v4.8.7) (2024-05-31)
+## [4.8.7](https://github.com/dgiot/iotStudio/compare/v4.8.6...v4.8.7) (2024-07-15)
 
 
 ### Features
 
 * import modbusxtcp ([6f1bc81](https://github.com/dgiot/iotStudio/commit/6f1bc81511d09ee2be0d62c3baa8f370b48e7589))
 * import wmx ([83c0b64](https://github.com/dgiot/iotStudio/commit/83c0b64afa28d6332765a3efc962c0e5ca238a74))
+* template ([3484162](https://github.com/dgiot/iotStudio/commit/3484162577145de32e3f5735bb3fadd72327f9c7))
 
 
 
