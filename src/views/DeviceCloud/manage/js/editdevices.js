@@ -7,6 +7,8 @@ import { getCardDevice, getDabDevice, getDevice } from '@/api/Device/index.js'
 import Instruct from '@/views/DeviceCloud/category/instruct_manage'
 import { queryView } from '@/api/View'
 import runningState from '@/views/DeviceCloud/manage/component/Device/runningState'
+import { getProduct } from '../../../../api/Product'
+
 const columns = [
   {
     title: '图片',
@@ -238,7 +240,7 @@ export default {
         number: 1,
         interval: 'h',
         datetimerange: '',
-        keys: '*',
+        keys: [],
         limit: 100,
         endTime: new Date().getTime(),
         startTime: new Date().getTime() - 3600 * 1000 * 24 * 7,
@@ -392,6 +394,7 @@ export default {
       dirlength: 20,
       selectproduct: '',
       watchNum: 0,
+      wmxkeys: [],
       chartType: [
         { type: 'line', name: '折线图' },
         { type: 'histogram', name: '柱状图' },
@@ -431,6 +434,7 @@ export default {
   mounted() {
     // this.deviceInfo.product.objectId = this.$route.query.productid
     this.getDeviceInfo(this.$route.query.deviceid)
+    this.getwmxkey()
     this.setTreeFlag(false)
     this.params.style = this.chartType[0].type
     console.log(' this.params.style', this.params.style)
@@ -453,6 +457,28 @@ export default {
     this.Unbscribe()
   },
   methods: {
+    async getwmxkey() {
+      const productdetail = await getProduct(this.$route.query.productid)
+      let wmxList = productdetail.thing?.properties || []
+      let options = []
+      if (wmxList.length > 0) {
+        wmxList.forEach((item) => {
+          if (item.isshow == true) {
+            let o = {
+              label: item.name,
+              value: item.identifier,
+            }
+            options.push(o)
+          }
+        })
+        this.params.keys = [wmxList[0].identifier]
+      }
+      options.unshift({
+        label: '全选',
+        value: '*',
+      })
+      this.wmxkeys = options
+    },
     /**
      * @Author: dext7r
      * @Date: 2021-12-24 12:13:39
@@ -740,11 +766,19 @@ export default {
           startTime,
           endTime,
         } = this.params
+        let newkeys = 'not'
+        if (keys.length > 0) {
+          newkeys = keys.join(',')
+        }
+        if (newkeys.indexOf('*') != -1) {
+          newkeys = '*'
+        }
+        this.params.keys = ['*']
         let params = {
           starttime: moment(startTime).valueOf(),
           endtime: moment(endTime).valueOf(),
           interval: number + interval,
-          keys: keys,
+          keys: newkeys,
           limit: limit,
           function: _function,
           style: style,
