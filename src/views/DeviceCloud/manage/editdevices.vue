@@ -78,6 +78,24 @@
                         type="datetime"
                       />
                     </el-form-item>
+                    <el-form-item label="物模型指标">
+                      <el-select
+                          multiple
+                          filterable
+                          collapse-tags
+                          v-model="params.keys"
+                          placeholder="请选择"
+                          size="mini"
+                          style="width: 300px"
+                      >
+                        <el-option
+                            v-for="(item, index) in wmxkeys"
+                            :key="index"
+                            :label="item.label"
+                            :value="item.value"
+                        />
+                      </el-select>
+                    </el-form-item>
                     <el-form-item :label="$translateTitle('developer.type')">
 
                       <el-select
@@ -639,6 +657,10 @@
 <script src="./js/editdevices.js"></script>
 <style lang="scss" scoped>
   ::v-deep {
+    .el-select__tags {
+      white-space: nowrap;
+      overflow: hidden;
+    }
     .el-tabs__header {
       margin: 0;
     }
@@ -662,7 +684,10 @@
       transition: 0.3s;
     }
   }
-
+  .el-select__tags {
+    white-space: nowrap;
+    overflow: hidden;
+  }
   .chartsinfo {
     margin-top: 15px;
 
