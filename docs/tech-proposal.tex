@@ -1,5 +1,6 @@
 % ============================================================================
-%  光储充微电网物联网平台 — 技术方案（Python 轻量版）
+%  dgiot_lite — 光储充微电网物联网平台 技术方案
+%  DG-IoT 开源物联网平台 Python 轻量联动版本
 %  版本: V1.0 | 日期: 2026年6月
 % ============================================================================
 \documentclass[12pt,a4paper]{ctexart}
@@ -22,7 +23,7 @@
 \centering\vspace*{3.5cm}
 {\Huge\bfseries\sffamily 光储充微电网物联网平台}\\[0.8cm]
 {\LARGE\bfseries 技术方案}\\[1.5cm]
-{\large 轻量版 · Python 全开源}\\[2.5cm]
+{\large dgiot\_lite · DG-IoT 轻量联动 · 独立运行 · 源码交付}\\[2.5cm]
 {\large\begin{tabular}{rl}
 \textbf{版 本 号:} & V1.0 \\
 \textbf{文档状态:} & 初稿 \\
@@ -321,6 +322,17 @@ P2 一般 & $\leq$8h & 个别设备离线 & 工单 \\
   \item 数据库（TDengine Community + PostgreSQL）免费，客户自装
   \item 不含服务器硬件，客户自行采购
   \item 年度维保服务按年另签
+\end{itemize}
+
+\subsection{DG-IoT 联动（可选）}
+
+dgiot\_lite 为 DG-IoT 开源物联网平台（Erlang/OTP）的 Python 轻量联动版本。独立运行完整闭环的同时，可选推送数据至 DG-IoT 主平台：
+
+\begin{itemize}
+  \item \textbf{联动方式}：MQTT 物模型格式推送 → DG-IoT 规则引擎自动接收
+  \item \textbf{配置方式}：管理后台添加推送目标，类型选择 dgiot
+  \item \textbf{零侵入}：不配置则完全不依赖 DG-IoT，独立运行
+  \item \textbf{数据格式}：自动转换为 DG-IoT 物模型标准格式（properties + timestamp）
 \end{itemize}
 
 \subsection{付款方式建议}
