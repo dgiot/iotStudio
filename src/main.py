@@ -280,6 +280,54 @@ async def collector_stats():
     return await collector.get_stats()
 
 
+# ---- Scanner (设备自动发现) ----
+
+class ScanRequest(BaseModel):
+    host: str = "127.0.0.1"
+    port: int = 502
+    start: int = 1
+    end: int = 10
+
+@app.get("/api/scanner/packet/{device_id}")
+async def packet_trace(device_id: str):
+    """获取设备报文追溯"""
+    adapter = collector._adapters.get(device_id)
+    if not adapter:
+        raise HTTPException(404, "设备未连接")
+    # Modbus native client has tracer
+    traces = []
+    if hasattr(adapter, 'client') and hasattr(adapter.client, 'tracer'):
+        for t in adapter.client.tracer.history[-20:]:
+            traces.append({"dir": t["dir"], "len": t["len"], "hex": t["hex"], "ts": t["ts"]})
+    return {"device_id": device_id, "traces": traces}
+
+@app.post("/api/scanner/scan")
+async def scan_network(body: ScanRequest):
+    """扫描 Modbus 从站 + 点位"""
+    from .protocols.modbus_scanner import SlaveScanner, PointScanner
+    results = {"host": body.host, "port": body.port, "slaves": [], "error": None}
+    try:
+        scanner = SlaveScanner(body.host, body.port, timeout=1.0, max_workers=10)
+        active = scanner.find_active(body.start, body.end)
+        for slave_id in active:
+            slave_info = {"slave_id": slave_id, "registers": []}
+            try:
+                ps = PointScanner(body.host, body.port, slave_id, timeout=1.0)
+                if ps.connect():
+                    # 扫描前 30 个寄存器的前几个有效地址
+                    regs = ps.scan_range(0, 30, max_workers=10)
+                    for r in regs[:10]:
+                        if r.success:
+                            slave_info["registers"].append({"address": r.address, "value": r.value})
+                    ps.disconnect()
+            except Exception as e:
+                slave_info["error"] = str(e)
+            results["slaves"].append(slave_info)
+    except Exception as e:
+        results["error"] = str(e)
+    return results
+
+
 # ---- Push Target ----
 
 @app.post("/api/push-targets")
