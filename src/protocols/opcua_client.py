@@ -87,8 +87,19 @@ class OPCUAClient(BaseProtocolAdapter):
         self._connected = False
 
     async def read_points(self, points: List[Dict[str, Any]]) -> List[PointValue]:
-        """读取点位 — 统一使用轮询模式（兼容性最好）"""
-        return await self._poll_read(points)
+        """读取点位 — 订阅队列优先 + 轮询兜底"""
+        results = []
+        # 1. 从订阅队列取数据
+        while not self._data_queue.empty():
+            try:
+                pv = self._data_queue.get_nowait()
+                results.append(pv)
+            except asyncio.QueueEmpty:
+                break
+        # 2. 队列空则轮询
+        if not results:
+            results = await self._poll_read(points)
+        return results
 
     async def _poll_read(self, points: List[Dict[str, Any]]) -> List[PointValue]:
         """轮询读取"""
@@ -132,7 +143,8 @@ class OPCUAClient(BaseProtocolAdapter):
             if self._subscription:
                 await self._subscription.delete()
 
-            self._subscription = await self.client.create_subscription(interval_ms, self._sub_handler)
+            handler = self._SubHandler(self)
+            self._subscription = await self.client.create_subscription(interval_ms, handler)
             self._sub_handle_map.clear()
 
             for pt in points:
@@ -153,17 +165,26 @@ class OPCUAClient(BaseProtocolAdapter):
             logger.error(f"[opcua] 建立订阅失败: {e}")
             return False
 
-    async def _sub_handler(self, handle: int, data: Any, _) -> None:
-        """订阅数据回调"""
-        point_id = self._sub_handle_map.get(handle, "")
-        await self._data_queue.put(PointValue(
-            device_id=self.device_id,
-            point_id=point_id,
-            point_name="",
-            value=data.Value.Value if hasattr(data, 'Value') else data,
-            data_type="auto",
-            timestamp=datetime.now(timezone.utc),
-        ))
+    class _SubHandler:
+        """符合 asyncua 接口的订阅处理器"""
+        def __init__(self, client):
+            self.client = client
+
+        def datachange_notification(self, node, val, data):
+            """asyncua 标准回调"""
+            try:
+                handle = hash(str(node)) & 0xFFFF
+                point_id = self.client._sub_handle_map.get(handle, "")
+                self.client._data_queue.put_nowait(PointValue(
+                    device_id=self.client.device_id,
+                    point_id=point_id,
+                    point_name="",
+                    value=val,
+                    data_type="auto",
+                    timestamp=datetime.now(timezone.utc),
+                ))
+            except asyncio.QueueFull:
+                pass
 
     async def write_point(self, point: Dict[str, Any], value: Any) -> bool:
         """写入 OPC UA 节点"""
