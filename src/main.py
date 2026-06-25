@@ -288,18 +288,24 @@ class ScanRequest(BaseModel):
     start: int = 1
     end: int = 10
 
-@app.get("/api/scanner/packet/{device_id}")
-async def packet_trace(device_id: str):
-    """获取设备报文追溯"""
-    adapter = collector._adapters.get(device_id)
-    if not adapter:
-        raise HTTPException(404, "设备未连接")
-    # Modbus native client has tracer
-    traces = []
-    if hasattr(adapter, 'client') and hasattr(adapter.client, 'tracer'):
-        for t in adapter.client.tracer.history[-20:]:
-            traces.append({"dir": t["dir"], "len": t["len"], "hex": t["hex"], "ts": t["ts"]})
-    return {"device_id": device_id, "traces": traces}
+# 全局报文日志
+_packet_log: List[Dict] = []
+
+def log_packet(device_id: str, direction: str, raw: bytes):
+    """记录报文到全局日志"""
+    import time as _time
+    _packet_log.append({"ts": _time.time(), "device": device_id, "dir": direction,
+                         "len": len(raw), "hex": raw.hex()})
+    if len(_packet_log) > 500:
+        _packet_log[:] = _packet_log[-200:]
+
+@app.get("/api/packets")
+async def get_packets(device_id: Optional[str] = None, limit: int = 50):
+    """获取报文日志"""
+    logs = _packet_log
+    if device_id:
+        logs = [p for p in _packet_log if p["device"] == device_id]
+    return {"total": len(logs), "packets": logs[-limit:]}
 
 @app.post("/api/scanner/scan")
 async def scan_network(body: ScanRequest):
@@ -307,14 +313,13 @@ async def scan_network(body: ScanRequest):
     from .protocols.modbus_scanner import SlaveScanner, PointScanner
     results = {"host": body.host, "port": body.port, "slaves": [], "error": None}
     try:
-        scanner = SlaveScanner(body.host, body.port, timeout=1.0, max_workers=10)
+        scanner = SlaveScanner(body.host, body.port, timeout=1.5, max_workers=10)
         active = scanner.find_active(body.start, body.end)
         for slave_id in active:
             slave_info = {"slave_id": slave_id, "registers": []}
             try:
-                ps = PointScanner(body.host, body.port, slave_id, timeout=1.0)
+                ps = PointScanner(body.host, body.port, slave_id, timeout=1.5)
                 if ps.connect():
-                    # 扫描前 30 个寄存器的前几个有效地址
                     regs = ps.scan_range(0, 30, max_workers=10)
                     for r in regs[:10]:
                         if r.success:
