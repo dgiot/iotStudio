@@ -254,7 +254,7 @@ class TDEngineStore:
             sql = f"ALTER STABLE {self._db}.{stable} INTERVAL({interval_days}d) KEEP({keep_days}d)"
             self.execute(sql)
 
-    def close(self) -> None:
+    async def close(self) -> None:
         if self._conn:
             try:
                 self._conn.close()
