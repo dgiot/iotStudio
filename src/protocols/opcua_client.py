@@ -87,21 +87,8 @@ class OPCUAClient(BaseProtocolAdapter):
         self._connected = False
 
     async def read_points(self, points: List[Dict[str, Any]]) -> List[PointValue]:
-        """读取点位（订阅模式从队列取，轮询模式直接读）"""
-        mode = self.config.extra.get("read_mode", "subscribe")
-
-        if mode == "subscribe":
-            results = []
-            while not self._data_queue.empty():
-                try:
-                    pv = self._data_queue.get_nowait()
-                    results.append(pv)
-                except asyncio.QueueEmpty:
-                    break
-            return results
-        else:
-            # 轮询模式: 批量 Read
-            return await self._poll_read(points)
+        """读取点位 — 统一使用轮询模式（兼容性最好）"""
+        return await self._poll_read(points)
 
     async def _poll_read(self, points: List[Dict[str, Any]]) -> List[PointValue]:
         """轮询读取"""

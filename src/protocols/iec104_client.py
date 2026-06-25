@@ -270,16 +270,16 @@ class IEC104Client(BaseProtocolAdapter):
             await self._parse_signal(type_id, num_elements, sq, common_addr, payload)
 
     async def _parse_measurement(self, type_id: int, n: int, sq: bool, ca: int, payload: bytes):
-        """解析遥测值"""
-        elem_size = 3 if type_id == 9 else (3 if type_id == 11 else 5)  # 简化: 每个元素大小
+        """解析遥测值 (IOA=3B + Value + QDS)"""
+        # M_ME_NC_1(13): IOA(3) + float(4) + QDS(1) = 8 bytes
+        elem_size = 8 if type_id == 13 else (3 if type_id in (9, 11) else 5)
         for i in range(n):
             offset = i * elem_size
             if offset + elem_size > len(payload):
                 break
-            ioa = struct.unpack('<H', payload[offset:offset + 2])[0]
-            if type_id == 13:  # 短浮点
-                raw = struct.unpack('<f', payload[offset + 3:offset + 7])[0]  # 简化
-                raw = struct.unpack('<f', bytes(payload[offset + 1:offset + 5]))[0]  # 调整
+            ioa = struct.unpack('<I', payload[offset:offset + 3] + b'\x00')[0]
+            if type_id == 13:
+                raw = struct.unpack('<f', payload[offset + 3:offset + 7])[0]
                 await self._data_queue.put(PointValue(
                     device_id=self.device_id,
                     point_id=f"ioa_{ioa}",
