@@ -19,6 +19,7 @@ const routes = [
       { path: '/topology', name: 'Topology', component: () => import('../views/TopologyView.vue'), meta: { title: '设备拓扑', icon: 'Share' } },
       { path: '/scada', name: 'Scada', component: () => import('../views/ScadaView.vue'), meta: { title: '2D组态', icon: 'PictureFilled' } },
       { path: '/channels', name: 'Channels', component: () => import('../views/ChannelView.vue'), meta: { title: '通道管理', icon: 'Connection' } },
+      { path: '/maintenance', name: 'Maintenance', component: () => import('../views/MaintenanceView.vue'), meta: { title: '运维管理', icon: 'Setting' } },
       { path: '/simulators', name: 'Simulators', component: () => import('../views/SimulatorView.vue'), meta: { title: '模拟器管理', icon: 'VideoCameraFilled' } },
       { path: '/telemetry', name: 'Telemetry', component: () => import('../views/TelemetryView.vue'), meta: { title: '数据查询', icon: 'Search' } },
     ]
