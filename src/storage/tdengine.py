@@ -89,10 +89,9 @@ class TDEngineStore:
                         port=self.config.port,
                         timeout=3,
                     )
-                except (ImportError, NameError):
-                    HAS_TAOS = False
-                    logger.warning("taos 模块不可用")
-            if not HAS_TAOS and HAS_REST:
+                except Exception:
+                    pass  # taos 不可用，走降级
+            if not self._conn and HAS_REST:
                 self._conn = RestClient(
                     url=f"http://{self.config.host}:{self.config.port}",
                     user=self.config.user, password=self.config.password,
