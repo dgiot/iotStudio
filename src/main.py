@@ -272,14 +272,17 @@ async def websocket_endpoint(ws: WebSocket):
 
 async def broadcast_ws(message: Dict[str, Any]):
     """向所有 WebSocket 客户端广播"""
-    import json
+    global ws_clients
     dead = set()
     for ws in ws_clients:
         try:
             await ws.send_json(message)
-        except Exception:
+        except Exception as e:
+            logger.debug(f"[ws] broadcast error: {e}")
             dead.add(ws)
     ws_clients -= dead
+    if ws_clients:
+        logger.debug(f"[ws] broadcast to {len(ws_clients)} clients: {message.get('device_id', '')} {len(message.get('data', []))}pts")
 
 
 # 注册广播到采集引擎回调
