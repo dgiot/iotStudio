@@ -251,6 +251,28 @@ async def device_latest(device_id: str):
     return {"device_id": device_id, "data": rows}
 
 
+# ---- Simulator Status ----
+
+@app.get("/api/simulators/status")
+async def simulators_status():
+    """检测本地模拟器端口状态"""
+    import socket
+    simulators = [
+        {"id": "modbus_tcp_502",  "name": "Modbus TCP 逆变器", "protocol": "Modbus TCP", "port": 502,  "device": "光伏逆变器",    "itemCount": 10},
+        {"id": "modbus_tcp_1502", "name": "Modbus TCP 储能",   "protocol": "Modbus TCP", "port": 1502, "device": "储能PCS",       "itemCount": 10},
+        {"id": "modbus_tcp_2502", "name": "Modbus TCP 充电桩", "protocol": "Modbus TCP", "port": 2502, "device": "充电桩",        "itemCount": 8},
+        {"id": "iec104_2404",     "name": "IEC 104 储能PCS",   "protocol": "IEC 104",    "port": 2404, "device": "储能PCS从站",    "itemCount": 14},
+        {"id": "opcua_4840",      "name": "OPC UA 充电桩",     "protocol": "OPC UA",     "port": 4840, "device": "充电桩+环境",    "itemCount": 12},
+        {"id": "opcda_9090",      "name": "OPC DA 数据源",     "protocol": "OPC DA",     "port": 9090, "device": "光储充数据源",   "itemCount": 19},
+    ]
+    for sim in simulators:
+        s = socket.socket(); s.settimeout(1)
+        r = s.connect_ex(("127.0.0.1", sim["port"])); s.close()
+        sim["status"] = "running" if r == 0 else "stopped"
+        sim["startCmd"] = "python simulators/run_all.py"
+    return {"simulators": simulators}
+
+
 # ---- Collector Stats ----
 
 @app.get("/api/stats")
