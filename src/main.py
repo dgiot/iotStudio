@@ -41,7 +41,7 @@ async def lifespan(app: FastAPI):
     # 启动
     await pg_store.connect()
     await td_store.connect()
-    await td_store.create_supertable()
+    await td_store.ensure_supertable("default")
     await push_engine.start()
 
     # 采集引擎回调链
