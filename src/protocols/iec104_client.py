@@ -273,20 +273,29 @@ class IEC104Client(BaseProtocolAdapter):
 
     def _parse_buffer(self, buf: bytes, ioa_map: dict = None):
         """解析缓冲区中的所有帧，ioa_map: {ioa_int: point_id}"""
-        while len(buf) >= 2 and buf[0] == 0x68:
+        while len(buf) >= 6:
+            # 跳过非 0x68 开头的字节（帧间残余）
+            if buf[0] != 0x68:
+                buf = buf[1:]
+                continue
+            if len(buf) < 2: break
             if len(buf) < 2: break
             apdu_len = buf[1]
             if len(buf) < apdu_len + 2: break
             frame = buf[:apdu_len + 2]
             buf = buf[apdu_len + 2:]
             asdu_bytes = frame[8:] if len(frame) >= 8 else b''
-            if len(asdu_bytes) >= 6 and asdu_bytes[0] == 13:  # M_ME_NC_1
-                elem_size = 8; n = asdu_bytes[1] & 0x7F
-                for i in range(n):
-                    off = i * elem_size
-                    if off + elem_size > len(asdu_bytes) - 6: break
-                    ioa = struct.unpack('<I', asdu_bytes[6+off:6+off+3] + b'\x00')[0]
-                    val = struct.unpack('<f', asdu_bytes[6+off+3:6+off+7])[0]
+            # M_ME_NC_1(13): ASDU header 6B + each element IOA(3)+float(4)[+QDS(1)]
+            if len(asdu_bytes) >= 11 and asdu_bytes[0] == 13:
+                n = asdu_bytes[1] & 0x7F
+                body = asdu_bytes[6:]  # skip 6-byte header
+                # Detect element size: try 8 (with QDS), fallback 7 (without QDS)
+                elem_size = 8 if len(body) >= n * 8 else 7
+                for j in range(n):
+                    off = j * elem_size
+                    if off + 7 > len(body): break
+                    ioa = struct.unpack('<I', body[off:off+3] + b'\x00')[0]
+                    val = struct.unpack('<f', body[off+3:off+7])[0]
                     pid = ioa_map.get(ioa, f"ioa_{ioa}") if ioa_map else f"ioa_{ioa}"
                     self._data_queue.put_nowait(PointValue(
                         device_id=self.device_id, point_id=pid,
