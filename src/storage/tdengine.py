@@ -80,19 +80,24 @@ class TDEngineStore:
 
         try:
             if HAS_TAOS:
-                self._conn = taos.connect(
-                    host=self.config.host,
-                    user=self.config.user,
-                    password=self.config.password,
-                    port=self.config.port,
-                    timeout=3,
-                )
-            elif HAS_REST:
+                try:
+                    import taos as _taos
+                    self._conn = _taos.connect(
+                        host=self.config.host,
+                        user=self.config.user,
+                        password=self.config.password,
+                        port=self.config.port,
+                        timeout=3,
+                    )
+                except (ImportError, NameError):
+                    HAS_TAOS = False
+                    logger.warning("taos 模块不可用")
+            if not HAS_TAOS and HAS_REST:
                 self._conn = RestClient(
                     url=f"http://{self.config.host}:{self.config.port}",
                     user=self.config.user, password=self.config.password,
                 )
-            else:
+            if not self._conn:
                 logger.warning("TDengine connector 未安装，降级 SQLite")
                 self._is_fallback = True
                 return await self._fallback_connect()
