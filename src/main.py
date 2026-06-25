@@ -295,9 +295,14 @@ def log_packet(device_id: str, direction: str, raw: bytes):
     """记录报文到全局日志"""
     import time as _time
     _packet_log.append({"ts": _time.time(), "device": device_id, "dir": direction,
-                         "len": len(raw), "hex": raw.hex()})
-    if len(_packet_log) > 500:
-        _packet_log[:] = _packet_log[-200:]
+                         "len": len(raw), "hex": raw.hex(' ')})
+    if len(_packet_log) > 200:
+        _packet_log[:] = _packet_log[-100:]
+
+# 注入到 modbus 适配器
+import sys as _sys
+if 'src.protocols.modbus_tcp' in _sys.modules:
+    _sys.modules['src.protocols.modbus_tcp'].set_packet_logger(log_packet)
 
 @app.get("/api/packets")
 async def get_packets(device_id: Optional[str] = None, limit: int = 50):

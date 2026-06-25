@@ -1,13 +1,17 @@
 # ============================================================
 # pythonIot — Modbus TCP 协议适配器
 # ============================================================
-import struct
+import struct, time
 import logging
 from typing import Any, Dict, List, Optional
 from datetime import datetime
 
 from pymodbus.client import AsyncModbusTcpClient
 from pymodbus.exceptions import ModbusException
+
+# 全局报文日志（由 main.py 注入）
+_packet_logger = None
+def set_packet_logger(fn): global _packet_logger; _packet_logger = fn
 
 from .base import BaseProtocolAdapter, ProtocolConfig, PointValue
 
@@ -94,6 +98,8 @@ class ModbusTCPAdapter(BaseProtocolAdapter):
         return results
 
     async def _read(self, func: int, addr: int, cnt: int, slave: int) -> Optional[list]:
+        # 构建请求报文 hex
+        req_hex = f"0001 0000 0006 {slave:02x} {func:02x} {addr>>8:02x}{addr&0xff:02x} {cnt>>8:02x}{cnt&0xff:02x}"
         try:
             if func == 3:
                 r = await self.client.read_holding_registers(addr, cnt, slave)
@@ -105,9 +111,17 @@ class ModbusTCPAdapter(BaseProtocolAdapter):
                 r = await self.client.read_discrete_inputs(addr, cnt, slave)
             else:
                 r = await self.client.read_holding_registers(addr, cnt, slave)
-            return list(r.registers) if hasattr(r, 'registers') else None
+            regs = list(r.registers) if hasattr(r, 'registers') else None
+            # 记录报文
+            if _packet_logger and regs:
+                resp_bytes = struct.pack(f'>{len(regs)}H', *regs)
+                resp_hex = f"0001 0000 {3+len(regs)*2:04x} {slave:02x} {func:02x} {len(regs)*2:02x} " + resp_bytes.hex(' ')
+                _packet_logger(self.device_id, "TX", bytes.fromhex(req_hex.replace(' ','')))
+                _packet_logger(self.device_id, "RX", bytes.fromhex(resp_hex.replace(' ','')))
+            return regs
         except ModbusException:
             self._connected = False
+            if _packet_logger: _packet_logger(self.device_id, "TX", bytes.fromhex(req_hex.replace(' ','')))
             return None
 
     def _decode(self, regs: list, offset: int, dtype: str) -> Optional[Any]:
