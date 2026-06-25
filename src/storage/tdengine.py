@@ -62,6 +62,7 @@ class TDEngineStore:
         self.config = config or cfg.tdengine
         self._conn = None
         self._db = self.config.database
+        self._is_fallback = False
         self._supertable_cache: set = set()
 
     async def connect(self) -> bool:
@@ -105,6 +106,7 @@ class TDEngineStore:
     async def _fallback_connect(self) -> bool:
         import sqlite3, os
         os.makedirs(cfg.data_dir, exist_ok=True)
+        self._db = self.config.database
         self._conn = sqlite3.connect(os.path.join(cfg.data_dir, "telemetry.db"))
         self.execute("""CREATE TABLE IF NOT EXISTS telemetry (
             ts TEXT, device_id TEXT, point_id TEXT, point_name TEXT,
@@ -112,6 +114,7 @@ class TDEngineStore:
             device_type TEXT, station_id TEXT
         )""")
         self.execute("CREATE INDEX IF NOT EXISTS idx_tele ON telemetry(device_id, point_id, ts)")
+        self._is_fallback = True
         return True
 
     def execute(self, sql: str, *args) -> Any:
@@ -178,10 +181,21 @@ class TDEngineStore:
         """写入单个点位值"""
         if ts is None:
             ts = datetime.now(timezone.utc)
+        ts_str = ts.strftime("%Y-%m-%d %H:%M:%S.%f")[:-3]
 
+        # SQLite 降级模式：直接写入 telemetry 表
+        if self._is_fallback:
+            try:
+                sql = f"INSERT INTO telemetry (ts, device_id, point_id, point_name, value, unit, quality, device_type, station_id) VALUES ('{ts_str}', '{device_id}', '{point_id}', '{point_name}', {value}, '{unit}', {quality}, '{device_type}', '{station_id}')"
+                self.execute(sql)
+                return True
+            except Exception as e:
+                logger.debug(f"[sqlite] insert failed: {e}")
+                return False
+
+        # TDengine 模式
         table_name = await self.ensure_subtable(
             device_id, point_id, point_name, unit, device_type, station_id)
-        ts_str = ts.strftime("%Y-%m-%d %H:%M:%S.%f")[:-3]
 
         try:
             sql = f"INSERT INTO {self._db}.`{table_name}` VALUES ('{ts_str}', {value}, {quality})"
@@ -189,7 +203,6 @@ class TDEngineStore:
             return True
         except Exception:
             try:
-                # 子表可能不存在，重建
                 await self.ensure_subtable(device_id, point_id, point_name, unit, device_type, station_id)
                 self.execute(sql)
                 return True
@@ -220,21 +233,37 @@ class TDEngineStore:
                     start: Optional[str] = None, end: Optional[str] = None,
                     limit: int = 1000) -> List[Dict]:
         """查询点位时序数据"""
+        if self._is_fallback:
+            conds = [f"device_id='{device_id}'", f"point_id='{point_id}'"]
+            if start: conds.append(f"ts >= '{start}'")
+            if end: conds.append(f"ts <= '{end}'")
+            sql = f"SELECT ts, value, quality FROM telemetry WHERE {' AND '.join(conds)} ORDER BY ts DESC LIMIT {limit}"
+            cur = self.execute(sql)
+            if cur is None: return []
+            return [{"ts": r[0], "value": r[1], "quality": r[2]} for r in cur.fetchall()]
+
         table_name = f"t_{device_id}_{point_id}".replace('-', '_').replace('.', '_').replace(':', '_')
         conds = []
-        if start:
-            conds.append(f"ts >= '{start}'")
-        if end:
-            conds.append(f"ts <= '{end}'")
+        if start: conds.append(f"ts >= '{start}'")
+        if end: conds.append(f"ts <= '{end}'")
         where = ("WHERE " + " AND ".join(conds)) if conds else ""
         sql = f"SELECT ts, value, quality FROM {self._db}.`{table_name}` {where} ORDER BY ts DESC LIMIT {limit}"
         cur = self.execute(sql)
-        if cur is None:
-            return []
+        if cur is None: return []
         return [{"ts": r[0], "value": r[1], "quality": r[2]} for r in cur.fetchall()]
 
     async def query_device_latest(self, device_id: str, point_ids: List[str]) -> List[Dict]:
         """查询设备所有点位最新值"""
+        if self._is_fallback:
+            results = []
+            for pid in point_ids:
+                sql = f"SELECT ts, value FROM telemetry WHERE device_id='{device_id}' AND point_id='{pid}' ORDER BY ts DESC LIMIT 1"
+                cur = self.execute(sql)
+                if cur:
+                    row = cur.fetchone()
+                    if row: results.append({"point_id": pid, "ts": str(row[0]), "value": row[1]})
+            return results
+
         results = []
         for pid in point_ids:
             table_name = f"t_{device_id}_{pid}".replace('-', '_').replace('.', '_').replace(':', '_')
@@ -242,8 +271,7 @@ class TDEngineStore:
             cur = self.execute(sql)
             if cur:
                 row = cur.fetchone()
-                if row:
-                    results.append({"point_id": pid, "ts": str(row[0]), "value": row[1]})
+                if row: results.append({"point_id": pid, "ts": str(row[0]), "value": row[1]})
         return results
 
     # ===== 降采样与保留 =====

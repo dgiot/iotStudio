@@ -337,6 +337,26 @@ async def _ws_broadcast(device_id: str, points):
 
 collector.on_data(_ws_broadcast)
 
+# ---- Bridge (外部数据接入) ----
+class BridgePoint(BaseModel):
+    point_id: str = ""; point_name: str = ""; value: float = 0.0
+    data_type: str = "float32"; unit: str = ""; quality: int = 0
+
+class BridgeData(BaseModel):
+    device_id: str; points: List[BridgePoint]
+
+@app.post("/api/bridge/telemetry")
+async def bridge_telemetry(body: BridgeData):
+    """c104 桥接器数据接入"""
+    meta = collector._device_meta.get(body.device_id, {"device_type": "pcs", "station_id": "station_01"})
+    rows = [{"device_id": body.device_id, "point_id": p.point_id, "point_name": p.point_name,
+             "value": p.value, "unit": p.unit, "quality": p.quality,
+             "device_type": meta.get("device_type","default"), "station_id": meta.get("station_id","default")}
+            for p in body.points]
+    await td_store.batch_insert(rows)
+    return {"status": "ok", "count": len(rows)}
+
+
 # ---- Vue3 前端托管 ----
 from pathlib import Path as _Path
 from starlette.responses import Response as _Response
