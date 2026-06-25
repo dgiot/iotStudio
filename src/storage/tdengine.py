@@ -1,15 +1,25 @@
 # ============================================================
-# pythonIot — TDengine 时序存储
+# dgiot_lite — TDengine 物模型时序存储
+# 参考 shixu 项目: point_mapping → supertable TAG 模式
 # ============================================================
+"""
+物模型 → TDengine 映射规则:
+  设备类型(product) → 超级表(STABLE) → 每个设备一个子表(TABLE)
+
+超级表 TAG 设计:
+  device_id, point_id, point_name, unit, device_type, station_id
+
+数据写入:
+  INSERT INTO t_{device_id} USING {stable} TAGS(...) VALUES(ts, value, quality)
+"""
 import logging
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import Any, Dict, List, Optional
 
 from ..config import cfg, TDEngineConfig
 
 logger = logging.getLogger(__name__)
 
-# TDengine connector 可选
 try:
     import taos
     HAS_TAOS = True
@@ -27,17 +37,32 @@ except ImportError:
     HAS_REST = False
 
 
-class TDEngineStore:
-    """TDengine 时序数据存储
+# 物模型：设备类型 → 超级表名
+DEVICE_TYPE_STABLE = {
+    "inverter": "inverter_telemetry",
+    "pcs": "pcs_telemetry",
+    "charger": "charger_telemetry",
+    "meter": "meter_telemetry",
+    "sensor": "sensor_telemetry",
+    "default": "device_telemetry",
+}
 
-    使用 REST 接口（taosAdapter），无需原生客户端。
-    数据模型: 超级表 → 子表
+
+class TDEngineStore:
+    """TDengine 物模型时序存储
+
+    特性:
+      - 按设备类型自动建超级表
+      - 按设备+点位自动建子表
+      - TAG 索引支持多维查询
+      - 无 TDengine 时降级 SQLite
     """
 
     def __init__(self, config: Optional[TDEngineConfig] = None):
         self.config = config or cfg.tdengine
         self._conn = None
         self._db = self.config.database
+        self._supertable_cache: set = set()
 
     async def connect(self) -> bool:
         try:
@@ -46,42 +71,35 @@ class TDEngineStore:
                     host=self.config.host,
                     user=self.config.user,
                     password=self.config.password,
-                    database=self._db,
                     port=self.config.port,
                 )
             elif HAS_REST:
                 self._conn = RestClient(
                     url=f"http://{self.config.host}:{self.config.port}",
-                    user=self.config.user,
-                    password=self.config.password,
-                    database=self._db,
+                    user=self.config.user, password=self.config.password,
                 )
             else:
-                logger.warning("TDengine connector 未安装，使用 SQLite 降级模式")
+                logger.warning("TDengine connector 未安装，降级 SQLite")
                 return await self._fallback_connect()
 
-            # 创建数据库
-            self.execute(f"CREATE DATABASE IF NOT EXISTS {self._db} KEEP 365 DURATION 10 BUFFER 16")
+            self.execute(f"CREATE DATABASE IF NOT EXISTS {self._db} KEEP 365 DURATION 10 BUFFER 16 WAL_LEVEL 1")
             self.execute(f"USE {self._db}")
             logger.info(f"[tdengine] 连接成功 {self.config.host}:{self.config.port}")
             return True
         except Exception as e:
             logger.error(f"[tdengine] 连接失败: {e}")
-            return False
+            return await self._fallback_connect()
 
     async def _fallback_connect(self) -> bool:
-        """降级为 SQLite"""
-        import sqlite3
-        import os
+        import sqlite3, os
         os.makedirs(cfg.data_dir, exist_ok=True)
         self._conn = sqlite3.connect(os.path.join(cfg.data_dir, "telemetry.db"))
-        self.execute("""
-            CREATE TABLE IF NOT EXISTS telemetry (
-                ts TEXT, device_id TEXT, point_id TEXT, point_name TEXT,
-                value REAL, unit TEXT, quality INTEGER
-            )
-        """)
-        self.execute("CREATE INDEX IF NOT EXISTS idx_telemetry_ts ON telemetry(ts)")
+        self.execute("""CREATE TABLE IF NOT EXISTS telemetry (
+            ts TEXT, device_id TEXT, point_id TEXT, point_name TEXT,
+            value REAL, unit TEXT, quality INTEGER DEFAULT 0,
+            device_type TEXT, station_id TEXT
+        )""")
+        self.execute("CREATE INDEX IF NOT EXISTS idx_tele ON telemetry(device_id, point_id, ts)")
         return True
 
     def execute(self, sql: str, *args) -> Any:
@@ -91,13 +109,17 @@ class TDEngineStore:
             self._conn.commit()
             return cur
         except Exception as e:
-            logger.debug(f"[tdengine] SQL error: {e}")
+            logger.debug(f"[tdengine] SQL: {e}")
             return None
 
-    async def create_supertable(self) -> None:
-        """创建超级表"""
-        sql = f"""
-            CREATE STABLE IF NOT EXISTS {self._db}.device_telemetry (
+    # ===== 物模型超级表管理 =====
+
+    async def ensure_supertable(self, device_type: str) -> str:
+        """确保设备类型对应的超级表存在"""
+        stable = DEVICE_TYPE_STABLE.get(device_type, DEVICE_TYPE_STABLE["default"])
+
+        if stable not in self._supertable_cache:
+            sql = f"""CREATE STABLE IF NOT EXISTS {self._db}.{stable} (
                 ts TIMESTAMP,
                 value DOUBLE,
                 quality TINYINT
@@ -106,83 +128,119 @@ class TDEngineStore:
                 point_id NCHAR(64),
                 point_name NCHAR(128),
                 unit NCHAR(32),
-                device_type NCHAR(32)
-            )
-        """
-        self.execute(sql)
+                device_type NCHAR(32),
+                station_id NCHAR(64)
+            )"""
+            self.execute(sql)
+            self._supertable_cache.add(stable)
+            logger.info(f"[tdengine] 超级表: {stable}")
 
-    async def create_subtable(self, device_id: str, point_id: str, point_name: str,
-                               unit: str = "", device_type: str = "") -> str:
-        """创建子表"""
-        table_name = f"t_{device_id}_{point_id}".replace('-', '_').replace('.', '_')
+        return stable
+
+    async def ensure_subtable(self, device_id: str, point_id: str, point_name: str,
+                               unit: str = "", device_type: str = "default",
+                               station_id: str = "default") -> str:
+        """确保设备+点位的子表存在，返回子表名"""
+        stable = await self.ensure_supertable(device_type)
+        table_name = f"t_{device_id}_{point_id}".replace('-', '_').replace('.', '_').replace(':', '_')
+
         safe_device_id = device_id.replace("'", "''")
-        sql = f"""
-            CREATE TABLE IF NOT EXISTS {self._db}.`{table_name}`
-            USING {self._db}.device_telemetry
-            TAGS ('{safe_device_id}', '{point_id}', '{point_name}', '{unit}', '{device_type}')
-        """
+        safe_point_id = point_id.replace("'", "''")
+        safe_point_name = point_name.replace("'", "''")
+        safe_unit = (unit or "").replace("'", "''")
+        safe_station = (station_id or "default").replace("'", "''")
+
+        sql = f"""CREATE TABLE IF NOT EXISTS {self._db}.`{table_name}`
+            USING {self._db}.{stable}
+            TAGS ('{safe_device_id}', '{safe_point_id}', '{safe_point_name}',
+                  '{safe_unit}', '{device_type}', '{safe_station}')"""
         self.execute(sql)
         return table_name
 
-    async def insert(self, device_id: str, point_id: str, point_name: str,
-                     value: float, unit: str = "", device_type: str = "",
-                     quality: int = 0, ts: Optional[str] = None) -> bool:
-        """插入一条遥测数据"""
+    # ===== 数据写入 =====
+
+    async def insert_point(self, device_id: str, point_id: str, point_name: str,
+                           value: float, unit: str = "", device_type: str = "default",
+                           station_id: str = "default", quality: int = 0,
+                           ts: Optional[datetime] = None) -> bool:
+        """写入单个点位值"""
         if ts is None:
-            ts = datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S")
-        table_name = f"t_{device_id}_{point_id}".replace('-', '_').replace('.', '_')
-        safe_device_id = device_id.replace("'", "''")
+            ts = datetime.now(timezone.utc)
+
+        table_name = await self.ensure_subtable(
+            device_id, point_id, point_name, unit, device_type, station_id)
+        ts_str = ts.strftime("%Y-%m-%d %H:%M:%S.%f")[:-3]
+
         try:
-            sql = f"INSERT INTO {self._db}.`{table_name}` VALUES ('{ts}', {value}, {quality})"
+            sql = f"INSERT INTO {self._db}.`{table_name}` VALUES ('{ts_str}', {value}, {quality})"
             self.execute(sql)
             return True
         except Exception:
-            # 自动建表后重试
             try:
-                await self.create_subtable(device_id, point_id, point_name, unit, device_type)
+                # 子表可能不存在，重建
+                await self.ensure_subtable(device_id, point_id, point_name, unit, device_type, station_id)
                 self.execute(sql)
                 return True
-            except Exception:
+            except Exception as e:
+                logger.debug(f"[tdengine] insert failed: {e}")
                 return False
 
     async def batch_insert(self, rows: List[Dict[str, Any]]) -> int:
-        """批量插入"""
+        """批量写入点位值"""
         count = 0
         for row in rows:
-            if await self.insert(**row):
+            if await self.insert_point(
+                device_id=row.get("device_id", ""),
+                point_id=row.get("point_id", ""),
+                point_name=row.get("point_name", ""),
+                value=float(row.get("value", 0)),
+                unit=row.get("unit", ""),
+                device_type=row.get("device_type", "default"),
+                station_id=row.get("station_id", "default"),
+                quality=row.get("quality", 0),
+            ):
                 count += 1
         return count
+
+    # ===== 数据查询 =====
 
     async def query(self, device_id: str, point_id: str,
                     start: Optional[str] = None, end: Optional[str] = None,
                     limit: int = 1000) -> List[Dict]:
-        """查询时序数据"""
-        table_name = f"t_{device_id}_{point_id}".replace('-', '_').replace('.', '_')
-        conditions = []
+        """查询点位时序数据"""
+        table_name = f"t_{device_id}_{point_id}".replace('-', '_').replace('.', '_').replace(':', '_')
+        conds = []
         if start:
-            conditions.append(f"ts >= '{start}'")
+            conds.append(f"ts >= '{start}'")
         if end:
-            conditions.append(f"ts <= '{end}'")
-        where = "WHERE " + " AND ".join(conditions) if conditions else ""
+            conds.append(f"ts <= '{end}'")
+        where = ("WHERE " + " AND ".join(conds)) if conds else ""
         sql = f"SELECT ts, value, quality FROM {self._db}.`{table_name}` {where} ORDER BY ts DESC LIMIT {limit}"
         cur = self.execute(sql)
         if cur is None:
             return []
-        cols = ["ts", "value", "quality"]
-        return [dict(zip(cols, row)) for row in cur.fetchall()]
+        return [{"ts": r[0], "value": r[1], "quality": r[2]} for r in cur.fetchall()]
 
     async def query_device_latest(self, device_id: str, point_ids: List[str]) -> List[Dict]:
-        """查询设备各点位最新值"""
+        """查询设备所有点位最新值"""
         results = []
         for pid in point_ids:
-            table_name = f"t_{device_id}_{pid}".replace('-', '_').replace('.', '_')
+            table_name = f"t_{device_id}_{pid}".replace('-', '_').replace('.', '_').replace(':', '_')
             sql = f"SELECT ts, value FROM {self._db}.`{table_name}` ORDER BY ts DESC LIMIT 1"
             cur = self.execute(sql)
             if cur:
                 row = cur.fetchone()
                 if row:
-                    results.append({"point_id": pid, "ts": row[0], "value": row[1]})
+                    results.append({"point_id": pid, "ts": str(row[0]), "value": row[1]})
         return results
+
+    # ===== 降采样与保留 =====
+
+    async def setup_retention(self, keep_days: int = 365, interval_days: int = 30):
+        """设置自动降采样策略"""
+        for stable in DEVICE_TYPE_STABLE.values():
+            sql = f"ALTER STABLE {self._db}.{stable} INTERVAL({interval_days}d) KEEP({keep_days}d)"
+            self.execute(sql)
 
     def close(self) -> None:
         if self._conn:

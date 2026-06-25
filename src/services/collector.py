@@ -36,6 +36,7 @@ class CollectorEngine:
         self._running = False
         self._stats: Dict[str, Dict[str, int]] = {}  # device_id → {success, fail}
         self._on_data_callbacks: List[callable] = []  # 数据回调链
+        self._device_meta: Dict[str, Dict[str, str]] = {}  # device_id → {device_type, station_id}
 
     def on_data(self, callback):
         """注册数据回调"""
@@ -108,6 +109,7 @@ class CollectorEngine:
             return
 
         self._adapters[dev.device_id] = adapter
+        self._device_meta[dev.device_id] = {"device_type": dev.device_type or "default", "station_id": dev.station_id or "default"}
 
         # 启动采集循环
         interval = max(protocol_config.collect_interval, 1)
@@ -165,7 +167,8 @@ class CollectorEngine:
                 results = await adapter.read_points(points)
 
                 if results:
-                    # 写入 TDengine
+                    # 写入 TDengine（带物模型标签）
+                    meta = self._device_meta.get(device_id, {})
                     rows = []
                     for pv in results:
                         rows.append({
@@ -175,6 +178,8 @@ class CollectorEngine:
                             "value": float(pv.value) if isinstance(pv.value, (int, float)) else 0.0,
                             "unit": pv.unit or "",
                             "quality": pv.quality,
+                            "device_type": meta.get("device_type", "default"),
+                            "station_id": meta.get("station_id", "default"),
                         })
                     await self.td.batch_insert(rows)
 
