@@ -4,7 +4,7 @@
 # ============================================================
 fastapi>=0.110.0
 uvicorn[standard]>=0.29.0
-pymodbus>=3.6.0
+pymodbus>=3.6.0,<3.7.0
 asyncua>=1.0.0
 asyncpg>=0.29.0
 sqlalchemy[asyncio]>=2.0.25

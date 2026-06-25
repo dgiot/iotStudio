@@ -214,48 +214,43 @@ class ModbusSimServer:
                     regs = sim.get_registers()
                     for addr, val in regs.items():
                         if addr < 100:
-                            ctx[0].setValues(3, addr, [val & 0xFFFF])  # 3 = holding register
+                            ctx.setValues(3, addr, [val & 0xFFFF])
                 await asyncio.sleep(1)
             except Exception as e:
                 logger.error(f"更新失败: {e}")
                 await asyncio.sleep(1)
 
+    async def start_server(self, port, context, name):
+        """启动单个 Modbus TCP Server"""
+        identity = ModbusDeviceIdentification()
+        identity.VendorName = "dgiot_lite"; identity.ProductName = name
+        identity.Model = "SIM-2026"; identity.Version = "V1.0"
+        await StartAsyncTcpServer(
+            context=ModbusServerContext(slaves={1: context}, single=False),
+            identity=identity,
+            address=(self.host, port),
+        )
+
     async def start(self):
         """启动三个 Modbus TCP 服务器"""
         self._running = True
+        self.contexts = [self.build_context(self.inverter),
+                         self.build_context(self.pcs),
+                         self.build_context(self.charger)]
 
-        # 构建 contexts
-        ctx_502 = self.build_context(self.inverter)
-        ctx_1502 = self.build_context(self.pcs)
-        ctx_2502 = self.build_context(self.charger)
-        self.contexts = [ctx_502, ctx_1502, ctx_2502]
-
-        context = {
-            0x01: ctx_502,   # slave_id=1, port 502 → 逆变器
-            0x02: ctx_1502,  # slave_id=2, port 1502 → PCS
-            0x03: ctx_2502,  # slave_id=3, port 2502 → 充电桩
-        }
-
-        identity = ModbusDeviceIdentification()
-        identity.VendorName = "pythonIot Simulator"
-        identity.ProductName = "光储充微电网模拟器"
-        identity.Model = "SIM-2026"
-        identity.Version = "V1.0"
-
-        # 启动更新循环
         asyncio.create_task(self._update_loop())
 
         logger.info("=" * 60)
         logger.info("Modbus TCP 模拟器启动")
-        logger.info(f"  逆变器:  {self.host}:502   (slave_id=1)")
-        logger.info(f"  储能PCS: {self.host}:1502  (slave_id=2)")
-        logger.info(f"  充电桩:  {self.host}:2502  (slave_id=3)")
+        logger.info(f"  逆变器:  {self.host}:502")
+        logger.info(f"  储能PCS: {self.host}:1502")
+        logger.info(f"  充电桩:  {self.host}:2502")
         logger.info("=" * 60)
 
-        await StartAsyncTcpServer(
-            context=ModbusServerContext(slaves=context, single=False),
-            identity=identity,
-            address=[(self.host, 502), (self.host, 1502), (self.host, 2502)],
+        await asyncio.gather(
+            self.start_server(502,  self.contexts[0], "光伏逆变器"),
+            self.start_server(1502, self.contexts[1], "储能PCS"),
+            self.start_server(2502, self.contexts[2], "充电桩"),
         )
 
 
