@@ -1,5 +1,5 @@
 # ============================================================
-# pythonIot — 告警引擎
+# dgiot_lite — 告警引擎
 # ============================================================
 import logging
 import uuid
@@ -13,140 +13,94 @@ logger = logging.getLogger(__name__)
 
 
 class AlarmEngine:
-    """告警引擎
-
-    评估规则:
-    - 阈值告警: value > alarm_high → P1, value > alarm_high_high → P0
-    - 速率告警: (value - last_value) / dt > rate_limit → P1
-    - 状态告警: device offline → P0
-    """
+    """告警引擎 — 从数据库读取阈值配置"""
 
     def __init__(self, pg_store: PostgresStore):
         self.pg = pg_store
-        self._last_values: Dict[str, tuple] = {}  # point_id → (value, timestamp)
-        self._active_alarms: Dict[str, str] = {}   # point_id → alarm_id (防重复)
+        self._threshold_cache: Dict[str, Dict] = {}  # point_id → {high, low, ...}
+        self._active_alarms: Dict[str, str] = {}  # point_id → alarm_id
         self._on_alarm_callbacks: List[callable] = []
 
     def on_alarm(self, callback):
         self._on_alarm_callbacks.append(callback)
 
+    async def _load_thresholds(self, device_id: str):
+        """从数据库加载设备点位阈值"""
+        points = await self.pg.list_points(device_id)
+        for p in points:
+            self._threshold_cache[p.point_id] = {
+                "high": p.alarm_high,
+                "high_high": p.alarm_high_high,
+                "low": p.alarm_low,
+                "low_low": p.alarm_low_low,
+            }
+
     async def evaluate(self, device_id: str, points: List[PointValue]) -> List[Dict[str, Any]]:
-        """评估一批采集值，返回触发的告警列表"""
+        """评估一批采集值并生成告警"""
         triggered = []
         now = datetime.now(timezone.utc)
+
+        # 确保阈值已加载
+        if device_id not in [k.split(':')[0] for k in self._threshold_cache]:
+            await self._load_thresholds(device_id)
 
         for pv in points:
             if not isinstance(pv.value, (int, float)):
                 continue
+            if pv.value == 0 and pv.point_id.endswith('_pf'):
+                continue  # 功率因数=0 不告警
 
-            # 查找点位配置（通过 point_id 匹配）
-            alarms = await self._check_threshold(device_id, pv, now)
-            alarms += await self._check_rate(device_id, pv, now)
-            triggered.extend(alarms)
+            thresholds = self._threshold_cache.get(pv.point_id, {})
+            if not thresholds:
+                continue
 
-        # 触发回调（推送通知）
-        for alarm in triggered:
-            for cb in self._on_alarm_callbacks:
-                try:
-                    await cb(alarm)
-                except Exception:
-                    pass
+            level, msg = None, ""
+
+            high = thresholds.get("high")
+            high_high = thresholds.get("high_high")
+            low = thresholds.get("low")
+            low_low = thresholds.get("low_low")
+
+            if high_high and pv.value > high_high:
+                level, msg = "P0", f"{pv.point_name} {pv.value} > 上上限 {high_high}"
+            elif high and pv.value > high:
+                level, msg = "P1", f"{pv.point_name} {pv.value} > 上限 {high}"
+            elif low_low and pv.value < low_low:
+                level, msg = "P0", f"{pv.point_name} {pv.value} < 下下限 {low_low}"
+            elif low and pv.value < low:
+                level, msg = "P1", f"{pv.point_name} {pv.value} < 下限 {low}"
+
+            if level:
+                # 防止重复告警
+                if pv.point_id in self._active_alarms:
+                    continue
+                alarm_id = f"ALM-{uuid.uuid4().hex[:8].upper()}"
+                alarm = {
+                    "alarm_id": alarm_id, "device_id": device_id,
+                    "point_id": pv.point_id, "alarm_type": "threshold",
+                    "alarm_level": level, "alarm_msg": msg,
+                    "alarm_value": pv.value, "threshold_value": high_high or high or low_low or low,
+                }
+                await self.pg.create_alarm(alarm)
+                self._active_alarms[pv.point_id] = alarm_id
+                triggered.append(alarm)
+                logger.warning(f"[alarm] {alarm_id}: {msg}")
+
+                # 通知回调
+                for cb in self._on_alarm_callbacks:
+                    try: await cb(alarm)
+                    except: pass
 
         return triggered
 
-    async def _check_threshold(self, device_id: str, pv: PointValue, now: datetime) -> List[Dict]:
-        """检查阈值告警"""
-        alarms = []
-        # 从点位额外信息中获取阈值
-        extra = pv.extra if hasattr(pv, 'extra') else {}
-
-        high = extra.get("alarm_high")
-        high_high = extra.get("alarm_high_high")
-        low = extra.get("alarm_low")
-        low_low = extra.get("alarm_low_low")
-
-        level = None
-        msg = ""
-
-        if high_high and pv.value > high_high:
-            level = "P0"
-            msg = f"{pv.point_name} 值 {pv.value} 超过上上限 {high_high}"
-        elif high and pv.value > high:
-            level = "P1"
-            msg = f"{pv.point_name} 值 {pv.value} 超过上限 {high}"
-        elif low_low and pv.value < low_low:
-            level = "P0"
-            msg = f"{pv.point_name} 值 {pv.value} 低于下下限 {low_low}"
-        elif low and pv.value < low:
-            level = "P1"
-            msg = f"{pv.point_name} 值 {pv.value} 低于下限 {low}"
-
-        if level:
-            # 防重复
-            if pv.point_id in self._active_alarms:
-                return alarms
-            alarm_id = f"ALM-{uuid.uuid4().hex[:8].upper()}"
-            alarm = {
-                "alarm_id": alarm_id,
-                "device_id": device_id,
-                "point_id": pv.point_id,
-                "alarm_type": "threshold",
-                "alarm_level": level,
-                "alarm_msg": msg,
-                "alarm_value": pv.value,
-                "threshold_value": high_high or high or low_low or low,
-            }
-            await self.pg.create_alarm(alarm)
-            self._active_alarms[pv.point_id] = alarm_id
-            alarms.append(alarm)
-            logger.warning(f"[alarm] {alarm_id}: {msg}")
-
-        return alarms
-
-    async def _check_rate(self, device_id: str, pv: PointValue, now: datetime) -> List[Dict]:
-        """检查变化率告警"""
-        alarms = []
-        last = self._last_values.get(pv.point_id)
-        self._last_values[pv.point_id] = (pv.value, now)
-
-        if last is None:
-            return alarms
-
-        last_val, last_ts = last
-        dt = (now - last_ts).total_seconds()
-        if dt <= 0:
-            return alarms
-
-        rate = abs(pv.value - last_val) / dt
-        rate_limit = pv.extra.get("rate_limit", float('inf')) if hasattr(pv, 'extra') else float('inf')
-
-        if rate > rate_limit:
-            alarm_id = f"ALM-{uuid.uuid4().hex[:8].upper()}"
-            alarm = {
-                "alarm_id": alarm_id,
-                "device_id": device_id,
-                "point_id": pv.point_id,
-                "alarm_type": "rate",
-                "alarm_level": "P1",
-                "alarm_msg": f"{pv.point_name} 变化率 {rate:.2f}/s 超过限值 {rate_limit}/s",
-                "alarm_value": pv.value,
-                "threshold_value": rate_limit,
-            }
-            await self.pg.create_alarm(alarm)
-            alarms.append(alarm)
-
-        return alarms
-
-    async def clear_alarm(self, alarm_id: str, operator: str = "system") -> bool:
-        """清除告警"""
-        await self.pg.update_alarm_status(alarm_id, "cleared", operator)
-        # 清除防重复记录
+    async def confirm_alarm(self, alarm_id: str, operator: str = "system") -> bool:
+        await self.pg.update_alarm_status(alarm_id, "confirmed", operator)
         to_remove = [pid for pid, aid in self._active_alarms.items() if aid == alarm_id]
-        for pid in to_remove:
-            del self._active_alarms[pid]
+        for pid in to_remove: self._active_alarms.pop(pid, None)
         return True
 
-    async def confirm_alarm(self, alarm_id: str, operator: str = "system") -> bool:
-        """确认告警"""
-        await self.pg.update_alarm_status(alarm_id, "confirmed", operator)
+    async def clear_alarm(self, alarm_id: str, operator: str = "system") -> bool:
+        await self.pg.update_alarm_status(alarm_id, "cleared", operator)
+        to_remove = [pid for pid, aid in self._active_alarms.items() if aid == alarm_id]
+        for pid in to_remove: self._active_alarms.pop(pid, None)
         return True
