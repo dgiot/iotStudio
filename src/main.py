@@ -10,7 +10,6 @@ from typing import Any, Dict, List, Optional
 
 from fastapi import FastAPI, HTTPException, Query, WebSocket, WebSocketDisconnect
 from fastapi.responses import HTMLResponse, JSONResponse, FileResponse
-from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field
 
 from .config import cfg
@@ -296,27 +295,83 @@ collector.on_data(_ws_broadcast)
 
 # ---- Vue3 前端托管 ----
 from pathlib import Path as _Path
+from starlette.responses import Response as _Response
 
 _FRONTEND_DIR = _Path(__file__).resolve().parent.parent / "frontend-vue" / "dist"
 
+# 硬编码 MIME 映射（Windows 上 mimetypes 不可靠）
+_MIME_MAP = {
+    ".html": "text/html; charset=utf-8",
+    ".js": "application/javascript; charset=utf-8",
+    ".mjs": "application/javascript; charset=utf-8",
+    ".css": "text/css; charset=utf-8",
+    ".json": "application/json",
+    ".png": "image/png",
+    ".jpg": "image/jpeg",
+    ".jpeg": "image/jpeg",
+    ".svg": "image/svg+xml",
+    ".ico": "image/x-icon",
+    ".woff": "font/woff",
+    ".woff2": "font/woff2",
+    ".ttf": "font/ttf",
+    ".eot": "application/vnd.ms-fontobject",
+    ".txt": "text/plain; charset=utf-8",
+    ".xml": "application/xml",
+    ".pdf": "application/pdf",
+}
+
+def _media_type(path: str) -> str:
+    """返回正确的 MIME 类型"""
+    ext = _Path(path).suffix.lower()
+    return _MIME_MAP.get(ext, "application/octet-stream")
+
+def _static_response(full_path: str) -> _Response:
+    """读取静态文件并返回带正确 Content-Type 的响应"""
+    file_path = _FRONTEND_DIR / full_path
+    if file_path.is_file():
+        content = file_path.read_bytes()
+        return _Response(content=content, media_type=_media_type(full_path))
+    return None
+
 if _FRONTEND_DIR.exists():
-    app.mount("/assets", StaticFiles(directory=_FRONTEND_DIR / "assets"), name="assets")
+
+    @app.get("/assets/{file_path:path}")
+    async def serve_assets(file_path: str):
+        """静态资源 — 强制正确 MIME"""
+        resp = _static_response(f"assets/{file_path}")
+        if resp:
+            return resp
+        raise HTTPException(status_code=404)
+
+    @app.get("/favicon.svg")
+    async def serve_favicon():
+        resp = _static_response("favicon.svg")
+        if resp:
+            return resp
+        raise HTTPException(status_code=404)
 
     @app.get("/{full_path:path}")
     async def serve_frontend(full_path: str):
-        """SPA 路由回退"""
+        """SPA 路由"""
+        if full_path.startswith("api"):
+            raise HTTPException(status_code=404)
+
         file_path = _FRONTEND_DIR / full_path
-        if file_path.exists() and file_path.is_file() and not full_path.startswith("api"):
-            return FileResponse(file_path)
-        return FileResponse(_FRONTEND_DIR / "index.html")
+        if file_path.is_file() and not full_path.startswith("api"):
+            content = file_path.read_bytes()
+            return _Response(content=content, media_type=_media_type(full_path))
+
+        # SPA fallback
+        index = (_FRONTEND_DIR / "index.html").read_bytes()
+        return _Response(content=index, media_type="text/html; charset=utf-8")
 
     @app.get("/")
     async def root():
-        return FileResponse(_FRONTEND_DIR / "index.html")
+        index = (_FRONTEND_DIR / "index.html").read_bytes()
+        return _Response(content=index, media_type="text/html; charset=utf-8")
 
     logger.info(f"[main] Vue3 前端已托管: {_FRONTEND_DIR}")
 else:
-    # 降级：旧版 scada 页面
     @app.get("/scada", response_class=HTMLResponse)
     async def scada_page():
         path = _Path(__file__).resolve().parent.parent / "frontend" / "index.html"
