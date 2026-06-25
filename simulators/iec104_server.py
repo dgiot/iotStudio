@@ -36,7 +36,7 @@ class IEC104Slave:
         self._server = None
         self._send_seq = 0
         self._recv_seq = 0
-        self._ioa_values = self._init_ioa_map()
+        self._ioa_values = self._init_ioa_values()
 
     def _init_ioa_values(self):
         """初始化 IOA 映射表 (模拟PCS数据)"""
