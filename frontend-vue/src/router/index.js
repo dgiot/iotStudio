@@ -16,6 +16,7 @@ const routes = [
       { path: '/devices', name: 'Devices', component: () => import('../views/DeviceListView.vue'), meta: { title: '设备管理', icon: 'Monitor' } },
       { path: '/devices/:id', name: 'DeviceDetail', component: () => import('../views/DeviceDetailView.vue'), meta: { title: '设备详情', hidden: true } },
       { path: '/alarms', name: 'Alarms', component: () => import('../views/AlarmListView.vue'), meta: { title: '告警管理', icon: 'Bell' } },
+      { path: '/topology', name: 'Topology', component: () => import('../views/TopologyView.vue'), meta: { title: '设备拓扑', icon: 'Share' } },
       { path: '/scada', name: 'Scada', component: () => import('../views/ScadaView.vue'), meta: { title: '2D组态', icon: 'PictureFilled' } },
       { path: '/channels', name: 'Channels', component: () => import('../views/ChannelView.vue'), meta: { title: '通道管理', icon: 'Connection' } },
       { path: '/simulators', name: 'Simulators', component: () => import('../views/SimulatorView.vue'), meta: { title: '模拟器管理', icon: 'VideoCameraFilled' } },
