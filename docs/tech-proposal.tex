@@ -1,0 +1,329 @@
+% ============================================================================
+%  光储充微电网物联网平台 — 技术方案（Python 轻量版）
+%  版本: V1.0 | 日期: 2026年6月
+% ============================================================================
+\documentclass[12pt,a4paper]{ctexart}
+\usepackage{xeCJK}
+\usepackage{graphicx,float,fancyhdr,hyperref,geometry,longtable,booktabs,enumitem,caption,xcolor,tikz}
+\setmainfont{Noto Serif SC}
+\setCJKmainfont{SimSun}
+\setCJKsansfont{SimHei}
+\geometry{a4paper,margin=2.5cm,top=3cm,bottom=2.5cm}
+\pagestyle{fancy}
+\fancyhead[L]{光储充微电网物联网平台·技术方案}
+\fancyhead[R]{V1.0}
+\fancyfoot[C]{\thepage}
+\hypersetup{colorlinks=true,linkcolor=blue,pdftitle={光储充微电网物联网平台技术方案}}
+
+\begin{document}
+
+% 封面
+\begin{titlepage}
+\centering\vspace*{3.5cm}
+{\Huge\bfseries\sffamily 光储充微电网物联网平台}\\[0.8cm]
+{\LARGE\bfseries 技术方案}\\[1.5cm]
+{\large 轻量版 · Python 全开源}\\[2.5cm]
+{\large\begin{tabular}{rl}
+\textbf{版 本 号:} & V1.0 \\
+\textbf{文档状态:} & 初稿 \\
+\textbf{日　　期:} & 2026年6月 \\
+\end{tabular}}\\[1.5cm]
+{\normalsize [公司名称]}
+\end{titlepage}
+
+\newpage\tableofcontents\newpage
+
+% ===== 一、项目概述 =====
+\section{项目概述}
+
+\subsection{项目背景}
+客户需要一套\textbf{可源码交付}的物联网平台，用于光储充微电网场站的数据采集与监控。客户拿到源码后自行掌握二次开发、部署和运维。
+
+\textbf{我方自有物联网平台与本项目独立}——本项目交付的是基于 Python 全开源技术栈的轻量级物联网平台，专为满足客户源码交付需求而构建。
+
+\subsection{建设目标}
+\begin{enumerate}[leftmargin=*]
+  \item \textbf{四协议统一接入}：Modbus RTU、Modbus TCP、IEC 104、OPC UA 实际跑通
+  \item \textbf{时序+关系双存储}：TDengine（时序）+ PostgreSQL（关系），开源免费
+  \item \textbf{2D组态监控}：HTML5 Canvas 实现，浏览器直接访问，无需插件
+  \item \textbf{数据推送}：MQTT / HTTP 实时推送至第三方应用
+  \item \textbf{源码交付}：完整 Python 源码，客户可自行编译部署和二次开发
+\end{enumerate}
+
+\subsection{项目范围与分工}
+\textbf{我方负责物联网平台层——平台部署、协议适配、组态配置、数据推送，确保系统实际跑通。}
+
+\begin{table}[H]\centering
+\begin{tabular}{p{3.5cm}p{5cm}p{5cm}}
+\toprule\textbf{工作内容} & \textbf{我方（平台层）} & \textbf{客户（应用层）} \\
+\midrule
+数据采集引擎 & \checkmark\ 4协议采集，实际跑通 & — \\
+2D组态 & \checkmark\ 组态页面+数据绑定 & \checkmark\ 业务画面定制 \\
+数据库 & \checkmark\ TDengine+PG 部署+表结构 & — \\
+数据推送 & \checkmark\ MQTT/HTTP 通道开发 & \checkmark\ 第三方对接 \\
+碳排优化 & \checkmark\ 数据采集+核算模型 & \checkmark\ 策略制定 \\
+源码处置 & — & \checkmark\ 客户自行处置 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+% ===== 二、技术选型 =====
+\section{技术选型}
+
+\subsection{选型策略}
+
+本项目定位为\textbf{轻量学习版}，预算约 5 万元，技术选型原则：
+\begin{itemize}
+  \item \textbf{全开源}：所有组件开源免费，无 License 成本
+  \item \textbf{Python 优先}：生态丰富、开发高效、客户易于接手
+  \item \textbf{异步架构}：asyncio + FastAPI，支撑多设备并发采集
+  \item \textbf{降级模式}：无 PostgreSQL/TDengine 时自动降级为 SQLite，单机即跑
+\end{itemize}
+
+\subsection{技术栈}
+
+\begin{table}[H]\centering
+\begin{tabular}{p{3cm}p{4.5cm}p{5cm}}
+\toprule\textbf{层次} & \textbf{选型} & \textbf{说明} \\
+\midrule
+核心语言 & Python 3.10+ & 异步非阻塞，生态丰富 \\
+Web框架 & FastAPI + uvicorn & 自动 API 文档，高性能异步 \\
+Modbus & pymodbus 3.6+ & RTU + TCP 双模式 \\
+IEC 104 & 自研轻量客户端 & ASDU 解析，总召+变化传输 \\
+OPC UA & opcua-asyncio & 订阅+轮询双模式 \\
+时序存储 & TDengine 3.x & 列式存储，10-20:1 压缩 \\
+关系存储 & PostgreSQL 15+ & SQLAlchemy async ORM \\
+消息推送 & paho-mqtt + httpx & MQTT+HTTP 双通道 \\
+前端 & HTML5 Canvas + Vanilla JS & 零依赖 2D 组态 \\
+部署 & Docker Compose & 一键部署全部组件 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+% ===== 三、总体架构 =====
+\section{总体架构设计}
+
+系统采用四层架构：
+
+\begin{enumerate}[leftmargin=*]
+  \item \textbf{设备接入层}：协议适配器（Modbus RTU/TCP、IEC 104、OPC UA），每个设备一个适配器实例，独立异步采集循环
+  \item \textbf{核心服务层}：采集调度引擎（CollectorEngine）+ 告警引擎（AlarmEngine）+ 推送引擎（PushEngine），通过回调链串联
+  \item \textbf{数据存储层}：TDengine 存遥测时序数据，PostgreSQL 存设备档案/配置/告警，降级模式自动切 SQLite
+  \item \textbf{Web 服务层}：FastAPI REST API + WebSocket 实时推送 + 2D 组态静态页面
+\end{enumerate}
+
+\subsection{数据流向}
+
+采集流程：\textbf{调度器定时触发 → 协议适配器读取硬件 → 解析为 PointValue → 并行写入 TDengine → 转发告警引擎和推送引擎 → WebSocket 广播至前端}
+
+% ===== 四、协议方案 =====
+\section{数据采集协议方案}
+
+\subsection{Modbus RTU/TCP}
+
+基于 pymodbus 异步客户端实现。RTU 模式通过 RS-485 串口轮询，TCP 模式通过以太网并发连接。支持功能码 01-04、06、16，自动解析 int16/uint16/int32/float32/float64 数据类型。每个设备独立采集周期（1-60秒可配），采集失败自动重连。
+
+\subsection{IEC 60870-5-104}
+
+轻量自研 IEC 104 客户端（主站模式），实现：
+\begin{itemize}
+  \item APCI 帧解析（I 帧发送序列号管理、U 帧 STARTDT/STOPDT）
+  \item ASDU 类型支持：M\_ME\_NA\_1(9)、M\_ME\_NB\_1(11)、M\_ME\_NC\_1(13)、M\_SP\_NA\_1(1)、M\_DP\_NA\_1(3)
+  \item 总召命令（C\_IC\_NA\_1）+ 时钟同步（C\_CS\_NA\_1）
+  \item TCP/2404 连接，自动重连
+\end{itemize}
+
+\subsection{OPC UA}
+
+基于 opcua-asyncio，支持：
+\begin{itemize}
+  \item Browse 地址空间自动发现变量节点
+  \item 订阅（Subscription）模式：数据变化主动推送
+  \item 轮询（Read）模式：周期读取
+  \item 安全策略 None / Basic256Sha256 + 用户名密码认证
+\end{itemize}
+
+% ===== 五、应用功能 =====
+\section{应用功能设计}
+
+\subsection{设备与点位管理}
+\begin{itemize}
+  \item 设备档案：设备名称、类型（光伏/储能/充电桩/电表/传感器）、协议、通讯参数
+  \item 点位配置：协议地址、数据类型、采集周期、缩放系数、告警阈值
+  \item 批量导入：支持 Excel/CSV 点位模板批量导入
+\end{itemize}
+
+\subsection{2D组态监控}
+
+基于 HTML5 Canvas 的 2D 组态画面：
+\begin{itemize}
+  \item \textbf{画面}：场站总览、光伏监控、储能监控、充电桩监控、碳排仪表盘、告警总览（6 画面）
+  \item \textbf{图元}：光伏阵列、逆变器、PCS、变压器、充电桩、电网接口等电力设备图标
+  \item \textbf{实时交互}：点击设备弹出数据详情面板，告警变色闪烁，WebSocket 实时刷新
+\end{itemize}
+
+\subsection{碳排优化细则}
+\label{sec:carbon}
+
+\textbf{碳排放源识别}：光储充场站无直接排放源，间接排放来自电网购电（范围二）。碳减排来自光伏替代电网电量和充电桩替代燃油。
+
+\textbf{数据采集要求}：从逆变器采集光伏发电量（15分钟）、PCS采集充放电量（15分钟）、关口表采集电网购售电量（15分钟）、充电桩采集服务电量（累计）、辐照仪采集辐照度（1分钟）。
+
+\textbf{核算标准}：采用 GB/T 32150 方法学，电网排放因子引用生态环境部最新发布值。\\
+净碳排放 = 电网购电量 × 排放因子 − 光伏发电量 × 排放因子 − 充电量 × 燃油替代因子
+
+\textbf{报告周期}：实时仪表盘（1分钟刷新）+ 日报 + 月报 + 年报
+
+\subsection{关键KPI}
+
+\begin{table}[H]\centering
+\begin{tabular}{p{2cm}p{3.5cm}p{2.5cm}p{2cm}}
+\toprule\textbf{类别} & \textbf{指标} & \textbf{目标值} & \textbf{周期} \\
+\midrule
+采集质量 & 数据完整率 & $\geq$ 99\% & 日/月 \\
+采集质量 & 设备在线率 & $\geq$ 99\% & 日/月 \\
+采集质量 & 平均采集延迟 & $\leq$ 3秒 & 实时 \\
+平台性能 & 数据推送延迟 & $\leq$ 1秒 & 实时 \\
+平台性能 & API响应时间 & $\leq$ 500ms & 实时 \\
+碳排指标 & 光伏碳减排量 & 按装机核算 & 月/年 \\
+碳排指标 & 场站净碳排放 & $\leq$ 0(碳中和) & 月/年 \\
+碳排指标 & 可再生能源占比 & $\geq$ 80\% & 月 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{告警管理}
+
+阈值告警（高限/上上限/低限/下下限）、变化率告警、设备离线告警。三级分类 P0/P1/P2。WebSocket 实时推送至前端 + MQTT 推送至第三方。
+
+\subsection{数据推送}
+
+MQTT（默认）+ HTTP POST 双通道。消息格式 JSON，规则引擎按设备类型/点位过滤。断网本地缓存、恢复补推。
+
+% ===== 六、存储方案 =====
+\section{数据存储方案}
+
+\subsection{TDengine 时序存储}
+超级表 device\_telemetry（ts + value + quality），TAGs（device\_id, point\_id, point\_name, unit, device\_type）。每个设备点位独立子表。列式存储+差值编码，压缩比 10-20:1。1分钟级数据保留 12 个月。
+
+\subsection{PostgreSQL 关系存储}
+存储设备档案（devices）、点位配置（data\_points）、告警记录（alarm\_records）、推送目标（push\_targets）。SQLAlchemy async ORM + Alembic 迁移。
+
+\subsection{降级模式}
+无 TDengine/PostgreSQL 环境时，自动降级为 SQLite 存储全部数据，单机即可完整运行——适合开发测试和轻量部署场景。
+
+% ===== 七、部署方案 =====
+\section{部署方案}
+
+\subsection{服务器配置（$\leq$500设备）}
+
+\begin{table}[H]\centering
+\begin{tabular}{p{3cm}p{3cm}p{4cm}}
+\toprule\textbf{资源} & \textbf{最低} & \textbf{推荐} \\
+\midrule
+CPU & 4 核 & 8 核 \\
+内存 & 8 GB & 16 GB \\
+磁盘 & 200 GB SSD & 500 GB SSD \\
+系统 & Ubuntu 20.04+ & Ubuntu 22.04 LTS \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Docker 一键部署}
+
+\begin{verbatim}
+cd scripts && docker-compose up -d
+\end{verbatim}
+
+一键启动 IoT 平台 + PostgreSQL + TDengine + EMQ X 四个容器。
+
+\subsection{裸机部署}
+
+\begin{verbatim}
+pip install -r requirements.txt
+python scripts/init_db.py
+python run.py
+# 访问 http://localhost:8000/docs
+\end{verbatim}
+
+\subsection{数据库说明}
+数据库采用\textbf{开源免费版本}：TDengine Community（AGPL v3）+ PostgreSQL（PostgreSQL License）。客户按《部署手册》自行安装，不产生 License 费用。
+
+% ===== 八、实施计划 =====
+\section{实施计划}
+
+\begin{table}[H]\centering
+\begin{tabular}{p{1.2cm}p{3cm}p{1.5cm}p{5cm}}
+\toprule\textbf{阶段} & \textbf{工作内容} & \textbf{工期} & \textbf{验收标准} \\
+\midrule
+P1 & 需求确认+环境准备 & 1周 & 设备清单、通讯参数、服务器就绪 \\
+P2 & 平台部署+数据库初始化 & 1周 & 平台可登录，数据库连接正常 \\
+P3 & 四协议适配+联调 & 3周 & \textbf{各协议至少接入1台真实设备跑通} \\
+P4 & 2D组态+数据推送 & 2周 & 组态画面实时数据展示，推送链路正常 \\
+P5 & 联调测试+文档 & 2周 & 端到端测试通过，数据准确率达标 \\
+P6 & 验收+培训 & 1周 & 交付物齐全，客户签字验收 \\
+\hline
+\textbf{合计} & & \textbf{10周} & \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{交付物}
+\begin{itemize}
+  \item IoT 平台完整 Python 源码（含 Git 仓库）
+  \item 技术方案（本文档）+ 部署手册 + 协议接入指南 + API 文档
+  \item 数据库初始化脚本 + Docker Compose 部署文件
+  \item 验收测试报告
+\end{itemize}
+
+% ===== 九、运维服务 =====
+\section{运维服务方案}
+
+\textbf{服务范围}：保障交付的 IoT 平台长期稳定运行——四协议采集链路、TDengine/PostgreSQL 数据库运行、数据推送链路、2D 组态可用性。
+
+\begin{table}[H]\centering
+\begin{tabular}{p{2cm}p{2cm}p{4cm}p{4cm}}
+\toprule\textbf{级别} & \textbf{响应} & \textbf{场景} & \textbf{方式} \\
+\midrule
+P0 紧急 & $\leq$30min & 平台宕机、全站数据中断 & 远程+电话 \\
+P1 重要 & $\leq$2h & 单协议中断、推送断开 & 远程 \\
+P2 一般 & $\leq$8h & 个别设备离线 & 工单 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\textbf{不含}：平台版本升级（交付版本长期可用，升级迭代不纳入本项目）；客户应用层运维；服务器硬件。
+
+% ===== 十、投资概算 =====
+\section{投资概算（脱敏版）}
+
+\subsection{费用构成}
+
+\begin{table}[H]\centering
+\begin{tabular}{p{1.2cm}p{3.5cm}p{3cm}p{5cm}}
+\toprule\textbf{序号} & \textbf{费用项目} & \textbf{计价} & \textbf{说明} \\
+\midrule
+1 & 四协议适配开发 & 按工作量 & Modbus RTU/TCP + IEC104 + OPCUA 采集引擎 \\
+2 & 2D组态开发 & 6个画面 & 总览/光伏/储能/充电桩/碳排/告警 \\
+3 & 数据推送开发 & 3通道 & MQTT + HTTP + WebSocket \\
+4 & 数据库部署 & 2个 & TDengine + PostgreSQL 建库建表 \\
+5 & 平台部署+联调 & 按人天 & 环境部署+协议调试+性能调优 \\
+6 & 文档+培训 & 按项 & 部署手册+API文档+培训 \\
+\hline
+\multicolumn{3}{r}{\textbf{合计}} & \textbf{详见商务报价函} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\textbf{说明}：
+\begin{itemize}
+  \item 全开源组件，无第三方 License 费用
+  \item 数据库（TDengine Community + PostgreSQL）免费，客户自装
+  \item 不含服务器硬件，客户自行采购
+  \item 年度维保服务按年另签
+\end{itemize}
+
+\subsection{付款方式建议}
+合同签订后→平台部署完成→联调测试通过→终验合格，分四期支付。
+
+\end{document}

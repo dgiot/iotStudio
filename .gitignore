@@ -1,0 +1,28 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+dist/
+build/
+.venv/
+env/
+
+# IDE
+.vscode/
+.idea/
+
+# Data
+data/
+*.db
+
+# LaTeX
+*.aux
+*.log
+*.out
+*.toc
+*.synctex.gz
+*.lot
+*.lof
+
+# Env
+.env

@@ -1,0 +1,314 @@
+# ============================================================
+# pythonIot — FastAPI 主入口
+# ============================================================
+import asyncio
+import logging
+import uuid
+from contextlib import asynccontextmanager
+from datetime import datetime, timezone
+from typing import Any, Dict, List, Optional
+
+from fastapi import FastAPI, HTTPException, Query, WebSocket, WebSocketDisconnect
+from fastapi.responses import HTMLResponse, JSONResponse
+from fastapi.staticfiles import StaticFiles
+from pydantic import BaseModel, Field
+
+from .config import cfg
+from .storage.tdengine import TDEngineStore
+from .storage.postgres import PostgresStore
+from .services.collector import CollectorEngine
+from .services.alarm_engine import AlarmEngine
+from .services.push_engine import PushEngine
+
+# ===== 日志 =====
+logging.basicConfig(level=getattr(logging, cfg.log_level.upper(), logging.INFO),
+                    format="%(asctime)s [%(levelname)s] %(name)s: %(message)s")
+logger = logging.getLogger(__name__)
+
+# ===== 全局服务 =====
+pg_store = PostgresStore()
+td_store = TDEngineStore()
+collector = CollectorEngine(pg_store, td_store)
+alarm_engine = AlarmEngine(pg_store)
+push_engine = PushEngine(pg_store)
+
+# ===== WebSocket 连接管理 =====
+ws_clients: set[WebSocket] = set()
+
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    """应用生命周期"""
+    # 启动
+    await pg_store.connect()
+    await td_store.connect()
+    await td_store.create_supertable()
+    await push_engine.start()
+
+    # 采集引擎回调链
+    collector.on_data(alarm_engine.evaluate)
+    collector.on_data(push_engine.push)
+
+    await collector.start()
+    logger.info(f"[main] {cfg.title} V{cfg.version} 启动完成")
+    yield
+    # 关闭
+    await collector.stop()
+    await td_store.close()
+    await pg_store.close()
+
+
+app = FastAPI(
+    title=cfg.title,
+    version=cfg.version,
+    lifespan=lifespan,
+    docs_url="/docs",
+    redoc_url="/redoc",
+)
+
+
+# ===== Pydantic 模型 =====
+
+class DeviceCreate(BaseModel):
+    device_id: str
+    device_name: str
+    device_type: str = "inverter"
+    station_id: str = "default"
+    protocol: str = "modbus_tcp"
+    comm_params: Optional[Dict] = None
+    manufacturer: Optional[str] = None
+    model: Optional[str] = None
+    install_location: Optional[str] = None
+
+
+class PointCreate(BaseModel):
+    point_id: str
+    device_id: str
+    point_name: str
+    protocol_addr: str
+    register_type: Optional[str] = "3"
+    data_type: str = "float32"
+    scale: float = 1.0
+    offset: float = 0.0
+    unit: Optional[str] = None
+    collect_interval: int = 5
+    alarm_high: Optional[float] = None
+    alarm_low: Optional[float] = None
+
+
+class PushTargetCreate(BaseModel):
+    target_id: str
+    target_name: str
+    target_type: str = "mqtt"    # mqtt / http
+    endpoint: str
+    config: Optional[Dict] = None
+
+
+# ===== REST API =====
+
+@app.get("/api/health")
+async def health():
+    """健康检查"""
+    stats = await collector.get_stats()
+    return {
+        "status": "ok",
+        "version": cfg.version,
+        "uptime_seconds": stats.get("uptime", 0),
+        "collector": stats,
+    }
+
+
+# ---- Device ----
+
+@app.get("/api/devices")
+async def list_devices(station_id: Optional[str] = None, device_type: Optional[str] = None):
+    devices = await pg_store.list_devices(station_id, device_type)
+    return {
+        "total": len(devices),
+        "devices": [{
+            "device_id": d.device_id, "device_name": d.device_name,
+            "device_type": d.device_type, "protocol": d.protocol,
+            "status": d.status, "station_id": d.station_id,
+            "manufacturer": d.manufacturer, "model": d.model,
+            "last_online_at": d.last_online_at.isoformat() if d.last_online_at else None,
+        } for d in devices]
+    }
+
+
+@app.get("/api/devices/{device_id}")
+async def get_device(device_id: str):
+    dev = await pg_store.get_device(device_id)
+    if dev is None:
+        raise HTTPException(404, "设备不存在")
+    return {"device_id": dev.device_id, "device_name": dev.device_name, "status": dev.status,
+            "protocol": dev.protocol, "device_type": dev.device_type}
+
+
+@app.post("/api/devices")
+async def create_device(body: DeviceCreate):
+    existing = await pg_store.get_device(body.device_id)
+    if existing:
+        raise HTTPException(400, "设备ID已存在")
+    dev = await pg_store.create_device(body.model_dump())
+    await collector.add_device(dev)
+    return {"device_id": dev.device_id, "status": "created"}
+
+
+@app.delete("/api/devices/{device_id}")
+async def delete_device(device_id: str):
+    await collector.remove_device(device_id)
+    return {"status": "removed"}
+
+
+# ---- Data Points ----
+
+@app.get("/api/devices/{device_id}/points")
+async def list_points(device_id: str):
+    points = await pg_store.list_points(device_id)
+    return {"total": len(points), "points": [{
+        "point_id": p.point_id, "point_name": p.point_name,
+        "protocol_addr": p.protocol_addr, "data_type": p.data_type,
+        "unit": p.unit, "scale": p.scale, "offset": p.offset,
+        "collect_interval": p.collect_interval,
+    } for p in points]}
+
+
+@app.post("/api/devices/{device_id}/points")
+async def create_point(device_id: str, body: PointCreate):
+    await pg_store.create_points_batch([body.model_dump()])
+    return {"status": "created"}
+
+
+@app.post("/api/devices/{device_id}/points/batch")
+async def create_points_batch(device_id: str, points: List[PointCreate]):
+    data = [p.model_dump() for p in points]
+    count = await pg_store.create_points_batch(data)
+    return {"status": "created", "count": count}
+
+
+# ---- Alarms ----
+
+@app.get("/api/alarms")
+async def list_alarms(status: Optional[str] = "active", limit: int = 100):
+    alarms = await pg_store.list_alarms(status, limit)
+    return {"total": len(alarms), "alarms": [{
+        "alarm_id": a.alarm_id, "device_id": a.device_id,
+        "alarm_type": a.alarm_type, "alarm_level": a.alarm_level,
+        "alarm_msg": a.alarm_msg, "status": a.status,
+        "created_at": a.created_at.isoformat() if a.created_at else None,
+    } for a in alarms]}
+
+
+@app.post("/api/alarms/{alarm_id}/confirm")
+async def confirm_alarm(alarm_id: str):
+    await alarm_engine.confirm_alarm(alarm_id)
+    return {"status": "confirmed"}
+
+
+@app.post("/api/alarms/{alarm_id}/clear")
+async def clear_alarm(alarm_id: str):
+    await alarm_engine.clear_alarm(alarm_id)
+    return {"status": "cleared"}
+
+
+# ---- Telemetry Query ----
+
+@app.get("/api/telemetry/{device_id}/{point_id}")
+async def query_telemetry(device_id: str, point_id: str,
+                          start: Optional[str] = None,
+                          end: Optional[str] = None,
+                          limit: int = 1000):
+    rows = await td_store.query(device_id, point_id, start, end, limit)
+    if isinstance(rows, list) and len(rows) > 0 and hasattr(rows[0], 'isoformat'):
+        rows = [{"ts": r[0].isoformat() if hasattr(r[0], 'isoformat') else str(r[0]),
+                 "value": r[1], "quality": r[2]} for r in rows]
+    return {"total": len(rows), "data": rows}
+
+
+@app.get("/api/telemetry/{device_id}/latest")
+async def device_latest(device_id: str):
+    points = await pg_store.list_points(device_id)
+    point_ids = [p.point_id for p in points]
+    rows = await td_store.query_device_latest(device_id, point_ids)
+    return {"device_id": device_id, "data": rows}
+
+
+# ---- Collector Stats ----
+
+@app.get("/api/stats")
+async def collector_stats():
+    return await collector.get_stats()
+
+
+# ---- Push Target ----
+
+@app.post("/api/push-targets")
+async def create_push_target(body: PushTargetCreate):
+    async with pg_store.session as s:
+        from ..models.device import PushTarget as PT
+        target = PT(**body.model_dump())
+        s.add(target)
+        await s.commit()
+    await push_engine.start()  # 重载
+    return {"status": "created"}
+
+
+# ---- WebSocket (实时数据推送) ----
+
+@app.websocket("/ws")
+async def websocket_endpoint(ws: WebSocket):
+    await ws.accept()
+    ws_clients.add(ws)
+    try:
+        while True:
+            data = await ws.receive_text()
+            # 客户端心跳
+            if data == "ping":
+                await ws.send_text("pong")
+    except WebSocketDisconnect:
+        pass
+    finally:
+        ws_clients.discard(ws)
+
+
+async def broadcast_ws(message: Dict[str, Any]):
+    """向所有 WebSocket 客户端广播"""
+    import json
+    dead = set()
+    for ws in ws_clients:
+        try:
+            await ws.send_json(message)
+        except Exception:
+            dead.add(ws)
+    ws_clients -= dead
+
+
+# 注册广播到采集引擎回调
+async def _ws_broadcast(device_id: str, points):
+    await broadcast_ws({
+        "type": "telemetry",
+        "device_id": device_id,
+        "data": [{"point_id": pv.point_id, "point_name": pv.point_name,
+                  "value": pv.value, "unit": pv.unit} for pv in points],
+    })
+
+collector.on_data(_ws_broadcast)
+
+# ---- Static / SCADA Page ----
+
+@app.get("/scada", response_class=HTMLResponse)
+async def scada_page():
+    from pathlib import Path
+    path = Path(__file__).resolve().parent.parent / "frontend" / "index.html"
+    if path.exists():
+        return HTMLResponse(path.read_text(encoding="utf-8"))
+    return HTMLResponse("<h2>SCADA page not found</h2>")
+
+
+@app.get("/admin", response_class=HTMLResponse)
+async def admin_page():
+    from pathlib import Path
+    path = Path(__file__).resolve().parent.parent / "frontend" / "admin.html"
+    if path.exists():
+        return HTMLResponse(path.read_text(encoding="utf-8"))
+    return HTMLResponse("<h2>Admin page not found</h2>")

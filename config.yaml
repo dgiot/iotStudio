@@ -1,0 +1,31 @@
+# ============================================================
+# pythonIot — 主配置文件
+# ============================================================
+title: "光储充微电网物联网平台"
+version: "1.0.0"
+host: "0.0.0.0"
+port: 8000
+log_level: "INFO"
+data_dir: "./data"
+sqlite_path: "./data/local.db"
+
+db:
+  host: "127.0.0.1"
+  port: 5432
+  user: "postgres"
+  password: "postgres"
+  database: "iot_platform"
+
+tdengine:
+  host: "127.0.0.1"
+  port: 6030
+  user: "root"
+  password: "taosdata"
+  database: "iot_telemetry"
+
+mqtt:
+  host: "127.0.0.1"
+  port: 1883
+  username: ""
+  password: ""
+  client_id: "pythonIot-pusher"

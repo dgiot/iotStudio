@@ -1,0 +1,24 @@
+# ============================================================
+# pythonIot — 光储充微电网物联网平台
+# 依赖清单
+# ============================================================
+fastapi>=0.110.0
+uvicorn[standard]>=0.29.0
+pymodbus>=3.6.0
+opcua-asyncio>=1.0.0
+asyncpg>=0.29.0
+sqlalchemy[asyncio]>=2.0.25
+alembic>=1.13.0
+paho-mqtt>=2.0.0
+httpx>=0.27.0
+pyyaml>=6.0
+python-dotenv>=1.0.0
+pydantic>=2.6.0
+pydantic-settings>=2.1.0
+apscheduler>=3.10.0
+tdengine-connector>=1.0.0
+taos-ws-py>=0.3.0
+pyserial>=3.5
+pyserial-asyncio>=0.6
+websockets>=12.0
+jinja2>=3.1.0

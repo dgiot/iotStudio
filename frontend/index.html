@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>光储充微电网 — 2D 组态监控</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Microsoft YaHei',sans-serif;background:#0a1628;color:#c0d5e8;overflow:hidden;}
+#app{display:flex;flex-direction:column;height:100vh;}
+/* 顶栏 */
+#topbar{background:#0f1f3a;padding:12px 20px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #1a3a5c;}
+#topbar h1{font-size:20px;color:#4fc3f7;}
+#topbar .stats{display:flex;gap:30px;font-size:14px;}
+.stat-item span{color:#4fc3f7;font-weight:bold;font-size:18px;}
+/* 主区域 */
+#main{flex:1;display:flex;}
+/* 侧栏 */
+#sidebar{width:260px;background:#0d1b30;padding:15px;border-right:1px solid #1a3a5c;overflow-y:auto;}
+#sidebar h3{color:#4fc3f7;margin:12px 0 8px;font-size:14px;text-transform:uppercase;letter-spacing:1px;}
+.device-item{background:#132540;margin:4px 0;padding:10px;border-radius:6px;cursor:pointer;border:1px solid transparent;transition:all 0.2s;}
+.device-item:hover{border-color:#4fc3f7;}
+.device-item .name{font-weight:bold;font-size:14px;}
+.device-item .info{font-size:12px;color:#8899aa;margin-top:3px;}
+.device-item.online{border-left:3px solid #66bb6a;}
+.device-item.offline{border-left:3px solid #ef5350;}
+.device-item.alarm{border-left:3px solid #ff9800;animation:blink 1s infinite;}
+@keyframes blink{50%{border-left-color:#c0d5e8;}}
+/* 画布 */
+#canvas-wrap{flex:1;position:relative;overflow:hidden;}
+#scada-canvas{width:100%;height:100%;display:block;}
+/* 弹窗 */
+#tooltip{position:absolute;background:#132540;border:1px solid #4fc3f7;border-radius:8px;padding:12px 16px;display:none;pointer-events:none;z-index:100;min-width:200px;}
+#tooltip .tt-name{font-size:16px;font-weight:bold;color:#4fc3f7;margin-bottom:6px;}
+#tooltip .tt-row{font-size:13px;margin:2px 0;display:flex;justify-content:space-between;}
+#tooltip .tt-row .val{color:#fff;font-weight:bold;}
+/* 告警弹窗 */
+#alarm-panel{position:absolute;bottom:20px;right:20px;width:320px;max-height:250px;background:#132540;border:1px solid #ff9800;border-radius:8px;overflow:hidden;display:none;}
+#alarm-panel .ap-header{background:#1a3a5c;padding:8px 12px;font-weight:bold;color:#ff9800;font-size:14px;}
+#alarm-panel .ap-list{max-height:200px;overflow-y:auto;padding:5px;}
+.ap-item{font-size:12px;padding:6px 8px;border-bottom:1px solid #1a3a5c;}
+.ap-item.P0{border-left:3px solid #ef5350;}
+.ap-item.P1{border-left:3px solid #ff9800;}
+.ap-item.P2{border-left:3px solid #ffc107;}
+/* 底部状态栏 */
+#bottombar{background:#0f1f3a;padding:6px 20px;display:flex;justify-content:space-between;font-size:12px;color:#8899aa;border-top:1px solid #1a3a5c;}
+</style>
+</head>
+<body>
+<div id="app">
+  <div id="topbar">
+    <h1>⚡ 光储充微电网 — 2D 组态监控</h1>
+    <div class="stats">
+      <div class="stat-item">在线设备 <span id="online-count">0</span></div>
+      <div class="stat-item">今日采集 <span id="collect-count">0</span></div>
+      <div class="stat-item">当前告警 <span id="alarm-count" style="color:#ff9800">0</span></div>
+    </div>
+  </div>
+  <div id="main">
+    <div id="sidebar">
+      <h3>📡 设备列表</h3>
+      <div id="device-list"></div>
+      <h3>📊 画面切换</h3>
+      <div style="display:flex;flex-wrap:wrap;gap:4px;">
+        <button onclick="switchView('overview')" style="flex:1;padding:6px;background:#132540;border:1px solid #1a3a5c;color:#c0d5e8;border-radius:4px;cursor:pointer;font-size:12px;">总览</button>
+        <button onclick="switchView('solar')" style="flex:1;padding:6px;background:#132540;border:1px solid #1a3a5c;color:#c0d5e8;border-radius:4px;cursor:pointer;font-size:12px;">光伏</button>
+        <button onclick="switchView('storage')" style="flex:1;padding:6px;background:#132540;border:1px solid #1a3a5c;color:#c0d5e8;border-radius:4px;cursor:pointer;font-size:12px;">储能</button>
+        <button onclick="switchView('charger')" style="flex:1;padding:6px;background:#132540;border:1px solid #1a3a5c;color:#c0d5e8;border-radius:4px;cursor:pointer;font-size:12px;">充电桩</button>
+      </div>
+    </div>
+    <div id="canvas-wrap">
+      <canvas id="scada-canvas"></canvas>
+      <div id="tooltip"></div>
+      <div id="alarm-panel">
+        <div class="ap-header">🔔 实时告警</div>
+        <div class="ap-list" id="alarm-list"></div>
+      </div>
+    </div>
+  </div>
+  <div id="bottombar">
+    <span id="conn-status">🔴 未连接</span>
+    <span id="last-update"></span>
+    <span>V1.0</span>
+  </div>
+</div>
+
+<script>
+// ===== 全局状态 =====
+const devices = {};
+const latestData = {};
+const alarms = [];
+let currentView = 'overview';
+let ws = null;
+
+// ===== Canvas 初始化 =====
+const canvas = document.getElementById('scada-canvas');
+const ctx = canvas.getContext('2d');
+
+function resizeCanvas(){
+  const wrap = document.getElementById('canvas-wrap');
+  canvas.width = wrap.clientWidth;
+  canvas.height = wrap.clientHeight;
+  drawScene();
+}
+window.addEventListener('resize', resizeCanvas);
+
+// ===== 场景对象 =====
+const scene = {
+  overview: {
+    objects: [
+      {type:'rect', x:0.10, y:0.12, w:0.12, h:0.18, color:'#1460aa', label:'光伏阵列', icon:'☀️'},
+      {type:'rect', x:0.10, y:0.38, w:0.12, h:0.22, color:'#1460aa', label:'储能系统', icon:'🔋'},
+      {type:'rect', x:0.10, y:0.68, w:0.12, h:0.18, color:'#1460aa', label:'充电桩', icon:'🔌'},
+      {type:'rect', x:0.30, y:0.15, w:0.18, h:0.10, color:'#2e7d32', label:'逆变器', icon:'⚙️'},
+      {type:'rect', x:0.30, y:0.42, w:0.18, h:0.10, color:'#2e7d32', label:'PCS变流器', icon:'⚡'},
+      {type:'rect', x:0.55, y:0.30, w:0.12, h:0.10, color:'#5c3d8f', label:'变压器', icon:'🔄'},
+      {type:'rect', x:0.72, y:0.15, w:0.15, h:0.12, color:'#1565c0', label:'电网接口', icon:'🏭'},
+      {type:'rect', x:0.72, y:0.42, w:0.15, h:0.12, color:'#1565c0', label:'负荷', icon:'🏠'},
+      // 连线
+      {type:'line', x1:0.22, y1:0.21, x2:0.30, y2:0.20, color:'#ffc107'},
+      {type:'line', x1:0.22, y1:0.49, x2:0.30, y2:0.47, color:'#ffc107'},
+      {type:'line', x1:0.48, y1:0.20, x2:0.55, y2:0.35, color:'#ffc107'},
+      {type:'line', x1:0.48, y1:0.47, x2:0.55, y2:0.35, color:'#ffc107'},
+      {type:'line', x1:0.67, y1:0.35, x2:0.72, y2:0.21, color:'#4fc3f7'},
+      {type:'line', x1:0.67, y1:0.35, x2:0.72, y2:0.48, color:'#4fc3f7'},
+    ]
+  }
+};
+
+// 为 solar/storage/charger 复制简化场景
+scene.solar = {objects: scene.overview.objects.filter(o => o.label && ['光伏阵列','逆变器'].includes(o.label))};
+scene.storage = {objects: scene.overview.objects.filter(o => o.label && ['储能系统','PCS变流器'].includes(o.label))};
+scene.charger = {objects: scene.overview.objects.filter(o => o.label && ['充电桩'].includes(o.label))};
+
+function switchView(v){currentView=v;drawScene();}
+
+// ===== 绘制 =====
+function drawScene(){
+  const w = canvas.width, h = canvas.height;
+  ctx.clearRect(0,0,w,h);
+  // 背景网格
+  ctx.strokeStyle='#122540';ctx.lineWidth=1;
+  for(let x=0;x<w;x+=40)ctx.strokeRect(x,0,0,h);
+  for(let y=0;y<h;y+=40)ctx.strokeRect(0,y,w,0);
+
+  const objs = scene[currentView]?.objects || scene.overview.objects;
+  objs.forEach(o => drawObject(o, w, h));
+}
+
+function drawObject(o, w, h){
+  if(o.type === 'rect'){
+    const x=o.x*w, y=o.y*h, rw=o.w*w, rh=o.h*h;
+    // 背景
+    ctx.fillStyle=o.color;ctx.globalAlpha=0.6;
+    ctx.fillRect(x,y,rw,rh);ctx.globalAlpha=1;
+    // 边框
+    ctx.strokeStyle='#4fc3f7';ctx.lineWidth=2;
+    ctx.strokeRect(x,y,rw,rh);
+    // 图标
+    if(o.icon){ctx.font='24px serif';ctx.fillStyle='#fff';ctx.textAlign='center';ctx.fillText(o.icon,x+rw/2,y+rh/2+8);}
+    // 标签
+    ctx.font='12px "Microsoft YaHei"';ctx.fillStyle='#c0d5e8';ctx.fillText(o.label||'',x+rw/2,y+rh+16);
+  }else if(o.type === 'line'){
+    ctx.strokeStyle=o.color;ctx.lineWidth=3;
+    ctx.beginPath();ctx.moveTo(o.x1*w,o.y1*h);ctx.lineTo(o.x2*w,o.y2*h);ctx.stroke();
+    // 流向箭头
+    const mx=(o.x1+o.x2)/2*w, my=(o.y1+o.y2)/2*h;
+    const ang=Math.atan2((o.y2-o.y1)*h,(o.x2-o.x1)*w);
+    ctx.save();ctx.translate(mx,my);ctx.rotate(ang);
+    ctx.fillStyle=o.color;ctx.beginPath();ctx.moveTo(6,0);ctx.lineTo(-6,-4);ctx.lineTo(-6,4);ctx.fill();
+    ctx.restore();
+  }
+}
+
+// ===== 设备列表 =====
+function updateDeviceList(){
+  const el=document.getElementById('device-list');
+  let html='';
+  Object.values(devices).forEach(d=>{
+    const cls=d.status==='online'?'online':(d.status==='alarm'?'alarm':'offline');
+    html+=`<div class="device-item ${cls}" onclick="showTooltip(event,'${d.device_id}')">
+      <div class="name">${d.device_name}</div>
+      <div class="info">${d.protocol} | ${d.status}</div>
+    </div>`;
+  });
+  el.innerHTML=html||'<div style="color:#8899aa;padding:10px;">暂无设备</div>';
+}
+
+// ===== Tooltip =====
+function showTooltip(e, deviceId){
+  const d=devices[deviceId];
+  if(!d)return;
+  const data=latestData[deviceId];
+  let rows='';
+  if(data){
+    data.forEach(p=>{rows+=`<div class="tt-row"><span>${p.point_name}</span><span class="val">${p.value} ${p.unit||''}</span></div>`;});
+  }
+  const tt=document.getElementById('tooltip');
+  tt.innerHTML=`<div class="tt-name">${d.device_name}</div>${rows||'<div style="color:#8899aa">无数据</div>'}`;
+  tt.style.display='block';
+  tt.style.left=Math.min(e.clientX+10,window.innerWidth-220)+'px';
+  tt.style.top=Math.min(e.clientY-30,window.innerHeight-200)+'px';
+}
+document.addEventListener('click',e=>{if(!e.target.closest('.device-item')&&!e.target.closest('#tooltip'))document.getElementById('tooltip').style.display='none';});
+
+// ===== 告警面板 =====
+function updateAlarmPanel(){
+  const el=document.getElementById('alarm-panel');
+  const list=document.getElementById('alarm-list');
+  if(alarms.length===0){el.style.display='none';return;}
+  el.style.display='block';
+  list.innerHTML=alarms.slice(0,10).map(a=>`<div class="ap-item ${a.alarm_level}">[${a.alarm_level}] ${a.alarm_msg} <br><small>${a.device_id} | ${new Date(a.created_at).toLocaleTimeString()}</small></div>`).join('');
+  document.getElementById('alarm-count').textContent=alarms.length;
+}
+
+// ===== WebSocket =====
+function connectWS(){
+  const proto=location.protocol==='https:'?'wss':'ws';
+  ws=new WebSocket(`${proto}://${location.host}/ws`);
+  ws.onopen=()=>{document.getElementById('conn-status').innerHTML='🟢 已连接';};
+  ws.onclose=()=>{document.getElementById('conn-status').innerHTML='🔴 未连接';setTimeout(connectWS,5000);};
+  ws.onmessage=ev=>{
+    const msg=JSON.parse(ev.data);
+    if(msg.type==='telemetry'){
+      latestData[msg.device_id]=msg.data;
+      document.getElementById('last-update').textContent='更新: '+new Date().toLocaleTimeString();
+      document.getElementById('collect-count').textContent=(parseInt(document.getElementById('collect-count').textContent)||0)+msg.data.length;
+    }
+  };
+}
+
+// ===== 初始化 =====
+async function init(){
+  resizeCanvas();
+  connectWS();
+  // 加载设备
+  try{
+    const r=await fetch('/api/devices');
+    const j=await r.json();
+    j.devices.forEach(d=>{devices[d.device_id]=d;});
+    updateDeviceList();
+    document.getElementById('online-count').textContent=j.devices.filter(d=>d.status==='online').length;
+  }catch(e){console.error(e);}
+  // 加载告警
+  try{
+    const r=await fetch('/api/alarms');
+    const j=await r.json();
+    j.alarms.forEach(a=>alarms.push(a));
+    updateAlarmPanel();
+  }catch(e){}
+  // 定时刷新
+  setInterval(refreshDevices,10000);
+  setInterval(drawScene,5000);
+}
+
+async function refreshDevices(){
+  try{
+    const r=await fetch('/api/devices');const j=await r.json();
+    j.devices.forEach(d=>{devices[d.device_id]=d;});
+    updateDeviceList();
+    document.getElementById('online-count').textContent=j.devices.filter(d=>d.status==='online').length;
+  }catch(e){}
+  try{
+    const r=await fetch('/api/alarms?status=active');const j=await r.json();
+    alarms.length=0;j.alarms.forEach(a=>alarms.push(a));
+    updateAlarmPanel();
+  }catch(e){}
+}
+
+init();
+</script>
+</body>
+</html>
