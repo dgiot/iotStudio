@@ -120,18 +120,36 @@ class IEC104Client(BaseProtocolAdapter):
         self._connected = False
 
     async def read_points(self, points: List[Dict[str, Any]]) -> List[PointValue]:
-        """从数据队列中提取目标点位的最新值"""
+        """读取点位 — 混合模式(队列+主动GI)"""
         results = []
         point_map = {p.get("point_id"): p for p in points}
 
-        # 非阻塞读取队列中所有数据
+        # 1. 从队列取已有数据
         while not self._data_queue.empty():
             try:
                 pv = self._data_queue.get_nowait()
-                if pv.point_id in point_map or pv.point_id == "":
+                pid = pv.point_id or f"ioa_{pv.extra.get('ioa', '')}"
+                if pid in point_map or pv.point_id == "":
                     results.append(pv)
             except asyncio.QueueEmpty:
                 break
+
+        # 2. 如果队列为空，发送总召获取新数据
+        if not results and self._connected:
+            try:
+                await self._send_general_interrogation()
+                await asyncio.sleep(0.5)
+                # 再次从队列读取 GI 响应
+                while not self._data_queue.empty():
+                    try:
+                        pv = self._data_queue.get_nowait()
+                        pid = pv.point_id or f"ioa_{pv.extra.get('ioa', '')}"
+                        if pid in point_map or pv.point_id == "":
+                            results.append(pv)
+                    except asyncio.QueueEmpty:
+                        break
+            except Exception:
+                pass
 
         return results
 
