@@ -72,6 +72,7 @@ class TDEngineStore:
             s = socket.socket(); s.settimeout(2)
             if s.connect_ex((self.config.host, self.config.port)) != 0:
                 logger.info(f"[tdengine] {self.config.host}:{self.config.port} 不可达, 降级 SQLite")
+                self._is_fallback = True
                 return await self._fallback_connect()
             s.close()
         except Exception:
@@ -93,6 +94,7 @@ class TDEngineStore:
                 )
             else:
                 logger.warning("TDengine connector 未安装，降级 SQLite")
+                self._is_fallback = True
                 return await self._fallback_connect()
 
             self.execute(f"CREATE DATABASE IF NOT EXISTS {self._db} KEEP 365 DURATION 10 BUFFER 16 WAL_LEVEL 1")
@@ -101,6 +103,8 @@ class TDEngineStore:
             return True
         except Exception as e:
             logger.error(f"[tdengine] 连接失败: {e}")
+            logger.info("[tdengine] 降级使用 SQLite")
+            self._is_fallback = True
             return await self._fallback_connect()
 
     async def _fallback_connect(self) -> bool:
@@ -254,6 +258,7 @@ class TDEngineStore:
 
     async def query_device_latest(self, device_id: str, point_ids: List[str]) -> List[Dict]:
         """查询设备所有点位最新值"""
+        logger.info(f"[tdengine] query_latest device={device_id} fallback={self._is_fallback} pids={len(point_ids)}")
         if self._is_fallback:
             results = []
             for pid in point_ids:

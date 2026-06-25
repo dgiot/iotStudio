@@ -231,6 +231,14 @@ async def clear_alarm(alarm_id: str):
 
 # ---- Telemetry Query ----
 
+@app.get("/api/telemetry/{device_id}/latest")
+async def device_latest(device_id: str):
+    points = await pg_store.list_points(device_id)
+    point_ids = [p.point_id for p in points]
+    rows = await td_store.query_device_latest(device_id, point_ids)
+    return {"device_id": device_id, "data": rows}
+
+
 @app.get("/api/telemetry/{device_id}/{point_id}")
 async def query_telemetry(device_id: str, point_id: str,
                           start: Optional[str] = None,
@@ -241,14 +249,6 @@ async def query_telemetry(device_id: str, point_id: str,
         rows = [{"ts": r[0].isoformat() if hasattr(r[0], 'isoformat') else str(r[0]),
                  "value": r[1], "quality": r[2]} for r in rows]
     return {"total": len(rows), "data": rows}
-
-
-@app.get("/api/telemetry/{device_id}/latest")
-async def device_latest(device_id: str):
-    points = await pg_store.list_points(device_id)
-    point_ids = [p.point_id for p in points]
-    rows = await td_store.query_device_latest(device_id, point_ids)
-    return {"device_id": device_id, "data": rows}
 
 
 # ---- Simulator Status ----
