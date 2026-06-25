@@ -9,7 +9,7 @@ from datetime import datetime, timezone
 from typing import Any, Dict, List, Optional
 
 from fastapi import FastAPI, HTTPException, Query, WebSocket, WebSocketDisconnect
-from fastapi.responses import HTMLResponse, JSONResponse
+from fastapi.responses import HTMLResponse, JSONResponse, FileResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field
 
@@ -294,21 +294,32 @@ async def _ws_broadcast(device_id: str, points):
 
 collector.on_data(_ws_broadcast)
 
-# ---- Static / SCADA Page ----
+# ---- Vue3 前端托管 ----
+from pathlib import Path as _Path
 
-@app.get("/scada", response_class=HTMLResponse)
-async def scada_page():
-    from pathlib import Path
-    path = Path(__file__).resolve().parent.parent / "frontend" / "index.html"
-    if path.exists():
-        return HTMLResponse(path.read_text(encoding="utf-8"))
-    return HTMLResponse("<h2>SCADA page not found</h2>")
+_FRONTEND_DIR = _Path(__file__).resolve().parent.parent / "frontend-vue" / "dist"
 
+if _FRONTEND_DIR.exists():
+    app.mount("/assets", StaticFiles(directory=_FRONTEND_DIR / "assets"), name="assets")
 
-@app.get("/admin", response_class=HTMLResponse)
-async def admin_page():
-    from pathlib import Path
-    path = Path(__file__).resolve().parent.parent / "frontend" / "admin.html"
-    if path.exists():
-        return HTMLResponse(path.read_text(encoding="utf-8"))
-    return HTMLResponse("<h2>Admin page not found</h2>")
+    @app.get("/{full_path:path}")
+    async def serve_frontend(full_path: str):
+        """SPA 路由回退"""
+        file_path = _FRONTEND_DIR / full_path
+        if file_path.exists() and file_path.is_file() and not full_path.startswith("api"):
+            return FileResponse(file_path)
+        return FileResponse(_FRONTEND_DIR / "index.html")
+
+    @app.get("/")
+    async def root():
+        return FileResponse(_FRONTEND_DIR / "index.html")
+
+    logger.info(f"[main] Vue3 前端已托管: {_FRONTEND_DIR}")
+else:
+    # 降级：旧版 scada 页面
+    @app.get("/scada", response_class=HTMLResponse)
+    async def scada_page():
+        path = _Path(__file__).resolve().parent.parent / "frontend" / "index.html"
+        return HTMLResponse(path.read_text(encoding="utf-8")) if path.exists() else HTMLResponse("<h2>SCADA not found</h2>")
+
+    logger.info("[main] Vue3 dist 未构建，使用旧版 SCADA 页面")
