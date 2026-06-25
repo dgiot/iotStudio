@@ -4,7 +4,7 @@
 """
 OPC UA Client 适配器
 
-依赖: opcua-asyncio (asyncua)
+依赖: asyncua (pip install asyncua)
 
 支持:
   - 连接 OPC UA Server（匿名 / 用户名密码）
