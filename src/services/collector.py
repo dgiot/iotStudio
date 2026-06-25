@@ -44,8 +44,8 @@ class CollectorEngine:
 
     async def start(self) -> None:
         """启动采集引擎"""
+        self._running = True  # 必须造任务之前，否则 while self._running 跳过
         await self._load_devices()
-        self._running = True
         logger.info(f"[collector] 启动完成, {len(self._adapters)} 个设备")
 
     async def stop(self) -> None:
@@ -157,6 +157,7 @@ class CollectorEngine:
         """设备采集循环"""
         # 添加随机抖动避免采集风暴
         await asyncio.sleep(random.uniform(0, interval * 0.5))
+        logger.info(f"[collector] {device_id} 采集循环启动 interval={interval}s running={self._running}")
 
         while self._running:
             start = datetime.now(timezone.utc)
