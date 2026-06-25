@@ -1,9 +1,30 @@
 import axios from 'axios'
+import router from '../router'
 
 const api = axios.create({
   baseURL: '/api',
   timeout: 10000,
 })
+
+// 请求拦截：自动附加 token
+api.interceptors.request.use(config => {
+  const token = localStorage.getItem('dgiot_token')
+  if (token) config.headers.Authorization = `Bearer ${token}`
+  return config
+})
+
+// 响应拦截：401 跳转登录
+api.interceptors.response.use(
+  resp => resp,
+  error => {
+    if (error.response?.status === 401) {
+      localStorage.removeItem('dgiot_token')
+      localStorage.removeItem('dgiot_user')
+      router.push('/login')
+    }
+    return Promise.reject(error)
+  }
+)
 
 // 设备
 export const getDevices = (params) => api.get('/devices', { params })

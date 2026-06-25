@@ -2,6 +2,12 @@ import { createRouter, createWebHashHistory } from 'vue-router'
 
 const routes = [
   {
+    path: '/login',
+    name: 'Login',
+    component: () => import('../views/LoginView.vue'),
+    meta: { title: '登录', noAuth: true }
+  },
+  {
     path: '/',
     component: () => import('../components/AppLayout.vue'),
     redirect: '/dashboard',
@@ -20,6 +26,18 @@ const routes = [
 const router = createRouter({
   history: createWebHashHistory(),
   routes,
+})
+
+// 路由守卫
+router.beforeEach((to, from, next) => {
+  const token = localStorage.getItem('dgiot_token')
+  if (to.meta.noAuth) {
+    next() // 登录页不拦截
+  } else if (!token) {
+    next('/login') // 未登录跳转
+  } else {
+    next()
+  }
 })
 
 export default router

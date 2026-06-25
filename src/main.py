@@ -8,7 +8,7 @@ from contextlib import asynccontextmanager
 from datetime import datetime, timezone
 from typing import Any, Dict, List, Optional
 
-from fastapi import FastAPI, HTTPException, Query, WebSocket, WebSocketDisconnect
+from fastapi import FastAPI, HTTPException, Query, WebSocket, WebSocketDisconnect, Depends
 from fastapi.responses import HTMLResponse, JSONResponse, FileResponse
 from pydantic import BaseModel, Field
 
@@ -102,6 +102,25 @@ class PushTargetCreate(BaseModel):
     endpoint: str
     config: Optional[Dict] = None
 
+
+# ===== 认证 API =====
+from .auth import authenticate, verify_token, get_current_user, USERS
+
+class LoginRequest(BaseModel):
+    username: str
+    password: str
+
+@app.post("/api/auth/login")
+async def login(body: LoginRequest):
+    token = authenticate(body.username, body.password)
+    if token is None:
+        raise HTTPException(401, "用户名或密码错误")
+    payload = verify_token(token)
+    return {"token": token, "username": payload["sub"], "role": payload["role"]}
+
+@app.get("/api/auth/me")
+async def me(user: dict = Depends(get_current_user)):
+    return {"username": user["sub"], "role": user["role"]}
 
 # ===== REST API =====
 
