@@ -415,6 +415,23 @@ async def bridge_telemetry(body: BridgeData):
     return {"status": "ok", "count": len(rows)}
 
 
+# ---- Maintenance ----
+
+@app.get("/api/maintenance/db-stats")
+async def db_stats():
+    """数据库统计"""
+    import sqlite3, os
+    td_db = os.path.join(cfg.data_dir, "telemetry.db")
+    telemetry_rows = 0
+    if os.path.exists(td_db):
+        try:
+            db = sqlite3.connect(td_db)
+            telemetry_rows = db.execute("SELECT COUNT(*) FROM telemetry").fetchone()[0]
+            db.close()
+        except: pass
+    return {"telemetry_rows": telemetry_rows, "sqlite": "正常" if telemetry_rows > 0 else "空库"}
+
+
 # ---- Channel Management (通道管理) ----
 
 @app.get("/api/channels")

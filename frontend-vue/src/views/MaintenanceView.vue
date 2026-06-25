@@ -140,13 +140,14 @@ async function loadAll() {
       axios.get('/api/simulators/status'), axios.get('/api/devices')
     ])
     const s = stats.data
-    statusCards.value[1].value = s.online_devices||0
-    statusCards.value[2].value = (s.success_rate||0)+'%'
-    statusCards.value[3].value = s.total_collects||0
-    statusCards.value[4].value = alarms.data.total||0
+    statusCards.value[0].value = s.online_devices||0
+    statusCards.value[1].value = (s.success_rate||0)+'%'
+    statusCards.value[2].value = s.total_collects||0
+    statusCards.value[3].value = alarms.data.total||0
 
-    sims.data.simulators?.forEach(s => {
-      const svc = services.value.find(v => v.host.includes(':'+s.port))
+    // 更新服务状态
+    ;(sims.data.simulators||[]).forEach(s => {
+      const svc = services.value.find(v => v.host.endsWith(':'+s.port))
       if (svc) svc.online = s.status === 'running'
     })
 
