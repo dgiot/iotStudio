@@ -65,6 +65,17 @@ class TDEngineStore:
         self._supertable_cache: set = set()
 
     async def connect(self) -> bool:
+        # 快速端口检查避免长时间超时
+        import socket
+        try:
+            s = socket.socket(); s.settimeout(2)
+            if s.connect_ex((self.config.host, self.config.port)) != 0:
+                logger.info(f"[tdengine] {self.config.host}:{self.config.port} 不可达, 降级 SQLite")
+                return await self._fallback_connect()
+            s.close()
+        except Exception:
+            pass
+
         try:
             if HAS_TAOS:
                 self._conn = taos.connect(
@@ -72,6 +83,7 @@ class TDEngineStore:
                     user=self.config.user,
                     password=self.config.password,
                     port=self.config.port,
+                    timeout=3,
                 )
             elif HAS_REST:
                 self._conn = RestClient(
