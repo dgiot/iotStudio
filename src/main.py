@@ -415,6 +415,45 @@ async def bridge_telemetry(body: BridgeData):
     return {"status": "ok", "count": len(rows)}
 
 
+# ---- Channel Management (通道管理) ----
+
+@app.get("/api/channels")
+async def channel_list():
+    """获取所有采集通道状态"""
+    channels = []
+    for did, adapter in collector._adapters.items():
+        dev = await pg_store.get_device(did)
+        stats = collector._stats.get(did, {"success": 0, "fail": 0})
+        meta = collector._device_meta.get(did, {})
+        channels.append({
+            "device_id": did,
+            "device_name": dev.device_name if dev else did,
+            "protocol": adapter.protocol_type,
+            "status": "online" if adapter._connected else "offline",
+            "connected": adapter._connected,
+            "success": stats.get("success", 0),
+            "fail": stats.get("fail", 0),
+            "device_type": meta.get("device_type", ""),
+            "config": {
+                "host": adapter.config.extra.get("host", "") or adapter.config.extra.get("endpoint", ""),
+                "port": adapter.config.extra.get("port", ""),
+            },
+            "packet_count": sum(1 for p in _packet_log if p["device"] == did),
+            "recent_packets": [p for p in _packet_log if p["device"] == did][-3:],
+        })
+    return {"total": len(channels), "channels": channels}
+
+@app.post("/api/channels/{device_id}/reconnect")
+async def channel_reconnect(device_id: str):
+    """重新连接通道"""
+    await collector.remove_device(device_id)
+    dev = await pg_store.get_device(device_id)
+    if dev:
+        await collector.add_device(dev)
+        return {"status": "reconnected"}
+    raise HTTPException(404, "设备不存在")
+
+
 # ---- Vue3 前端托管 ----
 from pathlib import Path as _Path
 from starlette.responses import Response as _Response

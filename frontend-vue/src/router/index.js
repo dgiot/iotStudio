@@ -17,6 +17,7 @@ const routes = [
       { path: '/devices/:id', name: 'DeviceDetail', component: () => import('../views/DeviceDetailView.vue'), meta: { title: '设备详情', hidden: true } },
       { path: '/alarms', name: 'Alarms', component: () => import('../views/AlarmListView.vue'), meta: { title: '告警管理', icon: 'Bell' } },
       { path: '/scada', name: 'Scada', component: () => import('../views/ScadaView.vue'), meta: { title: '2D组态', icon: 'PictureFilled' } },
+      { path: '/channels', name: 'Channels', component: () => import('../views/ChannelView.vue'), meta: { title: '通道管理', icon: 'Connection' } },
       { path: '/scanner', name: 'Scanner', component: () => import('../views/ScannerView.vue'), meta: { title: '网络扫描', icon: 'Search' } },
       { path: '/simulators', name: 'Simulators', component: () => import('../views/SimulatorView.vue'), meta: { title: '模拟器管理', icon: 'VideoCameraFilled' } },
       { path: '/telemetry', name: 'Telemetry', component: () => import('../views/TelemetryView.vue'), meta: { title: '数据查询', icon: 'Search' } },

@@ -114,6 +114,12 @@ class OPCUAClient(BaseProtocolAdapter):
             try:
                 node = self.client.get_node(node_id_str)
                 val = await node.read_value()
+                # 报文日志
+                try:
+                    from src.main import log_packet as _lp
+                    _lp(self.device_id, "TX", f"READ {node_id_str}".encode())
+                    _lp(self.device_id, "RX", f"= {val}".encode())
+                except: pass
                 results.append(PointValue(
                     device_id=self.device_id,
                     point_id=pt.get("point_id", ""),

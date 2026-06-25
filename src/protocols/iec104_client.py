@@ -93,11 +93,12 @@ class IEC104Client(BaseProtocolAdapter):
                 asyncio.open_connection(host, port),
                 timeout=self.config.timeout
             )
-            await self._send_u_frame(b'\x07')
+            await self._send_u_frame(b'\x07', log_dir="TX")
             await asyncio.sleep(0.3)
             # 读取 STARTDT_CONF + GI响应 并解析入队
             try:
                 buf = await asyncio.wait_for(self._reader.read(8192), timeout=1)
+                self._log_packet("RX", buf)
                 ioa_map = self._build_ioa_map()
                 self._parse_buffer(buf, ioa_map)
             except (asyncio.TimeoutError, Exception):
@@ -192,7 +193,7 @@ class IEC104Client(BaseProtocolAdapter):
 
     # ===== 帧处理 =====
 
-    async def _send_i_frame(self, asdu: bytes) -> None:
+    async def _send_i_frame(self, asdu: bytes, log_dir: str = "") -> None:
         """发送 I 帧"""
         ctrl = struct.pack('<HH', self._send_seq << 1, self._recv_seq << 1)
         length = 4 + len(asdu)
@@ -201,12 +202,19 @@ class IEC104Client(BaseProtocolAdapter):
         await self._writer.drain()
         self._send_seq = (self._send_seq + 1) % 32768
         self._unconfirmed += 1
+        if log_dir: self._log_pkt(log_dir, frame)
 
-    async def _send_u_frame(self, cmd: bytes) -> None:
+    async def _send_u_frame(self, cmd: bytes, log_dir: str = "") -> None:
         """发送 U 帧"""
         frame = b'\x68\x04\x04\x68' + cmd + b'\x00\x00'
         self._writer.write(frame)
         await self._writer.drain()
+        if log_dir: self._log_pkt(log_dir, frame)
+
+    @staticmethod
+    def _log_pkt(direction: str, raw: bytes):
+        try: from src.main import log_packet as _lp; _lp("iec104", direction, raw)
+        except: pass
 
     async def _send_s_frame(self) -> None:
         """发送 S 帧（确认）"""
