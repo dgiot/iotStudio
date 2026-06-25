@@ -99,7 +99,7 @@ class PointCreate(BaseModel):
 class PushTargetCreate(BaseModel):
     target_id: str
     target_name: str
-    target_type: str = "mqtt"    # mqtt / http
+    target_type: str = "mqtt"    # mqtt / http / dgiot
     endpoint: str
     config: Optional[Dict] = None
 

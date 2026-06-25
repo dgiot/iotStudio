@@ -1,97 +1,74 @@
-# CLAUDE.md — pythonIot
+# CLAUDE.md — dgiot_lite
 
-## 项目名称
-光储充微电网物联网平台（轻量版 / 学习版）
+## 项目定位
+**dgiot_lite** 是 [DG-IoT](https://github.com/dgiot/dgiot) 开源物联网平台的 **Python 轻量联动版本**，由迪格(杭州)物联科技有限公司维护。
+
+- **DG-IoT**：Erlang/OTP 全功能企业级平台（千万级承载、全协议、低代码组态）
+- **dgiot_lite**：Python 轻量版本（学习入门、边缘采集、快速原型、源码交付）
+
+两者定位互补，dgiot_lite 采集的数据可推送至 DG-IoT 主平台。
 
 ## 技术栈
 - **语言**: Python 3.10+
 - **后端框架**: FastAPI (异步) + uvicorn
-- **协议适配**: pymodbus (Modbus RTU/TCP), 自研 IEC 104, opcua-asyncio (OPC UA)
-- **时序存储**: TDengine 3.x (Python connector)
-- **关系存储**: PostgreSQL 15+ (SQLAlchemy + asyncpg)
+- **协议适配**: pymodbus (Modbus RTU/TCP), 自研 IEC 104, asyncua (OPC UA)
+- **时序存储**: TDengine 3.x / SQLite 降级
+- **关系存储**: PostgreSQL 15+ / SQLite 降级 (SQLAlchemy + asyncpg)
 - **消息推送**: paho-mqtt (MQTT), httpx (HTTP)
-- **前端**: HTML5 Canvas + Vanilla JS (2D 组态)
+- **前端**: Vue3 + Vite + Element Plus (管理后台)
 - **文档**: LaTeX (xelatex + ctex)
-- **部署**: Docker + docker-compose
+- **部署**: Docker + docker-compose / 裸机 Python
+
+## 与 DG-IoT 的关系
+
+```
+DG-IoT (Erlang, 企业级)          dgiot_lite (Python, 轻量级)
+┌─────────────────────┐          ┌──────────────────────┐
+│  全协议 全功能       │  数据推送 │  4协议采集引擎         │
+│  千万级设备承载      │ ←────── │  2D组态               │
+│  低代码组态          │  MQTT   │  TDengine + PG        │
+│  规则引擎 + BI       │         │  源码交付给客户         │
+└─────────────────────┘          └──────────────────────┘
+```
 
 ## 目录结构
 ```
-pythonIot/
+dgiot_lite/
 ├── CLAUDE.md
 ├── requirements.txt
-├── config.yaml                  # 主配置文件
-├── .env.example
+├── config.yaml
 ├── run.py                       # 启动入口
+├── start_platform.bat           # Windows 一键启动
+├── start_simulators.bat         # 模拟器一键启动
 ├── src/
 │   ├── main.py                  # FastAPI 应用
-│   ├── config.py                # 配置加载
-│   ├── models/                  # 数据模型 (SQLAlchemy)
-│   │   ├── device.py
-│   │   ├── point.py
-│   │   └── alarm.py
-│   ├── protocols/               # 协议适配器
-│   │   ├── base.py              # 抽象基类
-│   │   ├── modbus_rtu.py
-│   │   ├── modbus_tcp.py
-│   │   ├── iec104_client.py
-│   │   └── opcua_client.py
-│   ├── storage/                 # 存储层
-│   │   ├── tdengine.py
-│   │   └── postgres.py
-│   ├── push/                    # 数据推送
-│   │   ├── mqtt_pusher.py
-│   │   └── http_pusher.py
-│   ├── web/                     # Web 层
-│   │   ├── api.py
-│   │   ├── routes/
-│   │   └── templates/
-│   └── services/                # 核心服务
-│       ├── collector.py         # 采集调度引擎
-│       ├── alarm_engine.py      # 告警引擎
-│       └── push_engine.py       # 推送引擎
-├── frontend/                    # 2D 组态前端
-│   ├── index.html
-│   └── static/
-├── scripts/
-│   ├── init_db.sh
-│   ├── docker-compose.yml
-│   └── deploy.sh
-├── docs/
-│   ├── requirements.md
-│   ├── tech-proposal.tex
-│   └── pricing.tex
-└── tests/
+│   ├── config.py
+│   ├── models/device.py         # 数据模型
+│   ├── protocols/               # 4协议适配器
+│   ├── storage/                 # TDengine + PG
+│   ├── push/                    # MQTT + HTTP 推送
+│   ├── services/                # 采集/告警/推送引擎
+│   └── web/                     # API 路由
+├── frontend-vue/                # Vue3 管理后台
+├── simulators/                  # 4协议模拟器
+├── scripts/                     # Docker + 数据库初始化
+├── docs/                        # 技术方案 + 报价表
+└── tests/                       # 集成测试
 ```
 
 ## 启动
 ```bash
-# 安装依赖
-pip install -r requirements.txt
+# Windows 双击
+start_platform.bat          → http://localhost:8000
+start_simulators.bat        → 启动全部模拟器
 
-# 初始化数据库
-python scripts/init_db.py
-
-# 启动平台
-python run.py
-# 或
-uvicorn src.main:app --host 0.0.0.0 --port 8000
-
-# Docker 部署
-cd scripts && docker-compose up -d
+# 命令行
+python run.py               → 启动平台
+python simulators/run_all.py → 启动模拟器
 ```
-
-## 关键入口
-- API 文档: http://localhost:8000/docs
-- 2D 组态: http://localhost:8000/scada
-- 管理后台: http://localhost:8000/admin
 
 ## 默认技能
 - 文档: /latex-writer
 - 前端: /vue-patterns
-- 后端: /backend-patterns
+- 研究: /deep-research
 - 画图: /diagram-tools
-
-## 项目配置
-- 版本号: V1.0
-- 文档路径: docs/
-- Python 版本: ≥ 3.10
