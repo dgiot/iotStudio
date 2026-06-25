@@ -20,3 +20,5 @@ pyserial-asyncio>=0.6
 websockets>=12.0
 jinja2>=3.1.0
 aiosqlite>=0.20.0
+OpenOPC-DA>=1.5.0           # OPC DA 协议 (Windows only)
+Pyro5>=5.14                 # OPC DA Gateway

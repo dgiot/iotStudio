@@ -146,6 +146,9 @@ class CollectorEngine:
         elif proto == "opcua":
             from ..protocols.opcua_client import OPCUAClient
             return OPCUAClient(config)
+        elif proto == "opcda":
+            from ..protocols.opcda_client import OPCDAClient
+            return OPCDAClient(config)
         else:
             logger.error(f"[collector] 不支持的协议: {proto}")
             return None
