@@ -15,10 +15,13 @@ DEVICES = [
      "comm_params": {"host": "127.0.0.1", "port": 502, "slave_id": 1}},
     {"device_id": "pcs_01", "device_name": "储能PCS#1", "device_type": "pcs",
      "station_id": "station_01", "protocol": "modbus_tcp",
-     "comm_params": {"host": "127.0.0.1", "port": 1502, "slave_id": 2}},
+     "comm_params": {"host": "127.0.0.1", "port": 1502, "slave_id": 1}},
     {"device_id": "charger_01", "device_name": "直流充电桩#1", "device_type": "charger",
      "station_id": "station_01", "protocol": "modbus_tcp",
-     "comm_params": {"host": "127.0.0.1", "port": 2502, "slave_id": 3}},
+     "comm_params": {"host": "127.0.0.1", "port": 2502, "slave_id": 1}},
+    {"device_id": "meter_rtu_01", "device_name": "三相电表", "device_type": "meter",
+     "station_id": "station_01", "protocol": "modbus_tcp",
+     "comm_params": {"host": "127.0.0.1", "port": 503, "slave_id": 1}},
     {"device_id": "pcs_iec104", "device_name": "储能PCS(IEC104)", "device_type": "pcs",
      "station_id": "station_01", "protocol": "iec104",
      "comm_params": {"host": "127.0.0.1", "port": 2404, "common_addr": 1}},
@@ -30,9 +33,9 @@ DEVICES = [
 POINTS = {
     "inv_01": [
         {"point_id": "inv_power", "point_name": "有功功率", "protocol_addr": "0x0004", "register_type": "3", "data_type": "float32", "unit": "W", "collect_interval": 5},
-        {"point_id": "inv_voltage", "point_name": "A相电压", "protocol_addr": "0x0000", "register_type": "3", "data_type": "float32", "unit": "V", "collect_interval": 5},
-        {"point_id": "inv_current", "point_name": "A相电流", "protocol_addr": "0x0002", "register_type": "3", "data_type": "float32", "unit": "A", "collect_interval": 5},
-        {"point_id": "inv_temp", "point_name": "逆变器温度", "protocol_addr": "0x0008", "register_type": "3", "data_type": "float32", "unit": "°C", "collect_interval": 10},
+        {"point_id": "inv_voltage", "point_name": "A相电压", "protocol_addr": "0x0000", "register_type": "3", "data_type": "float32", "unit": "V", "collect_interval": 5, "alarm_high": 270, "alarm_low": 190},
+        {"point_id": "inv_current", "point_name": "A相电流", "protocol_addr": "0x0002", "register_type": "3", "data_type": "float32", "unit": "A", "collect_interval": 5, "alarm_high": 28, "alarm_low": 5},
+        {"point_id": "inv_temp", "point_name": "逆变器温度", "protocol_addr": "0x0008", "register_type": "3", "data_type": "float32", "unit": "°C", "collect_interval": 10, "alarm_high": 80, "alarm_high_high": 90},
         {"point_id": "inv_pf", "point_name": "功率因数", "protocol_addr": "0x0006", "register_type": "3", "data_type": "float32", "unit": "", "collect_interval": 10},
     ],
     "pcs_01": [
@@ -57,11 +60,16 @@ POINTS = {
         {"point_id": "iec104_soh", "point_name": "SOH(IEC104)", "protocol_addr": "101", "register_type": "", "data_type": "float32", "unit": "%", "collect_interval": 10},
     ],
     "charger_opcua": [
-        {"point_id": "opcua_status", "point_name": "充电状态(OPCUA)", "protocol_addr": "ns=2;s=Charger_01.Status", "register_type": "", "data_type": "int32", "unit": "", "collect_interval": 5},
-        {"point_id": "opcua_power", "point_name": "充电功率(OPCUA)", "protocol_addr": "ns=2;s=Charger_01.ChargePower", "register_type": "", "data_type": "float64", "unit": "kW", "collect_interval": 5},
-        {"point_id": "opcua_voltage", "point_name": "输出电压(OPCUA)", "protocol_addr": "ns=2;s=Charger_01.OutputVoltage", "register_type": "", "data_type": "float64", "unit": "V", "collect_interval": 5},
-        {"point_id": "opcua_temp", "point_name": "模块温度(OPCUA)", "protocol_addr": "ns=2;s=Charger_01.ModuleTemp", "register_type": "", "data_type": "float64", "unit": "°C", "collect_interval": 10},
-        {"point_id": "opcua_energy", "point_name": "累计充电量(OPCUA)", "protocol_addr": "ns=2;s=Charger_01.TotalEnergy", "register_type": "", "data_type": "float64", "unit": "kWh", "collect_interval": 10},
+        {"point_id": "opcua_status", "point_name": "充电状态(OPCUA)", "protocol_addr": "ns=2;i=3", "register_type": "", "data_type": "int32", "unit": "", "collect_interval": 5},
+        {"point_id": "opcua_power", "point_name": "充电功率(OPCUA)", "protocol_addr": "ns=2;i=4", "register_type": "", "data_type": "float64", "unit": "kW", "collect_interval": 5},
+        {"point_id": "opcua_voltage", "point_name": "输出电压(OPCUA)", "protocol_addr": "ns=2;i=5", "register_type": "", "data_type": "float64", "unit": "V", "collect_interval": 5},
+        {"point_id": "opcua_temp", "point_name": "模块温度(OPCUA)", "protocol_addr": "ns=2;i=9", "register_type": "", "data_type": "float64", "unit": "°C", "collect_interval": 10},
+        {"point_id": "opcua_energy", "point_name": "累计充电量(OPCUA)", "protocol_addr": "ns=2;i=8", "register_type": "", "data_type": "float64", "unit": "kWh", "collect_interval": 10},
+    ],
+    "meter_rtu_01": [
+        {"point_id": "meter_voltage", "point_name": "A相电压", "protocol_addr": "0x0000", "register_type": "3", "data_type": "float32", "unit": "V", "collect_interval": 5},
+        {"point_id": "meter_current", "point_name": "A相电流", "protocol_addr": "0x0002", "register_type": "3", "data_type": "float32", "unit": "A", "collect_interval": 5},
+        {"point_id": "meter_power", "point_name": "有功功率", "protocol_addr": "0x0004", "register_type": "3", "data_type": "float32", "unit": "W", "collect_interval": 5},
     ],
 }
 
