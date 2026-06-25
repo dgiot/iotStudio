@@ -93,12 +93,16 @@ class IEC104Client(BaseProtocolAdapter):
                 asyncio.open_connection(host, port),
                 timeout=self.config.timeout
             )
-            # 发送 STARTDT
             await self._send_u_frame(b'\x07')
-            # 发送总召
-            await self._send_general_interrogation()
+            await asyncio.sleep(0.3)
+            # 读取 STARTDT_CONF + GI响应 并解析入队
+            try:
+                buf = await asyncio.wait_for(self._reader.read(8192), timeout=1)
+                ioa_map = self._build_ioa_map()
+                self._parse_buffer(buf, ioa_map)
+            except (asyncio.TimeoutError, Exception):
+                pass
             self._connected = True
-            self._recv_task = asyncio.create_task(self._recv_loop())
             logger.info(f"[iec104] {self.device_id} 连接成功 {host}:{port}")
             return True
         except Exception as e:
@@ -120,36 +124,46 @@ class IEC104Client(BaseProtocolAdapter):
         self._connected = False
 
     async def read_points(self, points: List[Dict[str, Any]]) -> List[PointValue]:
-        """读取点位 — 混合模式(队列+主动GI)"""
-        results = []
-        point_map = {p.get("point_id"): p for p in points}
+        """读取点位 — 从队列取 + 主动GI"""
+        if not self._connected:
+            return []
 
-        # 1. 从队列取已有数据
+        results = []
+        point_ids = {p.get("point_id") for p in points}
+
+        # 1. 先取队列中已有数据
         while not self._data_queue.empty():
             try:
                 pv = self._data_queue.get_nowait()
-                pid = pv.point_id or f"ioa_{pv.extra.get('ioa', '')}"
-                if pid in point_map or pv.point_id == "":
+                if pv.point_id in point_ids:
                     results.append(pv)
             except asyncio.QueueEmpty:
                 break
 
-        # 2. 如果队列为空，发送总召获取新数据
-        if not results and self._connected:
+        # 2. 如果队列空，发送 GI 并读取响应
+        if not results and self._writer:
             try:
-                await self._send_general_interrogation()
-                await asyncio.sleep(0.5)
-                # 再次从队列读取 GI 响应
-                while not self._data_queue.empty():
+                ca = self.config.extra.get("common_addr", 1)
+                asdu = struct.pack('<BBHB', 100, 1, 0x1400, ca & 0xFF) + b'\x00\x14'
+                await self._send_i_frame(asdu)
+                buf = b''
+                for _ in range(5):
                     try:
-                        pv = self._data_queue.get_nowait()
-                        pid = pv.point_id or f"ioa_{pv.extra.get('ioa', '')}"
-                        if pid in point_map or pv.point_id == "":
-                            results.append(pv)
-                    except asyncio.QueueEmpty:
+                        data = await asyncio.wait_for(self._reader.read(4096), timeout=0.5)
+                        buf += data
+                    except asyncio.TimeoutError:
                         break
-            except Exception:
-                pass
+                if buf:
+                    self._parse_buffer(buf, self._build_ioa_map())
+                    while not self._data_queue.empty():
+                        try:
+                            pv = self._data_queue.get_nowait()
+                            if pv.point_id in point_ids or not point_ids:
+                                results.append(pv)
+                        except asyncio.QueueEmpty:
+                            break
+            except Exception as e:
+                logger.debug(f"[iec104] GI error: {e}")
 
         return results
 
@@ -243,6 +257,41 @@ class IEC104Client(BaseProtocolAdapter):
                 logger.error(f"[iec104] recv error: {e}")
                 self._connected = False
                 return
+
+    def _build_ioa_map(self) -> dict:
+        """从点位配置构建 IOA → point_id 映射"""
+        m = {}
+        for p in self.config.points:
+            addr = p.get("protocol_addr", "0")
+            try:
+                ioa = int(addr) if addr.isdigit() else 0
+                if ioa > 0:
+                    m[ioa] = p.get("point_id", f"ioa_{ioa}")
+            except (ValueError, TypeError):
+                pass
+        return m
+
+    def _parse_buffer(self, buf: bytes, ioa_map: dict = None):
+        """解析缓冲区中的所有帧，ioa_map: {ioa_int: point_id}"""
+        while len(buf) >= 2 and buf[0] == 0x68:
+            if len(buf) < 2: break
+            apdu_len = buf[1]
+            if len(buf) < apdu_len + 2: break
+            frame = buf[:apdu_len + 2]
+            buf = buf[apdu_len + 2:]
+            asdu_bytes = frame[8:] if len(frame) >= 8 else b''
+            if len(asdu_bytes) >= 6 and asdu_bytes[0] == 13:  # M_ME_NC_1
+                elem_size = 8; n = asdu_bytes[1] & 0x7F
+                for i in range(n):
+                    off = i * elem_size
+                    if off + elem_size > len(asdu_bytes) - 6: break
+                    ioa = struct.unpack('<I', asdu_bytes[6+off:6+off+3] + b'\x00')[0]
+                    val = struct.unpack('<f', asdu_bytes[6+off+3:6+off+7])[0]
+                    pid = ioa_map.get(ioa, f"ioa_{ioa}") if ioa_map else f"ioa_{ioa}"
+                    self._data_queue.put_nowait(PointValue(
+                        device_id=self.device_id, point_id=pid,
+                        point_name=f"IOA_{ioa}", value=round(val, 4),
+                        data_type="float32", timestamp=datetime.now(timezone.utc)))
 
     async def _parse_frame(self, frame: bytes) -> None:
         """解析 APDU 帧"""

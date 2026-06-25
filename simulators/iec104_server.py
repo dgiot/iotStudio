@@ -144,17 +144,16 @@ class IEC104Slave:
 
                     # 处理 U 帧
                     if parsed["type"] == 3:
-                        cmd = parsed["ctrl"] & 0xFC
-                        if cmd == 0x07:  # STARTDT
-                            logger.info("[IEC104] 收到 STARTDT → 发送确认")
-                            response = b'\x68\x04\x04\x68' + bytes([0x0B, 0x00, 0x00, 0x00])
+                        ctrl = parsed["ctrl"]
+                        if ctrl == 0x07:  # STARTDT act
+                            logger.info("[IEC104] 收到 STARTDT -> 发送确认")
+                            response = b'\x68\x04\x04\x68\x0b\x00'
                             writer.write(response)
                             await writer.drain()
-
                             # 发送总召响应
                             await self.send_gi_response(writer)
 
-                    # 处理 I 帧中收到的序列号
+                    # 处理 I 帧
                     if parsed["type"] == 0:
                         recv_seq = (parsed["ctrl"] >> 1) & 0x7FFF
                         self._recv_seq = (recv_seq + 1) % 32768
