@@ -2,8 +2,8 @@
   <div class="login-page">
     <div class="login-card">
       <div class="login-header">
-        <h1>⚡ dgiot_lite</h1>
-        <p>光储充微电网物联网平台</p>
+        <h1>⚡ 光储充微电网物联网平台</h1>
+        <p>轻量级边缘代理 V1.0</p>
       </div>
       <el-form :model="form" :rules="rules" ref="formRef" @keyup.enter="doLogin">
         <el-form-item prop="username">
@@ -61,15 +61,15 @@ async function doLogin() {
 <style scoped>
 .login-page {
   display: flex; justify-content: center; align-items: center; min-height: 100vh;
-  background: linear-gradient(135deg, #0a1628 0%, #0d1b30 50%, #122540 100%);
+  background: linear-gradient(135deg, #0c1c30 0%, #162844 50%, #1a3050 100%);
 }
 .login-card {
-  width: 400px; padding: 40px; background: #0f1f3a; border: 1px solid #1a3a5c;
+  width: 400px; padding: 40px; background: #162844; border: 1px solid #234060;
   border-radius: 12px; box-shadow: 0 8px 32px rgba(0,0,0,0.3);
 }
 .login-header { text-align: center; margin-bottom: 30px; }
-.login-header h1 { color: #4fc3f7; font-size: 28px; margin: 0; }
-.login-header p { color: #8899aa; font-size: 14px; margin-top: 8px; }
+.login-header h1 { color: #66d9ff; font-size: 28px; margin: 0; }
+.login-header p { color: #c0d5e8; font-size: 14px; margin-top: 8px; }
 .login-hint { text-align: center; margin-top: 12px; }
 .login-error { color: #ef5350; text-align: center; margin-top: 12px; font-size: 13px; }
 </style>

@@ -3,12 +3,13 @@
     <!-- 侧栏 -->
     <el-aside width="220px" class="sidebar">
       <div class="logo">
-        <h2>⚡ 光储充物联网</h2>
-        <small>pythonIot V1.0</small>
+        <h2>⚡ 光储充微电网物联网平台</h2>
+        <small>轻量级边缘代理 V1.0</small>
       </div>
-      <el-menu :default-active="route.path" router background-color="#0d1b30" text-color="#c0d5e8" active-text-color="#4fc3f7">
-        <template v-for="item in menuItems" :key="item.path">
-          <el-menu-item v-if="!item.meta?.hidden" :index="item.path">
+      <el-menu :default-active="route.path" router background-color="#0f1d33" text-color="#c0d5e8" active-text-color="#66d9ff">
+        <template v-for="(items, group) in menuGroups" :key="group">
+          <div class="menu-group-label">{{ group }}</div>
+          <el-menu-item v-for="item in items" :key="item.path" :index="item.path">
             <el-icon><component :is="item.meta?.icon" /></el-icon>
             <span>{{ item.meta?.title }}</span>
           </el-menu-item>
@@ -21,10 +22,11 @@
       <el-header class="topbar">
         <div class="topbar-left">{{ currentTitle }}</div>
         <div class="topbar-right">
+          <NotifyBell />
           <el-tag :type="healthStatus === 'ok' ? 'success' : 'danger'" size="small" effect="dark">
             {{ healthStatus === 'ok' ? '系统正常' : '异常' }}
           </el-tag>
-          <span style="margin-left:12px;color:#8899aa;font-size:13px">{{ stats?.online_devices || 0 }} 设备在线</span>
+          <span style="margin-left:8px;color:#b0c8d8;font-size:13px">{{ stats?.online_devices || 0 }} 设备在线</span>
         </div>
       </el-header>
 
@@ -40,6 +42,8 @@
 import { ref, computed, onMounted, onUnmounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { getHealth, getStats } from '../api'
+import NotifyBell from './NotifyBell.vue'
+import { MENU_GROUPS } from '../utils/constants'
 
 const route = useRoute()
 const router = useRouter()
@@ -47,8 +51,23 @@ const router = useRouter()
 const healthStatus = ref('loading')
 const stats = ref({ online_devices: 0, total_collects: 0, success_rate: 0 })
 
-const menuItems = router.options.routes
-  .find(r => r.path === '/')?.children || []
+const allItems = router.options.routes.find(r => r.path === '/')?.children || []
+const menuGroups = computed(() => {
+  const groups = {}
+  allItems.filter(i => !i.meta?.hidden).forEach(item => {
+    const g = item.meta?.group || 'other'
+    const label = (MENU_GROUPS[g] || { label: g }).label
+    if (!groups[label]) groups[label] = []
+    groups[label].push(item)
+  })
+  // 按 MENU_GROUPS.order 排序（预计算 lookup 避免 O(n*m)）
+  const groupOrder = Object.fromEntries(
+    Object.entries(MENU_GROUPS).map(([, v]) => [v.label, v.order])
+  )
+  return Object.fromEntries(
+    Object.entries(groups).sort(([a], [b]) => (groupOrder[a] ?? 99) - (groupOrder[b] ?? 99))
+  )
+})
 
 const currentTitle = computed(() => route.meta?.title || '仪表盘')
 
@@ -65,14 +84,15 @@ onUnmounted(() => clearInterval(timer))
 
 <style>
 * { margin: 0; padding: 0; box-sizing: border-box; }
-body { font-family: 'Microsoft YaHei', sans-serif; background: #0a1628; }
+body { font-family: 'Microsoft YaHei', sans-serif; background: #0c1c30; color: #c0d5e8; }
 .app-layout { height: 100vh; }
-.sidebar { background: #0d1b30; overflow-y: auto; }
-.logo { padding: 20px 16px; text-align: center; border-bottom: 1px solid #1a3a5c; }
-.logo h2 { color: #4fc3f7; font-size: 16px; }
-.logo small { color: #8899aa; font-size: 11px; }
+.sidebar { background: #0f1d33; overflow-y: auto; }
+.logo { padding: 20px 16px; text-align: center; border-bottom: 1px solid #234060; }
+.logo h2 { color: #66d9ff; font-size: 16px; }
+.logo small { color: #c0d5e8; font-size: 11px; }
 .el-menu { border-right: none !important; }
-.topbar { background: #0f1f3a; border-bottom: 1px solid #1a3a5c; display: flex; align-items: center; justify-content: space-between; height: 50px; }
-.topbar-left { color: #c0d5e8; font-size: 16px; font-weight: bold; }
-.main-content { background: #0a1628; padding: 20px; min-height: calc(100vh - 50px); }
+.topbar { background: #0f1d33; border-bottom: 1px solid #234060; display: flex; align-items: center; justify-content: space-between; height: 50px; }
+.topbar-left { color: #d8e4f0; font-size: 16px; font-weight: bold; }
+.menu-group-label { font-size: 11px; color: #8aa0b4; padding: 12px 20px 4px; letter-spacing: 1px; }
+.main-content { background: #0c1c30; padding: 20px; min-height: calc(100vh - 50px); }
 </style>
