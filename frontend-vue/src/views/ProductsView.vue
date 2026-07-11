@@ -72,6 +72,30 @@
         </el-table>
         <el-pagination v-if="thingPoints.length>ptPageSize" style="margin-top:6px;justify-content:center" background small layout="prev,pager,next" :total="thingPoints.length" v-model:current-page="ptPage" :page-size="ptPageSize" />
 
+    <!-- 新建产品弹窗 -->
+    <el-dialog v-model="showProdDialog" title="新建产品" width="480px">
+      <el-form :model="prodForm" label-width="80px" size="small">
+        <el-row :gutter="12">
+          <el-col :span="12"><el-form-item label="devType"><el-input v-model="prodForm.devType" placeholder="inverter" /></el-form-item></el-col>
+          <el-col :span="12"><el-form-item label="名称"><el-input v-model="prodForm.name" placeholder="光伏逆变器" /></el-form-item></el-col>
+        </el-row>
+        <el-row :gutter="12">
+          <el-col :span="12"><el-form-item label="图标"><el-input v-model="prodForm.icon" /></el-form-item></el-col>
+          <el-col :span="12">
+            <el-form-item label="节点类型"><el-select v-model="prodForm.nodeType" style="width:100%"><el-option :value="0" label="直连设备" /><el-option :value="1" label="网关子设备" /></el-select></el-form-item>
+          </el-col>
+        </el-row>
+        <el-row :gutter="12">
+          <el-col :span="12">
+            <el-form-item label="网络"><el-select v-model="prodForm.netType" style="width:100%"><el-option value="ethernet" label="以太网" /><el-option value="wifi" label="WiFi" /><el-option value="cellular" label="4G/5G" /><el-option value="lora" label="LoRa" /></el-select></el-form-item>
+          </el-col>
+          <el-col :span="12"><el-form-item label="ObjectId"><el-input v-model="prodForm.objectId" placeholder="留空自动生成" /></el-form-item></el-col>
+        </el-row>
+        <el-form-item label="描述"><el-input v-model="prodForm.desc" type="textarea" :rows="2" /></el-form-item>
+      </el-form>
+      <template #footer><el-button @click="showProdDialog=false">取消</el-button><el-button type="primary" @click="saveProduct">创建</el-button></template>
+    </el-dialog>
+
     <!-- 产品导入弹窗 -->
     <el-dialog v-model="importDialog" title="导入产品" width="600px">
       <el-input v-model="importText" type="textarea" :rows="10" placeholder="粘贴产品 JSON 数组 [{objectId,devType,name,nodeType,netType,icon,desc}]" />
@@ -202,8 +226,18 @@ function exportAll() {
   navigator.clipboard.writeText(JSON.stringify(data, null, 2))
   ElMessage.success(`${data.length} 个产品定义已复制`)
 }
-function addProduct() {
-  ElMessage.info('新建产品 — 弹出物模型向导')
+const showProdDialog = ref(false)
+const prodForm = reactive({objectId:'',name:'',devType:'',icon:'📦',nodeType:0,netType:'ethernet',desc:''})
+function addProduct() { Object.assign(prodForm,{objectId:'',name:'',devType:'',icon:'📦',nodeType:0,netType:'ethernet',desc:''}); showProdDialog.value=true }
+async function saveProduct() {
+  if (!prodForm.name || !prodForm.devType) { ElMessage.warning('名称和devType必填'); return }
+  const key = prodForm.objectId || prodForm.devType
+  products.value.push({ key, icon: prodForm.icon, name: prodForm.name, devType: prodForm.devType, nodeType: prodForm.nodeType, netType: prodForm.netType, desc: prodForm.desc, count:0, pointCount:0 })
+  // 同步到后端 parse_lite
+  try {
+    await api.post('/products', { objectId: key, devType: prodForm.devType, name: prodForm.name, icon: prodForm.icon, nodeType: prodForm.nodeType, netType: prodForm.netType, desc: prodForm.desc })
+  } catch {}
+  showProdDialog.value = false; ElMessage.success(`产品 ${prodForm.name} 已创建`)
 }
 function exportTSL() {
   const tsl = {
