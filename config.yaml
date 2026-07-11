@@ -27,6 +27,25 @@ tdengine:
   database: "iot_telemetry"
   # Windows 无 TDengine → 自动降级 SQLite (data/telemetry.db)
 
+# 插件管理 — 启用/禁用协议和服务
+plugins:
+  protocol:
+    modbus_tcp: true
+    modbus_rtu: false
+    iec104: false
+    opcua: false
+    a11: true
+    http_rest_youyeyun: true
+  service:
+    collector: true
+    alarm_engine: true
+    push_engine: true
+    phm_engine: true
+    safety_rules: true
+  storage:
+    tdengine: true     # 无则自动降级 SQLite
+    sqlite: true       # 始终可用
+
 # Parse-lite (嵌入式 — 替代 Parse Server)
 parse:
   db_path: "./data/parse.db"   # SQLite 单机版

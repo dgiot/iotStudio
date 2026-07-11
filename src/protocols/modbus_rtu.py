@@ -161,6 +161,36 @@ class ModbusRTUAdapter(BaseProtocolAdapter):
         except (IndexError, struct.error):
             return None
 
+    async def read_holding(self, addr: int, count: int = 1, slave_id: Optional[int] = None) -> Optional[list]:
+        """读取保持寄存器 (Modbus 功能码 0x03)
+
+        Args:
+            addr: 起始寄存器地址
+            count: 寄存器数量
+            slave_id: 从站地址 (默认使用配置中的 slave_id)
+
+        Returns:
+            寄存器值列表，失败返回 None
+        """
+        sid = slave_id or self.config.extra.get("slave_id", 1)
+        raw = await self._read_registers(3, addr, count, sid)
+        return list(raw) if raw else None
+
+    async def read_coils(self, addr: int, count: int = 1, slave_id: Optional[int] = None) -> Optional[list]:
+        """读取线圈状态 (Modbus 功能码 0x01)
+
+        Args:
+            addr: 起始线圈地址
+            count: 线圈数量
+            slave_id: 从站地址 (默认使用配置中的 slave_id)
+
+        Returns:
+            线圈状态列表 [bool, ...]，失败返回 None
+        """
+        sid = slave_id or self.config.extra.get("slave_id", 1)
+        raw = await self._read_registers(1, addr, count, sid)
+        return list(raw) if raw else None
+
     async def write_point(self, point: Dict[str, Any], value: Any) -> bool:
         """写入单个寄存器"""
         if not self.client or not self._connected:
@@ -177,6 +207,27 @@ class ModbusRTUAdapter(BaseProtocolAdapter):
         except Exception:
             return False
 
+    async def health(self) -> dict:
+        """健康检查 — 测试串口连接状态"""
+        if self._connected and self.client:
+            # 执行一次空读验证连接
+            try:
+                sid = self.config.extra.get("slave_id", 1)
+                resp = await self.client.read_holding_registers(0, 1, sid)
+                if resp and not hasattr(resp, 'registers'):
+                    self._connected = False
+                    return {"ok": False, "msg": "从站无响应"}
+                return {"ok": True, "msg": "已连接"}
+            except Exception:
+                self._connected = False
+                return {"ok": False, "msg": "连接已断开"}
+        # 尝试重连
+        try:
+            ok = await self.connect()
+            return {"ok": ok, "msg": "已连接" if ok else "重连失败"}
+        except Exception as e:
+            return {"ok": False, "msg": str(e)}
+
 
 # ===== 简化版重试读取函数（解析地址） =====
 def _parse_addr(addr_str: str) -> int:
@@ -190,3 +241,18 @@ def _parse_addr(addr_str: str) -> int:
         if addr_str.isdigit():
             return int(addr_str)
     return 0
+
+
+# -- plugin registration --
+try:
+    from plugin_registry import register
+    register("modbus_rtu", version="1.0", category="protocol",
+             adapter="ModbusRTUAdapter",
+             config={
+                 "port": "/dev/ttyUSB0",
+                 "baudrate": 9600,
+                 "parity": "N",
+                 "slave_id": 1,
+             })
+except ImportError:
+    pass
