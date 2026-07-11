@@ -59,6 +59,23 @@
         </el-card>
       </el-col>
     </el-row>
+
+    <!-- 远程 IO 服务器本体 -->
+    <el-card style="margin-top:12px">
+      <template #header>
+        <span>🏭 IO 服务器本体 ({{ remote.host || '点击加载' }})</span>
+        <el-button size="small" style="margin-left:12px" @click="loadRemoteOntology" :loading="remoteLoading">🔄 扫描</el-button>
+      </template>
+      <el-row :gutter="12" v-if="remote.hostname">
+        <el-col :span="6"><div class="edge-metric"><div class="em-val" style="color:#67C23A">{{ remote.hostname }}</div><div class="em-lbl">主机名</div></div></el-col>
+        <el-col :span="6"><div class="edge-metric"><div class="em-val" style="color:#409EFF">{{ remote.cpuCores || '—' }}</div><div class="em-lbl">CPU核心</div></div></el-col>
+        <el-col :span="6"><div class="edge-metric"><div class="em-val" style="color:#E6A23C">{{ remote.ontology?.counts?.gateways || 0 }}</div><div class="em-lbl">网关</div></div></el-col>
+        <el-col :span="6"><div class="edge-metric"><div class="em-val" style="color:#909399">{{ remote.ontology?.counts?.devices || 0 }}</div><div class="em-lbl">进程/设备</div></div></el-col>
+      </el-row>
+      <div v-if="remote.hostname" style="margin-top:8px;font-size:11px;color:#909399">
+        CPU: {{ remote.cpu?.split('\n')[0] || '—' }} | 内存: {{ remote.memory?.split('\n')[0] || '—' }} | 进程: {{ remote.processes?.split('\n').length || 0 }} 个
+      </div>
+    </el-card>
   </div>
 </template>
 
@@ -68,6 +85,19 @@ import * as echarts from 'echarts'
 import api from '../api'
 
 const protoChart = ref(null)
+const remote = ref({})
+const remoteLoading = ref(false)
+
+async function loadRemoteOntology() {
+  remoteLoading.value = true
+  try {
+    const r = await api.get('/system/remote', { params: { host: '11.66.12.131' } })
+    remote.value = r.data
+    // Parse CPU cores from wmic output
+    const m = (r.data.cpu || '').match(/NumberOfCores=(\d+)/)
+    if (m) remote.value.cpuCores = m[1] + ' 核'
+  } catch {} finally { remoteLoading.value = false }
+}
 
 const metrics = ref([
   { label: 'CPU', value: '—', color: '#67C23A' },
