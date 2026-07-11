@@ -65,12 +65,22 @@
       </el-col>
       <el-col :span="15">
         <el-card :header="'报文 #'+ (sel?.id||'')">
-          <div v-if="sel">
-            <div class="info">{{sel.src}} → {{sel.dst}} | {{sel.dir}} | {{sel.sz}}B | {{sel.msg}}</div>
-            <div class="hex-title">Hex</div>
-            <div class="hex">{{sel.hex}}</div>
+          <div v-if="sel" class="pkt-detail">
+            <div class="pkt-meta">{{sel.dir==='TX'?'发送':'接收'}} | {{sel.src}} → {{sel.dst}} | {{sel.sz}}B | {{sel.msg}}</div>
+
+            <!-- Wireshark 风格 Hex dump -->
+            <div class="hex-title">Hex Dump</div>
+            <div class="hex-dump">
+              <div v-for="(line,i) in hexLines" :key="i" class="hex-line">
+                <span class="hex-offset">{{ (i*16).toString(16).padStart(4,'0') }}</span>
+                <span class="hex-bytes">{{ line.hex }}</span>
+                <span class="hex-ascii">{{ line.ascii }}</span>
+              </div>
+            </div>
+
             <div class="hex-title">字段解码</div>
             <el-table :data="sel.fields" size="small" border><el-table-column prop="f" label="字段" width="100"/><el-table-column prop="v" label="值"><template #d="{row}"><code>{{row.v}}</code></template></el-table-column><el-table-column prop="d" label="说明"/></el-table>
+
             <div v-if="sel.str?.length" class="hex-title">Payload 可读字符串</div>
             <div v-for="s in sel.str" :key="s" class="path">{{s}}</div>
           </div>
@@ -125,6 +135,21 @@ const pagedPackets = computed(() => {
   return packets.value.slice(start, start + pktPageSize.value)
 })
 
+// Wireshark style hex dump
+const hexLines = computed(() => {
+  if (!sel.value?.hex) return []
+  const hex = sel.value.hex.replace(/\s/g, '')
+  const lines = []
+  for (let i = 0; i < hex.length; i += 32) {
+    const chunk = hex.slice(i, i + 32)
+    const bytes = chunk.match(/.{1,2}/g) || []
+    const spaced = bytes.map((b,i) => i===7 ? b+'  ' : b).join(' ')
+    const ascii = bytes.map(b => { const c = parseInt(b,16); return c>=32&&c<127 ? String.fromCharCode(c) : '.' }).join('')
+    lines.push({ hex: spaced.padEnd(51), ascii })
+  }
+  return lines
+})
+
 const devs = [
   {p:'\\CY1C8K\\Z611SYWS\\ZD010838DOVXV301VC#',d:'采油一厂八矿·611井站·阀门开状态'},
   {p:'\\CY1C8K\\Z611SYWS\\ZD010838DOVXV301VO#',d:'采油一厂八矿·611井站·阀门关状态'},
@@ -177,8 +202,6 @@ async function toggle() {
         const ep = endpoints.value.find(e => e.objectId === remoteEndpoint.value)
         const host = ep?.host || '11.66.12.131'
         await fetch(`/api/capture/remote/start?host=${host}&ports=8889,53001,502`,{method:'POST'})
-        // 注入演示样本确保有数据
-        await fetch('/api/capture/remote/inject-sample',{method:'POST'})
       }
       capturing.value = true
       timer = setInterval(async () => {
@@ -205,7 +228,13 @@ onUnmounted(() => clearInterval(timer))
 .page-title{font-size:18px;font-weight:600;color:#e0e0e0;margin-bottom:12px}
 .sub{font-size:12px;color:#909399;font-weight:400;margin-left:8px}
 .info{font-size:13px;color:#c0c4cc;margin-bottom:8px}
-.hex-title{font-size:13px;color:#e6a23c;font-weight:bold;margin:8px 0 4px}
+.pkt-meta{font-size:12px;color:#409EFF;margin-bottom:8px;font-family:Consolas,monospace}
+.hex-title{font-size:12px;color:#e6a23c;font-weight:bold;margin:8px 0 4px}
+.hex-dump{background:#0d0e14;border-radius:4px;padding:8px;font-family:Consolas,monospace;font-size:12px;line-height:1.6;overflow-x:auto;max-height:300px;overflow-y:auto}
+.hex-line{display:flex;gap:12px}
+.hex-offset{color:#606266;width:40px;flex-shrink:0}
+.hex-bytes{color:#e6a23c;flex-shrink:0;letter-spacing:1px}
+.hex-ascii{color:#67c23a}
 .hex{background:#0d0e14;border-radius:4px;padding:10px;font-family:Consolas,monospace;font-size:12px;color:#e6a23c;line-height:1.8;word-break:break-all}
 .path{font-family:Consolas,monospace;font-size:12px;color:#67c23a;padding:3px 0;border-bottom:1px solid #2d2e3b}
 .dev{padding:6px 0;border-bottom:1px solid #2d2e3b}
