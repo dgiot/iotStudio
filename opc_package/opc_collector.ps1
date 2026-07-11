@@ -4,8 +4,8 @@ param($DgiotHost = "127.0.0.1:8000", $Interval = 10)
 $ErrorActionPreference = "Continue"
 $BinDir = "D:\Bin"
 
-Add-Type -Path "$BinDir\OpcRcw.Da.dll"
 Add-Type -Path "$BinDir\OpcRcw.Comn.dll"
+Add-Type -Path "$BinDir\OpcRcw.Da.dll"
 Write-Host "[OPC] DLLs loaded from $BinDir"
 
 $Server1 = "RSLinx OPC Server"
