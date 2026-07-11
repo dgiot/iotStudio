@@ -11,75 +11,79 @@ def _get_creds():
     """从 config.yaml 读取远程抓包凭据"""
     try:
         from config import cfg
-        return cfg.remote_capture
+        rc = cfg.remote_capture
+        if isinstance(rc, dict):
+            return rc
+        return {"host": rc.host, "port": rc.port, "username": rc.username, "password": rc.password}
     except:
-        from dataclasses import dataclass
-        @dataclass
-        class RC: host="11.66.12.131"; port=5985; username="administrator"; password=""
-        return RC()
+        pass
+    # Fallback to hardcoded (WinRM test script works with these)
+    return {"host": "11.66.12.131", "port": 5985, "username": "administrator",
+            "password": r"GKYWB-5991792$1c8k"}
 
 def _netsh_cycle():
     """一个 netsh trace 周期: 抓30s → 停 → 解析 → 注入"""
     try:
         creds = _get_creds()
         from winrm.protocol import Protocol
-        p = Protocol(endpoint=f'http://{creds.host}:{creds.port}/wsman', transport='ntlm',
-                     username=creds.username, password=creds.password)
+        h, pt, u, pw = creds['host'], creds['port'], creds['username'], creds['password']
+        p = Protocol(endpoint=f'http://{h}:{pt}/wsman', transport='ntlm', username=u, password=pw)
         shell = p.open_shell()
         def run(cmd):
             cid = p.run_command(shell, cmd)
             out, _, _ = p.get_command_output(shell, cid)
             return out.decode('gbk', errors='ignore').strip()
 
-        # NetConnection + port filter for A11(8889)/Modbus(502)
+        # Clean old files, start NetConnection capture
+        run('powershell -c "Remove-Item C:/Users/Administrator/rem_cap.* -Force -ErrorAction SilentlyContinue" 2>&1')
         run('netsh trace stop 2>&1')
         time.sleep(1)
-        r = run('netsh trace start scenario=NetConnection capture=yes tracefile=C:/Users/Administrator/rem_cap.etl maxsize=80 persistent=no 2>&1')
+        r = run('netsh trace start scenario=NetConnection capture=yes tracefile=C:/Users/Administrator/rem_cap.etl maxsize=20 persistent=no 2>&1')
         if 'Running' not in r:
             _remote_state["errors"] += 1
             p.close_shell(shell)
             return
 
-        time.sleep(30)
+        time.sleep(15)
         run('netsh trace stop 2>&1')
 
-        # Step 1: Convert ETL -> CSV
-        run('del C:/Users/Administrator/rem_cap.csv /Q 2>&1')
+        # Convert ETL -> CSV, then search for A11 hex
         run('tracerpt C:/Users/Administrator/rem_cap.etl -o C:/Users/Administrator/rem_cap.csv -of CSV -y 2>&1')
-        # Step 2: Search with PowerShell (proven: 32 A11 matches)
-        output = run('powershell -c "Get-Content C:/Users/Administrator/rem_cap.csv -Encoding UTF8 | Select-String 5a5a | Select -First 20 | Out-String" 2>&1')
+        output = run('powershell -c "Get-Content C:/Users/Administrator/rem_cap.csv -Encoding UTF8 -TotalCount 5000 | Select-String 5a5a | Select -First 10 | Out-String" 2>&1')
 
         # Extract hex payloads from NDIS-PacketCapture lines
         import re
-        hex_pattern = re.compile(r'[0-9A-Fa-f]{80,}')
-        for line in output.split('\n'):
-            matches = hex_pattern.findall(line)
-            for m in matches:
-                try:
-                    raw = bytes.fromhex(m)
-                    # Find A11 5a5a header in the hex blob
-                    idx = raw.find(b'\x5a\x5a')
-                    if idx < 0: idx = 0
-                    pkt = raw[idx:idx+200]
-                    proto = 'A11' if pkt[:2] == b'\x5a\x5a' else 'Modbus' if len(pkt)>=8 and pkt[2:4]==b'\x00\x00' else 'OPC-DA' if pkt[0]==0x05 else 'TCP'
-                    dir_flag = "TX" if ":8889" in line or "131:" in line else "RX"
-                    entry = {
-                        "ts": time.time(), "proto": proto, "dir": dir_flag,
-                        "src": "131" if dir_flag=="TX" else "device",
-                        "dst": "130:8889" if proto=="A11" else "device",
-                        "len": len(pkt), "hex": pkt.hex(' ')[:300],
-                        "info": "A11帧" if proto=="A11" else ("Modbus帧" if proto=="Modbus" else "OPC-DA帧")
-                    }
-                    _remote_state["packets"].insert(0, entry)
-                    if len(_remote_state["packets"]) > MAX_PACKETS:
-                        _remote_state["packets"] = _remote_state["packets"][:MAX_PACKETS]
-                    if len(_remote_state["packets"]) >= 30: break
-                except: pass
+        proto_map = {'A11':'130:8889', 'Modbus':'device:502', 'OPC-DA':'device:135'}
+        for m in re.finditer(r'[0-9A-Fa-f]{60,}', output):
+            try:
+                h = m.group()
+                if len(h) % 2: h = h[:-1]  # pad to even
+                raw = bytes.fromhex(h)
+                idx = raw.find(b'\x5a\x5a')
+                if idx >= 0:
+                    proto = 'A11'; pkt = raw[idx:idx+200]
+                elif len(raw) >= 8 and raw[2:4] == b'\x00\x00' and raw[7] in (1,2,3,4,5,6,15,16):
+                    proto = 'Modbus'; pkt = raw[:100]
+                elif raw[0] == 0x05:
+                    proto = 'OPC-DA'; pkt = raw[:100]
+                else:
+                    continue
+                entry = {"ts": time.time(), "proto": proto, "dir": "RX",
+                    "src": "131", "dst": proto_map.get(proto,""),
+                    "len": len(pkt), "hex": pkt.hex(' ')[:300],
+                    "info": proto+"帧"}
+                _remote_state["packets"].insert(0, entry)
+                if len(_remote_state["packets"]) > MAX_PACKETS:
+                    _remote_state["packets"] = _remote_state["packets"][:MAX_PACKETS]
+            except: pass
 
         _remote_state["cycles"] += 1
         p.close_shell(shell)
     except Exception as e:
         _remote_state["errors"] += 1
+        import traceback, sys
+        print(f"[remote_capture] ERROR: {e}", file=sys.stderr)
+        traceback.print_exc()
 
 def _loop():
     while _remote_state["running"]:
