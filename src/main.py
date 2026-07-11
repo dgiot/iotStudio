@@ -1433,6 +1433,10 @@ app.include_router(vendor_router)
 from .web.capture_endpoint_api import router as cap_ep_router
 app.include_router(cap_ep_router)
 
+# ---- 本地网卡抓包 (netsh trace, 无需 Npcap) ----
+from .web.local_capture import router as local_cap_router
+app.include_router(local_cap_router)
+
 # ---- PCAP 文件读取 API ----
 from .web.pcap_api import router as pcap_router
 app.include_router(pcap_router)

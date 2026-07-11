@@ -194,12 +194,12 @@ function switchSource(v) {
 
 async function toggle() {
   if (capturing.value) {
-    try { await fetch(source.value==='local'?'http://localhost:8765/api/stop':'/api/capture/remote/stop',{method:'POST'}) } catch {}
+    try { await fetch(source.value==='local'?'/api/capture/local/stop':'/api/capture/remote/stop',{method:'POST'}) } catch {}
     capturing.value = false; clearInterval(timer); livePackets.value = 0
   } else {
     try {
       if (source.value === 'local') {
-        await fetch('http://localhost:8765/api/start',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({ports:[8889,502,2404]})})
+        await fetch('/api/capture/local/start',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({ports:'8889,502,2404'})})
       } else {
         const ep = endpoints.value.find(e => e.objectId === remoteEndpoint.value)
         const host = ep?.host || '11.66.12.131'
@@ -208,7 +208,7 @@ async function toggle() {
       capturing.value = true
       timer = setInterval(async () => {
         try {
-          const url = source.value==='local'?'http://localhost:8765/api/packets?limit=5':'/api/capture/remote/packets?limit=5'
+          const url = source.value==='local'?'/api/capture/local/packets?limit=5':'/api/capture/remote/packets?limit=5'
           const r = await fetch(url); const d = await r.json()
           if (d.packets?.length) {
             livePackets.value = d.total
