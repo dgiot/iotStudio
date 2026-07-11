@@ -1,6 +1,6 @@
 <template>
   <div class="a11-page">
-    <h2 class="page-title">报文分析 <span class="sub">A11 · Modbus · OPC-DA | 7.10.pcapng · 93,913帧</span></h2>
+    <h2 class="page-title">报文分析 <span class="sub" v-if="pcapFile">{{ pcapFile }} · {{ packets.length }} 帧</span><span class="sub" v-else>打开 pcap 文件或启动抓包</span></h2>
 
     <el-card style="margin-bottom:12px">
       <input type="file" ref="fileInput" accept=".pcap,.pcapng,.cap" style="display:none" @change="onFilePicked" />
