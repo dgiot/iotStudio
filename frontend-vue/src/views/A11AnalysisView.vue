@@ -47,7 +47,8 @@
           <template #header><span>报文列表 (点击查看)</span><el-button size="small" style="float:right" @click="clearPackets">🗑 清空</el-button></template>
           <el-table :data="pagedPackets" size="small" @row-click="select" highlight-current-row max-height="620" :row-style="rowStyle">
             <el-table-column prop="id" label="No." width="45"/>
-            <el-table-column label="Protocol" width="72"><template #default="{row}"><el-tag :type="row.msg==='A11'||row.msg?.startsWith('0x')?'success':row.msg==='Modbus'?'warning':'info'" size="small" effect="dark">{{ row.msg||'TCP' }}</el-tag></template></el-table-column>
+            <el-table-column label="Time" width="95"><template #default="{row}"><span style="font-size:10px;color:#909399;font-family:Consolas">{{ row.time||'—' }}</span></template></el-table-column>
+            <el-table-column label="Proto" width="68"><template #default="{row}"><el-tag :type="row.msg==='A11'||row.msg?.startsWith('0x')?'success':row.msg==='Modbus'?'warning':'info'" size="small" effect="dark">{{ row.msg||'TCP' }}</el-tag></template></el-table-column>
             <el-table-column label="Source" min-width="140"><template #default="{row}"><span :style="{color:row.dir==='TX'?'#E6A23C':'#67C23A'}">{{ row.src }}</span></template></el-table-column>
             <el-table-column label="Destination" min-width="140"><template #default="{row}"><span>{{ row.dst }}</span></template></el-table-column>
             <el-table-column label="Info" min-width="160" show-overflow-tooltip><template #default="{row}"><span style="font-size:11px;color:#909399">{{ row.info||pktInfo(row) }}</span><span style="color:#c0c4cc;margin-left:6px;font-size:10px">{{ row.sz }}B</span></template></el-table-column>
