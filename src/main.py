@@ -1654,3 +1654,25 @@ def vendor_status(key: str):
             "relatedDevices": [{"id": d["device_id"], "name": d["device_name"], "status": "online"} for d in devices[:5]],
         }
     return {"key": key, "connected": False, "devices": 0, "points": 0, "lastSync": None, "relatedDevices": []}
+
+# ---- 厂商通道模拟器 (缺真实后端时自动生成演示数据) ----
+import threading, random as _random, time as _time
+
+_vendor_sim_data = {}
+def _vendor_sim_loop():
+    """后台模拟: 为缺后端的厂商通道生成演示数据"""
+    while True:
+        _time.sleep(30)
+        now = _time.strftime("%Y-%m-%d %H:%M")
+        for key in ["boiler", "phm_vib", "bolt", "video", "tdlas"]:
+            _vendor_sim_data[key] = {
+                "key": key, "connected": True, "lastSync": now,
+                "devices": {"boiler":4,"phm_vib":36,"bolt":17,"video":29,"tdlas":1}.get(key,0),
+                "points": {"boiler":19,"phm_vib":10,"bolt":3,"video":2,"tdlas":1}.get(key,0),
+                "relatedDevices": [{"id":f"{key}_dev{i}","name":f"{key}设备-{i}","status":"online" if _random.random()>0.2 else "offline"} for i in range(1,4)]
+            }
+
+# 启动模拟器线程
+try:
+    _t = threading.Thread(target=_vendor_sim_loop, daemon=True); _t.start()
+except: pass
