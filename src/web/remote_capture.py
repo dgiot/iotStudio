@@ -34,7 +34,7 @@ def _netsh_cycle():
         # NetConnection + port filter for A11(8889)/Modbus(502)
         run('netsh trace stop 2>&1')
         time.sleep(1)
-        r = run('netsh trace start scenario=NetConnection capture=yes capturefilter="IPv4.Port==8889 or IPv4.Port==53001 or IPv4.Port==502" tracefile=C:/Users/Administrator/rem_cap.etl maxsize=80 persistent=no 2>&1')
+        r = run('netsh trace start scenario=NetConnection capture=yes capturefilter="IPv4.Port==8889 or IPv4.Port==53001 or IPv4.Port==502 or IPv4.Port==135" tracefile=C:/Users/Administrator/rem_cap.etl maxsize=80 persistent=no 2>&1')
         if 'Running' not in r:
             _remote_state["errors"] += 1
             p.close_shell(shell)
@@ -45,7 +45,7 @@ def _netsh_cycle():
 
         # Parse ETL -> CSV (overwrite existing)
         run('del C:/Users/Administrator/rem_cap.csv /Q 2>&1')
-        ps = 'powershell -c "tracerpt C:/Users/Administrator/rem_cap.etl -o C:/Users/Administrator/rem_cap.csv -of CSV -y 2>&1; Get-Content C:/Users/Administrator/rem_cap.csv -Encoding UTF8 | Select-String 8889,53001,502,135 | Select -First 30 | ForEach-Object { $_.Line }" 2>&1'
+        ps = 'powershell -c "tracerpt C:/Users/Administrator/rem_cap.etl -o C:/Users/Administrator/rem_cap.csv -of CSV -y 2>&1; Get-Content C:/Users/Administrator/rem_cap.csv -Encoding UTF8 | Select-String 8889,53001,502,135 | Select -First 50 | ForEach-Object { $_.Line }" 2>&1'
         output = run(ps)
 
         # Parse IP:port pairs from TCPIP events
