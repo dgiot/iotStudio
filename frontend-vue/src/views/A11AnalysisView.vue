@@ -125,7 +125,7 @@ async function onFilePicked(e) {
   } catch { ElMessage.error('解析失败') }
 }
 
-onMounted(() => { loadEndpoints(); injectSample() })
+onMounted(() => { loadEndpoints(); setTimeout(injectSample, 1000) })
 
 // 远程端点
 const endpoints = ref([])
@@ -237,7 +237,7 @@ async function injectSample() {
       }))
       ElMessage.success(`${packets.value.length} 个样本注入成功`)
     }
-  } catch { ElMessage.error('注入失败') }
+  } catch(e) { console.error('injectSample:', e); ElMessage.error('注入失败: '+e.message) }
 }
 
 function clearPackets() {
