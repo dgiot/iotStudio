@@ -138,7 +138,7 @@ async function toggle() {
           }
         } catch {}
       }, 3000)
-    } catch { ElMessage.warning('capture_server.py 未启动 (python capture_server.py)') }
+    } catch { ElMessage.warning('抓包未就绪: 需 Npcap + python capture_server.py') }
   }
 }
 
