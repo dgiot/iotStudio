@@ -271,7 +271,7 @@ async function toggle() {
             const seen = new Set(packets.value.map(p => p.hex?.slice(0,20)))
             const fresh = d.packets.filter(p => !seen.has(p.hex?.slice(0,20)))
             if (fresh.length) {
-              packets.value = [...fresh.map(p=>({id:Date.now()%100000,dir:p.dir,src:p.src,dst:p.dst,sz:p.len,msg:p.proto||'?',hex:p.hex,fields:[{f:'协议',v:p.proto||'?',d:'实时解析'}]})), ...packets.value].slice(0,50)
+              packets.value = [...fresh.map(p=>({id:Date.now()%100000,time:new Date(p.ts*1000).toLocaleTimeString(),dir:p.dir,src:p.src,dst:p.dst,sz:p.len,msg:p.proto||'?',hex:p.hex,fields:[{f:'协议',v:p.proto||'?',d:'实时解析'}]})), ...packets.value].slice(0,50)
             }
           }
         } catch {}
