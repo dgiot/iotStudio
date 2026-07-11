@@ -2,17 +2,29 @@
 import threading, time, json, os, base64
 from fastapi import APIRouter
 
-router = APIRouter(prefix="/api/capture/remote", tags=["远程抓包"])
+router = APIRouter(prefix="/api", tags=["远程抓包"])
 
 _remote_state = {"running": False, "packets": [], "cycles": 0, "errors": 0, "host": "11.66.12.131"}
 MAX_PACKETS = 200
 
+def _get_creds():
+    """从 config.yaml 读取远程抓包凭据"""
+    try:
+        from config import cfg
+        return cfg.remote_capture
+    except:
+        from dataclasses import dataclass
+        @dataclass
+        class RC: host="11.66.12.131"; port=5985; username="administrator"; password=""
+        return RC()
+
 def _netsh_cycle():
     """一个 netsh trace 周期: 抓30s → 停 → 解析 → 注入"""
     try:
+        creds = _get_creds()
         from winrm.protocol import Protocol
-        p = Protocol(endpoint='http://11.66.12.131:5985/wsman', transport='ntlm',
-                     username='administrator', password=r'GKYWB-5991792$1c8k')
+        p = Protocol(endpoint=f'http://{creds.host}:{creds.port}/wsman', transport='ntlm',
+                     username=creds.username, password=creds.password)
         shell = p.open_shell()
         def run(cmd):
             cid = p.run_command(shell, cmd)

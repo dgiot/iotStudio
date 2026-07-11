@@ -64,7 +64,14 @@ mqtt:
 # 协议栈: ModbusTCP(7B MBAP) + jjZZ(4B) + Type LE(2B) + Sub LE(2B) + Payload
 # 参考: A11 正式规范白皮书 V1.0
 # ============================================================
-# a11_devices:
+# # 远程抓包 — WinRM 连接到 IO 服务器
+remote_capture:
+  host: "11.66.12.131"
+  port: 2500
+  username: "administrator"
+  password: "GKYWB-5991792$1c8k"
+
+a11_devices:
 #   - protocol_type: a11
 #     device_id: oilfield-gw-001
 #     device_name: 某采油厂A11网关
