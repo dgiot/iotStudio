@@ -3,10 +3,9 @@
     <h2 class="page-title">报文分析 <span class="sub">A11 · Modbus · OPC-DA | 7.10.pcapng · 93,913帧</span></h2>
 
     <el-card style="margin-bottom:12px">
-      <el-select v-model="pcapFile" size="small" placeholder="选择 pcap 文件" style="width:200px" @change="loadPcap" clearable filterable>
-        <el-option v-for="f in pcapFiles" :key="f.name" :label="`${f.name} (${f.size_mb}MB)`" :value="f.name" />
-      </el-select>
-      <el-button size="small" @click="refreshPcapList" style="margin-left:4px">🔄</el-button>
+      <input type="file" ref="fileInput" accept=".pcap,.pcapng,.cap" style="display:none" @change="onFilePicked" />
+      <el-button size="small" @click="$refs.fileInput.click()">📁 打开文件</el-button>
+      <span v-if="pcapFile" style="margin-left:8px;font-size:12px;color:#67c23a">{{ pcapFile }} · {{ packets.length }} 帧</span>
       <el-radio-group v-model="source" size="small" @change="switchSource" style="margin-left:8px">
         <el-radio-button value="local">🖥️ 本地抓包</el-radio-button>
         <el-radio-button value="remote">🌐 远程抓包</el-radio-button>
@@ -106,27 +105,29 @@ const source = ref(''); const capturing = ref(false); const livePackets = ref(0)
 const sel = ref(null); let timer = null
 const pcapFile = ref(''); const pcapFiles = ref([])
 
-async function refreshPcapList() {
-  try { const r = await fetch('/api/pcap/list'); const d = await r.json(); pcapFiles.value = d.files||[] } catch {}
-}
-async function loadPcap(filename) {
-  if (!filename) { packets.value = allPkts; return }
+async function onFilePicked(e) {
+  const file = e.target.files[0]
+  if (!file) return
+  pcapFile.value = file.name
+  const form = new FormData()
+  form.append('file', file)
   try {
-    const r = await fetch(`/api/pcap/read/${filename}?limit=100`)
+    const r = await fetch('/api/pcap/upload', { method: 'POST', body: form })
     const d = await r.json()
     if (d.packets?.length) {
       packets.value = d.packets.map((p,i) => ({
-        id: i+1, time: p.time||'', dir: p.dir, src: p.src, dst: p.dst,
-        sz: p.sz||p.len, msg: p.msg||p.proto, hex: p.hex,
+        id: i+1, time: p.time||'', dir: p.dir, src: p.src||'', dst: p.dst||'',
+        sz: p.sz||p.len||0, msg: p.msg||p.proto||'?', hex: p.hex||'',
         fields: [{f:'协议',v:p.proto||'?',d:'pcap解析'}],
-        str: [], info: p.proto==='A11'?'A11帧':p.proto==='Modbus'?'Modbus帧':p.proto==='OPC-DA'?'OPC-DA帧':''
+        str: [], info: p.info||''
       }))
-      source.value = ''  // switch off capture mode
+      source.value = ''; pktPage.value = 1
+      ElMessage.success(`${packets.value.length} 帧已加载`)
     }
-  } catch { ElMessage.error('pcap 加载失败') }
+  } catch { ElMessage.error('解析失败') }
 }
 
-onMounted(() => { refreshPcapList(); loadEndpoints() })
+onMounted(loadEndpoints)
 
 // 远程端点
 const endpoints = ref([])
