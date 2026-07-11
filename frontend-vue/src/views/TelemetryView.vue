@@ -1,6 +1,15 @@
 <template>
   <div class="telemetry">
-    <h3 style="color:#c0d5e8;margin-bottom:12px">历史数据查询</h3>
+    <h3 style="color:#c0d5e8;margin-bottom:12px">📊 数据分析</h3>
+
+    <!-- KPI 概览 -->
+    <el-row :gutter="12" style="margin-bottom:12px">
+      <el-col :span="6" v-for="c in kpiCards" :key="c.label">
+        <el-card class="kpi-card"><div class="kpi-val" :style="{color:c.color}">{{ c.value }}</div><div class="kpi-lbl">{{ c.label }}</div></el-card>
+      </el-col>
+    </el-row>
+
+    <!-- 数据查询 -->
     <el-form :inline="true" style="margin-bottom:12px">
       <el-form-item label="设备">
         <el-select v-model="query.deviceId" placeholder="选择设备" style="width:180px" @change="onDeviceChange" filterable>
@@ -56,7 +65,7 @@
 
 <script setup>
 import { ref, computed, onMounted } from 'vue'
-import { getDevices, getPoints, getTelemetry } from '../api'
+import api, { getDevices, getPoints, getTelemetry } from '../api'
 import { ElMessage } from 'element-plus'
 
 const devices = ref([])
@@ -66,20 +75,43 @@ const rows = ref([])
 const loading = ref(false)
 const searched = ref(false)
 
+const kpiCards = ref([
+  { label:'在线设备', value:'0', color:'#67C23A', key:'online' },
+  { label:'今日采集', value:'0', color:'#409EFF', key:'collects' },
+  { label:'活跃告警', value:'0', color:'#F56C6C', key:'alarms' },
+  { label:'存储占用', value:'—', color:'#909399', key:'storage' },
+])
+
 const hasData = computed(() => rows.value.length > 0)
 
 const chartOption = computed(() => ({
   backgroundColor:'transparent',
   grid:{top:10,right:25,bottom:35,left:55},
   tooltip:{trigger:'axis',formatter:p=>{const d=p[0];return `${d.name}<br/>值: <b>${d.value?.toFixed(4)}</b>`}},
-  xAxis:{type:'category',data:rows.value.slice(0,300).reverse().map(r=>formatTs(r.ts)),axisLabel:{color:'#8899aa',fontSize:10}},
-  yAxis:{type:'value',splitLine:{lineStyle:{color:'#1a3a5c'}}},
-  dataZoom:[{type:'inside'},{type:'slider',bottom:5,height:18,borderColor:'#1a3a5c',textStyle:{color:'#8899aa'}}],
-  series:[{name:'值',type:'line',smooth:true,symbol:'none',lineStyle:{color:'#4fc3f7',width:2},data:rows.value.slice(0,300).reverse().map(r=>r.value),areaStyle:{color:'rgba(79,195,247,0.06)'}}]
+  xAxis:{type:'category',data:rows.value.slice(0,300).reverse().map(r=>formatTs(r.ts)),axisLabel:{color:'#c0d5e8',fontSize:10}},
+  yAxis:{type:'value',splitLine:{lineStyle:{color:'#2a4870'}}},
+  dataZoom:[{type:'inside'},{type:'slider',bottom:5,height:18,borderColor:'#2a4870',textStyle:{color:'#c0d5e8'}}],
+  series:[{name:'值',type:'line',smooth:true,symbol:'none',lineStyle:{color:'#66d9ff',width:2},data:rows.value.slice(0,300).reverse().map(r=>r.value),areaStyle:{color:'rgba(79,195,247,0.06)'}}]
 }))
 
 onMounted(async()=>{
-  try{const r=await getDevices();devices.value=r.data.devices||[]}catch{}
+  // KPI 数据
+  try{const r=await api.get('/stats');const s=r.data;
+    kpiCards.value[0].value=s.online_devices||0
+    kpiCards.value[1].value=(s.total_collects||0).toLocaleString()
+  }catch{}
+  try{const r=await api.get('/alarms',{params:{status:'active'}});kpiCards.value[2].value=r.data.total||0}catch{}
+
+  try{const r=await getDevices();devices.value=r.data.devices||[]
+    if(devices.value.length>0){
+      query.value.deviceId=devices.value[0].device_id
+      await onDeviceChange(query.value.deviceId)
+      if(points.value.length>0){
+        query.value.pointId=points.value[0].point_id
+        await search()
+      }
+    }
+  }catch{}
 })
 
 async function onDeviceChange(deviceId){
@@ -105,8 +137,11 @@ function formatTs(ts){if(!ts)return'-';const d=new Date(ts);return d.toLocaleStr
 
 <style scoped>
 .telemetry{color:#c0d5e8}
-.chart-card,.table-card{background:#0f1f3a;border:1px solid #1a3a5c}
-.chart-card :deep(.el-card__header),.table-card :deep(.el-card__header){color:#c0d5e8;border-bottom:1px solid #1a3a5c;padding:10px 16px;font-size:13px}
-.el-table{background:transparent;--el-table-tr-bg-color:#0d1b30;--el-table-header-bg-color:#122540}
-:deep(.el-empty__description p){color:#8899aa}
+.kpi-card{text-align:center;padding:8px 0}
+.kpi-val{font-size:24px;font-weight:700}
+.kpi-lbl{font-size:12px;color:#909399;margin-top:2px}
+.chart-card,.table-card{background:#162844;border:1px solid #234060}
+.chart-card :deep(.el-card__header),.table-card :deep(.el-card__header){color:#c0d5e8;border-bottom:1px solid #234060;padding:10px 16px;font-size:13px}
+.el-table{background:transparent;--el-table-tr-bg-color:#162844;--el-table-header-bg-color:#1a3050}
+:deep(.el-empty__description p){color:#c0d5e8}
 </style>

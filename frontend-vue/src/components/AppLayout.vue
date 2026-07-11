@@ -3,7 +3,7 @@
     <!-- 侧栏 -->
     <el-aside width="220px" class="sidebar">
       <div class="logo">
-        <h2>⚡ 光储充微电网物联网平台</h2>
+        <h2>⚡ 轻量级物联网平台</h2>
         <small>轻量级边缘代理 V1.0</small>
       </div>
       <el-menu :default-active="route.path" router background-color="#0f1d33" text-color="#c0d5e8" active-text-color="#66d9ff">
@@ -22,6 +22,10 @@
       <el-header class="topbar">
         <div class="topbar-left">{{ currentTitle }}</div>
         <div class="topbar-right">
+          <!-- 租户选择 -->
+          <el-select v-model="currentTenant" size="small" style="width:140px" @change="switchTenant" popper-class="tenant-popper">
+            <el-option v-for="t in tenants" :key="t.tenant_id" :label="t.name" :value="t.tenant_id" />
+          </el-select>
           <NotifyBell />
           <el-tag :type="healthStatus === 'ok' ? 'success' : 'danger'" size="small" effect="dark">
             {{ healthStatus === 'ok' ? '系统正常' : '异常' }}
@@ -51,6 +55,30 @@ const router = useRouter()
 const healthStatus = ref('loading')
 const stats = ref({ online_devices: 0, total_collects: 0, success_rate: 0 })
 
+// 多租户
+const tenants = ref([{ tenant_id: 'default', name: '默认租户' }])
+const currentTenant = ref(localStorage.getItem('dgiot_tenant') || 'default')
+
+async function fetchTenants() {
+  try {
+    const r = await fetch('/api/tenants/my')
+    const d = await r.json()
+    if (d.tenants?.length) {
+      tenants.value = d.tenants
+      const cur = d.current || 'default'
+      if (!tenants.value.find(t => t.tenant_id === currentTenant.value)) {
+        currentTenant.value = cur
+      }
+    }
+  } catch {}
+}
+
+function switchTenant(tid) {
+  currentTenant.value = tid
+  localStorage.setItem('dgiot_tenant', tid)
+  window.location.reload()  // 切换租户后刷新整个应用
+}
+
 const allItems = router.options.routes.find(r => r.path === '/')?.children || []
 const menuGroups = computed(() => {
   const groups = {}
@@ -73,6 +101,7 @@ const currentTitle = computed(() => route.meta?.title || '仪表盘')
 
 let timer = null
 onMounted(async () => {
+  await fetchTenants()
   try { const r = await getHealth(); healthStatus.value = r.data.status } catch { healthStatus.value = 'error' }
   try { const r = await getStats(); stats.value = r.data } catch {}
   timer = setInterval(async () => {

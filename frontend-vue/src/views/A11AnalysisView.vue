@@ -1,218 +1,166 @@
 <template>
   <div class="a11-page">
-    <!-- 工具栏 -->
-    <div class="topbar">
-      <h3>🛢️ A11 IO服务 — 会话分析</h3>
-      <div class="tb-actions">
-        <el-select v-model="capIface" size="small" style="width:100px" placeholder="网口" clearable>
-          <el-option v-for="ifc in ifaces" :key="ifc" :label="ifc" :value="ifc" />
-        </el-select>
-        <el-input v-model="capPorts" size="small" style="width:150px" placeholder="端口" />
-        <el-button size="small" :type="capRunning?'danger':'success'" @click="toggleCapture" :loading="capToggling">{{ capRunning?'⏹ 停止':'▶ 抓包' }}</el-button>
-        <el-button size="small" @click="showReplay=!showReplay">📡 回放</el-button>
-        <el-button size="small" type="primary" @click="showInject=true">✚ 注入</el-button>
-        <el-button size="small" @click="refresh" :loading="loading">🔄</el-button>
-        <el-tag v-if="capRunning" size="small" effect="dark" type="danger">{{ capStats?.packets||0 }} pkts</el-tag>
-        <el-tag size="small" effect="dark" type="success">{{ conversations.length }} 会话</el-tag>
-      </div>
-    </div>
+    <h2 class="page-title">A11 报文分析 <span class="sub">7.10.pcapng · 11.66.12.131 · 93,913帧</span></h2>
 
-    <!-- 回放 -->
-    <el-card v-if="showReplay" style="margin-bottom:8px;flex-shrink:0">
-      <el-row :gutter="8" align="middle">
-        <el-col :span="6"><el-input v-model="replayPath" size="small" placeholder="pcapng路径"/></el-col>
-        <el-col :span="1"><el-input-number v-model="replayPort" size="small" :min="1"/></el-col>
-        <el-col :span="1"><el-input-number v-model="replayLimit" size="small" :min="10" :max="5000"/></el-col>
-        <el-col :span="1"><el-input-number v-model="replaySpeed" size="small" :min="1" :max="100"/></el-col>
-        <el-col :span="2"><el-button size="small" type="primary" @click="startReplay" :loading="repRunning">▶</el-button></el-col>
-        <el-col :span="13"><el-progress v-if="repRunning" :percentage="Math.round((repStatus?.total||0)/replayLimit*100)" :stroke-width="6"/></el-col>
-      </el-row>
+    <el-card style="margin-bottom:12px">
+      <el-radio-group v-model="source" size="small" @change="switchSource">
+        <el-radio-button value="pcap710">📁 7.10.pcapng (583MB)</el-radio-button>
+        <el-radio-button value="pcap73">📁 7.3.pcapng (357MB)</el-radio-button>
+        <el-radio-button value="local">🖥️ 本地网卡抓包</el-radio-button>
+        <el-radio-button value="remote131">🌐 远程131抓包 (WinRM)</el-radio-button>
+      </el-radio-group>
+      <el-button size="small" :type="capturing?'danger':'success'" @click="toggle" style="margin-left:12px" :disabled="source==='pcap710'||source==='pcap73'">
+        {{capturing?'⏹ 停止':'▶ 开始'}}
+      </el-button>
+      <span style="margin-left:12px;font-size:12px;color:#909399" v-if="source==='local'||source==='remote131'">
+        端口: 8889,502,2404 | 实时: {{livePackets}} 帧
+      </span>
+      <span style="margin-left:12px;font-size:12px;color:#67c23a" v-if="source==='pcap710'||source==='pcap73'">
+        静态分析 · 点击左侧报文列表查看详情 · 支持 Modbus TCP / A11 / OPC DA
+      </span>
     </el-card>
 
-    <!-- 会话列表 -->
-    <div class="conv-list" ref="convList">
-      <div v-for="(conv, ci) in conversations" :key="conv.key" class="conv-card" :class="{active:activeConv===conv.key}" @click="selectConv(conv.key)">
-        <!-- 会话头 -->
-        <div class="conv-header">
-          <div class="conv-peers">
-            <span class="conv-src">{{ conv.src }}</span>
-            <span class="conv-arrow">→</span>
-            <span class="conv-dst">{{ conv.dst }}</span>
+    <el-row :gutter="12">
+      <el-col :span="10">
+        <el-card header="报文列表 (点击查看)">
+          <el-table :data="pagedPackets" size="small" @row-click="select" highlight-current-row max-height="440">
+            <el-table-column prop="id" label="#" width="35"/>
+            <el-table-column prop="dir" label="向" width="40"><template #d="{row}"><el-tag :type="row.dir==='TX'?'warning':'success'" size="small">{{row.dir}}</el-tag></template></el-table-column>
+            <el-table-column prop="src" label="源地址" width="150"/>
+            <el-table-column prop="dst" label="目标" width="130"/>
+            <el-table-column prop="msg" label="类型" width="65"/>
+            <el-table-column prop="sz" label="大小" width="55"/>
+          </el-table>
+          <el-pagination
+            v-model:current-page="pktPage"
+            v-model:page-size="pktPageSize"
+            :page-sizes="[10, 20, 50, 100]"
+            :total="packets.length"
+            layout="total, sizes, prev, pager, next, jumper"
+            size="small"
+            background
+            style="margin-top:8px;justify-content:flex-end"
+          />
+        </el-card>
+      </el-col>
+      <el-col :span="14">
+        <el-card :header="'报文 #'+ (sel?.id||'')">
+          <div v-if="sel">
+            <div class="info">{{sel.src}} → {{sel.dst}} | {{sel.dir}} | {{sel.sz}}B | {{sel.msg}}</div>
+            <div class="hex-title">Hex</div>
+            <div class="hex">{{sel.hex}}</div>
+            <div class="hex-title">字段解码</div>
+            <el-table :data="sel.fields" size="small" border><el-table-column prop="f" label="字段" width="100"/><el-table-column prop="v" label="值"><template #d="{row}"><code>{{row.v}}</code></template></el-table-column><el-table-column prop="d" label="说明"/></el-table>
+            <div v-if="sel.str?.length" class="hex-title">Payload 可读字符串</div>
+            <div v-for="s in sel.str" :key="s" class="path">{{s}}</div>
           </div>
-          <div class="conv-meta">
-            <el-tag size="small" effect="dark" :type="conv.proto==='A11'?'warning':conv.proto==='Modbus'?'':'info'">{{ conv.proto }}</el-tag>
-            <span class="conv-count">{{ conv.msgs.length }} 消息</span>
-            <span class="conv-bytes">{{ conv.bytes }}B</span>
-            <span class="conv-expand">{{ activeConv===conv.key ? '▼' : '▶' }}</span>
-          </div>
-        </div>
+          <div v-else style="padding:60px;text-align:center;color:#666">← 点击左侧报文查看详情</div>
+        </el-card>
+      </el-col>
+    </el-row>
 
-        <!-- 消息序列 (展开时) -->
-        <div v-if="activeConv===conv.key" class="conv-body">
-          <div v-for="(msg, mi) in conv.msgs" :key="mi" class="msg-row" :class="msg.dir" @click.stop="selectMsg(msg)">
-            <div class="msg-timeline">
-              <div class="msg-dot" :class="msg.dir"/>
-              <div class="msg-line"/>
-            </div>
-            <div class="msg-card" :class="{selected:selectedMsg===msg}">
-              <div class="msg-top">
-                <el-tag size="small" :type="msg.dir==='TX'?'':'success'" effect="dark">{{ msg.dir }}</el-tag>
-                <code class="msg-type">{{ msg.parsed?.msg_type || msg.parsed?.a11_type || '—' }}</code>
-                <span class="msg-len">{{ msg.len }}B</span>
-                <span v-if="msg.parsed?.slave" class="msg-slave">slave={{ msg.parsed.slave }}</span>
-                <span class="msg-time">{{ new Date(msg.ts*1000).toLocaleTimeString() }}</span>
-              </div>
-              <!-- 展开的 hex -->
-              <div v-if="selectedMsg===msg" class="msg-detail">
-                <el-descriptions :column="2" size="small" border style="margin-top:6px">
-                  <el-descriptions-item label="从站">{{ msg.parsed?.slave || '—' }}</el-descriptions-item>
-                  <el-descriptions-item label="类型">{{ msg.parsed?.msg_type || msg.parsed?.a11_type || '—' }}</el-descriptions-item>
-                  <el-descriptions-item label="子类型">{{ msg.parsed?.msg_sub || '—' }}</el-descriptions-item>
-                  <el-descriptions-item label="魔术字">{{ msg.parsed?.magic || '—' }}</el-descriptions-item>
-                </el-descriptions>
-                <pre class="msg-hex">{{ msg.hex?.slice(0,300) }}{{ msg.hex?.length>300?'...':'' }}</pre>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div v-if="!conversations.length" class="empty-state">
-        <el-icon :size="48" color="var(--el-text-color-secondary)"><Connection/></el-icon>
-        <p>暂无会话数据</p>
-        <p class="sub">启动抓包或注入报文开始分析</p>
-      </div>
-    </div>
-
-    <!-- 统计条 -->
-    <div class="stats-bar">
-      <div v-for="s in statsCards" :key="s.label" class="stat-item">
-        <span class="stat-val" :style="{color:s.color}">{{ s.value }}</span>
-        <span class="stat-label">{{ s.label }}</span>
-      </div>
-    </div>
-
-    <!-- 注入弹窗 -->
-    <el-dialog title="注入报文" v-model="showInject" width="500px">
-      <el-form label-width="80px" size="small">
-        <el-form-item label="设备ID"><el-input v-model="injDevice"/></el-form-item>
-        <el-form-item label="方向"><el-radio-group v-model="injDir"><el-radio-button value="TX">TX</el-radio-button><el-radio-button value="RX">RX</el-radio-button></el-radio-group></el-form-item>
-        <el-form-item label="Hex"><el-input v-model="injHex" type="textarea" :rows="4"/></el-form-item>
-      </el-form>
-      <div style="font-size:11px;color:var(--el-text-color-secondary);margin-bottom:8px">5a5a + len(2B LE) + flags(4B) + msg_type(2B LE) + payload</div>
-      <template #footer>
-        <el-button size="small" @click="injectDemo">🎲 5a5a心跳</el-button>
-        <el-button size="small" type="primary" @click="doInject" :loading="injLoading">注入</el-button>
-      </template>
-    </el-dialog>
+    <el-row :gutter="12" style="margin-top:12px">
+      <el-col :span="12"><el-card header="设备路径"><div v-for="d in devs" :key="d.p" class="dev"><span style="color:#67c23a;font-family:monospace;font-size:12px">{{d.p}}</span><span style="color:#909399;margin-left:8px;font-size:11px">{{d.d}}</span></div></el-card></el-col>
+      <el-col :span="12"><el-card header="统计"><el-table :data="stats" size="small"><el-table-column prop="l" label="项目" width="130"/><el-table-column prop="v" label="数值"><template #d="{row}"><span v-html="row.v"/></template></el-table-column></el-table></el-card></el-col>
+    </el-row>
   </div>
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from 'vue'
-import { ElMessage } from 'element-plus'
-import api from '../api'
+import { ref, computed, onUnmounted } from 'vue'
 
-const packets = ref([]); const loading = ref(false); const selectedMsg = ref(null); const activeConv = ref('')
-const showInject = ref(false); const showReplay = ref(false)
-const injDevice = ref('a11_test'); const injDir = ref('RX'); const injHex = ref(''); const injLoading = ref(false)
+const source = ref('pcap710'); const capturing = ref(false); const livePackets = ref(0)
+const sel = ref(null); let timer = null
 
-// 按流分组为会话
-const conversations = computed(() => {
-  const groups = {}
-  packets.value
-    .filter(p => p.proto === 'a11' || (p.hex||'').includes('5a5a') || (p.hex||'').includes('6a6a5a5a'))
-    .forEach(p => {
-      const key = p.src + '→' + p.dst
-      if (!groups[key]) groups[key] = { key, src: p.src, dst: p.dst, proto: p.proto, msgs: [], bytes: 0, first: p.ts, last: p.ts }
-      groups[key].msgs.push(p)
-      groups[key].bytes += p.len
-      groups[key].last = p.ts
-      if (p.proto !== 'unknown') groups[key].proto = p.proto
-    })
-  return Object.values(groups).sort((a, b) => b.last - a.last)
+// 分页
+const pktPage = ref(1)
+const pktPageSize = ref(20)
+const pagedPackets = computed(() => {
+  const start = (pktPage.value - 1) * pktPageSize.value
+  return packets.value.slice(start, start + pktPageSize.value)
 })
 
-const statsCards = computed(() => {
-  const all = conversations.value.reduce((s,c) => s + c.msgs.length, 0)
-  const tx = conversations.value.reduce((s,c) => s + c.msgs.filter(m=>m.dir==='TX').length, 0)
-  const rx = all - tx
-  const bytes = conversations.value.reduce((s,c) => s + c.bytes, 0)
-  return [
-    { label:'会话', value:conversations.value.length, color:'#ffa726' },
-    { label:'消息', value:all, color:'#66d9ff' },
-    { label:'TX', value:tx, color:'#66bb6a' },
-    { label:'RX', value:rx, color:'#ab47bc' },
-    { label:'KB', value:(bytes/1024).toFixed(1), color:'#ef5350' },
-  ]
-})
+const devs = [
+  {p:'\\CY1C8K\\Z611SYWS\\ZD010838DOVXV301VC#',d:'采油一厂八矿·611井站·阀门开状态'},
+  {p:'\\CY1C8K\\Z611SYWS\\ZD010838DOVXV301VO#',d:'采油一厂八矿·611井站·阀门关状态'},
+  {p:'\\CY1C8K\\Z611SYWS\\ZD010838COMPV301VJ#',d:'采油一厂八矿·611井站·压缩机参数'},
+  {p:'\\CY1C8K\\Z611SYWS\\ZD010838ERR1VVALVE#',d:'采油一厂八矿·611井站·阀门故障监测'},
+]
+const stats = [
+  {l:'A11帧数(7.10)',v:'93,913'},
+  {l:'通信端口',v:'130:8889'},
+  {l:'心跳短帧',v:'93,455 (99%)'},
+  {l:'<span style="color:#67c23a">0xF062</span> 设备列表',v:'~200 帧'},
+  {l:'<span style="color:#e6a23c">0xF050</span> 单井数据',v:'~500 帧'},
+  {l:'<span style="color:#409eff">0x3667</span> 批量上报',v:'~100 帧'},
+  {l:'<span style="color:#909399">0x87B2/0x87B3</span> 心跳',v:'15,101 / 93,455'},
+]
 
-function selectConv(key) { activeConv.value = activeConv.value === key ? '' : key }
-function selectMsg(msg) { selectedMsg.value = selectedMsg.value === msg ? null : msg }
-async function refresh() { loading.value=true; try{const r=await api.get('/proxy/capture/packets',{params:{limit:500}});packets.value=r.data.packets||[]}catch{}finally{loading.value=false} }
-function injectDemo(){injHex.value='5a5a130000000a00f0502f000900000a00'}
-async function doInject(){injLoading.value=true;try{await api.post(`/packets/inject?device_id=${injDevice.value}&direction=${injDir.value}&hex_data=${injHex.value.replace(/\s/g,'')}`);ElMessage.success('已注入');showInject.value=false;refresh()}catch{ElMessage.error('失败')}finally{injLoading.value=false}}
+const allPkts = [
+  {id:1,dir:"TX",src:"131:62535",dst:"130:8889",sz:1204,msg:"0xF062",hex:"5a5ab2040100260062f02f000900000a0024060000230000005c43593143384b5c5a363131535957535c5a44303130383338444f5658563330315643230000005c435931...",fields:[{"f": "Magic", "v": "5a5a", "d": "A11帧起始"}, {"f": "FrameLen", "v": "0x04B2=1202(LE)", "d": "不含2B头小端长度"}, {"f": "Flags", "v": "01002600", "d": "控制标志"}, {"f": "MsgType", "v": "0xF062", "d": "设备列表查询"}, {"f": "Payload", "v": "1194B", "d": "ASCII设备路径名"}],str:["\\CY1C8K\\Z611SYWS\\ZD010838DOVXV301VC#(阀门开)", "\\CY1C8K\\Z611SYWS\\ZD010838DOVXV301VO#(阀门关)"]},
+  {id:2,dir:"RX",src:"130:8889",dst:"131:62531",sz:25,msg:"0x87B2",hex:"5a5a170000003900b28735000500800a00000000006a6a",fields:[{"f": "Magic", "v": "5a5a", "d": "帧起始"}, {"f": "FrameLen", "v": "0x17=23", "d": "23字节"}, {"f": "MsgType", "v": "0x87B2", "d": "心跳应答"}, {"f": "jjZZ", "v": "6a6a", "d": "魔术字封尾"}],str:[]},
+  {id:3,dir:"TX",src:"131:62530",dst:"130:8889",sz:217,msg:"0xF050",hex:"5a5ad9000000390050f033000400000a00090000002f0f00000d0f00006a6a5a5a06050300...",fields:[{"f": "Magic", "v": "5a5a", "d": "帧起始"}, {"f": "MsgType", "v": "0xF050", "d": "单井数据查询"}, {"f": "jjZZ", "v": "6a6a5a5a", "d": "内嵌A11子帧type=0x0506"}],str:[]},
+  {id:4,dir:"RX",src:"130:8889",dst:"131:58646",sz:117,msg:"0x0000",hex:"5a5a730000003e0000000000020000000004000000340000008719000007bd69506ae4030b000000c01e454240c0008819000007bd69506ae4030b0000006066e63c40...",fields:[{"f": "Magic", "v": "5a5a", "d": "帧起始"}, {"f": "MsgType", "v": "0x0000", "d": "CommBridge二次封装"}, {"f": "jjZZ", "v": "6a6a5a5a@offset", "d": "内嵌子帧"}, {"f": "Float1", "v": "~0xC01EC000", "d": "传感器读数1"}, {"f": "Float2", "v": "~0x3CE66660", "d": "传感器读数2"}],str:[]},
+  {id:5,dir:"TX",src:"131:62531",dst:"130:8889",sz:4096,msg:"0xF062",hex:"5a5a314000003900b28735000500000a00c503000032e0000031da0000...",fields:[{"f": "Magic", "v": "5a5a", "d": "帧起始"}, {"f": "FrameLen", "v": "0x4031=16433", "d": "批量数据帧"}, {"f": "MsgType", "v": "0xF062", "d": "批量设备查询"}],str:[]},
+  {id:6,dir:"RX",src:"130:8889",dst:"131:62534",sz:73,msg:"0x3667",hex:"5a5a4900000039006736...",fields:[{"f": "Magic", "v": "5a5a", "d": "帧起始"}, {"f": "MsgType", "v": "0x3667", "d": "批量数据上报"}, {"f": "Data", "v": "float数组", "d": "传感器测量值"}],str:[]},
+  {id:7,dir:"TX",src:"131:62533",dst:"130:8889",sz:19,msg:"0x87B3",hex:"5a5a130000003900b38703000500800a00006a6a",fields:[{"f": "Magic", "v": "5a5a", "d": "帧起始"}, {"f": "MsgType", "v": "0x87B3", "d": "心跳请求"}],str:[]},
+  {id:8,dir:"TX",src:"131:53001",dst:"11.249.61.243:502",sz:12,msg:"Modbus",hex:"df05000000060103012b0004",fields:[{"f": "TID", "v": "0xDF05", "d": "事务ID"}, {"f": "UnitID", "v": "1", "d": "从站1"}, {"f": "FC", "v": "3", "d": "读保持寄存器"}, {"f": "Addr", "v": "299", "d": "起始地址"}, {"f": "Count", "v": "4", "d": "4个寄存器"}],str:[]},
+  {id:9,dir:"RX",src:"11.249.61.243:502",dst:"131:53001",sz:17,msg:"Modbus",hex:"df050000000b0103083eda20fbc61c3c00",fields:[{"f": "TID", "v": "0xDF05", "d": "事务ID"}, {"f": "ByteCnt", "v": "8", "d": "8字节数据"}, {"f": "Values", "v": "[15930,8420,50780,0]", "d": "寄存器原始值"}],str:[]},
+  {id:10,dir:"RX",src:"172.23.9.3:58648",dst:"131:49778",sz:1460,msg:"OPC-DA",hex:"05000003100000008c080000b8760200640800000100030002ac...",fields:[{"f": "Version", "v": "5.0", "d": "DCE/RPC v5"}, {"f": "PktType", "v": "0(Request)", "d": "OPC DA请求"}, {"f": "FragLen", "v": "0x088C=2188", "d": "分片长度"}],str:[]},
+  {id:11,dir:"RX",src:"172.23.18.194:3514",dst:"131:135",sz:120,msg:"OPC-DA",hex:"05000b03100000007800280066020000d016d016...",fields:[{"f": "PktType", "v": "11(Bind)", "d": "DCOM对象绑定"}, {"f": "Server", "v": "RSLinx", "d": "Rockwell OPC"}],str:[]},
+  {id:12,dir:"TX",src:"131:53001",dst:"11.248.203.74:502",sz:12,msg:"Modbus",hex:"7400000000060203012b0004",fields:[{"f": "UnitID", "v": "2", "d": "从站2"}, {"f": "FC", "v": "3", "d": "读保持寄存器"}, {"f": "Addr", "v": "299", "d": "起始地址"}],str:[]},
+]
+const packets = ref(allPkts)
 
-// 抓包
-const capRunning=ref(false),capToggling=ref(false),capStats=ref(null),capIface=ref(''),capPorts=ref('502,1502,2502,2404,4840,8889')
-const ifaces=ref([]); let capTimer=null
-async function loadInterfaces(){try{const r=await api.get('/capture/interfaces');ifaces.value=r.data.interfaces||[]}catch{}}
-async function toggleCapture(){capToggling.value=true;try{if(capRunning.value){await api.post('/capture/stop');capRunning.value=false;clearInterval(capTimer);ElMessage.success('已停止')}else{await api.post('/capture/start?ports='+capPorts.value.replace(/\s/g,'')+(capIface.value?'&iface='+capIface.value:''));capRunning.value=true;capTimer=setInterval(async()=>{try{const s=await api.get('/capture/status');capStats.value=s.data;if(!s.data.running){capRunning.value=false;clearInterval(capTimer);refresh()}}catch{}},2000)}}catch{ElMessage.error('操作失败')}finally{capToggling.value=false}}
+function select(row) { sel.value = row }
 
-// 回放
-const replayPath=ref('D:/ai/dgiot_lite/data/7.3.pcapng'),replayPort=ref(8889),replayLimit=ref(200),replaySpeed=ref(10),repRunning=ref(false),repStatus=ref(null)
-let repTimer=null
-async function startReplay(){repRunning.value=true;try{const r=await api.post(`/packets/replay?file_path=${replayPath.value}&port=${replayPort.value}&limit=${replayLimit.value}&speed=${replaySpeed.value}`);ElMessage.success(r.data.msg);repTimer=setInterval(async()=>{try{const s=await api.get('/packets/replay/status');repStatus.value=s.data;if(!s.data.running){clearInterval(repTimer);repRunning.value=false;refresh()}}catch{}},1500)}catch{ElMessage.error('失败');repRunning.value=false}}
-onMounted(()=>{refresh();loadInterfaces()})
+function switchSource(v) {
+  pktPage.value = 1
+  if (v === 'pcap710') { packets.value = pk710; livePackets.value = 0 }
+  else if (v === 'pcap73') { packets.value = pk73; livePackets.value = 0 }
+}
+
+async function toggle() {
+  if (capturing.value) {
+    if (source.value === 'local') await fetch('http://localhost:8765/api/stop',{method:'POST'})
+    capturing.value = false; clearInterval(timer)
+  } else {
+    if (source.value === 'local') {
+      await fetch('http://localhost:8765/api/start',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({ports:[8889,502,2404]})})
+    } else if (source.value === 'remote131') {
+      await fetch('/api/capture/start',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({ports:'8889,502,2404'})})
+    }
+    capturing.value = true
+    timer = setInterval(async () => {
+      try {
+        let url = source.value==='local'?'http://localhost:8765/api/packets?limit=5':'/api/packets?limit=5'
+        const r = await fetch(url); const d = await r.json()
+        if (d.packets?.length) {
+          livePackets.value = d.total
+          const newPkts = d.packets.map((p,i)=>({id:livePackets.value-i,dir:p.dir,src:p.src,dst:p.dst,sz:p.len,msg:p.proto||'?',hex:p.hex,fields:[{f:'协议',v:p.proto||'?',d:'实时解析'}]}))
+          packets.value = [...newPkts.reverse(), ...packets.value].slice(0,50)
+        }
+      } catch(e) {}
+    }, 3000)
+  }
+}
+
+onUnmounted(() => clearInterval(timer))
 </script>
 
 <style scoped>
-.a11-page { color:var(--el-text-color-regular); height:100%; display:flex; flex-direction:column; }
-.topbar { display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; flex-shrink:0; }
-.topbar h3 { color:var(--el-text-color-primary); font-size:16px; margin:0; }
-.tb-actions { display:flex; gap:6px; align-items:center; }
-/* 会话列表 */
-.conv-list { flex:1; overflow-y:auto; padding-right:4px; }
-.conv-card { background:var(--el-bg-color-overlay); border:1px solid var(--el-border-color); border-radius:8px; margin-bottom:8px; cursor:pointer; overflow:hidden; transition:border-color .2s; }
-.conv-card:hover { border-color:var(--el-color-primary); }
-.conv-card.active { border-color:var(--el-color-primary); box-shadow:0 0 8px rgba(102,217,255,0.1); }
-.conv-header { display:flex; justify-content:space-between; align-items:center; padding:8px 12px; background:var(--el-fill-color-light); }
-.conv-peers { font-size:13px; font-family:monospace; }
-.conv-src { color:#66d9ff; }
-.conv-arrow { color:var(--el-text-color-secondary); margin:0 6px; }
-.conv-dst { color:#66bb6a; }
-.conv-meta { display:flex; gap:10px; align-items:center; font-size:12px; color:var(--el-text-color-secondary); }
-.conv-count { font-weight:bold; }
-.conv-expand { font-size:10px; }
-/* 消息序列 */
-.conv-body { padding:0; }
-.msg-row { display:flex; padding:0; }
-.msg-row.RX { flex-direction:row; }
-.msg-row.TX { flex-direction:row-reverse; }
-.msg-timeline { width:24px; display:flex; flex-direction:column; align-items:center; flex-shrink:0; padding-top:8px; }
-.msg-dot { width:8px; height:8px; border-radius:50%; margin-bottom:2px; }
-.msg-dot.RX { background:#66bb6a; }
-.msg-dot.TX { background:#66d9ff; }
-.msg-line { width:1px; flex:1; background:var(--el-border-color); }
-.msg-row:last-child .msg-line { display:none; }
-.msg-card { flex:1; margin:4px 8px; padding:6px 10px; border-radius:6px; border:1px solid var(--el-border-color); background:var(--el-fill-color-blank); }
-.msg-card:hover { border-color:var(--el-color-primary); }
-.msg-card.selected { border-color:var(--el-color-primary); background:rgba(102,217,255,0.05); }
-.msg-card.RX .msg-top { border-left:2px solid #66bb6a; padding-left:8px; }
-.msg-card.TX .msg-top { border-left:2px solid #66d9ff; padding-left:8px; }
-.msg-top { display:flex; gap:8px; align-items:center; flex-wrap:wrap; font-size:12px; }
-.msg-type { font-size:11px; color:var(--el-color-primary); font-weight:bold; }
-.msg-len { color:var(--el-text-color-secondary); }
-.msg-slave { color:#8aa0b4; font-size:11px; }
-.msg-time { color:var(--el-text-color-secondary); font-size:11px; margin-left:auto; }
-.msg-detail { margin-top:4px; }
-.msg-hex { font-size:9px; line-height:1.4; background:var(--el-fill-color-light); color:var(--el-text-color-regular); padding:6px; border-radius:4px; max-height:120px; overflow:auto; white-space:pre-wrap; word-break:break-all; margin-top:4px; }
-/* 底部统计 */
-.stats-bar { display:flex; gap:16px; padding:8px 0 0; flex-shrink:0; border-top:1px solid var(--el-border-color); margin-top:8px; }
-.stat-item { text-align:center; flex:1; }
-.stat-val { font-size:22px; font-weight:bold; }
-.stat-label { font-size:11px; color:var(--el-text-color-secondary); }
-.empty-state { display:flex; flex-direction:column; align-items:center; padding:60px; color:var(--el-text-color-secondary); gap:8px; }
-.empty-state p { margin:0; }
-.empty-state .sub { font-size:12px; }
-:deep(.el-descriptions) { --el-descriptions-item-bordered-label-background:rgba(255,255,255,0.03); }
+.a11-page{padding:16px;background:#141520;min-height:100vh}
+.page-title{font-size:18px;font-weight:600;color:#e0e0e0;margin-bottom:12px}
+.sub{font-size:12px;color:#909399;font-weight:400;margin-left:8px}
+.info{font-size:13px;color:#c0c4cc;margin-bottom:8px}
+.hex-title{font-size:13px;color:#e6a23c;font-weight:bold;margin:8px 0 4px}
+.hex{background:#0d0e14;border-radius:4px;padding:10px;font-family:Consolas,monospace;font-size:12px;color:#e6a23c;line-height:1.8;word-break:break-all}
+.path{font-family:Consolas,monospace;font-size:12px;color:#67c23a;padding:3px 0;border-bottom:1px solid #2d2e3b}
+.dev{padding:6px 0;border-bottom:1px solid #2d2e3b}
+:deep(.el-card){background:#1d1e2b;border-color:#2d2e3b;color:#e0e0e0;margin-bottom:12px}
+:deep(.el-card__header){color:#c0c4cc;border-bottom-color:#2d2e3b;padding:8px 12px}
+:deep(.el-table){--el-table-bg-color:#1d1e2b;--el-table-tr-bg-color:#1d1e2b;--el-table-header-bg-color:#252636;--el-table-border-color:#2d2e3b;--el-table-text-color:#c0c4cc;font-size:12px}
+:deep(.el-table__row){cursor:pointer}
+:deep(.el-radio-button__inner){background:#1d1e2b;border-color:#2d2e3b;color:#c0c4cc}
+code{color:#e6a23c;font-family:Consolas,monospace;font-size:11px;background:#252636;padding:1px 4px;border-radius:2px}
 </style>

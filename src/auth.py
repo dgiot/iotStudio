@@ -8,7 +8,6 @@ import hmac
 import json
 import base64
 from typing import Optional
-from functools import wraps
 from fastapi import Request, HTTPException
 
 # 简单 JWT（无外部依赖）
@@ -21,18 +20,42 @@ USERS = {
         "password": hashlib.sha256("admin123".encode()).hexdigest(),
         "role": "admin",
         "name": "管理员",
+        "desc": "系统管理员",
+        "enabled": True,
+        "created": "2026-01-01",
     },
     "dgiot": {
         "password": hashlib.sha256("dgiot123".encode()).hexdigest(),
         "role": "admin",
         "name": "DG-IoT管理员",
+        "desc": "平台管理员",
+        "enabled": True,
+        "created": "2026-01-01",
     },
     "operator": {
         "password": hashlib.sha256("oper123".encode()).hexdigest(),
         "role": "operator",
         "name": "运维操作员",
+        "desc": "日常运维",
+        "enabled": True,
+        "created": "2026-01-01",
     },
 }
+
+
+def add_user(username: str, password: str, role: str = "operator", desc: str = "") -> bool:
+    """添加用户"""
+    if not username or username in USERS:
+        return False
+    USERS[username] = {
+        "password": hashlib.sha256(password.encode()).hexdigest(),
+        "role": role,
+        "name": username,
+        "desc": desc,
+        "enabled": True,
+        "created": time.strftime("%Y-%m-%d %H:%M"),
+    }
+    return True
 
 
 def _b64_encode(data: bytes) -> str:
@@ -110,3 +133,34 @@ def require_role(role: str = "admin"):
             raise HTTPException(403, "权限不足")
         return user
     return dependency
+
+
+# ===== 多租户 — Parse CLP 等效中间件 =====
+# DG-IoT 用 Parse _Role + ACL/CLP 做数据隔离。
+# dgiot_lite 等效方案: X-Tenant-ID header + tenant_id column 过滤。
+
+async def get_current_tenant(request: Request) -> str:
+    """提取当前租户 ID — 优先级: JWT > Header > default"""
+    # 1. 从 JWT 中提取
+    auth = request.headers.get("Authorization", "")
+    if auth.startswith("Bearer "):
+        payload = verify_token(auth[7:])
+        if payload and payload.get("tenant_id"):
+            return payload["tenant_id"]
+    # 2. 从 Header 中提取
+    tid = request.headers.get("X-Tenant-ID")
+    if tid:
+        return tid
+    # 3. 默认
+    return "default"
+
+
+def require_admin(user=Depends(get_current_user)):
+    """要求 admin 角色"""
+    if user.get("role") != "admin":
+        raise HTTPException(403, "仅管理员可操作")
+    return user
+
+
+# 重新导入以支持 Depends
+from fastapi import Depends

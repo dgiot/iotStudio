@@ -65,5 +65,5 @@ onMounted(load)
 .alarm-list { color: #c0d5e8; }
 .toolbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
 .toolbar h3 { color: #c0d5e8; }
-.el-table { background: transparent; --el-table-tr-bg-color: #0d1b30; --el-table-header-bg-color: #122540; }
+.el-table { background: transparent !important; --el-table-tr-bg-color: #162844; --el-table-header-bg-color: #1a3050; }
 </style>

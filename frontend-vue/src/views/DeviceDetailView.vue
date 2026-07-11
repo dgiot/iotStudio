@@ -9,6 +9,9 @@
       <el-descriptions-item label="场站">{{ device.station_id }}</el-descriptions-item>
       <el-descriptions-item label="厂商">{{ device.manufacturer || '-' }}</el-descriptions-item>
     </el-descriptions>
+
+    <RunningCards :device-id="device.device_id" />
+
     <el-card shadow="never" class="section-card" style="margin-bottom:12px">
       <template #header><span>📈 实时数据趋势 (最近30点)</span></template>
       <v-chart :option="chartOption" autoresize style="height:280px" v-if="hasData" />
@@ -56,12 +59,14 @@ import { ref, reactive, computed, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import { getDevice, getPoints, createPoint, getLatest, getTelemetry } from '../api'
 import { ElMessage } from 'element-plus'
+import RunningCards from '../components/RunningCards.vue'
+import { DEVICE_TYPE_MAP, DATA_TYPES } from '../utils/constants'
 
 const route = useRoute()
 const device = ref(null), points = ref([]), latest = ref([]), loading = ref(false), pointDialog = ref(false)
 const pointForm = reactive({ point_id: '', device_id: route.params.id, point_name: '', protocol_addr: '', data_type: 'float32', register_type: '3', scale: 1.0, offset: 0.0, unit: '', collect_interval: 5 })
-const dtypes = ['int16','uint16','int32','uint32','float32','float64','bool','string']
-const typeMap = { inverter:'逆变器',pcs:'储能PCS',charger:'充电桩',meter:'电表',sensor:'传感器' }
+const dtypes = DATA_TYPES
+const typeMap = DEVICE_TYPE_MAP
 
 const chartTimes = ref([]), chartSeries = ref([])
 const hasData = computed(() => chartSeries.value.length > 0)
@@ -69,9 +74,9 @@ const chartOption = computed(() => ({
   backgroundColor: 'transparent',
   grid: { top:10,right:20,bottom:30,left:50 },
   tooltip: { trigger:'axis' },
-  legend: { data: chartSeries.value.map(s=>s.name), textStyle:{color:'#8899aa'}, top:-5 },
-  xAxis: { type:'category', data:chartTimes.value, axisLabel:{color:'#8899aa',fontSize:10} },
-  yAxis: { type:'value', splitLine:{lineStyle:{color:'#1a3a5c'}} },
+  legend: { data: chartSeries.value.map(s=>s.name), textStyle:{color:'#c0d5e8'}, top:-5 },
+  xAxis: { type:'category', data:chartTimes.value, axisLabel:{color:'#c0d5e8',fontSize:10} },
+  yAxis: { type:'value', splitLine:{lineStyle:{color:'#2a4870'}} },
   dataZoom: [{ type:'inside' }],
   series: chartSeries.value.map(s=>({ name:s.name, type:'line', smooth:true, symbol:'none', data:s.data, lineStyle:{width:2} }))
 }))
@@ -100,7 +105,7 @@ onMounted(load)
 
 <style scoped>
 .device-detail{color:#c0d5e8}
-.section-card{background:#0f1f3a;border:1px solid #1a3a5c}
-.section-card :deep(.el-card__header){color:#c0d5e8;border-bottom:1px solid #1a3a5c;padding:10px 16px;font-size:13px}
-.el-table{background:transparent;--el-table-tr-bg-color:#0d1b30;--el-table-header-bg-color:#122540}
+.section-card{background:#162844;border:1px solid #234060}
+.section-card :deep(.el-card__header){color:#c0d5e8;border-bottom:1px solid #234060;padding:10px 16px;font-size:13px}
+.el-table{background:transparent;--el-table-tr-bg-color:#162844;--el-table-header-bg-color:#1a3050}
 </style>

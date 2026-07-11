@@ -1,13 +1,16 @@
 # ============================================================
 # pythonIot — 主配置文件
 # ============================================================
-title: "光储充微电网物联网平台"
+title: "DG-IoT 轻量物联网平台"
 version: "1.0.0"
 host: "0.0.0.0"
 port: 8000
 log_level: "INFO"
 data_dir: "./data"
 sqlite_path: "./data/local.db"
+
+# 存储模式: "parse" (连接Parse Server) | "sqlite" (单机版)
+storage_mode: "sqlite"
 
 db:
   host: "127.0.0.1"
@@ -17,11 +20,18 @@ db:
   database: "iot_platform"
 
 tdengine:
-  host: "127.0.0.1"
-  port: 6030
+  host: "172.22.193.167"     # Kylin-DMZ 边缘中枢
+  port: 6041                 # taosAdapter RESTful
   user: "root"
   password: "taosdata"
   database: "iot_telemetry"
+  # Windows 无 TDengine → 自动降级 SQLite (data/telemetry.db)
+
+# Parse-lite (嵌入式 — 替代 Parse Server)
+parse:
+  db_path: "./data/parse.db"   # SQLite 单机版
+  app_id: "ddc9ac052450367e4a03c4056c21bff8"
+  master_key: "b59551ab147d580a84272044b2139fbd"
 
 mqtt:
   host: "127.0.0.1"
@@ -29,3 +39,31 @@ mqtt:
   username: ""
   password: ""
   client_id: "pythonIot-pusher"
+
+# ============================================================
+# A11 协议设备配置 (中石油油气生产物联网)
+# 协议栈: ModbusTCP(7B MBAP) + jjZZ(4B) + Type LE(2B) + Sub LE(2B) + Payload
+# 参考: A11 正式规范白皮书 V1.0
+# ============================================================
+# a11_devices:
+#   - protocol_type: a11
+#     device_id: oilfield-gw-001
+#     device_name: 某采油厂A11网关
+#     host: 11.66.12.130
+#     port: 8889
+#     unit_id: 0
+#     heartbeat_interval: 5
+#     enabled: true
+#     points:
+#       - point_id: well_pressure_001
+#         point_name: 1号井口压力
+#         a11_type: 0x0539
+#         unit: MPa
+#       - point_id: well_temp_001
+#         point_name: 1号井口温度
+#         a11_type: 0x0539
+#         unit: degC
+#       - point_id: oilflow_001
+#         point_name: 1号井产油量
+#         a11_type: 0x056c
+#         unit: m3/d

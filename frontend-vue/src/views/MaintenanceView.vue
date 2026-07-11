@@ -7,7 +7,7 @@
           <el-option v-for="d in devices" :key="d.device_id" :label="d.device_name" :value="d.device_id"/>
         </el-select>
         <el-button size="small" :type="autoRefresh?'success':'info'" @click="autoRefresh=!autoRefresh">{{ autoRefresh?'🔄 自动':'▶️ 手动' }}</el-button>
-        <span style="font-size:13px;color:#8899aa">
+        <span style="font-size:13px;color:#c0d5e8">
           正常: <b style="color:#66bb6a">{{ normalCount }}</b>
           告警: <b style="color:#ef5350">{{ alarmCount }}</b>
         </span>
@@ -47,7 +47,7 @@
             <el-table-column label="阈值范围" width="140">
               <template #default="{row}">
                 <span v-if="row.alarm_low || row.alarm_high">{{ row.alarm_low || '--' }} ~ {{ row.alarm_high || '--' }}</span>
-                <span v-else style="color:#8899aa">未设置</span>
+                <span v-else style="color:#c0d5e8">未设置</span>
               </template>
             </el-table-column>
             <el-table-column label="状态" width="80" align="center">
@@ -93,7 +93,7 @@ import axios from 'axios'
 import * as echarts from 'echarts'
 
 const statusCards = ref([
-  { label:'在线设备', value:'0', color:'#4fc3f7' },
+  { label:'在线设备', value:'0', color:'#66d9ff' },
   { label:'采集成功率', value:'0%', color:'#66bb6a' },
   { label:'总采集次数', value:'0', color:'#ffc107' },
   { label:'活跃告警', value:'0', color:'#ef5350' },
@@ -189,10 +189,10 @@ function renderChart() {
     groups[key].data.push(p.value)
   })
   chart.setOption({
-    tooltip:{trigger:'axis'}, legend:{data:Object.keys(groups).slice(0,6), textStyle:{color:'#8899aa',fontSize:10}, bottom:0},
+    tooltip:{trigger:'axis'}, legend:{data:Object.keys(groups).slice(0,6), textStyle:{color:'#c0d5e8',fontSize:10}, bottom:0},
     grid:{top:10,right:20,bottom:30,left:45},
-    xAxis:{type:'category',data:times,axisLabel:{color:'#8899aa',fontSize:9}},
-    yAxis:{type:'value',splitLine:{lineStyle:{color:'#1a3a5c'}}},
+    xAxis:{type:'category',data:times,axisLabel:{color:'#c0d5e8',fontSize:9}},
+    yAxis:{type:'value',splitLine:{lineStyle:{color:'#2a4870'}}},
     series: Object.values(groups).slice(0,6).map(g => ({name:g.name,type:'line',smooth:true,symbol:'none',data:g.data,lineStyle:{width:2}}))
   })
 }
@@ -204,14 +204,14 @@ onUnmounted(() => { clearInterval(timer); chart?.dispose() })
 
 <style scoped>
 .maint-page { color: #c0d5e8; }
-.st-card { background: #0f1f3a; border: 1px solid #1a3a5c; }
-.st-label { font-size: 12px; color: #8899aa; margin-bottom: 4px; }
+.st-card { background: #162844; border: 1px solid #234060; }
+.st-label { font-size: 12px; color: #c0d5e8; margin-bottom: 4px; }
 .st-val { font-size: 24px; font-weight: bold; }
-.sec-card { background: #0f1f3a; border: 1px solid #1a3a5c; }
-.sec-card :deep(.el-card__header) { color: #c0d5e8; border-bottom: 1px solid #1a3a5c; padding: 8px 14px; font-size: 13px; }
-.el-table { background: transparent; --el-table-tr-bg-color: #0d1b30; --el-table-header-bg-color: #122540; }
-.svc-row { display: flex; align-items: center; gap: 8px; padding: 6px 0; border-bottom: 1px solid #1a3a5c; font-size: 13px; }
+.sec-card { background: #162844; border: 1px solid #234060; }
+.sec-card :deep(.el-card__header) { color: #c0d5e8; border-bottom: 1px solid #234060; padding: 8px 14px; font-size: 13px; }
+.el-table { background: transparent !important; --el-table-tr-bg-color: #162844; --el-table-header-bg-color: #1a3050; }
+.svc-row { display: flex; align-items: center; gap: 8px; padding: 6px 0; border-bottom: 1px solid #234060; font-size: 13px; }
 .svc-name { flex: 1; }
-.svc-host { color: #8899aa; font-size: 11px; font-family: monospace; }
+.svc-host { color: #c0d5e8; font-size: 11px; font-family: monospace; }
 .el-descriptions { --el-descriptions-item-bordered-label-background: rgba(255,255,255,0.03); }
 </style>

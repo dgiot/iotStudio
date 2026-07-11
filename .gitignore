@@ -26,3 +26,25 @@ data/
 
 # Env
 .env
+
+# Parse Server (太重，不入库)
+parse-server/
+
+# IO 服务器分析数据 (太大)
+io服务器分析/
+
+# 嵌入式 git 仓库
+h-opc/
+
+# OPC 二进制库
+*.dll
+*.msi
+*.zip
+
+# PyInstaller
+dgiot_lite.spec
+build/
+dist/
+
+# TDengine/SQLite 数据
+*.db

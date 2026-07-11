@@ -6,10 +6,12 @@ const api = axios.create({
   timeout: 10000,
 })
 
-// 请求拦截：自动附加 token
+// 请求拦截：自动附加 token + 租户
 api.interceptors.request.use(config => {
   const token = localStorage.getItem('dgiot_token')
   if (token) config.headers.Authorization = `Bearer ${token}`
+  const tenant = localStorage.getItem('dgiot_tenant')
+  if (tenant) config.headers['X-Tenant-ID'] = tenant
   return config
 })
 

@@ -1,158 +1,157 @@
 <template>
   <div class="dashboard">
+    <!-- 顶部告警条 -->
+    <el-alert v-if="activeAlarms" :title="`${activeAlarms} 条活跃告警`" type="warning" show-icon :closable="false" style="margin-bottom:12px" />
+
     <!-- KPI 卡片 -->
-    <el-row :gutter="16" style="margin-bottom:16px">
-      <el-col :span="6" v-for="card in kpiCards" :key="card.label">
+    <el-row :gutter="12">
+      <el-col :span="4" v-for="card in kpiCards" :key="card.label">
         <el-card shadow="hover" class="kpi-card">
+          <div class="kpi-icon">{{ card.icon }}</div>
+          <div class="kpi-value" :style="{color:card.color}">{{ card.value }}</div>
           <div class="kpi-label">{{ card.label }}</div>
-          <div class="kpi-value" :style="{color: card.color}">{{ card.value }}</div>
         </el-card>
       </el-col>
     </el-row>
 
-    <!-- 图表区：采集趋势 + 设备在线率 -->
-    <el-row :gutter="16" style="margin-bottom:16px">
-      <el-col :span="16">
-        <el-card shadow="never" class="chart-card">
-          <template #header><span>📈 采集吞吐量趋势 (近1分钟)</span></template>
-          <v-chart :option="trendOption" autoresize style="height:260px" />
-        </el-card>
+    <!-- 图表行1 -->
+    <el-row :gutter="12" style="margin-top:12px">
+      <el-col :span="12">
+        <el-card class="chart-card"><template #header>📈 采集趋势 (近1小时)</template><div ref="trendChart" style="height:250px" /></el-card>
       </el-col>
-      <el-col :span="8">
-        <el-card shadow="never" class="chart-card">
-          <template #header><span>📊 设备协议分布</span></template>
-          <v-chart :option="protocolPieOption" autoresize style="height:260px" />
-        </el-card>
+      <el-col :span="6">
+        <el-card class="chart-card"><template #header>🥧 协议分布</template><div ref="protoChart" style="height:250px" /></el-card>
+      </el-col>
+      <el-col :span="6">
+        <el-card class="chart-card"><template #header>⚠️ 告警等级</template><div ref="alarmChart" style="height:250px" /></el-card>
       </el-col>
     </el-row>
 
-    <!-- 实时采集日志 -->
-    <el-card shadow="never" class="log-card">
-      <template #header>
-        <div style="display:flex;justify-content:space-between;align-items:center">
-          <span>📋 实时采集日志</span>
-          <el-tag size="small" effect="dark" type="success">WebSocket 实时</el-tag>
-        </div>
-      </template>
-      <el-table :data="logs" size="small" max-height="240" stripe>
-        <el-table-column prop="time" label="时间" width="140" />
-        <el-table-column prop="device" label="设备" width="160" />
-        <el-table-column prop="point" label="点位" min-width="140" />
-        <el-table-column prop="value" label="值" width="140" />
-        <el-table-column prop="status" label="状态" width="80">
-          <template #default="{row}">
-            <el-tag :type="row.status==='success'?'success':'danger'" size="small">{{ row.status }}</el-tag>
-          </template>
-        </el-table-column>
-      </el-table>
-    </el-card>
+    <!-- 图表行2 -->
+    <el-row :gutter="12" style="margin-top:12px">
+      <el-col :span="12">
+        <el-card class="chart-card"><template #header>📋 实时采集日志</template>
+          <el-table :data="logs" size="small" max-height="240" stripe>
+            <el-table-column prop="time" label="时间" width="90" />
+            <el-table-column prop="device" label="设备" width="120" show-overflow-tooltip />
+            <el-table-column prop="point" label="测点" width="100" />
+            <el-table-column prop="value" label="值" width="80" align="right"><template #default="{row}"><b :style="{color:row.color}">{{ row.value }}</b></template></el-table-column>
+            <el-table-column prop="protocol" label="协议" width="90" />
+            <el-table-column prop="status" label="状态" width="70"><template #default="{row}"><el-tag :type="row.ok?'success':'danger'" size="small" effect="dark">{{ row.ok?'成功':'失败' }}</el-tag></template></el-table-column>
+          </el-table>
+        </el-card>
+      </el-col>
+      <el-col :span="12">
+        <el-card class="chart-card"><template #header>⚠️ 最近告警</template>
+          <el-table :data="recentAlarms" size="small" max-height="240">
+            <el-table-column prop="level" label="级别" width="70"><template #default="{row}"><el-tag :type="row.level==='P0'?'danger':row.level==='P1'?'warning':'info'" size="small" effect="dark">{{ row.level }}</el-tag></template></el-table-column>
+            <el-table-column prop="device" label="设备" width="100" show-overflow-tooltip />
+            <el-table-column prop="msg" label="告警内容" min-width="200" show-overflow-tooltip />
+            <el-table-column prop="time" label="时间" width="90" />
+          </el-table>
+        </el-card>
+      </el-col>
+    </el-row>
   </div>
 </template>
 
 <script setup>
-import { ref, reactive, onMounted, onUnmounted } from 'vue'
-import { getStats, getDevices, getAlarms } from '../api'
+import { ref, onMounted, onUnmounted, nextTick } from 'vue'
+import * as echarts from 'echarts'
+import api from '../api'
+import { PROTOCOL_COLORS } from '../utils/constants'
 
 const kpiCards = ref([
-  { label: '在线设备', value: '0', color: '#4fc3f7', key: 'online_devices' },
-  { label: '采集成功率', value: '0%', color: '#66bb6a', key: 'success_rate' },
-  { label: '总采集次数', value: '0', color: '#ffc107', key: 'total_collects' },
-  { label: '活跃告警', value: '0', color: '#ef5350', key: 'alarms' },
+  { icon:'🟢', label:'在线设备', value:'0', color:'#66bb6a', key:'online' },
+  { icon:'📤', label:'总采集次数', value:'0', color:'#66d9ff', key:'collects' },
+  { icon:'✅', label:'成功率', value:'0%', color:'#ffa726', key:'rate' },
+  { icon:'⚠️', label:'活跃告警', value:'0', color:'#ef5350', key:'alarms' },
+  { icon:'📡', label:'MQTT状态', value:'运行中', color:'#66bb6a', key:'mqtt' },
+  { icon:'⏱️', label:'运行时间', value:'0s', color:'#ab47bc', key:'uptime' },
 ])
 const logs = ref([])
+const recentAlarms = ref([])
+const activeAlarms = ref(0)
+const trendChart=ref(null), protoChart=ref(null), alarmChart=ref(null)
+let charts=[], timer=null, trendData=[[],[]], trendTimes=[]
 
-// 趋势图数据
-const trendTimes = ref(Array.from({length: 30}, (_, i) => `${29-i}s`))
-const trendSuccess = ref(Array(30).fill(0))
-const trendFail = ref(Array(30).fill(0))
-
-const trendOption = computed(() => ({
-  backgroundColor: 'transparent',
-  grid: { top: 10, right: 20, bottom: 20, left: 45 },
-  tooltip: { trigger: 'axis' },
-  legend: { data: ['成功', '失败'], textStyle: { color: '#8899aa' }, top: -5 },
-  xAxis: { type: 'category', data: trendTimes.value, axisLine: { lineStyle: { color: '#1a3a5c' } }, axisLabel: { color: '#8899aa', fontSize: 10 } },
-  yAxis: { type: 'value', splitLine: { lineStyle: { color: '#1a3a5c' } }, axisLabel: { color: '#8899aa' } },
-  series: [
-    { name: '成功', type: 'line', smooth: true, symbol: 'none', lineStyle: { color: '#66bb6a', width: 2 }, areaStyle: { color: 'rgba(102,187,106,0.1)' }, data: trendSuccess.value },
-    { name: '失败', type: 'line', smooth: true, symbol: 'none', lineStyle: { color: '#ef5350', width: 1 }, data: trendFail.value },
-  ]
-}))
-
-const protocolPieOption = ref({
-  backgroundColor: 'transparent',
-  tooltip: { trigger: 'item' },
-  legend: { bottom: 0, textStyle: { color: '#8899aa', fontSize: 11 } },
-  series: [{
-    type: 'pie', radius: ['55%', '75%'], center: ['50%', '43%'],
-    label: { color: '#c0d5e8' },
-    data: [
-      { value: 0, name: 'Modbus TCP', itemStyle: { color: '#4fc3f7' } },
-      { value: 0, name: 'Modbus RTU', itemStyle: { color: '#66bb6a' } },
-      { value: 0, name: 'IEC 104', itemStyle: { color: '#ffc107' } },
-      { value: 0, name: 'OPC UA', itemStyle: { color: '#ab47bc' } },
-    ]
-  }]
-})
-
-let ws = null, timer = null, trendIdx = 0
-
-onMounted(async () => {
+async function refresh() {
   try {
-    const [stats, devices, alarms] = await Promise.all([getStats(), getDevices(), getAlarms({ status: 'active' })])
-    const s = stats.data
-    kpiCards.value[0].value = s?.online_devices || 0
-    kpiCards.value[1].value = (s?.success_rate || 0) + '%'
-    kpiCards.value[2].value = s?.total_collects || 0
-    kpiCards.value[3].value = alarms.data?.total || 0
-    // 协议分布
-    const pMap = {}
-    ;(devices.data?.devices || []).forEach(d => { pMap[d.protocol] = (pMap[d.protocol] || 0) + 1 })
-    protocolPieOption.value.series[0].data.forEach(d => { d.value = pMap[d.name] || 0 })
-  } catch {}
-
-  const proto = location.protocol === 'https:' ? 'wss' : 'ws'
-  ws = new WebSocket(`${proto}://${location.host}/ws`)
-  ws.onmessage = (ev) => {
-    const msg = JSON.parse(ev.data)
-    if (msg.type === 'telemetry') {
-      msg.data?.forEach(d => {
-        logs.value.unshift({ time: new Date().toLocaleTimeString(), device: msg.device_id, point: d.point_name || d.point_id, value: `${d.value} ${d.unit||''}`, status: 'success' })
-      })
-      if (logs.value.length > 100) logs.value = logs.value.slice(0, 100)
-      trendSuccess.value[trendIdx] = (trendSuccess.value[trendIdx] || 0) + (msg.data?.length || 0)
+    const [sr, dr, ar] = await Promise.all([api.get('/stats'), api.get('/devices',{params:{page_size:100}}), api.get('/alarms',{params:{status:'active'}})])
+    const s=sr.data, devs=dr.data.devices||[], alarms=ar.data.alarms||[]
+    const kpiMap = {
+      online:   s.online_devices||devs.filter(d=>d.status==='online').length||0,
+      collects: s.total_collects||0,
+      rate:     ((s.success_rate||0)*1).toFixed(1)+'%',
+      alarms:   alarms.length,
+      mqtt:     s.online_devices>0?'运行中':'等待',
+      uptime:   (s.uptime_seconds||0)+'s',
     }
+    kpiCards.value.forEach(card => { if (card.key in kpiMap) card.value = kpiMap[card.key] })
+    activeAlarms.value = alarms.length
+    recentAlarms.value = alarms.slice(0,8).map(a=>({level:a.alarm_level,device:a.device_id,msg:a.alarm_msg,time:(a.created_at||'').slice(11,19)}))
+
+    updateProtoChart(devs)
+    updateAlarmChart(alarms)
+    updateTrendFromStats(s)
+
+    const ds = s.device_stats || {}
+    const newLogs = []
+    for (const [did, st] of Object.entries(ds).slice(0,8)) {
+      newLogs.push({time:new Date().toLocaleTimeString(),device:did,point:'—',value:`${st.success}/${st.fail}`,protocol:'modbus_tcp',ok:st.fail===0,color:st.fail===0?'#66bb6a':'#ef5350'})
+    }
+    logs.value = newLogs
+  } catch {}
+}
+
+function initCharts() {
+  if (trendChart.value) {
+    const c=echarts.init(trendChart.value); charts.push(c)
+    c.setOption({tooltip:{trigger:'axis'},legend:{data:['成功','失败'],bottom:0,textStyle:{color:'#c0d5e8'}},xAxis:{type:'category',data:Array(60).fill(''),axisLabel:{color:'#8aa0b4',fontSize:9}},yAxis:{type:'value',splitLine:{lineStyle:{color:'#234060'}}},series:[{name:'成功',type:'line',smooth:true,symbol:'none',lineStyle:{color:'#66bb6a',width:2},areaStyle:{color:'rgba(102,187,106,0.1)'},data:Array(60).fill(0)},{name:'失败',type:'line',smooth:true,symbol:'none',lineStyle:{color:'#ef5350',width:1},data:Array(60).fill(0)}]})
   }
+  if (protoChart.value) {
+    const c=echarts.init(protoChart.value); charts.push(c)
+    c.setOption({tooltip:{trigger:'item'},series:[{type:'pie',radius:['45%','75%'],label:{color:'#c0d5e8',fontSize:10},data:[]}]})
+  }
+  if (alarmChart.value) {
+    const c=echarts.init(alarmChart.value); charts.push(c)
+    c.setOption({tooltip:{trigger:'item'},series:[{type:'pie',radius:'60%',label:{color:'#c0d5e8'},data:[]}]})
+  }
+}
 
-  timer = setInterval(async () => {
-    try {
-      const r = await getStats(); const s = r.data
-      kpiCards.value[0].value = s.online_devices
-      kpiCards.value[1].value = (s.success_rate||0)+'%'
-      kpiCards.value[2].value = s.total_collects||0
-      // 趋势滑动
-      trendIdx = (trendIdx + 1) % 30
-      trendSuccess.value[trendIdx] = Math.max(0, (s.total_collects||0) - (parseInt(kpiCards.value[2].value) || 0))
-      trendFail.value[trendIdx] = 0
-    } catch {}
-  }, 3000)
-})
+function updateProtoChart(devs) {
+  const c = charts[1]; if (!c) return
+  const counts = {}
+  devs.forEach(d => { const p = d.protocol || '其他'; counts[p] = (counts[p] || 0) + 1 })
+  c.setOption({series:[{data:Object.entries(counts).map(([k,v])=>({name:k,value:v,itemStyle:{color:PROTOCOL_COLORS[k]||'#8aa0b4'}}))}]})
+}
 
-onUnmounted(() => { ws?.close(); clearInterval(timer) })
-</script>
+function updateAlarmChart(alarms) {
+  const c = charts[2]; if (!c) return
+  const dist = {}
+  alarms.forEach(a => { const l = a.alarm_level || 'P2'; dist[l] = (dist[l] || 0) + 1 })
+  c.setOption({series:[{data:Object.entries(dist).map(([k,v]) => ({name:k,value:v,itemStyle:{color:k==='P0'?'#ef5350':k==='P1'?'#ff9800':'#409eff'}}))}]})
+}
 
-<script>
-import { computed } from 'vue'
+function updateTrendFromStats(s) {
+  const c = charts[0]; if (!c) return
+  const t = new Date().toLocaleTimeString()
+  trendTimes.push(t); if (trendTimes.length > 60) trendTimes.shift()
+  const succ = s.total_success || 0, fail = s.total_fail || 0
+  trendData[0].push(succ); trendData[1].push(fail)
+  if (trendData[0].length > 60) { trendData[0].shift(); trendData[1].shift() }
+  c.setOption({xAxis:{data:trendTimes},series:[{data:trendData[0]},{data:trendData[1]}]})
+}
+
+onMounted(async ()=>{ await nextTick(); initCharts(); refresh(); timer=setInterval(refresh,10000) })
+onUnmounted(()=>{ clearInterval(timer); charts.forEach(c=>c.dispose()) })
 </script>
 
 <style scoped>
 .dashboard { color: #c0d5e8; }
-.kpi-card { background: #0f1f3a; border: 1px solid #1a3a5c; }
-.kpi-label { font-size: 13px; color: #8899aa; margin-bottom: 6px; }
+.kpi-card { text-align: center; padding: 4px 0; }
+.kpi-icon { font-size: 28px; margin-bottom: 2px; }
 .kpi-value { font-size: 28px; font-weight: bold; }
-.chart-card { background: #0f1f3a; border: 1px solid #1a3a5c; }
-.chart-card :deep(.el-card__header) { color: #c0d5e8; border-bottom: 1px solid #1a3a5c; padding: 10px 16px; font-size: 13px; }
-.log-card { background: #0f1f3a; border: 1px solid #1a3a5c; }
-.log-card :deep(.el-card__header) { color: #c0d5e8; border-bottom: 1px solid #1a3a5c; padding: 10px 16px; }
-.el-table { background: transparent; --el-table-tr-bg-color: #0d1b30; --el-table-header-bg-color: #122540; }
+.kpi-label { font-size: 12px; color: #8aa0b4; margin-top: 2px; }
+.chart-card { margin-bottom: 0; }
 </style>

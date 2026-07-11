@@ -1,11 +1,11 @@
 # ============================================================
-# pythonIot — 设备模型
+# dgiot_lite — 设备模型 (多租户)
 # ============================================================
 from datetime import datetime
 from typing import Optional, Dict, Any
 from sqlalchemy import (
     Column, Integer, String, DateTime, JSON, Float, Boolean, Text,
-    create_engine
+    create_engine, ForeignKey
 )
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 
@@ -14,11 +14,47 @@ class Base(DeclarativeBase):
     pass
 
 
+class Tenant(Base):
+    """租户/组织 — 对齐 DG-IoT _Role 模型
+    DG-IoT 用 Parse _Role 做多租户隔离:
+      - name = 岗位/角色名称 (同时作为租户标识)
+      - parent_role = 上级角色 (支持层级)
+      - users = 关联用户列表
+      - ACL = 数据访问控制
+    """
+    __tablename__ = "tenants"
+
+    id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
+    tenant_id: Mapped[str] = mapped_column(String(64), unique=True, index=True, comment="租户唯一标识")
+    name: Mapped[str] = mapped_column(String(128), comment="租户/岗位名称")          # ≡ _Role.name
+    slug: Mapped[str] = mapped_column(String(64), unique=True, comment="短标识")
+    parent_id: Mapped[Optional[str]] = mapped_column(String(64), index=True, comment="上级租户 (层级)")  # ≡ _Role.roles
+    contact: Mapped[Optional[str]] = mapped_column(String(128), comment="联系人")
+    phone: Mapped[Optional[str]] = mapped_column(String(32))
+    status: Mapped[str] = mapped_column(String(16), default="active", comment="active/disabled")
+    max_devices: Mapped[int] = mapped_column(Integer, default=1000, comment="设备上限")
+    max_users: Mapped[int] = mapped_column(Integer, default=50)
+    extra: Mapped[Optional[Dict]] = mapped_column(JSON, comment="扩展配置")
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
+
+
+class UserRole(Base):
+    """用户-租户关联 — 对齐 DG-IoT _Role.users"""
+    __tablename__ = "user_roles"
+
+    id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
+    user_id: Mapped[str] = mapped_column(String(64), index=True, comment="用户ID")
+    tenant_id: Mapped[str] = mapped_column(String(64), index=True, comment="租户/角色ID")  # ≡ _Role.users relation
+    is_admin: Mapped[bool] = mapped_column(Boolean, default=False, comment="是否该租户管理员")
+    created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
+
+
 class Device(Base):
     """设备信息表"""
     __tablename__ = "devices"
 
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
+    tenant_id: Mapped[str] = mapped_column(String(64), index=True, default="default", comment="所属租户")
     device_id: Mapped[str] = mapped_column(String(64), unique=True, index=True, comment="设备唯一标识")
     device_name: Mapped[str] = mapped_column(String(128), comment="设备名称")
     device_type: Mapped[str] = mapped_column(String(32), index=True, comment="设备类型: inverter/pcs/charger/meter/sensor")

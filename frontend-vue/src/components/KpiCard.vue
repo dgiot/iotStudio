@@ -35,7 +35,7 @@ const displayValue = computed(() => {
 }
 .kpi-card.highlight { border-color: #4fc3f7; box-shadow: 0 0 12px rgba(79,195,247,0.1); }
 .kpi-val { font-size: 28px; font-weight: bold; line-height: 1.2; }
-.kpi-label { font-size: 13px; color: #8899aa; margin-top: 2px; }
-.kpi-sub { font-size: 11px; color: #5a7a8a; }
+.kpi-label { font-size: 13px; color: #c0d5e8; margin-top: 2px; }
+.kpi-sub { font-size: 11px; color: #a0b8c8; }
 .kpi-trend { display: flex; align-items: center; gap: 4px; font-size: 13px; margin-left: auto; }
 </style>

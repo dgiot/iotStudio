@@ -2,7 +2,7 @@
   <div class="login-page">
     <div class="login-card">
       <div class="login-header">
-        <h1>⚡ 光储充微电网物联网平台</h1>
+        <h1>⚡ 轻量级物联网平台</h1>
         <p>轻量级边缘代理 V1.0</p>
       </div>
       <el-form :model="form" :rules="rules" ref="formRef" @keyup.enter="doLogin">
