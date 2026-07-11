@@ -41,7 +41,7 @@
     </el-dialog>
 
     <el-row :gutter="12">
-      <el-col :span="9">
+      <el-col :span="13">
         <el-card>
           <template #header><span>报文列表 (点击查看)</span><el-button size="small" style="float:right" @click="clearPackets">🗑 清空</el-button></template>
           <el-table :data="pagedPackets" size="small" @row-click="select" highlight-current-row max-height="440" :row-style="rowStyle">
@@ -65,7 +65,7 @@
           />
         </el-card>
       </el-col>
-      <el-col :span="15">
+      <el-col :span="11">
         <el-card :header="'报文 #'+ (sel?.id||'')">
           <div v-if="sel" class="pkt-detail">
             <div class="pkt-meta">{{sel.dir==='TX'?'发送':'接收'}} | {{sel.src}} → {{sel.dst}} | {{sel.sz}}B | {{sel.msg}}</div>
