@@ -45,7 +45,7 @@
       <el-col :span="13">
         <el-card>
           <template #header><span>报文列表 (点击查看)</span><el-button size="small" style="float:right" @click="clearPackets">🗑 清空</el-button></template>
-          <el-table :data="pagedPackets" size="small" @row-click="select" highlight-current-row max-height="440" :row-style="rowStyle">
+          <el-table :data="pagedPackets" size="small" @row-click="select" highlight-current-row max-height="620" :row-style="rowStyle">
             <el-table-column prop="id" label="No." width="45"/>
             <el-table-column label="Protocol" width="72"><template #default="{row}"><el-tag :type="row.msg==='A11'||row.msg?.startsWith('0x')?'success':row.msg==='Modbus'?'warning':'info'" size="small" effect="dark">{{ row.msg||'TCP' }}</el-tag></template></el-table-column>
             <el-table-column label="Source" min-width="140"><template #default="{row}"><span :style="{color:row.dir==='TX'?'#E6A23C':'#67C23A'}">{{ row.src }}</span></template></el-table-column>
@@ -90,10 +90,6 @@
       </el-col>
     </el-row>
 
-    <el-row :gutter="12" style="margin-top:12px">
-      <el-col :span="12"><el-card header="设备路径"><div v-for="d in devs" :key="d.p" class="dev"><code class="dev-path">{{d.p}}</code><span style="color:#909399;margin-left:8px;font-size:11px">{{d.d}}</span></div></el-card></el-col>
-      <el-col :span="12"><el-card header="统计"><el-table :data="stats" size="small"><el-table-column prop="l" label="项目" width="130"/><el-table-column prop="v" label="数值"><template #d="{row}"><span v-html="row.v"/></template></el-table-column></el-table></el-card></el-col>
-    </el-row>
   </div>
 </template>
 
