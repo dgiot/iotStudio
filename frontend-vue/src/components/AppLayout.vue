@@ -3,8 +3,8 @@
     <!-- 侧栏 -->
     <el-aside width="220px" class="sidebar">
       <div class="logo">
-        <h2>⚡ iotStudio</h2>
-        <small>轻量级工业物联网平台</small>
+        <h2>⚡ 轻量级物联网平台</h2>
+        <small>轻量级边缘代理 V1.0</small>
       </div>
       <el-menu :default-active="route.path" router background-color="#0f1d33" text-color="#c0d5e8" active-text-color="#66d9ff">
         <template v-for="(items, group) in menuGroups" :key="group">
