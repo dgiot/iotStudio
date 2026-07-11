@@ -7,18 +7,38 @@
         <el-radio-button value="pcap710">📁 7.10.pcapng</el-radio-button>
         <el-radio-button value="pcap73">📁 7.3.pcapng</el-radio-button>
         <el-radio-button value="local">🖥️ 本地抓包</el-radio-button>
-        <el-radio-button value="remote131">🌐 远程131抓包</el-radio-button>
+        <el-radio-button value="remote">🌐 远程抓包</el-radio-button>
       </el-radio-group>
+      <el-select v-if="source==='remote'" v-model="remoteEndpoint" size="small" style="width:180px;margin-left:8px" placeholder="选择端点">
+        <el-option v-for="ep in endpoints" :key="ep.objectId" :label="ep.name+' ('+ep.host+':'+ep.port+')'" :value="ep.objectId" />
+      </el-select>
+      <el-button size="small" @click="showEpDialog=true" style="margin-left:4px" v-if="source==='remote'">⚙️</el-button>
       <el-button size="small" :type="capturing?'danger':'success'" @click="toggle" style="margin-left:12px" :disabled="source==='pcap710'||source==='pcap73'">
         {{capturing?'⏹ 停止':'▶ 开始抓包'}}
       </el-button>
-      <span style="margin-left:12px;font-size:12px;color:#909399" v-if="source==='local'||source==='remote131'">
-        端口: 8889,502,2404 | 实时: {{livePackets}} 帧
+      <span style="margin-left:12px;font-size:12px;color:#909399" v-if="source==='local'||source==='remote'">
+        实时: {{livePackets}} 帧
       </span>
       <span style="margin-left:12px;font-size:12px;color:#67c23a" v-else>
         静态分析 · 点击报文列表查看详情 · A11 / Modbus / OPC-DA
       </span>
     </el-card>
+
+    <!-- 端点配置弹窗 -->
+    <el-dialog v-model="showEpDialog" title="采集端点配置" width="480px">
+      <el-form label-width="70px" size="small">
+        <el-form-item label="名称"><el-input v-model="epForm.name" placeholder="131 IO服务器" /></el-form-item>
+        <el-form-item label="主机"><el-input v-model="epForm.host" placeholder="11.66.12.131" /></el-form-item>
+        <el-form-item label="端口"><el-input-number v-model="epForm.port" :min="1" :max="65535" /></el-form-item>
+        <el-form-item label="用户名"><el-input v-model="epForm.username" /></el-form-item>
+        <el-form-item label="密码"><el-input v-model="epForm.password" type="password" show-password /></el-form-item>
+      </el-form>
+      <template #footer>
+        <el-button @click="showEpDialog=false">取消</el-button>
+        <el-button type="primary" @click="saveEndpoint">保存</el-button>
+        <el-button type="danger" size="small" @click="delEndpoint" v-if="epForm.objectId">删除</el-button>
+      </template>
+    </el-dialog>
 
     <el-row :gutter="12">
       <el-col :span="10">
@@ -67,11 +87,35 @@
 </template>
 
 <script setup>
-import { ref, computed, onUnmounted } from 'vue'
+import { ref, reactive, computed, onMounted, onUnmounted } from 'vue'
 import { ElMessage } from 'element-plus'
 
 const source = ref('pcap710'); const capturing = ref(false); const livePackets = ref(0)
 const sel = ref(null); let timer = null
+
+// 远程端点
+const endpoints = ref([])
+const remoteEndpoint = ref('')
+const showEpDialog = ref(false)
+const epForm = reactive({ objectId:'', name:'', host:'11.66.12.131', port:5985, username:'administrator', password:'' })
+
+async function loadEndpoints() {
+  try { const r = await fetch('/api/capture/endpoints'); const d = await r.json(); endpoints.value = d.endpoints || []
+    if (endpoints.value.length && !remoteEndpoint.value) remoteEndpoint.value = endpoints.value[0].objectId
+  } catch {}
+}
+async function saveEndpoint() {
+  const body = { name: epForm.name, host: epForm.host, port: epForm.port, username: epForm.username, password: epForm.password, method: 'winrm' }
+  try {
+    if (epForm.objectId) { /* update not implemented yet */ }
+    else { await fetch('/api/capture/endpoints', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) }) }
+    showEpDialog.value = false; loadEndpoints()
+  } catch { ElMessage.error('保存失败') }
+}
+async function delEndpoint() {
+  if (!epForm.objectId) return
+  try { await fetch(`/api/capture/endpoints/${epForm.objectId}`, { method: 'DELETE' }); showEpDialog.value = false; loadEndpoints() } catch {}
+}
 
 // 分页
 const pktPage = ref(1)
@@ -123,29 +167,33 @@ function switchSource(v) {
 
 async function toggle() {
   if (capturing.value) {
-    try { await fetch(source.value==='local'?'http://localhost:8765/api/stop':'/api/capture/stop',{method:'POST'}) } catch {}
+    try { await fetch(source.value==='local'?'http://localhost:8765/api/stop':'/api/capture/remote/stop',{method:'POST'}) } catch {}
     capturing.value = false; clearInterval(timer); livePackets.value = 0
   } else {
     try {
       if (source.value === 'local') {
         await fetch('http://localhost:8765/api/start',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({ports:[8889,502,2404]})})
       } else {
-        await fetch('/api/capture/start',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({ports:'8889,502,2404'})})
+        const ep = endpoints.value.find(e => e.objectId === remoteEndpoint.value)
+        const host = ep?.host || '11.66.12.131'
+        await fetch(`/api/capture/remote/start?host=${host}&ports=8889,53001,502`,{method:'POST'})
       }
       capturing.value = true
       timer = setInterval(async () => {
         try {
-          const url = source.value==='local'?'http://localhost:8765/api/packets?limit=5':'/api/packets?limit=5'
+          const url = source.value==='local'?'http://localhost:8765/api/packets?limit=5':'/api/capture/remote/packets?limit=5'
           const r = await fetch(url); const d = await r.json()
           if (d.packets?.length) {
             livePackets.value = d.total
             packets.value = [...d.packets.map(p=>({id:Date.now()%100000,dir:p.dir,src:p.src,dst:p.dst,sz:p.len,msg:p.proto||'?',hex:p.hex,fields:[{f:'协议',v:p.proto||'?',d:'实时解析'}]})), ...packets.value].slice(0,50)
           }
         } catch {}
-      }, 3000)
-    } catch { ElMessage.warning('抓包启动失败: 检查 capture_server 或远程 WinRM 连接') }
+      }, 5000)  // 远程慢, 5s 轮询
+    } catch { ElMessage.warning('抓包启动失败') }
   }
 }
+
+onMounted(loadEndpoints)
 
 onUnmounted(() => clearInterval(timer))
 </script>

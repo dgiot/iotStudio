@@ -67,7 +67,7 @@ mqtt:
 # # 远程抓包 — WinRM 连接到 IO 服务器
 remote_capture:
   host: "11.66.12.131"
-  port: 2500
+  port: 5985
   username: "administrator"
   password: "GKYWB-5991792$1c8k"
 

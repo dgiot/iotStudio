@@ -1604,3 +1604,31 @@ async def list_channels():
     except Exception as e:
         logger.warning(f"Channel query failed: {e}")
     return {"channels": protocol_channels, "vendors": vendor_status, "categories": {"protocol": len(protocol_channels)}}
+
+# ---- 采集端点管理 API ----
+from pydantic import BaseModel as PydanticBase
+class CaptureEndpointModel(PydanticBase):
+    name: str
+    host: str
+    port: int = 2500
+    username: str = "administrator"
+    password: str = ""
+    method: str = "winrm"  # winrm | ssh | local
+
+@app.get("/api/capture/endpoints")
+def list_capture_endpoints():
+    try:
+        from .parse_lite import parse_query
+        r = parse_query("CaptureEndpoint", {})
+        return {"endpoints": r.get("results", [])}
+    except: return {"endpoints": []}
+
+@app.post("/api/capture/endpoints")
+def create_capture_endpoint(body: CaptureEndpointModel):
+    from .parse_lite import parse_create
+    return parse_create("CaptureEndpoint", body.model_dump())
+
+@app.delete("/api/capture/endpoints/{oid}")
+def delete_capture_endpoint(oid: str):
+    from .parse_lite import parse_delete
+    return parse_delete("CaptureEndpoint", oid)
