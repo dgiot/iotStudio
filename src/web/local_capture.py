@@ -9,19 +9,22 @@ MAX_PKTS = 200
 
 def _netsh_cycle():
     try:
-        trace_file = os.path.join(os.environ.get("TEMP", "C:/temp"), "dgiot_cap.etl")
-        # Start
+        trace_file = os.path.join(os.environ.get("TEMP", "C:/temp"), "dgiot_cap.etl").replace('\\', '/')
+        # Stop stale trace first
+        subprocess.run('netsh trace stop', shell=True, capture_output=True, timeout=5, encoding='utf-8', errors='ignore')
+        time.sleep(1)
+        # Start fresh trace
         r = subprocess.run(
             f'netsh trace start capture=yes tracefile={trace_file} maxsize=80 persistent=no',
-            shell=True, capture_output=True, text=True, timeout=10)
+            shell=True, capture_output=True, text=True, timeout=10, encoding='utf-8', errors='ignore')
         if 'Running' not in r.stdout:
             _state["errors"] += 1; return
         time.sleep(15)
-        subprocess.run('netsh trace stop', shell=True, capture_output=True, timeout=10)
+        subprocess.run('netsh trace stop', shell=True, capture_output=True, timeout=10, encoding='utf-8', errors='ignore')
 
         # Parse via tracerpt
         csv_file = trace_file.replace('.etl', '.csv')
-        subprocess.run(f'tracerpt "{trace_file}" -o "{csv_file}" -of CSV', shell=True, capture_output=True, timeout=30)
+        subprocess.run(f'tracerpt "{trace_file}" -o "{csv_file}" -of CSV', shell=True, capture_output=True, timeout=30, encoding='utf-8', errors='ignore')
 
         if os.path.exists(csv_file):
             with open(csv_file, 'r', encoding='utf-8', errors='ignore') as f:
