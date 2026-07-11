@@ -2,7 +2,7 @@
 import threading, time, json, os, base64
 from fastapi import APIRouter
 
-router = APIRouter(prefix="/api", tags=["远程抓包"])
+router = APIRouter(prefix="/api/capture/remote", tags=["远程抓包"])
 
 _remote_state = {"running": False, "packets": [], "cycles": 0, "errors": 0, "host": "11.66.12.131"}
 MAX_PACKETS = 200
