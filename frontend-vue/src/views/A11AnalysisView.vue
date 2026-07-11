@@ -7,12 +7,13 @@
         <el-radio-button value="pcap710">📁 7.10.pcapng</el-radio-button>
         <el-radio-button value="pcap73">📁 7.3.pcapng</el-radio-button>
         <el-radio-button value="local">🖥️ 本地抓包</el-radio-button>
+        <el-radio-button value="remote131">🌐 远程131抓包</el-radio-button>
       </el-radio-group>
-      <el-button size="small" :type="capturing?'danger':'success'" @click="toggle" style="margin-left:12px" :disabled="source!=='local'">
+      <el-button size="small" :type="capturing?'danger':'success'" @click="toggle" style="margin-left:12px" :disabled="source==='pcap710'||source==='pcap73'">
         {{capturing?'⏹ 停止':'▶ 开始抓包'}}
       </el-button>
-      <span style="margin-left:12px;font-size:12px;color:#909399" v-if="source==='local'">
-        需先启动: python capture_server.py | 实时: {{livePackets}} 帧
+      <span style="margin-left:12px;font-size:12px;color:#909399" v-if="source==='local'||source==='remote131'">
+        端口: 8889,502,2404 | 实时: {{livePackets}} 帧
       </span>
       <span style="margin-left:12px;font-size:12px;color:#67c23a" v-else>
         静态分析 · 点击报文列表查看详情 · A11 / Modbus / OPC-DA
@@ -122,23 +123,27 @@ function switchSource(v) {
 
 async function toggle() {
   if (capturing.value) {
-    try { await fetch('http://localhost:8765/api/stop',{method:'POST'}) } catch {}
+    try { await fetch(source.value==='local'?'http://localhost:8765/api/stop':'/api/capture/stop',{method:'POST'}) } catch {}
     capturing.value = false; clearInterval(timer); livePackets.value = 0
   } else {
     try {
-      await fetch('http://localhost:8765/api/start',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({ports:[8889,502,2404]})})
+      if (source.value === 'local') {
+        await fetch('http://localhost:8765/api/start',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({ports:[8889,502,2404]})})
+      } else {
+        await fetch('/api/capture/start',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({ports:'8889,502,2404'})})
+      }
       capturing.value = true
       timer = setInterval(async () => {
         try {
-          const r = await fetch('http://localhost:8765/api/packets?limit=5'); const d = await r.json()
+          const url = source.value==='local'?'http://localhost:8765/api/packets?limit=5':'/api/packets?limit=5'
+          const r = await fetch(url); const d = await r.json()
           if (d.packets?.length) {
             livePackets.value = d.total
-            const newPkts = d.packets.map((p,i)=>({id:livePackets.value-i,dir:p.dir,src:p.src,dst:p.dst,sz:p.len,msg:p.proto||'?',hex:p.hex,fields:[{f:'协议',v:p.proto||'?',d:'实时解析'}]}))
-            packets.value = [...newPkts.reverse(), ...packets.value].slice(0,50)
+            packets.value = [...d.packets.map(p=>({id:Date.now()%100000,dir:p.dir,src:p.src,dst:p.dst,sz:p.len,msg:p.proto||'?',hex:p.hex,fields:[{f:'协议',v:p.proto||'?',d:'实时解析'}]})), ...packets.value].slice(0,50)
           }
         } catch {}
       }, 3000)
-    } catch { ElMessage.warning('抓包未就绪: 需 Npcap + python capture_server.py') }
+    } catch { ElMessage.warning('抓包启动失败: 检查 capture_server 或远程 WinRM 连接') }
   }
 }
 
