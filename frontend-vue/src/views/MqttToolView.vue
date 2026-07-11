@@ -1,20 +1,7 @@
 <template>
   <div class="mqtt-page">
-    <h3>📡 MQTT 工具</h3>
-    <!-- EMQX Dashboard 风格: Broker 概览卡片 -->
-    <el-row :gutter="12" style="margin-top:12px">
-      <el-col :span="6" v-for="b in brokerCards" :key="b.label">
-        <div class="broker-card">
-          <span class="bc-icon">{{ b.icon }}</span>
-          <div>
-            <div class="bc-value" :style="{color:b.color}">{{ b.value }}</div>
-            <div class="bc-label">{{ b.label }}</div>
-          </div>
-        </div>
-      </el-col>
-    </el-row>
-
-    <el-row :gutter="16" style="margin-top:12px">
+    <h3>📡 MQTT 调试工具</h3>
+    <el-row :gutter="16" style="margin-top:16px">
       <!-- 连接配置 -->
       <el-col :span="8">
         <el-card class="sec-card">

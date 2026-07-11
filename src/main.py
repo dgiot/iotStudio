@@ -1507,3 +1507,100 @@ def enable_plugin(name: str):
 def disable_plugin(name: str):
     disable(name)
     return {"status": "disabled", "name": name}
+
+# ---- 系统信息 API (边缘代理本体扫描) ----
+@app.get("/api/system")
+def system_info():
+    import platform, os, time as _time, socket
+    info = {
+        "hostname": socket.gethostname(),
+        "os": f"{platform.system()} {platform.release()}",
+        "python": platform.python_version(),
+        "uptime": int(_time.time() - _startup_ts),
+    }
+    # CPU / Memory / Disk / Network (psutil)
+    try:
+        import psutil
+        info["cpu_percent"] = psutil.cpu_percent(interval=0.1)
+        info["cpu_cores"] = psutil.cpu_count()
+        mem = psutil.virtual_memory()
+        info["memory_used_gb"] = round(mem.used / (1024**3), 1)
+        info["memory_total_gb"] = round(mem.total / (1024**3), 1)
+        info["memory_percent"] = mem.percent
+        disk = psutil.disk_usage(cfg.data_dir)
+        info["disk_used_gb"] = round(disk.used / (1024**3), 1)
+        info["disk_total_gb"] = round(disk.total / (1024**3), 1)
+        info["disk_percent"] = disk.percent
+        # 网络接口
+        interfaces = []
+        for name, addrs in psutil.net_if_addrs().items():
+            iface = {"name": name, "ips": []}
+            for addr in addrs:
+                iface["ips"].append({"family": str(addr.family), "address": addr.address, "netmask": addr.netmask or ""})
+                if addr.family == 2 and not addr.address.startswith("127."):
+                    iface["ipv4"] = addr.address
+            if iface.get("ipv4"):
+                interfaces.append(iface)
+        info["interfaces"] = interfaces
+        # 网络流量
+        net = psutil.net_io_counters()
+        info["net_sent_mb"] = round(net.bytes_sent / (1024**2), 1)
+        info["net_recv_mb"] = round(net.bytes_recv / (1024**2), 1)
+        # 监听端口
+        ports = set()
+        for c in psutil.net_connections(kind='inet'):
+            if c.status == 'LISTEN':
+                ports.add(c.laddr.port)
+        info["listening_ports"] = sorted(ports)
+    except ImportError:
+        info["cpu_percent"] = None
+        info["memory_used_gb"] = None
+    # Storage mode
+    info["storage_mode"] = cfg.storage_mode
+    info["data_dir"] = cfg.data_dir
+    # Plugin registry health
+    try:
+        from .plugin_registry import health as plugin_health
+        info["plugins"] = plugin_health()
+    except: pass
+    return info
+
+# ---- 厂商通道 API ----
+@app.get("/api/channels")
+async def list_channels():
+    """协议通道 + 厂商通道状态"""
+    from .plugin_registry import list_all
+    protocol_channels = []
+    vendor_status = []
+    try:
+        from .parse_lite import parse_query
+        chs = parse_query("Channel", {})
+        for ch in chs.get("results", []):
+            protocol_channels.append({
+                "device_id": ch.get("objectId",""),
+                "device_name": ch.get("name",""),
+                "protocol": ch.get("cType",""),
+                "connected": ch.get("status") == "running",
+                "config": {
+                    "host": ch.get("config",{}).get("host","127.0.0.1") if isinstance(ch.get("config"),dict) else "127.0.0.1",
+                    "port": ch.get("config",{}).get("port",502) if isinstance(ch.get("config"),dict) else 502,
+                },
+                "success": 0, "fail": 0,
+            })
+        # Vendor channel status from parse_lite
+        vendors_map = {
+            "youyeyun": "ch_youyeyun", "boiler": "ch_boiler", "phm_vib": "ch_vib",
+            "bolt": "ch_bolt", "video": "ch_video", "tdlas": "ch_tdlas",
+        }
+        for key, chid in vendors_map.items():
+            ch = next((c for c in chs.get("results",[]) if c.get("objectId") == chid), None)
+            vendor_status.append({
+                "key": key,
+                "connected": ch.get("status") == "running" if ch else False,
+                "lastSync": ch.get("updatedAt","")[:16] if ch else None,
+                "devices": 2 if key == "youyeyun" else 4 if key == "boiler" else 36 if key == "phm_vib" else 17 if key == "bolt" else 29 if key == "video" else 1,
+                "points": 45 if key == "youyeyun" else 19 if key == "boiler" else 10 if key == "phm_vib" else 3,
+            })
+    except Exception as e:
+        logger.warning(f"Channel query failed: {e}")
+    return {"channels": protocol_channels, "vendors": vendor_status, "categories": {"protocol": len(protocol_channels)}}

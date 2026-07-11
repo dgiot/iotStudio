@@ -257,11 +257,21 @@ async function saveChannel() {
 }
 
 async function loadAll() {
-  try { const r = await axios.get('/api/channels'); channels.value = r.data.channels || []; cats.value = r.data.categories || {protocol:0, storage:0, push:0}
+  try {
+    // 协议通道
+    const r = await axios.get('/api/channels')
+    channels.value = r.data.channels || []
     if (selected.value) { const f = channels.value.find(c => c.device_id === selected.value.device_id); if (f) { selected.value = f; loadPackets(f.device_id) } }
+    // 厂商通道: 从后端加载状态, 合并到前端配置
+    if (r.data.vendors) {
+      r.data.vendors.forEach(v => {
+        const vch = vendorChannels.value.find(c => c.key === v.key)
+        if (vch) { vch.connected = v.connected; vch.lastSync = v.lastSync; vch.devices = v.devices; vch.points = v.points }
+      })
+    }
   } catch {}
 }
-onMounted(() => { loadAll(); timer = setInterval(loadAll, 5000) })
+onMounted(() => { loadAll(); timer = setInterval(loadAll, 30000) })
 onUnmounted(() => clearInterval(timer))
 </script>
 

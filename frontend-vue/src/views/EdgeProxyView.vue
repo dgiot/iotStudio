@@ -102,16 +102,30 @@ const features = [
 ]
 
 onMounted(async () => {
-  // 系统信息
+  // 系统信息 (真实扫描)
   try {
-    const r = await api.get('/health'); const d = r.data
+    const r = await api.get('/system'); const d = r.data
     sysInfo.value = {
       hostname: d.hostname || '—',
       os: d.os || '—',
-      python: d.python_version || '—',
-      storage: d.collector ? '运行中' : '—',
-      uptime: (d.uptime_seconds || 0) + 's',
+      python: d.python || '—',
+      storage: d.storage_mode === 'sqlite' ? 'SQLite' : (d.storage_mode || '—'),
+      uptime: (d.uptime || 0) + 's',
       dataDir: d.data_dir || './data',
+    }
+    // Metrics from real system
+    if (d.cpu_percent != null) {
+      metrics.value[0].value = d.cpu_percent + '%'
+      metrics.value[0].color = d.cpu_percent > 80 ? '#F56C6C' : d.cpu_percent > 50 ? '#E6A23C' : '#67C23A'
+    }
+    if (d.memory_used_gb != null) {
+      metrics.value[1].value = d.memory_used_gb + '/' + d.memory_total_gb + ' GB'
+    }
+    if (d.disk_used_gb != null) {
+      metrics.value[2].value = d.disk_used_gb + '/' + d.disk_total_gb + ' GB'
+    }
+    if (d.net_sent_mb != null) {
+      metrics.value[3].value = (d.net_sent_mb + d.net_recv_mb).toFixed(0) + ' MB'
     }
   } catch {}
 
@@ -119,6 +133,7 @@ onMounted(async () => {
   try {
     const r = await api.get('/stats'); const s = r.data
     metrics.value[4].value = s.online_devices || 0
+    metrics.value[5].value = s.total_devices ? Object.keys(s).length + '/4' : '—'
     metrics.value[7].value = (s.total_collects || 0).toLocaleString()
   } catch {}
 
