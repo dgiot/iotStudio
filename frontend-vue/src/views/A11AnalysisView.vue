@@ -212,7 +212,12 @@ async function toggle() {
           const r = await fetch(url); const d = await r.json()
           if (d.packets?.length) {
             livePackets.value = d.total
-            packets.value = [...d.packets.map(p=>({id:Date.now()%100000,dir:p.dir,src:p.src,dst:p.dst,sz:p.len,msg:p.proto||'?',hex:p.hex,fields:[{f:'协议',v:p.proto||'?',d:'实时解析'}]})), ...packets.value].slice(0,50)
+            // 去重: 已存在的 hex 不重复加
+            const seen = new Set(packets.value.map(p => p.hex?.slice(0,20)))
+            const fresh = d.packets.filter(p => !seen.has(p.hex?.slice(0,20)))
+            if (fresh.length) {
+              packets.value = [...fresh.map(p=>({id:Date.now()%100000,dir:p.dir,src:p.src,dst:p.dst,sz:p.len,msg:p.proto||'?',hex:p.hex,fields:[{f:'协议',v:p.proto||'?',d:'实时解析'}]})), ...packets.value].slice(0,50)
+            }
           }
         } catch {}
       }, 5000)  // 远程慢, 5s 轮询
