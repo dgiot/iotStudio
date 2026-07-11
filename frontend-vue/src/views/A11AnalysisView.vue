@@ -46,12 +46,12 @@
           <template #header><span>报文列表 (点击查看)</span><el-button size="small" style="float:right" @click="clearPackets">🗑 清空</el-button></template>
           <el-table :data="pagedPackets" size="small" @row-click="select" highlight-current-row max-height="440" :row-style="rowStyle">
             <el-table-column prop="id" label="No." width="50"/>
-            <el-table-column label="Time" width="80"><template #d="{row}"><span style="font-size:10px;color:#909399;font-family:Consolas">{{ row.time||'—' }}</span></template></el-table-column>
-            <el-table-column label="Source" min-width="150"><template #d="{row}"><span :style="{color:row.dir==='TX'?'#E6A23C':'#67C23A'}">{{ row.src }}</span></template></el-table-column>
-            <el-table-column label="Destination" min-width="130"><template #d="{row}"><span>{{ row.dst }}</span></template></el-table-column>
-            <el-table-column label="Protocol" width="70"><template #d="{row}"><el-tag :type="row.msg==='A11'||row.msg?.startsWith('0x')?'success':row.msg==='Modbus'?'warning':'info'" size="small" effect="dark">{{ row.msg||'TCP' }}</el-tag></template></el-table-column>
-            <el-table-column label="Length" width="65" align="right"><template #d="{row}"><span style="font-family:Consolas;font-size:11px">{{ row.sz }}</span></template></el-table-column>
-            <el-table-column label="Info" min-width="180"><template #d="{row}"><span style="font-size:10px;color:#909399">{{ row.info||pktInfo(row) }}</span></template></el-table-column>
+            <el-table-column label="Time" width="85"><template #default="{row}"><span style="font-size:10px;color:#909399;font-family:Consolas">{{ row.time||'—' }}</span></template></el-table-column>
+            <el-table-column label="Source" min-width="150"><template #default="{row}"><span :style="{color:row.dir==='TX'?'#E6A23C':'#67C23A'}">{{ row.src }}</span></template></el-table-column>
+            <el-table-column label="Destination" min-width="130"><template #default="{row}"><span>{{ row.dst }}</span></template></el-table-column>
+            <el-table-column label="Protocol" width="75"><template #default="{row}"><el-tag :type="row.msg==='A11'||row.msg?.startsWith('0x')?'success':row.msg==='Modbus'?'warning':'info'" size="small" effect="dark">{{ row.msg||'TCP' }}</el-tag></template></el-table-column>
+            <el-table-column label="Length" width="65" align="right"><template #default="{row}"><span style="font-family:Consolas;font-size:11px">{{ row.sz }}</span></template></el-table-column>
+            <el-table-column label="Info" min-width="180"><template #default="{row}"><span style="font-size:10px;color:#909399">{{ row.info||pktInfo(row) }}</span></template></el-table-column>
           </el-table>
           <el-pagination
             v-model:current-page="pktPage"
