@@ -184,7 +184,10 @@ const allPkts = [
 const packets = ref(allPkts)
 
 function select(row) { sel.value = row }
-function clearPackets() { packets.value = packets.value.filter(p => p.id <= 12); pktPage.value = 1; sel.value = null; livePackets.value = 0 }
+function clearPackets() {
+  packets.value = allPkts; pktPage.value = 1; sel.value = null; livePackets.value = 0
+  if (capturing.value) { clearInterval(timer); capturing.value = false }
+}
 
 function switchSource(v) {
   pktPage.value = 1

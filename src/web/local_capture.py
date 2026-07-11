@@ -9,7 +9,9 @@ MAX_PKTS = 200
 
 def _netsh_cycle():
     try:
-        trace_file = os.path.join(os.environ.get("TEMP", "C:/temp"), "dgiot_cap.etl").replace('\\', '/')
+        tmp_dir = os.environ.get("TEMP", "C:/temp").replace('\\', '/')
+        os.makedirs(tmp_dir, exist_ok=True)
+        trace_file = f"{tmp_dir}/dgiot_cap.etl"
         # Stop stale trace first
         subprocess.run('netsh trace stop', shell=True, capture_output=True, timeout=5, encoding='utf-8', errors='ignore')
         time.sleep(1)
