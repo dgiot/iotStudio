@@ -41,11 +41,10 @@
     </el-dialog>
 
     <el-row :gutter="12">
-      <el-col :span="10">
+      <el-col :span="9">
         <el-card header="报文列表 (点击查看)">
           <el-table :data="pagedPackets" size="small" @row-click="select" highlight-current-row max-height="440">
-            <el-table-column prop="id" label="#" width="35"/>
-            <el-table-column prop="ts" label="时间" width="85"><template #d="{row}"><span style="font-size:10px;color:#909399">{{ row.ts||'—' }}</span></template></el-table-column>
+            <el-table-column prop="id" label="#" width="45"/>
             <el-table-column prop="dir" label="向" width="40"><template #d="{row}"><el-tag :type="row.dir==='TX'?'warning':'success'" size="small">{{row.dir}}</el-tag></template></el-table-column>
             <el-table-column prop="src" label="源地址" width="150"/>
             <el-table-column prop="dst" label="目标" width="130"/>
@@ -64,7 +63,7 @@
           />
         </el-card>
       </el-col>
-      <el-col :span="14">
+      <el-col :span="15">
         <el-card :header="'报文 #'+ (sel?.id||'')">
           <div v-if="sel">
             <div class="info">{{sel.src}} → {{sel.dst}} | {{sel.dir}} | {{sel.sz}}B | {{sel.msg}}</div>
@@ -81,7 +80,7 @@
     </el-row>
 
     <el-row :gutter="12" style="margin-top:12px">
-      <el-col :span="12"><el-card header="设备路径"><div v-for="d in devs" :key="d.p" class="dev"><span style="color:#67c23a;font-family:monospace;font-size:12px">{{d.p}}</span><span style="color:#909399;margin-left:8px;font-size:11px">{{d.d}}</span></div></el-card></el-col>
+      <el-col :span="12"><el-card header="设备路径"><div v-for="d in devs" :key="d.p" class="dev"><code class="dev-path">{{d.p}}</code><span style="color:#909399;margin-left:8px;font-size:11px">{{d.d}}</span></div></el-card></el-col>
       <el-col :span="12"><el-card header="统计"><el-table :data="stats" size="small"><el-table-column prop="l" label="项目" width="130"/><el-table-column prop="v" label="数值"><template #d="{row}"><span v-html="row.v"/></template></el-table-column></el-table></el-card></el-col>
     </el-row>
   </div>
@@ -210,6 +209,7 @@ onUnmounted(() => clearInterval(timer))
 .hex{background:#0d0e14;border-radius:4px;padding:10px;font-family:Consolas,monospace;font-size:12px;color:#e6a23c;line-height:1.8;word-break:break-all}
 .path{font-family:Consolas,monospace;font-size:12px;color:#67c23a;padding:3px 0;border-bottom:1px solid #2d2e3b}
 .dev{padding:6px 0;border-bottom:1px solid #2d2e3b}
+.dev-path{font-family:Consolas,monospace;font-size:11px;color:#67c23a;word-break:break-all}
 :deep(.el-card){background:#1d1e2b;border-color:#2d2e3b;color:#e0e0e0;margin-bottom:12px}
 :deep(.el-card__header){color:#c0c4cc;border-bottom-color:#2d2e3b;padding:8px 12px}
 :deep(.el-table){--el-table-bg-color:#1d1e2b;--el-table-tr-bg-color:#1d1e2b;--el-table-header-bg-color:#252636;--el-table-border-color:#2d2e3b;--el-table-text-color:#c0c4cc;font-size:12px}
