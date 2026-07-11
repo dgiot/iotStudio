@@ -46,6 +46,21 @@ plugins:
     tdengine: true     # 无则自动降级 SQLite
     sqlite: true       # 始终可用
 
+# 有叶云油液监测
+youyeyun:
+  token: "eyJhbGciOiJIUzUxMiJ9.eyJsb2dpbl91c2VyX2tleSI6IjliMDc5NTJmLTJhZDAtNDQ5Yi1iNzI1LWJlZjQ4M2U3OTUxMyJ9.4I9-8AiK7kLszN3kpDBRzKtbDS0y8iBphbg6w3JFqnKd1zxdHLn3Lgjto4a3ZPzylYS6SK4gwNwJl3fhkyhAsQ"
+  devices:
+    - id: "DEMO23040001"
+      uuid: "6bf6f220-d5bb-11ed-b812-ed5ae62e5bad"
+      name: "CCS-1液压系统"
+      oil: "S2MX46"
+      group: "破碎机油站"
+    - id: "DEMO23040002"
+      uuid: "2e8cc4a0-35c9-11ee-b812-ed5ae62e5bad"
+      name: "2号齿轮系统"
+      oil: "壳牌320"
+      group: "演示组"
+
 # Parse-lite (嵌入式 — 替代 Parse Server)
 parse:
   db_path: "./data/parse.db"   # SQLite 单机版
