@@ -1433,6 +1433,10 @@ app.include_router(vendor_router)
 from .web.capture_endpoint_api import router as cap_ep_router
 app.include_router(cap_ep_router)
 
+# ---- PCAP 文件读取 API ----
+from .web.pcap_api import router as pcap_router
+app.include_router(pcap_router)
+
 # ---- 远程抓包 API ----
 from .web.remote_capture import router as remote_cap_router
 app.include_router(remote_cap_router)
