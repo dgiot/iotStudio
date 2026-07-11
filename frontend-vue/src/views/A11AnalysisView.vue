@@ -1,6 +1,6 @@
 <template>
   <div class="a11-page">
-    <h2 class="page-title">A11 报文分析 <span class="sub">7.10.pcapng · 11.66.12.131 · 93,913帧</span></h2>
+    <h2 class="page-title">报文分析 <span class="sub">A11 · Modbus · OPC-DA | 7.10.pcapng · 93,913帧</span></h2>
 
     <el-card style="margin-bottom:12px">
       <el-radio-group v-model="source" size="small" @change="switchSource">
