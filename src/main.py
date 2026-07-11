@@ -233,10 +233,14 @@ async def list_devices(station_id: Optional[str] = None, device_type: Optional[s
                 "page": page, "page_size": page_size,
                 "devices": [{
                     "device_id": d.get("devaddr",""), "device_name": d.get("name",""),
+                    "devaddr": d.get("devaddr",""), "name": d.get("name",""),
                     "device_type": d.get("device_type",""), "protocol": d.get("protocol",""),
-                    "status": d.get("status","offline"), "station_id": d.get("station_id",""),
-                    "manufacturer": (d.get("basedata") or {}).get("manufacturer",""),
-                    "model": (d.get("basedata") or {}).get("model",""),
+                    "ip": d.get("ip",""), "status": d.get("status","offline"),
+                    "station_id": d.get("basedata",{}).get("station","") if isinstance(d.get("basedata"),dict) else "",
+                    "manufacturer": (d.get("basedata") or {}).get("manufacturer","") if isinstance(d.get("basedata"),dict) else "",
+                    "model": (d.get("basedata") or {}).get("model","") if isinstance(d.get("basedata"),dict) else "",
+                    "product": d.get("product"),
+                    "productName": d.get("device_type",""),
                 } for d in r.get("results",[])]
             }
         except: pass
