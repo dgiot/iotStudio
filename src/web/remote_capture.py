@@ -34,7 +34,7 @@ def _netsh_cycle():
         # NetConnection + port filter for A11(8889)/Modbus(502)
         run('netsh trace stop 2>&1')
         time.sleep(1)
-        r = run('netsh trace start scenario=NetConnection capture=yes capturefilter="IPv4.Port==8889 or IPv4.Port==53001 or IPv4.Port==502 or IPv4.Port==135" tracefile=C:/Users/Administrator/rem_cap.etl maxsize=80 persistent=no 2>&1')
+        r = run('netsh trace start scenario=NetConnection capture=yes tracefile=C:/Users/Administrator/rem_cap.etl maxsize=80 persistent=no 2>&1')
         if 'Running' not in r:
             _remote_state["errors"] += 1
             p.close_shell(shell)
@@ -43,28 +43,42 @@ def _netsh_cycle():
         time.sleep(30)
         run('netsh trace stop 2>&1')
 
-        # Parse ETL -> CSV (overwrite existing)
+        # Step 1: Convert ETL -> CSV
         run('del C:/Users/Administrator/rem_cap.csv /Q 2>&1')
-        ps = 'powershell -c "tracerpt C:/Users/Administrator/rem_cap.etl -o C:/Users/Administrator/rem_cap.csv -of CSV -y 2>&1; Get-Content C:/Users/Administrator/rem_cap.csv -Encoding UTF8 | Select-String 8889,53001,502,135 | Select -First 50 | ForEach-Object { $_.Line }" 2>&1'
-        output = run(ps)
+        r = run('tracerpt C:/Users/Administrator/rem_cap.etl -o C:/Users/Administrator/rem_cap.csv -of CSV -y 2>&1')
+        # Step 2: Search for A11 and OPC-DA patterns
+        output = run('findstr 5a5a C:/Users/Administrator/rem_cap.csv 2>&1')
+        # OPC-DA: look for DCE/RPC patterns (port 135 traffic)
+        opc_output = run('findstr /C:"Port==135" C:/Users/Administrator/rem_cap.csv 2>&1')
+        if opc_output and len(opc_output) > 100:
+            output = (output or '') + '\n' + opc_output
 
-        # Parse IP:port pairs from TCPIP events
+        # Extract hex payloads from NDIS-PacketCapture lines
         import re
+        hex_pattern = re.compile(r'[0-9A-Fa-f]{80,}')
         for line in output.split('\n'):
-            # Extract src_ip:port -> dst_ip:port
-            m = re.findall(r'"([\d.]+:\d+)"', line)
-            if len(m) >= 2:
-                proto = 'A11' if ':8889' in line else 'Modbus' if ':502' in line or ':53001' in line else 'TCP'
-                entry = {
-                    "ts": time.time(), "proto": proto,
-                    "dir": "TX" if '131:' in m[0] else "RX",
-                    "src": m[0], "dst": m[1],
-                    "len": 0, "hex": "",
-                    "info": "TCP连接" if proto=='TCP' else ('A11通信' if proto=='A11' else 'Modbus轮询')
-                }
-                _remote_state["packets"].insert(0, entry)
-                if len(_remote_state["packets"]) > MAX_PACKETS:
-                    _remote_state["packets"] = _remote_state["packets"][:MAX_PACKETS]
+            matches = hex_pattern.findall(line)
+            for m in matches:
+                try:
+                    raw = bytes.fromhex(m)
+                    # Find A11 5a5a header in the hex blob
+                    idx = raw.find(b'\x5a\x5a')
+                    if idx < 0: idx = 0
+                    pkt = raw[idx:idx+200]
+                    proto = 'A11' if pkt[:2] == b'\x5a\x5a' else 'Modbus' if len(pkt)>=8 and pkt[2:4]==b'\x00\x00' else 'OPC-DA' if pkt[0]==0x05 else 'TCP'
+                    dir_flag = "TX" if ":8889" in line or "131:" in line else "RX"
+                    entry = {
+                        "ts": time.time(), "proto": proto, "dir": dir_flag,
+                        "src": "131" if dir_flag=="TX" else "device",
+                        "dst": "130:8889" if proto=="A11" else "device",
+                        "len": len(pkt), "hex": pkt.hex(' ')[:300],
+                        "info": "A11帧" if proto=="A11" else ("Modbus帧" if proto=="Modbus" else "OPC-DA帧")
+                    }
+                    _remote_state["packets"].insert(0, entry)
+                    if len(_remote_state["packets"]) > MAX_PACKETS:
+                        _remote_state["packets"] = _remote_state["packets"][:MAX_PACKETS]
+                    if len(_remote_state["packets"]) >= 30: break
+                except: pass
 
         _remote_state["cycles"] += 1
         p.close_shell(shell)
