@@ -3,9 +3,11 @@
     <h2 class="page-title">报文分析 <span class="sub">A11 · Modbus · OPC-DA | 7.10.pcapng · 93,913帧</span></h2>
 
     <el-card style="margin-bottom:12px">
-      <el-radio-group v-model="source" size="small" @change="switchSource">
-        <el-radio-button value="pcap710">📁 7.10.pcapng</el-radio-button>
-        <el-radio-button value="pcap73">📁 7.3.pcapng</el-radio-button>
+      <el-select v-model="pcapFile" size="small" placeholder="选择 pcap 文件" style="width:200px" @change="loadPcap" clearable filterable>
+        <el-option v-for="f in pcapFiles" :key="f.name" :label="`${f.name} (${f.size_mb}MB)`" :value="f.name" />
+      </el-select>
+      <el-button size="small" @click="refreshPcapList" style="margin-left:4px">🔄</el-button>
+      <el-radio-group v-model="source" size="small" @change="switchSource" style="margin-left:8px">
         <el-radio-button value="local">🖥️ 本地抓包</el-radio-button>
         <el-radio-button value="remote">🌐 远程抓包</el-radio-button>
       </el-radio-group>
@@ -13,14 +15,14 @@
         <el-option v-for="ep in endpoints" :key="ep.objectId" :label="ep.name+' ('+ep.host+':'+ep.port+')'" :value="ep.objectId" />
       </el-select>
       <el-button size="small" @click="showEpDialog=true" style="margin-left:4px" v-if="source==='remote'">⚙️</el-button>
-      <el-button size="small" :type="capturing?'danger':'success'" @click="toggle" style="margin-left:12px" :disabled="source==='pcap710'||source==='pcap73'">
+      <el-button size="small" :type="capturing?'danger':'success'" @click="toggle" style="margin-left:12px" :disabled="!source">
         {{capturing?'⏹ 停止':'▶ 开始抓包'}}
       </el-button>
       <span style="margin-left:12px;font-size:12px;color:#909399" v-if="source==='local'||source==='remote'">
         实时: {{livePackets}} 帧
       </span>
       <span style="margin-left:12px;font-size:12px;color:#67c23a" v-else>
-        静态分析 · 点击报文列表查看详情 · A11 / Modbus / OPC-DA
+        {{ pcapFile ? pcapFile + ' · ' + packets.length + ' 帧' : '点击报文列表查看详情' }}
       </span>
     </el-card>
 
@@ -45,13 +47,11 @@
         <el-card>
           <template #header><span>报文列表 (点击查看)</span><el-button size="small" style="float:right" @click="clearPackets">🗑 清空</el-button></template>
           <el-table :data="pagedPackets" size="small" @row-click="select" highlight-current-row max-height="440" :row-style="rowStyle">
-            <el-table-column prop="id" label="No." width="50"/>
-            <el-table-column label="Time" width="85"><template #default="{row}"><span style="font-size:10px;color:#909399;font-family:Consolas">{{ row.time||'—' }}</span></template></el-table-column>
-            <el-table-column label="Source" min-width="150"><template #default="{row}"><span :style="{color:row.dir==='TX'?'#E6A23C':'#67C23A'}">{{ row.src }}</span></template></el-table-column>
-            <el-table-column label="Destination" min-width="130"><template #default="{row}"><span>{{ row.dst }}</span></template></el-table-column>
-            <el-table-column label="Protocol" width="75"><template #default="{row}"><el-tag :type="row.msg==='A11'||row.msg?.startsWith('0x')?'success':row.msg==='Modbus'?'warning':'info'" size="small" effect="dark">{{ row.msg||'TCP' }}</el-tag></template></el-table-column>
-            <el-table-column label="Length" width="65" align="right"><template #default="{row}"><span style="font-family:Consolas;font-size:11px">{{ row.sz }}</span></template></el-table-column>
-            <el-table-column label="Info" min-width="180"><template #default="{row}"><span style="font-size:10px;color:#909399">{{ row.info||pktInfo(row) }}</span></template></el-table-column>
+            <el-table-column prop="id" label="No." width="45"/>
+            <el-table-column label="Protocol" width="72"><template #default="{row}"><el-tag :type="row.msg==='A11'||row.msg?.startsWith('0x')?'success':row.msg==='Modbus'?'warning':'info'" size="small" effect="dark">{{ row.msg||'TCP' }}</el-tag></template></el-table-column>
+            <el-table-column label="Source" min-width="140"><template #default="{row}"><span :style="{color:row.dir==='TX'?'#E6A23C':'#67C23A'}">{{ row.src }}</span></template></el-table-column>
+            <el-table-column label="Destination" min-width="140"><template #default="{row}"><span>{{ row.dst }}</span></template></el-table-column>
+            <el-table-column label="Info" min-width="160" show-overflow-tooltip><template #default="{row}"><span style="font-size:11px;color:#909399">{{ row.info||pktInfo(row) }}</span><span style="color:#c0c4cc;margin-left:6px;font-size:10px">{{ row.sz }}B</span></template></el-table-column>
           </el-table>
           <el-pagination
             v-model:current-page="pktPage"
@@ -102,8 +102,31 @@
 import { ref, reactive, computed, onMounted, onUnmounted } from 'vue'
 import { ElMessage } from 'element-plus'
 
-const source = ref('pcap710'); const capturing = ref(false); const livePackets = ref(0)
+const source = ref(''); const capturing = ref(false); const livePackets = ref(0)
 const sel = ref(null); let timer = null
+const pcapFile = ref(''); const pcapFiles = ref([])
+
+async function refreshPcapList() {
+  try { const r = await fetch('/api/pcap/list'); const d = await r.json(); pcapFiles.value = d.files||[] } catch {}
+}
+async function loadPcap(filename) {
+  if (!filename) { packets.value = allPkts; return }
+  try {
+    const r = await fetch(`/api/pcap/read/${filename}?limit=100`)
+    const d = await r.json()
+    if (d.packets?.length) {
+      packets.value = d.packets.map((p,i) => ({
+        id: i+1, time: p.time||'', dir: p.dir, src: p.src, dst: p.dst,
+        sz: p.sz||p.len, msg: p.msg||p.proto, hex: p.hex,
+        fields: [{f:'协议',v:p.proto||'?',d:'pcap解析'}],
+        str: [], info: p.proto==='A11'?'A11帧':p.proto==='Modbus'?'Modbus帧':p.proto==='OPC-DA'?'OPC-DA帧':''
+      }))
+      source.value = ''  // switch off capture mode
+    }
+  } catch { ElMessage.error('pcap 加载失败') }
+}
+
+onMounted(() => { refreshPcapList(); loadEndpoints() })
 
 // 远程端点
 const endpoints = ref([])
@@ -207,11 +230,7 @@ function clearPackets() {
   if (capturing.value) { clearInterval(timer); capturing.value = false }
 }
 
-function switchSource(v) {
-  pktPage.value = 1
-  if (v === 'pcap710') { packets.value = pk710; livePackets.value = 0 }
-  else if (v === 'pcap73') { packets.value = pk73; livePackets.value = 0 }
-}
+function switchSource(v) { pktPage.value = 1; packets.value = allPkts }
 
 async function toggle() {
   if (capturing.value) {
@@ -245,8 +264,6 @@ async function toggle() {
     } catch { ElMessage.warning('抓包启动失败') }
   }
 }
-
-onMounted(loadEndpoints)
 
 onUnmounted(() => clearInterval(timer))
 </script>

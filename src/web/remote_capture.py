@@ -31,9 +31,10 @@ def _netsh_cycle():
             out, _, _ = p.get_command_output(shell, cid)
             return out.decode('gbk', errors='ignore').strip()
 
-        # Start trace (forward slashes proven working on 131)
-        run('del C:/Users/Administrator/rem_cap.etl /Q 2>&1')
-        r = run('netsh trace start capture=yes tracefile=C:/Users/Administrator/rem_cap.etl maxsize=80 persistent=no 2>&1')
+        # Start trace with TCPIP provider (proven: captures src/dst IP:port)
+        run('netsh trace stop 2>&1')
+        time.sleep(1)
+        r = run('netsh trace start capture=yes provider=Microsoft-Windows-TCPIP tracefile=C:/Users/Administrator/rem_cap.etl maxsize=80 persistent=no 2>&1')
         if 'Running' not in r:
             _remote_state["errors"] += 1
             p.close_shell(shell)
@@ -42,40 +43,27 @@ def _netsh_cycle():
         time.sleep(30)
         run('netsh trace stop 2>&1')
 
-        # Parse ETL -> CSV via PowerShell
-        ps = 'powershell -c "tracerpt C:/Users/Administrator/rem_cap.etl -o C:/Users/Administrator/rem_cap.csv -of CSV 2>&1; Get-Content C:/Users/Administrator/rem_cap.csv -Encoding UTF8 | Select-String 8889,53001,135,502 | Select -First 20 | ForEach-Object { $_.Line }" 2>&1'
+        # Parse TCPIP provider CSV for connection events
+        ps = 'powershell -c "tracerpt C:/Users/Administrator/rem_cap.etl -o C:/Users/Administrator/rem_cap.csv -of CSV 2>&1; Get-Content C:/Users/Administrator/rem_cap.csv -Encoding UTF8 | Select-String 8889,53001,502,135 | Select -First 30 | ForEach-Object { $_.Line }" 2>&1'
         output = run(ps)
 
-        # Parse hex patterns from CSV
+        # Parse IP:port pairs from TCPIP events
         import re
-        hex_pattern = re.compile(r'[0-9A-Fa-f]{40,}')
         for line in output.split('\n'):
-            matches = hex_pattern.findall(line)
-            for m in matches:
-                try:
-                    raw = bytes.fromhex(m)
-                    if len(raw) > 20:
-                        payload_start = 0
-                        for i in range(len(raw)-1):
-                            if raw[i:i+2] == b'\x5a\x5a':
-                                payload_start = i; break
-                        if payload_start == 0:
-                            ihl = (raw[14] & 0x0F) * 4
-                            tcp_start = 14 + ihl
-                            data_offset = ((raw[tcp_start+12] >> 4) & 0x0F) * 4
-                            payload_start = tcp_start + data_offset
-                        if payload_start < len(raw):
-                            pkt_data = raw[payload_start:payload_start+80]
-                            proto = 'A11' if pkt_data[:2] == b'\x5a\x5a' else 'Modbus' if len(pkt_data)>7 and pkt_data[7] in (1,2,3,4,5,6,15,16) else 'TCP'
-                            entry = {
-                                "ts": time.time(), "proto": proto, "dir": "RX",
-                                "src": "131", "dst": "device", "len": len(pkt_data),
-                                "hex": pkt_data.hex(' ')
-                            }
-                            _remote_state["packets"].insert(0, entry)
-                            if len(_remote_state["packets"]) > MAX_PACKETS:
-                                _remote_state["packets"] = _remote_state["packets"][:MAX_PACKETS]
-                except: pass
+            # Extract src_ip:port -> dst_ip:port
+            m = re.findall(r'"([\d.]+:\d+)"', line)
+            if len(m) >= 2:
+                proto = 'A11' if ':8889' in line else 'Modbus' if ':502' in line or ':53001' in line else 'TCP'
+                entry = {
+                    "ts": time.time(), "proto": proto,
+                    "dir": "TX" if '131:' in m[0] else "RX",
+                    "src": m[0], "dst": m[1],
+                    "len": 0, "hex": "",
+                    "info": "TCP连接" if proto=='TCP' else ('A11通信' if proto=='A11' else 'Modbus轮询')
+                }
+                _remote_state["packets"].insert(0, entry)
+                if len(_remote_state["packets"]) > MAX_PACKETS:
+                    _remote_state["packets"] = _remote_state["packets"][:MAX_PACKETS]
 
         _remote_state["cycles"] += 1
         p.close_shell(shell)
