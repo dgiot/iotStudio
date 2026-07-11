@@ -8,7 +8,7 @@ import hmac
 import json
 import base64
 from typing import Optional
-from fastapi import Request, HTTPException
+from fastapi import Request, HTTPException, Depends
 
 # 简单 JWT（无外部依赖）
 SECRET = "dgiot_lite_2026_secret_key"
@@ -161,6 +161,3 @@ def require_admin(user=Depends(get_current_user)):
         raise HTTPException(403, "仅管理员可操作")
     return user
 
-
-# 重新导入以支持 Depends
-from fastapi import Depends

@@ -1385,6 +1385,10 @@ app.include_router(tenant_router)
 from .web.io_body_api import router as io_body_router
 app.include_router(io_body_router)
 
+# ---- 厂商通道桥接 API ----
+from .web.vendor_api import router as vendor_router
+app.include_router(vendor_router)
+
 # ---- 远程抓包 API ----
 from .web.remote_capture import router as remote_cap_router
 app.include_router(remote_cap_router)
@@ -1638,7 +1642,7 @@ import sqlite3 as _sqlite3, os as _os
 _OIL_DB = _os.path.join(_os.path.dirname(__file__), "..", "data", "oil_monitor.db")
 
 @app.get("/api/vendor/{key}/status")
-def vendor_status(key: str):
+def get_vendor_status(key: str):
     """厂商通道实时状态 — 真实数据优先，无则模拟"""
     # 油液监测: 真实数据
     if key == "youyeyun" and _os.path.exists(_OIL_DB):
