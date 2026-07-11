@@ -1429,6 +1429,10 @@ app.include_router(system_router)
 from .web.vendor_api import router as vendor_router
 app.include_router(vendor_router)
 
+# ---- 采集端点管理 API ----
+from .web.capture_endpoint_api import router as cap_ep_router
+app.include_router(cap_ep_router)
+
 # ---- 远程抓包 API ----
 from .web.remote_capture import router as remote_cap_router
 app.include_router(remote_cap_router)
