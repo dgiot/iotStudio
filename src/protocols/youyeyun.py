@@ -157,3 +157,11 @@ def create_adapter(token: str, device_id: str, name: str = "", interval: int = 3
     return YouyeyunAdapter(YouyeyunConfig(
         token=token, device_id=device_id, device_name=name, poll_interval=interval,
     ))
+
+# -- plugin registration --
+try:
+    from plugin_registry import register
+    register("http_rest_youyeyun", version="1.0", category="protocol",
+             adapter="YouyeyunAdapter",
+             config={"token": "", "device_id": "", "poll_interval": 300})
+except ImportError: pass

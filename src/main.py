@@ -1481,3 +1481,29 @@ else:
         return HTMLResponse(path.read_text(encoding="utf-8")) if path.exists() else HTMLResponse("<h2>SCADA not found</h2>")
 
     logger.info("[main] Vue3 dist 未构建，使用旧版 SCADA 页面")
+
+# ---- 插件管理 API ----
+from .plugin_registry import list_all, list_enabled, health as plugin_health, enable, disable
+
+@app.get("/api/plugins")
+def get_plugins(category: str = None):
+    """获取所有插件及其状态"""
+    return {
+        "plugins": [
+            {"name": p["name"], "category": p["category"], "version": p["version"],
+             "enabled": p["enabled"], "config": p.get("config_schema", {}),
+             "depends": p.get("depends", [])}
+            for p in list_all(category)
+        ],
+        "health": plugin_health()
+    }
+
+@app.post("/api/plugins/{name}/enable")
+def enable_plugin(name: str):
+    enable(name)
+    return {"status": "enabled", "name": name}
+
+@app.post("/api/plugins/{name}/disable")
+def disable_plugin(name: str):
+    disable(name)
+    return {"status": "disabled", "name": name}

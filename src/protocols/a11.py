@@ -640,3 +640,11 @@ if __name__ == '__main__':
                 await adapter.disconnect()
 
         asyncio.run(test())
+
+# -- plugin registration --
+try:
+    from plugin_registry import register
+    register("a11", version="1.0", category="protocol",
+             adapter="A11ProtocolAdapter",
+             config={"host": "127.0.0.1", "port": 8889, "heartbeat_interval": 5})
+except ImportError: pass

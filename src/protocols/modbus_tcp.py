@@ -168,3 +168,11 @@ class ModbusTCPAdapter(BaseProtocolAdapter):
             return a
         s = str(a).strip()
         return int(s, 16) if s.lower().startswith("0x") else (int(s) if s.isdigit() else 0)
+
+# -- plugin registration --
+try:
+    from plugin_registry import register
+    register("modbus_tcp", version="1.0", category="protocol",
+             adapter=ModbusTCPAdapter,
+             config={"host": "127.0.0.1", "port": 502, "slave_id": 1})
+except ImportError: pass
