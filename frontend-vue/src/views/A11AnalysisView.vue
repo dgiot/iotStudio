@@ -42,7 +42,8 @@
 
     <el-row :gutter="12">
       <el-col :span="9">
-        <el-card header="报文列表 (点击查看)">
+        <el-card>
+          <template #header><span>报文列表 (点击查看)</span><el-button size="small" style="float:right" @click="clearPackets">🗑 清空</el-button></template>
           <el-table :data="pagedPackets" size="small" @row-click="select" highlight-current-row max-height="440">
             <el-table-column prop="id" label="#" width="45"/>
             <el-table-column prop="dir" label="向" width="40"><template #d="{row}"><el-tag :type="row.dir==='TX'?'warning':'success'" size="small">{{row.dir}}</el-tag></template></el-table-column>
@@ -183,6 +184,7 @@ const allPkts = [
 const packets = ref(allPkts)
 
 function select(row) { sel.value = row }
+function clearPackets() { packets.value = allPkts; pktPage.value = 1; sel.value = null }
 
 function switchSource(v) {
   pktPage.value = 1
