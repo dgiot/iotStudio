@@ -107,10 +107,12 @@ def inject_sample():
         {"hex": "5a5ab2040100260062f02f000900000a0024060000230000005c43593143384b5c5a363131535957535c5a44303130383338444f565856333031564323", "dir": "TX", "src": "131:62535", "dst": "130:8889"},
         {"hex": "5a5a170000003900b28735000500800a00000000006a6a", "dir": "RX", "src": "130:8889", "dst": "131:62531"},
         {"hex": "df05000000060103012b0004", "dir": "TX", "src": "131:53001", "dst": "11.249.61.243:502"},
+        {"hex": "05000003100000008c080000b8760200640800000100030002ac", "dir": "RX", "src": "172.23.9.3:58648", "dst": "131:49778"},
+        {"hex": "05000b03100000007800280066020000d016d016", "dir": "RX", "src": "172.23.18.194:3514", "dst": "131:135"},
     ]
     for i, s in enumerate(samples):
         raw = bytes.fromhex(s["hex"].replace(' ',''))
-        proto = 'A11' if raw[:2] == b'\x5a\x5a' else 'Modbus'
+        proto = 'A11' if raw[:2] == b'\x5a\x5a' else 'OPC-DA' if raw[0] == 0x05 else 'Modbus'
         _remote_state["packets"].insert(0, {
             "ts": time.time(), "proto": proto, "dir": s["dir"],
             "src": s["src"], "dst": s["dst"], "len": len(raw), "hex": s["hex"]
