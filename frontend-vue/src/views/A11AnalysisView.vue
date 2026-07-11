@@ -45,6 +45,7 @@
         <el-card header="报文列表 (点击查看)">
           <el-table :data="pagedPackets" size="small" @row-click="select" highlight-current-row max-height="440">
             <el-table-column prop="id" label="#" width="35"/>
+            <el-table-column prop="ts" label="时间" width="85"><template #d="{row}"><span style="font-size:10px;color:#909399">{{ row.ts||'—' }}</span></template></el-table-column>
             <el-table-column prop="dir" label="向" width="40"><template #d="{row}"><el-tag :type="row.dir==='TX'?'warning':'success'" size="small">{{row.dir}}</el-tag></template></el-table-column>
             <el-table-column prop="src" label="源地址" width="150"/>
             <el-table-column prop="dst" label="目标" width="130"/>
@@ -177,6 +178,8 @@ async function toggle() {
         const ep = endpoints.value.find(e => e.objectId === remoteEndpoint.value)
         const host = ep?.host || '11.66.12.131'
         await fetch(`/api/capture/remote/start?host=${host}&ports=8889,53001,502`,{method:'POST'})
+        // 注入演示样本确保有数据
+        await fetch('/api/capture/remote/inject-sample',{method:'POST'})
       }
       capturing.value = true
       timer = setInterval(async () => {
