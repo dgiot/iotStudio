@@ -31,8 +31,8 @@ def _netsh_cycle():
             out, _, _ = p.get_command_output(shell, cid)
             return out.decode('gbk', errors='ignore').strip()
 
-        run(r'del C:\Users\Administrator\rem_cap.etl /Q 2>&1')
-        r = run(r'netsh trace start capture=yes tracefile=C:\Users\Administrator\rem_cap.etl maxsize=80 persistent=no 2>&1')
+        run('del C:\\Users\\Administrator\\rem_cap.etl /Q 2>&1')
+        r = run('netsh trace start capture=yes tracefile=C:\\Users\\Administrator\\rem_cap.etl maxsize=80 persistent=no 2>&1')
         if 'Running' not in r:
             _remote_state["errors"] += 1
             p.close_shell(shell)
@@ -42,11 +42,7 @@ def _netsh_cycle():
         run('netsh trace stop 2>&1')
 
         # Parse NDIS packets from ETL via PowerShell
-        ps = r'''powershell -c "
-$csv = tracerpt C:\Users\Administrator\rem_cap.etl -o C:\Users\Administrator\rem_cap.csv -of CSV 2>&1
-$lines = Get-Content C:\Users\Administrator\rem_cap.csv -Encoding UTF8 | Select-String '8889|53001|135|502'
-$lines | Select-Object -First 20 | ForEach-Object { $_.Line }
-" 2>&1'''
+        ps = 'powershell -c "tracerpt C:\\Users\\Administrator\\rem_cap.etl -o C:\\Users\\Administrator\\rem_cap.csv -of CSV 2>&1; Get-Content C:\\Users\\Administrator\\rem_cap.csv -Encoding UTF8 | Select-String 8889,53001,135,502 | Select -First 20 | ForEach-Object { $_.Line }" 2>&1'
         output = run(ps)
 
         # Parse NDIS hex from CSV
