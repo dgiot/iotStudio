@@ -1639,11 +1639,11 @@ _OIL_DB = _os.path.join(_os.path.dirname(__file__), "..", "data", "oil_monitor.d
 
 @app.get("/api/vendor/{key}/status")
 def vendor_status(key: str):
-    """厂商通道实时状态 — 从 oil_monitor.db 桥接"""
+    """厂商通道实时状态 — 真实数据优先，无则模拟"""
+    # 油液监测: 真实数据
     if key == "youyeyun" and _os.path.exists(_OIL_DB):
         db = _sqlite3.connect(_OIL_DB); db.row_factory = _sqlite3.Row
         devices = db.execute("SELECT DISTINCT device_id, device_name FROM sensor_meta").fetchall()
-        realtime = db.execute("SELECT COUNT(*) as cnt FROM sensor_realtime").fetchone()
         points = db.execute("SELECT COUNT(DISTINCT key_id) as cnt FROM sensor_meta").fetchone()
         last = db.execute("SELECT MAX(update_time) as t FROM sensor_realtime").fetchone()
         db.close()
@@ -1653,6 +1653,9 @@ def vendor_status(key: str):
             "lastSync": str(last["t"])[:16] if last and last["t"] else "2026-07-09 01:43",
             "relatedDevices": [{"id": d["device_id"], "name": d["device_name"], "status": "online"} for d in devices[:5]],
         }
+    # 其他通道: 模拟器数据 (30s 刷新)
+    if key in _vendor_sim_data:
+        return _vendor_sim_data[key]
     return {"key": key, "connected": False, "devices": 0, "points": 0, "lastSync": None, "relatedDevices": []}
 
 # ---- 厂商通道模拟器 (缺真实后端时自动生成演示数据) ----
