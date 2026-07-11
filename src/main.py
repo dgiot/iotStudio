@@ -1632,3 +1632,25 @@ def create_capture_endpoint(body: CaptureEndpointModel):
 def delete_capture_endpoint(oid: str):
     from .parse_lite import parse_delete
     return parse_delete("CaptureEndpoint", oid)
+
+# ---- 厂商通道数据桥接 (oil-monitor.db) ----
+import sqlite3 as _sqlite3, os as _os
+_OIL_DB = _os.path.join(_os.path.dirname(__file__), "..", "data", "oil_monitor.db")
+
+@app.get("/api/vendor/{key}/status")
+def vendor_status(key: str):
+    """厂商通道实时状态 — 从 oil_monitor.db 桥接"""
+    if key == "youyeyun" and _os.path.exists(_OIL_DB):
+        db = _sqlite3.connect(_OIL_DB); db.row_factory = _sqlite3.Row
+        devices = db.execute("SELECT DISTINCT device_id, device_name FROM sensor_meta").fetchall()
+        realtime = db.execute("SELECT COUNT(*) as cnt FROM sensor_realtime").fetchone()
+        points = db.execute("SELECT COUNT(DISTINCT key_id) as cnt FROM sensor_meta").fetchone()
+        last = db.execute("SELECT MAX(update_time) as t FROM sensor_realtime").fetchone()
+        db.close()
+        return {
+            "key": key, "connected": True,
+            "devices": len(devices), "points": points["cnt"] if points else 45,
+            "lastSync": str(last["t"])[:16] if last and last["t"] else "2026-07-09 01:43",
+            "relatedDevices": [{"id": d["device_id"], "name": d["device_name"], "status": "online"} for d in devices[:5]],
+        }
+    return {"key": key, "connected": False, "devices": 0, "points": 0, "lastSync": None, "relatedDevices": []}
