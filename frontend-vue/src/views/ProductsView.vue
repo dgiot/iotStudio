@@ -1,14 +1,26 @@
 <template>
   <div class="prod-page">
     <h3>📦 产品管理</h3>
+    <!-- iotStudio 风格: 分类筛选 + 操作栏 -->
+    <div class="prod-toolbar">
+      <el-select v-model="catFilter" size="small" placeholder="全部分类" clearable style="width:140px" @change="loadProducts">
+        <el-option v-for="c in categories" :key="c.key" :label="c.name" :value="c.key" />
+      </el-select>
+      <div style="display:flex;gap:8px">
+        <el-button size="small" @click="exportAll">📤 导出全部</el-button>
+        <el-button size="small" type="primary" @click="importDialog=true">📥 导入</el-button>
+        <el-button size="small" type="success" @click="addProduct">+ 新建产品</el-button>
+      </div>
+    </div>
     <div class="list-detail">
       <!-- 左侧：产品列表 -->
       <div class="list-panel">
         <el-row :gutter="8">
-          <el-col :span="6" v-for="p in products" :key="p.key">
+          <el-col :span="6" v-for="p in filteredProducts" :key="p.key">
             <el-card class="prod-card" :class="{active:selected?.key===p.key}" shadow="hover" @click="selectProduct(p)">
               <span class="pc-icon">{{ p.icon }}</span>
-              <div class="pc-name">{{ p.label }}</div>
+              <div class="pc-name">{{ p.name || p.label }}</div>
+              <div class="pc-meta"><el-tag size="small" effect="plain">{{ p.devType || p.key }}</el-tag><span v-if="p.nodeType!==undefined" style="margin-left:4px;font-size:10px;color:#909399">{{ p.nodeType===0?'直连':'网关' }}</span></div>
               <div class="pc-stats"><b>{{ p.count }}</b> 设备 · <b>{{ p.pointCount }}</b> 测点</div>
             </el-card>
           </el-col>
@@ -59,6 +71,12 @@
           </el-table-column>
         </el-table>
         <el-pagination v-if="thingPoints.length>ptPageSize" style="margin-top:6px;justify-content:center" background small layout="prev,pager,next" :total="thingPoints.length" v-model:current-page="ptPage" :page-size="ptPageSize" />
+
+    <!-- 产品导入弹窗 -->
+    <el-dialog v-model="importDialog" title="导入产品" width="600px">
+      <el-input v-model="importText" type="textarea" :rows="10" placeholder="粘贴产品 JSON 数组 [{objectId,devType,name,nodeType,netType,icon,desc}]" />
+      <template #footer><el-button @click="importDialog=false">取消</el-button><el-button type="primary" @click="doImportProducts">导入</el-button></template>
+    </el-dialog>
 
     <!-- TSL 导入弹窗 -->
     <el-dialog v-model="showImport" title="导入 TSL JSON" width="600px">
@@ -118,17 +136,27 @@ const COLS = { xs:40, sm:65, md:85, lg:115, xl:170 }
 function col(k) { return COLS[k]||80 }
 function zoneLabel(z) { return z==='props'?'属性':z==='events'?'事件':'服务' }
 
-const products = ref([
-  { key:'inverter', icon:'☀️', label:'光伏逆变器', desc:'光储充核心设备', count:0, pointCount:0 },
-  { key:'pcs', icon:'🔋', label:'储能PCS', desc:'电池储能变流控制', count:0, pointCount:0 },
-  { key:'charger', icon:'🔌', label:'充电桩', desc:'电动汽车充放电', count:0, pointCount:0 },
-  { key:'meter', icon:'📟', label:'智能电表', desc:'三相电量计量采集', count:0, pointCount:0 },
-  { key:'sensor', icon:'🌡️', label:'环境传感器', desc:'温湿度/辐照/风速', count:0, pointCount:0 },
-  { key:'oilwell', icon:'🛢️', label:'抽油机井', desc:'油气田采油设备', count:0, pointCount:0 },
-  { key:'rtu', icon:'📡', label:'RTU终端', desc:'远程采集终端', count:0, pointCount:0 },
-  { key:'compressor', icon:'⚙️', label:'压缩机', desc:'离心/往复压缩机', count:0, pointCount:0 },
-  { key:'pipeline', icon:'🔗', label:'集输管线', desc:'油气集输管道', count:0, pointCount:0 },
+const products = ref([  // DG-IoT Product aligned: devType, nodeType, netType
+  { key:'inverter', icon:'☀️', name:'光伏逆变器', devType:'inverter', nodeType:0, netType:'ethernet', cat:'energy', desc:'光储充核心设备', count:0, pointCount:0 },
+  { key:'pcs', icon:'🔋', name:'储能PCS', devType:'pcs', nodeType:0, netType:'ethernet', cat:'energy', desc:'电池储能变流控制', count:0, pointCount:0 },
+  { key:'charger', icon:'🔌', name:'充电桩', devType:'charger', nodeType:0, netType:'ethernet', cat:'energy', desc:'电动汽车充放电', count:0, pointCount:0 },
+  { key:'meter', icon:'📟', name:'智能电表', devType:'meter', nodeType:1, netType:'cellular', cat:'meter', desc:'三相电量计量采集', count:0, pointCount:0 },
+  { key:'sensor', icon:'🌡️', name:'环境传感器', devType:'sensor', nodeType:1, netType:'lora', cat:'sensor', desc:'温湿度/辐照/风速', count:0, pointCount:0 },
+  { key:'oilwell', icon:'🛢️', name:'抽油机井', devType:'oilwell', nodeType:1, netType:'cellular', cat:'oilfield', desc:'油气田采油设备', count:0, pointCount:0 },
+  { key:'rtu', icon:'📡', name:'RTU终端', devType:'rtu', nodeType:1, netType:'cellular', cat:'oilfield', desc:'远程采集终端', count:0, pointCount:0 },
+  { key:'compressor', icon:'⚙️', name:'压缩机', devType:'compressor', nodeType:0, netType:'ethernet', cat:'oilfield', desc:'离心/往复压缩机', count:0, pointCount:0 },
+  { key:'pipeline', icon:'🔗', name:'集输管线', devType:'pipeline', nodeType:0, netType:'ethernet', cat:'oilfield', desc:'油气集输管道', count:0, pointCount:0 },
 ])
+
+const categories = [
+  { key:'energy', name:'⚡ 能源设备' }, { key:'meter', name:'📟 计量仪表' },
+  { key:'sensor', name:'🌡️ 传感器' }, { key:'oilfield', name:'🛢️ 油田设备' },
+]
+const catFilter = ref('')
+const filteredProducts = computed(() =>
+  catFilter.value ? products.value.filter(p => p.cat === catFilter.value) : products.value
+)
+const importDialog = ref(false)
 
 const selected = ref(null)
 const thingPoints = ref([])
@@ -169,6 +197,14 @@ async function selectProduct(p) {
   loading.value = false
 }
 
+function exportAll() {
+  const data = products.value.map(p => ({ objectId: p.key, devType: p.devType, name: p.name, nodeType: p.nodeType, netType: p.netType, icon: p.icon, desc: p.desc }))
+  navigator.clipboard.writeText(JSON.stringify(data, null, 2))
+  ElMessage.success(`${data.length} 个产品定义已复制`)
+}
+function addProduct() {
+  ElMessage.info('新建产品 — 弹出物模型向导')
+}
 function exportTSL() {
   const tsl = {
     schema: 'TSL/v1', product: selected.value?.key, label: selected.value?.label,
@@ -178,6 +214,18 @@ function exportTSL() {
   }
   navigator.clipboard.writeText(JSON.stringify(tsl, null, 2))
   ElMessage.success('TSL 已复制到剪贴板')
+}
+
+function doImportProducts() {
+  try {
+    const items = JSON.parse(importText.value)
+    items.forEach(item => {
+      const existing = products.value.find(p => p.key === item.objectId)
+      if (existing) { Object.assign(existing, { name: item.name, devType: item.devType, nodeType: item.nodeType, netType: item.netType, icon: item.icon || '📦', desc: item.desc }) }
+      else { products.value.push({ key: item.objectId, icon: item.icon || '📦', name: item.name, devType: item.devType, nodeType: item.nodeType, netType: item.netType, desc: item.desc, count: 0, pointCount: 0 }) }
+    })
+    importDialog.value = false; ElMessage.success(`导入 ${items.length} 个产品`)
+  } catch { ElMessage.error('JSON 格式错误') }
 }
 
 function doImport() {
@@ -248,7 +296,8 @@ onMounted(async () => {
 
 <style scoped>
 .prod-page { height: 100%; display: flex; flex-direction: column; }
-.prod-page h3 { color: #e8f0f8; margin: 0 0 12px; flex-shrink: 0; }
+.prod-page h3 { color: #e8f0f8; margin: 0 0 8px; flex-shrink: 0; }
+.prod-toolbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px }
 .list-detail { display: flex; gap: 12px; flex: 1; min-height: 0; }
 .list-panel { flex: 1; overflow-y: auto; }
 
@@ -256,7 +305,8 @@ onMounted(async () => {
 .prod-card:hover { border-color: #66d9ff; }
 .prod-card.active { border-color: #66d9ff; box-shadow: 0 0 10px rgba(102,217,255,0.15); }
 .pc-icon { font-size: 28px; display: block; }
-.pc-name { font-size: 13px; font-weight: bold; margin: 4px 0; }
+.pc-name { font-size: 13px; font-weight: bold; margin: 4px 0; color: #e0e0e0 }
+.pc-meta { margin: 2px 0 }
 .pc-stats { font-size: 11px; color: #8aa0b4; }
 .pc-stats b { color: #66d9ff; }
 

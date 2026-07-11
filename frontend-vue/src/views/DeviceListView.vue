@@ -10,13 +10,26 @@
     <div class="content-row">
       <!-- 左侧表格 -->
       <div class="table-panel">
+        <!-- iotStudio 风格: 字段选择搜索 -->
         <div class="toolbar">
           <h3>设备列表</h3>
-          <el-button type="primary" size="small" @click="showDialog(null)"><el-icon><Plus /></el-icon>添加</el-button>
-          <el-button type="success" size="small" @click="seedDemo" :loading="seeding">🎲 演示数据</el-button>
+          <el-input v-model="searchText" size="small" placeholder="搜索..." style="width:200px" clearable @clear="load" @keyup.enter="load">
+            <template #prepend>
+              <el-select v-model="searchField" size="small" style="width:90px">
+                <el-option label="名称" value="name" />
+                <el-option label="devaddr" value="devaddr" />
+                <el-option label="产品" value="product" />
+              </el-select>
+            </template>
+          </el-input>
+          <div style="display:flex;gap:6px">
+            <el-button type="primary" size="small" @click="showDialog(null)"><el-icon><Plus /></el-icon>添加</el-button>
+            <el-button size="small" @click="exportDevices">📤 导出</el-button>
+            <el-button type="success" size="small" @click="seedDemo" :loading="seeding">🎲 演示</el-button>
+          </div>
         </div>
 
-        <el-table :data="devices" highlight-current-row @row-click="selectRow" :row-class-name="rowClass" max-height="560" v-loading="loading">
+        <el-table :data="devices" highlight-current-row @row-click="selectRow" :row-class-name="rowClass" max-height="520" v-loading="loading">
           <el-table-column prop="devaddr" label="devaddr" :min-width="col('lg')" align="center">
             <template #default="{row}"><code style="font-size:11px">{{ row.devaddr }}</code></template>
           </el-table-column>
@@ -127,6 +140,8 @@ const currentPage = ref(1)
 const pageSize = ref(20)
 const total = ref(0)
 const loading = ref(false)
+const searchField = ref('name')
+const searchText = ref('')
 const dialogVisible = ref(false)
 const editingId = ref('')
 const editForm = reactive({ device_id:'', device_name:'', device_type:'inverter', station_id:'station_01', protocol:'modbus_tcp', manufacturer:'', comm_params:{} })
@@ -154,6 +169,12 @@ function selectRow(row) { selected.value = row }
 function rowClass({row}) { return row.device_id === selected.value?.device_id ? 'row-selected' : '' }
 function goDetail(id) { router.push(`/devices/${id}`) }
 
+function exportDevices() {
+  const data = devices.value.map(d => ({ objectId: d.devaddr, name: d.name, devaddr: d.devaddr, product: d.product?.objectId, ip: d.ip, status: d.status, isEnable: d.isEnable }))
+  navigator.clipboard.writeText(JSON.stringify(data, null, 2))
+  ElMessage.success(`${data.length} 条设备数据已复制`)
+}
+
 function showDialog(row) {
   editingId.value = row?.device_id || ''
   Object.assign(editForm, row ? {...row} : { device_id:'', device_name:'', device_type:'inverter', station_id:'station_01', protocol:'modbus_tcp', manufacturer:'', comm_params:{} })
@@ -170,6 +191,7 @@ async function load() {
   try {
     const params = { page: currentPage.value, page_size: pageSize.value }
     if (activeTab.value !== 'all') params.device_type = activeTab.value
+    if (searchText.value) params.search = searchText.value; params.search_field = searchField.value
     const r = await getDevices(params)
     devices.value = r.data.devices || []
     total.value = r.data.total || 0
