@@ -24,6 +24,15 @@ from ..protocols.base import BaseProtocolAdapter, ProtocolConfig, PointValue
 
 logger = logging.getLogger(__name__)
 
+# 点位字段 → 默认值映射
+_POINT_FIELDS = {
+    "point_id": "", "point_name": "", "protocol_addr": "",
+    "register_type": "3", "data_type": "float32", "scale": 1.0,
+    "offset": 0.0, "unit": "", "dead_zone": 0.0,
+    "alarm_high": None, "alarm_low": None,
+    "alarm_high_high": None, "alarm_low_low": None,
+}
+
 
 class CollectorEngine:
     """采集调度引擎"""
@@ -61,9 +70,17 @@ class CollectorEngine:
 
     async def _load_devices(self) -> None:
         """加载所有启用的设备"""
-        devices = await self.pg.list_devices()
+        result = await self.pg.list_devices(page=1, page_size=500)
+        devices = result[0] if isinstance(result, tuple) else result
         for dev in devices:
-            if dev.enabled and dev.status != "maintenance":
+            # 跳过缺少必要字段的设备
+            if not getattr(dev, 'device_id', None):
+                continue
+            if not getattr(dev, 'protocol', None):
+                continue
+            enabled = getattr(dev, 'enabled', True)
+            status = getattr(dev, 'status', 'online')
+            if enabled and status != "maintenance":
                 await self._add_device(dev)
 
     async def _add_device(self, dev: Device) -> None:
@@ -78,22 +95,8 @@ class CollectorEngine:
             protocol_type=dev.protocol,
             device_id=dev.device_id,
             device_name=dev.device_name,
-            collect_interval=min(p.collect_interval for p in points if p.enabled) or 5,
-            points=[{
-                "point_id": p.point_id,
-                "point_name": p.point_name,
-                "protocol_addr": p.protocol_addr,
-                "register_type": p.register_type,
-                "data_type": p.data_type,
-                "scale": p.scale,
-                "offset": p.offset,
-                "unit": p.unit,
-                "dead_zone": p.dead_zone,
-                "alarm_high": p.alarm_high,
-                "alarm_low": p.alarm_low,
-                "alarm_high_high": p.alarm_high_high,
-                "alarm_low_low": p.alarm_low_low,
-            } for p in points if p.enabled],
+            collect_interval=min(getattr(p, 'collect_interval', None) or 5 for p in points),
+            points=[{k: getattr(p, k, v) for k, v in _POINT_FIELDS.items()} for p in points if getattr(p, 'enabled', True)],
             extra=dev.comm_params or {},
         )
 
@@ -149,6 +152,23 @@ class CollectorEngine:
         elif proto == "opcda":
             from ..protocols.opcda_client import OPCDAClient
             return OPCDAClient(config)
+        elif proto == "a11":
+            from ..protocols.a11 import A11ProtocolAdapter, A11Config
+            return A11ProtocolAdapter(A11Config(
+                device_id=config.device_id,
+                device_name=config.device_name,
+                host=config.extra.get("host", "127.0.0.1"),
+                port=config.extra.get("port", 8889),
+                unit_id=config.extra.get("unit_id", 0),
+                heartbeat_interval=config.extra.get("heartbeat_interval", 5),
+                collect_interval=config.collect_interval,
+                timeout=config.timeout,
+                retry=config.retry,
+                points=config.points,
+                dds_enabled=config.extra.get("dds_enabled", False),
+                dds_port=config.extra.get("dds_port", 2500),
+                extra=config.extra,
+            ))
         else:
             logger.error(f"[collector] 不支持的协议: {proto}")
             return None

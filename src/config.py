@@ -2,13 +2,21 @@
 # pythonIot — 配置管理
 # ============================================================
 import os
+import sys
 import yaml
 from pathlib import Path
 from pydantic import BaseModel
 from typing import Optional, Dict, Any
 
 
-BASE_DIR = Path(__file__).resolve().parent.parent
+def _get_base_dir() -> Path:
+    """项目根目录 — 兼容 PyInstaller 冻结和开发模式"""
+    if getattr(sys, 'frozen', False):
+        # PyInstaller 打包: exe 同目录（方便用户放置 config.yaml）
+        return Path(sys.executable).parent
+    return Path(__file__).resolve().parent.parent
+
+BASE_DIR = _get_base_dir()
 
 
 def load_yaml(path: str) -> Dict[str, Any]:
@@ -49,6 +57,7 @@ class MQTTConfig(BaseModel):
 
 
 class AppConfig(BaseModel):
+    model_config = {"extra": "allow"}  # 允许 yaml 中额外字段
     title: str = "光储充微电网物联网平台"
     version: str = "1.0.0"
     host: str = "0.0.0.0"
@@ -61,11 +70,27 @@ class AppConfig(BaseModel):
     sqlite_path: str = str(BASE_DIR / "data" / "local.db")
 
     @classmethod
+    def _find_config(cls, path: Optional[str] = None) -> Optional[str]:
+        """查找 config.yaml — 兼容 PyInstaller/开发模式"""
+        if path:
+            return path
+        env_path = os.getenv("IOT_CONFIG")
+        if env_path:
+            return env_path
+        # 搜索顺序: exe 同目录 → _MEIPASS 打包目录 → BASE_DIR
+        search = [str(Path(sys.executable).parent / "config.yaml") if getattr(sys, 'frozen', False) else None,
+                  str(Path(getattr(sys, '_MEIPASS', '')) / "config.yaml") if getattr(sys, 'frozen', False) else None,
+                  str(BASE_DIR / "config.yaml")]
+        for p in search:
+            if p and os.path.exists(p):
+                return p
+        return None
+
+    @classmethod
     def from_yaml(cls, path: Optional[str] = None) -> "AppConfig":
-        if path is None:
-            path = os.getenv("IOT_CONFIG", str(BASE_DIR / "config.yaml"))
-        if os.path.exists(path):
-            data = load_yaml(path)
+        found = cls._find_config(path)
+        if found and os.path.exists(found):
+            data = load_yaml(found)
             return cls(**data)
         return cls()
 

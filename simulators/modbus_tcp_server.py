@@ -28,18 +28,31 @@ logger = logging.getLogger("modbus-sim")
 
 # ===== 模拟器类 =====
 class DeviceSimulator:
-    """动态寄存器模拟器"""
+    """动态寄存器模拟器 — 支持固定值覆盖"""
 
     def __init__(self, base_values: dict, noise: float = 0.02):
         self.base = base_values    # {register_address: (base_value, amplitude, min, max)}
         self.noise = noise
         self._phase = {}
+        self.fixed: dict = {}      # {addr: int16_value} — 固定值，优先级高于动态
+
+    def set_fixed(self, addr: int, value: float):
+        """设置固定寄存器值"""
+        self.fixed[addr] = int(value)
+
+    def clear_fixed(self, addr: int = None):
+        """清除固定值"""
+        if addr is None: self.fixed.clear()
+        else: self.fixed.pop(addr, None)
 
     def update(self):
         """更新所有寄存器值，返回 {addr: int16_value}"""
         t = time.time()
         result = {}
         for addr, (base, amp, vmin, vmax) in self.base.items():
+            if addr in self.fixed:
+                result[addr] = self.fixed[addr]
+                continue
             phase = self._phase.get(addr, random.uniform(0, math.pi * 2))
             self._phase[addr] = phase + 0.05  # 缓慢变化
             noise = random.gauss(0, amp * self.noise)
@@ -192,28 +205,30 @@ class ModbusSimServer:
         """从模拟器构建 Modbus Server Context"""
         regs = simulator.get_registers()
         # 填充到足够大的寄存器空间
-        block = [0] * 100
+        block = [0] * 256
         for addr, val in regs.items():
-            if addr < 100:
+            if addr < 256:
                 block[addr] = val & 0xFFFF
         return ModbusSlaveContext(
-            hr=ModbusSequentialDataBlock(0, block),  # Holding Registers
-            ir=ModbusSequentialDataBlock(0, [0] * 100),
-            co=ModbusSequentialDataBlock(0, [0] * 100),
-            di=ModbusSequentialDataBlock(0, [0] * 100),
+            hr=ModbusSequentialDataBlock(0, block),  # Holding Registers (FC03/06/16)
+            ir=ModbusSequentialDataBlock(0, [0] * 256),  # Input Registers (FC04)
+            co=ModbusSequentialDataBlock(0, [0] * 100),  # Coils (FC01/05/15)
+            di=ModbusSequentialDataBlock(0, [0] * 100),  # Discrete Inputs (FC02)
         )
 
     async def _update_loop(self):
-        """每秒更新寄存器值"""
+        """每秒更新寄存器值（跳过固定值）"""
         while self._running:
             try:
-                # 更新所有 context
-                for sim, ctx in [(self.inverter, self.contexts[0]),
-                                 (self.pcs, self.contexts[1]),
-                                 (self.charger, self.contexts[2])]:
+                for sim, ctx, sim_name in [(self.inverter, self.contexts[0], "inverter"),
+                                           (self.pcs, self.contexts[1], "pcs"),
+                                           (self.charger, self.contexts[2], "charger")]:
                     regs = sim.get_registers()
                     for addr, val in regs.items():
-                        if addr < 100:
+                        # 固定值不覆盖（保持写入的值）
+                        if addr in sim.fixed:
+                            continue
+                        if addr < 256:
                             ctx.setValues(3, addr, [val & 0xFFFF])
                 await asyncio.sleep(1)
             except Exception as e:

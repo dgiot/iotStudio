@@ -112,14 +112,14 @@ class ModbusTCPAdapter(BaseProtocolAdapter):
             else:
                 r = await self.client.read_holding_registers(addr, cnt, slave)
             regs = list(r.registers) if hasattr(r, 'registers') else None
-            # 记录报文 (运行时导入避免循环依赖)
-            if regs:
+            # 记录报文
+            if _packet_logger or regs:
                 try:
-                    from src.main import log_packet as _lp
-                    resp_bytes = struct.pack(f'>{len(regs)}H', *regs)
-                    resp_hex = f"0001 0000 {3+len(regs)*2:04x} {slave:02x} {func:02x} {len(regs)*2:02x} " + resp_bytes.hex(' ')
-                    _lp(self.device_id, "TX", bytes.fromhex(req_hex.replace(' ','')))
-                    _lp(self.device_id, "RX", bytes.fromhex(resp_hex.replace(' ','')))
+                    resp_bytes = struct.pack(f'>{len(regs)}H', *regs) if regs else b''
+                    resp_hex = f"0001 0000 {3+len(regs)*2:04x} {slave:02x} {func:02x} {len(regs)*2:02x} " + resp_bytes.hex(' ') if regs else '00'
+                    if _packet_logger:
+                        _packet_logger(self.device_id, "TX", bytes.fromhex(req_hex.replace(' ','')))
+                        if regs: _packet_logger(self.device_id, "RX", bytes.fromhex(resp_hex.replace(' ','')))
                 except: pass
             return regs
         except ModbusException:

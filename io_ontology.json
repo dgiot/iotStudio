@@ -1,0 +1,478 @@
+{
+  "@context": {
+    "io": "http://dgiot.io/ontology#",
+    "dcs": "http://dgiot.io/dcs#",
+    "rtu": "http://dgiot.io/rtu#",
+    "hasServer": {
+      "@type": "@id"
+    },
+    "hasProcess": {
+      "@type": "@id"
+    },
+    "hasDataSource": {
+      "@type": "@id"
+    },
+    "hasPort": {
+      "@type": "@id"
+    },
+    "connectsTo": {
+      "@type": "@id"
+    },
+    "ip": "xsd:string",
+    "port": "xsd:integer",
+    "protocol": "xsd:string"
+  },
+  "servers": [
+    {
+      "id": "io:server_1",
+      "ip": "11.66.12.131",
+      "hostname": "WIN-NJ7VP96R2NM",
+      "role": "IO服务器",
+      "os": "Win10.0.14393",
+      "notes": "pSpace,WinRM:5985,RDP:2500"
+    },
+    {
+      "id": "io:server_2",
+      "ip": "11.66.12.130",
+      "hostname": "",
+      "role": "pSpace A11",
+      "os": "",
+      "notes": "A11 IO :8889"
+    },
+    {
+      "id": "io:server_3",
+      "ip": "11.66.12.129",
+      "hostname": "",
+      "role": "Oracle功图库",
+      "os": "",
+      "notes": "TNS:1521,orcl"
+    },
+    {
+      "id": "io:server_4",
+      "ip": "11.66.113.78",
+      "hostname": "",
+      "role": "DMZ中转",
+      "os": "",
+      "notes": "MQTT:1883,SSH:59660"
+    },
+    {
+      "id": "io:server_5",
+      "ip": "11.66.191.155",
+      "hostname": "",
+      "role": "开发机",
+      "os": "Win11",
+      "notes": "dgiot_lite,双网卡"
+    }
+  ],
+  "processes": [
+    {
+      "id": "io:process_1",
+      "name": "IoProject.exe",
+      "instances": 1,
+      "memory_mb": 306,
+      "version": "",
+      "vendor": "力控ForceCon",
+      "function": "IO主引擎",
+      "runsOn": "io:server_1"
+    },
+    {
+      "id": "io:process_2",
+      "name": "IOMan.exe",
+      "instances": 36,
+      "memory_mb": 16,
+      "version": "7.0.3.2",
+      "vendor": "力控ForceCon",
+      "function": "设备管理器(OPC/Modbus客户端)",
+      "runsOn": "io:server_1"
+    },
+    {
+      "id": "io:process_3",
+      "name": "IoMonitor.exe",
+      "instances": 1,
+      "memory_mb": 61,
+      "version": "7.0.1.2",
+      "vendor": "力控ForceCon",
+      "function": "监控界面+事件日志",
+      "runsOn": "io:server_1"
+    },
+    {
+      "id": "io:process_4",
+      "name": "CommBridge.exe",
+      "instances": 1,
+      "memory_mb": 32,
+      "version": "6.3.0.1",
+      "vendor": "力控ForceCon",
+      "function": "网桥(GPRS/CDMA)",
+      "runsOn": "io:server_1"
+    },
+    {
+      "id": "io:process_5",
+      "name": "IoCommit.exe",
+      "instances": 7,
+      "memory_mb": 15,
+      "version": "",
+      "vendor": "力控ForceCon",
+      "function": "数据提交(Oracle写入)",
+      "runsOn": "io:server_1"
+    }
+  ],
+  "data_sources": [
+    {
+      "id": 1,
+      "name": "Modbus RTU",
+      "type": "有线",
+      "endpoint": "131:53001",
+      "devices": 206,
+      "protocol": "Modbus TCP",
+      "status": "已解析,明文"
+    },
+    {
+      "id": 2,
+      "name": "OPC DA RSLinx",
+      "type": "DCOM",
+      "endpoint": "172.x:135",
+      "devices": 200,
+      "protocol": "OPC DA",
+      "status": "DCOM拒绝,需配DCOMCNFG"
+    },
+    {
+      "id": 3,
+      "name": "OPC DA WinCC",
+      "type": "DCOM",
+      "endpoint": "172.28.5.200",
+      "devices": 40,
+      "protocol": "OPC DA",
+      "status": "DCOM拒绝"
+    },
+    {
+      "id": 4,
+      "name": "A11 pSpace",
+      "type": "TCP",
+      "endpoint": "130:8889",
+      "devices": 200,
+      "protocol": "A11 5a5a",
+      "status": "已逆向"
+    },
+    {
+      "id": 5,
+      "name": "CommBridge GPRS",
+      "type": "无线",
+      "endpoint": "CommBridge",
+      "devices": 47,
+      "protocol": "GPRS/CDMA",
+      "status": "运行中"
+    },
+    {
+      "id": 6,
+      "name": "S7-TCP GCU331",
+      "type": "TCP",
+      "endpoint": "192.168.1.199",
+      "devices": 11,
+      "protocol": "S7-200",
+      "status": "dgiot_dtu配置"
+    },
+    {
+      "id": 7,
+      "name": "Oracle 功图",
+      "type": "TCP",
+      "endpoint": "129:1521",
+      "devices": 0,
+      "protocol": "TNS",
+      "status": "密码未知"
+    },
+    {
+      "id": 8,
+      "name": "IoMonitor GUI",
+      "type": "本地",
+      "endpoint": "桌面Session2",
+      "devices": 0,
+      "protocol": "UI Automation",
+      "status": "可读取实时事件"
+    },
+    {
+      "id": 9,
+      "name": "pSpace API",
+      "type": "DLL",
+      "endpoint": "psAPISDK.dll",
+      "devices": 0,
+      "protocol": "C API",
+      "status": "StartAPI=0"
+    }
+  ],
+  "dcs_endpoints": [
+    {
+      "id": 1,
+      "ip": "172.23.9.3",
+      "subnet": "172.23.9.0/24",
+      "devices": 30,
+      "opc_server": "RSLinx Classic",
+      "vendor": "Rockwell",
+      "dcom_port": 58648,
+      "status": "DCOM拒绝"
+    },
+    {
+      "id": 2,
+      "ip": "172.23.18.194",
+      "subnet": "172.23.18.0/24",
+      "devices": 30,
+      "opc_server": "RSLinx Classic",
+      "vendor": "Rockwell",
+      "dcom_port": 3514,
+      "status": "DCOM拒绝"
+    },
+    {
+      "id": 3,
+      "ip": "172.26.6.3",
+      "subnet": "172.26.6.0/24",
+      "devices": 60,
+      "opc_server": "RSLinx Classic",
+      "vendor": "Rockwell",
+      "dcom_port": 3759,
+      "status": "DCOM拒绝"
+    },
+    {
+      "id": 4,
+      "ip": "172.21.14.192",
+      "subnet": "172.21.14.0/24",
+      "devices": 40,
+      "opc_server": "RSLinx Classic",
+      "vendor": "Rockwell",
+      "dcom_port": 50167,
+      "status": "DCOM拒绝"
+    },
+    {
+      "id": 5,
+      "ip": "172.28.5.200",
+      "subnet": "172.28.5.0/24",
+      "devices": 40,
+      "opc_server": "RSLinx+WinCC",
+      "vendor": "Rockwell/Siemens",
+      "dcom_port": 59655,
+      "status": "DCOM拒绝"
+    }
+  ],
+  "rtu_networks": [],
+  "ports": [
+    {
+      "id": 1,
+      "server_id": 1,
+      "port": 5985,
+      "proto": "TCP",
+      "service": "WinRM",
+      "status": "OPEN"
+    },
+    {
+      "id": 2,
+      "server_id": 1,
+      "port": 53001,
+      "proto": "TCP",
+      "service": "Modbus主站",
+      "status": "OPEN"
+    },
+    {
+      "id": 3,
+      "server_id": 1,
+      "port": 2500,
+      "proto": "UDP",
+      "service": "RDP",
+      "status": "OPEN"
+    },
+    {
+      "id": 4,
+      "server_id": 1,
+      "port": 135,
+      "proto": "TCP",
+      "service": "DCE/RPC",
+      "status": "OPEN"
+    },
+    {
+      "id": 5,
+      "server_id": 1,
+      "port": 139,
+      "proto": "TCP",
+      "service": "NetBIOS",
+      "status": "OPEN"
+    },
+    {
+      "id": 6,
+      "server_id": 1,
+      "port": 54531,
+      "proto": "TCP",
+      "service": "IOMan-1",
+      "status": "OPEN"
+    },
+    {
+      "id": 7,
+      "server_id": 1,
+      "port": 54532,
+      "proto": "TCP",
+      "service": "IOMan-2",
+      "status": "OPEN"
+    },
+    {
+      "id": 8,
+      "server_id": 1,
+      "port": 54534,
+      "proto": "TCP",
+      "service": "IOMan-3",
+      "status": "OPEN"
+    },
+    {
+      "id": 9,
+      "server_id": 1,
+      "port": 54536,
+      "proto": "TCP",
+      "service": "IOMan-4",
+      "status": "OPEN"
+    },
+    {
+      "id": 10,
+      "server_id": 1,
+      "port": 54538,
+      "proto": "TCP",
+      "service": "IOMan-5",
+      "status": "OPEN"
+    },
+    {
+      "id": 11,
+      "server_id": 2,
+      "port": 8889,
+      "proto": "TCP",
+      "service": "A11 IO",
+      "status": "OPEN"
+    },
+    {
+      "id": 12,
+      "server_id": 3,
+      "port": 1521,
+      "proto": "TCP",
+      "service": "Oracle TNS",
+      "status": "OPEN"
+    }
+  ],
+  "protocols": [
+    {
+      "id": 1,
+      "name": "A11",
+      "endpoint": "130:8889",
+      "frames_73": 34130,
+      "frames_710": 93913,
+      "status": "已逆向"
+    },
+    {
+      "id": 2,
+      "name": "Modbus TCP",
+      "endpoint": "131:53001",
+      "frames_73": 5413,
+      "frames_710": 21255,
+      "status": "已解析"
+    },
+    {
+      "id": 3,
+      "name": "DCE/RPC OPC",
+      "endpoint": "172.x",
+      "frames_73": 41984,
+      "frames_710": 72923,
+      "status": "协议可识"
+    },
+    {
+      "id": 4,
+      "name": "Oracle TNS",
+      "endpoint": "129:1521",
+      "frames_73": 8740,
+      "frames_710": 8740,
+      "status": "可识"
+    },
+    {
+      "id": 5,
+      "name": "RDP",
+      "endpoint": "UDP:2500",
+      "frames_73": 13137,
+      "frames_710": 487432,
+      "status": "加密"
+    }
+  ],
+  "wireless_terminals": [
+    "02012170058",
+    "02105100097",
+    "02105110008",
+    "02106290043",
+    "02106290052",
+    "02106290085",
+    "02107010048",
+    "02107030091",
+    "02107190091",
+    "02110080020",
+    "02110080028",
+    "02110110045",
+    "02110120089",
+    "02110150030",
+    "02110150041",
+    "02110150046",
+    "02110160086",
+    "02111260034",
+    "02111270046",
+    "02111270058",
+    "02111290042",
+    "02111290066",
+    "02203170005",
+    "02203170100",
+    "02203170144",
+    "02203170155",
+    "02203210068",
+    "02203310036",
+    "02203310074",
+    "02203310103",
+    "02203310133"
+  ],
+  "relationships": [
+    {
+      "from": "io:process_IOMan",
+      "relation": "connectsTo",
+      "to": "dcs:1-5",
+      "via": "OPC DA/DCOM"
+    },
+    {
+      "from": "io:process_IoCommit",
+      "relation": "connectsTo",
+      "to": "io:server_3",
+      "via": "Oracle TNS"
+    },
+    {
+      "from": "io:process_CommBridge",
+      "relation": "connectsTo",
+      "to": "wireless",
+      "via": "GPRS/CDMA"
+    },
+    {
+      "from": "io:server_1",
+      "relation": "hasPort",
+      "to": "53001",
+      "via": "Modbus TCP -> 206 RTU"
+    },
+    {
+      "from": "io:server_1",
+      "relation": "hasPort",
+      "to": "8889",
+      "via": "A11 IO <- 11.66.12.130"
+    },
+    {
+      "from": "io:server_1",
+      "relation": "hasDataSource",
+      "to": "9 sources",
+      "via": "pSpace SDK"
+    },
+    {
+      "from": "io:server_1",
+      "relation": "connectsTo",
+      "to": "io:server_2",
+      "via": "A11 5a5a"
+    },
+    {
+      "from": "io:server_1",
+      "relation": "connectsTo",
+      "to": "io:server_3",
+      "via": "TNS :1521"
+    }
+  ]
+}

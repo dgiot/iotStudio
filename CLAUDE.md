@@ -11,7 +11,7 @@
 ## 技术栈
 - **语言**: Python 3.10+
 - **后端框架**: FastAPI (异步) + uvicorn
-- **协议适配**: pymodbus (Modbus RTU/TCP), 自研 IEC 104, asyncua (OPC UA)
+- **协议适配**: pymodbus (Modbus RTU/TCP), 自研 IEC 104, asyncua (OPC UA), **A11 (中石油私有协议)**
 - **时序存储**: TDengine 3.x / SQLite 降级
 - **关系存储**: PostgreSQL 15+ / SQLite 降级 (SQLAlchemy + asyncpg)
 - **消息推送**: paho-mqtt (MQTT), httpx (HTTP)
@@ -66,6 +66,15 @@ start_simulators.bat        → 启动全部模拟器
 python run.py               → 启动平台
 python simulators/run_all.py → 启动模拟器
 ```
+
+## 生产网规则
+
+> 详见: [[production-host-rules]]
+
+| 机器 | IP | 角色 | 约束 |
+|------|-----|------|------|
+| 主站 | 11.66.12.131 | pSpace 管理 (WinRM :5985) | 只读抓包/查进程，禁止安装/重启/停服 |
+| IO 服务器 | 11.66.12.130 | A11 :8889 | 被动查询，禁止直连写入 |
 
 ## 默认技能
 - 文档: /latex-writer

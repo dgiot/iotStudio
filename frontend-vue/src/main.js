@@ -1,6 +1,7 @@
 import { createApp } from 'vue'
 import ElementPlus from 'element-plus'
 import 'element-plus/dist/index.css'
+import './style.css'
 import zhCn from 'element-plus/dist/locale/zh-cn.mjs'
 import * as ElIcons from '@element-plus/icons-vue'
 import ECharts from 'vue-echarts'
