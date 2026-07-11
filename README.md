@@ -1,98 +1,116 @@
-# dgiot_lite
+# dgiot_lite — 轻量级物联网边缘平台
 
-> DG-IoT 开源物联网平台 Python 轻量联动版本 | 独立运行 | 源码交付
+[![Python](https://img.shields.io/badge/Python-3.10+-blue)](https://python.org)
+[![FastAPI](https://img.shields.io/badge/FastAPI-0.110+-green)](https://fastapi.tiangolo.com)
+[![Vue](https://img.shields.io/badge/Vue-3.x-cyan)](https://vuejs.org)
+[![SQLite](https://img.shields.io/badge/SQLite-零安装-orange)](https://sqlite.org)
 
-[![Python](https://img.shields.io/badge/Python-3.10+-blue?logo=python)](https://python.org)
-[![FastAPI](https://img.shields.io/badge/FastAPI-0.110+-green?logo=fastapi)](https://fastapi.tiangolo.com)
-[![Vue](https://img.shields.io/badge/Vue-3.x-cyan?logo=vue.js)](https://vuejs.org)
-[![License](https://img.shields.io/badge/License-Apache_2.0-orange)](LICENSE)
+> Python 轻量版本 | 边缘代理 | 协议采集 | 源码交付 | 支持联动 DG-IoT 主平台
 
 ---
 
-## 定位
+## 架构定位
 
-| 特性 | dgiot_lite | DG-IoT 主平台 |
-|------|-----------|-------------|
-| 语言 | Python 3.10+ | Erlang/OTP |
-| 定位 | 轻量学习版 / 边缘采集 | 企业级全功能 |
-| 协议 | Modbus RTU/TCP, IEC 104, OPC UA | 全协议（含GB28181视频等） |
-| 设备量 | ≤ 500 台 | 千万级 |
-| 部署 | 单机 Python / Docker | 集群 |
-| 联动 | 可推送至 DG-IoT 主平台 | 接收 dgiot_lite 数据 |
-
-**独立完整可用 → 可选联动 DG-IoT。**
+```
+iotStudio (边缘)              DG-IoT (中枢)              iotStudio (应用)
+Python · 轻量代理              Erlang · 高性能              Vue3 · 低代码
+┌────────────────┐  MQTT/HTTP ┌──────────────────┐  REST  ┌──────────────┐
+│ parse_lite      │ ─────────→ │ EMQX 汇聚         │ ←───── │ 12页管理后台  │
+│ SQLite / PG     │ ←───────── │ Parse Server      │        │ 7插件架构     │
+│ TDengine 时序   │            │ TDengine · 集群    │        │ 动态菜单      │
+│ 协议·采集·解析  │            │ 规则·告警·本体    │        │ 2D组态·拓扑   │
+└────────────────┘            └──────────────────┘        └──────────────┘
+  <1000 设备/节点              >10万 设备汇聚                用户交互层
+```
 
 ---
 
 ## 快速开始
 
-### 方式一：双击启动（Windows）
-
-```
-双击 start_platform.bat      → 启动物联网平台
-双击 start_simulators.bat    → 启动4协议模拟器
-```
-
-打开浏览器：**http://localhost:8000**
-
-### 方式二：命令行
-
 ```bash
 # 1. 安装依赖
 pip install -r requirements.txt
 
-# 2. 初始化数据库（可选，首次运行自动创建）
-python scripts/init_db.py
-
-# 3. 启动平台
+# 2. 启动平台 (SQLite 零安装, 无需 PG/TDengine)
 python run.py
+# → http://localhost:8000    管理后台
+# → http://localhost:8000/docs   Swagger API
 
-# 4. 另开终端，启动模拟器（可选）
-python simulators/run_all.py
-```
-
-### 方式三：Docker
-
-```bash
-cd scripts
-docker-compose up -d
-# 启动: IoT平台 + PostgreSQL + TDengine + EMQX
+# 3. (可选) 初始化种子数据
+python scripts/init_dgiot.py
 ```
 
 ---
 
-## 功能
+## 核心特性
 
 ### 数据采集
-| 协议 | 实现 | 说明 |
+| 协议 | 文件 | 说明 |
 |------|------|------|
-| Modbus RTU | pymodbus RS-485 | 串口轮询，多从站 |
-| Modbus TCP | pymodbus TCP | 以太网并发 |
-| IEC 60870-5-104 | 自研客户端 | 总召 + 变化传输 |
-| OPC UA | asyncua Client | 订阅 + 轮询 |
+| Modbus TCP/RTU | `protocols/modbus_tcp.py` | 多从站轮询，寄存器扫描 |
+| A11 (CNPC) | `protocols/a11.py` | 中石油油气生产物联网 5a5a 帧 |
+| OPC UA | pymodbus / asyncua | 订阅 + 轮询 |
+| OPC DA | DCOM 识别 | RSLinx 协议可识 |
+| IEC 104 | `protocols/` | 电力远动规约 |
+| HTTP REST | `protocols/youyeyun.py` | 有叶云油液监测平台 |
 
 ### 数据存储
-| 数据库 | 用途 | License |
-|--------|------|---------|
-| TDengine 3.x | 时序遥测数据 | AGPL v3 |
-| PostgreSQL 15+ | 设备档案/配置/告警 | PostgreSQL License |
-| SQLite | 降级模式（零依赖） | Public Domain |
-
-### 管理后台 (Vue3 + Element Plus)
-| 页面 | 功能 |
-|------|------|
-| 仪表盘 | 实时KPI + 采集日志 + WebSocket 实时推送 |
-| 设备管理 | 设备CRUD、通讯参数、协议选择 |
-| 设备详情 | 点位配置、最新遥测数据 |
-| 告警管理 | 阈值/变化率/离线告警，三级P0-P2，确认/清除 |
-| 数据查询 | 时序数据按时间范围查询 |
-
-### 数据推送
-| 目标 | 协议 | 说明 |
+| 方案 | 用途 | 安装 |
 |------|------|------|
-| MQTT Broker | MQTT 3.1.1 | 自定义Topic，QoS 0/1 |
-| HTTP Server | HTTP POST | JSON Body，Bearer Token |
-| **DG-IoT 主平台** | MQTT（物模型格式） | 可选联动 |
+| SQLite | 默认 (零安装) | 内置 |
+| PostgreSQL | 生产环境多租户 | 可选 |
+| TDengine 3.x | 时序数据 | 可选, 无则降级 SQLite |
+
+### Parse-lite (Parse Server Python 兼容层)
+| 功能 | 说明 |
+|------|------|
+| CRUD | `POST/GET/PUT/DELETE /classes/{ClassName}` |
+| 查询 | `$ne $lt $gt $in $nin $exists $regex $or $and` |
+| 用户 | signup / login / logout / session |
+| 角色 | `_Role` 创建, 层级, 用户关联 |
+| ACL | 对象级 `{user/role}:{read/write}` |
+| CLP | 类级 find/get/create/update/delete |
+| 批量 | `POST /batch` (max 50) |
+| Hooks | beforeSave / afterSave / beforeDelete / afterDelete |
+
+### 多租户
+| 功能 | 文件 |
+|------|------|
+| 租户 CRUD | `web/tenant_api.py` |
+| 角色层级 | `tenants.parent_id` (对齐 DG-IoT `_Role.roles`) |
+| 用户-租户关联 | `user_roles` 表 |
+| 请求隔离 | `X-Tenant-ID` header + JWT |
+
+### 本体引擎
+```
+Site (采油厂) → Gateway (IO服务器) → Device (RTU/井站) → Point (测点)
+                                                    ↓
+                        MQTT: dgiot/{site}/{gateway}/{device}/{point}/data
+```
+`ontology.py` — 四层模型 + `sync_to_parse()` 自动创建 Parse Device 对象。
+
+---
+
+## 管理后台 (12 页 7 组)
+
+```
+📊 监控     仪表盘 (KPI+趋势+告警等级+日志)
+🔌 设备     设备管理 · 产品管理 (TSL分区+导入导出)
+🗺️ 组态     组态视图 (设备拓扑+流程组态 tabs 联调)
+📡 数据     数据分析 · 告警管理 · 流计算引擎 · 预测性维护
+🔧 网络     报文解析 · 通道管理 · 边缘代理
+🛠️ 工具     MQTT调试 · 模拟器管理
+⚙️ 系统     系统概览 · 运维管理 · 用户管理
+```
+
+### 插件架构
+```js
+// manifest.js — 部署时按需启用
+hub:     false,  // 不需要边缘中枢联调 → Vite tree-shake 自动裁掉
+network: true,   // 需要报文解析
+```
+
+6 个厂商通道插件：🛢 油液监测 · 🔥 锅炉能效 · 📊 声振温 · 🔩 智能螺栓 · 📷 视频监控 · ⛽ TDLAS 气体检测
 
 ---
 
@@ -101,104 +119,77 @@ docker-compose up -d
 ```
 dgiot_lite/
 ├── run.py                    # 启动入口
-├── start_platform.bat        # Windows 启动脚本
-├── start_simulators.bat      # 模拟器启动脚本
-├── config.yaml               # 主配置
-├── requirements.txt          # Python 依赖
-│
-├── src/                      # 后端源码
-│   ├── main.py               # FastAPI (REST + WebSocket)
-│   ├── protocols/            # 4协议适配器
-│   ├── storage/              # TDengine + PostgreSQL
-│   ├── services/             # 采集/告警/推送 引擎
-│   └── push/                 # MQTT/HTTP/DG-IoT 推送器
-│
-├── frontend-vue/             # Vue3 管理后台
-│   └── src/views/            # 仪表盘/设备/告警/数据查询
-│
+├── config.yaml               # TDengine/MQTT/Parse 配置
+├── src/
+│   ├── main.py               # FastAPI 应用
+│   ├── parse_lite.py         # Parse Server Python 兼容层
+│   ├── ontology.py           # 4层本体引擎
+│   ├── auth.py               # JWT + 多租户中间件
+│   ├── protocols/            # Modbus/A11/OPC/IEC104/Youyeyun
+│   ├── storage/tdengine.py   # TDengine + SQLite 降级
+│   ├── models/               # dgiot_schema + device ORM
+│   ├── services/             # collector · phm · safety_rules
+│   └── web/                  # tenant_api · io_body_api
+├── frontend-vue/
+│   └── src/
+│       ├── plugins/          # 7插件 (manifest tree-shaking)
+│       ├── views/            # 12页 Vue3 SFC
+│       └── components/       # ChannelCard · NotifyBell · RunningCards
+├── scripts/                  # 初始化 · 种子数据
 ├── simulators/               # 协议模拟器
-│   ├── modbus_tcp_server.py  # 逆变器+PCS+充电桩
-│   ├── iec104_server.py      # IEC 104 从站
-│   ├── opcua_server.py       # OPC UA Server
-│   └── run_all.py            # 一键启动全部
-│
-├── docs/                     # 文档
-│   ├── requirements.md       # 需求规格说明书
-│   ├── tech-proposal.pdf     # 技术方案 (10页)
-│   └── pricing.pdf           # 报价表 (5页，脱敏)
-│
-├── scripts/                  # 部署
-│   ├── docker-compose.yml    # 一键部署4容器
-│   └── init_db.py            # 数据库初始化
-│
-└── tests/                    # 测试
-    └── test_integration.py   # 端到端集成测试
+└── tests/                    # 集成测试
 ```
-
----
-
-## API 文档
-
-启动后访问：**http://localhost:8000/docs** (Swagger UI)
-
-| 端点 | 说明 |
-|------|------|
-| `GET /api/health` | 健康检查 |
-| `GET/POST /api/devices` | 设备管理 |
-| `GET /api/devices/{id}` | 设备详情 |
-| `GET/POST /api/devices/{id}/points` | 点位配置 |
-| `GET /api/alarms` | 告警列表 |
-| `POST /api/alarms/{id}/confirm` | 告警确认 |
-| `POST /api/alarms/{id}/clear` | 告警清除 |
-| `GET /api/telemetry/{device_id}/{point_id}` | 时序数据查询 |
-| `GET /api/telemetry/{device_id}/latest` | 设备最新数据 |
-| `GET /api/stats` | 采集统计 |
-| `POST /api/push-targets` | 添加推送目标 |
-| `WS /ws` | WebSocket 实时数据 |
 
 ---
 
 ## 配置
 
-编辑 `config.yaml`：
+`config.yaml`:
 
 ```yaml
-db:           # PostgreSQL (无则自动降级 SQLite)
-  host: 127.0.0.1
-  port: 5432
-tdengine:     # TDengine (无则自动降级 SQLite)
-  host: 127.0.0.1
-  port: 6030
-mqtt:         # MQTT Broker (推送用)
-  host: 127.0.0.1
-  port: 1883
+# 存储 (无则降级 SQLite)
+tdengine:
+  host: "172.22.193.167"       # 远端 TDengine (可选)
+  port: 6041
+
+# Parse-lite 嵌入式
+parse:
+  db_path: "./data/parse.db"   # SQLite 单机版
+
+# 多租户
+storage_mode: "sqlite"         # sqlite | postgres
 ```
+
+---
+
+## API
+
+| 端点 | 说明 |
+|------|------|
+| `GET /api/health` | 健康检查 |
+| `GET/POST /api/devices` | 设备管理 (DG-IoT Device) |
+| `GET/POST /api/tenants` | 租户管理 (DG-IoT _Role) |
+| `POST /api/roleuser` | 用户-角色分配 |
+| `GET /api/alarms` | 告警列表 |
+| `GET /api/telemetry/{device_id}/{point_id}` | 时序查询 |
+| `GET /api/stats` | 采集统计 |
+| `WS /ws` | WebSocket 实时推送 |
 
 ---
 
 ## 与 DG-IoT 联动
 
-```json
-// 在管理后台添加推送目标，类型选 dgiot
-{
-  "target_type": "dgiot",
-  "config": {
-    "host": "dgiot-server",
-    "port": 1883,
-    "username": "dgiot_admin",
-    "topic": "dgiot/device/telemetry",
-    "product_id": "pcs_monitor"
-  }
-}
+dgiot_lite 采集数据通过 MQTT 推送至 DG-IoT 主平台：
+
+```
+dgiot_lite  ──MQTT──→  EMQX (:1883)  ──→  Parse Server  ──→  TDengine
+  边缘代理              中枢汇聚             存储引擎           时序引擎
 ```
 
-配置后 dgiot_lite 采集数据自动推送至 DG-IoT 主平台。
+数据格式对齐 DG-IoT 物模型标准，实现边缘采集 → 中心汇聚的全链路。
 
 ---
 
 ## 维护
 
-迪格(杭州)物联科技有限公司
-
-- Git: `git@git.iotn2n.com:dgiot/dgiot_lite.git`
-- DG-IoT 主平台: https://github.com/dgiot/dgiot
+迪格(杭州)物联科技有限公司 — [DG-IoT 主平台](https://github.com/dgiot/dgiot)
