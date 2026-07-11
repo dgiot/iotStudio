@@ -644,6 +644,11 @@ def init_db():
             user_id TEXT, data TEXT DEFAULT '{}', expiresAt TEXT, createdAt TEXT);
         CREATE TABLE IF NOT EXISTS _Join_users_Role (objectId TEXT PRIMARY KEY, userId TEXT, roleId TEXT, data TEXT DEFAULT '{}', createdAt TEXT);
         CREATE TABLE IF NOT EXISTS _SCHEMA (className TEXT PRIMARY KEY, data TEXT);
+        -- 本体四层表 (对齐 DG-IoT dgiot_ontology)
+        CREATE TABLE IF NOT EXISTS ontology_site (objectId TEXT PRIMARY KEY, name TEXT, type TEXT, location TEXT, data TEXT DEFAULT '{}', createdAt TEXT, updatedAt TEXT);
+        CREATE TABLE IF NOT EXISTS ontology_gateway (objectId TEXT PRIMARY KEY, name TEXT, ip TEXT, site_id TEXT, protocols TEXT, data TEXT DEFAULT '{}', createdAt TEXT, updatedAt TEXT);
+        CREATE TABLE IF NOT EXISTS ontology_device (objectId TEXT PRIMARY KEY, name TEXT, gateway_id TEXT, type TEXT, protocol TEXT, slave_id INTEGER DEFAULT 1, data TEXT DEFAULT '{}', createdAt TEXT, updatedAt TEXT);
+        CREATE TABLE IF NOT EXISTS ontology_point (objectId TEXT PRIMARY KEY, name TEXT, device_id TEXT, unit TEXT, register TEXT, alarm TEXT, data TEXT DEFAULT '{}', createdAt TEXT, updatedAt TEXT);
     """)
     db.commit()
 

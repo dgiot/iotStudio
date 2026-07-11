@@ -58,3 +58,90 @@ def list_plugins():
         return {"plugins": list_all(), "health": health()}
     except:
         return {"plugins": [], "health": {}}
+
+# ---- 远程 IO 服务器信息 (WinRM) ----
+@router.get("/system/remote")
+def remote_system_info(host: str = "11.66.12.131"):
+    """通过 WinRM 获取远程 IO 服务器真实系统信息"""
+    try:
+        from winrm.protocol import Protocol
+        from ..config import cfg
+        rc = getattr(cfg, 'remote_capture', None) or {}
+        username = rc.get('username', 'administrator') if isinstance(rc, dict) else getattr(rc, 'username', 'administrator')
+        password = rc.get('password', '') if isinstance(rc, dict) else getattr(rc, 'password', '')
+        port = rc.get('port', 5985) if isinstance(rc, dict) else getattr(rc, 'port', 5985)
+
+        p = Protocol(endpoint=f'http://{host}:{port}/wsman', transport='ntlm',
+                     username=username, password=password)
+        shell = p.open_shell()
+        def run(cmd):
+            cid = p.run_command(shell, cmd)
+            out, _, _ = p.get_command_output(shell, cid)
+            return out.decode('gbk', errors='ignore').strip()
+
+        hostname = run('hostname')
+        sysinfo = run('systeminfo | findstr /C:"OS" /C:"System" /C:"Memory" /C:"Processor"')
+        mem = run('wmic OS get TotalVisibleMemorySize,FreePhysicalMemory /Value')
+        cpu = run('wmic cpu get Name,NumberOfCores,LoadPercentage /Value')
+        disk = run('wmic logicaldisk where DeviceID="C:" get Size,FreeSpace /Value')
+        net = run('ipconfig | findstr "IPv4"')
+        procs = run('tasklist | findstr "IoProject IOMan IoMonitor IoCommit CommBridge"')
+
+        p.close_shell(shell)
+
+        # 解析为本体并存入 parse_lite
+        ontology = _parse_to_ontology(hostname, host, sysinfo, mem, cpu, disk, net, procs)
+        return {
+            "hostname": hostname, "host": host,
+            "sysinfo": sysinfo, "memory": mem, "cpu": cpu,
+            "disk": disk, "network": net, "processes": procs,
+            "ontology": ontology,
+        }
+    except Exception as e:
+        return {"error": str(e), "host": host}
+
+def _parse_to_ontology(hostname, host, sysinfo, mem, cpu, disk, net, procs):
+    """将远程采集数据解析为四层本体 (Site→Gateway→Device→Point) 存入 parse_lite"""
+    import re
+    try:
+        from ..parse_lite import parse_create, ensure_table
+        from ..ontology import OntologyEngine, Site, Gateway, Device, Point
+    except:
+        return {"status": "parse_lite unavailable"}
+
+    engine = OntologyEngine()
+    site_id = "io_farm"
+    gw_id = f"gw_{hostname}"
+
+    # Layer 1: Site
+    engine.register(Site(id=site_id, name="IO服务器集群", type="control_center"))
+
+    # Layer 2: Gateway
+    engine.register(Gateway(id=gw_id, ip=host, site=site_id, hostname=hostname,
+        protocols=["a11:8889", "modbus:53001", "opc_da:135"]))
+
+    # Layer 3: Devices (from process list)
+    proc_list = [p.strip() for p in procs.split('\n') if p.strip() and not p.startswith('INFO')]
+    for pi, proc_line in enumerate(proc_list[:10]):
+        parts = proc_line.split()
+        if parts:
+            dev_id = f"{gw_id}_proc_{pi}"
+            engine.register(Device(id=dev_id, gateway=gw_id, name=parts[0] if parts else f"proc_{pi}",
+                type="process", protocol="win32"))
+
+    # Layer 4: Points (from CPU/Mem/Disk)
+    for pi, (name, unit, val_str) in enumerate([
+        ("CPU使用率", "%", re.search(r'LoadPercentage=(\d+)', cpu)),
+        ("总内存", "KB", re.search(r'TotalVisibleMemorySize=(\d+)', mem)),
+        ("可用内存", "KB", re.search(r'FreePhysicalMemory=(\d+)', mem)),
+        ("C盘总空间", "B", re.search(r'Size=(\d+)', disk)),
+        ("C盘可用", "B", re.search(r'FreeSpace=(\d+)', disk)),
+    ]):
+        if val_str:
+            pt_id = f"{gw_id}_pt_{pi}"
+            engine.register(Point(id=pt_id, device=f"{gw_id}_proc_0", name=name, unit=unit,
+                alarm={"high": 90} if "CPU" in name else {}))
+
+    # Store to parse_lite
+    engine.sync_to_parse("default")
+    return engine.health()
