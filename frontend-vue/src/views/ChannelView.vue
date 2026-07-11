@@ -144,15 +144,15 @@
     <el-dialog :title="editId ? '编辑通道' : '添加通道'" v-model="editVisible" width="520px">
       <el-form :model="editForm" label-width="80px">
         <el-row :gutter="12">
-          <el-col :span="12"><el-form-item label="设备ID"><el-input v-model="editForm.device_id" :disabled="!!editId" /></el-form-item></el-col>
-          <el-col :span="12"><el-form-item label="名称"><el-input v-model="editForm.device_name" /></el-form-item></el-col>
+          <el-col :span="12"><el-form-item label="devaddr"><el-input v-model="editForm.devaddr" :disabled="!!editId" /></el-form-item></el-col>
+          <el-col :span="12"><el-form-item label="名称"><el-input v-model="editForm.name" /></el-form-item></el-col>
         </el-row>
         <el-row :gutter="12">
           <el-col :span="12">
-            <el-form-item label="协议"><el-select v-model="editForm.protocol" style="width:100%"><el-option v-for="p in protocols" :key="p" :label="p" :value="p" /></el-select></el-form-item>
+            <el-form-item label="cType"><el-select v-model="editForm.cType" style="width:100%"><el-option v-for="p in protocols" :key="p" :label="p" :value="p" /></el-select></el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="类型"><el-select v-model="editForm.device_type" style="width:100%"><el-option v-for="t in devTypes" :key="t.v" :label="t.l" :value="t.v" /></el-select></el-form-item>
+            <el-form-item label="isEnable"><el-switch v-model="editForm.isEnable" /></el-form-item>
           </el-col>
         </el-row>
         <el-row :gutter="12">

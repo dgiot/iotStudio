@@ -17,12 +17,18 @@
         </div>
 
         <el-table :data="devices" highlight-current-row @row-click="selectRow" :row-class-name="rowClass" max-height="560" v-loading="loading">
-          <el-table-column prop="device_id" label="设备ID" :min-width="col('lg')" align="center" />
-          <el-table-column prop="device_name" label="名称" :min-width="col('xl')" show-overflow-tooltip />
-          <el-table-column prop="device_type" label="类型" :min-width="col('md')" align="center">
-            <template #default="{row}"><el-tag size="small" effect="dark" type="">{{ typeMap[row.device_type] }}</el-tag></template>
+          <el-table-column prop="devaddr" label="devaddr" :min-width="col('lg')" align="center">
+            <template #default="{row}"><code style="font-size:11px">{{ row.devaddr }}</code></template>
           </el-table-column>
-          <el-table-column prop="protocol" label="协议" :min-width="col('md')" align="center" />
+          <el-table-column prop="name" label="名称" :min-width="col('xl')" show-overflow-tooltip />
+          <el-table-column prop="product" label="产品" :min-width="col('md')" align="center">
+            <template #default="{row}">
+              <el-tag size="small" effect="dark" type="">{{ row.productName || (row.product?.objectId) || '—' }}</el-tag>
+            </template>
+          </el-table-column>
+          <el-table-column prop="ip" label="IP" :min-width="col('md')" align="center">
+            <template #default="{row}"><span v-if="row.ip" style="font-family:monospace;font-size:11px">{{ row.ip }}</span><span v-else style="color:#666">—</span></template>
+          </el-table-column>
           <el-table-column prop="status" label="状态" :min-width="col('sm')" align="center">
             <template #default="{row}">
               <el-tag :type="row.status==='online'?'success':(row.status==='alarm'?'warning':'info')" size="small">
