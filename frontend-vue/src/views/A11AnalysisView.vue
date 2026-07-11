@@ -14,7 +14,8 @@
         <el-option v-for="ep in endpoints" :key="ep.objectId" :label="ep.name+' ('+ep.host+':'+ep.port+')'" :value="ep.objectId" />
       </el-select>
       <el-button size="small" @click="showEpDialog=true" style="margin-left:4px" v-if="source==='remote'">⚙️</el-button>
-      <el-button size="small" :type="capturing?'danger':'success'" @click="toggle" style="margin-left:12px" :disabled="!source">
+      <el-button size="small" type="warning" @click="injectSample" style="margin-left:8px">🧪 样本</el-button>
+      <el-button size="small" :type="capturing?'danger':'success'" @click="toggle" style="margin-left:4px" :disabled="!source">
         {{capturing?'⏹ 停止':'▶ 开始抓包'}}
       </el-button>
       <span style="margin-left:12px;font-size:12px;color:#909399" v-if="source==='local'||source==='remote'">
@@ -223,6 +224,22 @@ function pktInfo(row) {
   }
   return ''
 }
+async function injectSample() {
+  try {
+    await fetch('/api/capture/remote/inject-sample', {method:'POST'})
+    const r = await fetch('/api/capture/remote/packets?limit=20')
+    const d = await r.json()
+    if (d.packets?.length) {
+      packets.value = d.packets.map((p,i) => ({
+        id: i+1, time: new Date(p.ts*1000).toLocaleTimeString(), dir: p.dir,
+        src: p.src, dst: p.dst, sz: p.len, msg: p.proto, hex: p.hex,
+        fields: [{f:'协议',v:p.proto,d:'注入样本'}], str: [], info: p.proto==='A11'?'A11帧':'Modbus帧'
+      }))
+      ElMessage.success(`${packets.value.length} 个样本注入成功`)
+    }
+  } catch { ElMessage.error('注入失败') }
+}
+
 function clearPackets() {
   packets.value = []; pktPage.value = 1; sel.value = null; livePackets.value = 0
   if (capturing.value) { clearInterval(timer); capturing.value = false }
