@@ -125,7 +125,7 @@ async function onFilePicked(e) {
   } catch { ElMessage.error('解析失败') }
 }
 
-onMounted(loadEndpoints)
+onMounted(() => { loadEndpoints(); injectSample() })
 
 // 远程端点
 const endpoints = ref([])
