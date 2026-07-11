@@ -203,7 +203,7 @@ const allPkts = [
   {id:11,time:"09:31:23.250",dir:"RX",src:"172.23.18.194:3514",dst:"131:135",sz:120,msg:"OPC-DA",hex:"05000b03100000007800280066020000d016d016...",fields:[{"f": "PktType", "v": "11(Bind)", "d": "DCOM对象绑定"}, {"f": "Server", "v": "RSLinx", "d": "Rockwell OPC"}],str:[]},
   {id:12,time:"09:31:23.301",dir:"TX",src:"131:53001",dst:"11.248.203.74:502",sz:12,msg:"Modbus",hex:"7400000000060203012b0004",fields:[{"f": "UnitID", "v": "2", "d": "从站2"}, {"f": "FC", "v": "3", "d": "读保持寄存器"}, {"f": "Addr", "v": "299", "d": "起始地址"}],str:[]},
 ]
-const packets = ref(allPkts)
+const packets = ref([])
 
 function select(row) { sel.value = row }
 function rowStyle({row}) { return row.dir==='TX' ? {background:'rgba(230,162,60,0.03)'} : {} }
@@ -224,11 +224,11 @@ function pktInfo(row) {
   return ''
 }
 function clearPackets() {
-  packets.value = allPkts; pktPage.value = 1; sel.value = null; livePackets.value = 0
+  packets.value = []; pktPage.value = 1; sel.value = null; livePackets.value = 0
   if (capturing.value) { clearInterval(timer); capturing.value = false }
 }
 
-function switchSource(v) { pktPage.value = 1; packets.value = allPkts }
+function switchSource(v) { pktPage.value = 1 }
 
 async function toggle() {
   if (capturing.value) {
