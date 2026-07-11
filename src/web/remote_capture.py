@@ -49,7 +49,7 @@ def _netsh_cycle():
 
         # Convert ETL -> CSV, then search for A11 hex
         run('tracerpt C:/Users/Administrator/rem_cap.etl -o C:/Users/Administrator/rem_cap.csv -of CSV -y 2>&1')
-        output = run('powershell -c "Get-Content C:/Users/Administrator/rem_cap.csv -Encoding UTF8 -TotalCount 8000 | Select-String 5a5a,Modbus,MBAP,OPC | Select -First 15 | Out-String" 2>&1')
+        output = run('powershell -c "Get-Content C:/Users/Administrator/rem_cap.csv -Encoding UTF8 -TotalCount 10000 | Select-String 5a5a,6a6a,Modbus,MBAP,OPC,0500,DCOM,RPC,CoInitialize | Select -First 20 | Out-String" 2>&1')
 
         # Extract hex payloads from NDIS-PacketCapture lines
         import re
@@ -62,10 +62,12 @@ def _netsh_cycle():
                 idx = raw.find(b'\x5a\x5a')
                 if idx >= 0:
                     proto = 'A11'; pkt = raw[idx:idx+200]
-                elif raw[0] == 0x05 and raw[1] in (0, 2, 11, 12):
+                elif raw.find(b'\x05\x00') >= 0 and (raw.find(b'\x05\x00') < 20):
                     proto = 'OPC-DA'; pkt = raw[:150]
                 elif len(raw) >= 8 and raw[2:4] == b'\x00\x00' and raw[7] in (1,2,3,4,5,6,15,16):
                     proto = 'Modbus'; pkt = raw[:120]
+                elif raw.find(b'\x00\x00') >= 0 and len(raw) > 30:
+                    proto = 'TCP'; pkt = raw[:100]
                 else:
                     continue
                 entry = {"ts": time.time(), "proto": proto, "dir": "RX",
