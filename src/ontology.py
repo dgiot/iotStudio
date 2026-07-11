@@ -120,6 +120,45 @@ class OntologyEngine:
             "points": {k: asdict(v) for k, v in self.points.items()},
         }
 
+    # ── sync to Parse ──
+    def sync_to_parse(self, tenant_id: str = "default"):
+        """将本体实体同步到 parse_lite (DG-IoT Device/Product 类)"""
+        try:
+            from .parse_lite import parse_create
+        except ImportError:
+            from parse_lite import parse_create
+
+        # Sync sites → Device (device_type=site)
+        for s in self.sites.values():
+            parse_create("Device", {
+                "objectId": f"site_{s.id}", "devaddr": f"site_{s.id}",
+                "name": s.name, "device_type": "site",
+                "basedata": {"site_type": s.type, "location": s.location},
+                "isEnable": True, "tenant_id": tenant_id,
+            })
+
+        # Sync gateways → Device (device_type=gateway)
+        for g in self.gateways.values():
+            parse_create("Device", {
+                "objectId": f"gw_{g.id}", "devaddr": f"gw_{g.id}",
+                "name": g.hostname or g.id, "ip": g.ip,
+                "device_type": "gateway",
+                "basedata": {"protocols": g.protocols, "site": g.site},
+                "isEnable": True, "tenant_id": tenant_id,
+            })
+
+        # Sync devices → Device
+        for d in self.devices.values():
+            parse_create("Device", {
+                "objectId": d.id, "devaddr": d.id,
+                "name": d.name, "device_type": d.type,
+                "protocol": d.protocol,
+                "basedata": {"slave_id": d.slaveid, "gateway": d.gateway},
+                "isEnable": True, "tenant_id": tenant_id,
+            })
+
+        return {"status": "synced", "counts": self.health()["counts"]}
+
     def health(self) -> dict:
         return {
             "ontology": "4-layer: Site > Gateway > Device > Point",
