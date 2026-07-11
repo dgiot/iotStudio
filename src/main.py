@@ -223,6 +223,23 @@ async def health_mqtt():
 async def list_devices(station_id: Optional[str] = None, device_type: Optional[str] = None,
                        page: int = 1, page_size: int = 20):
     devices, total = await pg_store.list_devices(station_id, device_type, page=page, page_size=page_size)
+    if total == 0:
+        # Fallback: parse_lite 有种子数据
+        try:
+            from .parse_lite import parse_query
+            r = parse_query("Device", {"limit": page_size, "skip": (page-1)*page_size})
+            return {
+                "total": r.get("count", 0),
+                "page": page, "page_size": page_size,
+                "devices": [{
+                    "device_id": d.get("devaddr",""), "device_name": d.get("name",""),
+                    "device_type": d.get("device_type",""), "protocol": d.get("protocol",""),
+                    "status": d.get("status","offline"), "station_id": d.get("station_id",""),
+                    "manufacturer": (d.get("basedata") or {}).get("manufacturer",""),
+                    "model": (d.get("basedata") or {}).get("model",""),
+                } for d in r.get("results",[])]
+            }
+        except: pass
     return {
         "total": total,
         "page": page, "page_size": page_size,
