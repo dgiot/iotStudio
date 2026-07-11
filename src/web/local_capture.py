@@ -24,37 +24,23 @@ def _netsh_cycle():
         time.sleep(15)
         subprocess.run('netsh trace stop', shell=True, capture_output=True, timeout=10, encoding='utf-8', errors='ignore')
 
-        # Parse via tracerpt
-        csv_file = trace_file.replace('.etl', '.csv')
-        subprocess.run(f'tracerpt "{trace_file}" -o "{csv_file}" -of CSV', shell=True, capture_output=True, timeout=30, encoding='utf-8', errors='ignore')
-
-        if os.path.exists(csv_file):
-            with open(csv_file, 'r', encoding='utf-8', errors='ignore') as f:
-                for line in f:
-                    matches = re.findall(r'[0-9A-Fa-f]{40,}', line)
-                    for m in matches:
-                        try:
-                            raw = bytes.fromhex(m)
-                            if len(raw) > 20:
-                                pstart = 0
-                                for i in range(len(raw)-1):
-                                    if raw[i:i+2] == b'\x5a\x5a': pstart = i; break
-                                if pstart == 0:
-                                    ihl = (raw[14] & 0x0F) * 4
-                                    tcp_s = 14 + ihl
-                                    doff = ((raw[tcp_s+12] >> 4) & 0x0F) * 4
-                                    pstart = tcp_s + doff
-                                if pstart < len(raw):
-                                    pkt = raw[pstart:pstart+80]
-                                    proto = 'A11' if pkt[:2]==b'\x5a\x5a' else 'Modbus' if len(pkt)>7 and pkt[7] in (1,2,3,4,5,6,15,16) else 'TCP'
-                                    _state["packets"].insert(0, {
-                                        "ts": time.time(), "proto": proto, "dir": "RX",
-                                        "src": "local", "dst": "device", "len": len(pkt),
-                                        "hex": pkt.hex(' ')
-                                    })
-                                    if len(_state["packets"]) > MAX_PKTS:
-                                        _state["packets"] = _state["packets"][:MAX_PKTS]
-                        except: pass
+        # 直接从 ETL 文件读原始 hex (跳过 CSV 解析)
+        if os.path.exists(trace_file):
+            with open(trace_file, 'rb') as f:
+                raw_data = f.read()
+            # 搜索 5a5a (A11) 和 Modbus 特征
+            for i in range(0, len(raw_data)-20, 2):
+                chunk = raw_data[i:i+80]
+                if chunk[:2] == b'\x5a\x5a' or (len(chunk)>=8 and chunk[2:4]==b'\x00\x00' and chunk[7] in (1,2,3,4,5,6,15,16)):
+                    proto = 'A11' if chunk[:2]==b'\x5a\x5a' else 'Modbus'
+                    _state["packets"].insert(0, {
+                        "ts": time.time(), "proto": proto, "dir": "RX",
+                        "src": "local", "dst": "device", "len": min(len(chunk), 80),
+                        "hex": chunk[:80].hex(' ')
+                    })
+                    if len(_state["packets"]) > MAX_PKTS:
+                        _state["packets"] = _state["packets"][:MAX_PKTS]
+                    if len(_state["packets"]) >= 20: break
         _state["cycles"] += 1
     except: _state["errors"] += 1
 
