@@ -1385,6 +1385,10 @@ app.include_router(tenant_router)
 from .web.io_body_api import router as io_body_router
 app.include_router(io_body_router)
 
+# ---- 系统信息 + 插件 API ----
+from .web.system_api import router as system_router
+app.include_router(system_router)
+
 # ---- 厂商通道桥接 API ----
 from .web.vendor_api import router as vendor_router
 app.include_router(vendor_router)
