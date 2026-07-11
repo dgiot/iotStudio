@@ -1,7 +1,20 @@
 <template>
   <div class="mqtt-page">
-    <h3>📡 MQTT 调试工具</h3>
-    <el-row :gutter="16" style="margin-top:16px">
+    <h3>📡 MQTT 工具</h3>
+    <!-- EMQX Dashboard 风格: Broker 概览卡片 -->
+    <el-row :gutter="12" style="margin-top:12px">
+      <el-col :span="6" v-for="b in brokerCards" :key="b.label">
+        <div class="broker-card">
+          <span class="bc-icon">{{ b.icon }}</span>
+          <div>
+            <div class="bc-value" :style="{color:b.color}">{{ b.value }}</div>
+            <div class="bc-label">{{ b.label }}</div>
+          </div>
+        </div>
+      </el-col>
+    </el-row>
+
+    <el-row :gutter="16" style="margin-top:12px">
       <!-- 连接配置 -->
       <el-col :span="8">
         <el-card class="sec-card">
@@ -91,6 +104,14 @@ const connected = ref(false)
 const messages = ref([])
 let client = null
 
+// EMQX Dashboard 风格 Broker 卡片
+const brokerCards = ref([
+  { icon:'📟', label:'版本', value:'EMQX 4.x', color:'#409EFF' },
+  { icon:'⏱️', label:'运行时间', value:'—', color:'#67C23A' },
+  { icon:'🔗', label:'连接数', value:'0', color:'#E6A23C' },
+  { icon:'📊', label:'主题数', value:'0', color:'#909399' },
+])
+
 function toggleConnect() {
   if (client) { client.end(); client=null; connected.value=false; return }
   const opts = { clientId: conn.clientId, clean: true, connectTimeout: 5000 }
@@ -136,6 +157,11 @@ onUnmounted(() => { if (client) client.end() })
 <style scoped>
 .mqtt-page h3 { color: #e8f0f8; margin: 0; }
 .sec-card { margin-bottom: 0; }
+/* Broker 卡片 (EMQX Dashboard 风格) */
+.broker-card { display: flex; align-items: center; gap: 12px; padding: 14px; background: #1d1e2b; border: 1px solid #2d2e3b; border-radius: 6px }
+.bc-icon { font-size: 28px }
+.bc-value { font-size: 18px; font-weight: 700 }
+.bc-label { font-size: 11px; color: #909399; margin-top: 2px }
 .msg-log { max-height: 300px; overflow-y: auto; font-family: monospace; font-size: 12px; }
 .msg-empty { text-align: center; color: #c0d5e8; padding: 30px; }
 .msg-row { display: flex; gap: 8px; padding: 4px 8px; border-bottom: 1px solid #234060; align-items: flex-start; }
