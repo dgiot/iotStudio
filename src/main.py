@@ -261,6 +261,21 @@ async def list_devices(station_id: Optional[str] = None, device_type: Optional[s
 async def get_device(device_id: str):
     dev = await pg_store.get_device(device_id)
     if dev is None:
+        # Fallback to parse_lite
+        try:
+            from .parse_lite import parse_get
+            d = parse_get("Device", device_id)
+            if d:
+                return {
+                    "device_id": d.get("devaddr", device_id), "device_name": d.get("name", ""),
+                    "devaddr": d.get("devaddr", ""), "name": d.get("name", ""),
+                    "status": d.get("status", "offline"), "protocol": d.get("protocol", ""),
+                    "device_type": d.get("device_type", ""), "ip": d.get("ip", ""),
+                    "manufacturer": (d.get("basedata") or {}).get("manufacturer","") if isinstance(d.get("basedata"),dict) else "",
+                    "model": (d.get("basedata") or {}).get("model","") if isinstance(d.get("basedata"),dict) else "",
+                    "isEnable": d.get("isEnable", True),
+                }
+        except: pass
         raise HTTPException(404, "设备不存在")
     return {"device_id": dev.device_id, "device_name": dev.device_name, "status": dev.status,
             "protocol": dev.protocol, "device_type": dev.device_type}
