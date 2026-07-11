@@ -45,13 +45,9 @@ def _netsh_cycle():
 
         # Step 1: Convert ETL -> CSV
         run('del C:/Users/Administrator/rem_cap.csv /Q 2>&1')
-        r = run('tracerpt C:/Users/Administrator/rem_cap.etl -o C:/Users/Administrator/rem_cap.csv -of CSV -y 2>&1')
-        # Step 2: Search for A11 and OPC-DA patterns
-        output = run('findstr 5a5a C:/Users/Administrator/rem_cap.csv 2>&1')
-        # OPC-DA: look for DCE/RPC patterns (port 135 traffic)
-        opc_output = run('findstr /C:"Port==135" C:/Users/Administrator/rem_cap.csv 2>&1')
-        if opc_output and len(opc_output) > 100:
-            output = (output or '') + '\n' + opc_output
+        run('tracerpt C:/Users/Administrator/rem_cap.etl -o C:/Users/Administrator/rem_cap.csv -of CSV -y 2>&1')
+        # Step 2: Search with PowerShell (proven: 32 A11 matches)
+        output = run('powershell -c "Get-Content C:/Users/Administrator/rem_cap.csv -Encoding UTF8 | Select-String 5a5a | Select -First 20 | Out-String" 2>&1')
 
         # Extract hex payloads from NDIS-PacketCapture lines
         import re
