@@ -31,8 +31,9 @@ def _netsh_cycle():
             out, _, _ = p.get_command_output(shell, cid)
             return out.decode('gbk', errors='ignore').strip()
 
-        run('del C:\\Users\\Administrator\\rem_cap.etl /Q 2>&1')
-        r = run('netsh trace start capture=yes tracefile=C:\\Users\\Administrator\\rem_cap.etl maxsize=80 persistent=no 2>&1')
+        # Start trace (forward slashes proven working on 131)
+        run('del C:/Users/Administrator/rem_cap.etl /Q 2>&1')
+        r = run('netsh trace start capture=yes tracefile=C:/Users/Administrator/rem_cap.etl maxsize=80 persistent=no 2>&1')
         if 'Running' not in r:
             _remote_state["errors"] += 1
             p.close_shell(shell)
@@ -41,11 +42,11 @@ def _netsh_cycle():
         time.sleep(30)
         run('netsh trace stop 2>&1')
 
-        # Parse NDIS packets from ETL via PowerShell
-        ps = 'powershell -c "tracerpt C:\\Users\\Administrator\\rem_cap.etl -o C:\\Users\\Administrator\\rem_cap.csv -of CSV 2>&1; Get-Content C:\\Users\\Administrator\\rem_cap.csv -Encoding UTF8 | Select-String 8889,53001,135,502 | Select -First 20 | ForEach-Object { $_.Line }" 2>&1'
+        # Parse ETL -> CSV via PowerShell
+        ps = 'powershell -c "tracerpt C:/Users/Administrator/rem_cap.etl -o C:/Users/Administrator/rem_cap.csv -of CSV 2>&1; Get-Content C:/Users/Administrator/rem_cap.csv -Encoding UTF8 | Select-String 8889,53001,135,502 | Select -First 20 | ForEach-Object { $_.Line }" 2>&1'
         output = run(ps)
 
-        # Parse NDIS hex from CSV
+        # Parse hex patterns from CSV
         import re
         hex_pattern = re.compile(r'[0-9A-Fa-f]{40,}')
         for line in output.split('\n'):
@@ -54,14 +55,11 @@ def _netsh_cycle():
                 try:
                     raw = bytes.fromhex(m)
                     if len(raw) > 20:
-                        # Extract IP+TCP payload (skip Ethernet+IP+TCP headers)
-                        # Simple detection: look for 5a5a (A11) or Modbus
                         payload_start = 0
                         for i in range(len(raw)-1):
                             if raw[i:i+2] == b'\x5a\x5a':
                                 payload_start = i; break
                         if payload_start == 0:
-                            # Look for TCP payload (after IP header)
                             ihl = (raw[14] & 0x0F) * 4
                             tcp_start = 14 + ihl
                             data_offset = ((raw[tcp_start+12] >> 4) & 0x0F) * 4
@@ -70,12 +68,8 @@ def _netsh_cycle():
                             pkt_data = raw[payload_start:payload_start+80]
                             proto = 'A11' if pkt_data[:2] == b'\x5a\x5a' else 'Modbus' if len(pkt_data)>7 and pkt_data[7] in (1,2,3,4,5,6,15,16) else 'TCP'
                             entry = {
-                                "ts": time.time(),
-                                "proto": proto,
-                                "dir": "RX",
-                                "src": "131",
-                                "dst": "device",
-                                "len": len(pkt_data),
+                                "ts": time.time(), "proto": proto, "dir": "RX",
+                                "src": "131", "dst": "device", "len": len(pkt_data),
                                 "hex": pkt_data.hex(' ')
                             }
                             _remote_state["packets"].insert(0, entry)
@@ -85,7 +79,6 @@ def _netsh_cycle():
 
         _remote_state["cycles"] += 1
         p.close_shell(shell)
-
     except Exception as e:
         _remote_state["errors"] += 1
 
