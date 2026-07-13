@@ -1,55 +1,64 @@
-import axios from 'axios'
-import router from '../router'
+/**
+ * API 聚合入口 — 对齐 iotView 模块分离结构
+ *
+ * 子模块:
+ *   request.js     — axios 实例 + 拦截器
+ *   parse.js       — Parse CRUD (queryObject/createObject/updateObject/deleteObject)
+ *   user.js        — 认证 (login/logout/getInfo)
+ *   navigation.js  — 菜单 (getNavigationList)
+ *
+ * 快捷别名: 设备/产品/通道/告警/遥测/系统
+ */
+import request from './request'
+import Parse from './parse'
 
-const api = axios.create({
-  baseURL: '/api',
-  timeout: 10000,
-})
+// ── 子模块重导出 ──
+export { default as request } from './request'
+export { default as Parse } from './parse'
 
-// 请求拦截：自动附加 token + 租户
-api.interceptors.request.use(config => {
-  const token = localStorage.getItem('dgiot_token')
-  if (token) config.headers.Authorization = `Bearer ${token}`
-  const tenant = localStorage.getItem('dgiot_tenant')
-  if (tenant) config.headers['X-Tenant-ID'] = tenant
-  return config
-})
+export { login, logout, getInfo, getUsers, getRoleTree, getDepartmentList } from './user'
+export { getNavigationList, getNavigationByGroup } from './navigation'
 
-// 响应拦截：401 跳转登录
-api.interceptors.response.use(
-  resp => resp,
-  error => {
-    if (error.response?.status === 401) {
-      localStorage.removeItem('dgiot_token')
-      localStorage.removeItem('dgiot_user')
-      router.push('/login')
-    }
-    return Promise.reject(error)
-  }
-)
+// ═══════════════════════════════════════════════════════════
+// 快捷别名 — 设备/产品/通道/告警/测点
+// ═══════════════════════════════════════════════════════════
+
+const CLASS = (name) => `/classes/${name}`
 
 // 设备
-export const getDevices = (params) => api.get('/devices', { params })
-export const getDevice = (id) => api.get(`/devices/${id}`)
-export const createDevice = (data) => api.post('/devices', data)
-export const deleteDevice = (id) => api.delete(`/devices/${id}`)
+export const getDevices      = (p) => Parse.queryObject(CLASS('Device'), p)
+export const getDevice       = (id) => Parse.queryObject(CLASS('Device'), {}, id)
+export const createDevice    = (d) => Parse.createObject(CLASS('Device'), d)
+export const updateDevice    = (id, d) => Parse.updateObject(CLASS('Device'), d, id)
+export const deleteDevice    = (id) => Parse.deleteObject(CLASS('Device'), {}, id)
 
-// 点位
-export const getPoints = (deviceId) => api.get(`/devices/${deviceId}/points`)
-export const createPoint = (deviceId, data) => api.post(`/devices/${deviceId}/points`, data)
-export const createPointsBatch = (deviceId, data) => api.post(`/devices/${deviceId}/points/batch`, data)
+// 产品
+export const getProducts     = (p) => Parse.queryObject(CLASS('Product'), p)
+export const createProduct   = (d) => Parse.createObject(CLASS('Product'), d)
+
+// 通道
+export const getChannels     = (p) => Parse.queryObject(CLASS('Channel'), p)
+export const createChannel   = (d) => Parse.createObject(CLASS('Channel'), d)
 
 // 告警
-export const getAlarms = (params) => api.get('/alarms', { params })
-export const confirmAlarm = (id) => api.post(`/alarms/${id}/confirm`)
-export const clearAlarm = (id) => api.post(`/alarms/${id}/clear`)
+export const getAlarms       = (p) => Parse.queryObject(CLASS('Alarm'), p)
+export const confirmAlarm    = (id) => request({ url: `/alarms/${id}/confirm`, method: 'post' })
+export const clearAlarm      = (id) => request({ url: `/alarms/${id}/clear`, method: 'post' })
+
+// 测点
+export const getPoints       = (deviceId) => request({ url: `/devices/${deviceId}/points`, method: 'get' })
+export const createPoint     = (deviceId, data) => request({ url: `/devices/${deviceId}/points`, method: 'post', data })
+export const updatePoint     = (deviceId, pointId, data) => request({ url: `/devices/${deviceId}/points/${pointId}`, method: 'put', data })
 
 // 遥测
-export const getTelemetry = (deviceId, pointId, params) => api.get(`/telemetry/${deviceId}/${pointId}`, { params })
-export const getLatest = (deviceId) => api.get(`/telemetry/${deviceId}/latest`)
+export const getTelemetry    = (deviceId, pointId, params = {}) => request({ url: `/telemetry/${deviceId}/${pointId}`, method: 'get', params })
+export const getLatest       = (deviceId) => request({ url: `/telemetry/${deviceId}/latest`, method: 'get' })
 
-// 统计
-export const getStats = () => api.get('/stats')
-export const getHealth = () => api.get('/health')
+// 系统
+export const getHealth       = () => request({ url: '/health', method: 'get' })
+export const getStats        = () => request({ url: '/stats', method: 'get' })
 
-export default api
+// 批量
+export const batch           = (reqs) => Parse.batch(reqs)
+
+export default request

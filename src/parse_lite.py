@@ -21,25 +21,40 @@ Parse-lite — Python Parse Server 兼容实现
   ✅ Batch 操作 (POST /batch, max 50)
   ✅ Schema API (GET/POST /schemas)
 """
-import json, sqlite3, os, uuid, time, hashlib, hmac, base64, secrets, re
-from datetime import datetime, timedelta
+import json, os, time, hashlib, hmac, base64, secrets, re
+from datetime import datetime, timedelta, date
 from typing import Optional, Callable
-from functools import wraps
 
-DB_PATH = os.path.join(os.path.dirname(__file__), "..", "data", "parse.db")
+class _DTEncoder(json.JSONEncoder):
+    def default(self, obj):
+        if isinstance(obj, (datetime, date)):
+            return obj.isoformat()
+        return super().default(obj)
+
+def _json_dumps(obj, **kw):
+    return json.dumps(obj, cls=_DTEncoder, ensure_ascii=False, **kw)
+
+try:
+    from .parse_db import get_backend, DBBackend, get_db_compat
+except ImportError:
+    from parse_db import get_backend, DBBackend, get_db_compat
+
 APP_ID = "ddc9ac052450367e4a03c4056c21bff8"
 MASTER_KEY = "b59551ab147d580a84272044b2139fbd"
-os.makedirs(os.path.dirname(DB_PATH), exist_ok=True)
+
+PH = "?"  # placeholder, 由 get_db() 动态设置
 
 
 # ===================== 数据库 =====================
 def get_db():
-    c = sqlite3.connect(DB_PATH)
-    c.row_factory = sqlite3.Row; c.execute("PRAGMA journal_mode=WAL"); c.execute("PRAGMA foreign_keys=ON")
-    return c
+    """返回兼容 sqlite3.Cursor 的包装器 (底层: SQLite 或 PostgreSQL)"""
+    global PH
+    be = get_backend()
+    PH = be.placeholder if be else "?"
+    return get_db_compat()
 
 def now_iso():
-    return datetime.utcnow().strftime("%Y-%m-%dT%H:%M:%S.000Z")
+    return get_backend().now_iso()
 
 def _oid():
     return secrets.token_hex(10)
@@ -60,12 +75,12 @@ def ensure_table(class_name: str):
     """动态建表 + 缓存 Schema 定义"""
     if class_name in SCHEMA_CACHE:
         return
-    db = get_db()
-    safe = class_name.replace('"', '""')
-    db.execute(f'CREATE TABLE IF NOT EXISTS "{safe}" (objectId TEXT PRIMARY KEY, data TEXT DEFAULT \'{{}}\', ACL TEXT DEFAULT \'{{}}\', createdAt TEXT, updatedAt TEXT)')
-    db.execute(f'CREATE INDEX IF NOT EXISTS idx_{class_name}_created ON "{safe}"(createdAt)')
-    db.commit()
-    db.close()
+    be = get_backend()
+    if class_name == "_SCHEMA":
+        be.create_table(class_name, "className TEXT PRIMARY KEY, data TEXT")
+    else:
+        be.create_table(class_name, "objectId TEXT PRIMARY KEY, data TEXT DEFAULT '{}', ACL TEXT DEFAULT '{}', createdAt TEXT, updatedAt TEXT")
+        be.execute(f'CREATE INDEX IF NOT EXISTS idx_{class_name}_created ON "{class_name}"(createdAt)')
     SCHEMA_CACHE[class_name] = {"className": class_name, "fields": {}, "classLevelPermissions": {}}
 
 
@@ -165,20 +180,45 @@ def afterDelete(class_name: str):
 
 
 # ===================== Pointer & Relation =====================
-def resolve_pointer(val: dict) -> Optional[dict]:
-    """解析 Pointer → 获取目标对象"""
-    if isinstance(val, dict) and val.get("__type") == "Pointer":
-        cn = val["className"]; oid = val["objectId"]
-        ensure_table(cn); db = get_db()
-        safe = cn.replace('"', '""')
-        row = db.execute(f'SELECT * FROM "{safe}" WHERE objectId = ?', (oid,)).fetchone()
-        db.close()
-        if row:
-            obj = {"objectId": row["objectId"], "createdAt": row["createdAt"], "updatedAt": row["updatedAt"]}
-            try: obj.update(json.loads(row["data"]))
-            except: pass
-            return obj
-    return None
+def resolve_pointer(val: dict, depth: int = 2, max_depth: int = 3) -> Optional[dict]:
+    """解析 Pointer → 获取目标对象 (支持嵌套 Pointer 递归)
+    depth: 当前深度 (2 = include 了一层 Pointer)
+    max_depth: 最大递归层数 (防止死循环)"""
+    if not isinstance(val, dict) or val.get("__type") != "Pointer":
+        return val
+    if depth >= max_depth:
+        return val  # 不再递归，保留 Pointer 引用
+    cn = val["className"]; oid = val["objectId"]
+    ensure_table(cn); db = get_db()
+    row = db.execute(f'SELECT * FROM "{cn}" WHERE objectId = ?', (oid,)).fetchone()
+    db.close()
+    if not row:
+        return val
+    obj = {"objectId": row["objectId"], "createdAt": row["createdAt"], "updatedAt": row["updatedAt"]}
+    try:
+        data = json.loads(row["data"])
+        # 递归解析嵌套 Pointer
+        for k, v in data.items():
+            if isinstance(v, dict) and v.get("__type") == "Pointer":
+                data[k] = resolve_pointer(v, depth + 1, max_depth)
+        obj.update(data)
+    except: pass
+    return obj
+
+
+def _include_obj(obj: dict, include_path: str, depth: int = 0, max_depth: int = 3):
+    """处理多级 Include: "user.department.manager" """
+    if depth >= max_depth:
+        return
+    parts = include_path.split(".")
+    if not parts or parts[0] not in obj:
+        return
+    val = obj[parts[0]]
+    resolved = resolve_pointer(val, depth, max_depth)
+    if resolved:
+        obj[parts[0]] = resolved
+        if len(parts) > 1:
+            _include_obj(resolved, ".".join(parts[1:]), depth + 1, max_depth)
 
 def encode_pointer(class_name: str, object_id: str) -> dict:
     return {"__type": "Pointer", "className": class_name, "objectId": object_id}
@@ -219,7 +259,7 @@ def parse_query(class_name: str, params: dict, user: dict = None, is_master: boo
     order = params.get("order", "-createdAt")
     keys = params.get("keys", "").split(",") if params.get("keys") else []
     include = params.get("include", "").split(",") if params.get("include") else []
-    count_mode = params.get("count") == "1"
+    count_mode = str(params.get("count", "")) == "1"
 
     # Build WHERE clause
     conditions, vals = _build_where(where)
@@ -235,17 +275,18 @@ def parse_query(class_name: str, params: dict, user: dict = None, is_master: boo
     order_cols = []
     for o in order.split(","):
         o = o.strip()
-        if o.startswith("-"):
-            order_cols.append(f"json_extract(data, '$.{o[1:]}') DESC")
-        else:
-            order_cols.append(f"json_extract(data, '$.{o}') ASC")
-    order_sql = "ORDER BY " + ", ".join(order_cols) if order_cols else "ORDER BY createdAt DESC"
+        desc = o.startswith("-")
+        field = o[1:] if desc else o
+        col = _col_ref(field)  # 系统列用列名, 其他走 json_extract
+        direction = "DESC" if desc else "ASC"
+        order_cols.append(f"{col} {direction}")
+    order_sql = "ORDER BY " + ", ".join(order_cols) if order_cols else 'ORDER BY "createdAt" DESC'
 
     # Count
     total = 0
     if count_mode or limit > 0:
         cr = db.execute(f'SELECT COUNT(*) as c FROM "{safe}" {where_sql}', vals).fetchone()
-        total = cr["c"] if cr else 0
+        total = _get_count_val(cr)
 
     if count_mode and int(params.get("limit", 100)) == 0:
         db.close()
@@ -256,12 +297,9 @@ def parse_query(class_name: str, params: dict, user: dict = None, is_master: boo
     results = []
     for r in rows:
         obj = _row_to_obj(r, keys)
-        if include:
-            for inc in include:
-                val = obj.get(inc)
-                resolved = resolve_pointer(val)
-                if resolved:
-                    obj[inc] = resolved
+        for inc in include:
+            if inc:
+                _include_obj(obj, inc)
         results.append(obj)
 
     db.close()
@@ -330,6 +368,10 @@ def parse_create(class_name: str, body: dict, user: dict = None, is_master: bool
     hook = _hooks["afterSave"].get(class_name)
     if hook:
         hook({"object": {"objectId": oid, **data}, "user": user, "master": is_master})
+
+    # LiveQuery broadcast
+    obj = {"objectId": oid, **data}
+    LiveQuery._broadcast(class_name, "create", obj)
 
     return {"objectId": oid, "createdAt": now}
 
@@ -584,24 +626,41 @@ def _build_where(where: dict, prefix: str = ""):
             conditions.append(f"json_extract(data, '$.{k}.objectId') = ?")
             vals.append(v["objectId"])
         else:
-            conditions.append(f"json_extract(data, '$.{k}') = ?")
+            col = _col_ref(k)
+            conditions.append(f"{col} = ?")
             vals.append(_serialize(v))
     return conditions, vals
+
+
+def _col_ref(k: str) -> str:
+    """字段引用: 系统列双引号 (PG大小写), 其他走 json_extract"""
+    if k.lower() in ("objectid", "createdat", "updatedat", "acl"):
+        return f'"{k}"'
+    return f"json_extract(data, '$.{k}')"
+
+
+def _get_count_val(cr) -> int:
+    """从 count 结果提取整数值 (兼容 PG dict / SQLite Row)"""
+    if cr is None: return 0
+    if isinstance(cr, dict):
+        return int(cr.get("c", cr.get("count", list(cr.values())[0] if cr else 0)) or 0)
+    try: return int(cr[0])
+    except: return 0
 
 
 def _op_to_sql(field: str, op: str, val) -> tuple:
     """转换单个操作符"""
     jf = f"json_extract(data, '$.{field}')"
+    sql_ops = {"$ne": "!=", "$lt": "<", "$lte": "<=", "$gt": ">", "$gte": ">="}
+    sql_op = sql_ops.get(op)
+    if not sql_op:
+        return None, []
+    if op in ("$lt", "$lte", "$gt", "$gte"):
+        # Numeric cast: PG/SQLite both accept +0 for type coercion
+        jf = f"({jf}+0)"
     if op == "$ne":
-        return f"({jf} IS NULL OR {jf} != ?)", [_serialize(val)]
-    if op == "$lt":
-        return f"{jf} < ?", [_serialize(val)]
-    if op == "$lte":
-        return f"{jf} <= ?", [_serialize(val)]
-    if op == "$gt":
-        return f"{jf} > ?", [_serialize(val)]
-    if op == "$gte":
-        return f"{jf} >= ?", [_serialize(val)]
+        return f"({jf} IS NULL OR {jf} {sql_op} ?)", [_serialize(val)]
+    return f"{jf} {sql_op} ?", [_serialize(val)]
     if op == "$in":
         return f"{jf} IN ({','.join(['?']*len(val))})", [_serialize(v) for v in val]
     if op == "$nin":
@@ -615,49 +674,252 @@ def _op_to_sql(field: str, op: str, val) -> tuple:
 
 def _serialize(val):
     if val is None: return None
-    if isinstance(val, bool): return 1 if val else 0
-    if isinstance(val, (int, float)): return val
+    if isinstance(val, bool): return "true" if val else "false"
+    if isinstance(val, (int, float)): return str(val)
+    from datetime import datetime
+    if isinstance(val, datetime): return val.isoformat()
     return str(val)
 
 
 def _row_to_obj(row, keys: list = None) -> dict:
-    obj = {"objectId": row["objectId"], "createdAt": row["createdAt"], "updatedAt": row["updatedAt"]}
-    try: obj.update(json.loads(row["data"]))
-    except: pass
-    try: obj["ACL"] = json.loads(row["ACL"])
+    from datetime import datetime
+    def _g(key, fallback=""):
+        if key in row: v = row[key]
+        elif key.lower() in row: v = row[key.lower()]
+        elif key.upper() in row: v = row[key.upper()]
+        else: v = fallback
+        if v is None: return fallback
+        return v.isoformat() if isinstance(v, datetime) else (str(v) if isinstance(v, (int, float)) else v)
+    obj = {"objectId": _g("objectId"), "createdAt": _g("createdAt"), "updatedAt": _g("updatedAt")}
+    # PG direct columns (Node.js Parse Server schema)
+    for col in ["name", "devaddr", "status", "ip", "product", "device_type",
+                "protocol", "isEnable", "manufacturer", "model", "station_id",
+                "parentId", "route", "lastOnlineTime", "assetNum", "namenumber"]:
+        v = _g(col)
+        if v:
+            obj[col] = v
+    # JSON data column (parse_lite schema)
+    data_val = _g("data")
+    if data_val and data_val != "{}":
+        try:
+            d = json.loads(data_val) if isinstance(data_val, str) else data_val
+            if isinstance(d, dict):
+                obj.update(d)
+        except: pass
+    # JSON basedata/detail/profile columns (Parse Server)
+    for json_col in ["basedata", "detail", "profile", "content", "location", "state"]:
+        v = _g(json_col)
+        if v and v != "None" and v != "null":
+            try:
+                d = json.loads(v) if isinstance(v, str) else v
+                if isinstance(d, dict):
+                    obj[json_col] = d
+                    # Merge basedata into top level for easier access
+                    if json_col == "basedata":
+                        for bk, bv in d.items():
+                            if bk not in obj:
+                                obj[bk] = bv
+            except: pass
+    acl_val = _g("ACL") or _g("_rperm", "{}")
+    try: obj["ACL"] = json.loads(acl_val) if isinstance(acl_val, str) else acl_val
     except: pass
     if keys:
         obj = {k: v for k, v in obj.items() if k in keys or k in ("objectId", "createdAt", "updatedAt")}
     return obj
 
 
+# ===================== Cloud Functions =====================
+_cloud_functions = {}
+
+def cloud_function(name: str):
+    """装饰器: @cloud_function("hello") → POST /api/functions/hello 触发"""
+    def deco(fn):
+        _cloud_functions[name] = fn
+        return fn
+    return deco
+
+def call_function(name: str, params: dict, user: dict = None) -> dict:
+    """调用注册的 Cloud Function"""
+    fn = _cloud_functions.get(name)
+    if not fn:
+        return {"error": f"Cloud function '{name}' not found"}
+    try:
+        result = fn({"params": params, "user": user, "master": False})
+        return {"result": result}
+    except Exception as e:
+        return {"error": str(e)}
+
+# ===================== LiveQuery =====================
+_livequery_subscriptions: dict = {}  # class_name → set of (ws_session, query_filter)
+
+class LiveQuery:
+    """实时查询 — afterSave/afterDelete → WebSocket 推送"""
+
+    _ws_manager = None  # 由 main.py 注入
+
+    @classmethod
+    def set_ws_manager(cls, manager):
+        cls._ws_manager = manager
+
+    @classmethod
+    def subscribe(cls, session_id: str, class_name: str, where: dict = None):
+        key = class_name
+        if key not in _livequery_subscriptions:
+            _livequery_subscriptions[key] = {}
+        _livequery_subscriptions[key][session_id] = where or {}
+
+    @classmethod
+    def unsubscribe(cls, session_id: str, class_name: str = None):
+        if class_name:
+            _livequery_subscriptions.get(class_name, {}).pop(session_id, None)
+        else:
+            for cn in _livequery_subscriptions:
+                _livequery_subscriptions[cn].pop(session_id, None)
+
+    @classmethod
+    def _match(cls, obj: dict, where: dict) -> bool:
+        """检查对象是否匹配订阅条件"""
+        if not where:
+            return True
+        for k, v in where.items():
+            if k not in obj or obj[k] != v:
+                return False
+        return True
+
+    @classmethod
+    def _broadcast(cls, class_name: str, event: str, obj: dict, where: dict = None):
+        """将变更推送给所有匹配的订阅者"""
+        subs = _livequery_subscriptions.get(class_name, {})
+        if not subs:
+            return
+        msg = json.dumps({"op": event, "className": class_name, "object": obj})
+        for session_id, filter_where in subs.items():
+            if cls._match(obj, filter_where) and cls._ws_manager:
+                cls._ws_manager.send(session_id, msg)
+
+
+# ===================== Parse Aggregate =====================
+def parse_aggregate(class_name: str, pipeline: list, user: dict = None, is_master: bool = False) -> dict:
+    """Parse Aggregate 查询 → SQL GROUP BY / COUNT / SUM / AVG / MIN / MAX
+
+    pipeline:
+      [{"$match": {"status": "online"}},
+       {"$group": {"_id": "$product_id", "count": {"$sum": 1}, "avg_val": {"$avg": "$value"}}},
+       {"$sort": {"count": -1}},
+       {"$limit": 10}]
+
+    映射:
+      $match → WHERE
+      $group → GROUP BY + agg_func
+      $sort  → ORDER BY
+      $limit → LIMIT
+    """
+    if not check_clp(class_name, "find", user, is_master):
+        return {"results": [], "error": "Forbidden"}
+    ensure_table(class_name)
+    db = get_db()
+
+    where_clauses = ["1=1"]; where_vals = []
+    group_fields = []; agg_fields = []
+    order_clauses = []
+    limit_val = 100
+
+    for stage in pipeline:
+        if isinstance(stage, dict):
+            for op, spec in stage.items():
+                if op == "$match":
+                    # Strip $ prefix on field names (e.g., "$status" → "status")
+                    clean = {k.lstrip('$'): v for k, v in spec.items()}
+                    conds, vals = _build_where(clean)
+                    where_clauses.extend(conds)
+                    where_vals.extend(vals)
+                elif op == "$group":
+                    for alias, expr in spec.items():
+                        if alias == "_id":
+                            continue
+                        if isinstance(expr, dict):
+                            func = list(expr.keys())[0]
+                            raw = expr[func]
+                            if isinstance(raw, str) and raw.startswith("$"):
+                                col = f"json_extract(data, '$.{raw[1:]}')"  # $value → json_extract
+                            elif isinstance(raw, str):
+                                col = f"json_extract(data, '$.{raw}')"
+                            else:
+                                col = str(raw)  # literal number (e.g., $sum: 1)
+                            if func == "$sum":
+                                agg_fields.append(f"SUM(({col}+0)) as \"{alias}\"")
+                            elif func == "$avg":
+                                agg_fields.append(f"AVG(({col}+0)) as \"{alias}\"")
+                            elif func == "$min":
+                                agg_fields.append(f"MIN(({col}+0)) as \"{alias}\"")
+                            elif func == "$max":
+                                agg_fields.append(f"MAX(({col}+0)) as \"{alias}\"")
+                            elif func == "$count":
+                                agg_fields.append(f"COUNT({col}) as \"{alias}\"")
+                    # _id → GROUP BY
+                    grp = spec.get("_id", "")
+                    if grp:
+                        if isinstance(grp, str):
+                            grp_field = grp.lstrip("$")
+                            group_fields.append(f"json_extract(data, '$.{grp_field}')")
+                            agg_fields.append(f"json_extract(data, '$.{grp_field}') as \"{grp_field}\"")
+                elif op == "$sort":
+                    for col, direction in spec.items():
+                        dir_str = "DESC" if direction == -1 else "ASC"
+                        order_clauses.append(f'"{col}" {dir_str}')
+                elif op == "$limit":
+                    limit_val = int(spec)
+
+    safe = class_name.replace('"', '""')
+    select_fields = agg_fields if agg_fields else ["*"]
+    where_sql = "WHERE " + " AND ".join(where_clauses)
+    group_sql = f"GROUP BY {', '.join(group_fields)}" if group_fields else ""
+    order_sql = "ORDER BY " + ", ".join(order_clauses) if order_clauses else ""
+    limit_sql = f"LIMIT {limit_val}"
+
+    sql = f'SELECT {", ".join(select_fields)} FROM "{safe}" {where_sql} {group_sql} {order_sql} {limit_sql}'
+    rows = db.execute(sql, where_vals).fetchall()
+    db.close()
+    return {"results": [dict(r) for r in rows]}
+
+
 # ===================== 初始化 =====================
 def init_db():
+    try:
+        _do_init_db()
+    except Exception as e:
+        import logging; logging.warning(f"[parse_lite] init_db skip: {e}")
+
+def _do_init_db():
+    be = get_backend()
     db = get_db()
-    db.executescript("""
-        CREATE TABLE IF NOT EXISTS _User (objectId TEXT PRIMARY KEY, username TEXT UNIQUE, password_hash TEXT,
-            email TEXT, phone TEXT, role TEXT DEFAULT 'user', sessionToken TEXT, sessionExpires TEXT,
-            data TEXT DEFAULT '{}', ACL TEXT DEFAULT '{}', createdAt TEXT, updatedAt TEXT);
-        CREATE TABLE IF NOT EXISTS _Role (objectId TEXT PRIMARY KEY, name TEXT UNIQUE, alias TEXT,
-            parent_id TEXT, data TEXT DEFAULT '{}', ACL TEXT DEFAULT '{}', createdAt TEXT, updatedAt TEXT);
-        CREATE TABLE IF NOT EXISTS _Session (objectId TEXT PRIMARY KEY, sessionToken TEXT UNIQUE,
-            user_id TEXT, data TEXT DEFAULT '{}', expiresAt TEXT, createdAt TEXT);
-        CREATE TABLE IF NOT EXISTS _Join_users_Role (objectId TEXT PRIMARY KEY, userId TEXT, roleId TEXT, data TEXT DEFAULT '{}', createdAt TEXT);
-        CREATE TABLE IF NOT EXISTS _SCHEMA (className TEXT PRIMARY KEY, data TEXT);
-        -- 本体四层表 (对齐 DG-IoT dgiot_ontology)
-        CREATE TABLE IF NOT EXISTS ontology_site (objectId TEXT PRIMARY KEY, name TEXT, type TEXT, location TEXT, data TEXT DEFAULT '{}', createdAt TEXT, updatedAt TEXT);
-        CREATE TABLE IF NOT EXISTS ontology_gateway (objectId TEXT PRIMARY KEY, name TEXT, ip TEXT, site_id TEXT, protocols TEXT, data TEXT DEFAULT '{}', createdAt TEXT, updatedAt TEXT);
-        CREATE TABLE IF NOT EXISTS ontology_device (objectId TEXT PRIMARY KEY, name TEXT, gateway_id TEXT, type TEXT, protocol TEXT, slave_id INTEGER DEFAULT 1, data TEXT DEFAULT '{}', createdAt TEXT, updatedAt TEXT);
-        CREATE TABLE IF NOT EXISTS ontology_point (objectId TEXT PRIMARY KEY, name TEXT, device_id TEXT, unit TEXT, register TEXT, alarm TEXT, data TEXT DEFAULT '{}', createdAt TEXT, updatedAt TEXT);
-    """)
+    be.create_table("_User", "objectId TEXT PRIMARY KEY, username TEXT UNIQUE, password_hash TEXT, "
+        "email TEXT, phone TEXT, role TEXT DEFAULT 'user', sessionToken TEXT, sessionExpires TEXT, "
+        "data TEXT DEFAULT '{}', ACL TEXT DEFAULT '{}', createdAt TEXT, updatedAt TEXT")
+    be.create_table("_Role", "objectId TEXT PRIMARY KEY, name TEXT UNIQUE, alias TEXT, "
+        "parent_id TEXT, data TEXT DEFAULT '{}', ACL TEXT DEFAULT '{}', createdAt TEXT, updatedAt TEXT")
+    be.create_table("_Session", "objectId TEXT PRIMARY KEY, sessionToken TEXT UNIQUE, "
+        "user_id TEXT, data TEXT DEFAULT '{}', expiresAt TEXT, createdAt TEXT")
+    be.create_table("_Join_users_Role", "objectId TEXT PRIMARY KEY, userId TEXT, roleId TEXT, data TEXT DEFAULT '{}', createdAt TEXT")
+    be.create_table("_SCHEMA", "className TEXT PRIMARY KEY, data TEXT")
+    # 本体层表
+    be.create_table("ontology_site", "objectId TEXT PRIMARY KEY, name TEXT, type TEXT, location TEXT, description TEXT, data TEXT DEFAULT '{}', createdAt TEXT, updatedAt TEXT")
+    be.create_table("ontology_gateway", "objectId TEXT PRIMARY KEY, name TEXT, ip TEXT, site_id TEXT, hostname TEXT, os TEXT, status TEXT, installed TEXT, channels TEXT, notes TEXT, data TEXT DEFAULT '{}', createdAt TEXT, updatedAt TEXT")
+    be.create_table("ontology_channel", "objectId TEXT PRIMARY KEY, name TEXT, gateway_id TEXT, protocol TEXT, endpoint TEXT, status TEXT, config TEXT, devices TEXT, data TEXT DEFAULT '{}', createdAt TEXT, updatedAt TEXT")
+    be.create_table("ontology_device", "objectId TEXT PRIMARY KEY, name TEXT, channel_id TEXT, type TEXT, protocol TEXT, slave_id INTEGER DEFAULT 1, manufacturer TEXT, model TEXT, status TEXT, points TEXT, data TEXT DEFAULT '{}', createdAt TEXT, updatedAt TEXT")
+    be.create_table("ontology_point", "objectId TEXT PRIMARY KEY, name TEXT, device_id TEXT, unit TEXT, description TEXT, register TEXT, alarm TEXT, range_min REAL, range_max REAL, category TEXT, data TEXT DEFAULT '{}', createdAt TEXT, updatedAt TEXT")
+    be.create_table("ontology_constraint", "objectId TEXT PRIMARY KEY, name TEXT, rule TEXT, entity TEXT, severity TEXT, source TEXT, action TEXT, enabled INTEGER DEFAULT 1, data TEXT DEFAULT '{}', createdAt TEXT, updatedAt TEXT")
+    be.create_table("ontology_datasource", "objectId TEXT PRIMARY KEY, gateway_id TEXT, type TEXT, connection TEXT, status TEXT, tag_count INTEGER DEFAULT 0, data TEXT DEFAULT '{}', createdAt TEXT, updatedAt TEXT")
     db.commit()
 
     now = now_iso()
-    # 默认租户
+    # 默认租户 (兼容 PG: INSERT OR IGNORE → 包装器翻译)
     db.execute("INSERT OR IGNORE INTO _Role (objectId, name, alias, createdAt, updatedAt) VALUES (?,?,?,?,?)",
                ("default", "默认租户", "default", now, now))
+    db.commit()
     db.execute("INSERT OR IGNORE INTO _Role (objectId, name, alias, parent_id, createdAt, updatedAt) VALUES (?,?,?,?,?,?)",
                ("oil-monitor", "设备完整性", "oil-monitor", "default", now, now))
+    db.commit()
     # 管理员
     db.execute("INSERT OR IGNORE INTO _User (objectId, username, password_hash, role, createdAt, updatedAt) VALUES (?,?,?,?,?,?)",
                ("admin", "admin", _hash("admin123"), "admin", now, now))

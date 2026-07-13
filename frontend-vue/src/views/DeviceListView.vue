@@ -52,9 +52,9 @@
           <el-table-column prop="station_id" label="场站" :min-width="col('md')" align="center" />
           <el-table-column label="操作" width="160" fixed="right" align="center">
             <template #default="{row}">
-              <el-button link type="primary" size="small" @click.stop="goDetail(row.device_id)">详情</el-button>
+              <el-button link type="primary" size="small" @click.stop="goDetail(getDeviceId(row))">详情</el-button>
               <el-button link type="warning" size="small" @click.stop="showDialog(row)">编辑</el-button>
-              <el-popconfirm title="确认?" @confirm="handleDelete(row.device_id)"><template #reference><el-button link type="danger" size="small">删除</el-button></template></el-popconfirm>
+              <el-popconfirm title="确认?" @confirm="handleDelete(getDeviceId(row))"><template #reference><el-button link type="danger" size="small">删除</el-button></template></el-popconfirm>
             </template>
           </el-table-column>
         </el-table>
@@ -83,7 +83,7 @@
             <el-descriptions-item label="最后在线">{{ selected.last_online_at || '-' }}</el-descriptions-item>
           </el-descriptions>
           <div class="panel-actions">
-            <el-button size="small" type="primary" @click="goDetail(selected.device_id)">查看详情</el-button>
+            <el-button size="small" type="primary" @click="goDetail(getDeviceId(selected))">查看详情</el-button>
           </div>
         </template>
         <div v-else class="panel-empty">
@@ -166,8 +166,9 @@ const stats = computed(() => {
 })
 
 function selectRow(row) { selected.value = row }
-function rowClass({row}) { return row.device_id === selected.value?.device_id ? 'row-selected' : '' }
+function rowClass({row}) { return row && selected.value && getDeviceId(row) === getDeviceId(selected.value) ? 'row-selected' : '' }
 function goDetail(id) { router.push(`/devices/${id}`) }
+function getDeviceId(row) { return row?.devaddr || row?.device_id || row?.objectId || 'unknown' }
 
 function exportDevices() {
   const data = devices.value.map(d => ({ objectId: d.devaddr, name: d.name, devaddr: d.devaddr, product: d.product?.objectId, ip: d.ip, status: d.status, isEnable: d.isEnable }))
@@ -193,8 +194,8 @@ async function load() {
     if (activeTab.value !== 'all') params.device_type = activeTab.value
     if (searchText.value) params.search = searchText.value; params.search_field = searchField.value
     const r = await getDevices(params)
-    devices.value = r.data.devices || []
-    total.value = r.data.total || 0
+    devices.value = r.data.results || r.data.devices || []
+    total.value = r.data.count || r.data.total || 0
   } catch {} finally { loading.value = false }
 }
 function onSizeChange(size) { pageSize.value = size; currentPage.value = 1; load() }

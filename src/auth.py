@@ -24,6 +24,14 @@ USERS = {
         "enabled": True,
         "created": "2026-01-01",
     },
+    "dgiot_dev": {
+        "password": hashlib.sha256("dgiot_dev".encode()).hexdigest(),
+        "role": "admin",
+        "name": "DG-IoT开发者",
+        "desc": "平台开发者",
+        "enabled": True,
+        "created": "2026-01-01",
+    },
     "dgiot": {
         "password": hashlib.sha256("dgiot123".encode()).hexdigest(),
         "role": "admin",

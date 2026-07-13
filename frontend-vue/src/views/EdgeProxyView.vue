@@ -91,8 +91,8 @@ const remoteLoading = ref(false)
 async function loadRemoteOntology() {
   remoteLoading.value = true
   try {
-    const r = await api.get('/system/remote', { params: { host: '11.66.12.131' } })
-    remote.value = r.data
+    const r = await fetch('/api/system/remote?host=11.66.12.131'); const d = await r.json()
+    remote.value = d
     // Parse CPU cores from wmic output
     const m = (r.data.cpu || '').match(/NumberOfCores=(\d+)/)
     if (m) remote.value.cpuCores = m[1] + ' 核'
@@ -132,9 +132,9 @@ const features = [
 ]
 
 onMounted(async () => {
-  // 系统信息 (真实扫描)
+  // 系统信息 — 直接用 fetch
   try {
-    const r = await api.get('/system'); const d = r.data
+    const r = await fetch('/api/system'); const d = await r.json()
     sysInfo.value = {
       hostname: d.hostname || '—',
       os: d.os || '—',
@@ -161,7 +161,7 @@ onMounted(async () => {
 
   // 运行指标
   try {
-    const r = await api.get('/stats'); const s = r.data
+    const r = await fetch('/api/stats'); const s = await r.json()
     metrics.value[4].value = s.online_devices || 0
     metrics.value[5].value = s.total_devices ? Object.keys(s).length + '/4' : '—'
     metrics.value[7].value = (s.total_collects || 0).toLocaleString()
@@ -169,8 +169,8 @@ onMounted(async () => {
 
   // 协议适配器
   try {
-    const r = await api.get('/devices', { params: { page_size: 500 } })
-    const devs = r.data.devices || []
+    const r = await fetch('/api/devices?page_size=500'); const j = await r.json()
+    const devs = j.devices || j.results || []
     const protoMap = {}
     devs.forEach(d => {
       const p = d.protocol || 'unknown'

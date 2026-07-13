@@ -145,3 +145,203 @@ def _parse_to_ontology(hostname, host, sysinfo, mem, cpu, disk, net, procs):
     # Store to parse_lite
     engine.sync_to_parse("default")
     return engine.health()
+
+
+# ═══════════════════════════════════════════════════════════
+# Oracle 生产数据 API (via 131 bridge)
+# ═══════════════════════════════════════════════════════════
+
+@router.get("/oracle/ping")
+def oracle_ping():
+    """测试 Oracle 连接"""
+    try:
+        from ..storage.oracle_bridge import get_bridge
+        b = get_bridge()
+        return b.ping()
+    except Exception as e:
+        return {"ok": False, "error": str(e)}
+
+
+@router.get("/oracle/runrate")
+def oracle_run_rate():
+    """获取最新运行率"""
+    try:
+        from ..storage.oracle_bridge import get_bridge
+        b = get_bridge()
+        result = b.get_run_rate()
+        rows = result.get('rows', [])
+        return {
+            "ok": True,
+            "time": rows[0].get('INSERT_TIME', '') if rows else '',
+            "run_rate": rows[0].get('TODAY_RUN_RATE', '') if rows else '',
+        }
+    except Exception as e:
+        return {"ok": False, "error": str(e)}
+
+
+@router.get("/oracle/wells")
+def oracle_wells(limit: int = 20):
+    """查询单井信息"""
+    try:
+        from ..storage.oracle_bridge import get_bridge
+        b = get_bridge()
+        result = b.get_wells(limit)
+        rows = result.get('rows', [])
+        # 解析测点路径
+        for row in rows:
+            path = row.get('POINT_LONGNAME', '')
+            if not path:
+                # wells query doesn't have POINT_LONGNAME, skip
+                pass
+        return {
+            "ok": True,
+            "count": len(rows),
+            "wells": rows,
+        }
+    except Exception as e:
+        return {"ok": False, "error": str(e)}
+
+
+@router.get("/oracle/points")
+def oracle_points(limit: int = 50):
+    """查询测点关系"""
+    try:
+        from ..storage.oracle_bridge import get_bridge
+        b = get_bridge()
+        result = b.get_points(limit)
+        rows = result.get('rows', [])
+        # 解析每个测点的路径
+        for row in rows:
+            path = row.get('POINT_LONGNAME', '')
+            if path:
+                row['ontology'] = b.parse_point_path(path)
+        return {
+            "ok": True,
+            "count": len(rows),
+            "points": rows,
+        }
+    except Exception as e:
+        return {"ok": False, "error": str(e)}
+
+
+@router.get("/oracle/stats")
+def oracle_stats():
+    """Oracle 数据库统计"""
+    try:
+        from ..storage.oracle_bridge import get_bridge
+        b = get_bridge()
+        result = b.get_counts()
+        stats = {}
+        for k, v in result.items():
+            if k.startswith('cnt_'):
+                table = k[4:]
+                rows_data = v.get('rows', [])
+                stats[table] = int(rows_data[0].get('CNT', 0)) if rows_data else 0
+        return {"ok": True, "stats": stats}
+    except Exception as e:
+        return {"ok": False, "error": str(e)}
+
+
+@router.get("/oracle/query")
+def oracle_query(sql: str):
+    """执行自定义 SQL (只读)"""
+    try:
+        # 安全检查: 只允许 SELECT
+        if not sql.strip().upper().startswith('SELECT'):
+            return {"ok": False, "error": "Only SELECT queries allowed"}
+
+        from ..storage.oracle_bridge import get_bridge
+        b = get_bridge()
+        result = b.query(sql, label="custom")
+        return {"ok": True, **result}
+    except Exception as e:
+        return {"ok": False, "error": str(e)}
+
+
+# ═══════════════════════════════════════════════════════════
+# Oracle 数据管道 API — 定时采 → TDengine → MQTT
+# ═══════════════════════════════════════════════════════════
+
+@router.post("/pipeline/start")
+async def pipeline_start():
+    """启动 Oracle 数据管道"""
+    from ..services.oracle_pipeline import get_pipeline
+    p = get_pipeline()
+    result = await p.start()
+    return {"ok": True, **result}
+
+
+@router.post("/pipeline/stop")
+async def pipeline_stop():
+    """停止 Oracle 数据管道"""
+    from ..services.oracle_pipeline import get_pipeline
+    p = get_pipeline()
+    await p.stop()
+    return {"ok": True, "status": "stopped"}
+
+
+@router.get("/pipeline/status")
+def pipeline_status():
+    """查询管道状态"""
+    from ..services.oracle_pipeline import get_pipeline
+    p = get_pipeline()
+    return {"ok": True, **p.get_stats()}
+
+
+@router.post("/pipeline/run-once")
+async def pipeline_run_once():
+    """手动触发一次采集"""
+    from ..services.oracle_pipeline import get_pipeline
+    p = get_pipeline()
+    result = await p.run_once()
+    return {"ok": True, **result}
+
+
+# ═══════════════════════════════════════════════════════════
+# 有叶云油液监测 API
+# ═══════════════════════════════════════════════════════════
+
+@router.get("/youyeyun/health")
+def youyeyun_health():
+    """有叶云设备健康检查"""
+    try:
+        from ..protocols.youyeyun import create_adapter
+        from ..config import cfg
+        yy_cfg = getattr(cfg, 'youyeyun', None)
+        if not yy_cfg:
+            return {"ok": False, "error": "有叶云未配置"}
+        devices = getattr(yy_cfg, 'devices', []) or yy_cfg.get('devices', [])
+        results = []
+        for dev in devices:
+            token = getattr(yy_cfg, 'token', '') or yy_cfg.get('token', '')
+            dev_id = dev.get('uuid', '') if isinstance(dev, dict) else getattr(dev, 'uuid', '')
+            dev_name = dev.get('name', '') if isinstance(dev, dict) else getattr(dev, 'name', '')
+            adp = create_adapter(token=token, device_id=dev_id, name=dev_name)
+            h = adp.check_health()
+            results.append({"device": dev_name, **h})
+        return {"ok": True, "devices": results}
+    except Exception as e:
+        return {"ok": False, "error": str(e)}
+
+
+@router.get("/youyeyun/realtime")
+def youyeyun_realtime():
+    """有叶云实时数据"""
+    try:
+        from ..protocols.youyeyun import create_adapter
+        from ..config import cfg
+        yy_cfg = getattr(cfg, 'youyeyun', None)
+        if not yy_cfg:
+            return {"ok": False, "error": "有叶云未配置"}
+        devices = getattr(yy_cfg, 'devices', []) or yy_cfg.get('devices', [])
+        results = []
+        for dev in devices:
+            token = getattr(yy_cfg, 'token', '') or yy_cfg.get('token', '')
+            dev_id = dev.get('uuid', '') if isinstance(dev, dict) else getattr(dev, 'uuid', '')
+            dev_name = dev.get('name', '') if isinstance(dev, dict) else getattr(dev, 'name', '')
+            adp = create_adapter(token=token, device_id=dev_id, name=dev_name)
+            pts = adp.fetch_realtime()
+            results.append({"device": dev_name, "points": pts})
+        return {"ok": True, "devices": results}
+    except Exception as e:
+        return {"ok": False, "error": str(e)}

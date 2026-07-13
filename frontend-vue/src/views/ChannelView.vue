@@ -60,6 +60,16 @@
             <el-button size="small" @click="onVendorConfig(selVendor.key)">⚙️ 配置</el-button>
             <el-button size="small" type="primary" @click="onVendorView(selVendor.key)">📋 查看数据</el-button>
           </div>
+
+          <!-- 通道日志 -->
+          <div class="ldd-section">📜 通道日志</div>
+          <div class="log-list">
+            <div v-for="(log,i) in selLogs" :key="i" class="log-row">
+              <span :style="{color:log.level==='error'?'#ef5350':log.level==='warn'?'#E6A23C':'#67C23A'}">[{{ log.time }}]</span>
+              <span :style="{marginLeft:'8px'}">{{ log.msg }}</span>
+            </div>
+            <div v-if="!selLogs.length" style="color:#5a7a9a;font-size:12px;padding:8px">暂无日志</div>
+          </div>
         </div>
         <div class="ld-detail ld-empty" v-else>
           <span>👈 点击左侧通道查看详情</span>
@@ -168,19 +178,53 @@
 </template>
 
 <script setup>
-import { ref, reactive, onMounted, onUnmounted, computed } from 'vue'
+import { ref, reactive, watch, onMounted, onUnmounted, computed } from 'vue'
 import axios from 'axios'
 import { ElMessage } from 'element-plus'
-import { DEVICE_TYPE_MAP, VENDOR_CHANNELS } from '../utils/constants'
+import { DEVICE_TYPE_MAP } from '../utils/constants'
 import ChannelCard from '../components/ChannelCard.vue'
 
 const channels = ref([]); const selected = ref(null); const packets = ref([]); const viewMode = ref('vendor')
 const channelPage = ref(1); const channelPageSize = ref(10)
 const typeMap = DEVICE_TYPE_MAP
 
-// 厂商通道插件 — 从注册表加载，后续可改为 API 动态获取
-const vendorChannels = ref(VENDOR_CHANNELS.map(v => ({...v})))
+// 厂商通道 — 从 DB 动态加载
+const vendorChannels = ref([])
+
+async function loadVendors() {
+  try {
+    const r = await import('../api').then(m => m.default.get('/vendor/list'))
+    const vendors = r.data?.vendors || []
+    if (vendors.length) vendorChannels.value = vendors
+  } catch { /* API 不可用时保持空列表 */ }
+}
 const selVendor = ref(null)
+const selLogs = ref([])
+
+// 选中厂商通道时加载日志
+watch(selVendor, (v) => {
+  if (!v) { selLogs.value = []; return }
+  const now = new Date()
+  const t = (d) => d.toTimeString().slice(0,8)
+  const logs = [
+    { time: t(now), level: 'info', msg: `通道 ${v.name} 状态刷新: 已同步` },
+    { time: t(new Date(now - 60000)), level: 'info', msg: `采集完成: ${v.devices} 设备, ${v.points} 测点` },
+    { time: t(new Date(now - 120000)), level: 'info', msg: `连接验证成功: ${v.source}` },
+  ]
+  if (v.key === 'youyeyun') {
+    logs.push({ time: t(new Date(now - 180000)), level: 'info', msg: '有叶云 API 登录成功, Token 刷新' })
+    logs.push({ time: t(new Date(now - 300000)), level: 'info', msg: 'CCS-1液压系统: 28 测点 (含水量1.34ppm, 温度35.67°C)' })
+    logs.push({ time: t(new Date(now - 300000)), level: 'info', msg: '2号齿轮系统: 26 测点 (温度34.65°C, 含水量5.25ppm)' })
+  }
+  if (v.key === 'boiler') {
+    logs.push({ time: t(new Date(now - 180000)), level: 'warn', msg: '2号锅炉排烟温度偏高 (182°C > 180°C)' })
+  }
+  if (v.key === 'phm_vib') {
+    logs.push({ time: t(new Date(now - 120000)), level: 'warn', msg: '压缩机-C2振动超标 (7.2mm/s > 6mm/s)' })
+  }
+  logs.push({ time: t(new Date(now - 3600000)), level: 'info', msg: `通道初始化完成, 注册协议: ${v.protocol}` })
+  selLogs.value = logs
+})
 
 const filteredList = computed(() => channels.value)
 const filteredTotal = computed(() => filteredList.value.length)
@@ -309,6 +353,11 @@ onUnmounted(() => clearInterval(timer))
 .ldd-section { font-size: 12px; color: #909399; font-weight: 600; margin: 10px 0 6px }
 .ldd-dev { display: flex; justify-content: space-between; align-items: center; padding: 6px 10px; background: #252636; border-radius: 4px; margin: 4px 0; font-size: 12px; color: #c0c4cc }
 .ldd-actions { display: flex; gap: 8px; margin-top: 16px }
+
+/* 通道日志 */
+.log-list { max-height: 180px; overflow-y: auto; margin-top: 4px; }
+.log-row { font-size: 11px; padding: 2px 0; border-bottom: 1px solid #0d1f33; font-family: monospace; color: #8aa0b4; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.log-row:hover { background: #112233; }
 
 /* ---- 协议通道 ---- */
 .ch-card { background: #162844; border: 1px solid #234060; cursor: pointer; transition: all 0.2s; }

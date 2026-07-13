@@ -1,0 +1,5 @@
+import sys; sys.path.insert(0, '.')
+from src.push.dgiot_pusher import DGIoTBridge; print('dgiot_push:', DGIoTBridge)
+from src.channel_registry import make_channel, ChannelManager, CType; print('channel_registry:', 'OK')
+from src.channel_bootstrap import bootstrap_channels, shutdown_channels; print('channel_bootstrap:', 'OK')
+print('ALL IMPORTS PASS')

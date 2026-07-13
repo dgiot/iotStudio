@@ -1,0 +1,322 @@
+\documentclass[12pt,a4paper]{ctexart}
+\usepackage{geometry}\geometry{a4paper,margin=2.5cm}
+\usepackage{graphicx}\graphicspath{{../}}
+\usepackage{float,booktabs,longtable,enumitem,hyperref,fancyhdr,xcolor,listings}
+\usepackage{caption}
+
+\pagestyle{fancy}
+\fancyhead[L]{dgiot\_lite — IO 服务器本体分析报告}
+\fancyhead[R]{V1.0.0}
+\fancyfoot[C]{\thepage}
+
+\lstset{basicstyle=\ttfamily\small,breaklines=true,frame=single}
+
+\title{\textbf{131 IO 服务器本体建模与数据管道技术报告}}
+\author{dgiot\_lite 项目组}
+\date{2026年7月12日}
+
+\begin{document}
+\maketitle
+\tableofcontents
+\newpage
+
+\section{概述}
+
+\subsection{项目背景}
+
+dgiot\_lite 是迪格（杭州）物联科技有限公司维护的 Python 轻量级物联网平台，对标 Erlang/OTP 企业级 DG-IoT 平台。本次针对大庆采油厂 131 IO 服务器（11.66.12.131）进行了全面的本体建模分析，范围覆盖 2,047 个文件的精读，建立了从现场设备到云端平台的完整数据管道。
+
+\subsection{核心成果}
+
+\begin{itemize}[leftmargin=*]
+  \item \textbf{本体实体}: 1 Site + 1 Gateway + 13 Channel + 47 Device + 约束规则 15 条
+  \item \textbf{数据管道}: Oracle(129:1521) $\rightarrow$ WinRM(131) $\rightarrow$ TDengine(SQLite) + MQTT
+  \item \textbf{生产数据}: 966 口井 + 4,815,000 功图记录 + 4,567 测点关系
+  \item \textbf{实时运行率}: 99.31\% @ 采集频率 300ms (IoMonitor CommitRealSpan)
+  \item \textbf{协议覆盖}: Modbus TCP / A11 RTU / OPC DA / PLC (Siemens/Mitsubishi/Beckhoff/Omron/GE)
+  \item \textbf{DTU 支持}: 16 种国产 DTU 协议插件 (博海粤能/四信/宏电/映翰通/蓝迪等)
+\end{itemize}
+
+\section{131 IO 服务器全景架构}
+
+\subsection{硬件与环境}
+
+\begin{itemize}[leftmargin=*]
+  \item 主机名: WIN-NJ7VP96R2NM
+  \item 操作系统: Windows Server 2016 (10.0.14393)
+  \item IO 软件: 力控 ForceControl 7.x / IoMonitor v6.0.0.1
+  \item 数据库: Oracle 11g @ 11.66.12.129:1521/orcl
+  \item 实时库: pSpace @ 11.66.11.131:8889 (已停用)
+  \item Oracle 客户端: 11.2.0 @ E:\textbackslash app\textbackslash Administrator\textbackslash product
+\end{itemize}
+
+\subsection{软件组件清单}
+
+\begin{longtable}{p{3cm}p{5cm}p{2.5cm}p{3cm}}
+\toprule
+\textbf{组件} & \textbf{描述} & \textbf{版本} & \textbf{状态} \\
+\midrule
+IoMonitor.exe & 主采集进程 & v6.0.0.1 & 运行中 (PID 18400) \\
+IOMan.exe & IO 管理器 & 6.x & 运行中 (多线程) \\
+IoCommit.exe & 数据提交引擎 & - & 运行中 (12组并发) \\
+CommBridge.exe & 通信网桥 & v6.x & 运行中 (频繁崩溃) \\
+A11SQLSERVICE.exe & A11→Oracle SQL 桥 & - & 运行中 \\
+pSpaceServer64.exe & 实时数据库 & v6.0.1.9 & 已停用 \\
+CalcEngine.exe & 计算引擎 & v6.0.0.1 & 运行中 \\
+SyncTaskManager.exe & 同步平台 & v0.0.0.1 & 未知 \\
+\bottomrule
+\end{longtable}
+
+\subsection{守护服务 (psNTService.csv)}
+
+\begin{longtable}{p{5cm}p{2cm}p{2cm}p{2cm}p{2cm}}
+\toprule
+\textbf{服务} & \textbf{心跳(s)} & \textbf{重试} & \textbf{间隔(s)} & \textbf{异常阈值} \\
+\midrule
+pSpaceServer64.exe & 60 & 3 & 10 & 3 \\
+IOFileServer.exe & 60 & 3 & 10 & 3 \\
+IOMonitor.exe & 60 & 3 & 10 & 3 \\
+CalcFileServer.exe & 60 & 3 & 10 & 3 \\
+CalcEngine.exe & 60 & 3 & 10 & 3 \\
+SyncTaskManager.exe & 30 & 10 & 5 & 100 \\
+\bottomrule
+\end{longtable}
+
+\section{协议驱动分析}
+
+\subsection{活跃协议通道}
+
+从实时网络连接快照确认的三路采集：
+
+\begin{longtable}{p{2.5cm}p{2.5cm}p{3cm}p{3.5cm}}
+\toprule
+\textbf{进程} & \textbf{协议} & \textbf{目标} & \textbf{连接数/设备数} \\
+\midrule
+CommBridge.exe (PID 19240) & Modbus TCP & 11.248.x.x / 11.249.x.x & 80+ 井口 RTU \\
+IOMan workers (×7 PID) & A11 TCP & 11.66.12.130:8889 & 7 连接 \\
+OPC\_FC\_Client (ioapi.dll) & OPC DA & JB1V2/DX6PZ/Z22Y 等 & 活跃采集 \\
+IoMonitor.exe (PID 18400) & Oracle OLEDB & 11.66.12.129:1521 & 1 连接 (数据出口) \\
+\bottomrule
+\end{longtable}
+
+\subsection{OPC DA 连接状态}
+
+OPC DA (DCOM :135) 在 131 上已验证 COM 对象创建成功（OPC.Automation.1 → IOPCAutoServer），但 DCOM 远程连接到 172.23.9.x 系列 OPC Server 被对方的 DCOM 安全策略拒绝（错误码 80004005）。尝试了以下所有方案均失败：
+
+\begin{itemize}[leftmargin=*]
+  \item 32-bit cscript + OPC.Automation COM 连接
+  \item PsExec64.exe 注入 Session 2 获取交互令牌
+  \item 降低 DCOM 认证级别 (DefaultAuthLevel=1)
+  \item 注册 IoMonitor 自带的 OPCDAAuto.dll
+  \item RDP 桌面交互登录后直接运行
+  \item 全 11 种 ProgID $\times$ 6 台主机扫描
+\end{itemize}
+
+核心结论：OPC DA DCOM 安全策略在 OPC Server 端（172.23.9.x），131 无法修改。IoMonitor 通过 CommBridge (Modbus TCP) 和 IOMan (A11 TCP) 走 TCP 直连完成采集，不依赖 OPC DCOM。
+
+\subsection{协议驱动 DDL 清单}
+
+对根目录 120+ 个 DLL 进行分类分析：
+
+\begin{longtable}{p{4cm}p{7cm}}
+\toprule
+\textbf{类别} & \textbf{DLL} \\
+\midrule
+OPC 组件 & OPCDAAuto.dll, OPCProxy.dll, opccomn\_ps.dll \\
+Siemens PLC & s7onlinx.dll (159KB), W95\_s7.dll \\
+Mitsubishi PLC & MruComDll.dll (518KB), Komfort.dll, MyS3.dll, Setss3dll.dll \\
+Beckhoff & TcAdsDll.dll (221KB) \\
+Omron & HCTPXYIF.DLL, HKCANDLL.dll, IMPDRVR.dll \\
+GE Fanuc & GEFSNP32.DLL, GEFSRX32.DLL, GEFTCP32.DLL, GEFEGD32.DLL \\
+DTU/GPRS & GPRSDLL.dll (1.3MB), CB\_NetClient.dll, psNetClient.dll \\
+串行通信 & SCommDll.dll, SCommCom.dll, wcomm\_dll.dll \\
+PCI/DAQ (17 种) & PCI8KA.dll, PCI8336A.dll, KPCI811.DLL, PISO725.DLL... \\
+MQTT & mosquitto.dll (38KB) \\
+加密/压缩 & libcrypto.dll (2.3MB), libssl.dll, libxml2.dll (1MB), liblz4.dll \\
+\bottomrule
+\end{longtable}
+
+\subsection{DTU 协议插件 (16 种)}
+
+\begin{longtable}{p{4cm}p{4.5cm}p{5cm}}
+\toprule
+\textbf{目录} & \textbf{品牌} & \textbf{协议} \\
+\midrule
+DTU\_BHYN & 博海粤能 & Bohai YueNeng \\
+DTU\_CAIMAO & 莱司凯茂 & Laisecaimao \\
+DTU\_DATA6211 & 唐山平升 Data6211 & Pingsheng DATA6211 \\
+DTU\_DATA86 & 唐山平升 Data6100 & Pingsheng DATA6100 \\
+DTU\_DLHB\_HJT212 & 动力环保 & HJ/T212 国标 \\
+DTU\_DQQY & 大庆庆远 & Daqing Qingyuan \\
+DTU\_ETUNG & 亿通 & Etung \\
+DTU\_FENGSHI & 山东锋士 & Shandong Fengshi \\
+DTU\_FOUR\_FAITH & 四信 & Four Faith \\
+DTU\_HONGDIAN & 宏电 & Hongdian \\
+DTU\_InHand & 映翰通 & InHand Networks \\
+DTU\_LANDI & 唐山蓝迪 & Tangshan Landi \\
+DTU\_SUNWAY & 三维力控 (动态IP) & Sunway Dynamic IP \\
+DTU\_SUNWAY\_COMMSERVER & 通用TCP Server & Common Server \\
+DTU\_SUNWAY\_MULTIPORT & TCP多端口 & Multiport TCP \\
+DTU\_SUNWAY\_UDP & 通用UDP & UDP Protocol \\
+\bottomrule
+\end{longtable}
+
+\section{设备与物模型}
+
+\subsection{保护继电器 (Device.ini 12 类)}
+
+\begin{longtable}{p{1cm}p{3.5cm}p{3.5cm}p{2cm}p{4cm}}
+\toprule
+\textbf{代码} & \textbf{型号} & \textbf{中文名} & \textbf{通道} & \textbf{遥测量} \\
+\midrule
+00 & DSL-31A & 线路保护 & 20 & Ia/Ib/Ic/Ua/Ub/Uc/F/P/Q/cos$\phi$ \\
+10 & DST-31A & 变压器差动保护 & 15 & Ua/Ub/Uc/F \\
+20 & DBPA-31A & 电源备投 & 13 & - \\
+30 & DSB-31A & 母联保护 & 20 & Ia/Ib/Ic \\
+40 & - & 电动机保护 & 19 & Ia/Ib/Ic/Ua/Ub/Uc/F/P/cos$\phi$ \\
+50 & DST-22D & 变压器差动保护 & 15 & - \\
+60 & DSB-22D & 变压器后备保护 & 20 & - \\
+70 & DSL-24D & 线路保护 & 20 & - \\
+80 & DGP-11 & 电容器差动保护 & 21 & F+Ias+Ibs+Ics...+Ua$\sim$Uca+U2 \\
+90 & DGP-12 & 电容器后备保护 & 24 & F+Ua$\sim$U2+P+R+X \\
+100 & DGP-13 & 电容器接地保护 & 22 & F+Uas+Ia+3I0+E+U1+Rg \\
+110 & DMP-31A/DST-31A & 电动机差动保护 & 19 & Ia$\sim$Ic2+F+Ua$\sim$Uc+P+Q+cos$\phi$ \\
+\bottomrule
+\end{longtable}
+
+\subsection{通用遥测公式}
+
+\begin{table}[H]\centering
+\caption{Device.ini 遥测转换公式}
+\begin{tabular}{p{4cm}p{8cm}p{2cm}}
+\toprule
+\textbf{遥测量} & \textbf{公式} & \textbf{单位} \\
+\midrule
+Ia/Ib/Ic (电流) & Y $\times$ 170 / 8192 & A \\
+Iac/Ibc/Icc/3I0 (电流) & Y $\times$ 8.5 / 8192 & A \\
+Ua/Ub/Uc/Uab/Ubc/Uca/UX/3U0/U2 (电压) & Y $\times$ 170 / 8192 & V \\
+P/Q (功率) & Y $\times$ 170 $\times$ 8.5 $\times \sqrt{3}$ / 8192 & W/VAR \\
+cos$\phi$ & Y / 8192 & - \\
+F (频率) & 50 + Y $\times$ 2 / 8192 & Hz \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Oracle 生产数据表}
+
+\begin{longtable}{p{5cm}p{2.5cm}p{5cm}}
+\toprule
+\textbf{表名} & \textbf{行数} & \textbf{说明} \\
+\midrule
+PC\_FD\_PUMPJACK\_FDYNA\_DIA\_T & 4,814,975 & 抽油机功图诊断 (最大表) \\
+SYS\_DEVICE\_RUN\_DETAILS\_HIST & 233,462 & 设备运行详情历史 \\
+SYS\_SINGLE\_WELL\_BASE\_INFO & 966 & 单井基础信息 (9 字段) \\
+SYS\_POINTRELATION\_WELL & 4,567 & 测点-井关系 \\
+TOURWELL\_RECORD\_DETAIL & 2,522 & 巡井记录 \\
+SYS\_USER & 4 & 系统用户 \\
+QRTZ\_JOB\_DETAILS & 12 & Quartz 定时任务 \\
+\bottomrule
+\end{longtable}
+
+\subsection{测点路径本体解析}
+
+Oracle 中 POINT\_LONGNAME 字段自带本体路径结构：
+
+\texttt{/CY1C8K/B1V354V611/JD010804/B1V354V611GYS}
+$\rightarrow$ \texttt{\{site: CY1C8K, well: B1V354V611, station: JD010804, point\_code: GYS\}}
+
+测点类型后缀：TGP(套压)、ZWG(总无功)、ZYGX(总有功)、ZHL(总回流)、DWL(低回流)、RCV(热采阀)等。
+
+\section{数据管道实现}
+
+\subsection{架构}
+
+\begin{lstlisting}[caption=数据管道 Architecture]
+Field Devices (RTU/PLC)
+    |-- CommBridge.exe (Modbus TCP :53001 -> 80+ RTU)
+    |-- IOMan workers    (A11 TCP :8889 -> 11.66.12.130)
+    |-- OPC_FC_Client    (OPC DA DCOM -> JB1V2/DX6PZ/etc)
+    |
+    v
+IoMonitor.exe  (PID 18400, CommitRealSpan=300ms)
+    |
+    v
+Oracle 11.66.12.129:1521/orcl (DQYTPROD)
+    |
+    |  WinRM + VBS/ADO (32-bit)
+    v
+dgiot_lite OracleBridge  (D:\textbackslash ai\textbackslash dgiot\_lite\textbackslash src\textbackslash storage\textbackslash oracle\_bridge.py)
+    |
+    +---> TDengine (fallback SQLite: data/telemetry.db)
+    +---> MQTT Broker :1883
+    +---> WebSocket :8000/ws -> Frontend
+\end{lstlisting}
+
+\subsection{采集约束 (IoMonitor.ini)}
+
+\begin{table}[H]\centering
+\caption{采集参数}
+\begin{tabular}{p{5cm}p{7cm}}
+\toprule
+\textbf{参数} & \textbf{值} \\
+\midrule
+CommitRealSpan & 300ms (实时提交间隔) \\
+CommitHisSpan & 500ms (历史提交间隔) \\
+CommitTagOnce & 15,000 点 (单批最大) \\
+CommitTagCount & 1,000,000 (总标签容量) \\
+MaxTagValueCount & 100,000 (缓存刷新阈值) \\
+MaxIOCount & 10 (最大 IOMan 连接) \\
+ADOCOUNT & 4 (Oracle 并发连接数) \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{有叶云油液监测}
+
+双设备实时采集：
+\begin{itemize}[leftmargin=*]
+  \item CCS-1 液压系统: 4 传感器, 28 测点 (含水量 1.34ppm, 饱和度 0.627\%, 温度 35.67\textdegree C)
+  \item 2号齿轮系统: 3 传感器, 26 测点 (温度 34.65\textdegree C, 含水量 5.25ppm, 饱和度 0.74\%)
+\end{itemize}
+认证方式: JWT Token (POST /zhc/login) $\rightarrow$ x-authorization Bearer header.
+
+\section{已知故障分析}
+
+\subsection{IoCommit.exe 崩溃记录}
+
+10 次崩溃 (2022-01 至 2023-01)，全部为访问违规 (C0000005)：
+\begin{itemize}[leftmargin=*]
+  \item 6 次: 内存损坏 (指令模式 \texttt{8B 82 F8 19 00 00 8B 18 89 55 EC 3B D8 74 7D 8B})
+  \item 4 次: NULL 指针解引用 (\texttt{73412E7A/73522E7A} 读取 \texttt{00000000})
+  \item 1 次: 写越界 (\texttt{008D3146})
+\end{itemize}
+
+\subsection{IOSaveErr 数据存储失败}
+
+两类常见错误：
+\begin{itemize}[leftmargin=*]
+  \item \textbf{存储失败}: Value=0.000000 + timestamp=1970-01-01 (epoch zero 未初始化数据)
+  \item \textbf{时间太过}: 写入时间戳大于服务器当前时间
+\end{itemize}
+影响范围: CY1C7K + pPluse 数据提交组
+
+\section{冗余与高可用}
+
+冗余伙伴: 196.168.65.102 (端口 6000/6001)
+\begin{itemize}[leftmargin=*]
+  \item 心跳周期: 1500ms
+  \item 连续超时次数: 3
+  \item 故障转移时间: 4.5s
+\end{itemize}
+
+\section{总结}
+
+\begin{enumerate}[leftmargin=*]
+  \item 131 IO 服务器是一套完整的力控 IoMonitor 全栈系统，通过 CommBridge (Modbus TCP) + IOMan (A11 TCP) + OPC\_FC\_Client (OPC DA) 三路采集，覆盖 80+ 井口 RTU，数据实时提交到 Oracle
+  \item OPC DA DCOM 连接被 OPC Server 端安全策略拒绝，但数据通过 Oracle 间接可达
+  \item dgiot\_lite 已建立完整的 Oracle $\rightarrow$ TDengine(SQLite) $\rightarrow$ MQTT 数据管道
+  \item 本体建模覆盖 1 Site + 1 Gateway + 13 Channel + 47 Device + 15 约束规则
+  \item 协议驱动库支持 40+ 种工业协议，DTU 插件支持 16 种国产设备
+\end{enumerate}
+
+\end{document}

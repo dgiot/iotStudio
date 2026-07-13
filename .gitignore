@@ -48,3 +48,31 @@ dist/
 
 # TDengine/SQLite 数据
 *.db
+
+# IO Server plugin — binaries excluded
+plugins/io_server/*.dll
+plugins/io_server/*.exe
+plugins/io_server/*.pdb
+plugins/io_server/*.msi
+plugins/io_server/*.ocx
+plugins/io_server/*.sys
+plugins/io_server/*.vxd
+plugins/io_server/*.zip
+plugins/io_server/11.*/
+plugins/io_server/DALog/
+plugins/io_server/Log/
+plugins/io_server/IOSaveErr/
+plugins/io_server/back/
+plugins/io_server/port/
+plugins/io_server/run/
+plugins/io_server/DTU/
+plugins/io_server/Data Servers/
+plugins/io_server/DownLoadDir/
+plugins/io_server/IO Servers/
+plugins/io_server/reverse/commbridge/downloaded/
+plugins/io_server/reverse/commbridge/dtu_dlls/
+
+# Large data
+data/*.db
+logs/*.jsonl
+*.log

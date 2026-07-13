@@ -42,6 +42,27 @@ phm_engine = PHMEngine()
 # ===== WebSocket 连接管理 =====
 ws_clients: set[WebSocket] = set()
 
+class LiveQueryWSManager:
+    """WebSocket 连接管理 — LiveQuery 推送"""
+    def __init__(self):
+        self._sessions: dict = {}  # session_id → WebSocket
+
+    async def connect(self, websocket: WebSocket, session_id: str):
+        await websocket.accept()
+        self._sessions[session_id] = websocket
+        logger.info(f"[livequery] {session_id} connected")
+
+    def disconnect(self, session_id: str):
+        self._sessions.pop(session_id, None)
+
+    async def send(self, session_id: str, message: str):
+        ws = self._sessions.get(session_id)
+        if ws:
+            try:
+                await ws.send_text(message)
+            except Exception:
+                self.disconnect(session_id)
+
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -69,24 +90,39 @@ async def lifespan(app: FastAPI):
     collector.on_data(push_engine.push)
     safety_pipeline.start_timeout_checker()
 
-    # 内置 MQTT Broker
+    # ── 通道体系 (MQTT Broker / Bridge / DG-IoT Push / Oracle / Modbus) ──
     try:
-        await start_builtin_broker("0.0.0.0", 1883)
+        from .channel_bootstrap import bootstrap_channels
+        ch_results = await bootstrap_channels()
+        logger.info(f"[main] 通道体系: {ch_results}")
     except Exception as e:
-        logger.warning(f"[main] MQTT broker 启动失败: {e}")
+        logger.warning(f"[main] 通道体系启动失败: {e}")
 
     try:
         await collector.start()
     except Exception as e:
         logger.error(f"[main] 采集引擎启动失败: {e}")
 
+    # EventBus 挂载: pipeline 数据 → 流计算
+    try:
+        from .eventbus import bus
+        from .shadow import get_shadow
+        bus.on("pipeline.point_written", _on_pipeline_point, mode="one_for_more")
+        bus.on("device.shadow_change", _on_shadow_change, mode="one_for_more")
+
+        # 自动发现 @protocol 装饰器注册的通道
+        from . import protocols
+        logger.info("[main] EventBus + Shadow + Protocol Registry 已启动")
+    except Exception as e:
+        logger.warning(f"[main] EventBus 启动失败: {e}")
+
     _inject_packet_logger()
     logger.info(f"[main] {cfg.title} V{cfg.version} 启动完成")
     yield
     # 关闭
-    try: await collector.stop()
+    try: from .channel_bootstrap import shutdown_channels; await shutdown_channels()
     except: pass
-    try: await stop_builtin_broker()
+    try: await collector.stop()
     except: pass
     try: await td_store.close()
     except: pass
@@ -194,13 +230,26 @@ async def delete_user(username: str, user: dict = Depends(require_admin)):
 
 @app.get("/api/health")
 async def health():
-    """健康检查"""
+    """健康检查 — 含设备和管道状态"""
+    import time as _time
+    from .parse_lite import parse_query
     stats = await collector.get_stats()
+
+    dev_count = parse_query("Device", {"count":1}).get("count", 0)
+    ps_data = {}
+    try:
+        from .services.oracle_pipeline import get_pipeline
+        p = get_pipeline()
+        ps = p.get_stats()
+        ps_data = {"pipeline": {"running": ps["running"], "points": ps["points_written"], "errors": ps["errors"]}}
+    except: pass
+
     return {
-        "status": "ok",
-        "version": cfg.version,
-        "uptime_seconds": stats.get("uptime", 0),
+        "status": "ok", "version": cfg.version,
+        "uptime_seconds": int(_time.time() - _startup_ts),
+        "devices": {"total": dev_count, "online": dev_count},
         "collector": stats,
+        **ps_data,
     }
 
 @app.get("/api/health/mqtt")
@@ -222,38 +271,24 @@ async def health_mqtt():
 @app.get("/api/devices")
 async def list_devices(station_id: Optional[str] = None, device_type: Optional[str] = None,
                        page: int = 1, page_size: int = 20):
-    devices, total = await pg_store.list_devices(station_id, device_type, page=page, page_size=page_size)
-    if total == 0:
-        # Fallback: parse_lite 有种子数据
-        try:
-            from .parse_lite import parse_query
-            r = parse_query("Device", {"limit": page_size, "skip": (page-1)*page_size})
-            return {
-                "total": r.get("count", 0),
-                "page": page, "page_size": page_size,
-                "devices": [{
-                    "device_id": d.get("devaddr",""), "device_name": d.get("name",""),
-                    "devaddr": d.get("devaddr",""), "name": d.get("name",""),
-                    "device_type": d.get("device_type",""), "protocol": d.get("protocol",""),
-                    "ip": d.get("ip",""), "status": d.get("status","offline"),
-                    "station_id": d.get("basedata",{}).get("station","") if isinstance(d.get("basedata"),dict) else "",
-                    "manufacturer": (d.get("basedata") or {}).get("manufacturer","") if isinstance(d.get("basedata"),dict) else "",
-                    "model": (d.get("basedata") or {}).get("model","") if isinstance(d.get("basedata"),dict) else "",
-                    "product": d.get("product"),
-                    "productName": d.get("device_type",""),
-                } for d in r.get("results",[])]
-            }
-        except: pass
+    import importlib, sys
+    if 'src.parse_lite' in sys.modules:
+        importlib.reload(sys.modules['src.parse_lite'])
+    from .parse_lite import parse_query
+    r = parse_query("Device", {"limit": page_size, "skip": (page-1)*page_size})
     return {
-        "total": total,
+        "total": r.get("count", 0),
         "page": page, "page_size": page_size,
         "devices": [{
-            "device_id": d.device_id, "device_name": d.device_name,
-            "device_type": d.device_type, "protocol": d.protocol,
-            "status": d.status, "station_id": d.station_id,
-            "manufacturer": d.manufacturer, "model": d.model,
-            "last_online_at": d.last_online_at.isoformat() if d.last_online_at else None,
-        } for d in devices]
+            "device_id": d.get("devaddr", d.get("objectId","")),
+            "device_name": d.get("name", ""), "devaddr": d.get("devaddr", ""),
+            "name": d.get("name", ""), "device_type": d.get("device_type", d.get("deviceType","")),
+            "protocol": d.get("protocol", ""), "ip": d.get("ip", ""),
+            "status": d.get("status", "offline"),
+            "station_id": d.get("station_id", ""), "manufacturer": d.get("manufacturer", ""),
+            "model": d.get("model", ""), "product": d.get("product"),
+            "productName": d.get("productName", d.get("device_type", "")),
+        } for d in r.get("results", [])]
     }
 
 
@@ -328,6 +363,19 @@ async def create_points_batch(device_id: str, points: List[PointCreate]):
 @app.get("/api/alarms")
 async def list_alarms(status: Optional[str] = "active", limit: int = 100):
     alarms = await pg_store.list_alarms(status, limit)
+    if not alarms:
+        # Fallback: parse_lite 种子告警
+        try:
+            from .parse_lite import parse_query
+            where = f'{{"status":"{status}"}}' if status else '{}'
+            r = parse_query("Alarm", {"where": where, "limit": limit, "order": "-createdAt"})
+            return {"total": r.get("count", 0), "alarms": [{
+                "alarm_id": a.get("objectId",""), "device_id": a.get("device_type",""),
+                "alarm_type": a.get("alarm_type",""), "alarm_level": a.get("severity",""),
+                "alarm_msg": a.get("message",""), "status": a.get("status",""),
+                "created_at": a.get("createdAt",""),
+            } for a in r.get("results",[])]}
+        except: pass
     return {"total": len(alarms), "alarms": [{
         "alarm_id": a.alarm_id, "device_id": a.device_id,
         "alarm_type": a.alarm_type, "alarm_level": a.alarm_level,
@@ -395,7 +443,48 @@ async def simulators_status():
 
 @app.get("/api/stats")
 async def collector_stats():
-    return await collector.get_stats()
+    """聚合统计 — 采集引擎 + parse_lite + pipeline"""
+    import sqlite3, os
+    from .parse_lite import parse_query
+
+    base = await collector.get_stats()
+
+    # 补充 parse_lite 设备计数
+    try:
+        dev_count = parse_query("Device", {"count": 1}).get("count", 0)
+        base["total_devices"] = dev_count
+        base["online_devices"] = dev_count
+    except: pass
+
+    # 补充 Pipeline 数据
+    try:
+        from .services.oracle_pipeline import get_pipeline
+        p = get_pipeline()
+        ps = p.get_stats()
+        pts = ps.get("points_written", 0)
+        base["pipeline_running"] = ps.get("running", False)
+        base["total_collects"] = pts
+        base["total_success"] = pts - ps.get("errors", 0)
+        base["total_fail"] = ps.get("errors", 0)
+        base["success_rate"] = round(base["total_success"] / max(pts, 1) * 100, 1)
+    except: pass
+
+    # 活跃告警
+    try:
+        alarm_count = parse_query("Alarm", {"where": '{"status":"active"}', "count": 1}).get("count", 0)
+        base["active_alarms"] = alarm_count
+    except: pass
+
+    # 遥测存储
+    td_db = os.path.join(cfg.data_dir, "telemetry.db")
+    try:
+        if os.path.exists(td_db):
+            db = sqlite3.connect(td_db)
+            base["telemetry_rows"] = db.execute("SELECT COUNT(*) FROM telemetry").fetchone()[0]
+            db.close()
+    except: pass
+
+    return base
 
 
 # ---- Scanner (设备自动发现) ----
@@ -962,12 +1051,38 @@ async def websocket_endpoint(ws: WebSocket):
     try:
         while True:
             data = await ws.receive_text()
-            # 客户端心跳
             if data == "ping":
                 await ws.send_text("pong")
     except WebSocketDisconnect:
         pass
     finally:
+        ws_clients.discard(ws)
+
+
+# ---- LiveQuery WebSocket (Parse LiveQuery 兼容) ----
+
+@app.websocket("/api/livequery/{class_name}")
+async def livequery_ws(ws: WebSocket, class_name: str):
+    session_id = f"ws_{id(ws)}_{int(time.time())}"
+    ws_manager = LiveQueryWSManager()
+    from .parse_lite import LiveQuery
+    LiveQuery.set_ws_manager(ws_manager)
+    await ws_manager.connect(ws, session_id)
+    LiveQuery.subscribe(session_id, class_name)
+    try:
+        while True:
+            data = await ws.receive_text()
+            if data == "ping":
+                await ws.send_text("pong")
+            elif data.startswith("subscribe:"):
+                LiveQuery.subscribe(session_id, data.split(":", 1)[1])
+            elif data.startswith("unsubscribe:"):
+                LiveQuery.unsubscribe(session_id, data.split(":", 1)[1])
+    except WebSocketDisconnect:
+        pass
+    finally:
+        LiveQuery.unsubscribe(session_id)
+        ws_manager.disconnect(session_id)
         ws_clients.discard(ws)
 
 
@@ -997,6 +1112,66 @@ async def _ws_broadcast(device_id: str, points):
 
 collector.on_data(_ws_broadcast)
 
+
+# ---- EventBus → WebSocket 桥接 ----
+
+async def _eventbus_to_ws(**kwargs):
+    """EventBus 事件 → WebSocket 广播"""
+    await broadcast_ws({
+        "type": kwargs.get("_event_type", "event"),
+        "device_id": kwargs.get("device_id", ""),
+        "point_id": kwargs.get("point_id", ""),
+        "value": kwargs.get("value"),
+        "unit": kwargs.get("unit", ""),
+        "ts": kwargs.get("ts", ""),
+    })
+
+
+def _setup_eventbus_ws_bridge():
+    """将 EventBus 事件桥接到 WebSocket"""
+    from .eventbus import bus
+    bus.on("pipeline.point_written", lambda **kw: asyncio.create_task(_eventbus_to_ws(**{**kw, "_event_type": "pipeline"})), mode="one_for_more")
+    bus.on("device.shadow_change", lambda **kw: asyncio.create_task(_eventbus_to_ws(**{**kw, "_event_type": "shadow"})), mode="one_for_more")
+    logger.info("[bridge] EventBus ↔ WebSocket 已连接")
+
+
+# ---- MQTT → EventBus 桥接 ----
+
+def _setup_mqtt_eventbus_bridge():
+    """订阅 MQTT 主题 → 触发 EventBus 事件"""
+    try:
+        from .eventbus import bus
+        import paho.mqtt.client as mqtt
+        mqtt_cfg = getattr(cfg, 'mqtt', None)
+        if not mqtt_cfg:
+            return
+
+        def on_mqtt_message(client, userdata, msg):
+            try:
+                payload = json.loads(msg.payload.decode())
+                # 将 MQTT 消息转为 EventBus 事件
+                topic_parts = msg.topic.split('/')
+                event_type = "mqtt." + topic_parts[-1] if len(topic_parts) > 1 else "mqtt.message"
+                bus.emit(event_type, topic=msg.topic, payload=payload)
+            except: pass
+
+        mqtt_client = mqtt.Client(client_id="dgiot_bridge_mqtt2eventbus")
+        mqtt_client.on_message = on_mqtt_message
+        mqtt_client.connect_async(mqtt_cfg.host, mqtt_cfg.port)
+        mqtt_client.subscribe("dgiot/#")
+        mqtt_client.loop_start()
+        logger.info("[bridge] MQTT ↔ EventBus 已连接 (dgiot/#)")
+    except Exception as e:
+        logger.warning(f"[bridge] MQTT 桥接失败: {e}")
+
+
+# 启动桥接
+try:
+    _setup_eventbus_ws_bridge()
+    _setup_mqtt_eventbus_bridge()
+except Exception as e:
+    logger.warning(f"[bridge] 桥接启动失败: {e}")
+
 # ---- Bridge (外部数据接入) ----
 class BridgePoint(BaseModel):
     point_id: str = ""; point_name: str = ""; value: float = 0.0
@@ -1016,6 +1191,50 @@ async def bridge_telemetry(body: BridgeData):
     await td_store.batch_insert(rows)
     return {"status": "ok", "count": len(rows)}
 
+
+# ---- EventBus & Shadow Hooks ----
+
+def _on_pipeline_point(**kwargs):
+    device_id = kwargs.get("device_id", "unknown")
+    from .shadow import get_shadow
+    shadow = get_shadow(device_id)
+    shadow.heartbeat()
+    shadow.set_prop("last_value", kwargs.get("value"))
+
+def _on_shadow_change(device_id, old_state, new_state, **kw):
+    logger.info(f"[shadow] {device_id}: {old_state} → {new_state}")
+
+# ---- EventBus API ----
+
+@app.get("/api/eventbus/hooks")
+def eventbus_hooks():
+    from .eventbus import bus
+    return {"ok": True, "hooks": bus.hooks()}
+
+# ---- Shadow API ----
+
+@app.get("/api/shadows")
+def list_shadows():
+    from .shadow import all_shadows
+    return {"ok": True, "shadows": [s.snapshot() for s in all_shadows().values()]}
+
+@app.get("/api/shadows/{device_id}")
+def shadow_get(device_id: str):
+    from .shadow import get_shadow
+    return {"ok": True, "shadow": get_shadow(device_id).snapshot()}
+
+@app.post("/api/shadows/{device_id}/heartbeat")
+def shadow_heartbeat(device_id: str):
+    from .shadow import get_shadow
+    s = get_shadow(device_id); s.heartbeat()
+    return {"ok": True, "state": s.state.value}
+
+# ---- Channel Registry API ----
+
+@app.get("/api/channels/registry")
+def channels_registry_api():
+    from .channel_base import ChannelRegistry
+    return {"ok": True, "protocols": ChannelRegistry.list()}
 
 # ---- Maintenance ----
 
@@ -1217,6 +1436,45 @@ async def phm_stats():
     return phm_engine.get_stats()
 
 # ---- Product Model API ----
+
+@app.get("/api/products")
+async def list_products():
+    """列出所有产品"""
+    try:
+        from .parse_lite import parse_query
+        r = parse_query("Product", {"limit": 100})
+        return {
+            "total": r.get("count", 0),
+            "products": [{
+                "objectId": d.get("objectId",""),
+                "name": d.get("name",""),
+                "devType": d.get("devType", d.get("objectId","")),
+                "nodeType": d.get("nodeType", 0),
+                "netType": d.get("netType", "ethernet"),
+                "icon": d.get("icon","📦"),
+                "desc": d.get("desc",""),
+            } for d in r.get("results", [])]
+        }
+    except:
+        return {"total": 0, "products": []}
+
+
+@app.post("/api/products")
+async def create_product(body: dict):
+    """创建产品"""
+    from .parse_lite import parse_create, ensure_table
+    ensure_table("Product")
+    obj = {
+        "objectId": body.get("objectId", body.get("devType","")),
+        "name": body.get("name",""),
+        "devType": body.get("devType", body.get("objectId","")),
+        "nodeType": body.get("nodeType", 0),
+        "netType": body.get("netType", "ethernet"),
+        "icon": body.get("icon","📦"),
+        "desc": body.get("desc",""),
+    }
+    parse_create("Product", obj)
+    return {"ok": True, "product": obj}
 
 @app.get("/api/products/{product_type}/model")
 async def product_model(product_type: str):
@@ -1445,6 +1703,20 @@ app.include_router(pcap_router)
 from .web.remote_capture import router as remote_cap_router
 app.include_router(remote_cap_router)
 
+# Parse REST API (对齐 iotStudio)
+from .web.parse_router import router as parse_router
+app.include_router(parse_router)
+
+from .web.user_manager_api import router as user_mgr_router
+app.include_router(user_mgr_router)
+
+from .web.dashboard_edge_api import router as edge_dash_router
+app.include_router(edge_dash_router)
+from .web.admin_panel import router as admin_router
+app.include_router(admin_router)
+from .web.io_clone_api import router as io_clone_router
+app.include_router(io_clone_router)
+
 # ---- Vue3 前端托管 ----
 from pathlib import Path as _Path
 from starlette.responses import Response as _Response
@@ -1563,6 +1835,31 @@ def enable_plugin(name: str):
 def disable_plugin(name: str):
     disable(name)
     return {"status": "disabled", "name": name}
+
+# ---- 通道管理 API (边缘中枢 dlink 对齐) ----
+from .channel_registry import ChannelManager
+
+@app.get("/api/channels/health")
+def channels_health():
+    """所有通道健康状态 — 对标 dlink channel health"""
+    return ChannelManager.health()
+
+@app.get("/api/channels")
+def channels_list():
+    """通道列表"""
+    return {"channels": ChannelManager.list_all()}
+
+@app.post("/api/channels/{channel_id}/start")
+async def channel_start(channel_id: str):
+    """启动指定通道"""
+    ok = await ChannelManager.start(channel_id)
+    return {"channel_id": channel_id, "status": "started" if ok else "failed"}
+
+@app.post("/api/channels/{channel_id}/stop")
+async def channel_stop(channel_id: str):
+    """停止指定通道"""
+    ok = await ChannelManager.stop(channel_id)
+    return {"channel_id": channel_id, "status": "stopped" if ok else "failed"}
 
 # ---- 系统信息 API (边缘代理本体扫描) ----
 @app.get("/api/system")

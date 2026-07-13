@@ -68,6 +68,21 @@ const pointForm = reactive({ point_id: '', device_id: route.params.id, point_nam
 const dtypes = DATA_TYPES
 const typeMap = DEVICE_TYPE_MAP
 
+function norm(d) {
+  // 统一 Parse API 和旧 API 的字段差异
+  if (!d) return null
+  return {
+    device_id: d.devaddr || d.device_id || d.objectId || '',
+    device_name: d.name || d.device_name || '',
+    device_type: d.device_type || '',
+    protocol: d.protocol || '',
+    status: d.status || 'offline',
+    station_id: (d.basedata||{}).station || d.station_id || '',
+    manufacturer: (d.basedata||{}).manufacturer || d.manufacturer || '',
+    ...d,
+  }
+}
+
 const chartTimes = ref([]), chartSeries = ref([])
 const hasData = computed(() => chartSeries.value.length > 0)
 const chartOption = computed(() => ({
@@ -88,9 +103,14 @@ function showPointDialog(row) {
 }
 async function savePoint(){await createPoint(route.params.id,{...pointForm});ElMessage.success('已保存');pointDialog.value=false;load()}
 async function load(){
+  const id = route.params.id
+  if (!id || id === 'undefined' || id === 'unknown') {
+    device.value = { device_id: '?', device_name: '设备不存在', device_type: '', status: 'offline' }
+    return
+  }
   try{
-    const [dev,pts,lt]=await Promise.all([getDevice(route.params.id),getPoints(route.params.id),getLatest(route.params.id)])
-    device.value=dev.data; points.value=pts.data?.points||[]; latest.value=lt.data?.data||[]
+    const [dev,pts,lt]=await Promise.all([getDevice(id),getPoints(id),getLatest(id)])
+    device.value=norm(dev.data); points.value=pts.data?.points||[]; latest.value=lt.data?.data||[]
     if(points.value.length>0){
       const p=points.value[0]
       const r=await getTelemetry(route.params.id,p.point_id,{limit:30})

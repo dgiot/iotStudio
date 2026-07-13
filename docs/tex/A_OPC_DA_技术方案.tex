@@ -1,0 +1,281 @@
+\documentclass[12pt,a4paper]{ctexart}
+\usepackage{geometry}\geometry{margin=2.2cm}
+\usepackage{graphicx,float,fancyhdr,hyperref,longtable,booktabs,enumitem,xcolor}
+\pagestyle{fancy}\fancyhf{}\fancyhead[L]{IO 服务器自主 OPC DA 采集技术方案}\fancyhead[R]{V1.0}\fancyfoot[C]{\thepage}
+\title{\textbf{IO 服务器自主 OPC DA 采集\\技术方案}}
+\author{约翰·刘}
+\date{2026年7月13日}
+
+\begin{document}\maketitle
+\begin{abstract}
+本文档阐述通过逆向工程力控 pSpace 6.0 实时数据库系统，实现对油田 IO 服务器（11.66.12.130:8889）的自主 OPC DA 数据采集方案。
+核心技术路线包括：psAPISDK.dll 接口逆向、pSpace 协议分析、CommBridge 协议还原、12种保护装置设备建模，以及本机全栈模拟环境构建。
+最终实现在不依赖原厂 IoProject/IoMonitor 的情况下，自主选择设备参数完成实时数据采集。
+\end{abstract}
+
+\section{项目背景}
+
+\subsection{现状分析}
+某油田 IO 采集系统基于力控 pSpace 6.0 平台构建，核心架构为：
+
+\begin{verbatim}
+  RTU(200+) → CommBridge(:53001) → IoMonitor → IoCommit → Oracle
+  OPC DA → IOMan(TCP:8889) → pSpace(11.66.12.130) → IoCommit → Oracle
+\end{verbatim}
+
+系统已稳定运行多年，但存在以下问题：
+\begin{enumerate}[leftmargin=*]
+  \item 采集参数由 IoProject 固定分配，无法动态调整设备列表
+  \item 依赖原厂 IoMonitor/IoCommit 全套组件，维护成本高
+  \item pSpace 服务部署在远程服务器（11.66.12.130），开发调试不便
+  \item 缺乏离线开发环境，新功能验证依赖生产网络
+\end{enumerate}
+
+\subsection{建设目标}
+\begin{enumerate}[leftmargin=*]
+  \item 实现自主选择设备参数完成 OPC DA 实时数据读取
+  \item 构建本机全栈模拟环境，支持离线开发调测
+  \item 建立完整的 IO 服务器知识本体，覆盖实体、关系、约束、闭环四层
+  \item 提供五条可选的 OPC DA 数据访问路径
+\end{enumerate}
+
+\section{逆向工程成果}
+
+\subsection{进程架构还原}
+通过 WinRM 远程查询 131 生产服务器，提取了完整的进程快照：
+
+\begin{table}[H]\centering
+\caption{131 生产服务器进程清单}
+\begin{tabular}{lrrl}
+\toprule
+\textbf{进程} & \textbf{PID} & \textbf{内存} & \textbf{功能} \\
+\midrule
+IoProject.exe & 5096 & 306MB & 总调度，进程编排 \\
+IoMonitor.exe & 18400 & 61MB & GUI监视，Oracle写库 \\
+CommBridge.exe & 19240 & 32MB & DTU/RTU桥接网关 \\
+IOMan.exe ×8 & 多个 & -- & 设备采集器（OPC×7 + Modbus×1） \\
+IoCommit.exe ×7 & 多个 & -- & 批量写Oracle \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{IOMan 命令行格式}
+从 wmic 进程快照提取的 IOMan 启动参数：
+
+\begin{verbatim}
+IOMan.exe -aaa IO<SharedMemID>,<IoMonitorHwnd>,<DevType>,
+                   <DBName>,<DevCount>:<DevID1>,<DevID2>,...
+
+实例1 (Modbus): -aaa IO7CEE918,3B6C0B5C,1,IOCommitDB0,
+                        10:02012170058,02105100097,...
+实例2 (OPC):    -aaa IO7CEE898,3B6C0B5C,0,IOCommitDB0,
+                        10:02110080028,02110110045,...
+\end{verbatim}
+
+\textbf{参数解析}（出自 IOMan.exe 格式字符串 \texttt{IO\%X,\%X,\%d,}）：
+\begin{itemize}[leftmargin=*]
+  \item SharedMemID：共享内存唯一ID（Global命名空间）
+  \item IoMonitorHwnd：IoMonitor窗口句柄（WM\_COPYDATA IPC）
+  \item DevType：0=OPC DA采集，1=Modbus RTU采集
+  \item DBName：IOCommit数据库编号
+  \item DevCount/DevIDs：设备数量及ID列表
+\end{itemize}
+
+\subsection{依赖链根因分析}
+\begin{verbatim}
+  pSpace Server (130:8889) ← 唯一远程依赖
+      ↑ psAPI TCP协议
+  IoMonitor.exe (可启动，不连pSpace则无功能)
+      ↑ FindWindow + 共享内存
+  IoProject.exe (无pSpace依赖！可独立运行)
+      ↑ CreateProcess
+  IOMan.exe (ConnectEx需要pSpace服务)
+\end{verbatim}
+
+\textbf{关键发现}：IoProject.exe 不依赖 psAPISDK.dll，CommBridge.exe 也不依赖。
+这两个核心二进制可在本机独立运行。
+
+\section{psAPISDK 接口逆向}
+
+\subsection{SDK 来源}
+从力控 pSpace 6.0.1.9 SDK 开发包获取完整头文件，包含：
+\begin{itemize}[leftmargin=*]
+  \item psAPIServer.h：服务器连接（Connect/Disconnect/IsConnected）
+  \item psAPIReal.h：实时数据读写（ReadList/Subscribe/Write）
+  \item psAPIHis.h：历史数据查询
+  \item psAPIAlarm.h：告警管理
+  \item psAPITag.h：标签管理和查询
+  \item psAPIVariant.h：变体数据类型处理
+  \item psAPICommon.h：基础类型定义（PSHANDLE=uint16，PSAPIStatus=int32）
+\end{itemize}
+
+\subsection{关键函数签名}
+\begin{verbatim}
+// 服务器连接
+PSAPIStatus psAPI_Server_Connect(
+    PSSTR pszServer,        // "IP:Port"，如"11.66.12.130:8889"
+    PSSTR pszUserName,      // "admin"
+    PSSTR pszPassword,      // "DQYTA11_pass"
+    PSHANDLE *phServer);    // 返回连接句柄(uint16)
+
+// 实时数据读取
+PSAPIStatus psAPI_Real_ReadList(
+    PSHANDLE hServer,
+    PSUINT32 nCount,        // Tag 数量
+    PSUINT32 *pTagIds,      // Tag ID 数组
+    PS_VARIANT **ppValues,  // 返回值数组
+    PSAPIStatus **ppErrors); // 错误码数组
+\end{verbatim}
+
+\subsection{PS\_DATA 内存布局（实测）}
+\begin{table}[H]\centering
+\caption{PS\_DATA 结构体内存布局（pack=4，24字节/记录）}
+\begin{tabular}{lll}
+\toprule
+\textbf{偏移} & \textbf{大小} & \textbf{字段} \\
+\midrule
+0-3   & 4B & Time.Seconds (uint32 LE) \\
+4-7   & 4B & Time.NanoSec (uint32 LE) \\
+8-11  & 4B & DataType (uint32, =11) \\
+12-15 & 4B & (reserved) \\
+16-19 & 4B & \textbf{Float Value} (float32 LE) \\
+20-23 & 4B & Quality (0xC0=GOOD) \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\section{五条 OPC DA 数据访问路径}
+
+\begin{table}[H]\centering
+\caption{OPC DA 数据访问路径对比}
+\begin{tabular}{lp{3cm}ccp{2.5cm}}
+\toprule
+\textbf{\#} & \textbf{路径} & \textbf{实时} & \textbf{离线} & \textbf{状态} \\
+\midrule
+① & Python Mock 全栈模拟 & -- & 是 & 已验证(56设备) \\
+② & dgiot\_lite Oracle 管线 & 否 & 否 & 已通(26万条) \\
+③ & psAPISDK 直连 pSpace & 是 & 否 & \textbf{已通(自主读Tag)} \\
+④ & IoProject 注入自定义 IOMan & 是 & 否 & 格式已验证 \\
+⑤ & DCOM 直连 Kepware OPC DA & 是 & 否 & 脚本就绪 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{路径③：psAPISDK 直连（核心方案）}
+完整调用链：
+\begin{verbatim}
+  psAPI_Common_StartAPI()
+  → psAPI_Server_Connect("11.66.12.130:8889", "admin",
+                         "DQYTA11_pass", &handle)
+    → handle=0x0001
+  → psAPI_Real_ReadList(handle, 3, [5000,5001,5002],
+                        &values, &errors)
+    → values=[1.875, 1.875, 1.875]
+    → timestamp=2026-07-13 19:35:06 (实时！)
+    → quality=GOOD
+\end{verbatim}
+
+\textbf{实测数据}：
+\begin{table}[H]\centering
+\begin{tabular}{rrll}
+\toprule
+\textbf{Tag ID} & \textbf{值} & \textbf{时间戳} & \textbf{质量} \\
+\midrule
+5000 & 1.8750 & 2026-07-13 19:47:06 & GOOD \\
+5501 & 2.2437 & 2026-07-13 19:46:59 & GOOD \\
+6001 & 3.6946 & 2025-12-04 14:06:54 & 旧数据 \\
+10000 & 3.0440 & 2026-07-11 20:12:20 & 旧数据 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+活跃 Tag ID 范围：5000--15000，值范围 1.7--3.7（工程值，A/kV/kW），
+有效 Tag 以约 500 为间隔分布。
+
+\subsection{路径①：本机全栈模拟}
+\begin{verbatim}
+  $ python tools/dev_env.py --scale 56
+
+  服务           端口      状态
+  ─────────────────────────────
+  CommBridge     :53002    DTU桥接
+  IoMonitor      :9002     数据汇聚
+  IoCommit       :9003     数据写入
+  IoProject      :9001     进程编排
+  pSpace mock    :18889    pSpace数据源
+  OPC DA mock    :13500    OPC数据源
+  Modbus TCP     :502      直连轮询
+\end{verbatim}
+
+支持 20--100 台设备模拟，12 种设备类型全覆盖，带真实 Device.ini
+通道配置和 ChangeData 转换系数。
+
+\section{12种保护装置设备建模}
+\begin{longtable}{lp{2.5cm}p{4cm}p{3cm}}
+\toprule
+\textbf{编码} & \textbf{名称} & \textbf{通道配置} & \textbf{转换系数} \\
+\midrule
+0x00 & DSL-31A 断路器 & 20通道 & C0=170/8192(电流/电压) \\
+0x10 & DST-31A 变压器差动 & 15通道 & C1=8.5/8192(接地电流) \\
+0x20 & DBPA-31A 备用电源 & 13通道 & C2=170/8192(相电压) \\
+0x30 & DSB-31A 变压器后备 & 20通道 & C3=170×8.5/8192(功率) \\
+0x40 & 电动机保护 & 19通道 & C4=1/8192(功率因数) \\
+0x50 & DST-22D 变压器差动 & 20通道 & C5=2/8192(频率) \\
+0x60 & DSB-22D 变压器后备 & 20通道 & C6-9=1(直通) \\
+0x70 & DSL-24D 断路器 & 20通道 & -- \\
+0x80 & DGP-11 变压器差动保护 & 21通道 & -- \\
+0x90 & DGP-12 变压器后备保护 & 24通道 & -- \\
+0xA0 & DGP-13 接地保护 & 22通道 & -- \\
+0xB0 & DMP-31A 电动机保护 & 19通道 & -- \\
+\bottomrule
+\end{longtable}
+
+物理量转换公式：$Y = raw \times Coefficient[i]$，基准标定值 8192(0x2000)。
+
+\section{部署与使用}
+
+\subsection{环境要求}
+\begin{itemize}[leftmargin=*]
+  \item 32位 Python 3.11（C:\textbackslash Python311-32\textbackslash）
+  \item IO ServerOnLine 目录（含 psAPISDK.dll 及依赖 DLL）
+  \item 网络可达 11.66.12.130:8889
+\end{itemize}
+
+\subsection{采集器使用}
+\begin{verbatim}
+# 读取指定 Tag ID
+C:\Python311-32\python.exe tools/pspace_collector.py \
+    --ids "5000,5501,6001,10000"
+
+# 扫描活跃 Tag
+C:\Python311-32\python.exe tools/pspace_collector.py \
+    --scan --start 1 --end 20000 --step 100
+
+# 启动离线模拟环境
+python tools/dev_env.py --scale 20
+\end{verbatim}
+
+\section{风险与缓解}
+\begin{table}[H]\centering
+\begin{tabular}{lp{3cm}p{5cm}}
+\toprule
+\textbf{风险} & \textbf{概率} & \textbf{缓解措施} \\
+\midrule
+pSpace 密码变更 & 低 & 定期巡检连接状态 \\
+130 网络中断 & 低 & 方案①离线模拟可替代 \\
+Tag ID 映射缺失 & 高 & 待从 Oracle SYS\_POINTRELATION 提取 \\
+32位 Python 兼容性 & 低 & 已封装独立采集器脚本 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\section{总结}
+本项目通过三周逆向工程，完整还原了力控 pSpace 6.0 系统的 IO 采集架构，
+实现了不依赖原厂组件的自主 OPC DA 数据读取。
+核心成果包括：
+\textbf{psAPISDK 接口逆向}（3525 导出函数全量枚举）、
+\textbf{pSpace 协议对接}（Connect→ReadList 全链路打通）、
+\textbf{本机全栈模拟}（7 服务 + 56 设备离线可调）、
+\textbf{五条数据访问路径}（涵盖 Mock/Oracle/psAPI/IOMan/DCOM）。
+
+\end{document}

@@ -46,20 +46,13 @@ plugins:
     tdengine: true     # 无则自动降级 SQLite
     sqlite: true       # 始终可用
 
-# 有叶云油液监测
-youyeyun:
-  token: "eyJhbGciOiJIUzUxMiJ9.eyJsb2dpbl91c2VyX2tleSI6IjliMDc5NTJmLTJhZDAtNDQ5Yi1iNzI1LWJlZjQ4M2U3OTUxMyJ9.4I9-8AiK7kLszN3kpDBRzKtbDS0y8iBphbg6w3JFqnKd1zxdHLn3Lgjto4a3ZPzylYS6SK4gwNwJl3fhkyhAsQ"
-  devices:
-    - id: "DEMO23040001"
-      uuid: "6bf6f220-d5bb-11ed-b812-ed5ae62e5bad"
-      name: "CCS-1液压系统"
-      oil: "S2MX46"
-      group: "破碎机油站"
-    - id: "DEMO23040002"
-      uuid: "2e8cc4a0-35c9-11ee-b812-ed5ae62e5bad"
-      name: "2号齿轮系统"
-      oil: "壳牌320"
-      group: "演示组"
+# 第三方凭证 (敏感信息, 其他配置全部入库 parse_lite Channel 表)
+credentials:
+  youyeyun_username: "sell@inzoc.com"
+  youyeyun_password: "A1234567"
+  oracle_relay_host: "11.66.12.131"
+  oracle_relay_user: "administrator"
+  oracle_relay_pass: "GKYWB-5991792$1c8k"
 
 # Parse-lite (嵌入式 — 替代 Parse Server)
 parse:
@@ -73,6 +66,18 @@ mqtt:
   username: ""
   password: ""
   client_id: "pythonIot-pusher"
+
+# ============================================================
+# PHM 云平台 (设备预测性维护)
+# ============================================================
+phm_platform:
+  base_url: "https://test.pubsci.top"
+  api_base: "http://localhost:18183"   # 后端 API 内网地址
+  realm: "phm"
+  client_id: "phm-web"
+  username: "qut-admin"
+  password: "qut-admin"
+  poll_interval: 60
 
 # ============================================================
 # A11 协议设备配置 (中石油油气生产物联网)

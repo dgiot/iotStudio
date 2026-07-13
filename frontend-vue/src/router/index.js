@@ -1,11 +1,25 @@
+/**
+ * 路由 — 对齐 iotView src/router + src/permission.js
+ *
+ * 权限守卫:
+ *   1. whiteList 放行 (/login)
+ *   2. hasToken → 已登录: getInfo → generateRoutes → addRoutes
+ *   3. noToken  → 未登录: whiteList 放行, 其他跳 /login
+ */
 import { createRouter, createWebHashHistory } from 'vue-router'
+import { getToken } from '../utils/auth'
+import { title } from '../config'
 
-const routes = [
+// ═══════════════════════════════════════════════════════════
+// 静态路由 (对齐 iotView constantRoutes)
+// ═══════════════════════════════════════════════════════════
+
+export const constantRoutes = [
   {
     path: '/login',
     name: 'Login',
     component: () => import('../views/LoginView.vue'),
-    meta: { title: '登录', noAuth: true }
+    meta: { title: '登录', hidden: true },
   },
   {
     path: '/',
@@ -33,9 +47,11 @@ const routes = [
       { path: '/packet-analysis', name: 'PacketAnalysis', component: () => import('../views/A11AnalysisView.vue'), meta: { title: '报文解析', icon: 'DataAnalysis', group: 'network' } },
       { path: '/channels', name: 'Channels', component: () => import('../views/ChannelView.vue'), meta: { title: '通道管理', icon: 'Connection', group: 'network' } },
       { path: '/edge-proxy', name: 'EdgeProxy', component: () => import('../views/EdgeProxyView.vue'), meta: { title: '边缘代理', icon: 'Platform', group: 'network' } },
+      { path: '/amis-test', name: 'AmisTest', component: () => import('../views/AmisTestView.vue'), meta: { title: 'AMIS低代码', icon: 'Platform', group: 'network' } },
 
       // ===== 工具 =====
       { path: '/mqtt-tool', name: 'MqttTool', component: () => import('../views/MqttToolView.vue'), meta: { title: 'MQTT调试', icon: 'ChatDotRound', group: 'tool' } },
+      { path: '/io-clone', name: 'IOClone', component: () => import('../views/IOCloneView.vue'), meta: { title: 'IO服务器克隆', icon: 'CopyDocument', group: 'tool' } },
       { path: '/simulators', name: 'Simulators', component: () => import('../views/SimulatorView.vue'), meta: { title: '模拟器管理', icon: 'VideoCameraFilled', group: 'tool' } },
 
       // ===== 系统 =====
@@ -46,16 +62,85 @@ const routes = [
   }
 ]
 
+// ═══════════════════════════════════════════════════════════
+// 动态路由 (从 Navigation 加载，addRoute 追加)
+// ═══════════════════════════════════════════════════════════
+
+export const asyncRoutes = []
+
 const router = createRouter({
   history: createWebHashHistory(),
-  routes,
+  routes: constantRoutes,
 })
 
-router.beforeEach((to, from, next) => {
-  const token = localStorage.getItem('dgiot_token')
-  if (to.meta.noAuth) next()
-  else if (!token) next('/login')
-  else next()
+// ═══════════════════════════════════════════════════════════
+// 权限守卫 — 对齐 iotView src/permission.js
+// ═══════════════════════════════════════════════════════════
+
+// 无需登录的白名单
+const whiteList = ['/login']
+
+router.beforeEach(async (to, from, next) => {
+  // 设置页面标题
+  if (to.meta?.title) {
+    document.title = `${to.meta.title} - ${title}`
+  }
+
+  // 检查登录状态
+  const hasToken = getToken()
+
+  if (hasToken) {
+    if (to.path === '/login') {
+      // 已登录 → 去首页
+      next({ path: '/' })
+    } else {
+      // 有 token，检查是否已加载动态路由
+      // iotView: getInfo → generateRoutes → addRoutes
+      // iotStudio 简化版: 直接放行 (后续可接入 Navigation 动态路由)
+      const hasRoles = localStorage.getItem('dgiot_userid') != null
+      if (hasRoles) {
+        next()
+      } else {
+        try {
+          // 恢复 session: 从 localStorage 重建用户状态
+          const user = JSON.parse(localStorage.getItem('dgiot_user') || '{}')
+          if (user.username) {
+            localStorage.setItem('dgiot_username', user.username)
+            localStorage.setItem('dgiot_nick', user.nick || user.username)
+            next()
+          } else {
+            // session 丢失 → 清 token → 去登录
+            throw new Error('Session expired')
+          }
+        } catch (error) {
+          await import('../utils/auth').then(m => {
+            m.removeToken()
+            m.removeLocalUser()
+          })
+          next(`/login?redirect=${to.path}`)
+        }
+      }
+    }
+  } else {
+    // 无 token
+    if (whiteList.includes(to.path)) {
+      next()
+    } else {
+      next(`/login?redirect=${to.path}`)
+    }
+  }
 })
+
+/**
+ * 重置路由 (logout 时调用)
+ */
+export function resetRouter() {
+  const newRouter = createRouter({
+    history: createWebHashHistory(),
+    routes: constantRoutes,
+  })
+  // 用 matcher 替换实现 reset (对齐 iotView)
+  router.matcher = newRouter.matcher
+}
 
 export default router

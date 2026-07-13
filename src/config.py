@@ -54,6 +54,7 @@ class MQTTConfig(BaseModel):
     username: str = ""
     password: str = ""
     client_id: str = "pythonIot-pusher"
+    builtin_broker_port: int = 21883  # 内置 Mini MQTT Broker 端口，避免与 EMQX :1883 冲突
 
 
 class AppConfig(BaseModel):

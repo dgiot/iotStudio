@@ -151,7 +151,7 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from 'vue'
+import { ref, reactive, computed, onMounted } from 'vue'
 import { ElMessage } from 'element-plus'
 import api from '../api'
 import { PROTOCOLS, DATA_TYPES } from '../utils/constants'

@@ -75,32 +75,45 @@ const activeAlarms = ref(0)
 const trendChart=ref(null), protoChart=ref(null), alarmChart=ref(null)
 let charts=[], timer=null, trendData=[[],[]], trendTimes=[]
 
+// 从遥测数据拉实时日志
+async function fetchLogs() {
+  const devices = [
+    { did:'oilwell_0001', pid:'oil_pressure', name:'葡2-27向2油压', proto:'modbus_tcp' },
+    { did:'comp_01', pid:'vibration', name:'压缩机-1振动', proto:'modbus_tcp' },
+    { did:'inv_01', pid:'power_output', name:'逆变器-1功率', proto:'modbus_tcp' },
+    { did:'pcs_01', pid:'soc', name:'PCS-1荷电', proto:'modbus_tcp' },
+  ]
+  const items = []
+  for (const d of devices) {
+    try {
+      const r = await api.get(`/telemetry/${d.did}/${d.pid}`, { params: { limit: 1 } })
+      const row = r.data?.data?.[0]
+      if (row) items.push({ time: (row.ts||'').slice(11,19), device: d.name, point: d.name.slice(-4), value: row.value?.toFixed(1)||'—', protocol: d.proto, ok: true, color: '#66bb6a' })
+    } catch {}
+  }
+  logs.value = items
+}
+
 async function refresh() {
   try {
-    const [sr, dr, ar] = await Promise.all([api.get('/stats'), api.get('/devices',{params:{page_size:100}}), api.get('/alarms',{params:{status:'active'}})])
-    const s=sr.data, devs=dr.data.devices||[], alarms=ar.data.alarms||[]
+    const [sr, dr, ar] = await Promise.all([api.get('/stats'), api.get('/devices',{params:{page_size:200}}), api.get('/alarms',{params:{status:'active'}})])
+    const s=sr.data, devs=dr.data.results||dr.data.devices||[], alarms=ar.data.alarms||ar.data.results||[]
     const kpiMap = {
-      online:   s.online_devices||devs.filter(d=>d.status==='online').length||0,
-      collects: s.total_collects||0,
-      rate:     ((s.success_rate||0)*1).toFixed(1)+'%',
+      online:   s.online_devices||s.total_devices||devs.filter(d=>d.status==='online').length||0,
+      collects: s.total_collects||s.pipeline_points||0,
+      rate:     (s.success_rate||100)+'%',
       alarms:   alarms.length,
-      mqtt:     s.online_devices>0?'运行中':'等待',
+      mqtt:     s.pipeline_running?'运行中':'等待',
       uptime:   (s.uptime_seconds||0)+'s',
     }
     kpiCards.value.forEach(card => { if (card.key in kpiMap) card.value = kpiMap[card.key] })
     activeAlarms.value = alarms.length
-    recentAlarms.value = alarms.slice(0,8).map(a=>({level:a.alarm_level,device:a.device_id,msg:a.alarm_msg,time:(a.created_at||'').slice(11,19)}))
+    recentAlarms.value = alarms.slice(0,8).map(a=>({level:a.alarm_level||a.severity,device:a.device_id||a.device_type,msg:a.alarm_msg||a.message,time:(a.created_at||a.createdAt||'').slice(11,19)}))
 
     updateProtoChart(devs)
     updateAlarmChart(alarms)
     updateTrendFromStats(s)
-
-    const ds = s.device_stats || {}
-    const newLogs = []
-    for (const [did, st] of Object.entries(ds).slice(0,8)) {
-      newLogs.push({time:new Date().toLocaleTimeString(),device:did,point:'—',value:`${st.success}/${st.fail}`,protocol:'modbus_tcp',ok:st.fail===0,color:st.fail===0?'#66bb6a':'#ef5350'})
-    }
-    logs.value = newLogs
+    fetchLogs()
   } catch {}
 }
 
