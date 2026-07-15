@@ -114,7 +114,7 @@ class IEC104Slave:
         apdu_len = data[1]
         if len(data) < apdu_len + 2:
             return None
-        ctrl = struct.unpack('<H', data[4:6])[0]
+        ctrl = struct.unpack('<H', data[2:4])[0]
         frame_type = ctrl & 0x03
         asdu = data[8:apdu_len + 2] if apdu_len > 4 else b''
         return {"type": frame_type, "ctrl": ctrl, "asdu": asdu}
@@ -147,7 +147,7 @@ class IEC104Slave:
                         ctrl = parsed["ctrl"]
                         if ctrl == 0x07:  # STARTDT act
                             logger.info("[IEC104] 收到 STARTDT -> 发送确认")
-                            response = b'\x68\x04\x04\x68\x0b\x00'
+                            response = b'\x68\x04\x0b\x00\x00\x00'
                             writer.write(response)
                             await writer.drain()
                             # 发送总召响应
