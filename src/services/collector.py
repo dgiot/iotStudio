@@ -52,10 +52,15 @@ class CollectorEngine:
         self._on_data_callbacks.append(callback)
 
     async def start(self) -> None:
-        """启动采集引擎"""
-        self._running = True  # 必须造任务之前，否则 while self._running 跳过
+        """启动采集引擎（后台加载设备，不阻塞启动）"""
+        self._running = True
+        asyncio.create_task(self._background_load())
+        logger.info(f"[collector] 后台加载设备已启动")
+
+    async def _background_load(self):
+        """后台加载设备，避免阻塞应用启动"""
         await self._load_devices()
-        logger.info(f"[collector] 启动完成, {len(self._adapters)} 个设备")
+        logger.info(f"[collector] 后台加载完成, {len(self._adapters)} 个设备")
 
     async def stop(self) -> None:
         """停止采集引擎"""
@@ -134,9 +139,20 @@ class CollectorEngine:
             except Exception:
                 pass
 
+    @staticmethod
+    def _normalize_protocol(proto: str) -> str:
+        """统一协议名称 — 兼容 Parse DB 中的别名"""
+        aliases = {
+            "A11 RTU": "a11", "a11_tcp": "a11", "A11": "a11",
+            "OPC DA": "opcda", "opc_da": "opcda",
+            "Modbus RTU": "modbus_rtu",
+            "force_hls_sim": "modbus_tcp",
+        }
+        return aliases.get(proto, proto)
+
     def _create_adapter(self, config: ProtocolConfig) -> Optional[BaseProtocolAdapter]:
         """创建协议适配器"""
-        proto = config.protocol_type
+        proto = self._normalize_protocol(config.protocol_type)
         if proto == "modbus_rtu":
             from ..protocols.modbus_rtu import ModbusRTUAdapter
             return ModbusRTUAdapter(config)

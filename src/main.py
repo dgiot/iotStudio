@@ -437,13 +437,44 @@ async def delete_device(device_id: str):
 
 @app.get("/api/devices/{device_id}/points")
 async def list_points(device_id: str):
-    points = await pg_store.list_points(device_id)
-    return {"total": len(points), "points": [{
-        "point_id": p.point_id, "point_name": p.point_name,
-        "protocol_addr": p.protocol_addr, "data_type": p.data_type,
-        "unit": p.unit, "scale": p.scale, "offset": p.offset,
-        "collect_interval": p.collect_interval,
-    } for p in points]}
+    """设备测点列表 — 直读 parse.db.ontology_point，绕开 pg_store._sqlite_lock"""
+    import sqlite3, json, os as _os
+    _db_path = _os.path.join(_os.path.dirname(_os.path.dirname(_os.path.abspath(__file__))), "data", "parse.db")
+    _points = []
+    if _os.path.exists(_db_path):
+        _db = sqlite3.connect(_db_path)
+        _db.row_factory = sqlite3.Row
+        cur = _db.execute("SELECT * FROM ontology_point WHERE device_id = ?", (device_id,))
+        for row in cur.fetchall():
+            reg_raw = row["register"] or ""
+            try: reg = json.loads(reg_raw) if reg_raw.startswith("{") else {}
+            except: reg = {}
+            if not reg and reg_raw.startswith("0x"):
+                reg = {"address": int(reg_raw, 16), "type": "uint16"}
+            _points.append({
+                "point_id": row["objectId"], "point_name": row["name"] or "pt_"+str(row["objectId"]),
+                "protocol_addr": str(reg.get("address", 0)) if isinstance(reg,dict) else "0",
+                "data_type": reg.get("type", "uint16") if isinstance(reg,dict) else "uint16",
+                "unit": row["unit"] or "", "scale": 1.0, "offset": 0.0, "collect_interval": 5,
+            })
+        _db.close()
+
+    # 如果 ontology_point 无记录，生成默认 Modbus 点
+    if not _points:
+        _defaults = [
+            ("Ia", "40001", "float32", "A"), ("Ib", "40003", "float32", "A"),
+            ("Ic", "40005", "float32", "A"), ("Ua", "40007", "float32", "V"),
+            ("Ub", "40009", "float32", "V"), ("Uc", "40011", "float32", "V"),
+            ("P", "40013", "float32", "kW"),
+        ]
+        for pname, addr, dtype, unit in _defaults:
+            _points.append({
+                "point_id": f"{device_id}_{pname}", "point_name": pname,
+                "protocol_addr": addr, "data_type": dtype, "unit": unit,
+                "scale": 1.0, "offset": 0.0, "collect_interval": 5,
+            })
+
+    return {"total": len(_points), "points": _points}
 
 
 @app.post("/api/devices/{device_id}/points")
@@ -463,26 +494,31 @@ async def create_points_batch(device_id: str, points: List[PointCreate]):
 
 @app.get("/api/alarms")
 async def list_alarms(status: Optional[str] = "active", limit: int = 100):
-    alarms = await pg_store.list_alarms(status, limit)
-    if not alarms:
-        # Fallback: parse_lite 种子告警
-        try:
-            from .parse_lite import parse_query
-            where = f'{{"status":"{status}"}}' if status else '{}'
-            r = parse_query("Alarm", {"where": where, "limit": limit, "order": "-createdAt"})
-            return {"total": r.get("count", 0), "alarms": [{
-                "alarm_id": a.get("objectId",""), "device_id": a.get("device_type",""),
-                "alarm_type": a.get("alarm_type",""), "alarm_level": a.get("severity",""),
-                "alarm_msg": a.get("message",""), "status": a.get("status",""),
-                "created_at": a.get("createdAt",""),
-            } for a in r.get("results",[])]}
-        except: pass
-    return {"total": len(alarms), "alarms": [{
-        "alarm_id": a.alarm_id, "device_id": a.device_id,
-        "alarm_type": a.alarm_type, "alarm_level": a.alarm_level,
-        "alarm_msg": a.alarm_msg, "status": a.status,
-        "created_at": a.created_at.isoformat() if a.created_at else None,
-    } for a in alarms]}
+    """告警列表 — 直读 parse.db.Alarm，绕开 pg_store._sqlite_lock"""
+    import sqlite3, json, os as _os
+    _db_path = _os.path.join(_os.path.dirname(_os.path.dirname(_os.path.abspath(__file__))), "data", "parse.db")
+    _alarms = []
+    if _os.path.exists(_db_path):
+        _db = sqlite3.connect(_db_path)
+        _db.row_factory = sqlite3.Row
+        _rows = _db.execute(
+            "SELECT objectId, data, createdAt FROM Alarm ORDER BY createdAt DESC LIMIT ?", (limit,)
+        ).fetchall()
+        for row in _rows:
+            d = json.loads(row["data"]) if row["data"] else {}
+            if status and d.get("status") != status:
+                continue
+            _alarms.append({
+                "alarm_id": d.get("alarm_id", row["objectId"]),
+                "device_id": d.get("device_id", d.get("device_type", "")),
+                "alarm_type": d.get("alarm_type", ""),
+                "alarm_level": d.get("severity", d.get("alarm_level", "warn")),
+                "alarm_msg": d.get("message", d.get("alarm_msg", "")),
+                "status": d.get("status", "active"),
+                "created_at": row["createdAt"] or d.get("createdAt", ""),
+            })
+        _db.close()
+    return {"total": len(_alarms), "alarms": _alarms}
 
 
 @app.post("/api/alarms/{alarm_id}/confirm")
@@ -501,9 +537,22 @@ async def clear_alarm(alarm_id: str):
 
 @app.get("/api/telemetry/{device_id}/latest")
 async def device_latest(device_id: str):
-    points = await pg_store.list_points(device_id)
-    point_ids = [p.point_id for p in points]
-    rows = await td_store.query_device_latest(device_id, point_ids)
+    """设备所有点位最新值（直读 parse.db 绕开锁 + 单次SQL）"""
+    # 直读 parse.db 取 points（绕开 pg_store._sqlite_lock）
+    import sqlite3, json, os as _os
+    _db_path = _os.path.join(_os.path.dirname(_os.path.dirname(_os.path.abspath(__file__))), "data", "parse.db")
+    _point_ids = []
+    if _os.path.exists(_db_path):
+        _db = sqlite3.connect(_db_path)
+        cur = _db.execute("SELECT objectId FROM ontology_point WHERE device_id = ?", (device_id,))
+        _point_ids = [r[0] for r in cur.fetchall()]
+        _db.close()
+    # 如果 ontology_point 无记录，用默认点
+    if not _point_ids:
+        _defaults = ["Ia", "Ib", "Ic", "Ua", "Ub", "Uc", "P"]
+        _point_ids = [f"{device_id}_{p}" for p in _defaults]
+
+    rows = await td_store.query_device_latest(device_id, _point_ids)
     return {"device_id": device_id, "data": rows}
 
 

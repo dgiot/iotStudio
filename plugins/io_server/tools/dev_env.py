@@ -424,6 +424,7 @@ def main():
     import argparse
     ap = argparse.ArgumentParser()
     ap.add_argument("--no-collector", action="store_true")
+    ap.add_argument("--daemon", action="store_true", help="No console, run as daemon")
     ap.add_argument("--scale", type=int, default=20)
     args = ap.parse_args()
 
@@ -476,7 +477,16 @@ def main():
     print(f"\n  RTU 在线: {online}/{len(device_ids)}")
 
     # 交互控制台
-    console()
+    if not args.daemon:
+        console()
+    else:
+        print(f"\n  Daemon mode — 按 Ctrl+C 停止\n")
+        try:
+            while STATE["running"]:
+                time.sleep(1)
+        except KeyboardInterrupt:
+            STATE["running"] = False
+            print("  Shutting down...")
 
     # 保存日志
     print(f"\n  最终统计:")

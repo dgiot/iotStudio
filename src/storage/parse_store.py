@@ -326,7 +326,85 @@ class ParseStore:
                 if v and hasattr(cls, k):
                     stmt = stmt.where(getattr(cls, k) == v)
             result = await s.execute(stmt)
-            return [_to_obj(_sqlite_to_dict(r)) for r in result.scalars().all()]
+            items = [_to_obj(_sqlite_to_dict(r)) for r in result.scalars().all()]
+
+        # Fallback: 从 parse.db 读取（Devices/Points 存在 Parse 格式表中）
+        if not items and table in ("Device", "DataPoint"):
+            try:
+                import sqlite3, json, os as _os
+                parse_path = str(cfg.data_dir) + "/parse.db"
+                if _os.path.exists(parse_path):
+                    pdb = sqlite3.connect(parse_path)
+                    pdb.row_factory = sqlite3.Row
+                    if table == "Device":
+                        cur = pdb.execute("SELECT objectId, data, createdAt, updatedAt FROM Device")
+                        for row in cur.fetchall():
+                            data = json.loads(row["data"]) if row["data"] else {}
+                            if filters:
+                                skip = False
+                                for k, v in filters.items():
+                                    fv = data.get(k)
+                                    if fv is not None and fv != v:
+                                        skip = True; break
+                                if skip: continue
+                            obj = dict(data)
+                            obj["objectId"] = row["objectId"]
+                            items.append(_to_obj(_from_parse(obj)))
+                    elif table == "DataPoint":
+                        # 先查 ontology_point
+                        cur = pdb.execute("SELECT * FROM ontology_point")
+                        for row in cur.fetchall():
+                            reg_raw = row["register"] or ""
+                            try:
+                                reg = json.loads(reg_raw) if reg_raw.startswith("{") else {}
+                            except:
+                                reg = {}
+                            if not reg and reg_raw.startswith("0x"):
+                                reg = {"address": int(reg_raw, 16), "type": "uint16"}
+                            d = {
+                                "device_id": row["device_id"],
+                                "point_id": row["objectId"],
+                                "point_name": row["name"] or "pt_"+str(row["objectId"]),
+                                "protocol_addr": str(reg.get("address", 0)) if isinstance(reg,dict) else "0",
+                                "data_type": reg.get("type", "uint16") if isinstance(reg,dict) else "uint16",
+                                "unit": row["unit"] or "",
+                                "scale": 1.0, "offset": 0.0,
+                                "dead_zone": 0.0, "collect_interval": 5,
+                                "enabled": True,
+                            }
+                            items.append(_to_obj(d))
+
+                        # 被查询的 device_id 如果在 ontology_point 中无记录，生成默认 Modbus 点
+                        dev_id_filter = filters.get("device_id") if filters else None
+                        if dev_id_filter:
+                            has_pts = any(getattr(it, 'device_id', None) == dev_id_filter for it in items)
+                            if not has_pts:
+                                default_pts = [
+                                    ("Ia", "40001", "float32", "A"),
+                                    ("Ib", "40003", "float32", "A"),
+                                    ("Ic", "40005", "float32", "A"),
+                                    ("Ua", "40007", "float32", "V"),
+                                    ("Ub", "40009", "float32", "V"),
+                                    ("Uc", "40011", "float32", "V"),
+                                    ("P", "40013", "float32", "kW"),
+                                ]
+                                for pname, addr, dtype, unit in default_pts:
+                                    d = {
+                                        "device_id": dev_id_filter,
+                                        "point_id": f"{dev_id_filter}_{pname}",
+                                        "point_name": pname,
+                                        "protocol_addr": addr,
+                                        "data_type": dtype,
+                                        "unit": unit,
+                                        "scale": 1.0, "offset": 0.0,
+                                        "dead_zone": 0.0, "collect_interval": 5,
+                                        "enabled": True,
+                                    }
+                                    items.append(_to_obj(d))
+                    pdb.close()
+            except Exception as ex:
+                logger.warning(f"[parse] parse.db fallback failed: {ex}")
+        return items
 
     async def _sqlite_delete(self, table: str, key_id: str):
         from ..models.device import Device
