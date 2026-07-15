@@ -188,6 +188,21 @@ class CollectorEngine:
         elif proto == "http_rest":
             from ..protocols.http_rest import HttpRestAdapter
             return HttpRestAdapter(config)
+        elif proto in ("youyeyun", "oil_monitor"):
+            from ..protocols.youyeyun import YouyeyunProtocolAdapter
+            return YouyeyunProtocolAdapter(config)
+        elif proto in ("video_rtsp", "rtsp", "hikvision", "onvif"):
+            from ..protocols.video_rtsp import RtspVideoAdapter
+            return RtspVideoAdapter(config)
+        elif proto in ("bogan_mqtt", "bogan", "smart_bolt"):
+            from ..protocols.bogan_mqtt import BoganMqttAdapter
+            return BoganMqttAdapter(config)
+        elif proto in ("youyeyun", "oil_monitor"):
+            from ..protocols.youyeyun import YouyeyunProtocolAdapter
+            return YouyeyunProtocolAdapter(config)
+        elif proto in ("zhiwei_phm", "phm", "zhiwei"):
+            from ..protocols.zhiwei_phm import ZhiweiPhmAdapter
+            return ZhiweiPhmAdapter(config)
         else:
             logger.error(f"[collector] 不支持的协议: {proto}")
             return None

@@ -134,6 +134,62 @@ def create_adapter(token: str = "", device_id: str = "", name: str = "") -> Youy
         token=token, device_id=device_id, device_name=name,
     ))
 
+
+# ===== BaseProtocolAdapter 包装 =====
+from .base import BaseProtocolAdapter as _BaseAdapter, ProtocolConfig as _PConfig, PointValue as _PV
+
+class YouyeyunProtocolAdapter(_BaseAdapter):
+    """有叶云 BaseProtocolAdapter 包装 — 接入 dgiot_lite 采集引擎"""
+
+    def __init__(self, config: _PConfig):
+        super().__init__(config)
+        self._yy = YouyeyunAdapter(YouyeyunConfig(
+            username=config.extra.get("username", "sell@inzoc.com"),
+            password=config.extra.get("password", "A1234567"),
+            token=config.extra.get("token", ""),
+            device_id=config.extra.get("yy_device_id", ""),
+            device_name=config.device_name,
+        ))
+
+    async def connect(self) -> bool:
+        loop = asyncio.get_running_loop()
+        ok = await loop.run_in_executor(None, self._yy.login)
+        self._connected = ok
+        return ok
+
+    async def disconnect(self) -> None:
+        self._yy.session.close()
+        self._connected = False
+
+    async def read_points(self, points: List[Dict[str, Any]]) -> List[_PV]:
+        loop = asyncio.get_running_loop()
+        data = await loop.run_in_executor(None, self._yy.fetch_realtime)
+        now = datetime.now(timezone.utc)
+        results = []
+        for pt in data:
+            if pt["value"] is not None:
+                results.append(_PV(
+                    device_id=self.device_id,
+                    point_id=str(pt.get("key_id", pt["key_name"])),
+                    point_name=pt["key_name"],
+                    value=pt["value"],
+                    unit=pt.get("unit", ""),
+                    timestamp=now,
+                ))
+        # 如果 points 参数有过滤，只返回请求的
+        if points and results:
+            wanted = {p.get("point_id") or p.get("protocol_addr", "") for p in points}
+            if wanted:
+                results = [r for r in results if r.point_id in wanted]
+        return results
+
+    async def write_point(self, point: Dict[str, Any], value: Any) -> bool:
+        return False  # 有叶云 API 不支持写入
+
+    async def read_holding(self, addr: int, count: int = 1,
+                           slave_id: Optional[int] = None) -> Optional[list]:
+        return None
+
 # -- @protocol 自动注册 --
 try:
     from ..channel_base import protocol, BaseChannel
