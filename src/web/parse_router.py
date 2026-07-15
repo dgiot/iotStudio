@@ -35,17 +35,25 @@ async def query_objects(
     keys: Optional[str] = None,
     include: Optional[str] = None,
     count: Optional[int] = None,
+    page: Optional[int] = None,
+    page_size: Optional[int] = None,
 ):
     """query_object — 查询对象列表"""
     from ..parse_lite import parse_query
     params = {}
     if where: params["where"] = where
     if order: params["order"] = order
-    if limit: params["limit"] = limit
-    if skip: params["skip"] = skip
     if keys: params["keys"] = keys
     if include: params["include"] = include
     if count is not None: params["count"] = count
+    # Support page/page_size (frontend pagination)
+    if page and page_size:
+        params["limit"] = page_size
+        params["skip"] = (page - 1) * page_size
+    elif limit is not None:
+        params["limit"] = limit
+    if skip is not None:
+        params["skip"] = skip
     return parse_query(class_name, params)
 
 

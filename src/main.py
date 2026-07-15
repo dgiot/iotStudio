@@ -9,7 +9,7 @@ from contextlib import asynccontextmanager
 from datetime import datetime, timezone
 from typing import Any, Dict, List, Optional
 
-from fastapi import FastAPI, HTTPException, Query, WebSocket, WebSocketDisconnect, Depends
+from fastapi import FastAPI, HTTPException, Query, WebSocket, WebSocketDisconnect, Depends, Request
 from fastapi.responses import HTMLResponse, JSONResponse, FileResponse
 from pydantic import BaseModel, Field
 
@@ -21,6 +21,7 @@ from .services.alarm_engine import AlarmEngine
 from .services.push_engine import PushEngine
 from .services.safety_rules import SafetyPipeline
 from .services.phm_engine import PHMEngine
+from .services.rules_engine import RulesEngine
 from .services.mqtt_broker import start_builtin_broker, stop_builtin_broker
 from .models.thing_model import get_product_model
 
@@ -38,6 +39,7 @@ alarm_engine = AlarmEngine(pg_store)
 push_engine = PushEngine(pg_store)
 safety_pipeline = SafetyPipeline(pg_store)
 phm_engine = PHMEngine()
+rules_engine = RulesEngine()
 
 # ===== WebSocket 连接管理 =====
 ws_clients: set[WebSocket] = set()
@@ -271,49 +273,148 @@ async def health_mqtt():
 @app.get("/api/devices")
 async def list_devices(station_id: Optional[str] = None, device_type: Optional[str] = None,
                        page: int = 1, page_size: int = 20):
-    import importlib, sys
-    if 'src.parse_lite' in sys.modules:
-        importlib.reload(sys.modules['src.parse_lite'])
-    from .parse_lite import parse_query
-    r = parse_query("Device", {"limit": page_size, "skip": (page-1)*page_size})
-    return {
-        "total": r.get("count", 0),
-        "page": page, "page_size": page_size,
-        "devices": [{
-            "device_id": d.get("devaddr", d.get("objectId","")),
-            "device_name": d.get("name", ""), "devaddr": d.get("devaddr", ""),
-            "name": d.get("name", ""), "device_type": d.get("device_type", d.get("deviceType","")),
-            "protocol": d.get("protocol", ""), "ip": d.get("ip", ""),
-            "status": d.get("status", "offline"),
-            "station_id": d.get("station_id", ""), "manufacturer": d.get("manufacturer", ""),
-            "model": d.get("model", ""), "product": d.get("product"),
-            "productName": d.get("productName", d.get("device_type", "")),
-        } for d in r.get("results", [])]
-    }
+    """直接查 SQLite Device 表 — 绕过 parse_lite"""
+    import sqlite3, json, os
+    db_path = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "data", "parse.db")
+    db = sqlite3.connect(db_path)
+    db.row_factory = sqlite3.Row
+    total = db.execute("SELECT COUNT(*) as cnt FROM Device").fetchone()["cnt"]
+    skip = (page - 1) * page_size
+    rows = db.execute("SELECT objectId, data FROM Device ORDER BY createdAt DESC LIMIT ? OFFSET ?",
+                     (page_size, skip)).fetchall()
+    devices = []
+    for r in rows:
+        d = json.loads(r["data"]) if r["data"] else {}
+        devices.append({
+            "device_id": d.get("devaddr", r["objectId"]),
+            "device_name": d.get("device_name", d.get("name", r["objectId"])),
+            "devaddr": d.get("devaddr", r["objectId"]),
+            "name": d.get("name", d.get("device_name", r["objectId"])),
+            "device_type": d.get("device_type", ""),
+            "protocol": d.get("protocol", ""),
+            "status": d.get("status", "online"),
+            "station_id": d.get("station", d.get("station_id", "")),
+            "manufacturer": d.get("manufacturer", ""),
+            "model": d.get("model", ""),
+        })
+    db.close()
+    return {"total": total, "page": page, "page_size": page_size, "devices": devices}
 
+# ── 遥测数据写入 ──
+class TelemetryPoint(BaseModel):
+    device: str = ""
+    point: str = ""
+    value: float = 0.0
+    unit: str = ""
+    ts: Optional[float] = None
+
+@app.post("/api/telemetry")
+async def write_telemetry(body: TelemetryPoint):
+    """边缘代理接收遥测数据 → 写 SQLite + 推 MQTT"""
+    import sqlite3, json, os, time as _time
+    db_path = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "data", "telemetry.db")
+    conn = sqlite3.connect(db_path)
+    conn.execute("""CREATE TABLE IF NOT EXISTS telemetry
+        (ts TEXT, device_id TEXT, point_id TEXT, point_name TEXT, value REAL, unit TEXT, quality INTEGER, device_type TEXT, station_id TEXT)""")
+    now_ts = datetime.now(timezone.utc).isoformat()
+    conn.execute("INSERT INTO telemetry VALUES (?,?,?,?,?,?,192,?,?)",
+        (now_ts, body.device, body.point, body.point, body.value, body.unit or "", body.device or "sim", "sim"))
+    conn.commit()
+    cnt = conn.execute("SELECT COUNT(*) FROM telemetry").fetchone()[0]
+    conn.close()
+
+    # 推 MQTT → 边缘中枢
+    try:
+        import paho.mqtt.client as mqtt
+        topic = f"dgiot/default/gw_131/ch_edge_hub/{body.device}/{body.point}"
+        c = mqtt.Client(client_id='edge_agent')
+        c.connect('127.0.0.1', 1883, 5)
+        c.publish(topic, json.dumps({"value": body.value, "unit": body.unit, "ts": now_ts}))
+        c.disconnect()
+    except: pass
+
+    return {"status": "ok", "total_rows": cnt}
+
+
+# ── Rules Engine API ──
+from pydantic import Field
+
+@app.post("/api/rules")
+async def create_rule(request: Request):
+    body = await request.json()
+    rules_engine.add_rule(
+        body.get("rule_id") or f"rule_{int(time.time())}",
+        body.get("name", ""),
+        body.get("condition", {"field":"value","op":">","threshold":100}),
+        body.get("action", {"type":"alarm","message":"阈值超限"}),
+        body.get("severity", "warn"),
+        body.get("description", ""))
+    return {"status": "created"}
+
+@app.get("/api/rules")
+async def list_rules():
+    import sqlite3, os
+    db = sqlite3.connect(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "data", "rules.db"))
+    db.row_factory = sqlite3.Row
+    rows = [dict(r) for r in db.execute("SELECT * FROM rules ORDER BY created DESC").fetchall()]
+    db.close()
+    return {"rules": rows}
+
+@app.get("/api/rules/log")
+async def rule_log(limit: int = 50):
+    import sqlite3, os
+    db = sqlite3.connect(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "data", "rules.db"))
+    db.row_factory = sqlite3.Row
+    rows = [dict(r) for r in db.execute("SELECT * FROM rule_log ORDER BY ts DESC LIMIT ?", (limit,)).fetchall()]
+    db.close()
+    return {"logs": rows}
+
+# ── 租户/用户 API ──
+@app.get("/api/tenants/my")
+async def get_my_tenant():
+    return {"tenants": [{"tenant_id": "default", "name": "默认租户", "role": "admin"}]}
+
+# ── Parse 兼容接口 — /api/classes/Device → /api/devices ──
+@app.get("/api/classes/Device")
+async def parse_list_devices(request: Request):
+    """Parse 兼容 — GET /api/classes/Device"""
+    params = dict(request.query_params)
+    return await list_devices(page=int(params.get("page",1)), page_size=int(params.get("page_size",20)))
+
+@app.post("/api/classes/Device")
+async def parse_create_device(request: Request):
+    """Parse 兼容 — POST /api/classes/Device"""
+    body = await request.json()
+    return await create_device(DeviceCreate(**body))
 
 @app.get("/api/devices/{device_id}")
 async def get_device(device_id: str):
-    dev = await pg_store.get_device(device_id)
-    if dev is None:
-        # Fallback to parse_lite
-        try:
-            from .parse_lite import parse_get
-            d = parse_get("Device", device_id)
-            if d:
-                return {
-                    "device_id": d.get("devaddr", device_id), "device_name": d.get("name", ""),
-                    "devaddr": d.get("devaddr", ""), "name": d.get("name", ""),
-                    "status": d.get("status", "offline"), "protocol": d.get("protocol", ""),
-                    "device_type": d.get("device_type", ""), "ip": d.get("ip", ""),
-                    "manufacturer": (d.get("basedata") or {}).get("manufacturer","") if isinstance(d.get("basedata"),dict) else "",
-                    "model": (d.get("basedata") or {}).get("model","") if isinstance(d.get("basedata"),dict) else "",
-                    "isEnable": d.get("isEnable", True),
-                }
-        except: pass
+    """直接查 SQLite Device 表"""
+    import sqlite3, json, os
+    db_path = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "data", "parse.db")
+    db = sqlite3.connect(db_path); db.row_factory = sqlite3.Row
+    row = db.execute("SELECT objectId, data FROM Device WHERE objectId = ?", (device_id,)).fetchone()
+    if not row:
         raise HTTPException(404, "设备不存在")
-    return {"device_id": dev.device_id, "device_name": dev.device_name, "status": dev.status,
-            "protocol": dev.protocol, "device_type": dev.device_type}
+    d = json.loads(row["data"]) if row["data"] else {}
+    tags = db.execute("SELECT COUNT(*) as cnt FROM tag_definition WHERE device_id = ?", (device_id,)).fetchone()
+    db.close()
+    return {
+        "device_id": d.get("devaddr", row["objectId"]),
+        "device_name": d.get("device_name", d.get("name", row["objectId"])),
+        "devaddr": d.get("devaddr", row["objectId"]),
+        "name": d.get("name", d.get("device_name", row["objectId"])),
+        "status": d.get("status", "online"),
+        "device_type": d.get("device_type", ""),
+        "protocol": d.get("protocol", ""),
+        "ip": d.get("ip", ""),
+        "manufacturer": d.get("manufacturer", ""),
+        "model": d.get("model", ""),
+        "station_id": d.get("station", d.get("station_id", "")),
+        "productName": d.get("productName", d.get("device_type", "")),
+        "tag_count": tags["cnt"] if tags else 0,
+        "isEnable": True,
+    }
 
 
 @app.post("/api/devices")
@@ -1761,7 +1862,12 @@ def _static_response(full_path: str) -> _Response:
     file_path = _FRONTEND_DIR / full_path
     if file_path.is_file():
         content = file_path.read_bytes()
-        return _Response(content=content, media_type=_media_type(full_path))
+        headers = {}
+        # 强制 JS 文件不缓存 (开发模式)
+        if full_path.endswith('.js'):
+            headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
+            headers["Pragma"] = "no-cache"
+        return _Response(content=content, media_type=_media_type(full_path), headers=headers)
     return None
 
 if _FRONTEND_DIR.exists():

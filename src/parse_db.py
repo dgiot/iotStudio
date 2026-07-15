@@ -135,8 +135,8 @@ class PostgresBackend(DBBackend):
         async def _connect():
             self._pool = await asyncpg.create_pool(
                 self._dsn,
-                min_size=1,
-                max_size=10,
+                min_size=5,
+                max_size=30,
             )
             # 确保 parse 数据库存在
             async with self._pool.acquire() as conn:
@@ -181,25 +181,31 @@ class PostgresBackend(DBBackend):
             loop = asyncio.new_event_loop()
             asyncio.set_event_loop(loop)
 
-        # Ensure pool is alive
+        # Auto-reconnect: retry PG connection if pool is dead
         if self._pool is None:
+            log.info("[parse_db] Reconnecting PG...")
             if not self.connect():
+                self._pool = None  # force next attempt
                 raise RuntimeError("PostgreSQL pool is dead, reconnect failed")
 
-        if loop.is_running():
-            # 已经在 async 上下文中: 创建新 task
-            import concurrent.futures
-            future = concurrent.futures.Future()
-            async def _wrap():
-                try:
-                    result = await coro
-                    future.set_result(result)
-                except Exception as e:
-                    future.set_exception(e)
-            loop.create_task(_wrap())
-            return future.result(timeout=30)
-        else:
-            return loop.run_until_complete(coro)
+        try:
+            if loop.is_running():
+                import concurrent.futures
+                future = concurrent.futures.Future()
+                async def _wrap():
+                    try:
+                        result = await coro
+                        future.set_result(result)
+                    except Exception as e:
+                        future.set_exception(e)
+                loop.create_task(_wrap())
+                return future.result(timeout=30)
+            else:
+                return loop.run_until_complete(coro)
+        except Exception as e:
+            log.warning(f"[parse_db] Query failed, resetting pool: {e}")
+            self._pool = None  # Force reconnect on next attempt
+            raise
 
     def execute(self, sql: str, params: tuple = ()):
         async def _exec():
@@ -329,18 +335,17 @@ def get_backend() -> DBBackend:
     except Exception as e:
         log.warning(f"[parse_db] Embedded PG error: {e}")
 
-    # Final fallback: 直接连 localhost:7432
+    # Direct PG connect
     _backend = PostgresBackend("postgresql://dgiot:dgiot123@127.0.0.1:7432/parse")
     if _backend.connect():
-        log.info("[parse_db] Direct PG connect OK")
+        log.info("[parse_db] PG connected")
         return _backend
 
-    import warnings
-    warnings.warn("[parse_db] PG not available - using SQLite")
-    db_path = os.path.join(os.path.dirname(__file__), '..', 'data', 'parse.db')
-    _backend = SQLiteBackend(db_path)
+    # Fallback to SQLite
+    log.warning("[parse_db] PostgreSQL :7432 unavailable, fallback to SQLite")
+    sqlite_path = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "data", "parse.db")
+    _backend = SQLiteBackend(sqlite_path)
     _backend.connect()
-    log.info("[parse_db] SQLite fallback OK")
     return _backend
 
 

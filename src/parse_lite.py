@@ -691,6 +691,14 @@ def _row_to_obj(row, keys: list = None) -> dict:
         if v is None: return fallback
         return v.isoformat() if isinstance(v, datetime) else (str(v) if isinstance(v, (int, float)) else v)
     obj = {"objectId": _g("objectId"), "createdAt": _g("createdAt"), "updatedAt": _g("updatedAt")}
+    # JSON data column (parse_lite schema) — 优先处理, 所有字段都在这里
+    data_val = _g("data")
+    if data_val and data_val != "{}" and data_val != "":
+        try:
+            d = json.loads(data_val) if isinstance(data_val, str) else data_val
+            if isinstance(d, dict):
+                obj.update(d)
+        except: pass
     # PG direct columns (Node.js Parse Server schema)
     for col in ["name", "devaddr", "status", "ip", "product", "device_type",
                 "protocol", "isEnable", "manufacturer", "model", "station_id",
@@ -698,14 +706,6 @@ def _row_to_obj(row, keys: list = None) -> dict:
         v = _g(col)
         if v:
             obj[col] = v
-    # JSON data column (parse_lite schema)
-    data_val = _g("data")
-    if data_val and data_val != "{}":
-        try:
-            d = json.loads(data_val) if isinstance(data_val, str) else data_val
-            if isinstance(d, dict):
-                obj.update(d)
-        except: pass
     # JSON basedata/detail/profile columns (Parse Server)
     for json_col in ["basedata", "detail", "profile", "content", "location", "state"]:
         v = _g(json_col)

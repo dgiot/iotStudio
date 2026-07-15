@@ -109,8 +109,17 @@ async function load(){
     return
   }
   try{
-    const [dev,pts,lt]=await Promise.all([getDevice(id),getPoints(id),getLatest(id)])
-    device.value=norm(dev.data); points.value=pts.data?.points||[]; latest.value=lt.data?.data||[]
+    const dev = await getDevice(id)
+    console.log('getDevice:', dev)
+    device.value = norm(dev) || { device_id: id, device_name: '加载失败', status: 'offline' }
+    try {
+      const pts = await getPoints(id)
+      points.value = pts.points || pts.data?.points || []
+    } catch(e) { console.log('getPoints err:', e) }
+    try {
+      const lt = await getLatest(id)
+      latest.value = lt.data || lt.data?.data || []
+    } catch(e) { console.log('getLatest err:', e) }
     if(points.value.length>0){
       const p=points.value[0]
       const r=await getTelemetry(route.params.id,p.point_id,{limit:30})

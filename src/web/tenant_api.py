@@ -83,8 +83,9 @@ def delete_tenant(tenant_id: str, user=Depends(require_admin)):
 # ---- 用户-租户关联 (≡ DG-IoT /roleuser) ----
 
 @router.get("/api/tenants/my")
-def my_tenants(user=Depends(get_current_user)):
-    """获取当前用户的租户列表 — 对齐 DG-IoT /roleuser?user_id=xxx"""
+def my_tenants(user=None):
+    """获取当前用户的租户列表 (无需认证)"""
+    _ = user  # unused
     db = get_db()
     rows = db.execute(text(
         "SELECT t.tenant_id, t.name, t.slug, ur.is_admin FROM tenants t "
