@@ -4,7 +4,7 @@ EventBus 驱动 + SQLite 规则库 + 条件匹配 + 动作执行
 """
 import json, time, sqlite3, logging
 from pathlib import Path
-from typing import Optional
+from typing import Optional, List, Any
 
 log = logging.getLogger("rules")
 
@@ -34,6 +34,21 @@ class RulesEngine:
         self._rules = self._db.execute(
             "SELECT * FROM rules WHERE enabled=1").fetchall()
         log.info(f"[rules] loaded {len(self._rules)} rules")
+
+    async def evaluate(self, device_id: str, points: List[Any]) -> None:
+        """采集管道回调 — 处理一批采集值，逐点匹配规则"""
+        for pv in points:
+            try:
+                val = getattr(pv, 'value', pv.get('value', 0)) if isinstance(pv, dict) else getattr(pv, 'value', 0)
+                pid = getattr(pv, 'point_id', pv.get('point_id', '')) if isinstance(pv, dict) else getattr(pv, 'point_id', '')
+                for row in self._rules:
+                    try:
+                        cond = json.loads(row[3])
+                        action = json.loads(row[4])
+                        if self._match(cond, device_id, pid, val):
+                            self._execute(row[0], device_id, pid, val, action, cond)
+                    except: pass
+            except: pass
 
     def add_rule(self, rule_id: str, name: str, condition: dict,
                  action: dict, severity="warn", desc=""):

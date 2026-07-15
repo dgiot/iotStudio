@@ -89,6 +89,7 @@ async def lifespan(app: FastAPI):
     # 采集引擎回调链
     collector.on_data(alarm_engine.evaluate)
     collector.on_data(safety_pipeline.evaluate)
+    collector.on_data(rules_engine.evaluate)
     collector.on_data(push_engine.push)
     safety_pipeline.start_timeout_checker()
 
@@ -199,7 +200,22 @@ async def login(body: LoginRequest):
     if token is None:
         raise HTTPException(401, "用户名或密码错误")
     payload = verify_token(token)
-    return {"token": token, "username": payload["sub"], "role": payload["role"]}
+    uname = payload["sub"]
+    user_info = USERS.get(uname, {})
+    return {
+        "token": token,
+        "username": uname,
+        "role": payload["role"],
+        "user": {
+            "id": uname,
+            "username": uname,
+            "role": payload["role"],
+            "nick": user_info.get("name", uname),
+            "name": user_info.get("name", uname),
+            "email": user_info.get("email", ""),
+            "phone": user_info.get("phone", ""),
+        }
+    }
 
 @app.get("/api/auth/me")
 async def me(user: dict = Depends(get_current_user)):
@@ -227,6 +243,76 @@ async def delete_user(username: str, user: dict = Depends(require_admin)):
     if username in USERS:
         del USERS[username]
     return {"status": "deleted"}
+
+# ---- 前端兼容路由 (对齐 iotView user.js) ----
+
+@app.get("/api/users")
+async def list_api_users():
+    """用户列表 — 合并 auth.USERS + parse_lite _User"""
+    from .parse_lite import parse_query
+    parse_users = parse_query("_User", {"limit": 100})
+    result = []
+    seen = set()
+    for u in parse_users.get("results", []):
+        uid = u.get("objectId", "")
+        uname = u.get("username", uid)
+        if not uname:
+            continue
+        seen.add(uname)
+        result.append({
+            "id": uid,
+            "objectId": uid,
+            "username": uname,
+            "role": u.get("role", "user"),
+            "email": u.get("email", ""),
+            "phone": u.get("phone", ""),
+            "nick": u.get("nick", uname),
+            "createdAt": u.get("createdAt"),
+            "updatedAt": u.get("updatedAt"),
+        })
+    for uname, info in USERS.items():
+        if uname not in seen:
+            result.append({
+                "id": uname,
+                "objectId": uname,
+                "username": uname,
+                "role": info.get("role", "operator"),
+                "nick": info.get("name", uname),
+                "email": info.get("email", ""),
+                "phone": info.get("phone", ""),
+                "createdAt": info.get("created", ""),
+            })
+    return {"users": result, "total": len(result)}
+
+@app.get("/api/users/{user_id}")
+async def get_api_user(user_id: str):
+    """获取单个用户 — 先查 parse_lite _User，fallback auth.USERS"""
+    from .parse_lite import parse_get
+    user = parse_get("_User", user_id)
+    if user and user.get("objectId"):
+        return {
+            "id": user.get("objectId"),
+            "objectId": user.get("objectId"),
+            "username": user.get("username"),
+            "role": user.get("role", "user"),
+            "email": user.get("email", ""),
+            "phone": user.get("phone", ""),
+            "nick": user.get("nick", user.get("username", "")),
+            "createdAt": user.get("createdAt"),
+            "updatedAt": user.get("updatedAt"),
+        }
+    # Fallback to auth.USERS
+    if user_id in USERS:
+        info = USERS[user_id]
+        return {
+            "id": user_id,
+            "objectId": user_id,
+            "username": user_id,
+            "role": info.get("role", "operator"),
+            "nick": info.get("name", user_id),
+            "email": info.get("email", ""),
+        }
+    raise HTTPException(404, "用户不存在")
 
 # ===== REST API =====
 
@@ -341,7 +427,10 @@ from pydantic import Field
 
 @app.post("/api/rules")
 async def create_rule(request: Request):
-    body = await request.json()
+    try:
+        body = await request.json()
+    except Exception:
+        raise HTTPException(400, "无效的JSON格式")
     rules_engine.add_rule(
         body.get("rule_id") or f"rule_{int(time.time())}",
         body.get("name", ""),
@@ -459,7 +548,24 @@ async def list_points(device_id: str):
             })
         _db.close()
 
-    # 如果 ontology_point 无记录，生成默认 Modbus 点
+    # 如果 ontology_point 无记录，从 telemetry.db 发现实际测点
+    if not _points:
+        _tel_path = _os.path.join(_os.path.dirname(_os.path.dirname(_os.path.abspath(__file__))), "data", "telemetry.db")
+        if _os.path.exists(_tel_path):
+            _tdb = sqlite3.connect(_tel_path)
+            try:
+                cur = _tdb.execute("SELECT DISTINCT point_id FROM telemetry WHERE device_id = ? ORDER BY point_id", (device_id,))
+                for r in cur.fetchall():
+                    pid = r[0]
+                    _points.append({
+                        "point_id": pid, "point_name": pid,
+                        "protocol_addr": "0", "data_type": "float32",
+                        "unit": "", "scale": 1.0, "offset": 0.0, "collect_interval": 5,
+                    })
+            except: pass
+            _tdb.close()
+
+    # 如果 telemetry.db 也无数据，生成默认 Modbus 点
     if not _points:
         _defaults = [
             ("Ia", "40001", "float32", "A"), ("Ib", "40003", "float32", "A"),
@@ -537,17 +643,28 @@ async def clear_alarm(alarm_id: str):
 
 @app.get("/api/telemetry/{device_id}/latest")
 async def device_latest(device_id: str):
-    """设备所有点位最新值（直读 parse.db 绕开锁 + 单次SQL）"""
-    # 直读 parse.db 取 points（绕开 pg_store._sqlite_lock）
-    import sqlite3, json, os as _os
-    _db_path = _os.path.join(_os.path.dirname(_os.path.dirname(_os.path.abspath(__file__))), "data", "parse.db")
+    """设备所有点位最新值 — 从 telemetry.db 发现实际点位，不构造虚构点ID"""
+    import sqlite3, os as _os
+
+    # 1. 先查 ontology_point（parse.db），有则用真实点ID
+    _parse_path = _os.path.join(_os.path.dirname(_os.path.dirname(_os.path.abspath(__file__))), "data", "parse.db")
     _point_ids = []
-    if _os.path.exists(_db_path):
-        _db = sqlite3.connect(_db_path)
+    if _os.path.exists(_parse_path):
+        _db = sqlite3.connect(_parse_path)
         cur = _db.execute("SELECT objectId FROM ontology_point WHERE device_id = ?", (device_id,))
         _point_ids = [r[0] for r in cur.fetchall()]
         _db.close()
-    # 如果 ontology_point 无记录，用默认点
+
+    # 2. 如果 ontology_point 无记录，从 telemetry.db 发现实际点位
+    if not _point_ids:
+        _tel_path = _os.path.join(_os.path.dirname(_os.path.dirname(_os.path.abspath(__file__))), "data", "telemetry.db")
+        if _os.path.exists(_tel_path):
+            _db2 = sqlite3.connect(_tel_path)
+            cur = _db2.execute("SELECT DISTINCT point_id FROM telemetry WHERE device_id = ? ORDER BY point_id", (device_id,))
+            _point_ids = [r[0] for r in cur.fetchall()]
+            _db2.close()
+
+    # 3. 如果 telemetry.db 也无数据，用默认点（构造点ID，允许空值）
     if not _point_ids:
         _defaults = ["Ia", "Ib", "Ic", "Ua", "Ub", "Uc", "P"]
         _point_ids = [f"{device_id}_{p}" for p in _defaults]

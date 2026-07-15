@@ -127,10 +127,12 @@ async def login(request: Request):
 
 @router.post("/logout")
 async def logout(request: Request):
-    """用户登出"""
+    """用户登出 — 支持 body.sessionToken 和 header.sessionToken 两种方式"""
     from ..parse_lite import parse_logout
     body = await request.json()
-    return parse_logout(body.get("sessionToken", ""))
+    # 优先从 body 取，其次从 header 取（前端 axios 拦截器放在 header）
+    token = body.get("sessionToken", "") or request.headers.get("sessionToken", "") or ""
+    return parse_logout(token)
 
 
 @router.post("/register")
