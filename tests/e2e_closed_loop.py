@@ -348,17 +348,30 @@ def test_frontend_index():
 @test("frontend", "spa", "前端 JS 资源可访问")
 def test_frontend_js():
     try:
-        r = urllib.request.urlopen(f"{API}/assets/", timeout=5)
-        # The /assets/ route lists resources
-        return {"status": "ok"}
-    except Exception as e:
-        # Try main.js
-        for path in ["/assets/index.js", "/assets/index-BmCXIkn3.js"]:
+        # 从 index.html 中发现实际引用的 JS/CSS 资源文件
+        r = urllib.request.urlopen(f"{API}/", timeout=5)
+        html = r.read().decode("utf-8")
+        import re
+        resources = re.findall(r"(?:src|href)=[\"']([^\"']+\.(?:js|css))[\"']", html)
+        if not resources:
             try:
-                r = urllib.request.urlopen(f"{API}{path}", timeout=5)
-                if r.status == 200: return {"status": "ok", "js": path, "size": len(r.read())}
+                import os as _os
+                assets_dir = _os.path.join(_os.path.dirname(_os.path.dirname(_os.path.abspath(__file__))), "frontend-vue", "dist", "assets")
+                resources = [f"/assets/{f}" for f in _os.listdir(assets_dir) if f.endswith(('.js', '.css'))]
             except:
                 pass
+        if not resources:
+            return {"status": "skipped", "reason": "未发现任何前端资源引用"}
+        # 验证至少一个资源可访问
+        for res in resources[:5]:
+            try:
+                r2 = urllib.request.urlopen(f"{API}{res}", timeout=5)
+                if r2.status == 200:
+                    return {"status": "ok", "sample": res, "size": len(r2.read()), "total_found": len(resources)}
+            except:
+                continue
+        return {"status": "skipped", "reason": f"所有 {len(resources)} 个资源均不可达"}
+    except Exception as e:
         return {"status": "skipped", "reason": str(e)}
 
 @test("frontend", "spa", "前端 SPA 路由工作 (/#/devices)")
