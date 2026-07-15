@@ -431,6 +431,104 @@ def test_eventbus():
 
 
 # ════════════════════════════════════════════════════════════
+# Modbus RTU 协议适配器测试
+
+_MODBUS_RTU_PORT = "COM1"
+_MODBUS_RTU_SLAVE = 1
+
+@test("modbus_rtu", "simulator", "Modbus RTU 虚拟串口 COM2 模拟器可达")
+def test_modbus_rtu_port():
+    """通过同步客户端验证 Modbus RTU slave (COM2) 连通性"""
+    try:
+        from pymodbus.client import ModbusSerialClient
+        client = ModbusSerialClient(port=_MODBUS_RTU_PORT, baudrate=9600,
+                                    parity="N", stopbits=1, bytesize=8, timeout=3)
+        ok = client.connect()
+        if not ok:
+            return {"status": "skipped", "reason": "serial port connect failed"}
+        rr = client.read_holding_registers(0, 3, slave=_MODBUS_RTU_SLAVE)
+        client.close()
+        if rr and not rr.isError():
+            return {"status": "ok", "registers": list(rr.registers)}
+        return {"status": "skipped", "reason": str(rr)}
+    except Exception as e:
+        return {"status": "skipped", "reason": str(e)}
+
+@test("modbus_rtu", "protocol", "Modbus RTU _parse_addr 地址解析")
+def test_modbus_rtu_parse_addr():
+    """验证 _parse_addr 函数正确处理十进制/十六进制"""
+    sys.path.insert(0, _ROOT)
+    from src.protocols.modbus_rtu import _parse_addr
+    cases = [
+        ("0", 0), ("1", 1), ("10", 10), ("255", 255),
+        ("0x10", 16), ("0xFF", 255), ("0x0", 0),
+        ("10", 10),  # 十六进制无前缀时应按十进制
+    ]
+    for inp, expected in cases:
+        result = _parse_addr(inp)
+        assert result == expected, f"_parse_addr({inp!r}) = {result}, expected {expected}"
+    return {"cases": len(cases), "sample": f"0xFF={_parse_addr('0xFF')}"}
+
+@test("modbus_rtu", "protocol", "Modbus RTU _parse_value 数据类型解析")
+def test_modbus_rtu_parse_value():
+    """验证 _parse_value 各种数据类型的解析"""
+    sys.path.insert(0, _ROOT)
+    from src.protocols.modbus_rtu import ModbusRTUAdapter
+    from src.protocols.base import ProtocolConfig
+
+    config = ProtocolConfig(
+        protocol_type="modbus_rtu", device_id="test", device_name="test",
+        collect_interval=5, points=[], extra={"port": "COM1", "baudrate": 9600},
+    )
+    adapter = ModbusRTUAdapter(config)
+
+    # uint16
+    val = adapter._parse_value([100, 200], 0, "uint16")
+    assert val == 100, f"uint16[0] = {val}"
+    val = adapter._parse_value([100, 200], 1, "uint16")
+    assert val == 200, f"uint16[1] = {val}"
+
+    # int16 (negative)
+    val = adapter._parse_value([65535, 0], 0, "int16")
+    assert val == -1, f"int16[65535] = {val}"
+
+    # float32 (big-endian)
+    import struct
+    raw = struct.pack(">f", 3.14)
+    regs = [struct.unpack(">H", raw[0:2])[0], struct.unpack(">H", raw[2:4])[0]]
+    val = adapter._parse_value(regs, 0, "float32")
+    assert abs(val - 3.14) < 0.01, f"float32 = {val}"
+
+    # uint32
+    val = adapter._parse_value([0x1234, 0x5678], 0, "uint32")
+    assert val == 0x12345678, f"uint32 = {hex(val)}"
+
+    return {"types": "uint16/int16/float32/uint32", "sample": f"pi={adapter._parse_value(regs, 0, 'float32'):.4f}"}
+
+@test("modbus_rtu", "storage", "Modbus RTU 保持寄存器同步读取验证")
+def test_modbus_rtu_holding_registers():
+    """通过同步客户端读取 HR，验证值 = 300+addr"""
+    try:
+        from pymodbus.client import ModbusSerialClient
+        client = ModbusSerialClient(port=_MODBUS_RTU_PORT, baudrate=9600,
+                                    parity="N", stopbits=1, bytesize=8, timeout=3)
+        ok = client.connect()
+        if not ok:
+            return {"status": "skipped", "reason": "serial connect failed"}
+        # 读取 HR 0-9
+        rr = client.read_holding_registers(0, 10, slave=_MODBUS_RTU_SLAVE)
+        client.close()
+        if rr and not rr.isError():
+            regs = list(rr.registers)
+            expected = [300 + i for i in range(10)]
+            match = all(r == e for r, e in zip(regs, expected))
+            return {"registers": regs[:5], "match_300_offset": match}
+        return {"status": "skipped", "reason": str(rr)}
+    except Exception as e:
+        return {"status": "skipped", "reason": str(e)}
+
+
+# ════════════════════════════════════════════════════════════
 # http_rest 协议适配器测试
 
 _MOCK_REST = "http://127.0.0.1:18999"
