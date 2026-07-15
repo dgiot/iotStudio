@@ -203,3 +203,21 @@ class HttpRestAdapter(BaseProtocolAdapter):
     async def read_holding(self, addr: int, count: int = 1, slave_id: Optional[int] = None) -> Optional[list]:
         """REST 不支持寄存器读取"""
         return None
+
+    async def write_point(self, point: Dict[str, Any], value: Any) -> bool:
+        """REST 写入 — 通过 POST 将值发送到指定 URL"""
+        if not self.client or not self._connected:
+            return False
+        extra = self.config.extra
+        write_url = extra.get("write_url", extra.get("url", ""))
+        if not write_url:
+            logger.warning(f"[http_rest] {self.device_id} write_point: 未配置 write_url")
+            return False
+        try:
+            await self._ensure_auth()
+            payload = {"point_id": point.get("point_id", ""), "value": value}
+            resp = await self.client.post(write_url, json=payload)
+            return resp.status_code < 400
+        except Exception as e:
+            logger.warning(f"[http_rest] {self.device_id} write_point failed: {e}")
+            return False
