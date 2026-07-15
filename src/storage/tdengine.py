@@ -65,6 +65,7 @@ class TDEngineStore:
         self._db = self.config.database
         self._is_fallback = False
         self._supertable_cache: set = set()
+        self._read_conn = None  # 持久 aiosqlite 读连接
 
     async def connect(self) -> bool:
         # 快速端口检查避免长时间超时
@@ -125,7 +126,7 @@ class TDEngineStore:
             value REAL, unit TEXT, quality INTEGER DEFAULT 0,
             device_type TEXT, station_id TEXT
         )""")
-        self.execute("CREATE INDEX IF NOT EXISTS idx_tele ON telemetry(device_id, point_id, ts)")
+        self.execute("CREATE INDEX IF NOT EXISTS idx_tele_dev_pid_ts ON telemetry(device_id, point_id, ts DESC)")
         self._is_fallback = True
         return True
 
@@ -138,6 +139,27 @@ class TDEngineStore:
         except Exception as e:
             logger.debug(f"[tdengine] SQL: {e}")
             return None
+
+    async def _ensure_read_conn(self):
+        """确保持久 aiosqlite 读连接存在且有效（避免每次查询新建连接的开销）"""
+        import os
+        db_path = os.path.join(cfg.data_dir, "telemetry.db")
+        if self._read_conn is None:
+            import aiosqlite
+            self._read_conn = await aiosqlite.connect(db_path, timeout=10)
+            await self._read_conn.execute("PRAGMA journal_mode=WAL")
+            await self._read_conn.execute("PRAGMA busy_timeout=30000")
+            logger.info("[tdengine] 持久读连接已创建")
+        # 检查连接是否有效
+        try:
+            await self._read_conn.execute("SELECT 1")
+        except Exception:
+            import aiosqlite
+            await self._read_conn.close()
+            self._read_conn = await aiosqlite.connect(db_path, timeout=10)
+            await self._read_conn.execute("PRAGMA journal_mode=WAL")
+            await self._read_conn.execute("PRAGMA busy_timeout=30000")
+            logger.info("[tdengine] 持久读连接已重连")
 
     # ===== 物模型超级表管理 =====
 
@@ -223,7 +245,7 @@ class TDEngineStore:
                 return False
 
     async def batch_insert(self, rows: List[Dict[str, Any]]) -> int:
-        """批量写入点位值 — 使用单条 INSERT + executemany 减少事务数"""
+        """批量写入点位值 — 使用单条 INSERT + 线程池避免阻塞事件循环"""
         if not rows:
             return 0
         if self._is_fallback:
@@ -244,7 +266,9 @@ class TDEngineStore:
                     values.append(f"('{ts_str}','{did}','{pid}','{pname}',{val},'{unit}',{q},'{dt}','{sid}')")
                 if values:
                     sql = "INSERT INTO telemetry (ts,device_id,point_id,point_name,value,unit,quality,device_type,station_id) VALUES " + ",".join(values)
-                    self.execute(sql)
+                    # 线程池执行同步 SQLite 写，不阻塞事件循环
+                    loop = asyncio.get_running_loop()
+                    await loop.run_in_executor(None, lambda: self.execute(sql))
                 return len(values)
             except Exception as e:
                 logger.error(f"[sqlite] batch_insert failed: {e}")
@@ -305,27 +329,25 @@ class TDEngineStore:
         if self._is_fallback:
             if not point_ids:
                 return []
-            # 使用 aiosqlite 直连（绕开同步 self._conn 的线程安全问题）
+            # 使用持久 aiosqlite 连接（避免每次新建连接的开销 + WAL锁争用）
             try:
-                import aiosqlite, os
-                db_path = os.path.join(cfg.data_dir, "telemetry.db")
-                async with aiosqlite.connect(db_path, timeout=10) as _db:
-                    placeholders = ','.join('?' for _ in point_ids)
-                    sql = (
-                        f"SELECT t.point_id, t.ts, t.value FROM telemetry t "
-                        f"INNER JOIN ("
-                        f"  SELECT point_id, MAX(ts) AS max_ts FROM telemetry "
-                        f"  WHERE device_id=? AND point_id IN ({placeholders}) "
-                        f"  GROUP BY point_id"
-                        f") m ON t.point_id=m.point_id AND t.ts=m.max_ts "
-                        f"WHERE t.device_id=? AND t.point_id IN ({placeholders})"
-                    )
-                    params = (device_id, *point_ids, device_id, *point_ids)
-                    async with _db.execute(sql, params) as cur:
-                        rows = await cur.fetchall()
-                        return [{"point_id": row[0], "ts": str(row[1]), "value": row[2]} for row in rows]
+                await self._ensure_read_conn()
+                placeholders = ','.join('?' for _ in point_ids)
+                sql = (
+                    f"SELECT t.point_id, t.ts, t.value FROM telemetry t "
+                    f"INNER JOIN ("
+                    f"  SELECT point_id, MAX(ts) AS max_ts FROM telemetry "
+                    f"  WHERE device_id=? AND point_id IN ({placeholders}) "
+                    f"  GROUP BY point_id"
+                    f") m ON t.point_id=m.point_id AND t.ts=m.max_ts "
+                    f"WHERE t.device_id=? AND t.point_id IN ({placeholders})"
+                )
+                params = (device_id, *point_ids, device_id, *point_ids)
+                async with self._read_conn.execute(sql, params) as cur:
+                    rows = await cur.fetchall()
+                    return [{"point_id": row[0], "ts": str(row[1]), "value": row[2]} for row in rows]
             except Exception as e:
-                logger.warning(f"[tdengine] aiosqlite query_latest failed: {e}")
+                logger.warning(f"[tdengine] query_latest failed: {e}")
             return []
 
         # TDengine 模式：每个测点单独查子表
@@ -354,5 +376,10 @@ class TDEngineStore:
         if self._conn:
             try:
                 self._conn.close()
+            except Exception:
+                pass
+        if self._read_conn:
+            try:
+                await self._read_conn.close()
             except Exception:
                 pass

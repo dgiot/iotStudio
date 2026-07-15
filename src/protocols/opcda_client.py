@@ -69,12 +69,13 @@ class OPCDAClient(BaseProtocolAdapter):
             opc_server = self.config.extra.get("opc_server", "Matrikon.OPC.Simulation.1")
             opc_host = self.config.extra.get("opc_host", "localhost")
 
-            # OpenOPC 客户端 (同步)
-            self._opc = OpenOPC.open_client(opc_host)
-            servers = self._opc.servers()
+            # OpenOPC 客户端 (同步 → 线程池避免阻塞事件循环)
+            loop = asyncio.get_running_loop()
+            self._opc = await loop.run_in_executor(None, lambda: OpenOPC.open_client(opc_host))
+            servers = await loop.run_in_executor(None, lambda: self._opc.servers())
             logger.info(f"[opcda] {self.device_id} 可用服务器: {servers[:5]}")
 
-            self._opc.connect(opc_server)
+            await loop.run_in_executor(None, lambda: self._opc.connect(opc_server))
             logger.info(f"[opcda] {self.device_id} 连接成功 → {opc_server}")
             self._connected = True
 
@@ -94,7 +95,9 @@ class OPCDAClient(BaseProtocolAdapter):
 
             # 验证项是否有效
             if self._items_map:
-                available = self._opc.list(list(self._items_map.keys())[0].rsplit('.', 1)[0] + '.*' if '.' in list(self._items_map.keys())[0] else '*', recursive=True, flat=True)
+                first_key = list(self._items_map.keys())[0]
+                pattern = first_key.rsplit('.', 1)[0] + '.*' if '.' in first_key else '*'
+                available = await loop.run_in_executor(None, lambda: self._opc.list(pattern, recursive=True, flat=True))
                 logger.info(f"[opcda] {self.device_id} 可用项示例: {available[:5]}")
 
             # 启动采集线程
@@ -114,7 +117,8 @@ class OPCDAClient(BaseProtocolAdapter):
         self._running = False
         if self._opc:
             try:
-                self._opc.close()
+                loop = asyncio.get_running_loop()
+                await loop.run_in_executor(None, self._opc.close)
             except Exception:
                 pass
             self._opc = None
@@ -185,7 +189,8 @@ class OPCDAClient(BaseProtocolAdapter):
         try:
             item_path = point.get("protocol_addr", "")
             if item_path in self._items_map:
-                self._opc.write([(item_path, value)])
+                loop = asyncio.get_running_loop()
+                await loop.run_in_executor(None, lambda: self._opc.write([(item_path, value)]))
                 return True
         except Exception as e:
             logger.error(f"[opcda] write failed: {e}")
@@ -196,7 +201,8 @@ class OPCDAClient(BaseProtocolAdapter):
         if not self._opc:
             return []
         try:
-            items = self._opc.list(path, recursive=True, flat=True)
+            loop = asyncio.get_running_loop()
+            items = await loop.run_in_executor(None, lambda: self._opc.list(path, recursive=True, flat=True))
             return [{"item_id": it} for it in items]
         except Exception:
             return []
