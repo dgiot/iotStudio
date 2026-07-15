@@ -93,12 +93,13 @@ class ModbusRTUAdapter(BaseProtocolAdapter):
                 if raw is None:
                     continue
                 for pt, dtype in pts:
-                    offset = (pt["protocol_addr"] if isinstance(pt["protocol_addr"], int)
-                              else int(pt.get("protocol_addr", "0"), 16) if pt.get("protocol_addr", "0").replace('-', '').isalnum()
-                              else 0)
-                    offset = int(pt.get("protocol_addr", "0"), 16) if isinstance(pt.get("protocol_addr"), str) and pt["protocol_addr"].startswith("0x") else (
-                        int(pt["protocol_addr"]) if isinstance(pt["protocol_addr"], str) and pt["protocol_addr"].isdigit() else 0)
-                    reg_offset = (offset - addr) if isinstance(offset, int) and isinstance(addr, int) else 0
+                    # 统一解析协议地址 (同 line 75 逻辑: 全数字→十进制, 否则十六进制)
+                    pt_addr_str = pt.get("protocol_addr", "0")
+                    try:
+                        pt_addr = int(pt_addr_str) if str(pt_addr_str).isdigit() else int(str(pt_addr_str), 16)
+                    except (ValueError, TypeError):
+                        pt_addr = 0
+                    reg_offset = (pt_addr - addr) if isinstance(addr, int) else 0
                     val = self._parse_value(raw, reg_offset, dtype)
                     if val is not None:
                         results.append(PointValue(

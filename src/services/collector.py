@@ -185,6 +185,9 @@ class CollectorEngine:
                 dds_port=config.extra.get("dds_port", 2500),
                 extra=config.extra,
             ))
+        elif proto == "http_rest":
+            from ..protocols.http_rest import HttpRestAdapter
+            return HttpRestAdapter(config)
         else:
             logger.error(f"[collector] 不支持的协议: {proto}")
             return None
