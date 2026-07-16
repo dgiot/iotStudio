@@ -2083,7 +2083,12 @@ else:
     logger.info("[main] Vue3 dist 未构建，使用旧版 SCADA 页面")
 
 # ---- 插件管理 API ----
-from .plugin_registry import list_all, list_enabled, health as plugin_health, enable, disable
+from .plugin_registry import list_all, list_enabled, health as plugin_health, enable, disable, discover as _discover
+
+# 启动时自动发现并注册所有协议/服务插件
+_discover("src/protocols", "src.protocols")
+_discover("src/services", "src.services")
+_discover("src/push", "src.push")
 
 @app.get("/api/plugins")
 def get_plugins(category: str = None):

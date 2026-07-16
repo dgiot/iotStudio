@@ -319,3 +319,17 @@ class BoganMqttAdapter(BaseProtocolAdapter):
             "msg": "MQTT 已连接" if self._connected else "未连接",
             "queue_size": self._data_queue.qsize(),
         }
+
+
+# -- 插件注册 --
+try:
+    from ..plugin_registry import register
+    register("bogan_mqtt", version="1.0", category="protocol",
+             adapter="BoganMqttAdapter",
+             config={
+                 "broker": "dev.dgiotcloud.cn",
+                 "port": 1883,
+                 "subscribe_topics": ["iot/v3/gw/+/+/message/up"],
+             })
+except ImportError:
+    pass

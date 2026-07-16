@@ -151,8 +151,24 @@ class CollectorEngine:
         return aliases.get(proto, proto)
 
     def _create_adapter(self, config: ProtocolConfig) -> Optional[BaseProtocolAdapter]:
-        """创建协议适配器"""
+        """创建协议适配器 — 先查插件注册中心，再试硬编码核心协议"""
         proto = self._normalize_protocol(config.protocol_type)
+
+        # 1. 插件注册中心动态发现
+        try:
+            from ..plugin_registry import get as _plugin_get
+            plugin = _plugin_get(proto)
+            if plugin and plugin.get("enabled", True):
+                adapter_name = plugin["adapter"]
+                import importlib as _il
+                mod = _il.import_module(f"src.protocols.{proto}")
+                adapter_cls = getattr(mod, adapter_name)
+                if adapter_cls:
+                    return adapter_cls(config)
+        except Exception:
+            pass
+
+        # 2. 硬编码核心协议 (向后兼容)
         if proto == "modbus_rtu":
             from ..protocols.modbus_rtu import ModbusRTUAdapter
             return ModbusRTUAdapter(config)
@@ -188,21 +204,6 @@ class CollectorEngine:
         elif proto == "http_rest":
             from ..protocols.http_rest import HttpRestAdapter
             return HttpRestAdapter(config)
-        elif proto in ("youyeyun", "oil_monitor"):
-            from ..protocols.youyeyun import YouyeyunProtocolAdapter
-            return YouyeyunProtocolAdapter(config)
-        elif proto in ("video_rtsp", "rtsp", "hikvision", "onvif"):
-            from ..protocols.video_rtsp import RtspVideoAdapter
-            return RtspVideoAdapter(config)
-        elif proto in ("bogan_mqtt", "bogan", "smart_bolt"):
-            from ..protocols.bogan_mqtt import BoganMqttAdapter
-            return BoganMqttAdapter(config)
-        elif proto in ("youyeyun", "oil_monitor"):
-            from ..protocols.youyeyun import YouyeyunProtocolAdapter
-            return YouyeyunProtocolAdapter(config)
-        elif proto in ("zhiwei_phm", "phm", "zhiwei"):
-            from ..protocols.zhiwei_phm import ZhiweiPhmAdapter
-            return ZhiweiPhmAdapter(config)
         else:
             logger.error(f"[collector] 不支持的协议: {proto}")
             return None

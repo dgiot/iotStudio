@@ -107,3 +107,17 @@ class ZhiweiPhmAdapter(BaseProtocolAdapter):
     async def read_holding(self, addr: int, count: int = 1,
                            slave_id: Optional[int] = None) -> Optional[list]:
         return None
+
+
+# -- 插件注册 --
+try:
+    from ..plugin_registry import register
+    register("zhiwei_phm", version="1.0", category="protocol",
+             adapter="ZhiweiPhmAdapter",
+             config={
+                 "api_url": "http://10.99.0.x:5051/api/v1",
+                 "api_key": "",
+                 "devices": [{"sn": "", "name": ""}],
+             })
+except ImportError:
+    pass

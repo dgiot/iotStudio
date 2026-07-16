@@ -193,6 +193,20 @@ class YouyeyunProtocolAdapter(_BaseAdapter):
                            slave_id: _Opt[int] = None) -> _Opt[list]:
         return None
 
+
+# -- plugin_registry 注册 (供 collector.py 插件点发现) --
+try:
+    from ..plugin_registry import register as _p_register
+    _p_register("youyeyun", version="2.1", category="protocol",
+                adapter="YouyeyunProtocolAdapter",
+                config={
+                    "username": "sell@inzoc.com",
+                    "yy_device_id": "6bf6f220-d5bb-11ed-b812-ed5ae62e5bad",
+                    "poll_interval": 300,
+                })
+except ImportError:
+    pass
+
 # -- @protocol 自动注册 --
 try:
     from ..channel_base import protocol, BaseChannel
