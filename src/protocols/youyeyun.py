@@ -13,7 +13,7 @@ import hashlib
 import logging
 import requests
 from dataclasses import dataclass
-from typing import Optional, Dict, List
+from typing import Optional, Dict, List, Any
 
 log = logging.getLogger("youyeyun")
 
@@ -136,6 +136,9 @@ def create_adapter(token: str = "", device_id: str = "", name: str = "") -> Youy
 
 
 # ===== BaseProtocolAdapter 包装 =====
+import asyncio
+from datetime import datetime, timezone
+from typing import Any, Dict, List, Optional as _Opt
 from .base import BaseProtocolAdapter as _BaseAdapter, ProtocolConfig as _PConfig, PointValue as _PV
 
 class YouyeyunProtocolAdapter(_BaseAdapter):
@@ -187,7 +190,7 @@ class YouyeyunProtocolAdapter(_BaseAdapter):
         return False  # 有叶云 API 不支持写入
 
     async def read_holding(self, addr: int, count: int = 1,
-                           slave_id: Optional[int] = None) -> Optional[list]:
+                           slave_id: _Opt[int] = None) -> _Opt[list]:
         return None
 
 # -- @protocol 自动注册 --

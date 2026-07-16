@@ -117,7 +117,7 @@ class TDEngineStore:
         import sqlite3, os
         os.makedirs(cfg.data_dir, exist_ok=True)
         self._db = self.config.database
-        self._conn = sqlite3.connect(os.path.join(cfg.data_dir, "telemetry.db"), timeout=10)
+        self._conn = sqlite3.connect(os.path.join(cfg.data_dir, "telemetry.db"), timeout=10, check_same_thread=False)
         # WAL 模式：读写不互斥，解决采集器写 + API 读的锁冲突
         self.execute("PRAGMA journal_mode=WAL")
         self.execute("PRAGMA busy_timeout=5000")
