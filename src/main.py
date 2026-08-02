@@ -1984,6 +1984,14 @@ app.include_router(admin_router)
 from .web.io_clone_api import router as io_clone_router
 app.include_router(io_clone_router)
 
+# ---- FDE 六步工作法 API ----
+from .web.fde_api import router as fde_router
+app.include_router(fde_router)
+
+# ---- GraphRAG 知识图谱 API ----
+from .web.graphrag_api import router as graphrag_router
+app.include_router(graphrag_router)
+
 # ---- Vue3 前端托管 ----
 from pathlib import Path as _Path
 from starlette.responses import Response as _Response

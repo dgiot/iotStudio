@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>超大规模智能物联网 — 区块链可信管理平台</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Microsoft YaHei',sans-serif;background:#0a0e17;color:#c0d5e8;min-height:100vh}
+.topbar{background:linear-gradient(90deg,#0d1117,#1a2332);padding:14px 24px;border-bottom:2px solid #f7931a;display:flex;align-items:center;gap:16px}
+.topbar h1{font-size:22px;color:#f7931a;margin-right:auto}
+.topbar h1 span{color:#4fc3f7;font-size:14px;margin-left:8px}
+.topbar .tag{padding:4px 12px;border-radius:12px;font-size:11px;background:#1a2a1a;color:#10b981;border:1px solid #10b98133}
+.tabs{display:flex;gap:0;padding:0 24px;background:#111827;border-bottom:1px solid #1e293b}
+.tab{padding:10px 20px;font-size:13px;cursor:pointer;color:#64748b;border-bottom:2px solid transparent;transition:.2s}
+.tab:hover{color:#94a3b8}
+.tab.active{color:#f7931a;border-bottom-color:#f7931a}
+.main{max-width:1400px;margin:0 auto;padding:20px}
+.kpi-row{display:flex;gap:12px;margin-bottom:20px}
+.kpi{flex:1;background:#1a2332;border:1px solid #1e293b;border-radius:8px;padding:16px}
+.kpi .v{font-size:28px;font-weight:bold}.kpi .l{font-size:12px;color:#64748b;margin-top:4px}
+.kpi.chain .v{color:#f7931a}.kpi.node .v{color:#4fc3f7}.kpi.tx .v{color:#10b981}.kpi.contract .v{color:#8b5cf6}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px}
+.card{background:#1a2332;border:1px solid #1e293b;border-radius:8px;overflow:hidden;margin-bottom:16px}
+.card-hdr{padding:12px 16px;background:#111827;border-bottom:1px solid #1e293b;font-size:14px;font-weight:600;display:flex;justify-content:space-between;align-items:center}
+.card-body{padding:16px}
+table{width:100%;border-collapse:collapse;font-size:12px}
+th{background:#0f172a;padding:8px 12px;text-align:left;color:#64748b;font-weight:600;font-size:11px;border-bottom:1px solid #1e293b}
+td{padding:8px 12px;border-bottom:1px solid #1a2332}
+.hash{font-family:'Cascadia Code',monospace;font-size:11px;color:#f7931a}
+.status-dot{width:8px;height:8px;border-radius:50%;display:inline-block;margin-right:6px}
+.status-dot.online{background:#10b981;box-shadow:0 0 6px #10b98166}
+.status-dot.syncing{background:#f59e0b;box-shadow:0 0 6px #f59e0b66}
+.badge{padding:2px 8px;border-radius:4px;font-size:10px}
+.badge.ok{background:#1a3a2a;color:#10b981}.badge.warn{background:#3a2a1a;color:#f59e0b}
+.block-chain{display:flex;align-items:center;gap:4px;overflow-x:auto;padding:10px 0}
+.block{min-width:120px;padding:12px;background:#0f172a;border:1px solid #f7931a33;border-radius:8px;text-align:center;flex-shrink:0}
+.block .n{font-size:20px;font-weight:bold;color:#f7931a}.block .h{font-size:10px;color:#94a3b8;margin-top:4px}
+.chain-link{color:#f7931a;font-size:18px;flex-shrink:0}
+.node-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.node-card{padding:16px;background:#0f172a;border:1px solid #1e293b;border-radius:8px;text-align:center}
+.node-card .name{font-size:14px;font-weight:600;color:#e2e8f0}
+.node-card .ip{font-size:11px;color:#64748b;margin:6px 0}
+.node-card .peers{font-size:10px;color:#94a3b8}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <h1>⛓️ 超大规模智能物联网 <span>| 尖兵计划 · 区块链可信管理平台</span></h1>
+  <span class="tag">🟢 主网运行中</span>
+  <span class="tag" style="background:#1a2a3a;color:#4fc3f7;border-color:#4fc3f733">🏛️ 联盟链 Hyperledger Fabric 2.5</span>
+</div>
+
+<div class="tabs">
+  <div class="tab active" onclick="switchTab(0)">📊 链上总览</div>
+  <div class="tab" onclick="switchTab(1)">🔗 区块浏览器</div>
+  <div class="tab" onclick="switchTab(2)">🖥️ 节点管理</div>
+  <div class="tab" onclick="switchTab(3)">📋 智能合约</div>
+  <div class="tab" onclick="switchTab(4)">✍️ 电子签名</div>
+  <div class="tab" onclick="switchTab(5)">🔐 设备存证</div>
+  <div class="tab" onclick="switchTab(6)">📊 性能监控</div>
+  <div class="tab" onclick="switchTab(7)">🛡️ 监管合规</div>
+</div>
+
+<!-- Tab 0: 链上总览 -->
+<div class="main tab-content">
+  <div style="display:flex;align-items:center;gap:12px;padding:10px 24px;background:#0d1620;border-bottom:1px solid #1e293b;font-size:12px">
+    <span style="color:#10b981">● 主网运行</span><span style="color:#94a3b8">|</span>
+    <span style="color:#f7931a">区块: <b id="hdrHeight">1,284,739</b></span><span style="color:#94a3b8">|</span>
+    <span style="color:#4fc3f7">节点: <b>12/12</b></span><span style="color:#94a3b8">|</span>
+    <span style="color:#10b981">交易: <b id="hdrTx">3,892,541</b></span><span style="color:#94a3b8">|</span>
+    <span style="color:#f59e0b">TPS: <b id="hdrTps">1,247</b></span>
+    <span style="margin-left:auto;color:#64748b;font-size:10px" id="hdrTime"></span>
+  </div>
+  <div class="kpi-row">
+    <div class="kpi chain"><div class="v" id="blockHeight">1,284,739</div><div class="l">当前区块高度</div></div>
+    <div class="kpi node"><div class="v" id="nodeCount">12</div><div class="l">共识节点</div></div>
+    <div class="kpi tx"><div class="v" id="txCount">3,892,541</div><div class="l">累计交易量</div></div>
+    <div class="kpi contract"><div class="v" id="contractCount">8</div><div class="l">已部署合约</div></div>
+    <div class="kpi" style="--c:#ef4444"><div class="v" style="color:#ef4444" id="alertCount">0</div><div class="l">异常告警</div></div>
+    <div class="kpi"><div class="v" style="color:#f59e0b">2.4s</div><div class="l">平均出块时间</div></div>
+  </div>
+
+  <div class="grid2">
+    <div class="card">
+      <div class="card-hdr">📦 最新区块 <span style="font-size:11px;color:#64748b">共 1,284,739 个区块</span></div>
+      <div class="card-body">
+        <table>
+          <tr><th>区块高度</th><th>区块哈希</th><th>交易数</th><th>出块时间</th><th>生产者</th></tr>
+          <tr><td><b style="color:#f7931a">#1284739</b></td><td class="hash">0x7f3a...e9d2</td><td>128</td><td>2.1s前</td><td>Node-03</td></tr>
+          <tr><td>#1284738</td><td class="hash">0xa1b2...c4f8</td><td>96</td><td>4.5s前</td><td>Node-07</td></tr>
+          <tr><td>#1284737</td><td class="hash">0x3d5e...8a1b</td><td>142</td><td>6.9s前</td><td>Node-01</td></tr>
+          <tr><td>#1284736</td><td class="hash">0x9c8d...f2e3</td><td>110</td><td>9.3s前</td><td>Node-05</td></tr>
+        </table>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-hdr">🔗 区块链可视化 <span style="font-size:11px;color:#64748b">最近12个区块</span></div>
+      <div class="card-body"><div class="block-chain" id="blockChain"></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- Tab 1: 区块浏览器 -->
+<div class="main tab-content" style="display:none">
+  <div class="card">
+    <div class="card-hdr">🔗 交易浏览器</div>
+    <div class="card-body">
+      <table>
+        <tr><th>交易哈希</th><th>类型</th><th>发起方</th><th>接收方</th><th>时间戳</th><th>区块</th><th>状态</th></tr>
+        <tr><td class="hash">0x8a3f...7b2c</td><td>设备数据上链</td><td>IO-Server-131</td><td>Chain-Node-03</td><td>2.1s前</td><td>#1284739</td><td><span class="badge ok">已确认</span></td></tr>
+        <tr><td class="hash">0xb4d2...1e9f</td><td>告警存证</td><td>Safety-Engine</td><td>Chain-Node-07</td><td>4.5s前</td><td>#1284738</td><td><span class="badge ok">已确认</span></td></tr>
+        <tr><td class="hash">0x2c7e...a5d3</td><td>设备注册</td><td>Admin-Portal</td><td>Chain-Node-01</td><td>6.9s前</td><td>#1284737</td><td><span class="badge ok">已确认</span></td></tr>
+        <tr><td class="hash">0xf1a8...3b6e</td><td>物模型更新</td><td>Product-Manager</td><td>Chain-Node-05</td><td>9.3s前</td><td>#1284736</td><td><span class="badge ok">已确认</span></td></tr>
+        <tr><td class="hash">0x5d9c...e7f2</td><td>固件升级</td><td>OTAP-Service</td><td>Chain-Node-02</td><td>12.1s前</td><td>#1284735</td><td><span class="badge ok">已确认</span></td></tr>
+        <tr><td class="hash">0xa4b1...8c6d</td><td>配置变更</td><td>Config-Center</td><td>Chain-Node-08</td><td>14.8s前</td><td>#1284734</td><td><span class="badge ok">已确认</span></td></tr>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- Tab 2: 节点管理 -->
+<div class="main tab-content" style="display:none">
+  <div class="card">
+    <div class="card-hdr">🖥️ 共识节点状态 <span style="font-size:11px;color:#64748b">12/12 在线 | PBFT共识 | 3f+1=7 容错</span></div>
+    <div class="card-body"><div class="node-grid" id="nodeGrid"></div></div>
+  </div>
+  <div class="card" style="margin-top:16px">
+    <div class="card-hdr">📡 已接入区块链设备 <span style="font-size:11px;color:#64748b">尖兵计划采购设备清单</span></div>
+    <div class="card-body">
+      <table>
+        <tr><th>设备编号</th><th>设备名称</th><th>型号</th><th>IP地址</th><th>链上身份</th><th>状态</th></tr>
+        <tr><td>BC-001</td><td>区块链共识节点服务器</td><td>Inspur NF5280M6</td><td>10.11.12.101</td><td>Node-01 (Orderer)</td><td><span class="status-dot online"></span>在线</td></tr>
+        <tr><td>BC-002</td><td>区块链共识节点服务器</td><td>Inspur NF5280M6</td><td>10.11.12.102</td><td>Node-02 (Orderer)</td><td><span class="status-dot online"></span>在线</td></tr>
+        <tr><td>BC-003</td><td>区块链共识节点服务器</td><td>Inspur NF5280M6</td><td>10.11.12.103</td><td>Node-03 (Orderer)</td><td><span class="status-dot online"></span>在线</td></tr>
+        <tr><td>BC-004</td><td>区块链对等节点服务器</td><td>Huawei TaiShan 200</td><td>10.11.12.201</td><td>Peer-01 (Committing)</td><td><span class="status-dot online"></span>在线</td></tr>
+        <tr><td>BC-005</td><td>区块链对等节点服务器</td><td>Huawei TaiShan 200</td><td>10.11.12.202</td><td>Peer-02 (Committing)</td><td><span class="status-dot online"></span>在线</td></tr>
+        <tr><td>BC-006</td><td>区块链对等节点服务器</td><td>Huawei TaiShan 200</td><td>10.11.12.203</td><td>Peer-03 (Endorsing)</td><td><span class="status-dot syncing"></span>同步中</td></tr>
+        <tr><td>BC-007</td><td>区块链网关一体机</td><td>自研 DG-BC-GW01</td><td>10.11.12.301</td><td>Gateway-01</td><td><span class="status-dot online"></span>在线</td></tr>
+        <tr><td>BC-008</td><td>区块链网关一体机</td><td>自研 DG-BC-GW01</td><td>10.11.12.302</td><td>Gateway-02</td><td><span class="status-dot online"></span>在线</td></tr>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- Tab 3: 智能合约 -->
+<div class="main tab-content" style="display:none">
+  <div class="card">
+    <div class="card-hdr">📋 已部署智能合约</div>
+    <div class="card-body">
+      <table>
+        <tr><th>合约名称</th><th>合约地址</th><th>版本</th><th>部署时间</th><th>调用次数</th><th>状态</th></tr>
+        <tr><td><b>DeviceRegistry</b></td><td class="hash">0x3a1b...8c2d</td><td>v2.1.0</td><td>2026-06-15</td><td>892,341</td><td><span class="badge ok">运行中</span></td></tr>
+        <tr><td><b>DataAttestation</b></td><td class="hash">0x7f2c...a4e1</td><td>v1.8.3</td><td>2026-05-20</td><td>1,234,567</td><td><span class="badge ok">运行中</span></td></tr>
+        <tr><td><b>AlarmProof</b></td><td class="hash">0xb5d3...6f9a</td><td>v1.5.0</td><td>2026-04-10</td><td>456,789</td><td><span class="badge ok">运行中</span></td></tr>
+        <tr><td><b>ModelVersioning</b></td><td class="hash">0x2e8f...c1b7</td><td>v3.0.1</td><td>2026-07-01</td><td>89,234</td><td><span class="badge ok">运行中</span></td></tr>
+        <tr><td><b>AccessControl</b></td><td class="hash">0x9c4a...d5e2</td><td>v2.0.0</td><td>2026-03-15</td><td>345,678</td><td><span class="badge ok">运行中</span></td></tr>
+        <tr><td><b>FirmwareOTAP</b></td><td class="hash">0x1d8b...f3c6</td><td>v1.2.5</td><td>2026-02-28</td><td>123,456</td><td><span class="badge ok">运行中</span></td></tr>
+        <tr><td><b>ConfigAudit</b></td><td class="hash">0x5e7a...b9d4</td><td>v1.0.2</td><td>2026-07-15</td><td>12,345</td><td><span class="badge warn">测试中</span></td></tr>
+        <tr><td><b>CrossChainBridge</b></td><td class="hash">0xa6f3...2c8e</td><td>v0.9.0</td><td>2026-07-20</td><td>5,678</td><td><span class="badge warn">部署中</span></td></tr>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- Tab 3.5: 电子签名存证 (爱签合同) -->
+<div class="main tab-content" style="display:none">
+  <div class="card">
+    <div class="card-hdr">✍️ 物联网电子签名存证 <span style="font-size:11px;color:#64748b">浙江爱签数字科技 | 合同金额: 35万元 | 区块链上链存证</span></div>
+    <div class="card-body">
+      <table>
+        <tr><th>签名编号</th><th>设备标识</th><th>签名类型</th><th>签名哈希</th><th>上链时间</th><th>区块链存证</th></tr>
+        <tr><td>SIG-20260729-001</td><td>IO-Server-131</td><td>设备身份签名</td><td class="hash">0x8f3a...c2d1</td><td>2s前</td><td><span class="badge ok">已存证 ✓</span></td></tr>
+        <tr><td>SIG-20260729-002</td><td>K1_51油井RTU</td><td>数据上链签名</td><td class="hash">0xb4d2...1e9f</td><td>5s前</td><td><span class="badge ok">已存证 ✓</span></td></tr>
+        <tr><td>SIG-20260729-003</td><td>DSL-31A继电器</td><td>告警事件签名</td><td class="hash">0x2c7e...a5d3</td><td>10s前</td><td><span class="badge ok">已存证 ✓</span></td></tr>
+        <tr><td>SIG-20260729-004</td><td>光伏逆变器#1</td><td>物模型变更签名</td><td class="hash">0xf1a8...3b6e</td><td>15s前</td><td><span class="badge ok">已存证 ✓</span></td></tr>
+        <tr><td>SIG-20260729-005</td><td>储能PCS#1</td><td>固件升级签名</td><td class="hash">0x5d9c...e7f2</td><td>20s前</td><td><span class="badge ok">已存证 ✓</span></td></tr>
+      </table>
+    </div>
+  </div>
+  <div class="card" style="margin-top:16px">
+    <div class="card-hdr">📋 电子签名系统运行状态</div>
+    <div class="card-body">
+      <div class="node-grid">
+        <div class="node-card"><div class="name"><span class="status-dot online"></span>签名服务</div><div style="font-size:11px;color:#94a3b8">爱签 V1.0</div><div class="peers">运行正常 | QPS: 1,247</div></div>
+        <div class="node-card"><div class="name"><span class="status-dot online"></span>CA证书服务</div><div style="font-size:11px;color:#94a3b8">SM2国密算法</div><div class="peers">证书有效期至2027</div></div>
+        <div class="node-card"><div class="name"><span class="status-dot online"></span>时间戳服务</div><div style="font-size:11px;color:#94a3b8">国家授时中心</div><div class="peers">偏差<1ms</div></div>
+        <div class="node-card"><div class="name"><span class="status-dot online"></span>存证上链接口</div><div style="font-size:11px;color:#94a3b8">Hyperledger Fabric</div><div class="peers">成功率 100%</div></div>
+      </div>
+    </div>
+  </div>
+  <div class="card" style="margin-top:16px"><div class="card-hdr">📋 合同条款摘要 | 物联网电子签名管理系统V1.0</div>
+    <div class="card-body">
+      <table>
+        <tr><th style="width:120px">合同方</th><td>甲方: (待填写) | 乙方: 浙江爱签数字科技有限公司 (杭州余杭区良渚街道网周路99号)</td></tr>
+        <tr><th>合同金额</th><td style="color:#f7931a;font-weight:bold">35万元 (含税, 13%增值税专用发票)</td></tr>
+        <tr><th>费用明细</th><td>电子签名管理系统 20万 | 区块链上链存证功能 8万 | 年度存证服务 5万 | 定制开发 2万</td></tr>
+        <tr><th>付款方式</th><td>首付20万(签约后5日) + 尾款10万(验收后5日) + 年维护费3.5万(免费维护期满后)</td></tr>
+        <tr><th>免费维护</th><td style="color:#10b981">验收完成后3年内免费维护 | 乙方负责服务器运维/监控/系统稳定运行</td></tr>
+        <tr><th>验收标准</th><td>系统部署完成 → 功能测试通过 → 甲方验收(逾期不验收视为通过)</td></tr>
+        <tr><th>尖兵对标</th><td>课题五: 成果场景示范应用 — IoT数据电子签名 + 区块链上链存证</td></tr>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- Tab 4: 设备存证 -->
+<div class="main tab-content" style="display:none">
+  <div class="card">
+    <div class="card-hdr">🔐 IoT 设备数据上链存证记录</div>
+    <div class="card-body">
+      <table>
+        <tr><th>存证哈希</th><th>设备</th><th>数据类型</th><th>数据摘要</th><th>上链时间</th><th>验证</th></tr>
+        <tr><td class="hash">0xe3a1...7b2c</td><td>K1_51 油井RTU</td><td>套压数据</td><td>SHA256: a1b2c3...</td><td>2s前</td><td><span class="badge ok">✓ 已验证</span></td></tr>
+        <tr><td class="hash">0x8b4d...c5f2</td><td>DSL-31A 继电器</td><td>过流告警</td><td>SHA256: d4e5f6...</td><td>5s前</td><td><span class="badge ok">✓ 已验证</span></td></tr>
+        <tr><td class="hash">0x2c7e...a5d3</td><td>光伏逆变器#1</td><td>功率数据</td><td>SHA256: g7h8i9...</td><td>10s前</td><td><span class="badge ok">✓ 已验证</span></td></tr>
+        <tr><td class="hash">0xf1a8...3b6e</td><td>储能PCS#1</td><td>SOC数据</td><td>SHA256: j1k2l3...</td><td>15s前</td><td><span class="badge ok">✓ 已验证</span></td></tr>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- Tab 6: 性能监控 -->
+<div class="main tab-content" style="display:none">
+  <div class="grid2">
+    <div class="card"><div class="card-hdr">⚡ TPS 吞吐量 (实时)</div>
+      <div class="card-body"><div style="font-size:48px;font-weight:bold;color:#10b981;text-align:center" id="tpsValue">1,247</div><div style="text-align:center;color:#64748b;font-size:12px">笔/秒 | 峰值: 2,891 | 平均: 1,158</div></div>
+    </div>
+    <div class="card"><div class="card-hdr">⏱️ 出块延迟</div>
+      <div class="card-body"><div style="font-size:48px;font-weight:bold;color:#f7931a;text-align:center" id="latencyValue">2.4s</div><div style="text-align:center;color:#64748b;font-size:12px">P50: 2.1s | P95: 3.8s | P99: 5.2s</div></div>
+    </div>
+  </div>
+  <div class="grid3" style="margin-top:16px">
+    <div class="card"><div class="card-hdr">📈 交易成功率</div><div class="card-body"><div style="font-size:36px;font-weight:bold;color:#10b981;text-align:center" id="successRate">99.97%</div></div></div>
+    <div class="card"><div class="card-hdr">💾 账本大小</div><div class="card-body"><div style="font-size:36px;font-weight:bold;color:#4fc3f7;text-align:center">48.7 GB</div></div></div>
+    <div class="card"><div class="card-hdr">🔗 对等节点</div><div class="card-body"><div style="font-size:36px;font-weight:bold;color:#8b5cf6;text-align:center">12/12</div></div></div>
+  </div>
+  <div class="card" style="margin-top:16px"><div class="card-hdr">📊 24小时交易趋势</div>
+    <div class="card-body"><div id="tpsChart" style="height:200px;display:flex;align-items:flex-end;gap:2px;padding:10px 0"></div></div>
+  </div>
+</div>
+
+<!-- Tab 7: 监管合规 -->
+<div class="main tab-content" style="display:none">
+  <div class="card"><div class="card-hdr">🛡️ 等保合规与监管审计</div>
+    <div class="card-body">
+      <table>
+        <tr><th>合规项目</th><th>标准/规范</th><th>达标状态</th><th>审计结果</th><th>备注</th></tr>
+        <tr><td>等保2.0三级</td><td>GB/T 22239-2019</td><td><span class="badge ok">已通过</span></td><td>2026-06 测评报告</td><td>安全物理环境/通信/区域边界/计算环境/管理中心</td></tr>
+        <tr><td>区块链安全评估</td><td>GB/T 42570-2023</td><td><span class="badge ok">已通过</span></td><td>2026-05 评估报告</td><td>共识安全/智能合约安全/密钥管理/数据安全</td></tr>
+        <tr><td>密码应用安全</td><td>GM/T 0054-2018</td><td><span class="badge ok">已通过</span></td><td>国密SM2/SM3/SM4</td><td>支持SM2签名/SM3摘要/SM4加密</td></tr>
+        <tr><td>数据安全法合规</td><td>《数据安全法》2021</td><td><span class="badge ok">已通过</span></td><td>数据分类分级保护</td><td>IoT数据/告警数据分级保护</td></tr>
+        <tr><td>个人信息保护</td><td>《个人信息保护法》2021</td><td><span class="badge ok">已通过</span></td><td>最小必要原则</td><td>仅采集设备数据,不含个人信息</td></tr>
+        <tr><td>信创兼容认证</td><td>麒麟/统信/飞腾/鲲鹏</td><td><span class="badge ok">已通过</span></td><td>麒麟V10+鲲鹏920</td><td>全栈国产化适配验证</td></tr>
+        <tr><td>尖兵项目专项审计</td><td>2024C01066</td><td><span class="badge ok">通过中期检查</span></td><td>2026-07 中期审计</td><td>指标完成率 72%</td></tr>
+      </table>
+    </div>
+  </div>
+  <div class="card" style="margin-top:16px"><div class="card-hdr">📋 审计日志 (最近20条)</div>
+    <div class="card-body">
+      <table>
+        <tr><th>时间</th><th>操作</th><th>操作者</th><th>目标资源</th><th>IP地址</th><th>结果</th></tr>
+        <tr><td>2s前</td><td>设备数据上链</td><td>IO-Server-131</td><td>pt_tgp 套压数据</td><td>11.66.12.131</td><td><span class="badge ok">成功</span></td></tr>
+        <tr><td>5s前</td><td>智能合约调用</td><td>Admin-Portal</td><td>DataAttestation.submit()</td><td>10.11.12.301</td><td><span class="badge ok">成功</span></td></tr>
+        <tr><td>10s前</td><td>节点健康检查</td><td>Monitor-Service</td><td>Node-01~12</td><td>10.11.12.1</td><td><span class="badge ok">12/12在线</span></td></tr>
+        <tr><td>15s前</td><td>证书轮换</td><td>CA-Service</td><td>TLS证书更新</td><td>10.11.12.401</td><td><span class="badge ok">成功</span></td></tr>
+        <tr><td>30s前</td><td>配置变更</td><td>Admin</td><td>出块超时调整</td><td>10.11.12.1</td><td><span class="badge ok">成功</span></td></tr>
+      </table>
+    </div>
+  </div>
+</div>
+
+<script>
+// Block chain visual
+function renderChain(){
+  let h='';
+  for(let i=11;i>=0;i--){
+    const hh='0x'+Math.random().toString(16).slice(2,10)+'...'+Math.random().toString(16).slice(2,6);
+    h+=`<div class="block"><div class="n">#${1284739-i}</div><div class="h">${hh}</div><div style="font-size:10px;color:#64748b;margin-top:2px">${8+(i*6)%20} tx</div></div>`;
+    if(i>0) h+='<div class="chain-link">⛓️</div>';
+  }
+  document.getElementById('blockChain').innerHTML=h;
+}
+
+// Nodes
+function renderNodes(){
+  const nodes=[
+    {name:'Node-01',ip:'10.11.12.101',role:'Orderer',status:'online',peers:11,blocks:4284739},
+    {name:'Node-02',ip:'10.11.12.102',role:'Orderer',status:'online',peers:11,blocks:4284739},
+    {name:'Node-03',ip:'10.11.12.103',role:'Orderer',status:'online',peers:11,blocks:4284739},
+    {name:'Peer-01',ip:'10.11.12.201',role:'Committing',status:'online',peers:8,blocks:4284738},
+    {name:'Peer-02',ip:'10.11.12.202',role:'Committing',status:'online',peers:8,blocks:4284738},
+    {name:'Peer-03',ip:'10.11.12.203',role:'Endorsing',status:'syncing',peers:6,blocks:4284730},
+    {name:'Peer-04',ip:'10.11.12.204',role:'Endorsing',status:'online',peers:8,blocks:4284739},
+    {name:'Peer-05',ip:'10.11.12.205',role:'Endorsing',status:'online',peers:8,blocks:4284738},
+    {name:'GW-01',ip:'10.11.12.301',role:'Gateway',status:'online',peers:12,blocks:0},
+    {name:'GW-02',ip:'10.11.12.302',role:'Gateway',status:'online',peers:12,blocks:0},
+    {name:'CA-01',ip:'10.11.12.401',role:'CA',status:'online',peers:12,blocks:0},
+    {name:'CA-02',ip:'10.11.12.402',role:'CA',status:'online',peers:12,blocks:0},
+  ];
+  let h='';
+  nodes.forEach(n=>{
+    const cls=n.status==='online'?'online':'syncing';
+    h+=`<div class="node-card"><div class="name"><span class="status-dot ${cls}"></span>${n.name}</div><div class="ip">${n.ip}</div><div style="font-size:11px;color:#94a3b8">${n.role}</div><div class="peers">Peers: ${n.peers} | Blocks: ${n.blocks.toLocaleString()}</div></div>`;
+  });
+  document.getElementById('nodeGrid').innerHTML=h;
+}
+
+function switchTab(n){
+  document.querySelectorAll('.tab').forEach((t,i)=>t.classList.toggle('active',i===n));
+  document.querySelectorAll('.tab-content').forEach((t,i)=>t.style.display=i===n?'block':'none');
+}
+
+// Simulate live updates
+setInterval(()=>{
+  const h=document.getElementById('hdrHeight'); if(h) h.textContent=(1284739+Math.floor(Math.random()*5)).toLocaleString();
+  const tx=document.getElementById('hdrTx'); if(tx) tx.textContent=(3892541+Math.floor(Math.random()*80)).toLocaleString();
+  const tp=document.getElementById('hdrTps'); if(tp) tp.textContent=(1100+Math.floor(Math.random()*400));
+  const tm=document.getElementById('hdrTime'); if(tm) tm.textContent=new Date().toLocaleTimeString();
+},3000);
+setInterval(()=>{
+  document.getElementById('blockHeight').textContent=(1284739+Math.floor(Math.random()*3)).toLocaleString();
+  document.getElementById('txCount').textContent=(3892541+Math.floor(Math.random()*50)).toLocaleString();
+},3000);
+
+renderChain();renderNodes();
+// TPS chart
+function renderTpsChart(){
+  const d=document.getElementById('tpsChart'); if(!d)return;
+  let h=''; for(let i=0;i<60;i++){ const v=800+Math.floor(Math.random()*1500); h+=`<div style="flex:1;background:linear-gradient(to top,#10b98144,#10b981);height:${v/15}px;border-radius:2px 2px 0 0" title="${v} TPS"></div>`; } d.innerHTML=h;
+}
+renderTpsChart();
+// Live updates
+setInterval(()=>{
+  document.getElementById('tpsValue')&&(document.getElementById('tpsValue').textContent=(1000+Math.floor(Math.random()*500)).toLocaleString());
+  document.getElementById('latencyValue')&&(document.getElementById('latencyValue').textContent=(2.0+Math.random()*1.0).toFixed(1)+'s');
+  document.getElementById('successRate')&&(document.getElementById('successRate').textContent=(99.95+Math.random()*0.04).toFixed(2)+'%');
+  renderTpsChart();
+},2000);
+</script>
+</body>
+</html>

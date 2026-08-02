@@ -76,3 +76,30 @@ plugins/io_server/reverse/commbridge/dtu_dlls/
 data/*.db
 logs/*.jsonl
 *.log
+
+# ── 项目材料 (SVN 投标体系跟踪，不入平台 git) ──
+docs/*.docx
+docs/*.pptx
+docs/*.pdf
+docs/*.mp3
+docs/*.bcf
+docs/*.run.xml
+docs/screenshots/
+docs/research/
+docs/docs/
+docs/区块链采购/
+docs/软著材料/
+docs/技术报告/
+docs/技术方案/
+docs/标准录音 74.*
+docs/采购内容与尖兵项目关联性说明.docx
+docs/数蛙采购内容与尖兵项目关联性说明.docx
+docs/合规附件汇编-持续数据采集管理技术服务.docx
+docs/尖兵项目-*.docx
+docs/尖兵项目-*.md
+docs/尖兵项目*.pdf
+docs/尖兵项目*.tex
+docs/技术方案应答书-*.docx
+docs/评审答辩-*.pptx
+docs/16-项目审批*.docx
+docs/Compliance_Attachments_Data_Collection_System.docx

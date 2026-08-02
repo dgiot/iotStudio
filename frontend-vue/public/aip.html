@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>DG-IoT AIP — Palantir-Style Operations</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Segoe UI','Microsoft YaHei',sans-serif;background:#0a0e17;color:#c0d5e8;height:100vh;display:flex;flex-direction:column}
+.topbar{background:#111827;padding:8px 16px;border-bottom:1px solid #1e293b;display:flex;align-items:center;gap:12px;flex-shrink:0}
+.topbar h1{font-size:15px;color:#e2e8f0;margin-right:auto}
+.topbar h1 span{color:#4a9eff}
+.topbar .tabs{display:flex;gap:2px}
+.topbar .tab{padding:6px 14px;font-size:12px;cursor:pointer;background:0;border:none;color:#64748b;border-bottom:2px solid transparent;font-family:inherit}
+.topbar .tab:hover{color:#93c5fd}
+.topbar .tab.active{color:#4a9eff;border-bottom-color:#4a9eff}
+.kpi-row{display:flex;gap:8px;flex-shrink:0;padding:6px 16px;background:#111827;border-bottom:1px solid #1e293b}
+.kpi{flex:1;background:#1a2332;border:1px solid #1e293b;border-radius:4px;padding:6px 10px;text-align:center}
+.kpi .v{font-size:16px;font-weight:bold;color:#4a9eff}.kpi .l{font-size:9px;color:#64748b}
+.kpi.warn .v{color:#f59e0b}.kpi.danger .v{color:#ef4444}
+.main{flex:1;display:flex;overflow:hidden}
+.panel{background:#0f172a;overflow-y:auto;display:flex;flex-direction:column}
+.left{width:260px;border-right:1px solid #1e293b}
+.center{flex:1;padding:12px}
+.right{width:340px;border-left:1px solid #1e293b;padding:12px}
+.panel-hdr{padding:8px 12px;background:#1a2332;border-bottom:1px solid #1e293b;font-size:12px;font-weight:600;color:#94a3b8;flex-shrink:0}
+.obj-item{padding:5px 10px;cursor:pointer;font-size:11px;border-bottom:1px solid #1a2332;display:flex;align-items:center;gap:5px}
+.obj-item:hover{background:#1a2332}
+.obj-item.selected{background:#1e3a5f}
+.obj-item .ltag{font-size:8px;padding:1px 4px;border-radius:3px;background:#1e293b;min-width:35px;text-align:center}
+.obj-filter{display:flex;gap:4px;padding:6px 8px;border-bottom:1px solid #1e293b;flex-shrink:0}
+.obj-filter select,.obj-filter input{flex:1;background:#0a0e17;border:1px solid #1e293b;border-radius:4px;color:#94a3b8;font-size:11px;padding:4px 6px}
+.card{background:#1a2332;border:1px solid #1e293b;border-radius:6px;padding:10px;margin-bottom:8px}
+.card h3{font-size:12px;color:#e2e8f0;margin-bottom:6px}
+.props{display:grid;grid-template-columns:1fr 2fr;gap:3px 6px;font-size:11px}
+.props dt{color:#64748b;text-align:right}.props dd{color:#94a3b8}
+.rel-item{display:flex;align-items:center;gap:5px;font-size:10px;padding:3px 6px;background:#0f172a;border-radius:3px;cursor:pointer;margin:1px 0}
+.rel-item:hover{background:#1e293b}
+.btn{display:block;width:100%;padding:6px 12px;margin-bottom:4px;background:#1e3a5f;border:1px solid #2563eb;border-radius:4px;color:#93c5fd;font-size:11px;cursor:pointer;text-align:left;font-family:inherit}
+.btn:hover{background:#2563eb;color:white}
+.btn.danger{background:#3b1f1f;border-color:#dc2626;color:#fca5a5}.btn.danger:hover{background:#dc2626;color:white}
+input,select,textarea{background:#0a0e17;border:1px solid #1e293b;border-radius:4px;color:#94a3b8;font-size:11px;padding:5px 8px;font-family:inherit}
+.code-box{width:100%;min-height:100px;font-family:'Cascadia Code','Fira Code',monospace;font-size:11px;padding:8px;resize:vertical;background:#0a0e17;border:1px solid #1e293b;border-radius:4px;color:#94a3b8}
+.result-box{max-height:200px;overflow-y:auto;font-size:10px;margin-top:6px;background:#0a0e17;padding:8px;border-radius:4px;white-space:pre-wrap;font-family:monospace}
+.form-row{display:flex;gap:6px;margin-bottom:6px}
+.form-row label{width:60px;font-size:11px;color:#64748b;text-align:right;padding-top:5px}
+.form-row input,.form-row select{flex:1}
+.pipeline-row{display:flex;align-items:center;gap:8px;padding:6px 8px;border-bottom:1px solid #1a2332;font-size:11px}
+.alert-row{display:flex;align-items:center;gap:6px;padding:6px 8px;border-left:3px solid #ef4444;margin:2px 0;background:#1a2332;border-radius:4px;font-size:11px}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <h1>⚙️ DG-IoT <span>AIP</span></h1>
+  <div class="tabs" id="topTabs">
+    <div class="tab active" onclick="switchView('explorer')">🔍 Explorer</div>
+    <div class="tab" onclick="switchView('manager')">🏗️ Ontology</div>
+    <div class="tab" onclick="switchView('pipeline')">📡 Pipeline</div>
+    <div class="tab" onclick="switchView('console')">💻 Console</div>
+    <div class="tab" onclick="switchView('sparql')">🔮 SPARQL</div>
+    <div class="tab" onclick="switchView('tree')">🌳 Tree</div>
+    <div class="tab" onclick="switchView('graph')">🕸️ Graph</div>
+    <div class="tab" onclick="switchView('validate')">✅ Validate</div>
+  </div>
+  <span style="font-size:10px;color:#64748b" id="clock"></span>
+</div>
+
+<div class="kpi-row" id="kpiRow"></div>
+
+<div class="main">
+  <!-- ===== EXPLORER VIEW ===== -->
+  <div id="viewExplorer" style="display:flex;flex:1;overflow:hidden">
+    <div class="panel left" style="width:260px">
+      <div class="panel-hdr">🔍 Objects</div>
+      <div class="obj-filter">
+        <select id="layerFilter" onchange="loadObjects()">
+          <option value="">全部</option><option value="site">Site</option><option value="gateway">Gateway</option>
+          <option value="channel">Channel</option><option value="device">Device</option><option value="point">Point</option><option value="constraint">Constraint</option>
+        </select>
+        <input id="objSearch" placeholder="搜索..." oninput="loadObjects()">
+      </div>
+      <div class="obj-list" id="objList" style="flex:1;overflow-y:auto"></div>
+    </div>
+    <div class="center" id="objDetail" style="flex:1;overflow-y:auto;padding:12px">
+      <div style="text-align:center;padding:60px;color:#64748b"><div style="font-size:48px">📡</div><p>选择一个对象</p></div>
+    </div>
+    <div class="right" style="width:340px;overflow-y:auto;padding:12px">
+      <div class="card"><h3>⚡ Actions</h3>
+        <button class="btn" onclick="runAction('diagnose')">🔍 故障诊断</button>
+        <button class="btn" onclick="runAction('trend_check')">📈 趋势检查</button>
+        <button class="btn" onclick="runAction('health_check')">💚 健康检查</button>
+        <button class="btn danger" onclick="runAction('acknowledge_alarm')">✅ 确认告警</button>
+      </div>
+      <div class="card"><h3>🔮 Scenario</h3>
+        <div class="form-row"><input id="scenarioVal" type="number" step="any" placeholder="模拟新值"><button class="btn" style="width:auto;margin:0" onclick="runScenario()">模拟</button></div>
+        <div id="scenarioResult" style="font-size:11px;margin-top:6px"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== ONTOLOGY MANAGER VIEW ===== -->
+  <div id="viewManager" style="display:none;flex:1;overflow-y:auto;padding:16px">
+    <div style="display:flex;gap:16px">
+      <div style="flex:1"><div class="card"><h3>🏗️ 创建对象</h3>
+        <div class="form-row"><label>层级</label><select id="newLayer" onchange="updateCreateForm()"><option value="device">Device</option><option value="point">Point</option><option value="channel">Channel</option><option value="gateway">Gateway</option><option value="constraint">Constraint</option></select></div>
+        <div class="form-row"><label>ID</label><input id="newId" placeholder="唯一标识"></div>
+        <div class="form-row"><label>名称</label><input id="newName" placeholder="显示名称"></div>
+        <div id="newProps"></div>
+        <button class="btn" onclick="createObject()" style="margin-top:8px">✅ 创建</button>
+        <div id="createResult" style="font-size:11px;margin-top:6px"></div>
+      </div></div>
+      <div style="flex:1"><div class="card"><h3>📋 现有对象</h3>
+        <div class="obj-filter"><select id="mgmtLayerFilter" onchange="loadMgmtObjects()"><option value="">全部</option><option value="device">Device</option><option value="point">Point</option><option value="channel">Channel</option><option value="constraint">Constraint</option></select></div>
+        <div id="mgmtObjList" style="max-height:400px;overflow-y:auto"></div>
+      </div></div>
+    </div>
+  </div>
+
+  <!-- ===== PIPELINE VIEW ===== -->
+  <div id="viewPipeline" style="display:none;flex:1;overflow-y:auto;padding:16px">
+    <div class="card"><h3>📡 Pipeline Monitor</h3><div id="pipelineData" style="font-size:11px">加载中...</div></div>
+    <div class="card"><h3>⚠️ 告警规则 (Constraints)</h3><div id="constraintsList"></div></div>
+  </div>
+
+  <!-- ===== CONSOLE VIEW ===== -->
+  <div id="viewConsole" style="display:none;flex:1;overflow:hidden">
+    <div style="flex:1;padding:12px;display:flex;flex-direction:column">
+      <div class="card" style="flex:1;display:flex;flex-direction:column">
+        <h3>💻 Code Console <span style="font-size:10px;color:#64748b">预置: engine, rag, search(q), ask(q), ctx(id), summary(level)</span></h3>
+        <textarea class="code-box" id="codeInput" style="flex:1"># 试试这些:
+# search('变压器保护')
+# ask('K1_51井的套压安全吗')
+# ctx('dev_relay_00')
+# summary('site')
+# [d.name for d in engine.devices.values() if d.type=='relay']</textarea>
+        <button class="btn" onclick="runCode()" style="margin-top:8px;width:auto">▶️ 执行 (Ctrl+Enter)</button>
+        <div class="result-box" id="codeResult" style="flex:1;margin-top:8px"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== SPARQL VIEW ===== -->
+  <div id="viewSparql" style="display:none;flex:1;overflow:hidden">
+    <div style="flex:1;padding:12px;display:flex;flex-direction:column">
+      <div class="card" style="flex:1;display:flex;flex-direction:column">
+        <h3>🔮 SPARQL Console <span style="font-size:10px;color:#64748b">836 triples | 命名空间: dgiot:, isa95:, iof:, rdf:, rdfs:</span></h3>
+        <textarea class="code-box" id="sparqlInput" style="flex:1">SELECT ?device ?name ?protocol WHERE { ?device rdf:type dgiot:Device ; dgiot:name ?name ; dgiot:protocol ?protocol } LIMIT 20</textarea>
+        <button class="btn" onclick="runSparql()" style="margin-top:8px;width:auto">▶️ 执行</button>
+        <div class="result-box" id="sparqlResult" style="flex:1;margin-top:8px"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== TREE VIEW ===== -->
+  <div id="viewTree" style="display:none;flex:1;overflow-y:auto;padding:16px">
+    <div class="card"><h3>🌳 Ontology Tree</h3>
+      <div style="display:flex;gap:12px;align-items:center;margin-bottom:10px">
+        <button class="btn" style="width:auto" onclick="loadTree()">🔄 刷新</button>
+        <span style="font-size:11px;color:#64748b" id="treeStats"></span>
+      </div>
+      <div id="treeContent" style="font-family:monospace;font-size:11px;line-height:1.8"></div>
+    </div>
+  </div>
+
+  <!-- ===== GRAPH VIEW ===== -->
+  <div id="viewGraph" style="display:none;flex:1;overflow:hidden">
+    <div style="flex:1;padding:12px;display:flex;flex-direction:column">
+      <div class="card" style="flex:1">
+        <h3>🕸️ Full Ontology Graph <span style="font-size:10px;color:#64748b">所有实体 + 关系 | 可拖拽缩放</span></h3>
+        <div id="fullGraphViz" style="width:100%;height:calc(100vh - 140px)"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== VALIDATE VIEW ===== -->
+  <div id="viewValidate" style="display:none;flex:1;overflow-y:auto;padding:16px">
+    <div class="card"><h3>✅ Ontology Validation</h3>
+      <button class="btn" style="width:auto;margin-bottom:10px" onclick="loadValidate()">🔍 运行校验</button>
+      <div id="validateResult"></div>
+    </div>
+    <div class="card"><h3>📊 Statistics</h3><div id="statsDetail"></div></div>
+    <div class="card"><h3>🦉 OWL Export</h3>
+      <button class="btn" style="width:auto;margin-bottom:4px" onclick="downloadOwl()">📥 OWL RDF/XML</button>
+      <button class="btn" style="width:auto;margin-bottom:4px" onclick="downloadTtl()">📥 Turtle</button>
+      <span style="font-size:10px;color:#64748b">836 triples | 7 classes | 9 properties | ISA-95 aligned</span>
+    </div>
+  </div>
+</div>
+
+<script>
+let selectedObj=null,dashboard=null;
+
+async function init(){
+  try{
+    const r=await fetch('/api/graphrag/aip/dashboard');dashboard=await r.json();
+    const c=dashboard.entity_counts;
+    document.getElementById('kpiRow').innerHTML=`
+      <div class="kpi"><div class="v">${c.sites}</div><div class="l">Sites</div></div>
+      <div class="kpi"><div class="v">${c.gateways}</div><div class="l">Gateways</div></div>
+      <div class="kpi"><div class="v">${c.channels}</div><div class="l">Channels</div></div>
+      <div class="kpi"><div class="v">${c.devices}</div><div class="l">Devices</div></div>
+      <div class="kpi"><div class="v">${c.points}</div><div class="l">Points</div></div>
+      <div class="kpi"><div class="v">${c.constraints}</div><div class="l">Rules</div></div>
+      <div class="kpi ${dashboard.critical_rules?'danger':'warn'}"><div class="v">${dashboard.critical_rules}</div><div class="l">Critical</div></div>
+    `;
+  }catch(e){}
+  loadObjects();
+  setInterval(()=>document.getElementById('clock').textContent=new Date().toLocaleString(),1000);
+  // Ctrl+Enter 执行代码
+  document.getElementById('codeInput').addEventListener('keydown',e=>{if(e.ctrlKey&&e.key==='Enter')runCode()});
+}
+
+function switchView(v){
+  ['explorer','manager','pipeline','console','sparql'].forEach((name,i)=>{
+    document.getElementById('view'+name.charAt(0).toUpperCase()+name.slice(1)).style.display=name===v?'flex':'none';
+    document.querySelectorAll('#topTabs .tab')[i].classList.toggle('active',name===v);
+  });
+  if(v==='pipeline') loadPipeline();
+  if(v==='manager') loadMgmtObjects();
+}
+
+// ═══ Explorer ═══
+async function loadObjects(){
+  const l=document.getElementById('layerFilter').value,q=document.getElementById('objSearch').value;
+  const p=new URLSearchParams({limit:200});if(l)p.set('layer',l);if(q)p.set('q',q);
+  document.getElementById('objList').innerHTML='<div style="padding:12px;color:#64748b;font-size:11px">加载中...</div>';
+  try{
+    const r=await fetch('/api/graphrag/aip/objects?'+p);const d=await r.json();
+    if(!d.objects?.length){document.getElementById('objList').innerHTML='<div style="padding:12px;color:#64748b">无对象</div>';return}
+    const co={site:'#f59e0b',gateway:'#3b82f6',channel:'#10b981',device:'#8b5cf6',point:'#ef4444',constraint:'#f97316'};
+    document.getElementById('objList').innerHTML=d.objects.map(o=>`<div class="obj-item${selectedObj===o.id?' selected':''}" onclick="selectObj('${o.id}')">
+      <span style="width:6px;height:6px;border-radius:50%;flex-shrink:0;background:${o.status==='online'||o.status==='running'?'#10b981':o.status==='stopped'?'#ef4444':'#64748b'}"></span>
+      <span class="ltag" style="color:${co[o.layer]}">${o.layer}</span><span style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${o.name||o.id}</span></div>`).join('');
+  }catch(e){document.getElementById('objList').innerHTML='<div style="padding:12px;color:#ef4444">'+e.message+'</div>'}
+}
+
+async function selectObj(id){
+  selectedObj=id;loadObjects();
+  try{
+    const r=await fetch('/api/graphrag/aip/objects/'+id);const d=await r.json();const e=d.entity;
+    const co={site:'#f59e0b',gateway:'#3b82f6',channel:'#10b981',device:'#8b5cf6',point:'#ef4444',constraint:'#f97316'};
+    let h=`<div class="card"><h3><span style="color:${co[e.layer]}">⬤</span> ${e.name||e.id} <span style="font-size:10px;color:#64748b">[${e.layer}]</span></h3><dl class="props">${Object.entries(d.properties||{}).filter(([k])=>!k.startsWith('_')&&typeof d.properties[k]!=='object').slice(0,15).map(([k,v])=>`<dt>${k}</dt><dd>${v}</dd>`).join('')}</dl></div>`;
+    if(d.relations?.length){h+=`<div class="card"><h3>🔗 Relations (${d.relations.length})</h3>`;d.relations.forEach(r=>{const a={upstream:'←',downstream:'→',lateral:'↔'}[r.direction]||'—';h+=`<div class="rel-item" onclick="selectObj('${r.id}')">${a} <span style="font-size:9px;color:#64748b">${r.relation}</span> ${r.name}</div>`});h+='</div>'}
+    if(d.constraints?.length){h+=`<div class="card"><h3>⚠️ Constraints (${d.constraints.length})</h3>`;d.constraints.forEach(c=>{const s={danger:'#ef4444',critical:'#ef4444',warning:'#f59e0b',info:'#10b981'}[c.severity]||'#64748b';h+=`<div style="padding:4px 8px;margin:2px 0;background:#0f172a;border-left:2px solid ${s};font-size:11px"><b style="color:${s}">${c.severity}</b> ${c.name}<div style="font-size:10px;color:#64748b">${c.rule||''}</div></div>`});h+='</div>'}
+    if(d.live_data?.available&&d.live_data.value!==undefined){const ld=d.live_data;const sc={normal:'#10b981',high:'#f59e0b',critical_high:'#ef4444'}[ld.status]||'#64748b';h+=`<div class="card"><h3>📡 Live</h3><div style="font-size:22px;font-weight:bold;color:${sc}">${ld.value} ${ld.unit||''}</div><div style="font-size:10px;color:#64748b">${ld.status} | ${ld.ts||''}</div></div>`}
+    document.getElementById('objDetail').innerHTML=h;
+  }catch(e){document.getElementById('objDetail').innerHTML=`<div class="card">Error: ${e.message}</div>`}
+}
+
+async function runAction(a){if(!selectedObj)return alert('选一个对象');try{const r=await fetch('/api/graphrag/aip/actions/execute',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action:a,target_id:selectedObj})});const d=await r.json();alert(`[${a}] ${d.status||'done'}\n${JSON.stringify(d.result||d).slice(0,200)}`)}catch(e){alert(e.message)}}
+async function runScenario(){if(!selectedObj)return alert('选一个对象');const v=parseFloat(document.getElementById('scenarioVal').value);if(isNaN(v))return alert('输入数值');try{const r=await fetch('/api/graphrag/aip/scenarios/analyze',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({entity_id:selectedObj,change:{value:v}})});const d=await r.json();const s=d.scenarios[0];document.getElementById('scenarioResult').innerHTML=`<div style="padding:8px;background:${s.impact==='critical'?'#3b1f1f':'#1a2e1a'};border-radius:4px"><b>${s.parameter}: ${s.current_value||'?'} → ${s.simulated_value}</b><div style="margin-top:4px">影响: <span style="color:${s.impact==='critical'?'#ef4444':'#10b981'}">${s.impact}</span></div>${s.constraints_triggered.length?`<div style="color:#ef4444;margin-top:4px">触发: ${s.constraints_triggered.join(', ')}</div>`:''}</div>`}catch(e){alert(e.message)}}
+
+// ═══ Ontology Manager ═══
+async function loadMgmtObjects(){const l=document.getElementById('mgmtLayerFilter').value;const p=new URLSearchParams({limit:50});if(l)p.set('layer',l);try{const r=await fetch('/api/graphrag/aip/objects?'+p);const d=await r.json();document.getElementById('mgmtObjList').innerHTML=d.objects.map(o=>`<div style="padding:4px 8px;font-size:11px;border-bottom:1px solid #1a2332;display:flex;gap:8px;align-items:center"><span style="font-size:9px;color:#64748b">${o.layer}</span><span style="flex:1">${o.name||o.id}</span><span style="color:#ef4444;cursor:pointer;font-size:10px" onclick="deleteObj('${o.id}')">🗑</span></div>`).join('')}catch(e){}
+}
+async function createObject(){const l=document.getElementById('newLayer').value;const id=document.getElementById('newId').value;const name=document.getElementById('newName').value;if(!id)return alert('输入ID');const props={};document.querySelectorAll('#newProps input').forEach(el=>{if(el.value)props[el.dataset.key]=el.value});try{const r=await fetch('/api/graphrag/aip/objects/create',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({layer:l,id,name,props})});const d=await r.json();document.getElementById('createResult').innerHTML=`<span style="color:#10b981">✅ ${d.status}: ${d.id}</span>`;loadMgmtObjects()}catch(e){document.getElementById('createResult').innerHTML=`<span style="color:#ef4444">❌ ${e.message}</span>`}}
+async function deleteObj(id){if(!confirm('删除 '+id+'?'))return;try{await fetch('/api/graphrag/aip/objects/'+id,{method:'DELETE'});loadMgmtObjects()}catch(e){alert(e.message)}}
+function updateCreateForm(){const l=document.getElementById('newLayer').value;
+  const props={gateway:[['ip','IP'],['site','Site ID']],channel:[['gateway','Gateway ID'],['protocol','协议']],device:[['channel','Channel ID'],['type','类型'],['protocol','协议']],point:[['device','Device ID'],['unit','单位'],['category','分类']],constraint:[['entity','实体ID'],['severity','级别'],['rule','规则'],['action','动作']]};
+  document.getElementById('newProps').innerHTML=(props[l]||[]).map(([k,lb])=>`<div class="form-row"><label>${lb}</label><input data-key="${k}" placeholder="${k}"></div>`).join('');
+}
+
+// ═══ Pipeline ═══
+async function loadPipeline(){
+  try{
+    const r=await fetch('/api/graphrag/aip/pipeline');const d=await r.json();
+    document.getElementById('pipelineData').innerHTML=`
+      <div style="margin-bottom:8px">🕐 ${d.timestamp} | 运行时间: ${Math.floor(d.uptime_seconds/60)}min</div>
+      <div style="margin-bottom:12px">📊 遥测: ${d.telemetry.total_points} 条 | 最新: ${d.telemetry.latest_ts||'无'}</div>
+      ${Object.entries(d.channels||{}).map(([k,v])=>`<div class="pipeline-row"><span style="color:${v.connected?'#10b981':'#ef4444'}">●</span> ${k} <span style="color:#64748b">${v.connected}/${v.total} 连接</span></div>`).join('')}
+    `;
+  }catch(e){}
+  try{
+    const r=await fetch('/api/graphrag/aip/objects?layer=constraint&limit=50');const d=await r.json();
+    document.getElementById('constraintsList').innerHTML=d.objects.map(c=>`<div class="alert-row"><span style="color:#f59e0b">⚠</span> ${c.name} <span style="color:#64748b;font-size:9px">${c.id}</span></div>`).join('');
+  }catch(e){}
+}
+
+// ═══ Console ═══
+async function runCode(){
+  const code=document.getElementById('codeInput').value;
+  document.getElementById('codeResult').textContent='执行中...';
+  try{
+    const r=await fetch('/api/graphrag/aip/console',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({code,timeout:10})});
+    const d=await r.json();
+    let out='';
+    if(d.stdout)out+=d.stdout;
+    if(d.result)out+='\n'+Object.entries(d.result).map(([k,v])=>`${k} = ${v}`).join('\n');
+    if(d.error)out+='\n❌ '+d.error;
+    document.getElementById('codeResult').textContent=out.trim()||'(无输出)';
+  }catch(e){document.getElementById('codeResult').textContent='Error: '+e.message}
+}
+
+// ═══ SPARQL ═══
+async function runSparql(){
+  const q=document.getElementById('sparqlInput').value;
+  document.getElementById('sparqlResult').textContent='查询中...';
+  try{
+    const r=await fetch('/api/graphrag/sparql',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({query:q})});
+    const d=await r.json();
+    if(d.results?.length){const keys=Object.keys(d.results[0]);document.getElementById('sparqlResult').textContent=keys.join('\t')+'\n'+d.results.map(row=>keys.map(k=>row[k]).join('\t')).join('\n')+'\n\n'+d.total+' results'}
+    else{document.getElementById('sparqlResult').textContent=d.total+' results'}
+  }catch(e){document.getElementById('sparqlResult').textContent='Error: '+e.message}
+}
+
+// ═══ Tree View ═══
+async function loadTree(){
+  try{
+    const r=await fetch('/api/graphrag/tree');const d=await r.json();
+    document.getElementById('treeStats').textContent=`${d.health.counts.sites} sites · ${d.health.counts.gateways} gateways · ${d.health.counts.channels} channels · ${d.health.counts.devices} devices · ${d.health.counts.points} points`;
+    let h='';
+    (d.tree||[]).forEach(site=>{
+      h+=`<div style="margin-bottom:8px"><b style="color:#f59e0b">🏭 ${site.name}</b> <span style="color:#64748b;font-size:10px">${site.location||''}</span></div>`;
+      (site.gateways||[]).forEach(gw=>{
+        h+=`<div style="margin-left:20px"><span style="color:#3b82f6">🖥️ ${gw.hostname||gw.id}</span> <span style="color:#64748b;font-size:10px">${gw.ip} | ${gw.os||''} | ${gw.status}</span></div>`;
+        (gw.channels||[]).forEach(ch=>{
+          const icon=ch.status==='running'?'🟢':'🔴';
+          h+=`<div style="margin-left:40px">${icon} <span style="color:#10b981;cursor:pointer" onclick="selectObj('${ch.id}')">${ch.name}</span> <span style="color:#64748b;font-size:10px">${ch.protocol} | ${ch.endpoint||''} | ${ch.devices.length} devices</span></div>`;
+          (ch.devices||[]).forEach(dev=>{
+            h+=`<div style="margin-left:60px">  <span style="color:#8b5cf6;cursor:pointer" onclick="selectObj('${dev.id}')">📟 ${dev.name}</span> <span style="color:#64748b;font-size:10px">${dev.type||''} | ${dev.status}</span>`;
+            (dev.points||[]).forEach(pt=>{
+              h+=`<div style="margin-left:80px;color:#ef4444;cursor:pointer" onclick="selectObj('${pt.id}')">▸ ${pt.name} <span style="color:#64748b;font-size:10px">${pt.unit} ${pt.category}</span></div>`;
+            });
+            h+=`</div>`;
+          });
+        });
+      });
+    });
+    document.getElementById('treeContent').innerHTML=h;
+  }catch(e){document.getElementById('treeContent').innerHTML='<span style="color:#ef4444">'+e.message+'</span>'}
+}
+
+// ═══ Graph View ═══
+async function loadFullGraph(){
+  try{
+    const r=await fetch('/api/graphrag/tree');const d=await r.json();
+    const dom=document.getElementById('fullGraphViz');if(!dom)return;
+    const c=echarts.init(dom);
+    const nodes=[],edges=[];
+    const colors={site:'#f59e0b',gateway:'#3b82f6',channel:'#10b981',device:'#8b5cf6',point:'#ef4444'};
+    (d.tree||[]).forEach(site=>{
+      nodes.push({id:site.id,name:site.name,symbolSize:30,category:0,itemStyle:{color:colors.site}});
+      (site.gateways||[]).forEach(gw=>{
+        nodes.push({id:gw.id,name:gw.hostname||gw.id,symbolSize:25,category:1,itemStyle:{color:colors.gateway}});
+        edges.push({source:site.id,target:gw.id});
+        (gw.channels||[]).forEach(ch=>{
+          nodes.push({id:ch.id,name:ch.name,symbolSize:20,category:2,itemStyle:{color:colors.channel}});
+          edges.push({source:gw.id,target:ch.id});
+          (ch.devices||[]).slice(0,8).forEach(dev=>{
+            nodes.push({id:dev.id,name:dev.name,symbolSize:16,category:3,itemStyle:{color:colors.device}});
+            edges.push({source:ch.id,target:dev.id});
+            (dev.points||[]).slice(0,3).forEach(pt=>{
+              nodes.push({id:pt.id,name:pt.name,symbolSize:12,category:4,itemStyle:{color:colors.point}});
+              edges.push({source:dev.id,target:pt.id});
+            });
+          });
+        });
+      });
+    });
+    c.setOption({
+      tooltip:{formatter:p=>p.dataType==='node'?`<b>${p.name}</b>`:''},
+      legend:{data:['Site','Gateway','Channel','Device','Point'],bottom:0,textStyle:{color:'#94a3b8',fontSize:10}},
+      series:[{type:'graph',layout:'force',roam:true,draggable:true,
+        force:{repulsion:300,edgeLength:[40,150],gravity:0.05},
+        data:nodes,edges,
+        categories:['Site','Gateway','Channel','Device','Point'].map((n,i)=>({name:n,itemStyle:{color:Object.values(colors)[i]}})),
+        label:{show:true,fontSize:9,color:'#94a3b8',formatter:p=>p.name.length>15?p.name.slice(0,14)+'…':p.name},
+        emphasis:{focus:'adjacency'}
+      }]
+    });
+    setTimeout(()=>c.resize(),100);
+  }catch(e){}
+}
+
+// ═══ Validate ═══
+async function loadValidate(){
+  try{
+    const r=await fetch('/api/graphrag/health-check');const d=await r.json();
+    const icon=d.valid?'✅':'❌';
+    document.getElementById('validateResult').innerHTML=`
+      <div style="font-size:16px;margin-bottom:8px">${icon} Valid: ${d.valid}</div>
+      <div style="font-size:11px;color:#64748b">${d.counts.sites} sites · ${d.counts.gateways} gateways · ${d.counts.channels} channels · ${d.counts.devices} devices · ${d.counts.points} points · ${d.counts.constraints} constraints</div>
+      ${d.issues?.length?`<div style="margin-top:8px;color:#f59e0b">⚠️ ${d.issues.length} issues:<br>${d.issues.map(i=>'• '+i).join('<br>')}</div>`:'<div style="margin-top:8px;color:#10b981">✅ 无引用完整性问题</div>'}
+    `;
+    document.getElementById('statsDetail').innerHTML=`
+      <table style="width:100%;font-size:11px;border-collapse:collapse">
+        <tr><td style="padding:4px;color:#64748b">OWL Classes</td><td>7 (Site, Gateway, Channel, Device, Point, Constraint, DataSource)</td></tr>
+        <tr><td style="padding:4px;color:#64748b">Object Properties</td><td>9 (hasGateway, hasChannel, hasDevice, hasPoint, ...)</td></tr>
+        <tr><td style="padding:4px;color:#64748b">Data Properties</td><td>22</td></tr>
+        <tr><td style="padding:4px;color:#64748b">ISA-95 Alignment</td><td>Enterprise, Site, WorkCenter, Equipment, ControlModule, CommunicationChannel</td></tr>
+        <tr><td style="padding:4px;color:#64748b">IOF Alignment</td><td>ProcessingUnit, Equipment, MeasurementPoint, Constraint, DataStore</td></tr>
+        <tr><td style="padding:4px;color:#64748b">SPARQL</td><td>836 triples, W3C compliant</td></tr>
+        <tr><td style="padding:4px;color:#64748b">Export Formats</td><td>OWL RDF/XML · Turtle · JSON</td></tr>
+      </table>`;
+  }catch(e){document.getElementById('validateResult').innerHTML='<span style="color:#ef4444">'+e.message+'</span>'}
+}
+function downloadOwl(){window.open('/api/graphrag/ontology.owl')}
+function downloadTtl(){window.open('/api/graphrag/ontology.ttl')}
+
+function switchView(v){
+  ['explorer','manager','pipeline','console','sparql','tree','graph','validate'].forEach((name,i)=>{
+    document.getElementById('view'+name.charAt(0).toUpperCase()+name.slice(1)).style.display=name===v?'flex':'none';
+    const tabs=document.querySelectorAll('#topTabs .tab');
+    if(i<tabs.length) tabs[i].classList.toggle('active',name===v);
+  });
+  if(v==='pipeline') loadPipeline();
+  if(v==='manager') loadMgmtObjects();
+  if(v==='tree') loadTree();
+  if(v==='graph') setTimeout(loadFullGraph,200);
+  if(v==='validate') loadValidate();
+}
+
+init();
+setTimeout(()=>{if(!selectedObj)selectObj('dev_relay_00')},1200);
+</script>
+</body>
+</html>
