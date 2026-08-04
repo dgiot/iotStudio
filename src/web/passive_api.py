@@ -143,6 +143,42 @@ def io_health_check(ip: str, hostname: str = "", winrm_user: str = "",
     return report.to_dict()
 
 
+# ═══════════════════════════════════════════
+# 作业区适配层 (Zone Adapter Layer)
+# ═══════════════════════════════════════════
+
+_zone_adapters = {}
+
+def _get_zone(zone_id: str):
+    from src.services.zone_adapter import ZoneAdapter
+    if zone_id not in _zone_adapters:
+        _zone_adapters[zone_id] = ZoneAdapter(zone_id)
+    return _zone_adapters[zone_id]
+
+
+@router.post("/zones/{zone_id}/health")
+def zone_health(zone_id: str):
+    """作业区术前体检 (8 维度)"""
+    return _get_zone(zone_id).check_health()
+
+
+@router.post("/zones/{zone_id}/start")
+def zone_start(zone_id: str, require_healthy: bool = True):
+    """启动作业区适配层 (默认要求体检 READY)"""
+    return _get_zone(zone_id).start(require_healthy=require_healthy)
+
+
+@router.post("/zones/{zone_id}/stop")
+def zone_stop(zone_id: str):
+    _get_zone(zone_id).stop()
+    return {"status": "stopped", "zone": zone_id}
+
+
+@router.get("/zones/{zone_id}/status")
+def zone_status(zone_id: str):
+    return _get_zone(zone_id).status()
+
+
 @router.post("/health/ledger")
 def io_health_ledger(servers: list = None):
     """多作业区体检台账 — 批量体检全部 IO 服务器
