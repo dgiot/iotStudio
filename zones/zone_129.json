@@ -1,0 +1,34 @@
+{
+  "name": "萨北21站",
+  "zone": "采油三厂-第八作业区",
+  "a11_bridge": {
+    "mode": "bypass",
+    "server_port": 8889,
+    "heartbeat_interval": 5000
+  },
+  "opc_adapters": [
+    {"vendor": "rockwell", "endpoint": "172.23.9.3", "tag_map": "zone_129_opc1.json"}
+  ],
+  "modbus": {
+    "rtu_range": "11.250.1-15",
+    "model": "G1-G8_standard",
+    "expected_rtu": 15
+  },
+  "io_business": {
+    "oracle_dsn": "DQYTPROD",
+    "commit_span": 500,
+    "io_ip": "11.66.12.129"
+  },
+  "health": {
+    "collect_beat": {"commit_real_span": 2000, "commit_his_span": 3000, "commit_tag_once": 30000},
+    "cpu_pct": 40,
+    "mem_pct": 50,
+    "tcp_conn": 60,
+    "processes": "commbridge ioman iomonitor iocommit",
+    "ports": "53001 8889 135 7001",
+    "links": {"rtu_connections": 15, "opc_dcom": 1, "a11_channels": 2},
+    "protocol_stats": {"frames": 20000, "errors": 100},
+    "conflict": {"ado_pool_free": 2, "commit_gap_ms": 500},
+    "data_stats": {"points_total": 20000, "write_latency_ms": 900}
+  }
+}
