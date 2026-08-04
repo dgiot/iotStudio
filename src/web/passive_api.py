@@ -141,3 +141,22 @@ def io_health_check(ip: str, hostname: str = "", winrm_user: str = "",
                                   scan_data=scan_data or {})
     report = checker.check()
     return report.to_dict()
+
+
+@router.post("/health/ledger")
+def io_health_ledger(servers: list = None):
+    """多作业区体检台账 — 批量体检全部 IO 服务器
+
+    body: {"servers": [{"ip": "...", "name": "南4联合站",
+                        "zone": "采油二厂-第四作业区",
+                        "scan_data": {...}}, ...]}
+    """
+    from src.services.health_ledger import HealthLedger
+    ledger = HealthLedger()
+    for s in (servers or []):
+        ledger.add_server(s.get("ip", ""), s.get("name", s.get("ip", "")),
+                          s.get("zone", ""), scan_data=s.get("scan_data", {}))
+    ledger.run_all()
+    return {"summary": ledger.summary(),
+            "servers": [e.__dict__ for e in ledger.entries],
+            "worst_items": ledger.worst_items(10)}
