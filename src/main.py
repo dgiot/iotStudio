@@ -1996,6 +1996,9 @@ app.include_router(graphrag_router)
 from .web.asset_api import router as asset_router
 app.include_router(asset_router)
 
+from .web.passive_api import router as passive_router
+app.include_router(passive_router)
+
 # ---- Vue3 前端托管 ----
 from pathlib import Path as _Path
 from starlette.responses import Response as _Response
