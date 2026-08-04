@@ -1992,6 +1992,10 @@ app.include_router(fde_router)
 from .web.graphrag_api import router as graphrag_router
 app.include_router(graphrag_router)
 
+# ---- 资产全生命周期 API (模块5) ----
+from .web.asset_api import router as asset_router
+app.include_router(asset_router)
+
 # ---- Vue3 前端托管 ----
 from pathlib import Path as _Path
 from starlette.responses import Response as _Response
