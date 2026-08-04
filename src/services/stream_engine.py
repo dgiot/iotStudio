@@ -191,25 +191,65 @@ class StreamEngine:
         self._callbacks: List[Callable] = []
         # 厂级扩展算法: {factory_id: {algo_name: (handler, min_points)}}
         self._factory_algos: Dict[str, Dict] = {}
+        # 作业区元数据: {zone_id: {"factory": 厂, "name": 作业区名, "wells": 井数}}
+        self._zone_meta: Dict[str, dict] = {}
+        self._stats = {"zones": 0, "algorithms": 0, "checked_ok": 0,
+                       "checked_missing": 0}
 
     def on_alarm(self, cb: Callable): self._callbacks.append(cb)
 
-    # ── 厂级扩展算法 (每厂至少 1 种) ──
+    # ── 作业区级定制算法 (100+ 作业区 × 每区 ≥1 种) ──
+
+    def register_zone(self, zone_id: str, factory: str = "",
+                      name: str = "", wells: int = 0) -> bool:
+        """登记作业区 (可与注册算法分开调用)"""
+        self._zone_meta[zone_id] = {"factory": factory, "name": name,
+                                    "wells": wells}
+        self._stats["zones"] = len(self._zone_meta)
+        return True
 
     def register_factory_algorithm(self, factory_id: str, algo_name: str,
                                    handler: Callable, min_points: int = 2) -> bool:
-        """注册厂级扩展算法. handler: (window, params) -> {"alarm": bool, "msg": str}"""
+        """注册作业区级扩展算法. handler: (window, params) -> {"alarm": bool, "msg": str}
+
+        factory_id 即作业区 id (zone_001 ... zone_120), 每区至少 1 种
+        """
         entry = self._factory_algos.setdefault(factory_id, {})
         entry[algo_name] = (handler, min_points)
+        self._stats["algorithms"] = sum(
+            len(v) for v in self._factory_algos.values())
         return True
 
     def factory_algorithm_count(self, factory_id: str) -> int:
-        """该厂已注册扩展算法数 (验收: 每厂 ≥1)"""
+        """该作业区已注册扩展算法数 (验收: 每区 ≥1)"""
         return len(self._factory_algos.get(factory_id, {}))
+
+    def check_all_zones(self, min_count: int = 1) -> dict:
+        """批量校验: 全部已登记作业区是否每区 ≥min_count 种算法
+
+        返回: {"ok": bool, "total": N, "missing": [zone_id, ...], "stats": ...}
+        """
+        missing = []
+        for zone_id in self._zone_meta:
+            if len(self._factory_algos.get(zone_id, {})) < min_count:
+                missing.append(zone_id)
+        ok = not missing
+        self._stats["checked_ok"] = len(self._zone_meta) - len(missing)
+        self._stats["checked_missing"] = len(missing)
+        return {"ok": ok, "total": len(self._zone_meta),
+                "missing": missing, "stats": dict(self._stats)}
+
+    def zone_summary(self) -> dict:
+        """作业区算法覆盖总览"""
+        covered = sum(1 for z in self._zone_meta
+                      if len(self._factory_algos.get(z, {})) >= 1)
+        return {"zones": len(self._zone_meta), "covered": covered,
+                "missing": len(self._zone_meta) - covered,
+                "total_algorithms": self._stats["algorithms"]}
 
     def push(self, device_id: str, point_id: str, value: float,
              factory_id: str = None, factory_params: dict = None):
-        """推送一个数据点 (factory_id 可选: 追加评估厂级算法)"""
+        """推送一个数据点 (factory_id 可选: 追加评估该作业区定制算法)"""
         key = f"{device_id}:{point_id}"
         if key not in self._windows:
             self._windows[key] = SlidingWindow(key=key, max_size=20)
@@ -225,7 +265,7 @@ class StreamEngine:
         alarms.append(EdgeRules.trend_detect(w, 5))
         alarms.append(EdgeRules.volatility(w, abs(features.get("avg", 0)) * 0.3))
 
-        # 执行厂级扩展算法 (该厂注册的全部)
+        # 执行作业区级扩展算法 (该作业区注册的全部)
         factory_alarms = []
         if factory_id:
             for algo_name, (handler, min_points) in \
