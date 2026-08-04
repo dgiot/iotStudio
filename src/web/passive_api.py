@@ -114,3 +114,30 @@ def passive_decoded(limit: int = 100):
         {"ts": p.ts, "device_id": p.device_id, "point_id": p.point_id,
          "value": p.value, "quality": p.quality, "protocol": p.protocol}
         for p in pts]}
+
+
+# ═══════════════════════════════════════════
+# IO 服务器全面体检 (搭桥手术前评估)
+# ═══════════════════════════════════════════
+
+@router.post("/health/io/{ip}")
+def io_health_check(ip: str, hostname: str = "", winrm_user: str = "",
+                    winrm_password: str = "", scan_data: dict = None):
+    """IO 服务器全面体检 — 8 维度 (只读, 零修改)
+
+    参数:
+      ip: IO 服务器 IP (如 11.66.12.131)
+      hostname: 可选主机名
+      winrm_user/password: 可选, 提供则实时 WinRM 采集
+      scan_data: 可选, 注入已采集数据 (JSON body)
+    """
+    from src.services.io_health_check import IOHostHealthChecker
+    winrm_cfg = {}
+    if winrm_user and winrm_password:
+        winrm_cfg = {"ip": ip, "user": winrm_user, "password": winrm_password,
+                     "port": 5985}
+    checker = IOHostHealthChecker(ip=ip, hostname=hostname,
+                                  winrm_config=winrm_cfg,
+                                  scan_data=scan_data or {})
+    report = checker.check()
+    return report.to_dict()

@@ -179,16 +179,37 @@ class EdgeRules:
 # ===== 流式处理引擎 =====
 
 class StreamEngine:
-    """边缘流式引擎 — 管理所有设备的窗口和规则"""
+    """边缘流式引擎 — 管理所有设备的窗口和规则
+
+    两层算法:
+      公共层: EdgeRules 15 种预置算法 (所有厂通用)
+      厂级层: 每厂 ≥1 种扩展算法 (register_factory_algorithm)
+    """
 
     def __init__(self):
         self._windows: Dict[str, SlidingWindow] = {}  # key = "device_id:point_id"
         self._callbacks: List[Callable] = []
+        # 厂级扩展算法: {factory_id: {algo_name: (handler, min_points)}}
+        self._factory_algos: Dict[str, Dict] = {}
 
     def on_alarm(self, cb: Callable): self._callbacks.append(cb)
 
-    def push(self, device_id: str, point_id: str, value: float):
-        """推送一个数据点"""
+    # ── 厂级扩展算法 (每厂至少 1 种) ──
+
+    def register_factory_algorithm(self, factory_id: str, algo_name: str,
+                                   handler: Callable, min_points: int = 2) -> bool:
+        """注册厂级扩展算法. handler: (window, params) -> {"alarm": bool, "msg": str}"""
+        entry = self._factory_algos.setdefault(factory_id, {})
+        entry[algo_name] = (handler, min_points)
+        return True
+
+    def factory_algorithm_count(self, factory_id: str) -> int:
+        """该厂已注册扩展算法数 (验收: 每厂 ≥1)"""
+        return len(self._factory_algos.get(factory_id, {}))
+
+    def push(self, device_id: str, point_id: str, value: float,
+             factory_id: str = None, factory_params: dict = None):
+        """推送一个数据点 (factory_id 可选: 追加评估厂级算法)"""
         key = f"{device_id}:{point_id}"
         if key not in self._windows:
             self._windows[key] = SlidingWindow(key=key, max_size=20)
@@ -198,19 +219,37 @@ class StreamEngine:
         # 计算滑窗特征
         features = WindowFeatures.compute_all(w)
 
-        # 执行内置规则
+        # 执行公共规则 (15 种)
         alarms = []
         alarms.append(EdgeRules.sudden_change(w, abs(features.get("avg", 0)) * 0.5))
         alarms.append(EdgeRules.trend_detect(w, 5))
         alarms.append(EdgeRules.volatility(w, abs(features.get("avg", 0)) * 0.3))
 
-        for a in alarms:
-            if a.get("alarm"):
-                for cb in self._callbacks:
-                    try: cb(device_id, point_id, a)
-                    except: pass
+        # 执行厂级扩展算法 (该厂注册的全部)
+        factory_alarms = []
+        if factory_id:
+            for algo_name, (handler, min_points) in \
+                    self._factory_algos.get(factory_id, {}).items():
+                if w.size() < min_points:
+                    continue
+                try:
+                    r = handler(w, factory_params or {})
+                    if r and r.get("alarm"):
+                        r["algo"] = algo_name
+                        r["factory"] = factory_id
+                        factory_alarms.append(r)
+                except Exception:
+                    pass
 
-        return {"features": features, "alarms": [a for a in alarms if a.get("alarm")]}
+        all_alarms = [a for a in alarms if a.get("alarm")] + factory_alarms
+        for a in all_alarms:
+            for cb in self._callbacks:
+                try: cb(device_id, point_id, a)
+                except: pass
+
+        return {"features": features,
+                "alarms": all_alarms,
+                "factory_alarms": factory_alarms}
 
     def get_window(self, device_id: str, point_id: str) -> Optional[SlidingWindow]:
         return self._windows.get(f"{device_id}:{point_id}")
