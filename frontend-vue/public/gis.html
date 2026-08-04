@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>GIS 作业区拓扑监控</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Microsoft YaHei',sans-serif;background:#0a0e17;color:#c0d5e8;height:100vh;display:flex;flex-direction:column}
+.topbar{background:#111827;padding:8px 16px;border-bottom:1px solid #1e293b;display:flex;align-items:center;gap:12px;flex-shrink:0}
+.topbar h1{font-size:15px;color:#e2e8f0;margin-right:auto}
+.topbar .stat{font-size:11px;color:#64748b}
+.topbar .stat b{color:#4a9eff}
+.main{flex:1;display:flex;overflow:hidden}
+#map{flex:1}
+.sidebar{width:320px;background:#0f172a;border-left:1px solid #1e293b;overflow-y:auto;flex-shrink:0}
+.side-hdr{padding:10px 12px;background:#1a2332;border-bottom:1px solid #1e293b;font-size:13px;font-weight:600;position:sticky;top:0}
+.zone-item{padding:8px 12px;cursor:pointer;border-bottom:1px solid #1a2332;font-size:12px}
+.zone-item:hover{background:#1a2332}
+.zone-item.active{background:#1e3a5f;border-left:2px solid #4a9eff}
+.zone-item .name{color:#e2e8f0;font-weight:600}
+.zone-item .info{color:#64748b;font-size:10px;margin-top:2px}
+.zone-item .alarm{float:right;padding:2px 6px;border-radius:4px;font-size:10px}
+.zone-item .alarm.normal{background:#1a3a2a;color:#10b981}
+.zone-item .alarm.warn{background:#3a2a1a;color:#f59e0b}
+.zone-item .alarm.danger{background:#3a1a1a;color:#ef4444}
+.legend{position:absolute;bottom:20px;right:20px;z-index:1000;background:#0f172acc;border:1px solid #1e293b;border-radius:8px;padding:10px;font-size:11px}
+.legend div{margin:3px 0}
+.legend span{display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:6px}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <h1>GIS 作业区拓扑监控 — 时序数据采集与应用管理系统</h1>
+  <span class="stat">作业区: <b id="zoneCount">0</b></span>
+  <span class="stat">设备: <b id="devCount">0</b></span>
+  <span class="stat">告警: <b id="alarmCount" style="color:#10b981">0</b></span>
+</div>
+
+<div class="main">
+  <div id="map"></div>
+  <div class="sidebar">
+    <div class="side-hdr">作业区列表</div>
+    <div id="zoneList"></div>
+  </div>
+</div>
+
+<div class="legend">
+  <div><span style="background:#10b981"></span> 正常运行</div>
+  <div><span style="background:#f59e0b"></span> 有告警</div>
+  <div><span style="background:#ef4444"></span> 严重告警</div>
+  <div><span style="background:#4a9eff"></span> 离线</div>
+</div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+// ═══ 模拟 100 个作业区 GIS 数据 ═══
+const ZONES = []
+const baseLat = 46.5, baseLng = 125.0  // 大庆油田中心
+for (let i = 0; i < 100; i++) {
+  ZONES.push({
+    id: `zone_${i+1}`,
+    name: `第${i+1}作业区`,
+    lat: baseLat + (Math.random()-0.5)*2,
+    lng: baseLng + (Math.random()-0.5)*2,
+    devices: 8000 + Math.floor(Math.random()*4000), // 8000~12000
+    points: 80000 + Math.floor(Math.random()*40000),
+    alarms: Math.floor(Math.random()*20),
+    status: Math.random() > 0.1 ? 'normal' : (Math.random() > 0.5 ? 'warn' : 'danger'),
+  })
+}
+ZONES[0].status = 'danger'; ZONES[0].alarms = 15  // 让第一个有告警
+
+// ═══ Leaflet 地图 ═══
+const map = L.map('map').setView([baseLat, baseLng], 9)
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+  attribution: '&copy; OpenStreetMap', maxZoom: 18
+}).addTo(map)
+
+const markers = {}
+const colorMap = {normal:'#10b981', warn:'#f59e0b', danger:'#ef4444', offline:'#4a9eff'}
+
+ZONES.forEach(z => {
+  const marker = L.circleMarker([z.lat, z.lng], {
+    radius: 6 + z.devices/2000,
+    fillColor: colorMap[z.status],
+    color: '#fff',
+    weight: 1,
+    fillOpacity: 0.8,
+  }).addTo(map)
+
+  marker.bindPopup(`
+    <b>${z.name}</b><br>
+    设备: ${z.devices.toLocaleString()} 台<br>
+    测点: ${z.points.toLocaleString()} 个<br>
+    告警: ${z.alarms} 条
+  `)
+
+  marker.on('click', () => selectZone(z.id))
+  markers[z.id] = marker
+})
+
+// ═══ 侧边栏 ═══
+function renderZoneList(filter = '') {
+  const list = document.getElementById('zoneList')
+  let html = ''
+  const filtered = filter ? ZONES.filter(z => z.name.includes(filter) || z.id.includes(filter)) : ZONES
+  filtered.forEach(z => {
+    const cls = z.status === 'danger' ? 'danger' : (z.status === 'warn' ? 'warn' : 'normal')
+    html += `<div class="zone-item" onclick="selectZone('${z.id}')" id="item_${z.id}">
+      <span class="alarm ${cls}">${z.alarms}告警</span>
+      <div class="name">${z.name}</div>
+      <div class="info">设备 ${z.devices.toLocaleString()} | 测点 ${z.points.toLocaleString()}</div>
+    </div>`
+  })
+  list.innerHTML = html
+  document.getElementById('zoneCount').textContent = ZONES.length
+  document.getElementById('devCount').textContent = ZONES.reduce((s,z)=>s+z.devices,0).toLocaleString()
+  const totalAlarms = ZONES.reduce((s,z)=>s+z.alarms,0)
+  document.getElementById('alarmCount').textContent = totalAlarms
+}
+
+function selectZone(id) {
+  document.querySelectorAll('.zone-item').forEach(el => el.classList.remove('active'))
+  document.getElementById('item_'+id)?.classList.add('active')
+  const z = ZONES.find(z=>z.id===id)
+  if (z) {
+    map.setView([z.lat, z.lng], 12)
+    markers[id].openPopup()
+  }
+}
+
+renderZoneList()
+
+// ═══ 实时刷新 ═══
+setInterval(() => {
+  ZONES.forEach(z => {
+    z.alarms = Math.max(0, z.alarms + Math.floor(Math.random()*3-1))
+    z.status = z.alarms > 10 ? 'danger' : (z.alarms > 3 ? 'warn' : 'normal')
+    if (markers[z.id]) {
+      markers[z.id].setStyle({fillColor: colorMap[z.status]})
+    }
+  })
+  renderZoneList()
+}, 5000)
+</script>
+</body>
+</html>
