@@ -49,6 +49,10 @@ class LearnedDevice:
     online: bool = True
     # 点位学习: proto → 出现过的寄存器/字段集合
     points: Dict[str, set] = field(default_factory=dict)
+    # 设备指纹 (同址换机检测): proto → 指纹特征
+    fingerprint: Dict[str, str] = field(default_factory=dict)
+    # 帧结构统计: proto → {min_len, max_len, len_hist: {len: count}}
+    frame_len_hist: Dict[str, dict] = field(default_factory=dict)
 
 
 @dataclass
@@ -80,6 +84,50 @@ class FlowLearner:
         self._stats["frames"] += 1
         self._learn_device(frame)
         self._learn_point(frame)
+        self._learn_fingerprint(frame)
+
+    # ── 设备指纹 + 帧结构漂移 (同址换机/协议变更检测) ──
+
+    def _learn_fingerprint(self, frame) -> None:
+        """学习设备指纹特征 + 帧长分布统计
+
+        指纹特征 (不依赖 MAC, 纯报文特征):
+          - DTU 注册帧标识 (宏电IMEI/映翰通IMEI/亿帆SID/有人ID/四信ID)
+          - A11 帧首字节序列 (frame[:4].hex())
+          - 报文长度分布 (帧结构漂移检测依据)
+        """
+        key = f"{frame.device_ip}:{frame.device_port}"
+        dev = self._devices.get(key)
+        if dev is None:
+            return
+        proto = frame.proto or "unknown"
+        payload = frame.payload
+
+        # 指纹: DTU 注册帧标识
+        fp = _extract_fingerprint(payload)
+        if fp:
+            dev.fingerprint[proto] = fp
+
+        # 帧长统计
+        hist = dev.frame_len_hist.setdefault(proto, {})
+        plen = len(payload)
+        hist.setdefault(str(plen), 0)
+        hist[str(plen)] += 1
+
+        # 漂移检测: 帧长超出历史均值 ±50% 且计数足够 → 结构变化
+        lens = [int(k) for k, c in hist.items() for _ in range(min(c, 5))]
+        if lens:
+            avg = sum(lens) / len(lens)
+            if plen > avg * 1.5 or plen < avg * 0.5:
+                if hist[str(plen)] >= 2:   # 新长度出现 2 次以上才算变化
+                    if self._stats.get("last_drift") != (key, proto, plen):
+                        self._stats["last_drift"] = (key, proto, plen)
+                        self._events.append(LearnEvent(
+                            frame.ts, "frame_drift", frame.device_ip,
+                            frame.device_port,
+                            f"proto={proto} 帧长 {plen} vs 历史均值 {avg:.0f}"))
+                        logger.info(f"[learner] 帧结构漂移: {frame.device_ip} "
+                                    f"proto={proto} len={plen} avg={avg:.0f}")
 
     def _learn_device(self, frame) -> None:
         """设备发现 + 保活"""
@@ -150,6 +198,10 @@ class FlowLearner:
             out.append({"ip": d.ip, "port": d.port, "protos": sorted(d.protos),
                         "packets": d.packets, "online": d.online,
                         "points": {p: len(s) for p, s in d.points.items()},
+                        "fingerprint": dict(d.fingerprint),
+                        "frame_lens": {p: sorted(
+                            (int(k), v) for k, v in h.items())
+                            for p, h in d.frame_len_hist.items()},
                         "first_seen": d.first_seen, "last_seen": d.last_seen})
         return out
 
@@ -192,6 +244,35 @@ def _extract_addresses(frame) -> List[int]:
         # A11: 从 payload 中提取长度与类型, 地址字段在帧中
         pass  # 地址结构由 protocol_decoder 精细解析
     return addrs
+
+
+# 5 厂商 DTU 注册帧签名 (对齐 dtu_listener.py)
+_DTU_SIGNATURES = {
+    b"\x78": ("hongdian", 1),     # 宏电: IMEI (偏移1, 15字节)
+    b"\x7b": ("inhand", 1),       # 映翰通: IMEI
+    b"\x40": ("yifan", 1),        # 亿帆: SID (偏移1, 10字节)
+    b"\x23": ("usr", 1),          # 有人: ID (偏移1, 6字节)
+    b"\x24": ("fourfaith", 1),    # 四信: ID (偏移1, 11字节)
+}
+
+
+def _extract_fingerprint(payload: bytes) -> str:
+    """从报文提取设备指纹 (同址换机检测)
+
+    返回形如 "hongdian:IMEIxxxx" / "a11:6a6a5a5a" 的特征串
+    """
+    if not payload:
+        return ""
+    # DTU 注册帧
+    sig = _DTU_SIGNATURES.get(payload[:1])
+    if sig:
+        vendor, _ = sig
+        ident = payload[1:16].decode("ascii", errors="ignore").strip("\x00")
+        return f"{vendor}:{ident[:20]}"
+    # A11 帧: MBAP+jjZZ 或裸 jjZZ
+    if payload[:4] == A11_MAGIC or payload[7:11] == A11_MAGIC:
+        return "a11:jjzz"
+    return ""
 
 
 # ═══════════════════════════════════════════
