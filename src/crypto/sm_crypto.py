@@ -223,35 +223,107 @@ def _sm4_decrypt_cbc(cipher: SM4, data: bytes, iv: bytes) -> bytes:
 # ═══════════════════════════════════════════
 # SM2 — 椭圆曲线公钥密码（国标 GB/T 32918-2016）
 # ═══════════════════════════════════════════
-# 简化实现：生产环境用 gmssl 库
-# 此处提供接口 + SHA256 回退用于开发测试
+# sm2p256v1 曲线纯 Python 实现（点加/倍乘/签名/验签）
+# 生产环境可替换为 gmssl / 硬件加密卡
+
+# sm2p256v1 曲线参数（GB/T 32918.5-2017 附录A）
+_SM2_P = 0xFFFFFFFEFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF00000000FFFFFFFFFFFFFFFF
+_SM2_A = 0xFFFFFFFEFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF00000000FFFFFFFFFFFFFFFC
+_SM2_B = 0x28E9FA9E9D9F5E344D5A9E4BCF6509A7F39789F515AB8F92DDBCBD414D940E93
+_SM2_N = 0xFFFFFFFEFFFFFFFFFFFFFFFFFFFFFFFF7203DF6B21C6052B53BBF40939D54123
+_SM2_GX = 0x32C4AE2C1F1981195F9904466A39C9948FE30BBFF2660BE1715A4589334C74C7
+_SM2_GY = 0xBC3736A2F4F6779C59BDCEE36B692153D0A9877CC62A474002DF32E52139F0A0
+
+
+def _modinv(a: int, m: int) -> int:
+    """扩展欧几里得求模逆"""
+    a %= m
+    x0, x1, b = 1, 0, m
+    while b:
+        q = a // b
+        a, b = b, a - q * b
+        x0, x1 = x1, x0 - q * x1
+    return x0 % m
+
+
+def _point_add(p1: Optional[tuple], p2: Optional[tuple]) -> Optional[tuple]:
+    """椭圆曲线点加（仿射坐标）"""
+    if p1 is None:
+        return p2
+    if p2 is None:
+        return p1
+    x1, y1 = p1
+    x2, y2 = p2
+    if x1 == x2:
+        if (y1 + y2) % _SM2_P == 0:
+            return None  # 无穷远点
+        lam = (3 * x1 * x1 + _SM2_A) * _modinv(2 * y1, _SM2_P) % _SM2_P
+    else:
+        lam = (y2 - y1) * _modinv(x2 - x1, _SM2_P) % _SM2_P
+    x3 = (lam * lam - x1 - x2) % _SM2_P
+    y3 = (lam * (x1 - x3) - y1) % _SM2_P
+    return (x3, y3)
+
+
+def _point_mul(k: int, p: tuple) -> Optional[tuple]:
+    """椭圆曲线标量乘（二进制展开）"""
+    r = None
+    while k:
+        if k & 1:
+            r = _point_add(r, p)
+        p = _point_add(p, p)
+        k >>= 1
+    return r
+
 
 class SM2:
-    """SM2 椭圆曲线密钥对 + 签名/验签（开发回退用 SHA256-SM3 混合）"""
+    """SM2 椭圆曲线密钥对 + 签名/验签（GB/T 32918.2）"""
 
     def __init__(self):
         self._private_key: Optional[bytes] = None
         self._public_key: Optional[bytes] = None
 
     def generate_keypair(self) -> Tuple[bytes, bytes]:
-        """生成 SM2 密钥对"""
-        self._private_key = os.urandom(32)
-        # 简化的公钥派生（生产环境用椭圆曲线点乘）
-        h = SM3()
-        h.update(self._private_key)
-        self._public_key = h.digest()
+        """生成 SM2 密钥对: d ∈ [1, n-1], P = dG"""
+        d = int.from_bytes(os.urandom(32), "big") % (_SM2_N - 1) + 1
+        P = _point_mul(d, (_SM2_GX, _SM2_GY))
+        self._private_key = d.to_bytes(32, "big")
+        self._public_key = (b"\x04" + P[0].to_bytes(32, "big") +
+                            P[1].to_bytes(32, "big"))  # 非压缩格式
         return self._private_key, self._public_key
 
     def sign(self, data: bytes, private_key: bytes = None) -> bytes:
-        """SM2 签名（回退: SM3-HMAC）"""
-        key = private_key or self._private_key
-        return sm3_hmac(key, data)
+        """SM2 签名（r,s 各 32 字节，共 64 字节）"""
+        d = int.from_bytes(private_key or self._private_key, "big")
+        e = int.from_bytes(sm3_hash(data), "big")
+        while True:
+            k = int.from_bytes(os.urandom(32), "big") % (_SM2_N - 1) + 1
+            x1, _ = _point_mul(k, (_SM2_GX, _SM2_GY))
+            r = (e + x1) % _SM2_N
+            if r == 0 or r + k == _SM2_N:
+                continue
+            s = _modinv(1 + d, _SM2_N) * (k - r * d) % _SM2_N
+            if s == 0:
+                continue
+            return r.to_bytes(32, "big") + s.to_bytes(32, "big")
 
     def verify(self, data: bytes, signature: bytes, public_key: bytes = None) -> bool:
-        """SM2 验签"""
-        key = public_key or self._public_key
-        expected = sm3_hmac(key, data)
-        return signature == expected
+        """SM2 验签: 验证 r, s ∈ [1,n-1], sG + tP = (e + x1) mod n"""
+        pub = public_key or self._public_key
+        if len(pub) != 65 or pub[0] != 0x04:
+            return False
+        P = (int.from_bytes(pub[1:33], "big"), int.from_bytes(pub[33:65], "big"))
+        r = int.from_bytes(signature[:32], "big")
+        s = int.from_bytes(signature[32:], "big")
+        if not (1 <= r <= _SM2_N - 1 and 1 <= s <= _SM2_N - 1):
+            return False
+        e = int.from_bytes(sm3_hash(data), "big")
+        t = (r + s) % _SM2_N
+        if t == 0:
+            return False
+        x1, _ = _point_add(_point_mul(s, (_SM2_GX, _SM2_GY)),
+                           _point_mul(t, P))
+        return (e + x1) % _SM2_N == r
 
 
 # ═══════════════════════════════════════════

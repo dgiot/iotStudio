@@ -11,7 +11,7 @@
 """
 import sys, os, time, json, random, statistics, threading, signal
 from datetime import datetime, timezone
-from collections import defaultdict
+from collections import defaultdict, deque
 from concurrent.futures import ThreadPoolExecutor
 import sqlite3
 
@@ -25,7 +25,7 @@ NUM_DEVICES = 500           # 设备数量（验收 ≥500）
 POINTS_PER_DEVICE = 20      # 每设备测点数（验收典型值）
 TOTAL_POINTS = NUM_DEVICES * POINTS_PER_DEVICE
 INTERVAL_MS = 500           # 采集间隔 ms（验收范围 500ms~60s）
-DURATION_HOURS = 1          # 测试时长（验收 24h，快速测试用 1h）
+DURATION_HOURS = float(os.environ.get("STRESS_HOURS", "1"))  # 测试时长（验收 24h，默认 1h，可用环境变量覆盖）
 DB_PATH = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "data", "stress_test.db")
 
 # 故障注入配置
@@ -159,7 +159,9 @@ class StressTestEngine:
             "total_pushes": 0,
             "total_alarms": 0,
             "total_errors": 0,
-            "latencies_us": [],
+            "latencies_us": deque(maxlen=20000),  # 滚动窗口，防内存无界增长
+            "lat_sum_us": 0.0,                     # 全量延迟累计（用于精确均值）
+            "lat_count": 0,
             "fault_events": [],
             "start_time": None,
         }
@@ -253,6 +255,8 @@ class StressTestEngine:
             # 模拟推送到 MQTT → 边缘中枢 → 流式引擎 → 写入
             latency_us = (time.perf_counter() - t0) * 1_000_000 / len(data)
             self._stats["latencies_us"].append(latency_us)
+            self._stats["lat_sum_us"] += latency_us
+            self._stats["lat_count"] += 1
 
             # 模拟告警判定（简单阈值）
             if pt["value"] > dev._baselines[pt["point_id"]] * 1.5:
@@ -315,8 +319,8 @@ class StressTestEngine:
         except ImportError:
             cpu, mem = 0, 0
 
-        lat = self._stats["latencies_us"][-1000:]  # last 1000
-        avg_lat = statistics.mean(lat) if lat else 0
+        lat = list(self._stats["latencies_us"])[-1000:]  # last 1000
+        avg_lat = self._stats["lat_sum_us"] / max(1, self._stats["lat_count"])
 
         self.db.execute(
             "INSERT INTO stress_snapshot VALUES (?,?,?,?,?,?,?)",
@@ -328,8 +332,9 @@ class StressTestEngine:
 
     def _report(self):
         elapsed = time.time() - self._stats["start_time"]
-        lats = self._stats["latencies_us"]
+        lats = list(self._stats["latencies_us"])
         lats_sorted = sorted(lats)
+        avg_lat_us = self._stats["lat_sum_us"] / max(1, self._stats["lat_count"])
 
         print()
         print("=" * 70)
@@ -342,7 +347,7 @@ class StressTestEngine:
         print(f"  故障注入:     {len(self._stats['fault_events'])} 次")
         print()
         print(f"  推送延迟 (us):")
-        print(f"    平均:       {statistics.mean(lats):>10.1f}")
+        print(f"    平均:       {avg_lat_us:>10.1f}")
         print(f"    P50:        {lats_sorted[len(lats)//2]:>10.1f}")
         print(f"    P95:        {lats_sorted[int(len(lats)*0.95)]:>10.1f}")
         print(f"    P99:        {lats_sorted[int(len(lats)*0.99)]:>10.1f}")
@@ -351,7 +356,6 @@ class StressTestEngine:
         print()
 
         # 验收判定
-        avg_lat_us = statistics.mean(lats)
         p95_lat_us = lats_sorted[int(len(lats)*0.95)]
         print("  验收判定:")
         print(f"    设备规模 ≥500:  {'PASS' if NUM_DEVICES >= 500 else 'FAIL'}")
