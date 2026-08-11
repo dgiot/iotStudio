@@ -1,0 +1,750 @@
+{
+  "nodes": [
+    {
+      "name": "南4联合站",
+      "symbolSize": 70,
+      "category": "场站"
+    },
+    {
+      "name": "IO服务器(131)",
+      "symbolSize": 55,
+      "category": "服务器"
+    },
+    {
+      "name": "pSpace(130)",
+      "symbolSize": 50,
+      "category": "服务器"
+    },
+    {
+      "name": "Oracle(129)",
+      "symbolSize": 50,
+      "category": "服务器"
+    },
+    {
+      "name": "开发机(155)",
+      "symbolSize": 40,
+      "category": "服务器"
+    },
+    {
+      "name": "DCS-A",
+      "symbolSize": 35,
+      "category": "DCS"
+    },
+    {
+      "name": "DCS-B",
+      "symbolSize": 35,
+      "category": "DCS"
+    },
+    {
+      "name": "DCS-C",
+      "symbolSize": 35,
+      "category": "DCS"
+    },
+    {
+      "name": "DCS-D",
+      "symbolSize": 35,
+      "category": "DCS"
+    },
+    {
+      "name": "DCS-E",
+      "symbolSize": 35,
+      "category": "DCS"
+    },
+    {
+      "name": "北9注水站",
+      "symbolSize": 35,
+      "category": "场站"
+    },
+    {
+      "name": "北15联合站",
+      "symbolSize": 35,
+      "category": "场站"
+    },
+    {
+      "name": "萨北21站",
+      "symbolSize": 35,
+      "category": "场站"
+    },
+    {
+      "name": "DX8ZRZ站",
+      "symbolSize": 35,
+      "category": "场站"
+    },
+    {
+      "name": "DX6PZ站",
+      "symbolSize": 35,
+      "category": "场站"
+    },
+    {
+      "name": "DX5ZRZ站",
+      "symbolSize": 35,
+      "category": "场站"
+    },
+    {
+      "name": "XZ202TP站",
+      "symbolSize": 35,
+      "category": "场站"
+    },
+    {
+      "name": "SYZ105ZYTWZ站",
+      "symbolSize": 35,
+      "category": "场站"
+    },
+    {
+      "name": "SY217Z1-4站",
+      "symbolSize": 35,
+      "category": "场站"
+    },
+    {
+      "name": "XZ208Z1-4站",
+      "symbolSize": 35,
+      "category": "场站"
+    },
+    {
+      "name": "JB1V2站",
+      "symbolSize": 35,
+      "category": "场站"
+    },
+    {
+      "name": "CommBridge.exe",
+      "symbolSize": 30,
+      "category": "进程"
+    },
+    {
+      "name": "IOMan.exe",
+      "symbolSize": 30,
+      "category": "进程"
+    },
+    {
+      "name": "IoMonitor.exe",
+      "symbolSize": 30,
+      "category": "进程"
+    },
+    {
+      "name": "IoProject.exe",
+      "symbolSize": 30,
+      "category": "进程"
+    },
+    {
+      "name": "IoCommit.exe",
+      "symbolSize": 30,
+      "category": "进程"
+    },
+    {
+      "name": "GPRSDLL.dll",
+      "symbolSize": 30,
+      "category": "进程"
+    },
+    {
+      "name": "RTU设备(191台)",
+      "symbolSize": 45,
+      "category": "设备"
+    },
+    {
+      "name": "12种保护装置",
+      "symbolSize": 35,
+      "category": "设备"
+    },
+    {
+      "name": "DSL-31A 断路器",
+      "symbolSize": 20,
+      "category": "设备"
+    },
+    {
+      "name": "DST-31A 变压器差动",
+      "symbolSize": 20,
+      "category": "设备"
+    },
+    {
+      "name": "DBPA-31A 备用电源",
+      "symbolSize": 20,
+      "category": "设备"
+    },
+    {
+      "name": "DSB-31A 变压器后备",
+      "symbolSize": 20,
+      "category": "设备"
+    },
+    {
+      "name": "电动机保护",
+      "symbolSize": 20,
+      "category": "设备"
+    },
+    {
+      "name": "DST-22D 变压器差动",
+      "symbolSize": 20,
+      "category": "设备"
+    },
+    {
+      "name": "A11",
+      "symbolSize": 25,
+      "category": "协议"
+    },
+    {
+      "name": "Modbus TCP",
+      "symbolSize": 25,
+      "category": "协议"
+    },
+    {
+      "name": "OPC DA ",
+      "symbolSize": 25,
+      "category": "协议"
+    },
+    {
+      "name": "Oracle TNS",
+      "symbolSize": 25,
+      "category": "协议"
+    },
+    {
+      "name": "CommBridge专有帧",
+      "symbolSize": 25,
+      "category": "协议"
+    },
+    {
+      "name": "DTU注册帧",
+      "symbolSize": 25,
+      "category": "协议"
+    },
+    {
+      "name": "Device.ini",
+      "symbolSize": 18,
+      "category": "配置"
+    },
+    {
+      "name": "IoChannelCfg.ini",
+      "symbolSize": 18,
+      "category": "配置"
+    },
+    {
+      "name": "SqlFilSet.ini",
+      "symbolSize": 18,
+      "category": "配置"
+    },
+    {
+      "name": "IoMonitor.ini",
+      "symbolSize": 18,
+      "category": "配置"
+    },
+    {
+      "name": "OPCClientCfg.ini",
+      "symbolSize": 18,
+      "category": "配置"
+    },
+    {
+      "name": "DeviceStruct.txt",
+      "symbolSize": 18,
+      "category": "配置"
+    },
+    {
+      "name": "Modbus采集链路",
+      "symbolSize": 30,
+      "category": "链路"
+    },
+    {
+      "name": "OPC DA采集链路",
+      "symbolSize": 30,
+      "category": "链路"
+    },
+    {
+      "name": "A11采集链路",
+      "symbolSize": 30,
+      "category": "链路"
+    },
+    {
+      "name": "Modbus测点(4567)",
+      "symbolSize": 22,
+      "category": "设备"
+    },
+    {
+      "name": "OPC测点(26081)",
+      "symbolSize": 25,
+      "category": "设备"
+    },
+    {
+      "name": "pSpace标签(16663)",
+      "symbolSize": 22,
+      "category": "设备"
+    },
+    {
+      "name": "L1",
+      "symbolSize": 20,
+      "category": "校验"
+    },
+    {
+      "name": "L2",
+      "symbolSize": 20,
+      "category": "校验"
+    },
+    {
+      "name": "L3",
+      "symbolSize": 20,
+      "category": "校验"
+    },
+    {
+      "name": "L4",
+      "symbolSize": 20,
+      "category": "校验"
+    },
+    {
+      "name": "L5",
+      "symbolSize": 20,
+      "category": "校验"
+    },
+    {
+      "name": "采集冲突边界",
+      "symbolSize": 30,
+      "category": "安全"
+    },
+    {
+      "name": "安全下发窗口",
+      "symbolSize": 28,
+      "category": "安全"
+    },
+    {
+      "name": "生产环境红线",
+      "symbolSize": 30,
+      "category": "安全"
+    },
+    {
+      "name": "采油二厂",
+      "symbolSize": 50,
+      "category": "场站"
+    },
+    {
+      "name": "采油三厂",
+      "symbolSize": 45,
+      "category": "场站"
+    },
+    {
+      "name": "第四作业区",
+      "symbolSize": 38,
+      "category": "场站"
+    },
+    {
+      "name": "第八作业区",
+      "symbolSize": 35,
+      "category": "场站"
+    },
+    {
+      "name": "dgiot_lite",
+      "symbolSize": 35,
+      "category": "链路"
+    }
+  ],
+  "links": [
+    {
+      "source": "南4联合站",
+      "target": "IO服务器(131)",
+      "label": "部署于"
+    },
+    {
+      "source": "IO服务器(131)",
+      "target": "pSpace(130)",
+      "label": "A11:8889"
+    },
+    {
+      "source": "IO服务器(131)",
+      "target": "Oracle(129)",
+      "label": "TNS:1521"
+    },
+    {
+      "source": "IO服务器(131)",
+      "target": "DCS-A",
+      "label": "OPC DA (172.23.9.3)"
+    },
+    {
+      "source": "IO服务器(131)",
+      "target": "DCS-B",
+      "label": "OPC DA (172.23.18.194)"
+    },
+    {
+      "source": "IO服务器(131)",
+      "target": "DCS-C",
+      "label": "OPC DA (172.26.6.3)"
+    },
+    {
+      "source": "IO服务器(131)",
+      "target": "DCS-D",
+      "label": "OPC DA (172.21.14.192)"
+    },
+    {
+      "source": "IO服务器(131)",
+      "target": "DCS-E",
+      "label": "OPC DA (172.28.5.200)"
+    },
+    {
+      "source": "DX8ZRZ站",
+      "target": "IO服务器(131)",
+      "label": "OPC DA采集"
+    },
+    {
+      "source": "DX6PZ站",
+      "target": "IO服务器(131)",
+      "label": "OPC DA采集"
+    },
+    {
+      "source": "DX5ZRZ站",
+      "target": "IO服务器(131)",
+      "label": "OPC DA采集"
+    },
+    {
+      "source": "XZ202TP站",
+      "target": "IO服务器(131)",
+      "label": "OPC DA采集"
+    },
+    {
+      "source": "SYZ105ZYTWZ站",
+      "target": "IO服务器(131)",
+      "label": "OPC DA采集"
+    },
+    {
+      "source": "IO服务器(131)",
+      "target": "CommBridge.exe",
+      "label": "运行"
+    },
+    {
+      "source": "CommBridge.exe",
+      "target": "RTU设备(191台)",
+      "label": "TCP:53001"
+    },
+    {
+      "source": "IoProject.exe",
+      "target": "IOMan.exe",
+      "label": "CreateProcess"
+    },
+    {
+      "source": "CommBridge.exe",
+      "target": "IoMonitor.exe",
+      "label": "WM_COPYDATA"
+    },
+    {
+      "source": "IoMonitor.exe",
+      "target": "Oracle(129)",
+      "label": "OLEDB写入"
+    },
+    {
+      "source": "IO服务器(131)",
+      "target": "IoProject.exe",
+      "label": "主引擎"
+    },
+    {
+      "source": "pSpace(130)",
+      "target": "IoCommit.exe",
+      "label": "psAPI"
+    },
+    {
+      "source": "IoCommit.exe",
+      "target": "Oracle(129)",
+      "label": "批量写入"
+    },
+    {
+      "source": "CommBridge.exe",
+      "target": "GPRSDLL.dll",
+      "label": "加载"
+    },
+    {
+      "source": "开发机(155)",
+      "target": "IO服务器(131)",
+      "label": "WinRM:5985"
+    },
+    {
+      "source": "RTU设备(191台)",
+      "target": "12种保护装置",
+      "label": "装配"
+    },
+    {
+      "source": "12种保护装置",
+      "target": "DSL-31A 断路器",
+      "label": "类型"
+    },
+    {
+      "source": "12种保护装置",
+      "target": "DST-31A 变压器差动",
+      "label": "类型"
+    },
+    {
+      "source": "12种保护装置",
+      "target": "DBPA-31A 备用电源",
+      "label": "类型"
+    },
+    {
+      "source": "12种保护装置",
+      "target": "DSB-31A 变压器后备",
+      "label": "类型"
+    },
+    {
+      "source": "12种保护装置",
+      "target": "电动机保护",
+      "label": "类型"
+    },
+    {
+      "source": "12种保护装置",
+      "target": "DST-22D 变压器差动",
+      "label": "类型"
+    },
+    {
+      "source": "IO服务器(131)",
+      "target": "A11",
+      "label": "到pSpace"
+    },
+    {
+      "source": "IO服务器(131)",
+      "target": "Modbus TCP",
+      "label": "到RTU"
+    },
+    {
+      "source": "IO服务器(131)",
+      "target": "OPC DA",
+      "label": "到DCS"
+    },
+    {
+      "source": "IO服务器(131)",
+      "target": "Oracle TNS",
+      "label": "到Oracle"
+    },
+    {
+      "source": "CommBridge.exe",
+      "target": "CommBridge专有帧",
+      "label": "封装"
+    },
+    {
+      "source": "IO服务器(131)",
+      "target": "Device.ini",
+      "label": "读取"
+    },
+    {
+      "source": "IO服务器(131)",
+      "target": "IoChannelCfg.ini",
+      "label": "读取"
+    },
+    {
+      "source": "IO服务器(131)",
+      "target": "SqlFilSet.ini",
+      "label": "读取"
+    },
+    {
+      "source": "IO服务器(131)",
+      "target": "IoMonitor.ini",
+      "label": "读取"
+    },
+    {
+      "source": "IO服务器(131)",
+      "target": "OPCClientCfg.ini",
+      "label": "读取"
+    },
+    {
+      "source": "IO服务器(131)",
+      "target": "DeviceStruct.txt",
+      "label": "读取"
+    },
+    {
+      "source": "RTU设备(191台)",
+      "target": "Modbus采集链路",
+      "label": ""
+    },
+    {
+      "source": "Modbus采集链路",
+      "target": "IO服务器(131)",
+      "label": "实时"
+    },
+    {
+      "source": "DCS-A",
+      "target": "OPC DA采集链路",
+      "label": ""
+    },
+    {
+      "source": "OPC DA采集链路",
+      "target": "IO服务器(131)",
+      "label": "实时"
+    },
+    {
+      "source": "pSpace(130)",
+      "target": "A11采集链路",
+      "label": ""
+    },
+    {
+      "source": "A11采集链路",
+      "target": "IO服务器(131)",
+      "label": "1-5s"
+    },
+    {
+      "source": "Modbus采集链路",
+      "target": "Modbus测点(4567)",
+      "label": ""
+    },
+    {
+      "source": "OPC DA采集链路",
+      "target": "OPC测点(26081)",
+      "label": ""
+    },
+    {
+      "source": "A11采集链路",
+      "target": "pSpace标签(16663)",
+      "label": ""
+    },
+    {
+      "source": "L1",
+      "target": "L2",
+      "label": "升级"
+    },
+    {
+      "source": "L2",
+      "target": "L3",
+      "label": "升级"
+    },
+    {
+      "source": "L3",
+      "target": "L4",
+      "label": "升级"
+    },
+    {
+      "source": "L4",
+      "target": "L5",
+      "label": "升级"
+    },
+    {
+      "source": "IO服务器(131)",
+      "target": "L1",
+      "label": "校验入口"
+    },
+    {
+      "source": "IO服务器(131)",
+      "target": "采集冲突边界",
+      "label": "约束"
+    },
+    {
+      "source": "采集冲突边界",
+      "target": "安全下发窗口",
+      "label": "允许"
+    },
+    {
+      "source": "IO服务器(131)",
+      "target": "生产环境红线",
+      "label": "强制"
+    },
+    {
+      "source": "采油二厂",
+      "target": "第四作业区",
+      "label": "管辖"
+    },
+    {
+      "source": "第四作业区",
+      "target": "南4联合站",
+      "label": "管辖"
+    },
+    {
+      "source": "采油三厂",
+      "target": "第八作业区",
+      "label": "管辖"
+    },
+    {
+      "source": "第八作业区",
+      "target": "北9注水站",
+      "label": "管辖"
+    },
+    {
+      "source": "第八作业区",
+      "target": "北15联合站",
+      "label": "管辖"
+    },
+    {
+      "source": "第八作业区",
+      "target": "萨北21站",
+      "label": "管辖"
+    },
+    {
+      "source": "开发机(155)",
+      "target": "dgiot_lite",
+      "label": "部署"
+    },
+    {
+      "source": "dgiot_lite",
+      "target": "Modbus采集链路",
+      "label": "替代CommBridge"
+    },
+    {
+      "source": "dgiot_lite",
+      "target": "OPC DA采集链路",
+      "label": "直读Oracle"
+    },
+    {
+      "source": "dgiot_lite",
+      "target": "A11采集链路",
+      "label": "psAPISDK待认证"
+    }
+  ],
+  "categories": [
+    {
+      "name": "场站",
+      "itemStyle": {
+        "color": "#e74c3c"
+      }
+    },
+    {
+      "name": "服务器",
+      "itemStyle": {
+        "color": "#3498db"
+      }
+    },
+    {
+      "name": "进程",
+      "itemStyle": {
+        "color": "#2ecc71"
+      }
+    },
+    {
+      "name": "协议",
+      "itemStyle": {
+        "color": "#9b59b6"
+      }
+    },
+    {
+      "name": "设备",
+      "itemStyle": {
+        "color": "#f39c12"
+      }
+    },
+    {
+      "name": "DCS",
+      "itemStyle": {
+        "color": "#1abc9c"
+      }
+    },
+    {
+      "name": "配置",
+      "itemStyle": {
+        "color": "#95a5a6"
+      }
+    },
+    {
+      "name": "校验",
+      "itemStyle": {
+        "color": "#e67e22"
+      }
+    },
+    {
+      "name": "约束",
+      "itemStyle": {
+        "color": "#c0392b"
+      }
+    },
+    {
+      "name": "数据流",
+      "itemStyle": {
+        "color": "#16a085"
+      }
+    },
+    {
+      "name": "安全",
+      "itemStyle": {
+        "color": "#8e44ad"
+      }
+    },
+    {
+      "name": "链路",
+      "itemStyle": {
+        "color": "#2c3e50"
+      }
+    }
+  ]
+}

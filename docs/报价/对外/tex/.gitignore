@@ -1,0 +1,6 @@
+# LaTeX 编译辅助产物（源码目录只保留 .tex）
+*.aux
+*.log
+*.out
+*.toc
+*.synctex.gz

@@ -4,6 +4,8 @@ import 'element-plus/dist/index.css'
 import './style.css'
 import './styles/variables.css'
 import zhCn from 'element-plus/dist/locale/zh-cn.mjs'
+import en from 'element-plus/dist/locale/en.mjs'
+import i18n from './i18n/index.js'
 import * as ElIcons from '@element-plus/icons-vue'
 import ECharts from 'vue-echarts'
 import { use } from 'echarts/core'
@@ -22,7 +24,9 @@ import { tabsState } from './stores/tabs.js'        // 4. 多标签页
 use([CanvasRenderer, LineChart, BarChart, PieChart, GaugeChart, GridComponent, TooltipComponent, LegendComponent, TitleComponent, DataZoomComponent])
 
 const app = createApp(App)
-app.use(ElementPlus, { locale: zhCn })
+const elLocales = { zh: zhCn, en }
+app.use(ElementPlus, { locale: i18n.global.locale.value === 'zh' ? zhCn : en })
+app.use(i18n)
 app.use(router)
 app.component('v-chart', ECharts)
 

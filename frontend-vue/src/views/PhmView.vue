@@ -47,49 +47,19 @@
 </template>
 
 <script setup>
-import { ref, onMounted, nextTick } from 'vue'
+import { ref, onMounted, onUnmounted, nextTick } from 'vue'
 import * as echarts from 'echarts'
 import api from '../api'
 
-const equipments = ref([
-  { id:'C-10201', icon:'⚙️', name:'离心压缩机', model:'MCL526+2BCL458', healthScore:82, level:'正常', rulDays:365, faults:[
-    {mode:'轴承磨损',probability:0.12,severity:'低',action:'按计划巡检，无需干预'},
-    {mode:'不对中',probability:0.05,severity:'低',action:'下次停机时检查对中'},
-    {mode:'不平衡',probability:0.08,severity:'低',action:'监控振动趋势'},
-    {mode:'喘振',probability:0.03,severity:'高',action:'检查防喘振阀工作状态'},
-    {mode:'润滑失效',probability:0.15,severity:'中',action:'安排更换润滑油'},
-    {mode:'气蚀',probability:0.02,severity:'低',action:'检查入口过滤器'},
-    {mode:'密封失效',probability:0.10,severity:'中',action:'检查密封气压力'},
-  ]},
-  { id:'PLPT-526', icon:'🌀', name:'膨胀机', model:'PLPT-526/46-12', healthScore:91, level:'正常', rulDays:580, faults:[
-    {mode:'轴承磨损',probability:0.06,severity:'低',action:'正常巡检'},
-    {mode:'不对中',probability:0.03,severity:'低',action:'—'},
-    {mode:'不平衡',probability:0.04,severity:'低',action:'—'},
-    {mode:'喘振',probability:0.01,severity:'高',action:'检查进口导叶'},
-    {mode:'润滑失效',probability:0.08,severity:'低',action:'—'},
-    {mode:'气蚀',probability:0.02,severity:'低',action:'—'},
-    {mode:'密封失效',probability:0.07,severity:'中',action:'监控密封气压差'},
-  ]},
-  { id:'CAMV44', icon:'💧', name:'外输泵', model:'CAMV44/5+5', healthScore:68, level:'警告', rulDays:120, faults:[
-    {mode:'轴承磨损',probability:0.25,severity:'中',action:'准备备件，安排更换'},
-    {mode:'不对中',probability:0.10,severity:'中',action:'检查联轴器'},
-    {mode:'不平衡',probability:0.05,severity:'低',action:'—'},
-    {mode:'喘振',probability:0.02,severity:'高',action:'检查进出口阀门'},
-    {mode:'润滑失效',probability:0.35,severity:'高',action:'立即安排更换润滑油'},
-    {mode:'气蚀',probability:0.18,severity:'中',action:'检查吸入压力'},
-    {mode:'密封失效',probability:0.22,severity:'中',action:'检查机械密封'},
-  ]},
-  { id:'inv_01', icon:'☀️', name:'光伏逆变器#1', model:'SUN2000-50KTL', healthScore:95, level:'正常', rulDays:1825, faults:[
-    {mode:'轴承磨损',probability:0.01,severity:'低',action:'—'},
-    {mode:'不平衡',probability:0.01,severity:'低',action:'—'},
-    {mode:'润滑失效',probability:0.03,severity:'低',action:'—'},
-    {mode:'气蚀',probability:0,severity:'低',action:'—'},
-    {mode:'密封失效',probability:0.02,severity:'低',action:'—'},
-  ]},
-])
+const equipments = ref([])
 
 const selected = ref(null)
 const healthChart = ref(null)
+let timer = null
+
+async function loadEquipments() {
+  try { const r = await api.get('/phm/equipments'); equipments.value = r.equipments || [] } catch {}
+}
 
 function scoreColor(s) { return s>=80?'#66bb6a':s>=60?'#ffa726':s>=40?'#ef5350':'#f44336' }
 function selectEquip(e) { selected.value = e; nextTick(()=>initChart()) }
@@ -105,7 +75,8 @@ function initChart() {
   })
 }
 
-onMounted(async ()=>{})
+onMounted(async ()=>{ loadEquipments(); timer = setInterval(loadEquipments, 10000) })
+onUnmounted(()=>{clearInterval(timer)})
 </script>
 
 <style scoped>

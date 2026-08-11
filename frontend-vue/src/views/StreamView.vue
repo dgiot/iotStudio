@@ -4,9 +4,12 @@
     <p style="color:#8aa0b4;font-size:13px;margin:0 0 16px">
       15种边缘算法实时执行 | 滑动窗口 (deque, max 20)
       <span style="margin-left:12px;background:#152a40;padding:2px 8px;border-radius:4px;font-size:12px">
-        📡 作用域:
-        <el-tag v-for="t in [...new Set(liveDevices.map(d=>d.dtype))]" :key="t" size="small" type="primary" effect="dark" style="margin-left:4px">{{ t }}</el-tag>
-        <span style="margin-left:6px;color:#66d9ff;font-weight:bold">{{ liveDevices.length }}</span> 条数据流
+        ⚡ QPS {{ streamStats.qps }} | 📊 {{ (streamStats.total_processed||0).toLocaleString() }}
+        <span v-if="streamStats.total_alarms" style="margin-left:4px;color:#ffa726">⚠️ {{ streamStats.total_alarms }}告警</span>
+      </span>
+      <span style="margin-left:8px;background:#152a40;padding:2px 8px;border-radius:4px;font-size:12px">
+        📡 作用域: <el-tag v-for="t in streamStats.scope_types" :key="t" size="small" type="primary" effect="dark" style="margin-left:4px">{{ t }}</el-tag>
+        <span style="margin-left:6px;color:#66d9ff;font-weight:bold">{{ streamStats.live_streams?.length||liveDevices.length }}</span> 条数据流
       </span>
     </p>
 
@@ -72,7 +75,18 @@
 
       <!-- 第3栏: 实时特征值 -->
       <div class="col-right">
-        <div class="col-title">📊 窗口特征值 (n={{ WINDOW_SIZE }})</div>
+        <div class="col-title">📡 实时数据流 ({{ streamStats.live_streams?.length||0 }}条)</div>
+        <div class="col-meta">产品类型→设备→测点的真实数据流，算法对其逐点处理</div>
+        <div class="feat-scroll">
+          <div v-for="s in (streamStats.live_streams||[])" :key="s.did+s.point" class="feat-row" style="border-left:3px solid #67C23A">
+            <div class="fr-top">
+              <el-tag size="small" type="success">{{ s.dtype }}</el-tag>
+              <span class="fr-dev">{{ s.did }}</span>
+              <span class="fr-pt">{{ s.point }}={{ s.val }}{{ s.unit }}</span>
+            </div>
+          </div>
+        </div>
+        <div class="col-title" style="margin-top:12px">📊 窗口特征值 (n={{ WINDOW_SIZE }})</div>
         <div class="col-meta">对作用域内每条数据流计算统计特征，算法基于此判定</div>
         <div class="feat-scroll">
           <div v-for="f in pagedFeatures" :key="f.device+f.point" class="feat-row">
@@ -126,6 +140,26 @@ const algorithms = ref([
 ].map(a => ({...a, ...(saved[a.name]||{})})))
 
 const scopeTypes = ref(['oilwell','compressor','inverter','pcs'])
+const streamStats = ref({qps:0, total_processed:0, total_alarms:0, algorithms:[], live_streams:[], scope_types:[]})
+async function loadStreamStatus() {
+  try { const r = await api.get('/stream/status'); streamStats.value = r
+    scopeTypes.value = r.scope_types || ['oilwell','compressor','inverter','pcs']
+    // 更新算法计数
+    if (r.algorithms) {
+      const activeOnes = r.algorithms.filter(a=>a.active)
+      algorithms.value.forEach(a=>{
+        const found = activeOnes.find(s=>s.name===a.name||s.name.includes(a.name.slice(0,2)))
+        if (found) { a.count = found.processed; a.alarms = found.alarms; a.lastRun = found.last }
+      })
+    }
+  } catch {}
+}
+async function loadScopeTypes() {
+  try { const r = await api.get('/classes/Product'); const prods = r.results || []
+    scopeTypes.value = prods.map(p => p.objectId).filter(Boolean)
+    if (!scopeTypes.value.length) scopeTypes.value = ['oilwell','compressor','inverter','pcs']
+  } catch {}
+}
 
 // 分页
 const algoPage = ref(1); const algoPageSize = 10
@@ -248,8 +282,8 @@ async function refresh() {
   windowFeatures.value = features
 }
 
-onMounted(()=>{ refresh(); timer=setInterval(refresh, 8000) })
-onUnmounted(()=>clearInterval(timer))
+onMounted(()=>{ loadScopeTypes(); loadStreamStatus(); refresh(); timer=setInterval(refresh, 8000); timer2=setInterval(loadStreamStatus, 5000) })
+onUnmounted(()=>{clearInterval(timer);clearInterval(timer2)})
 </script>
 
 <style scoped>

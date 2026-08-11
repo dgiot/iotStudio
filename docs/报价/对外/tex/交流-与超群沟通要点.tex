@@ -1,0 +1,98 @@
+% ============================================================
+% 交流要点（一页精简版）— 供与超群沟通使用
+% 口径对齐: 报价书 / 附件②③④⑥ / 全景论证 / 交流要点.md
+% 编译: xelatex -interaction=nonstopmode 交流-与超群沟通要点.tex
+% ============================================================
+\documentclass[10pt,a4paper]{ctexart}
+\usepackage{xeCJK}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{fancyhdr}
+\usepackage{hyperref}
+\usepackage{geometry}
+\usepackage{booktabs}
+\usepackage{enumitem}
+\usepackage{array}
+\usepackage[compact]{titlesec}
+
+% 字体
+\setCJKmainfont{Microsoft YaHei}
+
+% 页面
+\geometry{a4paper, margin=1.4cm}
+
+% 节标题与列表间距压缩
+\ctexset{section={beforeskip=4pt, afterskip=4pt}}
+\setlist{leftmargin=1.2em, itemsep=0pt, topsep=2pt, parsep=0pt}
+
+% 页眉页脚
+\pagestyle{fancy}
+\fancyhead[L]{时序数据采集与应用管理系统 — 交流要点}
+\fancyhead[R]{精简版}
+\fancyfoot[C]{\thepage}
+
+\hypersetup{
+  colorlinks=true, linkcolor=black, urlcolor=blue,
+  pdftitle={时序数据采集与应用管理系统交流要点},
+}
+
+\begin{document}
+
+\begin{center}
+{\Large\bfseries 时序数据采集与应用管理系统 — 交流要点}\\[2pt]
+{\small 精简版（1 页）\quad 2026-08 \quad 完整材料：报价书 + 附件②③④⑥ + 全景论证}
+\end{center}
+
+\vspace{0.2em}
+\noindent\hrulefill
+\vspace{0.3em}
+
+\section*{1. 项目是什么（一句话）}
+
+在\textbf{不改 A11、不替代 A11} 的前提下，以\textbf{路由监听双路采集}方式，为油田补上 A11 给不了的\textbf{高频、动态、差异化、信创化}时序数据能力——\textbf{全域感知、多维联动}；\textbf{A11 管存量，本项目管增量}。
+
+\section*{2. 为什么要做}
+
+油田日益精细化的运行需求（逐井逐工况差异化采集、高频异常秒级预警、动态设备统一感知）与 A11 标准固化体系（统一点位、统一频率、全系统一种节奏）矛盾日益突出——\textbf{瓶颈不在算法}（局地试点已验证），\textbf{在数据密度与采集灵活性}（A11 分钟级抽吸，高频异常在刷新间隙内抓不到）；改造 A11 统建系统代价极大（亿元级），本方案以\textbf{极低投入}获得同等数据能力。
+
+\section*{3. 怎么做（两条采集路径）}
+
+\begin{table}[H]\centering
+\begin{tabular}{p{4.6cm} p{4.9cm} p{4.6cm}}
+\toprule
+\textbf{终端类型} & \textbf{方式} & \textbf{特点} \\
+\midrule
+静态 IP 终端（设备侧为服务端） & \textbf{客户端主动连接采集}（旁路） & 设备侧无感知，原链路不动 \\
+动态 IP 终端（4G，设备侧为客户端） & \textbf{抢占原服务器 IP:端口做桥接}：复制一份 + 原样转发原 A11 服务 & 设备配置零改动，\textbf{数据流始终全量流向 A11} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+桥接切换遵循三条操作纪律：\textbf{窗口期极短}（低峰执行，秒级，目标毫秒级）· \textbf{切换前业务流摸清}（设备/会话/端口/保活逐项建档）· \textbf{异常即时回退}（秒级切回原 IP:端口，链路自动恢复）。
+
+\section*{4. 关键约束}
+
+A11 保留运行，全部既有配置（点位/物模型/资产体系）与业务系统集成关系原样保留、不中断；硬件投入极少：新增仅 \textbf{2--3 台服务器}，其余全利旧，软件部署于既有 IO 服务器（CPU $<$5\%、延迟 $<$20$\mu$s）；主数据唯一源头、两层部署（DMZ 只转发不存）、全栈源码交付。
+
+\section*{5. 价值与投入}
+
+\begin{itemize}[leftmargin=*, itemsep=1pt]
+  \item \textbf{核心能力：全域感知}（全终端/全协议/全量高频采集，动态设备统一感知）\textbf{· 多维联动}（多源数据联合判定、告警分级闭环通知）；
+  \item \textbf{价值（最优：定制化流水计算）}：15 种油田算法 + \textbf{每作业区独立定制算法}（逐井逐工况、注册制），入库前判定、告警秒级——通用开源流引擎给不了油田级定制，\textbf{这是以前想要也要不到的}；
+  \item 其次：500ms--60s 动态调频（异常加密到秒级）· 10 家网关厂家适配 · 逐井调优 · 信创全栈适配；
+  \item \textbf{投入}：总价 \textbf{725.04 万}，与官方功能点测算金额完全一致；软件产品资产约占四成，新作业区按"区数 $\times$ 单价"扩展、推广其他油田时核心资产零成本复用；
+  \item \textbf{交付}：约 4 个月（2026-11-30 前）、全栈源码 + 文档、甲方团队跟学共建可独立运维、3 年免费运维。
+\end{itemize}
+
+\section*{6. 待现场核实 / 协同事项}
+
+\textcircled{1} 终端接入形态（静态/动态占比）与授权开发凭证（IP、端口、账号）——现场调研确认；\textcircled{2} 桥接切换协同：窗口需甲方批准、三方值守（甲方运维、A11 服务方、我方）；\textcircled{3} 试点 10 作业区先行验证，再按实际覆盖扩展二期。
+
+\vspace{0.5em}
+\noindent\hrulefill
+
+\begin{center}
+\small 编制单位：迪格(杭州)物联科技有限公司 \quad 2026-08
+\end{center}
+
+\end{document}

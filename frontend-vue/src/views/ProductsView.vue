@@ -33,6 +33,7 @@
           <span class="dp-title">{{ selected.label }} — 物模型 (TSL)</span>
           <el-tag size="small" :type="tslStatus==='draft'?'warning':'success'" style="margin-left:8px">{{ tslStatus==='draft'?'草稿':'已发布' }}</el-tag>
           <span class="dp-sub">产品类型: {{ selected.key }} | {{ thingPoints.length }} 个测点</span>
+          <el-button size="small" type="warning" @click="autoCreateChannels(selected.key)" style="margin-left:12px">⚡ 生成三通道</el-button>
         </div>
         <div class="dp-actions">
           <span>{{ activeZone }} ({{ zoneData.length }} 项)</span>
@@ -51,7 +52,7 @@
         <div class="zone-desc">{{ zones.find(z=>z.key===activeZone)?.desc }}</div>
         <el-table :data="pagedPoints" size="small" max-height="320" v-loading="loading" stripe>
           <el-table-column label="分区" :min-width="50" align="center">
-            <template #default="{row}"><el-tag size="small" :type="row.zone==='services'?'warning':row.zone==='events'?'danger':''" effect="dark">{{ zoneLabel(row.zone) }}</el-tag></template>
+            <template #default="{row}"><el-tag size="small" :type="row.zone==='services'?'warning':row.zone==='events'?'danger':row.zone==='ontology'?'success':''" effect="dark">{{ row.type||zoneLabel(row.zone) }}</el-tag></template>
           </el-table-column>
           <el-table-column prop="identifier" label="标识符" :min-width="col('lg')" show-overflow-tooltip />
           <el-table-column prop="name" label="名称" :min-width="col('md')" />
@@ -158,8 +159,9 @@ import { PROTOCOLS, DATA_TYPES } from '../utils/constants'
 
 const COLS = { xs:40, sm:65, md:85, lg:115, xl:170 }
 function col(k) { return COLS[k]||80 }
-function zoneLabel(z) { return z==='props'?'属性':z==='events'?'事件':'服务' }
+function zoneLabel(z) { return z==='props'?'属性':z==='events'?'事件':z==='services'?'服务':z==='ontology'?'本体':'—' }
 
+const ICONS = { oil_well:'🛢️', water_injection:'💧', rtu:'📡', dcs:'🖥️', relay:'🔌', compressor:'⚙️', pipeline:'🔗', gas_injection:'💨', dewater:'💦' }
 const products = ref([  // DG-IoT Product aligned: devType, nodeType, netType
   { key:'inverter', icon:'☀️', name:'光伏逆变器', devType:'inverter', nodeType:0, netType:'ethernet', cat:'energy', desc:'光储充核心设备', count:0, pointCount:0 },
   { key:'pcs', icon:'🔋', name:'储能PCS', devType:'pcs', nodeType:0, netType:'ethernet', cat:'energy', desc:'电池储能变流控制', count:0, pointCount:0 },
@@ -196,29 +198,50 @@ const zones = [
   { key: 'props', label: '属性', desc: '设备采集与监控数据点 — 只读采集值' },
   { key: 'events', label: '事件', desc: '设备主动上报的事件与告警 — 只读状态位' },
   { key: 'services', label: '服务', desc: '可写控制参数与阈值设定 — 读写配置' },
+  { key: 'ontology', label: '本体', desc: '五层实体: Site→Gateway→Channel→Device→Point' },
 ]
-const zoneData = computed(() => thingPoints.value.filter(p => (p.zone||'props') === activeZone.value))
+const zoneData = computed(() => {
+  if (activeZone.value === 'ontology') return ontoEntities.value
+  return thingPoints.value.filter(p => (p.zone||'props') === activeZone.value)
+})
+const ontoEntities = ref([])
+async function loadOntology(devType) {
+  try {
+    const r = await fetch('/api/fde/wizard/compile', {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({devType: devType||'oil_well'})})
+    const d = await r.json()
+    const entities = d.entities || {}
+    ontoEntities.value = [
+      {identifier:'site',name:entities.site||'—',zone:'ontology',type:'Site',dataType:'',unit:'',range:'',alarm_high:'',alarm_low:''},
+      {identifier:'gateway',name:entities.gateway||'—',zone:'ontology',type:'Gateway',dataType:'',unit:'',range:'',alarm_high:'',alarm_low:''},
+      {identifier:'channel',name:entities.channel||'—',zone:'ontology',type:'Channel',dataType:'',unit:'',range:'',alarm_high:'',alarm_low:''},
+      {identifier:'device',name:entities.device||'—',zone:'ontology',type:'Device',dataType:'',unit:'',range:'',alarm_high:'',alarm_low:''},
+    ]
+    if (entities.points) entities.points.forEach(p => ontoEntities.value.push({identifier:p,name:p.replace('pt_'+devType+'_',''),zone:'ontology',type:'Point',dataType:'',unit:'',range:'',alarm_high:'',alarm_low:''}))
+    if (entities.constraints) entities.constraints.forEach(c => ontoEntities.value.push({identifier:c,name:c.replace('c_'+devType+'_',''),zone:'ontology',type:'Constraint',dataType:'',unit:'',range:'',alarm_high:'',alarm_low:''}))
+  } catch {}
+}
 const pagedPoints = computed(() => zoneData.value.slice((ptPage.value-1)*ptPageSize.value, ptPage.value*ptPageSize.value))
 const ptForm = ref({ point_id:'', point_name:'', data_type:'float32', unit:'', min_val:0, max_val:9999, alarm_low:null, alarm_high:null, category:'electrical', register_addr:'', protocol:'modbus_tcp', register_type:'3', zone:'props' })
 const dtypes = DATA_TYPES
 const protocols = PROTOCOLS
 
 async function selectProduct(p) {
-  selected.value = p; ptPage.value = 1; activeZone.value = 'props'; tslStatus.value = 'published'
-  loading.value = true
+  selected.value = p; ptPage.value = 1; activeZone.value = 'props'; tslStatus.value = 'published'; loadOntology(p.devType||p.objectId)
+  const tsl = p.thing || {}
+  thingPoints.value = [
+    ...(tsl.properties||[]).map(x => ({identifier:x.id, name:x.name||x.id, dataType:x.dataType||'float32', unit:x.unit||'', zone:'props'})),
+    ...(tsl.events||[]).map(x => ({identifier:x.id, name:x.name||x.id, dataType:'event', zone:'events'})),
+    ...(tsl.services||[]).map(x => ({identifier:x.id, name:x.name||x.id, dataType:'service', zone:'services'})),
+  ]
+  p.pointCount = thingPoints.value.length
+}
+
+async function autoCreateChannels(productId) {
   try {
-    const r = await api.get(`/products/${p.key}/model`)
-    const pts = (r.data||{}).points||{}
-    thingPoints.value = Object.entries(pts).map(([k,v]) => ({
-      identifier: k, name: v.name||k, dataType: v.type||'float32',
-      unit: v.unit||'', min: v.min, max: v.max,
-      category: v.category||'—', register_addr: v.register_addr||'—',
-      alarm_low: v.alarm_low, alarm_high: v.alarm_high,
-      zone: v.zone||(v.register_type==='3'||v.register_type==='4'?'services':(v.register_type==='1'||v.register_type==='2'?'events':'props')),
-    }))
-    p.pointCount = thingPoints.value.length
-  } catch { thingPoints.value = [] }
-  loading.value = false
+    const r = await fetch(`/api/product/${productId}/channels`, { method: 'POST' })
+    const d = await r.json()
+    ElMessage.success(`三通道自动创建: ${d.channels.length}个 (采集+时序+任务)`)
+  } catch { ElMessage.error('创建失败') }
 }
 
 function exportAll() {
@@ -310,21 +333,21 @@ async function delPoint(row) {
 
 
 onMounted(async () => {
+  // 从 Parse API 加载产品列表
   try {
-    const r = await api.get('/devices', {params:{page_size:200}})
-    ;(r.data.devices||[]).forEach(d => {
-      const p = products.value.find(x=>x.key===d.device_type)
-      if (p) p.count++
-    })
-  } catch {}
-  // 预加载所有产品的测点数 + 默认选中第一个
-  for (const p of products.value) {
+    const pr = await api.get('/classes/Product')
+    const list = (pr.results||[]).map(p => ({
+      key: p.devType, devType: p.devType, label: p.name, name: p.name, icon: ICONS[p.devType]||'📦',
+      count: 0, pointCount: (p.thing?.properties||[]).length, thing: p.thing||{}
+    }))
+    // 统计设备数
     try {
-      const r = await api.get(`/products/${p.key}/model`)
-      p.pointCount = Object.keys((r.data||{}).points||{}).length
-    } catch { p.pointCount = 0 }
-  }
-  if (products.value.length > 0) selectProduct(products.value[0])
+      const dr = await api.get('/devices', {params:{page_size:500}})
+      ;(dr.devices||[]).forEach(d => { const p = list.find(x => x.key === d.devType); if (p) p.count++ })
+    } catch {}
+    products.value = list
+    if (list.length > 0) selectProduct(list[0])
+  } catch(e) { console.error('load products:', e) }
 })
 </script>
 

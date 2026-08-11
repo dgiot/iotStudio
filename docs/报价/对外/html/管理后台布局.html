@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family:'Microsoft YaHei',sans-serif; background:#f0f2f5; display:flex; justify-content:center; padding:40px; }
+.frame { width:1200px; background:#fff; border-radius:8px; box-shadow:0 2px 20px rgba(0,0,0,0.1); overflow:hidden; }
+/* 顶部 */
+.topbar { display:flex; align-items:center; background:#1a1a2e; color:#e0e0e0; padding:0 20px; height:44px; gap:16px; font-size:13px; }
+.topbar .dot { width:8px; height:8px; background:#22c55e; border-radius:50%; }
+.topbar .search { flex:1; max-width:260px; background:#16213e; border:1px solid #2a3a5a; border-radius:4px; padding:5px 12px; color:#94a3b8; font-size:12px; }
+.topbar .bell { position:relative; }
+.topbar .bell .badge { position:absolute; top:-5px; right:-7px; background:#ef4444; color:#fff; font-size:10px; border-radius:8px; padding:0 5px; line-height:16px; }
+.topbar .user { margin-left:auto; color:#94a3b8; }
+/* 主体 */
+.layout { display:flex; height:600px; }
+/* 侧栏 */
+.sidebar { width:180px; background:#f8f9fb; border-right:1px solid #e5e7eb; padding:8px 0; }
+.sidebar .title { padding:10px 16px; font-size:12px; color:#9ca3af; font-weight:bold; letter-spacing:1px; }
+.sidebar .item { display:flex; align-items:center; gap:8px; padding:10px 16px; font-size:13px; color:#374151; cursor:pointer; border-left:3px solid transparent; transition:all .15s; }
+.sidebar .item:hover { background:#eef2ff; color:#1d4ed8; }
+.sidebar .item.active { background:#eef2ff; color:#1d4ed8; border-left-color:#3b82f6; font-weight:bold; }
+.sidebar .item .icon { font-size:14px; }
+/* 主区 */
+.main { flex:1; padding:24px; display:flex; flex-direction:column; justify-content:center; align-items:center; }
+.main .placeholder { width:100%; height:100%; border:2px dashed #d1d5db; border-radius:8px; display:flex; flex-direction:column; justify-content:center; align-items:center; color:#9ca3af; font-size:15px; gap:8px; background:#fafbfc; }
+.main .placeholder .icon { font-size:48px; opacity:0.3; }
+.main .hint { font-size:12px; color:#d1d5db; margin-top:4px; }
+/* 标注区 */
+.annotations { position:absolute; }
+</style>
+</head>
+<body>
+<div class="frame">
+  <!-- 顶部状态条 -->
+  <div class="topbar">
+    <span class="dot"></span>
+    <span>系统运行状态</span>
+    <span style="color:#64748b;margin:0 4px;">·</span>
+    <input class="search" placeholder="全局搜索设备 / 测点 / 告警...">
+    <span style="color:#64748b;margin:0 4px;">·</span>
+    <span class="bell">🔔<span class="badge">3</span></span>
+    <span style="color:#9ca3af;font-size:11px;">未处置数</span>
+    <span style="color:#64748b;margin:0 4px;">·</span>
+    <span class="user">当前用户：管理员 · 采油二厂</span>
+  </div>
+  <!-- 主体 -->
+  <div class="layout">
+    <!-- 左侧导航 -->
+    <div class="sidebar">
+      <div class="title">左 侧 导 航（9 组）</div>
+      <div class="item active"><span class="icon">📊</span>驾 驶 舱</div>
+      <div class="item"><span class="icon">📱</span>设 备 管 理</div>
+      <div class="item"><span class="icon">📡</span>设 备 接 入</div>
+      <div class="item"><span class="icon">🧮</span>算 法 管 理</div>
+      <div class="item"><span class="icon">🔔</span>告 警 中 心</div>
+      <div class="item"><span class="icon">📈</span>数 据 服 务</div>
+      <div class="item"><span class="icon">🗺️</span>可 视 化</div>
+      <div class="item"><span class="icon">⚡</span>自 动 化</div>
+      <div class="item"><span class="icon">⚙️</span>系 统 管 理</div>
+    </div>
+    <!-- 主工作区 -->
+    <div class="main">
+      <div class="placeholder">
+        <span class="icon">📋</span>
+        <span>主 工 作 区</span>
+        <span style="font-size:13px;color:#9ca3af;">随所选功能切换：列表 / 详情 / 图表 / 配置表单</span>
+        <span class="hint">任何界面 3 次点击可达</span>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

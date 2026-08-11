@@ -1,0 +1,795 @@
+{
+  "meta": {
+    "name": "大庆油田作业区场站本体",
+    "version": "V2.1",
+    "date": "2026-07-21",
+    "source": "pcapng(95K报文) + Oracle 61K测点 + PDB逆向 + pSpace 16663标签 + 实体清单 + 关系矩阵 + 约束规则库",
+    "framework": "DLAS (Data·Logic·Action·Security)",
+    "total_entities": 54,
+    "total_relations": 0,
+    "total_constraints": 54
+  },
+  "Data": {
+    "description": "物理世界 — 场站·设备·传感器·网络·软件·人员",
+    "场站": [
+      {
+        "name": "南4联合站",
+        "code": "CY1C8K",
+        "ip": "11.66.12.131",
+        "location": "采油二厂第四作业区",
+        "role": "核心IO枢纽"
+      },
+      {
+        "name": "北9注水站",
+        "code": null,
+        "location": "采油三厂第八作业区",
+        "role": "注水"
+      },
+      {
+        "name": "北15联合站",
+        "code": null,
+        "location": "采油三厂第八作业区",
+        "role": "联合处理"
+      },
+      {
+        "name": "萨北21站",
+        "code": null,
+        "location": "采油三厂第八作业区",
+        "role": "综合"
+      },
+      {
+        "name": "DX8ZRZ站",
+        "code": "DX8ZRZ",
+        "ip": "172.23.9.3",
+        "role": "联合站(OPC)",
+        "points": 2209
+      },
+      {
+        "name": "DX6PZ站",
+        "code": "DX6PZ",
+        "ip": "172.23.9.23",
+        "role": "联合站(OPC)",
+        "points": 3106
+      },
+      {
+        "name": "DX5ZRZ站",
+        "code": "DX5ZRZ",
+        "ip": "172.26.6.3",
+        "role": "联合站(OPC)",
+        "points": 2568
+      },
+      {
+        "name": "XZ202TP站",
+        "code": "XZ202TP",
+        "ip": "172.23.18.194",
+        "role": "脱水站(OPC)",
+        "points": 976
+      },
+      {
+        "name": "SYZ105ZYTWZ站",
+        "code": "SYZ105ZYTWZ",
+        "ip": "172.21.14.192",
+        "role": "注水站(OPC)",
+        "points": 400
+      },
+      {
+        "name": "SY217Z1-4站",
+        "code": "SY217Z1-4",
+        "role": "注水站(OPC)",
+        "points": 250
+      },
+      {
+        "name": "XZ208Z1-4站",
+        "code": "XZ208Z1-4",
+        "role": "注水站(OPC)",
+        "points": 350
+      },
+      {
+        "name": "JB1V2站",
+        "code": "JB1V2",
+        "role": "遥信站(OPC)",
+        "points": 969
+      }
+    ],
+    "服务器与网络": [
+      {
+        "name": "IO服务器(131)",
+        "ip": "11.66.12.131",
+        "os": "Windows Server 2016",
+        "spec": "Xeon + 32GB+ + X520 10GbE ×4"
+      },
+      {
+        "name": "pSpace服务器(130)",
+        "ip": "11.66.12.130",
+        "port": "8889",
+        "role": "A11协议服务器 + pSpace 6.0"
+      },
+      {
+        "name": "Oracle 11g(129)",
+        "ip": "11.66.12.129",
+        "port": "1521",
+        "sid": "orcl",
+        "user": "DQYTPROD"
+      },
+      {
+        "name": "开发机(dgiot_lite)",
+        "ip": "11.66.191.155",
+        "role": "边缘中枢",
+        "ports": "5173/8765/53001"
+      },
+      {
+        "name": "DMZ中转",
+        "ip": "11.66.113.78",
+        "ports": "1883/59660",
+        "role": "MQTT/SSH"
+      }
+    ],
+    "采集进程": [
+      {
+        "name": "CommBridge.exe",
+        "pid": 19240,
+        "memory": "32MB",
+        "version": "6.3.0.1",
+        "function": "Modbus TCP桥接(191 RTU, :53001)",
+        "protocol": "专有帧+DTU透传"
+      },
+      {
+        "name": "IOMan.exe",
+        "count": 36,
+        "memory": "~16MB/个",
+        "version": "7.0.3.2",
+        "function": "IO设备管理(OPC DA×5 + A11×7 + Modbus×24)",
+        "protocol": "DCOM/psAPI"
+      },
+      {
+        "name": "IoMonitor.exe",
+        "pid": 18400,
+        "memory": "61MB",
+        "version": "7.0.1.2",
+        "function": "GUI监控 + OLEDB写Oracle",
+        "protocol": "OLEDB/ADO"
+      },
+      {
+        "name": "IoProject.exe",
+        "count": 1,
+        "memory": "306MB",
+        "function": "pSpace核心引擎",
+        "protocol": "psAPI"
+      },
+      {
+        "name": "IoCommit.exe",
+        "count": 7,
+        "memory": "~15MB/个",
+        "function": "批量写Oracle(15000点/批)"
+      },
+      {
+        "name": "GPRSDLL.dll",
+        "size": "1.38MB",
+        "function": "GPRS/CDMA协议栈(47台无线终端)"
+      }
+    ],
+    "协议栈": [
+      {
+        "name": "A11(5a5a)",
+        "transport": "TCP :8889",
+        "parties": "130↔131",
+        "frames": 93900,
+        "status": "已逆向",
+        "features": "设备路径+浮点值"
+      },
+      {
+        "name": "Modbus TCP",
+        "transport": "TCP :53001",
+        "parties": "131→191 RTU",
+        "frames": 21300,
+        "status": "已解析",
+        "features": "206台寄存器值"
+      },
+      {
+        "name": "OPC DA (DCE/RPC)",
+        "transport": "DCOM :135",
+        "parties": "5 DCS↔131",
+        "frames": 72900,
+        "status": "RSLinx/WinCC"
+      },
+      {
+        "name": "Oracle TNS",
+        "transport": "TCP :1521",
+        "parties": "131→129",
+        "frames": 8700,
+        "status": "功图数据查询"
+      },
+      {
+        "name": "CommBridge专有帧",
+        "transport": "TCP :53001",
+        "format": "Seq(1B)+Flags(4B)+Len(1B)+Slave(1B)+Func(1B)+Data(N)",
+        "status": "已逆向"
+      },
+      {
+        "name": "DTU注册帧",
+        "transport": "TCP",
+        "format": "0xAA+SlaveID+ASCII_DeviceID+0x0D",
+        "count": "2211帧, 413设备ID"
+      }
+    ],
+    "设备与装置": [
+      {
+        "name": "DSL-31A 断路器",
+        "code": "0x00",
+        "channels": 20
+      },
+      {
+        "name": "DST-31A 变压器差动",
+        "code": "0x10",
+        "channels": 15
+      },
+      {
+        "name": "DBPA-31A 备用电源",
+        "code": "0x20",
+        "channels": 13
+      },
+      {
+        "name": "DSB-31A 变压器后备",
+        "code": "0x30",
+        "channels": 20
+      },
+      {
+        "name": "电动机保护",
+        "code": "0x40",
+        "channels": 19
+      },
+      {
+        "name": "DST-22D 变压器差动",
+        "code": "0x50",
+        "channels": 20
+      },
+      {
+        "name": "DSB-22D 变压器后备",
+        "code": "0x60",
+        "channels": 20
+      },
+      {
+        "name": "DSL-24D 断路器",
+        "code": "0x70",
+        "channels": 20
+      },
+      {
+        "name": "DGP-11 变压器差动",
+        "code": "0x80",
+        "channels": 21
+      },
+      {
+        "name": "DGP-12 变压器后备",
+        "code": "0x90",
+        "channels": 24
+      },
+      {
+        "name": "DGP-13 接地保护",
+        "code": "0xA0",
+        "channels": 22
+      },
+      {
+        "name": "DMP-31A 电动机",
+        "code": "0xB0",
+        "channels": 19
+      }
+    ],
+    "DCS系统": [
+      {
+        "name": "DCS-A",
+        "ip": "172.23.9.3",
+        "opc_server": "RSLinx Classic",
+        "devices": "30+"
+      },
+      {
+        "name": "DCS-B",
+        "ip": "172.23.18.194",
+        "opc_server": "RSLinx Classic",
+        "devices": "30+"
+      },
+      {
+        "name": "DCS-C",
+        "ip": "172.26.6.3",
+        "opc_server": "RSLinx Classic",
+        "devices": "60+"
+      },
+      {
+        "name": "DCS-D",
+        "ip": "172.21.14.192",
+        "opc_server": "RSLinx Classic",
+        "devices": "40+"
+      },
+      {
+        "name": "DCS-E",
+        "ip": "172.28.5.200",
+        "opc_server": "RSLinx+WinCC",
+        "devices": "40+"
+      }
+    ],
+    "配置文件": [
+      {
+        "name": "Device.ini",
+        "path": "E:\\IO ServerOnLine\\",
+        "content": "12设备类型 + ChangeData公式(8192标定)"
+      },
+      {
+        "name": "IoChannelCfg.ini",
+        "content": "通道配置(CommBridge DEV_COUNT=3)"
+      },
+      {
+        "name": "SqlFilSet.ini",
+        "content": "Oracle连接(EXECUTECYC=1000ms, ADOCOUNT=1-4)"
+      },
+      {
+        "name": "IoMonitor.ini",
+        "content": "提交参数(CommitRealSpan=300ms, CommitHisSpan=500ms, CommitTagOnce=15000)"
+      },
+      {
+        "name": "OPCClientCfg.ini",
+        "content": "OPC配置(Kepware ProgID+CLSID)"
+      },
+      {
+        "name": "DeviceStruct.txt",
+        "content": "OPC设备结构(17字段: IP/ProgID/CLSID/刷新率)"
+      }
+    ],
+    "测点体系": {
+      "modbus_rtu": {
+        "total": 4567,
+        "wells": 54,
+        "channels_per_well": 23,
+        "station": "CY1C8K"
+      },
+      "opc_da": {
+        "total": 26081,
+        "DX_telemetry": 16372,
+        "JB_remote_signal": 915,
+        "Z_water_injection": 8794
+      },
+      "pSpace": {
+        "total": 16663,
+        "wells": 1032,
+        "stations": [
+          "CY1C7K",
+          "gscyc"
+        ],
+        "point_types": [
+          "ADL",
+          "ADY",
+          "ADY2",
+          "BDL",
+          "BDY",
+          "BPP",
+          "BPS",
+          "CDL",
+          "CDY",
+          "CHC",
+          "CPV",
+          "CZT",
+          "CZT5",
+          "DCV",
+          "DWL",
+          "EGT",
+          "GYS",
+          "HGT",
+          "JRH",
+          "MFQ",
+          "PDL",
+          "PDY",
+          "RCV",
+          "ROT",
+          "SAQ",
+          "SLV",
+          "TGP",
+          "TGP2",
+          "TGT",
+          "UCV",
+          "UWL",
+          "WLV",
+          "ZHL",
+          "ZWG",
+          "ZWG2",
+          "ZYG"
+        ],
+        "metering_stations": 9
+      },
+      "典型测点类型": [
+        "ADL",
+        "ADY",
+        "BDL",
+        "BDY",
+        "CDL",
+        "CDY",
+        "CHC",
+        "CPV",
+        "CZT",
+        "DCV",
+        "DWL",
+        "EGT",
+        "GYS",
+        "HGT",
+        "RCV",
+        "SLV",
+        "TGP",
+        "TGT",
+        "UCV",
+        "UWL",
+        "ZHL",
+        "ZWG",
+        "ZYG"
+      ]
+    }
+  },
+  "Logic": {
+    "description": "推理决策 — 协议规则·采集节拍·校验·阈值·约束",
+    "采集节拍": [
+      {
+        "channel": "CommBridge (Modbus RTU)",
+        "interval": "1s",
+        "points_per_cycle": 20,
+        "commit_cycle": "300ms(实时)"
+      },
+      {
+        "channel": "OPC DA (5 DCS)",
+        "interval": "实时订阅推送",
+        "commit_cycle": "300ms(实时)"
+      },
+      {
+        "channel": "A11 (pSpace)",
+        "interval": "1-5s",
+        "commit_cycle": "300ms(实时)"
+      },
+      {
+        "channel": "IoCommit (批量写Oracle)",
+        "batch_size": "15000点/批",
+        "real_span": "300ms",
+        "his_span": "500ms"
+      },
+      {
+        "channel": "SQL执行",
+        "cycle": "1000ms",
+        "task_alloc": "2-5ms"
+      }
+    ],
+    "时序约束": [
+      {
+        "param": "CommitRealSpan",
+        "value": "300ms",
+        "desc": "实时数据提交间隔"
+      },
+      {
+        "param": "CommitHisSpan",
+        "value": "500ms",
+        "desc": "历史数据提交间隔"
+      },
+      {
+        "param": "CommitTagOnce",
+        "value": "15000",
+        "desc": "单次提交点数上限"
+      },
+      {
+        "param": "MaxTagCount",
+        "value": "100万",
+        "desc": "总标签数上限"
+      },
+      {
+        "param": "DataDelay",
+        "value": "5ms",
+        "desc": "IO提交延迟"
+      },
+      {
+        "param": "EXECUTECYC",
+        "value": "1000ms",
+        "desc": "SQL执行周期"
+      },
+      {
+        "param": "TASKALLOCATIONCYC",
+        "value": "2-5ms",
+        "desc": "任务分配周期"
+      },
+      {
+        "param": "ADOCOUNT",
+        "value": "1-4",
+        "desc": "OLEDB连接池大小"
+      }
+    ],
+    "五级校验": [
+      {
+        "level": "L1",
+        "rule": "帧匹配校验",
+        "condition": "abs(expected-actual)≤2",
+        "severity": "danger",
+        "action": "丢弃错误帧"
+      },
+      {
+        "level": "L2",
+        "rule": "值范围校验",
+        "condition": "电流0-500A / 电压100-400V",
+        "severity": "danger",
+        "action": "数值异常+告警"
+      },
+      {
+        "level": "L3",
+        "rule": "三相平衡校验",
+        "condition": "(Imax-Imin)/Iavg < 25%",
+        "severity": "danger",
+        "action": "三相不平衡告警"
+      },
+      {
+        "level": "L4",
+        "rule": "时序一致性",
+        "condition": "delta < 50%",
+        "severity": "warn",
+        "action": "标记可疑值"
+      },
+      {
+        "level": "L5",
+        "rule": "Oracle双源对比",
+        "condition": "|A-B|/A < 1%",
+        "severity": "danger",
+        "action": "数据源异常告警"
+      }
+    ],
+    "ChangeData公式": [
+      {
+        "name": "C0",
+        "formula": "Y × 170 / 8192",
+        "unit": "A",
+        "applies_to": "Ia, Ib, Ic, Ua, Ub, Uc"
+      },
+      {
+        "name": "C5",
+        "formula": "F = 50 + Y × 2 / 8192",
+        "unit": "Hz",
+        "applies_to": "频率"
+      }
+    ],
+    "资源边界": [
+      {
+        "resource": "TCP连接",
+        "used": "203",
+        "limit": "65535",
+        "headroom": "充足"
+      },
+      {
+        "resource": "CPU",
+        "used": "<5%",
+        "limit": "100%",
+        "headroom": "充足"
+      },
+      {
+        "resource": "内存",
+        "used": "~1.2GB",
+        "limit": "32GB+",
+        "headroom": "中等"
+      },
+      {
+        "resource": "Oracle连接",
+        "used": "4 ADO",
+        "limit": "许可限制",
+        "headroom": "紧张"
+      },
+      {
+        "resource": "CommBridge吞吐",
+        "used": "~20KB/s",
+        "limit": "100Mbps",
+        "headroom": "充足"
+      }
+    ],
+    "安全下发策略": [
+      {
+        "type": "allowed",
+        "condition": "CommitRealSpan间隙(300ms的80%空闲)",
+        "channel": "读Oracle/遥测/统计"
+      },
+      {
+        "type": "allowed",
+        "condition": "CommBridge查询间隔末尾(1s轮询最后200ms)",
+        "channel": "dgiot :53002独立端口"
+      },
+      {
+        "type": "allowed",
+        "condition": "SQL EXECUTECYC间隙(1000ms非执行窗口)",
+        "channel": "新增TCP连接"
+      },
+      {
+        "type": "forbidden",
+        "condition": "CommBridge :53001干扰RTU轮询",
+        "risk": "RTU断线→IoMonitor告警→数据缺失"
+      },
+      {
+        "type": "forbidden",
+        "condition": "DCOM :135触发DCS安全策略",
+        "risk": "DCOM超时→IOMan崩溃"
+      },
+      {
+        "type": "forbidden",
+        "condition": "OLEDB写操作竞争IoCommit",
+        "risk": "写库失败→数据丢失"
+      }
+    ]
+  },
+  "Action": {
+    "description": "执行动作 — 数据流·IPC·控制闭环·自动恢复",
+    "三大采集链路": [
+      {
+        "name": "Modbus RTU链路",
+        "path": "RTU(11.248-250.x) → CommBridge(TCP:53001) → IoMonitor(WM_COPYDATA) → Oracle(OLEDB)",
+        "protocol": "专有帧+DTU透传",
+        "throughput": "4567点/1s",
+        "status": "生产运行中"
+      },
+      {
+        "name": "OPC DA链路",
+        "path": "DCS(172.x) → IOMan×5(DCOM:135) → pSpace(psAPI) → IoCommit → Oracle",
+        "protocol": "DCE/RPC OPC DA",
+        "throughput": "26081点/实时",
+        "status": "生产运行中"
+      },
+      {
+        "name": "A11链路",
+        "path": "pSpace(130:8889) → IOMan×7(psAPI) → IoCommit → Oracle",
+        "protocol": "A11 5a5a TCP",
+        "throughput": "16663点/1-5s",
+        "status": "生产运行中"
+      }
+    ],
+    "IPC通信机制": [
+      {
+        "from": "IoProject",
+        "to": "IOMan",
+        "method": "CreateProcess + 命令行参数",
+        "desc": "派生36个IOMan实例"
+      },
+      {
+        "from": "IOMan",
+        "to": "IoMonitor",
+        "method": "共享内存 + WM_COPYDATA",
+        "desc": "Global\\命名空间"
+      },
+      {
+        "from": "IoMonitor",
+        "to": "Oracle",
+        "method": "OLEDB ADO连接池",
+        "desc": "批量写DQYTPROD"
+      },
+      {
+        "from": "CommBridge",
+        "to": "IoMonitor",
+        "method": "WM_COPYDATA IPC",
+        "desc": "实时数据推送"
+      }
+    ],
+    "dgiot_lite接入": [
+      {
+        "protocol": "Modbus TCP",
+        "method": "commbridge_server.exe替代CommBridge",
+        "port": "53002就绪",
+        "status": "待切换"
+      },
+      {
+        "protocol": "OPC DA",
+        "method": "Oracle SYS_POINTRELATION_STATION直读",
+        "coverage": "26081点已接入",
+        "status": "就绪"
+      },
+      {
+        "protocol": "pSpace实时",
+        "method": "psAPISDK.dll直连",
+        "requirement": "等认证",
+        "status": "待认证"
+      }
+    ],
+    "自动恢复动作": [
+      {
+        "trigger": "3次异常无数据",
+        "action": "自动重启commbridge_server",
+        "severity": "critical"
+      },
+      {
+        "trigger": "平台连接失败×3",
+        "action": "杀端口→重启uvicorn",
+        "severity": "critical"
+      }
+    ]
+  },
+  "Security": {
+    "description": "安全合规 — 访问控制·凭据管理·生产环境保护·审计",
+    "访问控制": [
+      {
+        "target": "IO服务器(131)",
+        "method": "WinRM :5985",
+        "user": "administrator",
+        "policy": "仅限运维白名单IP"
+      },
+      {
+        "target": "Oracle DQYTPROD",
+        "method": "TNS :1521",
+        "user": "DQYTPROD",
+        "policy": "只读账号分离"
+      },
+      {
+        "target": "pSpace :9004",
+        "method": "HTTP管理界面",
+        "user": "admin",
+        "policy": "内网访问+密码轮换"
+      },
+      {
+        "target": "IOFileServer :7001",
+        "method": "TCP文件服务",
+        "user": "admin",
+        "policy": "内网访问"
+      }
+    ],
+    "生产环境红线": [
+      {
+        "rule": "禁止安装/卸载/停止IO服务",
+        "enforcement": "抓包+WinRM查询巡检"
+      },
+      {
+        "rule": "禁止抢占CommBridge :53001",
+        "risk": "191 RTU断线"
+      },
+      {
+        "rule": "禁止重连DCOM :135",
+        "risk": "DCS安全策略触发→IOMan崩溃"
+      },
+      {
+        "rule": "禁止竞争OLEDB连接池",
+        "risk": "IoCommit写库失败→数据丢失"
+      },
+      {
+        "rule": "凭据不可落地/明文存储",
+        "enforcement": "环境变量+加密配置"
+      }
+    ],
+    "下发安全边界": [
+      {
+        "op": "查询 GET /api/classes/Device",
+        "risk": "无(只读)",
+        "permit": true
+      },
+      {
+        "op": "遥测 GET /api/telemetry/{id}/{point}",
+        "risk": "无(只读)",
+        "permit": true
+      },
+      {
+        "op": "扫描 dgiot :53002",
+        "risk": "低(独立通道)",
+        "permit": true
+      },
+      {
+        "op": "统计 Oracle COUNT/GROUP",
+        "risk": "无(只读)",
+        "permit": true
+      },
+      {
+        "op": "写入 POST/PUT/DELETE Device",
+        "risk": "高(竞争IoCommit)",
+        "permit": false
+      },
+      {
+        "op": "控制 Modbus Write Register",
+        "risk": "严重(可能写错RTU)",
+        "permit": false
+      },
+      {
+        "op": "重连 DCOM Reconnect",
+        "risk": "严重(触发DCS安全策略)",
+        "permit": false
+      },
+      {
+        "op": "大批SQL查询",
+        "risk": "中(竞争OLEDB)",
+        "permit": false
+      }
+    ],
+    "合规要求": [
+      "等保2.0三级",
+      "EX防爆区域合规",
+      "5角色×4密级访问控制",
+      "审计日志全量留存(180天)"
+    ]
+  }
+}

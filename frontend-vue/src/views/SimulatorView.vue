@@ -1,7 +1,7 @@
 <template>
   <div class="sim-page">
     <div class="sp-top">
-      <h3>🎛️ 协议模拟器</h3>
+      <h3>🎛️ 设备模拟</h3>
       <div class="sp-actions">
         <el-button type="primary" size="small" @click="startAll" :loading="starting">▶ 全部启动</el-button>
         <el-button type="danger" size="small" @click="stopAll">⏹ 全部停止</el-button>
@@ -30,15 +30,15 @@
             <el-descriptions-item label="端口">{{ sim.port }}</el-descriptions-item>
             <el-descriptions-item label="设备">{{ sim.device }}</el-descriptions-item>
             <el-descriptions-item label="测点">{{ sim.itemCount }} 个</el-descriptions-item>
-            <el-descriptions-item label="更新">{{ sim.updateRate || '1s' }}</el-descriptions-item>
+            <el-descriptions-item label="通道">{{ sim.channel || '—' }}</el-descriptions-item>
           </el-descriptions>
 
           <!-- 模拟数据预览 -->
-          <div class="sim-preview" v-if="sim.status==='running' && sim.sampleValues">
+          <div class="sim-preview" v-if="sim.status==='running'">
             <div class="preview-title">📊 实时模拟值</div>
             <div class="preview-items">
-              <div class="pv-item" v-for="(v,k) in sim.sampleValues.slice(0,4)" :key="k">
-                <span class="pv-name">{{ v.name || 'reg'+k }}</span>
+              <div class="pv-item" v-for="(v,k) in (sim.sampleValues||genSamples(sim)).slice(0,4)" :key="k">
+                <span class="pv-name">{{ v.name || 'reg_'+k.toString(16) }}</span>
                 <span class="pv-val">{{ v.value }}</span>
               </div>
             </div>
@@ -109,7 +109,7 @@ const runningCount = computed(() => simulators.value.filter(s => s.status==='run
 async function loadStatus() {
   try {
     const r = await api.get('/simulators/status')
-    simulators.value = (r.data.simulators||[]).map(s => ({
+    simulators.value = (r.simulators||r.data?.simulators||[]).map(s => ({
       ...s,
       sampleValues: s.status==='running' ? genSamples(s) : null,
       updateRate: s.protocol==='IEC 104'?'2s':'1s',
@@ -132,11 +132,12 @@ function genSamples(sim) {
 async function loadPackets() {
   try {
     const r = await api.get('/packets', {params:{limit:20}})
-    packetLog.value = (r.data.packets||[]).slice(-10).map(p => ({
-      time: new Date(p.ts*1000).toLocaleTimeString(),
-      protocol: p.device?.includes('iec')?'IEC104':p.device?.includes('opc')?'OPCUA':'Modbus',
-      dir: p.dir?.toUpperCase()||'--',
-      hex: p.hex?.slice(0,60)||'',
+    const raw = r.packets||r.data?.packets||[]
+    packetLog.value = raw.slice(-10).map(p => ({
+      time: p.time||(p.ts?new Date(p.ts*1000).toLocaleTimeString():new Date().toLocaleTimeString()),
+      protocol: p.protocol||(p.device?.includes('iec')?'IEC104':p.device?.includes('opc')?'OPCUA':'Modbus'),
+      dir: (p.dir||'--').toUpperCase(),
+      hex: (p.hex||'').slice(0,60),
     }))
   } catch {}
 }

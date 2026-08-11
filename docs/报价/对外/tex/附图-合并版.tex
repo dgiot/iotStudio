@@ -1,0 +1,234 @@
+% ============================================================
+% 网络拓扑图：三区隔离 + 真实IP白名单
+% 编译: xelatex -interaction=nonstopmode 附图-网络拓扑图-白名单版
+% ============================================================
+\documentclass[11pt,a4paper]{ctexart}
+\usepackage{xeCJK, float, geometry, tikz}
+\usetikzlibrary{arrows.meta, positioning, calc}
+\setCJKmainfont{Microsoft YaHei}
+\geometry{a4paper, margin=0.4cm, landscape}
+\begin{document}
+\begin{figure}[H]\centering
+\begin{tikzpicture}[
+  font=\footnotesize,
+  zone/.style={draw=black!40,fill=#1,rounded corners=6pt,minimum width=7.4cm,minimum height=11.5cm},
+  box/.style={draw,rounded corners=2pt,fill=#1,align=left,inner sep=3pt,text width=6.8cm,font=\tiny},
+  lnk/.style={-{Stealth},very thick,#1},
+  dsh/.style={-{Stealth},very thick,#1,densely dashed},
+  tl/.style={font=\footnotesize,fill=white,inner sep=2pt},
+]
+
+% === 三区 ===
+\node[zone=orange!6] (P)  at (0,0) {};
+\node[zone=blue!5]   (D)  [right=0.3cm of P] {};
+\node[zone=green!6]  (O)  [right=0.3cm of D] {};
+\node[font=\Large\bfseries,above=0.1cm of P.north]{生产网（工控区）};
+\node[font=\Large\bfseries,above=0.1cm of D.north]{DMZ 区};
+\node[font=\Large\bfseries,above=0.1cm of O.north]{办公网（应用区）};
+
+% ===== 生产网 =====
+\node[box=white,below=0.3cm of P.north,anchor=north] (dev) {
+\textbf{现场设备}\\[2pt]
+RTU {\tt 11.248.195-205} / {\tt 11.249.34-80} / {\tt 11.250.x}\\
+\quad 191 台 Modbus TCP\\[2pt]
+DCS-A {\tt 172.23.9.3}\quad DCS-B {\tt 172.23.9.23}\\
+DCS-C {\tt 172.26.6.3}\quad DCS-D {\tt 172.23.18.194}\\
+DCS-E {\tt 172.21.14.192}\\
+\quad 5 站 OPC DA (Kepware/RSLinx)\\[2pt]
+ZIGBEE 压力变送器 11,577 台\\
+12 种继电保护装置 · 智能仪表 · PLC
+};
+
+\node[box=red!10,below=0.4cm of dev] (io) {
+\textbf{IO 服务器 {\tt 11.66.12.131}}\\[2pt]
+Windows Server 2016\\[2pt]
+{\tt CommBridge :53001} -- 191 RTU, 1s 轮询\\
+{\tt IOMan x36} (5 OPC DA + 7 A11 + 24 Modbus)\\
+{\tt IoMonitor} -- OLEDB 写库 (300ms/批)\\
+{\tt IoCommit x7} -- Oracle 批量写\\[2pt]
+CPU <5\% \quad 内存 1.2GB \quad TCP 203连接
+};
+
+\node[box=red!8,below=0.3cm of io,minimum height=2.5cm] (a11) {
+\textbf{A11 原系统（全部保留不动）}\\[2pt]
+{\tt pSpace 11.66.12.130}\\
+\quad :8889 A11 实时 · :9004 管理\\[2pt]
+{\tt Oracle 11g 11.66.12.129:1521}\\
+\quad DQYTPROD\\[2pt]
+};
+
+\draw[lnk=red!60] (dev) -- node[tl,fill=red!5] {原 A11 链路\ 全保留不动} (io);
+\draw[lnk=red!60] (io) -- (a11);
+
+% ===== DMZ =====
+\node[box=blue!15,below=0.3cm of D.north,anchor=north] (edge) {
+\textbf{边缘中枢处理节点}\\[2pt]
+MQTT Broker 汇聚全油田 IO 服务器\\
+Topic ACL · QoS 0/1/2 分级投递\\[2pt]
+流水计算引擎 (15内置算法+定制注册)\\
+TDengine 3.x 热数据 SSD 存储\\[2pt]
+断网本地缓存 · 恢复时序补传 · 去重幂等
+};
+
+\node[box=blue!5,below=0.3cm of edge] (two) {
+\textbf{双路采集通道}\\[2pt]
+\textcircled{1} 静态IP：客户端主动连接 -- 旁路取数\\
+\quad dgiot {\tt :53002} (独立端口, 零干扰)\\[2pt]
+\textcircled{2} 动态IP：抢占原IP:端口 -- 透明转发\\
+\quad 复制一份 + 原样转发给 A11
+};
+
+\node[box=red!5,below=0.3cm of two] (fw) {
+\textbf{工业防火墙 / 网闸}\\[2pt]
+生产网 $\rightarrow$ DMZ：单向只读\\
+禁止任何反向写入生产网\\[2pt]
+国密 SM2/3/4 端到端加密
+};
+
+\node[box=blue!10,below=0.3cm of fw] (dmzdb) {
+\textbf{DMZ 时序存储}\\[2pt]
+TDengine 3.x 热数据层 (SSD)\\
+MQTT 消息中间件 边云同步\\
+边缘分级存储策略 (热/温/冷)
+};
+
+\draw[lnk=blue!70] (edge) -- (two);
+\draw[lnk=blue!70] (two) -- (fw);
+\draw[lnk=blue!70] (fw) -- (dmzdb);
+
+% ===== 跨区链路 =====
+\draw[dsh=cyan] ($(dev.east)+(0,-0.5)$) to node[tl,fill=cyan!5,pos=0.45] {\textcircled{1} 静态采集} ($(two.west)+(0,0.5)$);
+\draw[dsh=cyan] ($(io.east)+(0,0.2)$)  to node[tl,fill=cyan!5,pos=0.48] {\textcircled{2} 动态桥接} ($(two.west)+(0,-0.3)$);
+
+% DMZ $\rightarrow$ 办公网
+\draw[dsh=black!60] (dmzdb.east) to node[tl,above,pos=0.3] {MQTT · QoS 0/1/2} ++(2.8,0);
+
+% ===== 办公网 =====
+\node[box=green!15,below=0.3cm of O.north,anchor=north] (ctr) {
+\textbf{边缘中枢应用服务}\\[2pt]
+FastAPI + dmapi · 200+ REST API 统一路由\\
+WebSocket 实时推送 (KPI/告警秒级)\\
+分布式调度 (优先级/重试/排队)\\
+告警中心 (四级 · 确认/清除 · 升级链)
+};
+
+\node[box=green!10,below=0.3cm of ctr] (store) {
+\textbf{混合存储引擎}\\[2pt]
+TDengine 3.x 时序库 (冷热分层)\\
+PostgreSQL 15+ 关系库 (主数据唯一源)\\
+SQLite 边缘降级 (WAL 模式)
+};
+
+\node[box=green!5,below=0.3cm of store] (dash) {
+\textbf{数据驾驶舱（大屏）}\\[2pt]
+深色底 · C 位链路拓扑图\\
+KPI 卡片墙 (链路健康率 · 采集完整率)\\
+告警滚动列表 · 秒级刷新
+};
+
+\node[box=green!5,below=0.2cm of dash] (mgmt) {
+\textbf{管理后台（8 界面）}\\[2pt]
+设备管理 · 采集监控 · 算法管理\\
+告警中心 · 数据分析 · 拓扑视图\\
+系统管理 (角色化裁剪 · 千人千面)
+};
+
+\draw[lnk=green!70] (ctr) -- (store);
+\draw[lnk=green!70] (store) -- (dash);
+\draw[lnk=green!70] (dash) -- (mgmt);
+
+% ===== 底部安全策略 =====
+\node[font=\small\bfseries,fill=yellow!10,draw=yellow!50!black,rounded corners=3pt,
+      below=0.35cm of P.south,anchor=north,inner sep=5pt,text width=18.7cm,align=center] {
+  安全纪律: 生产网单向只读 \quad |\quad
+  dgiot :53002 独立端口零干扰 \quad |\quad
+  CPU <5\% · 延迟 <20us \quad |\quad
+  原 A11 链路全部保留不动 \quad |\quad
+  数据溯源: 第四作业区南4联合站 IO 服务器 11.66.12.131 摸底实测
+};
+
+\end{tikzpicture}
+\end{figure}
+
+\clearpage
+
+\begin{figure}[H]\centering
+\begin{tikzpicture}[
+  font=\scriptsize\bfseries,
+  root/.style={draw, fill=blue!20, rounded corners=3pt, align=center, inner sep=6pt, text width=7cm},
+  dom/.style={draw, fill=#1, rounded corners=2pt, align=center, inner sep=4pt, text width=2.6cm},
+  mod/.style={draw, fill=white, rounded corners=2pt, align=left, inner sep=3pt, text width=3.6cm, font=\footnotesize},
+  conn/.style={draw=black!40, thick},
+  connc/.style={draw=#1, thick},
+]
+
+% 根
+\node[root] (root) {{\Large\bfseries 时序数据采集与应用管理系统}\\[3pt]{\normalsize 8 个软件模块 · 725.04 万元（含税）}};
+
+% === 第一层：6 功能域（左右展开） ===
+\node[dom=orange!15, below left=1.8cm of root.south, anchor=north, xshift=-5.8cm] (d1) {① 采得全\\{\footnotesize（采集域）}};
+\node[dom=blue!12, below left=1.8cm of root.south, anchor=north, xshift=-3.5cm] (d2) {② 存得住\\{\footnotesize（存储域）}};
+\node[dom=green!12, below left=1.8cm of root.south, anchor=north, xshift=-1.2cm] (d3) {③ 算得准\\{\footnotesize（计算域）}};
+\node[dom=purple!10, below left=1.8cm of root.south, anchor=north, xshift=1.2cm] (d4) {④ 看得见\\{\footnotesize（应用域）}};
+\node[dom=red!10, below left=1.8cm of root.south, anchor=north, xshift=3.5cm] (d5) {⑤ 管得住\\{\footnotesize（安全域）}};
+\node[dom=gray!15, below left=1.8cm of root.south, anchor=north, xshift=5.8cm] (d6) {⑥ 交付保障\\{\footnotesize（交付域）}};
+
+% 根 → 域
+\foreach \n in {1,...,6} {
+  \draw[conn] (root.south) -- (d\n.north);
+}
+
+% === 第二层：核心模块 ===
+% 采集域 (d1)
+\node[mod, below=0.15cm of d1.south, anchor=north] (m1a) {\textbullet\ 多协议解析引擎（A11+10+协议）};
+\node[mod, below=0.04cm of m1a.south, anchor=north] (m1b) {\textbullet\ 双路采集（静态客户端/动态桥接）};
+\node[mod, below=0.04cm of m1b.south, anchor=north] (m1c) {\textbullet\ 设备统一动态感知+10家网关适配};
+\node[mod, below=0.04cm of m1c.south, anchor=north, fill=yellow!8] (m1d) {\textbf{\textbullet\ 智能动态调频 · 断网缓存补传}};
+\draw[connc=orange!60] (d1) -- (m1a);
+
+% 存储域 (d2)
+\node[mod, below=0.15cm of d2.south, anchor=north] (m2a) {\textbullet\ 混合存储引擎（TDengine时序+PG关系）};
+\node[mod, below=0.04cm of m2a.south, anchor=north] (m2b) {\textbullet\ 边缘分级存储（边缘/DMZ/中心三层）};
+\node[mod, below=0.04cm of m2b.south, anchor=north] (m2c) {\textbullet\ 数据生命周期管理+消息中间件};
+\draw[connc=blue!60] (d2) -- (m2a);
+
+% 计算域 (d3)
+\node[mod, below=0.15cm of d3.south, anchor=north] (m3a) {\textbullet\ 定制化流水计算（15内置+定制注册）};
+\node[mod, below=0.04cm of m3a.south, anchor=north] (m3b) {\textbullet\ 流式告警规则引擎（四级告警）};
+\node[mod, below=0.04cm of m3b.south, anchor=north, fill=yellow!8] (m3c) {\textbf{\textbullet\ 可视化规则编排·A/B对比·版本回滚}};
+\draw[connc=green!60] (d3) -- (m3a);
+
+% 应用域 (d4)
+\node[mod, below=0.15cm of d4.south, anchor=north] (m4a) {\textbullet\ 数据驾驶舱（大屏）·拓扑视图};
+\node[mod, below=0.04cm of m4a.south, anchor=north] (m4b) {\textbullet\ 设备管理·采集监控·算法管理};
+\node[mod, below=0.04cm of m4b.south, anchor=north] (m4c) {\textbullet\ 告警中心·数据分析与报表};
+\draw[connc=purple!60] (d4) -- (m4a);
+
+% 安全域 (d5)
+\node[mod, below=0.15cm of d5.south, anchor=north] (m5a) {\textbullet\ 全链路安全审计追溯（国密SM2/3/4）};
+\node[mod, below=0.04cm of m5a.south, anchor=north] (m5b) {\textbullet\ 用户角色权限·信创全栈适配};
+\draw[connc=red!60] (d5) -- (m5a);
+
+% 交付域 (d6)
+\node[mod, below=0.15cm of d6.south, anchor=north] (m6a) {\textbullet\ 全链路压测（16厂·100+作业区全部边缘代理并发·260万+点位满频采集·15天长稳）};
+\node[mod, below=0.04cm of m6a.south, anchor=north] (m6b) {\textbullet\ 规模化灌数验证+信创全栈测试};
+\node[mod, below=0.04cm of m6b.south, anchor=north] (m6c) {\textbullet\ 部署实施（桥接验证+联调+验收）+文档培训};
+\draw[connc=gray!60] (d6) -- (m6a);
+
+% === 底部：两大核心引擎 ===
+\node[draw, fill=yellow!10, rounded corners=4pt, align=left, inner sep=5pt, text width=16cm,
+      below=0.5cm of m1d.south, anchor=north west, xshift=-0.5cm] (core) {
+  {\bfseries 两大核心引擎（本系统区别于通用平台的全部价值所在）：}\\[2pt]
+  {\bfseries 【采集策略多样化】}怎么采——按作业区定制（频率/算法/优先级），全油田不再是"一种节奏"；\\[2pt]
+  {\bfseries 【定制化流水计算】}怎么算——15种油田内置算法+每作业区独立注册定制算法，数据入库前完成判定与告警
+};
+
+\draw[connc=orange!50, very thick, dashed] (m1d.south) -- (core);
+\draw[connc=green!50, very thick, dashed] (m3c.south) -- (core);
+
+\end{tikzpicture}
+\caption{系统功能树——6 功能域逐级展开至核心模块，底部两大核心引擎贯通采集与计算全链路}
+\end{figure}
+
+
+\end{document}

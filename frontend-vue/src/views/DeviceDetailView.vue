@@ -10,7 +10,25 @@
       <el-descriptions-item label="厂商">{{ device.manufacturer || '-' }}</el-descriptions-item>
     </el-descriptions>
 
-    <RunningCards :device-id="device.device_id" />
+    <RunningCards v-if="device" :device-id="device.device_id" />
+
+    <!-- 设备影子 — 对标 dgaiot Shadow -->
+    <el-card shadow="never" class="section-card" style="margin-bottom:12px" v-if="shadow.connected">
+      <template #header><span>🪞 设备影子 (Shadow) — desired/reported · 版本 {{ shadow.version }}</span>
+        <el-tag :type="shadow.shadow?.sync_status==='synced'?'success':'warning'" size="small" style="margin-left:8px">{{ shadow.shadow?.sync_status==='synced'?'已同步':'待同步' }}</el-tag>
+      </template>
+      <el-row :gutter="8">
+        <el-col :span="8"><div style="font-size:11px;color:#909399;margin-bottom:4px">Desired (期望值)</div>
+          <div v-for="(v,k) in shadow.shadow?.desired||{}" :key="'d'+k" style="font-size:12px;padding:2px 0;display:flex;justify-content:space-between"><span>{{ k }}</span><span style="color:#66d9ff">{{ v }}</span></div>
+        </el-col>
+        <el-col :span="8"><div style="font-size:11px;color:#909399;margin-bottom:4px">Reported (上报值)</div>
+          <div v-for="(v,k) in shadow.shadow?.reported||{}" :key="'r'+k" style="font-size:12px;padding:2px 0;display:flex;justify-content:space-between"><span>{{ k }}</span><span style="color:#66bb6a">{{ v }}</span></div>
+        </el-col>
+        <el-col :span="8"><div style="font-size:11px;color:#909399;margin-bottom:4px">Delta (差异)</div>
+          <div v-for="(v,k) in shadow.shadow?.delta||{}" :key="'l'+k" style="font-size:12px;padding:2px 0;display:flex;justify-content:space-between"><span>{{ k }}</span><span :style="{color:v>0.5?'#F56C6C':'#67C23A'}">{{ v }}</span></div>
+        </el-col>
+      </el-row>
+    </el-card>
 
     <el-card shadow="never" class="section-card" style="margin-bottom:12px">
       <template #header><span>📈 实时数据趋势 (最近30点)</span></template>
@@ -63,7 +81,7 @@ import RunningCards from '../components/RunningCards.vue'
 import { DEVICE_TYPE_MAP, DATA_TYPES } from '../utils/constants'
 
 const route = useRoute()
-const device = ref(null), points = ref([]), latest = ref([]), loading = ref(false), pointDialog = ref(false)
+const device = ref(null), points = ref([]), latest = ref([]), shadow = ref({}), loading = ref(false), pointDialog = ref(false)
 const pointForm = reactive({ point_id: '', device_id: route.params.id, point_name: '', protocol_addr: '', data_type: 'float32', register_type: '3', scale: 1.0, offset: 0.0, unit: '', collect_interval: 5 })
 const dtypes = DATA_TYPES
 const typeMap = DEVICE_TYPE_MAP
@@ -114,20 +132,23 @@ async function load(){
     device.value = norm(dev) || { device_id: id, device_name: '加载失败', status: 'offline' }
     try {
       const pts = await getPoints(id)
-      points.value = pts.points || pts.data?.points || []
+      points.value = pts.points || pts.results || pts.data?.points || []
     } catch(e) { console.log('getPoints err:', e) }
     try {
+      const sh = await fetch(`/api/shadow/${id}`); shadow.value = await sh.json()
+    } catch(e) { console.log('shadow err:', e) }
+    try {
       const lt = await getLatest(id)
-      latest.value = lt.data || lt.data?.data || []
+      latest.value = lt.data || lt.results || []
     } catch(e) { console.log('getLatest err:', e) }
     if(points.value.length>0){
       const p=points.value[0]
       const r=await getTelemetry(route.params.id,p.point_id,{limit:30})
-      const d=r.data.data||[]
+      const d=r.data||[]
       chartTimes.value=d.map(x=>x.ts?new Date(x.ts).toLocaleTimeString():'').reverse()
       chartSeries.value=[{name:p.point_name,data:d.map(x=>x.value).reverse()}]
     }
-  }catch(e){}
+  }catch(e){ console.error('DeviceDetail load error:', e) }
 }
 onMounted(load)
 </script>

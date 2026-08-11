@@ -1,0 +1,221 @@
+\documentclass[12pt,a4paper]{ctexart}
+\usepackage{geometry}\geometry{a4paper,margin=2.5cm}
+\usepackage{graphicx}\graphicspath{{../}}
+\usepackage{float,booktabs,longtable,enumitem,hyperref,fancyhdr,listings,xcolor}
+\pagestyle{fancy}
+\fancyhead[L]{dgiot\_lite — 用户手册}
+\fancyhead[R]{V1.0.0}
+\fancyfoot[C]{\thepage}
+\lstset{basicstyle=\ttfamily\small,breaklines=true,frame=single}
+
+\title{\textbf{dgiot\_lite 物联网平台 用户手册}}
+\author{迪格（杭州）物联科技有限公司}
+\date{2026年7月12日}
+
+\begin{document}
+\maketitle
+\tableofcontents
+\newpage
+
+\section{产品概述}
+
+\subsection{产品简介}
+dgiot\_lite 是一款轻量级物联网平台，支持 Modbus TCP/RTU、OPC UA、A11（中石油私有协议）、有叶云油液监测等多协议设备接入，提供实时数据采集、时序存储、告警管理、流计算引擎、设备影子（状态机）等功能。
+
+\subsection{适用对象}
+\begin{itemize}[leftmargin=*]
+  \item 油田/化工厂设备监控与数据采集
+  \item 光伏/储能/充电桩能源管理
+  \item 工业设备预测性维护 (PHM)
+  \item 边缘网关数据汇聚与转发
+\end{itemize}
+
+\subsection{运行环境}
+\begin{table}[H]\centering
+\begin{tabular}{p{3cm}p{4cm}p{5cm}}
+\toprule
+\textbf{项目} & \textbf{最低要求} & \textbf{推荐配置} \\
+\midrule
+操作系统 & Windows 10 / Linux & Ubuntu 20.04+ / Windows Server \\
+Python & 3.10+ & 3.11+ \\
+内存 & 2GB & 8GB+ \\
+存储 & 1GB & 10GB+ (数据增长) \\
+浏览器 & Chrome 90+ & Chrome 120+ \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\section{安装与部署}
+
+\subsection{安装步骤}
+\begin{enumerate}[leftmargin=*]
+  \item 克隆项目: \texttt{git clone <repo> dgiot\_lite}
+  \item 安装依赖: \texttt{pip install -r requirements.txt}
+  \item 安装前端: \texttt{cd frontend-vue \&\& npm install \&\& npm run build}
+  \item 配置数据库: 编辑 \texttt{config.yaml} 中的 TDengine / Oracle 连接
+  \item 启动服务: \texttt{python -m uvicorn src.main:app --host 0.0.0.0 --port 8000}
+  \item 访问: \texttt{http://localhost:8000}
+\end{enumerate}
+
+\subsection{卸载方法}
+\begin{enumerate}[leftmargin=*]
+  \item 停止服务: Ctrl+C
+  \item 删除项目目录: \texttt{rm -rf dgiot\_lite}
+  \item 数据文件: \texttt{rm -rf data/} (可选)
+\end{enumerate}
+
+\section{快速入门}
+
+\subsection{首次启动}
+启动后浏览器打开 \texttt{http://localhost:8000}，默认显示仪表盘页面。系统会自动初始化 SQLite 数据库并加载种子数据（269 台设备、9 类产品、120 条告警、239K 遥测记录）。
+
+\subsection{界面导览}
+\begin{table}[H]\centering
+\begin{tabular}{p{3cm}p{5cm}p{5cm}}
+\toprule
+\textbf{区域} & \textbf{位置} & \textbf{功能} \\
+\midrule
+侧边栏 & 左侧 220px & 菜单导航 (12 页面) \\
+顶部栏 & 顶部 50px & 标题/租户/通知/设备数/WebSocket 状态 \\
+标签页 & 顶栏下方 36px & 多标签页导航, 右键关闭 \\
+主内容区 & 中央 & 页面内容 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{基本操作}
+\begin{enumerate}[leftmargin=*]
+  \item \textbf{查看设备}: 点击「设备管理」→ 显示 269 台设备列表 → 点击设备行 → 右侧显示设备详情
+  \item \textbf{查看告警}: 点击「告警管理」→ 顶部统计卡片 + 饼图 → 左侧告警列表 → 点击告警行 → 右侧处理建议 + 历史
+  \item \textbf{查询遥测}: 点击「数据分析」→ 选择设备和点位 → 点击查询 → 显示趋势曲线
+  \item \textbf{通道管理}: 点击「通道管理」→ 6 个厂商通道列表 → 点击通道 → 查看设备/测点/日志
+  \item \textbf{流计算}: 点击「流计算引擎」→ 15 种算法列表 → 点击算法 → 配置阈值和作用域
+\end{enumerate}
+
+\section{功能详解}
+
+\subsection{设备管理 (/devices)}
+\begin{itemize}[leftmargin=*]
+  \item \textbf{设备列表}: 显示所有设备的 devaddr、名称、产品类型、IP、状态、场站
+  \item \textbf{搜索/过滤}: 可按名称/devaddr 搜索，按产品类型过滤
+  \item \textbf{添加设备}: 点击「添加设备」→ 填写设备信息 → 保存
+  \item \textbf{设备详情}: 点击设备行 → 显示设备属性、测点列表、实时数据趋势图
+\end{itemize}
+
+\subsection{产品管理 (/products)}
+\begin{itemize}[leftmargin=*]
+  \item 9 类产品定义，每类包含 TSL 物模型（属性/事件/服务）
+  \item 抽油机井: 10 属性（油压/套压/载荷/位移/冲次/电流/功率）+ 2 事件 + 1 服务
+  \item 支持导入/导出产品 JSON 配置
+\end{itemize}
+
+\subsection{通道管理 (/channels)}
+双视图切换：
+\begin{itemize}[leftmargin=*]
+  \item \textbf{厂商通道}: 6 个协议通道 (油液监测/锅炉能效/声振温/智能螺栓/视频/TDLAS)，含接入设备数、采集测点数、最后同步时间、通道日志
+  \item \textbf{协议通道}: 网络端口扫描 + 通道 CRUD
+\end{itemize}
+
+\subsection{告警管理 (/alarms)}
+\begin{itemize}[leftmargin=*]
+  \item 顶部统计: 4 个 KPI 卡片 + 2 个饼图（严重度分布 + 通道分布）
+  \item 列表-详情布局: 左侧告警列表（120 条），右侧详情面板（处理建议 + 历史同类告警）
+  \item 操作: 确认告警 / 清除告警
+\end{itemize}
+
+\subsection{数据分析 (/telemetry)}
+\begin{itemize}[leftmargin=*]
+  \item KPI: 在线设备数 / 今日采集 / 活跃告警 / 存储占用
+  \item 趋势曲线: 选择设备和点位后查询，显示时域曲线
+  \item 数据明细: 表格展示遥测记录
+\end{itemize}
+
+\subsection{流计算引擎 (/stream)}
+\begin{itemize}[leftmargin=*]
+  \item 三栏布局: 算法列表(左) | 配置面板(中) | 窗口特征值(右)
+  \item 15 种边缘算法: 阈值判定/突变检测/趋势判定/波动性检测/滑动平均/变化率检测/峰值检测/连续异常/基线偏离/范围检查/累积计数/变化方向/异常评分/死区过滤
+  \item 作用域: 每个算法可指定只对特定产品类型生效
+  \item 数据源: 从 SQLite telemetry 表拉取最近 20 个数据点计算统计特征
+\end{itemize}
+
+\subsection{用户管理 (/users)}
+\begin{itemize}[leftmargin=*]
+  \item 用户列表 + 部门树（8 个角色/部门）
+  \item 角色分配下拉选择
+  \item 添加/删除用户
+\end{itemize}
+
+\subsection{运维管理 (/maintenance)}
+\begin{itemize}[leftmargin=*]
+  \item 服务状态: MQTT Broker / Oracle Pipeline / 有叶云 API / SQLite / TDengine
+  \item 实时参数表: 从遥测数据展示设备参数值
+\end{itemize}
+
+\section{配置说明}
+
+\subsection{config.yaml 主要配置}
+
+\begin{lstlisting}[caption=config.yaml 关键配置]
+tdengine:
+  host: "172.22.193.167"    # TDengine 地址
+  port: 6041
+  database: "iot_telemetry"
+
+mqtt:
+  host: "127.0.0.1"         # MQTT Broker
+  port: 1883
+
+youyeyun:
+  username: "sell@inzoc.com"
+  password: "A1234567"
+  poll_interval: 300        # 有叶云采集间隔 (秒)
+
+oracle_pipeline:
+  poll_interval: 60         # Oracle 采集间隔
+\end{lstlisting}
+
+\section{常见问题}
+
+\begin{description}[leftmargin=*]
+  \item[Q: TDengine 连接失败?] 系统自动降级为 SQLite 存储，不影响使用。
+  \item[Q: 设备列表显示 0?] 检查 data/parse.db 是否存在，确保种子数据已初始化。
+  \item[Q: WebSocket 连不上?] 检查防火墙是否放行 8000 端口。
+  \item[Q: OPC DA 无法连接?] OPC DA 依赖 DCOM 安全配置，当前不支持直接连接。数据可通过 Oracle Bridge 间接获取。
+  \item[Q: 前端 401 错误?] 清除浏览器 localStorage 后刷新。
+\end{description}
+
+\section{附录}
+
+\subsection{API 端点}
+\begin{longtable}{p{5cm}p{6cm}}
+\toprule
+\textbf{端点} & \textbf{说明} \\
+\midrule
+GET /api/classes/\{Name\} & Parse CRUD 查询 \\
+GET /api/health & 健康检查 \\
+GET /api/stats & 聚合统计 \\
+GET /api/oracle/ping & Oracle 连接测试 \\
+GET /api/oracle/runrate & 实时运行率 \\
+GET /api/youyeyun/realtime & 有叶云实时数据 \\
+POST /api/pipeline/run-once & 手动采集 \\
+GET /api/shadows/\{id\} & 设备影子状态 \\
+GET /api/channels/registry & 协议注册表 \\
+GET /api/eventbus/hooks & EventBus 钩子 \\
+\bottomrule
+\end{longtable}
+
+\subsection{端口清单}
+\begin{table}[H]\centering
+\begin{tabular}{p{2cm}p{3cm}p{7cm}}
+\toprule
+\textbf{端口} & \textbf{服务} & \textbf{说明} \\
+\midrule
+8000 & dgiot\_lite & FastAPI HTTP 服务 \\
+1883 & MQTT Broker & 内置 Mosquitto \\
+6041 & TDengine & 远端时序库 (不可达时降级) \\
+502 & Modbus TCP & 模拟器端口 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\end{document}

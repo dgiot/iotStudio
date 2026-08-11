@@ -1,0 +1,111 @@
+% 七模块详细描述 — 定稿版
+\documentclass[11pt,a4paper]{ctexart}
+\usepackage[top=2cm,bottom=2cm,left=2.2cm,right=2.2cm]{geometry}
+\usepackage{xcolor,booktabs,array,enumitem,fancyhdr,hyperref,setspace}
+\setCJKmainfont{Microsoft YaHei}
+\setstretch{1.15}
+\definecolor{pri}{HTML}{0f2347}
+\definecolor{accent}{HTML}{00b4d8}
+\definecolor{gray}{HTML}{64748b}
+\pagestyle{fancy}\fancyhf{}
+\fancyhead[L]{\small\color{gray}时序数据采集与应用管理系统}
+\fancyhead[R]{\small\color{gray}七模块详细描述}
+\fancyfoot[C]{\small\color{gray}\thepage}
+\hypersetup{colorlinks=true,linkcolor=accent,urlcolor=accent}
+
+\begin{document}
+
+\begin{center}
+{\Huge\bfseries\color{pri}技术服务内容——七模块详细描述}\\[6pt]
+{\large 时序数据采集与应用管理系统 \quad 2026.08 定稿版}
+\end{center}
+\vspace{1em}\hrulefill\vspace{1em}
+
+\section{多维度分析与展示服务}
+
+构建多作业区统一的数据展示与分析平台。
+
+\begin{itemize}[leftmargin=*]
+  \item 以数字驾驶舱为首页入口，通过KPI卡片、采集链路拓扑图和告警滚动列表实现一屏总览多作业区运行状态
+  \item 配套协议分布分析、数据库性能监控和告警态势分析等专题看板，支撑运维决策
+  \item 提供日报月报年报自动生成、健康日报推送和作业区横向对比等报表服务
+  \item 支持拖拽式仪表盘组态和GIS地图层级下钻等可视化能力，满足不同角色的个性化展示需求
+\end{itemize}
+
+\section{设备管理服务}
+
+建立覆盖多作业区的设备全生命周期管理体系。
+
+\begin{itemize}[leftmargin=*]
+  \item 通过设备台账统一管理所有设备的厂家、型号、协议和链路等基础属性，支持五态生命周期流转和批量导入导出
+  \item 区分静态IP和动态IP两种采集场景进行差异化链路监控
+  \item 通过场景编排实现批量配置下发和定时巡检等自动化运维操作
+  \item 基于G1至G8油水井物模型实现一键自动配点和A11既有点位原样映射
+  \item 设备详情以六页签形式聚合台账、实时、历史、告警、趋势和日志等全方位信息
+\end{itemize}
+
+\section{协议管理服务}
+
+构建多协议统一解析和双路采集接入能力，是本系统区别于A11的核心技术底座。
+
+\begin{itemize}[leftmargin=*]
+  \item 多协议解析引擎覆盖A11专有、Modbus、OPC DA与UA、IEC104、MQTT和HTTP等十余种工业协议，实现多作业区异构设备统一接入
+  \item 双路采集在不改A11、不改DTU、不换设备、不影响原业务的前提下，通过静态IP客户端主动采集和动态IP桥接转发新增独立高频链路
+  \item 完成十家主流网关厂家的协议适配与动态感知
+  \item 提供视频和智能仪表等非标协议的扩展接入框架
+  \item 实现静态与移动终端的统一上下线监测和指纹识别自动注册
+\end{itemize}
+
+\section{流式计算搭建与管理服务}
+
+提供油田级流式计算和智能告警两大核心引擎。
+
+\begin{itemize}[leftmargin=*]
+  \item 内置15种开箱即用的油田算法覆盖工况诊断、预警和统计三大类别
+  \item 每作业区可独立注册定制算法并批量校验效果，优质算法通过算法市场跨区共享
+  \item 逐井调优支持单井独立参数配置和AB版本并行对比
+  \item 拖拽式规则编排降低流式计算开发门槛
+  \item 告警引擎实现四级分级管理、确认清除双动作和超时逐级升级通知链，工单覆盖从发现到归档的完整闭环
+  \item 规则引擎联动将采集事件自动转化为调频、降级和重启等响应动作，减少人工干预
+\end{itemize}
+
+\section{数据存储与管理服务}
+
+构建从边缘到中心的三级数据存储与传输体系。
+
+\begin{itemize}[leftmargin=*]
+  \item 混合存储引擎以TDengine承载高频时序数据、PostgreSQL管理主数据和关系型配置，双库协同查询为上层应用提供统一数据视图
+  \item 边缘SQLite本地缓存、DMZ汇聚存储和中心持久化归档形成三级分级存储架构
+  \item 数据生命周期管理实现热温冷自动分层和保留策略按作业区灵活配置
+  \item MQTT消息中间件支撑千万级消息从边缘到DMZ到中心全链路贯通
+  \item 标准化REST API对外提供数据接口，配套在线文档和数据湖嵌入方案
+  \item 历史数据回放支持时间轴拖拽定位和多格式导出
+\end{itemize}
+
+\section{运维管理服务}
+
+提供完整的系统运维和安全管理能力。
+
+\begin{itemize}[leftmargin=*]
+  \item 用户权限管理支持三种角色化视图，个性化面板兼顾领导、调度和运维三类使用者
+  \item 角色管理实现菜单按钮级权限精细控制和按作业区的数据隔离
+  \item 全操作审计留痕并支持多维检索和异常操作预警
+  \item 国密算法组件保障数据传输与存储安全，密码策略和会话安全配置完善
+  \item 生产网严格执行只出不进的单向安全隔离
+  \item 完成麒麟Linux、飞腾CPU和达梦数据库的全栈信创适配验证
+  \item 系统健康自监控覆盖分布式节点状态和服务可用性探测
+\end{itemize}
+
+\section{作业区场景适配服务}
+
+围绕面向各作业区全覆盖的服务，给予差异化支撑和定制化现场实施服务。
+
+\begin{itemize}[leftmargin=*]
+  \item 采集策略按作业区定制的采集频率和算法优先级，支持本地策略模板化快速复制
+  \item 定制化流式计算在边缘侧入库前完成判定与告警
+  \item 断网时边缘本地缓存保障数据不丢失，网络恢复后自动按序补传并去重
+  \item 智能动态调频根据网络状况和业务时段自动调整采集节奏
+  \item 三阶段渐进接入策略从观察到桥接复制再到稳定并行，保证每个作业区的功能完整能够稳定运行
+\end{itemize}
+
+\end{document}

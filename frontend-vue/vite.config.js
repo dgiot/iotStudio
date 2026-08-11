@@ -9,8 +9,8 @@ export default defineConfig({
     strictPort: false,
     allowedHosts: ['dev.dgiotcloud.cn', '.dgiotcloud.cn', 'localhost', '127.0.0.1', '10.255.6.205'],
     proxy: {
-      '/api': 'http://localhost:8000',
-      '/ws': { target: 'ws://localhost:8000', ws: true },
+      '/api': 'http://localhost:9876',
+      '/ws': { target: 'ws://localhost:8780', ws: true },
     }
   },
   build: {

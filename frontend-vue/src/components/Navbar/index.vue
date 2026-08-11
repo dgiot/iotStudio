@@ -26,6 +26,8 @@
         {{ healthStatus === 'ok' ? '系统正常' : '异常' }}
       </el-tag>
 
+      <el-button size="small" @click="toggleLang" style="margin:0 4px;min-width:60px" :title="langLabel">🌐 {{ langLabel }}</el-button>
+
       <span class="device-count">{{ onlineDevices }} 设备在线</span>
 
       <el-dropdown trigger="click" style="margin-left:12px">
@@ -44,6 +46,11 @@
 </template>
 
 <script setup>
+import { computed } from 'vue'
+import { useI18n } from 'vue-i18n'
+import { toggleLang, LANGS } from '../../i18n'
+const { locale } = useI18n()
+const langLabel = computed(() => LANGS[locale.value]?.split(' ')[0] || locale.value)
 defineProps({
   title:       { type: String, default: '' },
   userName:    { type: String, default: '' },

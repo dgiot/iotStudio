@@ -4,8 +4,8 @@
 <template>
   <el-aside width="220px" class="sidebar">
     <div class="logo">
-      <h2>⚡ DG-IoT</h2>
-      <small>轻量级边缘代理</small>
+      <h2>时序采集与应用管理</h2>
+      <small>{{ deployLabel }}</small>
     </div>
     <el-menu
       :default-active="activeMenu"
@@ -14,13 +14,12 @@
       text-color="#c0d5e8"
       active-text-color="#66d9ff"
     >
-      <template v-for="(items, group) in menuGroups" :key="group">
-        <div class="menu-group-label">{{ group }}</div>
+      <el-sub-menu v-for="(items, group) in menuGroups" :key="group" :index="'grp-'+group">
+        <template #title><span style="font-size:13px;font-weight:bold">{{ group }}</span></template>
         <el-menu-item v-for="item in items" :key="item.path" :index="item.path">
-          <el-icon><component :is="item.meta?.icon" /></el-icon>
           <span>{{ item.meta?.title }}</span>
         </el-menu-item>
-      </template>
+      </el-sub-menu>
     </el-menu>
   </el-aside>
 </template>
@@ -28,6 +27,10 @@
 <script setup>
 import { computed } from 'vue'
 import { useRoute } from 'vue-router'
+import { DEPLOY_MODE } from '../../utils/constants'
+
+const deployLabel = computed(() => DEPLOY_MODE === 'agent' ? '边缘代理' : '边缘中枢')
+import { MENU_GROUPS } from '../../utils/constants'
 
 const props = defineProps({
   menuGroups: { type: Object, default: () => ({}) },

@@ -194,12 +194,9 @@ async function load() {
     if (activeTab.value !== 'all') params.device_type = activeTab.value
     if (searchText.value) params.search = searchText.value; params.search_field = searchField.value
     const r = await getDevices(params)
-    console.log('getDevices response:', r, 'keys:', Object.keys(r||{}))
-    console.log('devices array:', r?.devices, 'results:', r?.results)
     devices.value = r.results || r.devices || []
     total.value = r.count || r.total || 0
-    console.log('devices.value:', devices.value.length, 'total:', total.value)
-  } catch {} finally { loading.value = false }
+  } catch (e) { console.error('load error:', e) } finally { loading.value = false }
 }
 function onSizeChange(size) { pageSize.value = size; currentPage.value = 1; load() }
 const seeding = ref(false)

@@ -1,0 +1,188 @@
+% 时序数据采集管理技术服务 — 功能模块图
+% 三层架构：中心侧 + 边缘中枢 + 边缘采集
+\documentclass[10pt,a4paper]{ctexart}
+\usepackage[top=1.5cm,bottom=1.5cm,left=1.5cm,right=1.5cm]{geometry}
+\usepackage{tikz,xcolor,float,booktabs,array,enumitem,fancyhdr,hyperref,setspace}
+\usetikzlibrary{shapes.geometric,arrows.meta,positioning,fit,calc,trees,backgrounds,mindmap}
+\definecolor{pri}{HTML}{0a1628}
+\definecolor{accent}{HTML}{00b4d8}
+\definecolor{gold}{HTML}{c9a84c}
+\definecolor{gray}{HTML}{64748b}
+\definecolor{l1}{HTML}{00b4d8}   % 中心侧
+\definecolor{l2}{HTML}{10b981}   % 边缘中枢
+\definecolor{l3}{HTML}{f59e0b}   % 边缘采集
+\pagestyle{empty}
+\begin{document}
+
+% === 封面 ===
+\begin{center}
+\vspace*{2cm}
+{\fontsize{24}{30}\selectfont\bfseries\color{pri}时序数据采集管理技术服务}\\[0.8cm]
+{\fontsize{18}{22}\selectfont\color{accent}\bfseries 功能模块图}\\[3cm]
+{\fontsize{11}{14}\selectfont\color{gray}中心侧 · 边缘中枢 · 边缘采集 — 三层架构}\\[0.5cm]
+{\fontsize{10}{12}\selectfont\color{gray}V1.0 · 2026.08}
+\end{center}
+\newpage
+
+% === 三层总览 ===
+\begin{center}
+\begin{tikzpicture}[scale=0.55,transform shape,
+  layer/.style={draw,rounded corners=6pt,fill=#1!8,text width=18cm,minimum height=2cm,align=left,font=\small},
+  box/.style={draw=#1!50,fill=#1!10,rounded corners=3pt,align=center,font=\footnotesize,inner sep=4pt,text width=2.6cm},
+]
+
+% 层1: 中心侧
+\node[layer=l1] (L1) at (0,8) {\textbf{\large\color{l1!80!black}中心侧时序数据应用管理系统}\\[3pt]
+  \begin{tikzpicture}[box/.style={draw=l1!50,fill=l1!10,rounded corners=3pt,align=center,font=\scriptsize,inner sep=3pt,text width=2.2cm}]
+    \node[box] at (0,0){时序数据可视化管理};
+    \node[box] at (3,0){设备管理};
+    \node[box] at (6,0){设备接入管理};
+    \node[box] at (9,0){算法管理};
+    \node[box] at (12,0){告警中心服务管理};
+    \node[box] at (15,0){数据服务};
+    \node[box] at (0,-0.8){采集场景管理};
+    \node[box] at (3,-0.8){系统管理};
+    \node[box] at (6,-0.8){消息中间件与边云同步};
+    \node[box] at (9,-0.8){可视化规则编排};
+    \node[box] at (12,-0.8){REST API接口};
+    \node[box] at (15,-0.8){用户/角色/权限};
+  \end{tikzpicture}
+};
+
+% 层2: 边缘中枢
+\node[layer=l2,below=1.5cm of L1] (L2) {\textbf{\large\color{l2!80!black}边缘中枢系统}\\[3pt]
+  \begin{tikzpicture}[box/.style={draw=l2!50,fill=l2!10,rounded corners=3pt,align=center,font=\scriptsize,inner sep=3pt,text width=3.5cm}]
+    \node[box] at (0,0){定制化流水计算引擎\\\tiny 每作业区定制算法 · 入库前置计算};
+    \node[box] at (5,0){流式告警规则引擎\\\tiny 四级告警 · 去重合并升级 · 工单闭环};
+    \node[box] at (10,0){混合存储引擎\\\tiny TDengine(热)+PG(温)+SQLite(冷)};
+    \node[box] at (0,-1.2){全链路安全与审计\\\tiny TLS/HTTPS · RBAC · 审计日志 · 国密};
+    \node[box] at (5,-1.2){平台服务与治理\\\tiny 分布式节点 · 异步任务 · 配置中心};
+    \node[box] at (10,-1.2){MQTT/HTTP双协议\\\tiny QoS 0/1/2 · Topic ACL · 边云双向同步};
+  \end{tikzpicture}
+};
+
+% 层3: 边缘采集
+\node[layer=l3,below=1.5cm of L2] (L3) {\textbf{\large\color{l3!80!black}边缘采集系统}\\[3pt]
+  \begin{tikzpicture}[box/.style={draw=l3!50,fill=l3!10,rounded corners=3pt,align=center,font=\scriptsize,inner sep=3pt,text width=3.5cm}]
+    \node[box] at (0,0){多协议解析引擎\\\tiny A11·Modbus·OPC UA/DA·IEC104·MQTT·HTTP};
+    \node[box] at (5,0){双路采集模块\\\tiny 静态IP旁路 + 动态IP桥接};
+    \node[box] at (10,0){兼容A11既有系统\\\tiny 不改A11·不改DTU·零影响};
+    \node[box] at (2.5,-1.2){物模型自动配点\\\tiny 协议地址→物模型属性自动映射};
+    \node[box] at (7.5,-1.2){断网补传·网关在线地图\\\tiny 链路恢复自动补传·GIS可视化};
+  \end{tikzpicture}
+};
+
+% 箭头
+\draw[-{Stealth},ultra thick,l1!70] (L1.south) -- node[right,font=\footnotesize]{\textbf{↓ 数据消费}} (L2.north);
+\draw[-{Stealth},ultra thick,l2!70] (L2.south) -- node[right,font=\footnotesize]{\textbf{↑ 数据上报}} (L3.north);
+
+\end{tikzpicture}
+\end{center}
+
+\newpage
+
+% === 详细功能树 ===
+\section*{功能模块详细拆解}
+
+\begin{center}
+\begin{tikzpicture}[scale=0.53,transform shape,
+  root/.style={draw,fill=pri!90,text=white,rounded corners=4pt,align=center,font=\bfseries\small,inner sep=6pt},
+  cat/.style={draw=#1!60,fill=#1!12,rounded corners=3pt,align=center,font=\small\bfseries,inner sep=5pt,text width=4cm},
+  item/.style={rounded corners=2pt,align=left,font=\footnotesize,inner sep=3pt,text width=3.8cm},
+  conn/.style={-{Stealth},thick,#1!60},
+]
+
+% 根
+\node[root] (root) at (0,0) {时序数据采集\\管理技术服务\\功能模块};
+
+% 中心侧
+\node[cat=l1,above=2cm of root] (ct) {中心侧\\时序数据应用管理系统};
+\node[item,l1!40,above=0.8cm of ct.north,text width=14cm,align=center] (ctd) {
+\textbf{9 大模块}\\[2pt]
+时序数据可视化管理 \textbar{} 设备管理 \textbar{} 设备接入管理 \textbar{} 算法管理 \textbar{} 告警中心服务管理 \textbar{} 数据服务 \textbar{} 采集场景管理 \textbar{} 系统管理 \textbar{} 消息中间件与边云同步
+};
+
+% 边缘中枢
+\node[cat=l2,right=6cm of root] (hub) {边缘中枢系统};
+\node[item,l2!40,right=1.5cm of hub.east,text width=5cm] (hubd) {
+\textbf{6 大引擎}\\[2pt]
+定制化流水计算引擎\\
+流式告警规则引擎\\
+混合存储引擎\\
+全链路安全与审计\\
+平台服务与治理\\
+边云同步
+};
+
+% 边缘采集
+\node[cat=l3,below=4cm of root] (edge) {边缘采集系统};
+\node[item,l3!40,below=0.5cm of edge.south,text width=14cm,align=center] (edged) {
+\textbf{5 大能力}\\[2pt]
+多协议解析引擎 (A11·Modbus·OPC·IEC104·MQTT·HTTP) \textbar{} 双路采集 (静态旁路+动态桥接)
+兼容A11 (零影响) \textbar{} 物模型自动配点 \textbar{} 断网补传+网关在线地图
+};
+
+% 连线
+\draw[conn=l1] (root) -- (ct);
+\draw[conn=l2] (root) -- (hub);
+\draw[conn=l3] (root) -- (edge);
+
+% 中心侧子模块
+\node[item,below=0.2cm of ctd.south,text width=16cm,align=left,font=\scriptsize] {
+\makebox[2.8cm][l]{\textbf{时序数据可视化} KPI指标卡·拓扑图·告警滚动}
+\makebox[2.8cm][l]{\textbf{设备管理} 台账·五态生命周期·六页签}
+\makebox[2.8cm][l]{\textbf{设备接入} 静态/动态视图·链路着色}\\[2pt]
+\makebox[2.8cm][l]{\textbf{算法管理} 15种内置·A/B对比·定制注册}
+\makebox[2.8cm][l]{\textbf{告警中心} 四级列表·确认/清除·升级链}
+\makebox[2.8cm][l]{\textbf{数据服务} 报表·曲线回放·健康日报}\\[2pt]
+\makebox[2.8cm][l]{\textbf{采集场景} 场景编排·规则引擎·批量下发}
+\makebox[2.8cm][l]{\textbf{系统管理} 国密·信创·RBAC·审计}
+\makebox[2.8cm][l]{\textbf{边云同步} MQTT/HTTP·QoS·Topic ACL}
+};
+
+\end{tikzpicture}
+\end{center}
+
+\newpage
+
+% === 设备管理模块详情 ===
+\section*{设备管理模块 — 前端视图清单}
+
+\begin{table}[H]\centering\small
+\begin{tabular}{p{2.5cm}p{6cm}p{6cm}}
+\toprule
+\textbf{视图} & \textbf{功能} & \textbf{技术实现} \\
+\midrule
+KPI 指标卡 & 设备总数·在线率·采集总量·成功率 & ECharts 仪表盘，秒级刷新 \\
+设备台账 & 566 设备 · 搜索筛选 · 批量操作 & Parse REST API，分页查询 \\
+采集链路拓扑图 & 油田→厂→区→站 三级力导向图 & ECharts Graph + 树导航 \\
+五态生命周期 & init→auth→online→alarm→offline & 设备影子状态机 \\
+告警滚动列表 & 四级告警 · 确认/清除 & 实时 WebSocket 推送 \\
+设备详情六页签 & 台账/实时/历史/告警/趋势/采集日志 & 六 Tab 切换 \\
+采集频率趋势 & 时序采集间隔变化曲线 & ECharts 折线图 \\
+物模型键配点 & 协议地址→物模型属性映射 & Product→Device 关联 \\
+静态/动态终端视图 & 静态 IP + 动态 IP 双视图 & 配置驱动切换 \\
+链路状态码着色 & 在线绿·离线红·超时黄 & Element Plus Tag \\
+断网补传进度条 & 断网→恢复→补传百分比 & Progress Bar + 时间估算 \\
+网关在线地图 & GIS 地图 → 928 台网关位置 & Leaflet/高德瓦片 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\section*{算法管理模块}
+
+\begin{table}[H]\centering\small
+\begin{tabular}{p{2.5cm}p{6cm}p{6cm}}
+\toprule
+\textbf{功能} & \textbf{说明} & \textbf{技术实现} \\
+\midrule
+15 种内置算法 & 工况诊断·产液量·含水率·泵效·平衡度等 & Python 流计算引擎 \\
+A/B 对比 & 新旧算法同数据对比 & 双曲线叠加 \\
+逐井调优 & 每口井独立参数 & 配置文件驱动 \\
+定制算法注册 & 作业区上传 Python 脚本 & 沙箱执行·校验 \\
+可视化规则编排 & 拖拽式规则配置 & FDE 六步工作法 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\end{document}

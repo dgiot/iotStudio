@@ -1,0 +1,27 @@
+# 边缘代理 → 边缘中枢 MQTT 联调配置
+# 使用方式: set IOT_CONFIG=D:\ai\dgiot_lite\config-edge.yaml
+
+title: "DG-IoT 边缘代理联调"
+version: "1.0.0"
+log_level: "DEBUG"
+
+mqtt:
+  host: "172.22.193.167"   # Kylin-DMZ EMQX
+  port: 1883
+  username: ""
+  password: ""
+  client_id: "edge-agent-dev"
+
+db:
+  host: "127.0.0.1"
+  port: 5432
+  user: "postgres"
+  password: "postgres"
+  database: "iot_platform"
+
+tdengine:
+  host: "127.0.0.1"
+  port: 6030
+  user: "root"
+  password: "taosdata"
+  database: "iot_telemetry"

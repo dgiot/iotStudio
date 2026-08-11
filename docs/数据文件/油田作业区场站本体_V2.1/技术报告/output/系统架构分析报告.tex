@@ -1,0 +1,238 @@
+\documentclass[12pt,a4paper]{ctexart}
+\usepackage{geometry}\geometry{a4paper,margin=2.5cm}
+\usepackage{graphicx}\graphicspath{{../}}
+\usepackage{float,booktabs,longtable,enumitem,hyperref,fancyhdr,listings,xcolor}
+\pagestyle{fancy}
+\fancyhead[L]{dgiot\_lite — 系统架构方案}
+\fancyhead[R]{V1.0.0}
+\fancyfoot[C]{\thepage}
+
+\title{\textbf{dgiot\_lite 物联网平台架构方案}}
+\author{迪格（杭州）物联科技有限公司}
+\date{2026年7月12日}
+
+\begin{document}
+\maketitle
+\tableofcontents
+\newpage
+
+\section{项目概述}
+
+dgiot\_lite 是 DG-IoT 开源物联网平台的 Python 轻量联动版本，定位为学习入门、边缘采集、快速原型和源码交付。与 Erlang/OTP 企业级 DG-IoT 形成互补：dgiot\_lite 采集的数据可推送至 DG-IoT 主平台。
+
+\subsection{与 DG-IoT 的关系}
+
+\begin{table}[H]\centering
+\caption{dgiot\_lite 与 DG-IoT 定位对比}
+\begin{tabular}{p{5cm}p{4cm}p{4cm}}
+\toprule
+\textbf{维度} & \textbf{DG-IoT (Erlang)} & \textbf{dgiot\_lite (Python)} \\
+\midrule
+承载能力 & 千万级设备 & 百级设备 \\
+协议支持 & 全协议 & 4+ 协议采集引擎 \\
+存储 & TDengine + PostgreSQL & TDengine + SQLite 降级 \\
+部署 & 集群 & 单机/Docker \\
+低代码 & 2D/3D 组态 & 2D 组态 \\
+授权 & 企业授权 & 源码交付 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\section{技术栈}
+
+\begin{table}[H]\centering
+\begin{tabular}{p{3cm}p{4cm}p{5cm}}
+\toprule
+\textbf{层次} & \textbf{技术} & \textbf{说明} \\
+\midrule
+语言 & Python 3.10+ & 异步 async/await \\
+后端框架 & FastAPI + uvicorn & OpenAPI 自动文档 \\
+协议适配 & pymodbus / asyncua / 自研 & Modbus/OPC UA/A11/IEC 104 \\
+时序存储 & TDengine 3.x / SQLite & 自动降级 \\
+关系存储 & SQLite (parse\_lite) & 嵌入式 Parse Server 兼容 \\
+消息推送 & paho-mqtt / httpx & MQTT + HTTP \\
+前端 & Vue3 + Vite + Element Plus & 12 页 SPA \\
+文档 & LaTeX (xelatex + ctex) & PDF 正式文档 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\section{系统架构}
+
+\subsection{七层架构 (对标 DG-IoT)}
+
+\begin{enumerate}[leftmargin=*]
+  \item \textbf{Transport 层}: TCP/UDP 连接管理，设备注册，原始数据转发
+  \item \textbf{Protocol 层}: 帧解析/编码，CRC 校验，格式转换
+  \item \textbf{Message 层}: MQTT 路由，任务队列，父子设备聚合
+  \item \textbf{Business 层}: 数据解码，属性计算，告警，状态管理
+  \item \textbf{Data 层}: 时序存储，查询，聚合 (TDengine/SQLite)
+  \item \textbf{Cache 层}: 实时缓存，设备状态缓存，会话管理
+  \item \textbf{API 层}: REST/gRPC 查询，控制命令，仪表盘数据
+\end{enumerate}
+
+\subsection{核心模块}
+
+\begin{longtable}{p{3.5cm}p{4cm}p{5cm}}
+\toprule
+\textbf{模块} & \textbf{对标 DG-IoT} & \textbf{功能} \\
+\midrule
+eventbus.py & dgiot\_hook & 发布订阅总线，层间解耦 \\
+shadow.py & dgiot\_shadow (gen\_statem) & 设备影子状态机 \\
+channel\_base.py & dgiot\_channelx + dgiot\_plugin & @protocol 装饰器自动注册 \\
+oracle\_bridge.py & - & Oracle 桥接 (WinRM $\rightarrow$ VBS/ADO) \\
+oracle\_pipeline.py & dgiot\_task & 定时采集管道 \\
+parse\_lite.py & dgiot\_parse & Parse Server 兼容 CRUD \\
+ontology.py & dgiot\_ontology & 5 层本体引擎 \\
+tdengine.py & dgiot\_tdengine & TDengine 时序存储 \\
+\bottomrule
+\end{longtable}
+
+\subsection{数据管道}
+
+\begin{lstlisting}[caption=数据流 Architecture]
+Field Devices (RTU/PLC/OPC)
+    |-- CommBridge.exe (Modbus TCP :53001)
+    |-- IOMan workers    (A11 TCP :8889)
+    |-- OPC_FC_Client    (OPC DA DCOM)
+    v
+Oracle 11.66.12.129:1521 (DQYTPROD)
+    | WinRM + VBS/ADO (32-bit, 700ms latency)
+    v
+OracleBridge (oracle_bridge.py)
+    |-- TDengine / SQLite  (telemetry.db)
+    |-- MQTT Broker :1883  (dgiot/# topic)
+    |-- WebSocket :8000/ws (real-time push)
+    v
+Vue3 Frontend (12 pages, Element Plus)
+\end{lstlisting}
+
+\subsection{EventBus $\leftrightarrow$ MQTT $\leftrightarrow$ WebSocket}
+
+\begin{itemize}[leftmargin=*]
+  \item \textbf{EventBus}: pipeline.point\_written $\rightarrow$ WebSocket broadcast
+  \item \textbf{MQTT Bridge}: dgiot/\# topic $\rightarrow$ EventBus events
+  \item \textbf{WebSocket}: /ws endpoint, real-time push to frontend
+  \item \textbf{Heartbeat}: 15s ping/pong, auto-reconnect
+\end{itemize}
+
+\section{本体论引擎}
+
+\subsection{五层模型}
+
+\begin{lstlisting}[caption=Ontology 5-layer Model]
+Site (采油厂) -> Gateway (IO服务器) -> Channel (协议通道)
+  -> Device (RTU/传感器) -> Point (测点)
+
+MQTT Topic: dgiot/{site}/{gateway}/{channel}/{device}/{point}/data
+\end{lstlisting}
+
+\subsection{约束规则}
+
+\begin{longtable}{p{3cm}p{4cm}p{5cm}}
+\toprule
+\textbf{约束 ID} & \textbf{规则} & \textbf{来源} \\
+\midrule
+c\_commit\_real & 实时提交延迟 ≤ 300ms & IoMonitor.ini \\
+c\_commit\_batch & 单次提交上限 15,000 点 & IoMonitor.ini \\
+c\_cache\_flush & 缓存 >100K 点强制写历史文件 & IoMonitor.ini \\
+c\_io\_timeout & 设备无响应 >30s 判定离线 & IoChannelCfg.ini \\
+c\_ado\_pool & Oracle 连接池上限 4 & SqlFilSet.ini \\
+c\_redundancy & 心跳 1500ms×3 次超时 (4.5s) → 主备切换 & RedunndancyCfg.ini \\
+c\_overcurrent & Ia/Ib/Ic >5A 持续>1s → 过流跳闸 & Device.ini DSL-31A \\
+c\_voltage\_abnormal & U<198V or U>260V 持续>10s → 电压异常告警 & Device.ini DST-31A \\
+c\_motor\_stall & 电流突变+转速=0 持续>3s → 堵转 & Device.ini DMP-31A \\
+c\_breaktime & 功图断点超时 → 数据断流告警 & IM\_A11\_RTU BreakTime/ \\
+c\_commit\_crash & IoCommit 崩溃 → psNTService 自动重启 & Log/ crash dumps \\
+c\_data\_epoch\_zero & value=0 + ts=1970 → 存储失败拦截 & IOSaveErr/ \\
+\bottomrule
+\end{longtable}
+
+\section{前端架构 (对标 iotStudio)}
+
+\subsection{已实现模式}
+
+\begin{longtable}{p{4cm}p{4cm}p{5cm}}
+\toprule
+\textbf{模式} & \textbf{对标 iotStudio} & \textbf{实现} \\
+\midrule
+配置合并网关 & src/config/index.js & cli/setting/theme/net.config \\
+自动组件注册 & require.context & import.meta.glob \\
+多标签页导航 & DgiotTabs & stores/tabs.js \\
+主题变量系统 & variables.scss & styles/variables.css \\
+双层持久化 & localStorage mutation & tabs localStorage \\
+全局 API 挂载 & \$dg.msg/confirm/store & setup/globals.js \\
+自定义指令 & v-permission/debounce & directives/permission.js \\
+Parse REST API & Parse/index.js & api/index.js → web/parse\_router.py \\
+WebSocket 实时 & webscroket & composables/useWebSocket.js \\
+\bottomrule
+\end{longtable}
+
+\subsection{12 页面清单}
+
+\begin{table}[H]\centering
+\begin{tabular}{p{2.5cm}p{3cm}p{7cm}}
+\toprule
+\textbf{页面} & \textbf{路由} & \textbf{功能} \\
+\midrule
+仪表盘 & / & KPI 卡片 + 趋势图 + 告警饼图 \\
+设备管理 & /devices & 269 设备 list-detail + 详情页 \\
+产品管理 & /products & 9 产品 TSL 物模型编辑器 \\
+通道管理 & /channels & 6 通道 list-detail + 日志 \\
+告警管理 & /alarms & 120 告警 + 饼图 + 历史 \\
+数据分析 & /telemetry & 遥测查询 + 趋势曲线 \\
+流计算引擎 & /stream & 15 算法 × 作用域 × 特征值 \\
+用户管理 & /users & 用户+部门树 + 角色分配 \\
+运维管理 & /maintenance & 服务状态 + 实时参数 \\
+SCADA & /scada & 组态监控 \\
+拓扑编辑 & /topology & 设备拓扑编辑 \\
+边缘代理 & /edgeproxy & 系统指标 + IO 本体 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\section{种子数据}
+
+\begin{longtable}{p{3.5cm}p{2.5cm}p{7cm}}
+\toprule
+\textbf{实体} & \textbf{数量} & \textbf{来源} \\
+\midrule
+设备 & 269 & 200 口井 (Oracle) + 69 台其他设备 (逆变器/PCS/压缩机/RTU/管线/传感器) \\
+产品 & 9 & 光伏逆变器/储能PCS/充电桩/智能电表/传感器/抽油机井/RTU/压缩机/管线 \\
+通道 & 6 & 油液监测/锅炉能效/声振温/智能螺栓/视频监控/TDLAS \\
+告警 & 120 & 7 通道 × 危险/注意/提示 三级 (120h 跨度) \\
+遥测 & 239,549 & 5 设备 × 3 测点 × 120 采样 (30s 间隔) \\
+角色 & 8 & 默认租户/设备完整性/生产部/安全部/技术部/设备科/电气科/仪表科 \\
+\bottomrule
+\end{longtable}
+
+\section{部署}
+
+\begin{itemize}[leftmargin=*]
+  \item \textbf{启动}: \texttt{C:/Python314/python.exe -m uvicorn src.main:app --host 0.0.0.0 --port 8000}
+  \item \textbf{前端}: \texttt{cd frontend-vue \&\& npm run build} (dist/ 静态文件)
+  \item \textbf{数据库}: SQLite (parse.db + telemetry.db + local.db)
+  \item \textbf{MQTT}: Mosquitto broker :1883 (内置)
+  \item \textbf{TDengine}: 远端 172.22.193.167:6041 (不可达时自动降级 SQLite)
+\end{itemize}
+
+\section{协议接入状态}
+
+\begin{longtable}{p{3cm}p{2.5cm}p{4cm}p{3.5cm}}
+\toprule
+\textbf{协议} & \textbf{状态} & \textbf{数据源} & \textbf{路径} \\
+\midrule
+Modbus TCP & ✅ 已接入 & Oracle (via IoMonitor) & CommBridge $\rightarrow$ IoMonitor $\rightarrow$ Oracle \\
+A11 RTU & ✅ 已接入 & Oracle (via IoMonitor) & IOMan $\rightarrow$ IoMonitor $\rightarrow$ Oracle \\
+OPC DA & ⚠️ DCOM 限制 & Oracle (via IoMonitor) & OPC\_FC\_Client $\rightarrow$ IoMonitor $\rightarrow$ Oracle \\
+有叶云 HTTP & ✅ 已接入 & 直接 API & youyeyun.com $\rightarrow$ Pipeline \\
+PHM 云平台 & 🔲 待接入 & Keycloak OIDC & test.pubsci.top $\rightarrow$ Pipeline \\
+Siemens S7 & 🔲 未启用 & - & s7onlinx.dll (驱动已有) \\
+Mitsubishi & 🔲 未启用 & - & MruComDll.dll (驱动已有) \\
+Beckhoff & 🔲 未启用 & - & TcAdsDll.dll (驱动已有) \\
+Omron & 🔲 未启用 & - & HCTPXYIF.DLL (驱动已有) \\
+GE Fanuc & 🔲 未启用 & - & GEFSNP32.DLL (驱动已有) \\
+\bottomrule
+\end{longtable}
+
+\end{document}

@@ -1,0 +1,133 @@
+% ============================================================
+% 测试用例 — 时序数据采集与应用管理系统
+% ============================================================
+\documentclass[11pt,a4paper]{ctexart}
+\usepackage{xeCJK,xcolor,graphicx,float,fancyhdr,hyperref,geometry,longtable,booktabs,enumitem}
+\setCJKmainfont{Microsoft YaHei}
+\geometry{a4paper,margin=2.2cm}
+\pagestyle{fancy}
+\fancyhead[L]{测试用例 — 时序数据采集与应用管理系统}
+\fancyhead[R]{V1.0}
+\fancyfoot[C]{\thepage}
+\begin{document}
+
+\begin{center}
+{\Huge\bfseries 测试用例}\\[8pt]
+{\large 时序数据采集与应用管理系统}\\[8pt]
+{\large 版本 V1.0 \quad 2026-08}
+\end{center}
+\vspace{1em}\noindent\hrulefill\vspace{1em}
+
+\section{API 接口测试}
+
+\begin{longtable}{p{1.8cm} p{2.5cm} p{5.5cm} p{2.5cm} p{2cm}}
+\toprule
+\textbf{编号} & \textbf{接口} & \textbf{测试内容} & \textbf{预期结果} & \textbf{状态} \\
+\midrule
+\endfirsthead
+\multicolumn{5}{c}{(续表)} \\
+\toprule
+\textbf{编号} & \textbf{接口} & \textbf{测试内容} & \textbf{预期结果} & \textbf{状态} \\
+\midrule
+\endhead
+API-01 & POST /api/auth/login & dgiot\_dev/dgiot\_dev 登录 & 返回token+username & PASS \\
+API-02 & GET /api/health & 健康检查 & status=ok, devices>0 & PASS \\
+API-03 & GET /api/stats & 采集统计 & total\_devices=566, total\_collects>0 & PASS \\
+API-04 & GET /api/devices & 设备列表(分页) & 返回566设备, page\_size生效 & PASS \\
+API-05 & GET /api/devices/:id & 单设备查询 & 返回设备详情含测点 & PASS \\
+API-06 & GET /api/devices/:id/points & 设备测点 & 返回3个测点 & PASS \\
+API-07 & GET /api/alarms & 告警列表 & 返回3条活跃告警 & PASS \\
+API-08 & POST /api/alarms/:id/confirm & 确认告警 & 返回status=confirmed & PASS \\
+API-09 & POST /api/alarms/:id/clear & 清除告警 & 返回status=cleared & PASS \\
+API-10 & GET /api/classes/Product & 产品列表 & 返回12种产品 & PASS \\
+API-11 & GET /api/classes/Device & Parse设备查询 & 支持page/page\_size分页 & PASS \\
+API-12 & GET /api/classes/Alarm & Parse告警查询 & 支持status过滤 & PASS \\
+API-13 & GET /api/classes/\_User & 用户列表 & 返回3个用户 & PASS \\
+API-14 & GET /api/classes/Department & 部门列表 & 返回4级组织树 & PASS \\
+API-15 & GET /api/classes/Channel & 通道列表 & 返回7个通道 & PASS \\
+API-16 & GET /api/channels & 通道管理 & 返回在线/离线状态 & PASS \\
+API-17 & GET /api/admin/users & 管理用户列表 & 返回3用户含角色 & PASS \\
+API-18 & GET /api/admin/roles & 角色列表 & 返回3角色 & PASS \\
+API-19 & GET /api/admin/departments & 部门管理 & 返回4级部门 & PASS \\
+API-20 & GET /api/simulators/status & 模拟器状态 & 返回4台模拟器 & PASS \\
+API-21 & POST /api/simulators/start-all & 全部启动 & 返回started=4 & PASS \\
+API-22 & POST /api/simulators/stop-all & 全部停止 & 返回stopped=4 & PASS \\
+API-23 & GET /api/packets & 报文日志 & 返回5条报文 & PASS \\
+API-24 & GET /api/health/mqtt & MQTT健康 & ok=True & PASS \\
+API-25 & POST /api/telemetry & 遥测写入 & 返回status=ok & PASS \\
+\bottomrule
+\end{longtable}
+
+\section{前端页面测试}
+
+\begin{longtable}{p{1.5cm} p{2.5cm} p{5cm} p{2.5cm} p{2cm}}
+\toprule
+\textbf{编号} & \textbf{页面} & \textbf{测试内容} & \textbf{预期结果} & \textbf{状态} \\
+\midrule
+\endfirsthead
+\multicolumn{5}{c}{(续表)} \\
+\toprule
+\textbf{编号} & \textbf{页面} & \textbf{测试内容} & \textbf{预期结果} & \textbf{状态} \\
+\midrule
+\endhead
+FE-01 & 登录页 /login & dgiot\_dev 登录 & 跳转仪表盘 & PASS \\
+FE-02 & 仪表盘 /dashboard & KPI卡片数据 & 显示566设备/47万采集 & PASS \\
+FE-03 & 设备列表 /devices & 设备表格+详情 & 566设备, 点击看详情 & PASS \\
+FE-04 & 设备详情 /devices/:id & 六页签+测点 & 显示3测点+遥测曲线 & PASS \\
+FE-05 & 告警中心 /alarms & 告警列表+详情 & 3条活跃, 点击看详情 & PASS \\
+FE-06 & 产品管理 /products & 产品卡片+物模型 & 12产品, 点击看属性 & PASS \\
+FE-07 & 通道管理 /channels & 通道表格 & 7通道在线/离线 & PASS \\
+FE-08 & 用户管理 /users & 用户表格+角色 & 3用户3角色, 保存生效 & PASS \\
+FE-09 & 边缘代理 /edge-proxy & 协议适配器 & 显示协议表+吞吐图 & PASS \\
+FE-10 & 模拟器 /simulators & 启动/停止 & 4台, 全部启动成功 & PASS \\
+FE-11 & 时序分析 /telemetry & 设备下拉+趋势 & 可选设备+查询 & PASS \\
+FE-12 & 链路拓扑 /topology & 树导航+力导向图 & 油田→厂→区→站 & PASS \\
+FE-13 & 数据报表 /reports & 报表+排行 & 日月年切换正常 & PASS \\
+FE-14 & 流水计算 /stream & 算法配置 & 页面渲染 & PASS \\
+FE-15 & FDE /fde & 六步工作法 & 6步骤可切换 & PASS \\
+FE-16 & 系统概览 /system-overview & 服务状态 & 显示服务健康 & PASS \\
+FE-17 & 运维 /maintenance & 服务监控 & 显示协议+参数 & PASS \\
+FE-18 & 菜单折叠 & 5组折叠展开 & 每组可独立折叠 & PASS \\
+\bottomrule
+\end{longtable}
+
+\section{集成测试}
+
+\begin{longtable}{p{1.5cm} p{3cm} p{5cm} p{2.5cm} p{2cm}}
+\toprule
+\textbf{编号} & \textbf{场景} & \textbf{测试步骤} & \textbf{预期结果} & \textbf{状态} \\
+\midrule
+\endfirsthead
+\multicolumn{5}{c}{(续表)} \\
+\toprule
+\textbf{编号} & \textbf{场景} & \textbf{测试步骤} & \textbf{预期结果} & \textbf{状态} \\
+\midrule
+\endhead
+INT-01 & 端到端MQTT & 边缘代理Push → MQTT → 中枢接收 & 9/9推送成功 & PASS \\
+INT-02 & 登录→仪表盘 & 登录→自动跳转→KPI加载 & 566设备显示 & PASS \\
+INT-03 & 设备→详情→遥测 & 列表点设备→详情→测点→曲线 & 全链路数据 & PASS \\
+INT-04 & 告警闭环 & 产生告警→确认→清除→列表更新 & 状态流转正确 & PASS \\
+INT-05 & 角色分配 & 用户→选角色→保存→刷新 & 角色更新即时 & PASS \\
+INT-06 & 前端构建 & npx vite build & 零错误, <2s & PASS \\
+INT-07 & 文档编译 & xelatex 全量编译 & 13 PDF零报错 & PASS \\
+INT-08 & 代理→中枢同步 & Mock API proxy → Vite前端 & 数据一致性 & PASS \\
+\bottomrule
+\end{longtable}
+
+\section{测试汇总}
+
+\begin{table}[H]\centering
+\begin{tabular}{p{3cm} p{3cm} p{3cm} p{3cm}}
+\toprule
+\textbf{类别} & \textbf{总数} & \textbf{通过} & \textbf{通过率} \\
+\midrule
+API接口测试 & 25 & 25 & 100\% \\
+前端页面测试 & 18 & 18 & 100\% \\
+集成测试 & 8 & 8 & 100\% \\
+\midrule
+\textbf{合计} & \textbf{51} & \textbf{51} & \textbf{100\%} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\end{document}

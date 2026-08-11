@@ -1,0 +1,108 @@
+% 新架构图 + 数据流图 — 会议纪要要求
+\documentclass[11pt,a4paper]{ctexart}
+\usepackage[top=1.5cm,bottom=1.5cm,left=1.5cm,right=1.5cm]{geometry}
+\usepackage{tikz,xcolor,float,booktabs,array}
+\usetikzlibrary{arrows.meta,positioning,fit,calc,shapes.geometric,backgrounds}
+\definecolor{pri}{HTML}{0f2347}
+\definecolor{accent}{HTML}{00b4d8}
+\definecolor{gold}{HTML}{c9a84c}
+\definecolor{gray}{HTML}{64748b}
+\definecolor{edge}{HTML}{f59e0b}
+\definecolor{hub}{HTML}{10b981}
+\definecolor{center}{HTML}{00b4d8}
+\pagestyle{empty}
+\begin{document}
+
+% ===== 图1: 系统架构图 (新) =====
+\section*{平台系统架构}
+
+\begin{figure}[H]\centering
+\begin{tikzpicture}[scale=0.62,transform shape,
+  box/.style={draw,rounded corners=4pt,fill=#1!10,text width=3cm,minimum height=0.7cm,align=center,font=\small},
+  grp/.style={draw=#1!50,fill=#1!5,rounded corners=6pt,text width=14.5cm,minimum height=2.0cm,align=left},
+]
+
+% 边缘采集层
+\node[grp=edge] (edge) at (0,1.5) {};
+\node[font=\large\bfseries,text=edge!80] at (-5.5,3.0) {边缘采集层};
+\node[box=edge] at (-5,2.0) {设备接入\\[-2pt]\footnotesize 协议扫描·设备注册};
+\node[box=edge] at (-1,2.0) {数据采集\\[-2pt]\footnotesize 多协议·双路采集};
+\node[box=edge] at (3,2.0) {边缘代理\\[-2pt]\footnotesize IO服务器·本地缓存};
+
+% 边缘中枢层
+\node[grp=hub] (hub) at (0,-1.5) {};
+\node[font=\large\bfseries,text=hub!80] at (-5.5,-0.3) {边缘中枢层};
+\node[box=hub] at (-5,-1) {消息中间件\\[-2pt]\footnotesize MQTT·边云同步};
+\node[box=hub] at (-1,-1) {流式计算\\[-2pt]\footnotesize 15种算法·实时处理};
+\node[box=hub] at (3,-1) {数据存储\\[-2pt]\footnotesize 时序+关系+文件};
+
+% 中心应用层
+\node[grp=center] (app) at (0,-4.5) {};
+\node[font=\large\bfseries,text=center!80] at (-5.5,-3.3) {中心应用层};
+\node[box=center] at (-5.5,-4) {驾驶舱\\[-2pt]\footnotesize 数字大屏·GIS地图};
+\node[box=center] at (-2,-4) {设备管理\\[-2pt]\footnotesize 台账·生命周期·产品};
+\node[box=center] at (1.5,-4) {告警管理\\[-2pt]\footnotesize 四级告警·规则引擎};
+\node[box=center] at (5,-4) {报表分析\\[-2pt]\footnotesize 日月年·导出·回放};
+
+% 箭头
+\draw[-{Stealth},ultra thick,edge!70] (edge.south) -- node[right,font=\small]{数据上报} (hub.north);
+\draw[-{Stealth},ultra thick,hub!70] (hub.south) -- node[right,font=\small]{汇聚处理} (app.north);
+
+% 运维管理 竖条
+\node[draw=gray!50,fill=gray!8,rounded corners=4pt,text width=1.8cm,minimum height=9cm,align=center,font=\small] at (7.5,-1.5) {运维\\管理\\[-2pt]\footnotesize 用户\\权限\\审计};
+
+\end{tikzpicture}
+\caption{平台系统架构 — 三层物理部署 · 七模块功能分布}
+\end{figure}
+
+\newpage
+
+% ===== 图2: 数据流图 (抽象) =====
+\section*{数据流图}
+
+\begin{figure}[H]\centering
+\begin{tikzpicture}[scale=0.7,transform shape,
+  node/.style={draw,rounded corners=4pt,fill=#1!10,text width=3.5cm,minimum height=0.8cm,align=center,font=\footnotesize},
+  arr/.style={-{Stealth},thick},
+]
+
+\node[node=edge] (devices) at (0,0) {现场设备\\RTU·DCS·PLC·仪表};
+\node[node=edge,right=2cm of devices] (collect) {数据采集\\协议解析·双路采集};
+\node[node=hub,right=2cm of collect] (process) {数据处理\\流式计算·告警判定};
+\node[node=hub,right=2cm of process] (store) {数据存储\\时序库·关系库};
+\node[node=center,right=2cm of store] (display) {数据展示\\驾驶舱·报表·GIS};
+
+\draw[arr] (devices) -- (collect);
+\draw[arr] (collect) -- (process);
+\draw[arr] (process) -- (store);
+\draw[arr] (store) -- (display);
+
+% 反馈箭头
+\draw[arr,dashed,gray!60] (display.south) -- ++(0,-1) -| node[below,pos=0.5,font=\footnotesize]{指令下发} (collect.south);
+
+\node[font=\small,text=gray] at (6,-2.5) {采集→处理→存储→展示 → 指令反馈 全链路闭环};
+
+\end{tikzpicture}
+\caption{数据流图 — 从现场设备到管理屏幕的抽象数据管道}
+\end{figure}
+
+% ===== 图3: 七模块总览 =====
+\section*{技术服务内容 — 七模块}
+
+\begin{table}[H]\centering
+\begin{tabular}{p{2.5cm}p{3.5cm}p{7cm}}
+\toprule
+\textbf{一级模块} & \textbf{核心服务} & \textbf{平台价值} \\
+\midrule
+1. 设备接入 & 协议扫描·设备注册·通道建立 & 多厂家多协议一站式接入，自动发现\\[2pt]
+2. 数据采集 & 多协议解析·双路采集·边缘代理 & 全量数据汇聚，不依赖单一系统\\[2pt]
+3. 流式计算 & 15种算法·实时处理·异常检测 & 数据入库前完成判定，秒级响应\\[2pt]
+4. 告警管理 & 四级分级·规则引擎·通知闭环 & 异常早发现早处理，减少损失\\[2pt]
+5. 设备管理 & 台账·生命周期·产品模板 & 统一管理视图，操作可追溯\\[2pt]
+6. 数据存储 & 时序+关系+文件三级存储 & 数据不丢不重，分级降本\\[2pt]
+7. 驾驶舱 & 大屏·GIS·报表·趋势分析 & 一张图看清全局，决策有据\\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\end{document}

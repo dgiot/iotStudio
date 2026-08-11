@@ -64,7 +64,7 @@ import Sidebar from './Sidebar/index.vue'
 import Navbar from './Navbar/index.vue'
 import NotifyBell from './NotifyBell.vue'
 import { getHealth, getStats } from '../api'
-import { MENU_GROUPS } from '../utils/constants'
+import { MENU_GROUPS, MENU_VISIBILITY, DEPLOY_MODE } from '../utils/constants'
 import { tabsState } from '../stores/tabs'
 import { watch } from 'vue'
 import { useWebSocket } from '../composables/useWebSocket'
@@ -180,11 +180,18 @@ const menuGroups = computed(() => {
     if (!groups[label]) groups[label] = []
     groups[label].push(item)
   })
+  // 按部署模式过滤
+  const visible = MENU_VISIBILITY[DEPLOY_MODE] || MENU_VISIBILITY.hub
+  const visibleLabels = visible.map(g => (MENU_GROUPS[g] || {}).label).filter(Boolean)
+  const filtered = {}
+  for (const [label, items] of Object.entries(groups)) {
+    if (visibleLabels.includes(label)) filtered[label] = items
+  }
   const groupOrder = Object.fromEntries(
     Object.entries(MENU_GROUPS).map(([, v]) => [v.label, v.order])
   )
   return Object.fromEntries(
-    Object.entries(groups).sort(([a], [b]) => (groupOrder[a] ?? 99) - (groupOrder[b] ?? 99))
+    Object.entries(filtered).sort(([a], [b]) => (groupOrder[a] ?? 99) - (groupOrder[b] ?? 99))
   )
 })
 

@@ -96,13 +96,13 @@ const chartOption = computed(() => ({
 
 onMounted(async()=>{
   // KPI 数据
-  try{const r=await api.get('/stats');const s=r.data;
+  try{const s=await api.get("/stats");
     kpiCards.value[0].value=s.online_devices||0
     kpiCards.value[1].value=(s.total_collects||0).toLocaleString()
   }catch{}
-  try{const r=await api.get('/alarms',{params:{status:'active'}});kpiCards.value[2].value=r.data.total||0}catch{}
+  try{const r=await api.get('/alarms',{params:{status:'active'}});kpiCards.value[2].value=r.total||0}catch{}
 
-  try{const r=await getDevices();devices.value=r.data.devices||[]
+  try{const r=await getDevices();devices.value=r.results||r.devices||[]
     if(devices.value.length>0){
       query.value.deviceId=devices.value[0].device_id
       await onDeviceChange(query.value.deviceId)
@@ -118,7 +118,7 @@ async function onDeviceChange(deviceId){
   points.value=[]
   query.value.pointId=''
   if(!deviceId)return
-  try{const r=await getPoints(deviceId);points.value=r.data.points||[]}catch{}
+  try{const r=await getPoints(deviceId);points.value=r.results||r.points||[]}catch{}
 }
 
 async function search(){
@@ -126,7 +126,7 @@ async function search(){
   loading.value=true;searched.value=true
   try{
     const r=await getTelemetry(query.value.deviceId,query.value.pointId,{limit:query.value.limit})
-    rows.value=r.data.data||[]
+    rows.value=r.data||[]
     if(rows.value.length===0) ElMessage.info('该点位暂无历史数据（请确认模拟器已启动并采集了一段时间）')
   }catch(e){ElMessage.error('查询失败');rows.value=[]}
   loading.value=false

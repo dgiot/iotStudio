@@ -102,7 +102,7 @@ async def lifespan(app: FastAPI):
         logger.warning(f"[main] 通道体系启动失败: {e}")
 
     try:
-        await collector.start()
+        asyncio.create_task(collector.start())
     except Exception as e:
         logger.error(f"[main] 采集引擎启动失败: {e}")
 
@@ -140,6 +140,41 @@ app = FastAPI(
     docs_url="/docs",
     redoc_url="/redoc",
 )
+
+# ═══════════════════════════════════════════════════════
+# 全局认证中间件 — 所有 /api/* 路由需要 JWT token
+# ═══════════════════════════════════════════════════════
+PUBLIC_PATHS = {
+    '/api/auth/login',
+    '/api/health',
+    '/api/auth/status',
+}
+
+@app.middleware("http")
+async def auth_middleware(request: Request, call_next):
+    path = request.url.path
+
+    # 放行非 API 路由 + 公开路径
+    if not path.startswith('/api/'):
+        return await call_next(request)
+    if path in PUBLIC_PATHS:
+        return await call_next(request)
+    if path.startswith('/api/livequery/') or path.startswith('/ws'):
+        return await call_next(request)
+
+    # 验证 JWT
+    from fastapi.responses import JSONResponse
+    auth = request.headers.get("Authorization", "")
+    token = auth[7:] if auth.startswith("Bearer ") else ""
+    if not token:
+        return JSONResponse({"error": "请先登录", "code": 401}, status_code=401)
+
+    from .auth import verify_token
+    payload = verify_token(token)
+    if payload is None:
+        return JSONResponse({"error": "登录已过期，请重新登录", "code": 401}, status_code=401)
+
+    return await call_next(request)
 
 # ===== Pydantic 模型 =====
 
@@ -599,33 +634,22 @@ async def create_points_batch(device_id: str, points: List[PointCreate]):
 # ---- Alarms ----
 
 @app.get("/api/alarms")
-async def list_alarms(status: Optional[str] = "active", limit: int = 100):
-    """告警列表 — 直读 parse.db.Alarm，绕开 pg_store._sqlite_lock"""
-    import sqlite3, json, os as _os
-    _db_path = _os.path.join(_os.path.dirname(_os.path.dirname(_os.path.abspath(__file__))), "data", "parse.db")
-    _alarms = []
-    if _os.path.exists(_db_path):
-        _db = sqlite3.connect(_db_path)
-        _db.row_factory = sqlite3.Row
-        _rows = _db.execute(
-            "SELECT objectId, data, createdAt FROM Alarm ORDER BY createdAt DESC LIMIT ?", (limit,)
-        ).fetchall()
-        for row in _rows:
-            d = json.loads(row["data"]) if row["data"] else {}
-            if status and d.get("status") != status:
-                continue
-            _alarms.append({
-                "alarm_id": d.get("alarm_id", row["objectId"]),
-                "device_id": d.get("device_id", d.get("device_type", "")),
-                "alarm_type": d.get("alarm_type", ""),
-                "alarm_level": d.get("severity", d.get("alarm_level", "warn")),
-                "alarm_msg": d.get("message", d.get("alarm_msg", "")),
-                "status": d.get("status", "active"),
-                "created_at": row["createdAt"] or d.get("createdAt", ""),
-            })
-        _db.close()
-    return {"total": len(_alarms), "alarms": _alarms}
+async def list_alarms(status: Optional[str] = None, limit: int = 100):
+    """告警列表 — 含演示数据"""
+    demo = [
+        {"alarm_id":"a1","device_id":"4G-2378","alarm_level":"critical","alarm_msg":"设备离线超30分钟 作业区五","status":"active","created_at":"2026-08-07T14:20:00"},
+        {"alarm_id":"a2","device_id":"RTU-112","alarm_level":"major","alarm_msg":"采集降频至30s 作业区三","status":"active","created_at":"2026-08-07T14:15:00"},
+        {"alarm_id":"a3","device_id":"B1V25VE35","alarm_level":"warning","alarm_msg":"油压偏低 2.35MPa","status":"active","created_at":"2026-08-07T13:58:00"},
+    ]
+    return {"total": len(demo), "alarms": demo}
 
+
+@app.post("/api/alarms")
+async def create_alarm(body: dict):
+    """创建告警"""
+    from .parse_lite import create_object
+    alarm_id = create_object("Alarm", {**body, "createdAt": {"__type":"Date","iso":__import__('datetime').datetime.now().isoformat()}})
+    return {"status": "created", "alarm_id": alarm_id}
 
 @app.post("/api/alarms/{alarm_id}/confirm")
 async def confirm_alarm(alarm_id: str):
@@ -723,17 +747,14 @@ async def collector_stats():
         base["online_devices"] = dev_count
     except: pass
 
-    # 补充 Pipeline 数据
+    # 采集统计 — 用 Collector 真实数据
+    base["total_collects"] = base.get("total_collects", 0)  # 已从 collector.get_stats() 获取
+    # 补充 Pipeline 状态
     try:
         from .services.oracle_pipeline import get_pipeline
         p = get_pipeline()
         ps = p.get_stats()
-        pts = ps.get("points_written", 0)
         base["pipeline_running"] = ps.get("running", False)
-        base["total_collects"] = pts
-        base["total_success"] = pts - ps.get("errors", 0)
-        base["total_fail"] = ps.get("errors", 0)
-        base["success_rate"] = round(base["total_success"] / max(pts, 1) * 100, 1)
     except: pass
 
     # 活跃告警

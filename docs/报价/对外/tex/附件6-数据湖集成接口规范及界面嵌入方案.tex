@@ -1,0 +1,186 @@
+% ============================================================
+% 附件⑥ — 与数据湖的集成接口规范及管理界面嵌入方案
+% 评审会六项附件待办第 6 项 | 2026-07-13 评审会
+% 依据：评审会硬性要求之二（主数据唯一源头）、之三（两层部署）
+% 编译: xelatex -interaction=nonstopmode 附件6-数据湖集成接口规范及界面嵌入方案.tex
+% ============================================================
+\documentclass[11pt,a4paper]{ctexart}
+\usepackage{xeCJK}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{fancyhdr}
+\usepackage{hyperref}
+\usepackage{geometry}
+\usepackage{longtable}
+\usepackage{booktabs}
+\usepackage{enumitem}
+\usepackage{caption}
+\usepackage{array}
+
+% 字体
+\setCJKmainfont{Microsoft YaHei}
+
+% 页面
+\geometry{a4paper, margin=2.5cm}
+
+% 页眉页脚
+\pagestyle{fancy}
+\fancyhead[L]{时序数据采集与应用管理系统 — 附件⑥}
+\fancyhead[R]{与数据湖的集成接口规范及管理界面嵌入方案}
+\fancyfoot[C]{\thepage}
+
+\hypersetup{
+  colorlinks=true, linkcolor=black, urlcolor=blue,
+  pdftitle={与数据湖的集成接口规范及管理界面嵌入方案},
+}
+
+\begin{document}
+
+\begin{center}
+{\Huge\bfseries 与数据湖的集成接口规范\\[8pt] 及管理界面嵌入方案}\\[14pt]
+{\large 时序数据采集与应用管理系统 — 附件⑥}\\[8pt]
+{\large 版本 V1.0 \quad 编制日期 2026-08}
+\end{center}
+
+\vspace{1em}
+\noindent\hrulefill
+\vspace{1em}
+
+% ═══════════════════════════════════════════
+\section{集成定位与原则}
+
+本方案落实评审会硬性要求之二、之三及架构定位，明确本系统（时序数据采集与应用管理系统）与数据湖的集成关系：\textbf{本系统是数据中台的实时数据采集子模块，与数据湖逻辑集成、物理分离，禁止形成独立于数据湖的第二套数据管理体系}。
+
+\begin{enumerate}[leftmargin=*]
+  \item \textbf{主数据唯一源头}：点位管理、物模型构建全部以数据湖主数据为唯一源头，本系统只注册、不另建；任何点位/物模型的创建、变更、停用均通过主数据接口完成，主数据下发即为本系统生效配置。
+  \item \textbf{两层部署}：生产网侧仅承担边缘采集与流式计算（毫秒级响应）；办公网侧经 DMZ 区做短期缓存并接入数据湖；长期存储由数据湖统一承载，本系统不留长期历史库。
+  \item \textbf{禁止孤岛}：管理界面嵌入数据湖门户（单点登录、菜单集成、权限映射），不新建独立门户；对外数据服务统一经数据湖发布，本系统不对外暴露独立数据出口。
+  \item \textbf{职责边界}：数据湖承担长期存储、主数据管理、分析与共享；本系统承担实时采集、边缘流式计算、实时告警、短期缓存与实时查询。边界清晰、接口契约化。
+\end{enumerate}
+
+% ═══════════════════════════════════════════
+\section{总体集成架构}
+
+\begin{table}[H]\centering
+\caption{两层部署与接口分层}
+\begin{tabular}{p{3.2cm} p{3.6cm} p{3.0cm} p{3.2cm}}
+\toprule
+\textbf{层次} & \textbf{承载内容} & \textbf{与数据湖关系} & \textbf{数据保留} \\
+\midrule
+生产网侧（边缘） & 路由监听采集、多协议接入、边缘流式计算、边缘告警 & 不直连数据湖（跨网隔离） & 本地短期缓存（小时级，断网补传） \\
+办公网侧 DMZ 区 & 边缘中枢、MQTT 消息汇聚、\textbf{以数据转发为主}、短期缓存（约 7 天） & 经接口接入数据湖 & 短期缓存（约 7 天，幂等重放） \\
+数据湖（办公网） & 长期存储、主数据、数据服务、分析共享 & \textbf{主数据唯一源头 + 长期存储唯一承载} & 长期（按数据湖策略） \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\textbf{接口分层}：本系统与数据湖之间共 5 类接口——\textbf{主数据接口}（注册/变更/查询）、\textbf{数据接入接口}（时序数据写入/回补）、\textbf{数据服务接口}（实时查询/订阅）、\textbf{元数据同步接口}（字典/单位/资产）、\textbf{门户集成接口}（单点登录/菜单/权限）。接口全部采用 RESTful + JSON，跨网传输经 DMZ 单向隔离与国密加密（评审会硬性要求之四）。
+
+% ═══════════════════════════════════════════
+\section{接口规范}
+
+\subsection{3.1 主数据接口（唯一源头机制）}
+
+本系统点位与物模型的管理遵循\textbf{注册制}：主数据是权威源，本系统只消费主数据下发的权威配置并回传运行状态，不提供独立的点位/物模型创建入口（管理界面中相应功能仅作为主数据维护的调用端）。
+
+\begin{longtable}{p{3.6cm} p{3.2cm} p{1.9cm} p{3.4cm}}
+\toprule
+\textbf{接口} & \textbf{方向} & \textbf{协议/频率} & \textbf{说明} \\
+\midrule
+\endfirsthead
+\multicolumn{4}{c}{(续表)} \\
+\toprule
+\textbf{接口} & \textbf{方向} & \textbf{协议/频率} & \textbf{说明} \\
+\midrule
+\endhead
+点位注册申请 & 本系统$\rightarrow$数据湖 & REST/按需 & 新接入点位向主数据注册，含 A2/A5 设备标识、物模型类型、量程/精度/单位/频次 \\
+点位注册批复 & 数据湖$\rightarrow$本系统 & REST/实时 & 主数据分配标准点位编码（主数据点位编码），本系统据此建采集配置 \\
+物模型注册申请/批复 & 本系统$\rightarrow$数据湖 & REST/按需 & G1--G8 物模型模板向主数据注册，校验后成为主数据资产 \\
+点位变更申请/下发 & 双向 & REST/实时 & 量程、频次、阈值等变更走主数据流程，主数据下发后本系统热加载生效 \\
+点位停用 & 数据湖$\rightarrow$本系统 & REST/实时 & 停用下发后本系统停止采集并归档配置，保留历史轨迹 \\
+主数据查询 & 本系统$\rightarrow$数据湖 & REST/查询 & 按设备/物模型/区域批量查询权威点位清单与字典 \\
+\bottomrule
+\end{longtable}
+
+\subsection{3.2 数据接入接口（时序数据写入）}
+
+\begin{longtable}{p{3.6cm} p{3.2cm} p{1.9cm} p{3.4cm}}
+\toprule
+\textbf{接口} & \textbf{方向} & \textbf{协议/频率} & \textbf{说明} \\
+\midrule
+\endfirsthead
+\multicolumn{4}{c}{(续表)} \\
+\toprule
+\textbf{接口} & \textbf{方向} & \textbf{协议/频率} & \textbf{说明} \\
+\midrule
+\endhead
+时序数据批量写入 & DMZ 缓存$\rightarrow$数据湖 & REST 批量/秒级-分钟级 & 按主数据点位编码写入，批量带幂等键（作业区+点位+时间戳），重复投递不重复入库 \\
+消息流式接入 & DMZ 缓存$\rightarrow$数据湖 & Kafka/流式 & 可选流式通道，QoS 语义 at-least-once，消费端幂等去重 \\
+断网回补 & DMZ 缓存$\rightarrow$数据湖 & REST 批量/恢复后 & 边缘断网期间本地缓存，恢复后按时间窗补传，带完整性校验（条数+校验和） \\
+写入确认与错误回执 & 数据湖$\rightarrow$本系统 & REST/实时 & 分批确认；格式错误、点位未注册等错误回执触发告警与重试 \\
+\bottomrule
+\end{longtable}
+
+\subsection{3.3 数据服务接口（实时数据对外）}
+
+\begin{longtable}{p{3.6cm} p{3.2cm} p{1.9cm} p{3.4cm}}
+\toprule
+\textbf{接口} & \textbf{方向} & \textbf{协议/频率} & \textbf{说明} \\
+\midrule
+\endfirsthead
+\multicolumn{4}{c}{(续表)} \\
+\toprule
+\textbf{接口} & \textbf{方向} & \textbf{协议/频率} & \textbf{说明} \\
+\midrule
+\endhead
+实时测点查询 & 数据湖$\rightarrow$本系统 & REST/查询 & 上层应用经数据湖查询本系统实时/近期数据，本系统仅向数据湖暴露，不直接对外 \\
+订阅推送 & 数据湖$\rightarrow$本系统 & REST 回调 & 数据湖按订阅规则回推告警/指标到业务系统，本系统提供订阅注册与回调管理 \\
+\bottomrule
+\end{longtable}
+
+\subsection{3.4 元数据同步接口}
+
+设备资产（A2/A5）、组织层级（油田$\rightarrow$作业区$\rightarrow$站库$\rightarrow$井组）、单位字典、量程模板等元数据由数据湖主数据统一维护，本系统定时/事件同步，保证采集配置与主数据资产一一对应，元数据差异率纳入体检台账监控。
+
+% ═══════════════════════════════════════════
+\section{管理界面嵌入方案}
+
+\begin{enumerate}[leftmargin=*]
+  \item \textbf{嵌入方式}：本系统管理界面（监控大盘、配置管理、告警处置、资产视图等）以\textbf{门户子模块}形式嵌入数据湖门户，不新建独立门户、不出现第二套登录入口。
+  \item \textbf{单点登录}：对接数据湖门户统一认证（CAS/OIDC），用户一次登录、权限沿用门户体系；本系统不再自建账号体系，RBAC 与门户角色映射（数据湖角色 $\rightarrow$ 本系统菜单/操作权限）。
+  \item \textbf{菜单集成}：本系统菜单注册至门户导航树（数据湖门户 $\rightarrow$ 实时数据采集子模块），菜单权限随门户角色下发；嵌入页面支持门户统一的主题与布局规范。
+  \item \textbf{嵌入范围}：一期嵌入监控大盘、配置管理、告警处置、资产与主数据维护调用端、运维管控；报表中心经数据湖统一报表出口发布。
+  \item \textbf{界面功能核算边界}：界面呈现层由《界面功能表》单独核算（另行报价），其中"数据湖门户界面嵌入"项（单点登录、菜单集成、主题适配）已单列，本报价书总价不含界面呈现层。
+\end{enumerate}
+
+% ═══════════════════════════════════════════
+\section{主数据唯一源头机制（流程）}
+
+\begin{enumerate}[leftmargin=*]
+  \item \textbf{接入前注册}：任何新点位、新设备类型接入前，必须先向主数据注册获批，获得主数据点位编码后方可配置采集——未注册点位不采集（体检阶段即拦截）。
+  \item \textbf{变更全流程管控}：量程/频次/阈值变更、设备迁移、点位停用均走主数据流程；主数据下发为本系统唯一生效来源，本系统侧热加载、可回滚，变更全程留痕。
+  \item \textbf{与 A11 现有点位的关系}：A11 既有测点通过主数据已有点位映射接入（路由监听采集数据挂接到主数据点位编码），不新建平行点位；本项目新增点位按注册制补录，两条路径最终统一于主数据唯一编码体系。
+  \item \textbf{禁止双写}：本系统不维护独立点位字典作为权威源，元数据差异率与"未注册点位数"纳入体检台账（红黄绿告警），从机制上杜绝第二套数据管理体系。
+\end{enumerate}
+
+% ═══════════════════════════════════════════
+\section{数据流向与一致性保障}
+
+\begin{enumerate}[leftmargin=*]
+  \item \textbf{流向}：边缘采集 $\rightarrow$ 边缘流式计算/告警 $\rightarrow$ 边缘本地缓存 $\rightarrow$ DMZ 短期缓存 $\rightarrow$ 数据湖长期存储；告警等事件数据同步按订阅推送。
+  \item \textbf{幂等与重放}：所有写入携带幂等键（作业区+主数据点位编码+时间戳），重复投递、断网重放均不产生重复数据；数据湖侧消费端按幂等键去重。
+  \item \textbf{缓存策略}：DMZ 区\textbf{以数据转发为主}（评审会明确"坚决不存数据、只做数据转发"），仅保留约 7 天短期缓存承担断网回补与实时查询缓冲；不在 DMZ 部署长期数据库，缓存保留期结束后由数据湖长期承载，本系统不增长期历史库。
+  \item \textbf{一致性监控}：写入确认率、回补成功率、点位元数据差异率、缓存堆积量纳入运维看板与体检台账，异常自动告警。
+\end{enumerate}
+
+% ═══════════════════════════════════════════
+\section{接口清单汇总与实施安排}
+
+\begin{itemize}[leftmargin=*]
+  \item 接口清单（5 类 / 16 个接口）详见本附件各节表；接口规范以联调阶段双方确认的《接口文档 V1.0》为准，本附件为契约基线。
+  \item 实施安排：主数据接口与数据接入接口联调纳入里程碑 M4（2026-11 上旬，与 A11/数据湖/作业区平台联调）；门户嵌入与单点登录纳入 M2 原型验证（2026-09 上旬）及 M4 联调验证。
+  \item 工作量归属：主数据对接（数据湖注册、物模型、点位字典）150 人天已含于附件④（模块三）；门户界面嵌入 8 万元已含于《界面功能表》（另行报价）。
+  \item 验收口径：联调报告 + 问题清零；未注册点位拦截率 100\%、写入幂等去重正确性 100\%、门户单点登录与菜单权限随动验证通过。
+\end{itemize}
+
+\end{document}

@@ -194,7 +194,7 @@ function getAdvice(a) {
 function formatTime(ts) { return ts ? new Date(ts).toLocaleString() : '-' }
 
 async function load() {
-  try { const r = await getAlarms({ status: filter.value || undefined }); alarms.value = r.data.alarms || [] } catch {}
+  try { const r = await getAlarms({ status: filter.value || undefined }); alarms.value = r.results || r.alarms || [] } catch {}
   page.value = 1
 }
 async function handleConfirm(id) { await confirmAlarm(id); ElMessage.success('已确认'); load() }
@@ -231,7 +231,7 @@ onMounted(load)
 .alarm-row { display: flex; align-items: center; gap: 10px; padding: 8px 12px; cursor: pointer; border-bottom: 1px solid #162d45; }
 .alarm-row:hover { background: #112233; }
 .alarm-row.active { background: #152a40; border-left: 3px solid #ef5350; }
-.ar-sev { width: 36px; height: 22px; border-radius: 4px; font-size: 10px; font-weight: bold; color: #fff; display: flex; align-items: center; justify-content: center; text-transform: uppercase; flex-shrink: 0; }
+.ar-sev { width: 36px; height: 22px; border-radius: 4px; font-size: 10px; font-weight: bold; color: #141520; display: flex; align-items: center; justify-content: center; text-transform: uppercase; flex-shrink: 0; }
 .ar-sev.danger,.ar-sev.p0 { background: #ef5350; }
 .ar-sev.warn,.ar-sev.p1 { background: #E6A23C; }
 .ar-sev.info,.ar-sev.p2 { background: #409EFF; }
@@ -243,7 +243,7 @@ onMounted(load)
 /* 详情 */
 .ldd-header { display: flex; align-items: center; gap: 10px; }
 .ldd-title { font-size: 15px; color: #e0e0e0; font-weight: bold; }
-.sev-badge { width: 40px; height: 24px; border-radius: 4px; font-size: 11px; font-weight: bold; color: #fff; display: flex; align-items: center; justify-content: center; }
+.sev-badge { width: 40px; height: 24px; border-radius: 4px; font-size: 11px; font-weight: bold; color: #141520; display: flex; align-items: center; justify-content: center; }
 .sev-badge.danger { background: #ef5350; } .sev-badge.warn { background: #E6A23C; } .sev-badge.info { background: #409EFF; }
 .ldd-kpi { text-align: center; padding: 6px; background: #0a1a2a; border-radius: 4px; }
 .lk-val { font-size: 14px; font-weight: bold; }

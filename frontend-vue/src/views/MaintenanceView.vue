@@ -135,33 +135,41 @@ function inRange(p) {
 
 async function loadAll() {
   try {
+    const maint = await axios.get('/api/maintenance/status'); const d = maint.data
+    statusCards.value[0].value = d.stats?.online_devices||0
+    statusCards.value[1].value = (d.stats?.success_rate||0)+'%'
+    statusCards.value[2].value = d.stats?.collects||0
+    statusCards.value[3].value = d.stats?.alarms_active||0
+    services.value = (d.services||[]).map(s=>({...s,online:s.status==='online'}))
+    params.value = d.params||[]
+    if (d.sqlite?.status==='connected') sqliteStatus.value = '正常 ('+d.sqlite.path+') · '+(d.sqlite.records||0).toLocaleString()+' 条'
+    return
+  } catch {}
+  try {
     const [stats, alarms, sims, devs] = await Promise.all([
       axios.get('/api/stats'), axios.get('/api/alarms?status=active'),
       axios.get('/api/simulators/status'), axios.get('/api/devices')
     ])
-    const s = stats.data
+    const s = stats
     statusCards.value[0].value = s.online_devices||0
     statusCards.value[1].value = (s.success_rate||0)+'%'
     statusCards.value[2].value = s.total_collects||0
-    statusCards.value[3].value = alarms.data.total||0
-
-    // 更新服务状态
-    ;(sims.data.simulators||[]).forEach(s => {
+    statusCards.value[3].value = alarms.total||0
+    ;(sims.simulators||[]).forEach(s => {
       const svc = services.value.find(v => v.host.endsWith(':'+s.port))
       if (svc) svc.online = s.status === 'running'
     })
-
-    devices.value = devs.data.devices || []
+    devices.value = devs.devices || devs.results || []
 
     // 加载最新遥测数据
     const paramList = []
     for (const d of devices.value.slice(0,6)) {
       try {
         const r = await axios.get(`/api/telemetry/${d.device_id}/latest`)
-        const pts = r.data.data || []
+        const pts = r.data || []
         // 同时获取点位阈值
         const r2 = await axios.get(`/api/devices/${d.device_id}/points`)
-        const pMap = {}; (r2.data.points||[]).forEach(p => pMap[p.point_id] = p)
+        const pMap = {}; (r2.points||r2.results||[]).forEach(p => pMap[p.point_id] = p)
         pts.forEach(pt => {
           const cfg = pMap[pt.point_id] || {}
           paramList.push({

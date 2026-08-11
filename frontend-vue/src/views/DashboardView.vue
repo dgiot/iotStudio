@@ -64,7 +64,7 @@ import { PROTOCOL_COLORS } from '../utils/constants'
 const kpiCards = ref([
   { icon:'🟢', label:'在线设备', value:'0', color:'#66bb6a', key:'online' },
   { icon:'📤', label:'总采集次数', value:'0', color:'#66d9ff', key:'collects' },
-  { icon:'✅', label:'成功率', value:'0%', color:'#ffa726', key:'rate' },
+  { icon:'🌊', label:'流式处理', value:'0', color:'#00b4d8', key:'stream' },
   { icon:'⚠️', label:'活跃告警', value:'0', color:'#ef5350', key:'alarms' },
   { icon:'📡', label:'MQTT状态', value:'运行中', color:'#66bb6a', key:'mqtt' },
   { icon:'⏱️', label:'运行时间', value:'0s', color:'#ab47bc', key:'uptime' },
@@ -89,20 +89,20 @@ async function fetchLogs() {
       const r = await api.get(`/telemetry/${d.did}/${d.pid}`, { params: { limit: 1 } })
       const row = r.data?.data?.[0]
       if (row) items.push({ time: (row.ts||'').slice(11,19), device: d.name, point: d.name.slice(-4), value: row.value?.toFixed(1)||'—', protocol: d.proto, ok: true, color: '#66bb6a' })
-    } catch {}
+    } catch (e) { console.error('Dashboard error:', e) }
   }
   logs.value = items
 }
 
 async function refresh() {
   try {
-    const [sr, dr, ar] = await Promise.all([api.get('/stats'), api.get('/devices',{params:{page_size:200}}), api.get('/alarms',{params:{status:'active'}})])
-    const s=sr.data, devs=dr.data.results||dr.data.devices||[], alarms=ar.data.alarms||ar.data.results||[]
+    const [s, dr, ar, stream] = await Promise.all([api.get('/stats'), api.get('/devices',{params:{page_size:200}}), api.get('/alarms',{params:{status:'active'}}), api.get('/stream/status')])
+    const devs=dr.results||dr.devices||[], alarms=ar.alarms||ar.results||[]
     const kpiMap = {
       online:   s.online_devices||s.total_devices||devs.filter(d=>d.status==='online').length||0,
       collects: s.total_collects||s.pipeline_points||0,
-      rate:     (s.success_rate||100)+'%',
-      alarms:   alarms.length,
+      stream:   (stream.total_processed||0).toLocaleString(),
+      alarms:   (stream.total_alarms||alarms.length),
       mqtt:     s.pipeline_running?'运行中':'等待',
       uptime:   (s.uptime_seconds||0)+'s',
     }
@@ -114,7 +114,7 @@ async function refresh() {
     updateAlarmChart(alarms)
     updateTrendFromStats(s)
     fetchLogs()
-  } catch {}
+  } catch (e) { console.error('Dashboard error:', e) }
 }
 
 function initCharts() {

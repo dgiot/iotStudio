@@ -1,0 +1,265 @@
+% ============================================================
+% 技术白皮书 — 时序数据采集与应用管理系统
+% ============================================================
+\documentclass[11pt,a4paper]{ctexart}
+\usepackage{xeCJK,xcolor,graphicx,float,fancyhdr,hyperref,geometry,longtable,booktabs,enumitem,tikz}
+\usetikzlibrary{arrows.meta,positioning,calc,shapes.geometric}
+\setCJKmainfont{Microsoft YaHei}
+\geometry{a4paper,margin=2.2cm}
+\pagestyle{fancy}
+\fancyhead[L]{时序数据采集与应用管理系统 — 技术白皮书}
+\fancyhead[R]{V1.0}
+\fancyfoot[C]{\thepage}
+\hypersetup{colorlinks=true,linkcolor=black,urlcolor=blue}
+
+\begin{document}
+
+\begin{center}
+{\Huge\bfseries 时序数据采集与应用管理系统\\[8pt] 技术白皮书}\\[14pt]
+{\large 系统架构 · 技术栈 · 安全体系 · 性能指标}\\[8pt]
+{\large 版本 V1.0 \quad 2026-08}
+\end{center}
+\vspace{1em}\noindent\hrulefill\vspace{1em}
+
+\section{系统架构}
+
+\subsection{核心设计：底座 + 插件}
+
+系统\textbf{不是从零开发}，而是在两个成熟底座上以插件方式扩展油田专用功能：
+
+\begin{table}[H]\centering
+\begin{tabular}{p{2.8cm} p{4.2cm} p{4.2cm} p{3.0cm}}
+\toprule
+\textbf{组件} & \textbf{底座} & \textbf{底座提供能力} & \textbf{插件（自研）} \\
+\midrule
+\textbf{边缘代理} & dgiot\_lite (Python) & FastAPI Web 框架、10+ 协议适配框架、SQLite 边缘存储、MQTT 客户端、Parse 数据模型 & 双路采集 · 动态调频 · 断网补传 · 物模型配点 · 作业区适配 · 网关适配 \\
+\textbf{边缘中枢} & dgaiot (Erlang/OTP) & dgiot MQTT、Parse Server 数据 API、PostgreSQL 持久层、TDengine 时序引擎、Nginx 反向代理、36 OTP 应用、用户认证/角色权限 & 流水计算引擎 · 告警规则引擎 · 驾驶舱 · 管理后台 9 模块 · 可视化 · 自动化 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\textbf{设计原则}：底座提供通用基础能力（不计价），插件实现油田差异化定制（计价）。通用能力（MQTT、API、存储）开源复用，油田专用（A11 协议、流水算法、作业区定制）自研开发。
+
+\subsection{总体架构：五层模型}
+
+\begin{figure}[H]\centering
+\begin{tikzpicture}[font=\footnotesize,
+  layer/.style={draw,rounded corners=3pt,align=center,inner sep=6pt,text width=13cm},
+  arr/.style={-{Stealth},thick}]
+\node[layer,fill=orange!10] (L5) {{\large\bfseries ⑤ 应用展示层}\\[2pt]驾驶舱大屏 · 设备管理 · 设备接入 · 算法管理 · 告警中心 · 数据服务 · 可视化 · 自动化 · 系统管理};
+\node[layer,fill=blue!8,below=1.2cm of L5] (L4) {{\large\bfseries ④ 计算分析层}\\[2pt]流水计算引擎（15 内置算法+定制注册）· 流式告警规则引擎（四级+升级链）· 可视化规则编排};
+\node[layer,fill=green!8,below=1.2cm of L4] (L3) {{\large\bfseries ③ 存储与消息层}\\[2pt]TDengine 3.x 时序 + PostgreSQL 15+ 关系 + SQLite 边缘降级 · MQTT/HTTP 消息中间件 · 冷热分层};
+\node[layer,fill=gray!10,below=1.2cm of L3] (L2) {{\large\bfseries ② 采集接入层（边缘代理）}\\[2pt]10+ 协议解析引擎 · 双路采集（静态客户端/动态桥接）· 动态调频 · 设备感知 · 断网缓存补传};
+\node[layer,fill=gray!25,below=1.2cm of L2] (L1) {{\large\bfseries ① 终端设备层}\\[2pt]RTU · DCS · PLC · 智能仪表 · 摄像头 · ZIGBEE 压力变送器 · 12 种继电保护装置（全部利旧，不动不改）};
+\draw[arr] (L5.south) -- (L4.north);
+\draw[arr] (L4.south) -- (L3.north);
+\draw[arr] (L3.south) -- (L2.north);
+\draw[arr] (L2.south) -- (L1.north);
+\end{tikzpicture}
+\caption{五层架构：从终端设备到驾驶舱大屏的数据流水线}
+\end{figure}
+
+\subsection{物理部署：三区隔离}
+
+系统部署在三个网络区域，通过工业防火墙和网闸实现安全隔离：
+
+\begin{table}[H]\centering
+\begin{tabular}{p{2.8cm} p{4.2cm} p{3.5cm} p{3.5cm}}
+\toprule
+\textbf{区域} & \textbf{部署内容} & \textbf{操作系统} & \textbf{核心组件} \\
+\midrule
+\textbf{生产网} & 边缘代理（IO 服务器） & Windows Server 2016 & CommBridge :53001, IOMan ×36, IoMonitor \\
+\textbf{DMZ} & 边缘中枢 & 麒麟 Linux V10 & dgiot, TDengine 2.6.0, PostgreSQL 16, Parse Server, Nginx \\
+\textbf{办公网} & 管理后台 + 驾驶舱 & 浏览器访问 & Vue3 SPA, WebSocket 实时推送 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\section{边缘代理技术规格}
+
+\subsection{运行环境}
+\begin{itemize}[leftmargin=*]
+  \item 部署位置：作业区 IO 服务器（与 A11 服务同机共存）
+  \item 操作系统：Windows Server 2016
+  \item 进程资源：CPU <5\%, 内存约 1.2GB, TCP 连接约 203
+  \item 独立端口：dgiot :53002（与 CommBridge :53001 隔离）
+\end{itemize}
+
+\subsection{协议栈}
+\begin{table}[H]\centering
+\begin{tabular}{p{2.8cm} p{2.4cm} p{2.0cm} p{5.5cm}}
+\toprule
+\textbf{协议} & \textbf{端口} & \textbf{测点数} & \textbf{技术实现} \\
+\midrule
+Modbus TCP & :53001 & 4,567 & CommBridge 专有帧：Seq+Flags+Len+Slave+Func+Data \\
+OPC DA & :135 & 26,081 & DCOM 订阅推送, Kepware/RSLinx, 5 DCS 端点 \\
+A11 & :8889 & 16,663 & psAPISDK 直连, 1--5s 轮询 \\
+MQTT & :1883 & — & paho-mqtt, QoS 0/1/2 \\
+IEC104 & :2404 & — & 自研客户端, 可变帧长 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{双路采集机制}
+
+\begin{itemize}[leftmargin=*]
+  \item \textbf{静态 IP 终端}（设备侧 Server）：系统以客户端身份主动连接设备，旁路取数，不经过 A11
+  \item \textbf{动态 IP 终端}（设备侧 Client, 4G 移动网关）：抢占原 A11 通信的 IP:端口，复制一份数据给本系统，原样转发给 A11——A11 感知不到中间被桥接
+\end{itemize}
+
+\section{边缘中枢技术规格}
+
+\subsection{运行环境}
+\begin{itemize}[leftmargin=*]
+  \item 部署位置：DMZ 区麒麟 Linux V10 (Halberd)
+  \item WSL2 实例：Kylin-Test, x86\_64, 16 核, 7.4GB 内存
+  \item 7 个服务进程：dgiot + Nginx + Parse + TDengine + Vite + PostgreSQL + GoFastDFS
+  \item 管理工具：dgiot-mgr.sh（一键部署/启停/状态/自测）
+\end{itemize}
+
+\subsection{服务端口矩阵}
+\begin{table}[H]\centering
+\begin{tabular}{p{1.8cm} p{3.2cm} p{3.2cm} p{3.2cm}}
+\toprule
+\textbf{端口} & \textbf{服务} & \textbf{用途} & \textbf{技术栈} \\
+\midrule
+:80 & Nginx & 前端入口 + 反向代理 & nginx 1.26.3 \\
+:1337 & Parse Server & 数据 REST API & Python \\
+:1883 & dgiot & MQTT Broker 设备接入 & Erlang/OTP \\
+:5173 & Vite & 前端 SPA & Vue3 + Vite \\
+:6041 & TDengine & 时序数据存储 & C \\
+:7432 & PostgreSQL & 关系数据存储 & C \\
+:18083 & DG-IOT Dashboard & 运维仪表盘 & Erlang \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{启动依赖链}
+
+\begin{verbatim}
+T=0s    PG :7432 + TDengine :6041       存储层启动
+T=3s    DG-IOT dgiot 引擎独立启动        36 个 OTP 应用
+T=4s    Parse :1337                      依赖 PG
+
+T=12s   Vite :5173 + Nginx :80          前端上线
+\end{verbatim}
+
+\section{数据架构}
+
+\subsection{存储策略}
+
+\begin{table}[H]\centering
+\begin{tabular}{p{3.0cm} p{5.5cm} p{4.0cm}}
+\toprule
+\textbf{存储层} & \textbf{技术方案} & \textbf{存储内容} \\
+\midrule
+热数据（SSD） & TDengine 3.x, 最近 30 天 & 高频时序采集数据 \\
+温数据（HDD） & TDengine 3.x, 31 天--1 年 & 聚合统计与归档数据 \\
+冷数据（归档） & PostgreSQL + 文件存储, 1 年以上 & 年度报表与审计记录 \\
+边缘缓存 & SQLite（WAL 模式） & 断网期间本地缓存 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{消息中间件}
+
+\begin{itemize}[leftmargin=*]
+  \item MQTT Broker：dgiot, 千万级并发
+  \item Topic 体系：dgiot/\{site\}/\{gateway\}/\{device\}/\{point\}/data
+  \item QoS 0/1/2 分级：QoS 0（实时遥测, 允许丢失）, QoS 1（告警事件, 至少一次）, QoS 2（配置指令, 仅一次）
+  \item Topic ACL：按设备 ID 控制发布/订阅权限
+\end{itemize}
+
+\section{安全体系}
+
+\subsection{数据安全}
+
+\begin{itemize}[leftmargin=*]
+  \item \textbf{传输加密}：MQTT TLS, API HTTPS, 国密 SM2/3/4 端到端加密
+  \item \textbf{存储加密}：敏感字段 SM4 加密存储，TDengine/PostgreSQL 原生加密
+  \item \textbf{访问控制}：RBAC 角色权限（三员分立）, 菜单/按钮/数据三级权限
+  \item \textbf{审计追溯}：全链路操作日志，不可篡改，按用户/时间/操作多维检索
+\end{itemize}
+
+\subsection{网络安全}
+
+\begin{itemize}[leftmargin=*]
+  \item \textbf{三区隔离}：生产网 → 工业防火墙/网闸（单向只读）→ DMZ → 安全网关 → 办公网
+  \item \textbf{最小端口}：仅开放必要端口（:53002 采集, :1883 MQTT, :80 前端）
+  \item \textbf{生产网纪律}：只读观测 + 禁止安装/重启/停服
+  \item \textbf{凭证保护}：密码不入库/不写死，运行时安全组件读取
+\end{itemize}
+
+\subsection{信创适配}
+
+\begin{table}[H]\centering
+\begin{tabular}{p{3.0cm} p{3.5cm} p{3.5cm}}
+\toprule
+\textbf{组件} & \textbf{当前方案} & \textbf{信创替代方案} \\
+\midrule
+操作系统 & Windows Server 2016 & 麒麟 V10 / 统信 UOS \\
+数据库 & Oracle 11g & 达梦 DM8 / 金仓 KingbaseES \\
+时序库 & TDengine 2.6.0 & TDengine 3.x（社区版信创适配） \\
+CPU & x86\_64 & 飞腾 / 鲲鹏 \\
+浏览器 & Chrome/Edge & 国产浏览器（360/奇安信） \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\section{性能指标}
+
+\begin{table}[H]\centering
+\begin{tabular}{p{4.0cm} p{3.0cm} p{4.5cm}}
+\toprule
+\textbf{指标} & \textbf{目标值} & \textbf{验证方式} \\
+\midrule
+单作业区并发设备 & 200+ RTU/DCS & 第四作业区实测 \\
+全油田并发接入 & 200+ IO 服务器 & 全链路压测验证 \\
+MQTT 消息吞吐 & 3000 万条/15 天 & 全链路压测验证 \\
+流水计算延迟 & <1ms/条 & 内存内判定 \\
+告警响应时间 & 秒级 & WebSocket 推送 \\
+驾驶舱刷新频率 & KPI/告警秒级, 趋势 5--30s & 前端实测 \\
+查询响应时间 & 500 万测点 <3s & 数据库压测 \\
+系统可用率 & >99.5\% & 15 天长稳运行 \\
+CPU 占用（边缘代理） & <5\% & IO 服务器实测 \\
+边缘代理延迟 & <20μs & 帧转发实测 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\section{技术栈总览}
+
+\begin{table}[H]\centering
+\begin{tabular}{p{3.0cm} p{3.5cm} p{3.5cm} p{3.0cm}}
+\toprule
+\textbf{层次} & \textbf{技术} & \textbf{版本} & \textbf{许可证} \\
+\midrule
+后端框架 & Python FastAPI & 0.100+ & MIT \\
+MQTT Broker & dgiot & 4.9.1 & Apache 2.0 \\
+时序数据库 & TDengine & 3.x & AGPL \\
+关系数据库 & PostgreSQL & 15+ & PostgreSQL \\
+消息队列 & MQTT/HTTP & — & — \\
+前端框架 & Vue3 + Vite + Element Plus & 3.x & MIT \\
+数据可视化 & ECharts + TikZ & 5.x & Apache 2.0 \\
+国密算法 & gmssl / 自研 sm\_crypto & — & — \\
+容器化 & Docker + docker-compose & — & — \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\section{与 A11 系统的关系}
+
+\begin{itemize}[leftmargin=*]
+  \item \textbf{关系定位}：并行互补，非改造、非替代
+  \item \textbf{A11 继续保留运行}：不修改 A11 任何配置、DTU 固件或端点行为
+  \item \textbf{数据获取方式}：通过路由监听旁路方式并行采集（搭桥原则，零侵入、可回退）
+  \item \textbf{对 A11 原有业务零影响}：列入验收指标
+  \item \textbf{技术实现}：静态 IP 终端以客户端身份主动连接旁路取数；动态 IP 终端抢占原地址端口桥接转发
+\end{itemize}
+
+\vspace{1em}\noindent\hrulefill
+\begin{center}\small
+编制单位：迪格(杭州)物联科技有限公司 \quad 2026-08 \quad 配套：产品说明书、用户手册、功能边界清单
+\end{center}
+
+\end{document}

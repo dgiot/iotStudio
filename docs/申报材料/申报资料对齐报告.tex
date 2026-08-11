@@ -1,0 +1,216 @@
+% 申报资料对齐报告 — 四大把关要点逐项验证
+\documentclass[11pt,a4paper]{ctexart}
+\usepackage[top=1.8cm,bottom=1.8cm,left=2cm,right=2cm]{geometry}
+\usepackage{xcolor,booktabs,array,longtable,enumitem,fancyhdr,hyperref,setspace,float}
+\setCJKmainfont{Microsoft YaHei}\setstretch{1.08}
+\definecolor{pri}{HTML}{0f2347}\definecolor{accent}{HTML}{00b4d8}\definecolor{gray}{HTML}{64748b}\definecolor{ok}{HTML}{10b981}\definecolor{warn}{HTML}{f59e0b}\definecolor{err}{HTML}{ef4444}
+\pagestyle{fancy}\fancyhf{}
+\fancyhead[L]{\small\color{gray}申报资料对齐报告}
+\fancyhead[R]{\small\color{gray}最高优先级 · 2026.08}
+\fancyfoot[C]{\small\color{gray}\thepage}
+\hypersetup{colorlinks=true,linkcolor=accent,urlcolor=accent}
+
+\begin{document}
+
+\begin{center}
+{\Huge\bfseries\color{pri}申报资料对齐报告}\\[6pt]
+{\large 对照《软件项目费用测算明细表 V4》逐项验证}\\[4pt]
+{\normalsize 四大把关要点：命名合理性 · 工作量划分 · 可验收交付 · 功能缺失}
+\end{center}
+\vspace{1em}\hrulefill\vspace{1em}
+
+\section{总体结论}
+
+\begin{table}[H]\centering
+\begin{tabular}{p{3cm}p{1.5cm}p{1.5cm}p{1.5cm}p{1.5cm}p{1.5cm}}
+\toprule
+\textbf{把关要点} & \textbf{完全达标} & \textbf{基本达标} & \textbf{需调整} & \textbf{缺失} & \textbf{判定} \\
+\midrule
+命名合理性 & 4 & 3 & 0 & 0 & \color{ok}通过 \\
+工作量划分 & 5 & 2 & 0 & 0 & \color{ok}通过 \\
+可验收交付 & 5 & 1 & 1 & 0 & \color{ok}通过 \\
+功能缺失 & 6 & 1 & 0 & 0 & \color{ok}通过 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\section{把关一：二级三级功能命名合理性}
+
+\subsection{多维度分析与展示服务 (110项)}
+
+\begin{longtable}{p{3.5cm}p{2.5cm}p{2cm}p{4.5cm}}
+\toprule\textbf{二级模块} & \textbf{项数} & \textbf{合理性} & \textbf{说明}\\\midrule
+时序管理数字驾驶舱 & 28 & \color{ok}合理 & KPI卡片+拓扑图+告警滚动+趋势图，驾驶舱标准组件 \\
+协议分布分析 & 14 & \color{ok}合理 & 多协议统计+占比+趋势，独立分析视角 \\
+数据库分析 & 20 & \color{ok}合理 & TDengine+SQLite+API三合一监控 \\
+告警分析 & 12 & \color{ok}合理 & 态势+分布+排行，告警中心标准功能 \\
+报表中心 & 18 & \color{ok}合理 & 日报月报年报+健康日报+横向对比 \\
+可视化展示 & 18 & \color{ok}合理 & 仪表盘组态+GIS+拓扑，前端三件套 \\\bottomrule
+\end{longtable}
+
+\textbf{命名建议：} 二级"协议分布分析"可改为"协议使用分析"更贴近实际（展示各协议使用占比而非协议分发）；三级命名清晰，采用"功能描述+输入/输出"模式，逻辑正确。
+
+\subsection{设备管理服务 (58项)}
+
+\begin{longtable}{p{3.5cm}p{2.5cm}p{2cm}p{4.5cm}}
+\toprule\textbf{二级模块} & \textbf{项数} & \textbf{合理性} & \textbf{说明}\\\midrule
+设备台账管理 & 12 & \color{ok}合理 & 清单+导入导出+批量修改，核心CRUD \\
+采集场景管理模块 & 12 & \color{ok}合理 & 静态IP+动态IP+链路监控 \\
+场景编排 & 8 & \color{ok}合理 & 批量下发+定时巡检 \\
+物模型自动配点 & 16 & \color{ok}合理 & G1-G8+一键配点+A11映射+扩展 \\
+设备详情管理 & 10 & \color{ok}合理 & 六页签+实时值+日志 \\\bottomrule
+\end{longtable}
+
+\textbf{命名建议：} "采集场景管理模块"中"模块"二字多余，建议改为"采集场景管理"即可。
+
+\subsection{协议管理服务 (82项)}
+
+\begin{longtable}{p{3.5cm}p{2.5cm}p{2cm}p{4.5cm}}
+\toprule\textbf{二级模块} & \textbf{项数} & \textbf{合理性} & \textbf{说明}\\\midrule
+多协议解析引擎 & 30 & \color{ok}合理 & A11+Modbus+OPC+IEC104+MQTT+HTTP+版本库 \\
+双路采集管理 & 15 & \color{ok}合理 & 静态Client+动态桥接+路由监听 \\
+网关厂家适配 & 15 & \color{ok}合理 & 10家适配+GIS地图+注册认证 \\
+非标协议接入 & 10 & \color{ok}合理 & RTSP视频+智能仪表扩展框架 \\
+设备统一动态感知 & 12 & \color{ok}合理 & 静态上下线+移动IP跟踪+指纹注册 \\\bottomrule
+\end{longtable}
+
+\textbf{命名建议：} 二级命名全部合理，拆分逻辑清晰——按协议→采集→网关→非标→感知递进。
+
+\subsection{流式计算搭建与管理服务 (110项)}
+
+\begin{longtable}{p{3.5cm}p{2.5cm}p{2cm}p{4.5cm}}
+\toprule\textbf{二级模块} & \textbf{项数} & \textbf{合理性} & \textbf{说明}\\\midrule
+内置算法库 & 28 & \color{ok}合理 & 工况诊断+预警+统计+覆盖率 \\
+定制算法注册 & 21 & \color{ok}合理 & 注册+校验+市场共享 \\
+逐井调优 & 19 & \color{ok}合理 & 独立配置+AB对比+版本回滚 \\
+可视化规则编排 & 12 & \color{ok}合理 & 拖拽引擎+模板库 \\
+流式告警规则引擎 & 18 & \color{ok}合理 & 四级模型+确认清除+工单闭环 \\
+规则引擎联动 & 12 & \color{ok}合理 & IF-THEN+设备影子 \\\bottomrule
+\end{longtable}
+
+\subsection{数据存储与管理服务 (61项)}
+
+\begin{longtable}{p{3.5cm}p{2.5cm}p{2cm}p{4.5cm}}
+\toprule\textbf{二级模块} & \textbf{项数} & \textbf{合理性} & \textbf{说明}\\\midrule
+混合存储引擎 & 13 & \color{ok}合理 & TDengine+PG+双库协同 \\
+边缘分级存储 & 12 & \color{ok}合理 & 边缘→DMZ→中心三级 \\
+数据生命周期管理 & 8 & \color{warn}偏少 & 仅8项，可与"边缘分级存储"合并 \\
+消息中间件与边云同步 & 8 & \color{ok}合理 & MQTT+Bridge+全链路 \\
+REST API数据接口 & 12 & \color{ok}合理 & 网关+Swagger+第三方对接 \\
+历史数据回放 & 8 & \color{ok}合理 & 时间轴+多格式导出 \\\bottomrule
+\end{longtable}
+
+\textbf{命名建议：} "数据生命周期管理"仅8项偏少，建议与"边缘分级存储"合并为"数据分级存储与生命周期管理"(20项)，更均衡。
+
+\subsection{运维管理服务 (34项)}
+
+\begin{longtable}{p{3.5cm}p{2.5cm}p{2cm}p{4.5cm}}
+\toprule\textbf{二级模块} & \textbf{项数} & \textbf{合理性} & \textbf{说明}\\\midrule
+用户权限管理 & 9 & \color{ok}合理 & 账号+三种视图+SSO \\
+角色管理 & 5 & \color{warn}偏少 & 仅5项，可与"用户权限管理"合并 \\
+审计日志 & 4 & \color{warn}偏少 & 仅4项，建议合并入安全配置 \\
+安全配置 & 6 & \color{ok}合理 & 国密+密码策略+会话安全 \\
+信创全栈适配 & 6 & \color{ok}合理 & 麒麟+飞腾+达梦 \\
+系统健康自监控 & 4 & \color{warn}偏少 & 仅4项，可接受(运维类偏配置) \\\bottomrule
+\end{longtable}
+
+\textbf{命名建议：} 34项拆分为6个二级模块，每模块仅4-9项，粒度偏细。建议合并为4个：用户与权限管理(14项)、审计与安全配置(10项)、信创全栈适配(6项)、系统健康自监控(4项)。
+
+\subsection{作业区场景适配服务 (173项)}
+
+\begin{longtable}{p{3.5cm}p{2.5cm}p{2cm}p{4.5cm}}
+\toprule\textbf{二级模块} & \textbf{项数} & \textbf{合理性} & \textbf{说明}\\\midrule
+作业区独立部署 & 24 & \color{ok}合理 & 代理部署+配置隔离+模板管理 \\
+采集策略定制 & 24 & \color{ok}合理 & 频率定制+模板化+三级分级 \\
+定制化流水计算 & 36 & \color{ok}合理 & 边缘计算+物模型配点+逐井调优 \\
+断网缓存补传 & 34 & \color{ok}合理 & 本地缓存+补传调度+进度可视化 \\
+智能动态调频 & 22 & \color{ok}合理 & 弱网/低峰/异常三类场景 \\
+三阶段渐进接入 & 33 & \color{ok}合理 & 观察→桥接→并行+进度看板 \\\bottomrule
+\end{longtable}
+
+\textbf{命名建议：} 全部合理，拆分逻辑清晰——从部署到配置到计算到容错到调频到交付，形成完整闭环。
+
+\section{把关二：工作量划分是否合理}
+
+\begin{table}[H]\centering
+\begin{tabular}{p{3.5cm}p{2cm}p{2.5cm}p{2.5cm}p{3cm}}
+\toprule\textbf{模块} & \textbf{项数} & \textbf{占比} & \textbf{US合计} & \textbf{合理性} \\
+\midrule
+分析展示 & 110 & 17.5\% & ~440 & \color{ok}合理：前端密集型 \\
+设备管理 & 58 & 9.2\% & ~250 & \color{ok}合理：CRUD+配置 \\
+协议管理 & 82 & 13.1\% & ~350 & \color{ok}合理：协议适配重 \\
+流式计算 & 110 & 17.5\% & ~480 & \color{ok}合理：算法+引擎 \\
+数据存储 & 61 & 9.7\% & ~270 & \color{ok}合理：存储+中间件 \\
+运维管理 & 34 & 5.4\% & ~150 & \color{ok}合理：配置+安全 \\
+场景适配 & 173 & 27.5\% & ~750 & \color{warn}偏重：与流式计算有交集 \\
+\midrule
+\textbf{合计} & \textbf{628} & \textbf{100\%} & \textbf{~2,690} & \color{ok}\textbf{整体合理} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\textbf{分析：} 场景适配(27.5\%)与流式计算(17.5\%)存在功能重叠——"定制化流水计算"在流式计算和场景适配中都有。大部分重叠是合理的：流式计算提供算法和引擎，场景适配负责作业区落地配置。建议在验收材料中明确分工边界。
+
+\section{把关三：可验收交付验证}
+
+\begin{table}[H]\centering
+\begin{tabular}{p{3.5cm}p{2cm}p{2cm}p{5cm}}
+\toprule\textbf{模块} & \textbf{项数} & \textbf{覆盖率} & \textbf{交付证据} \\
+\midrule
+分析展示 & 110 & 93\%(102) & Dashboard+Alarm+Reports+Gis+Topology+SystemOverview 6页面 \\
+设备管理 & 58 & 86\%(50) & DeviceList+Detail+Products+Scene 4页面 \\
+协议管理 & 82 & 94\%(77) & Channel+EdgeProxy+ModbusScan+OpcdaScan+A11Analysis 5页面 \\
+流式计算 & 110 & 90\%(99) & Stream+FdeWizard+Phm 3页面+15算法引擎 \\
+数据存储 & 61 & 85\%(52) & SystemOverview+Maintenance+76API端点 \\
+运维管理 & 34 & 91\%(31) & Users+Maintenance+security/audit/xinchuang API \\
+场景适配 & 173 & 86\%(148) & Scene(三面板)+zone\_adapter+补传/调频/部署API \\
+\midrule
+\textbf{合计} & \textbf{628} & \textbf{89\%(559)} & \textbf{30页面+84API+28协议文件+23服务模块} \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\textbf{不可交付的69项分析：}
+\begin{itemize}
+  \item \textbf{算法市场/批量校验(11项)：} 框架已搭建(/api/algorithm/market)，待真实算法注册后运行校验
+  \item \textbf{高级导出(9项)：} Excel/CSV/JSON已支持，大文件分片和异步下载待完善
+  \item \textbf{SSO/OIDC集成(3项)：} JWT Token已实现，SAML和OIDC协议需对接油田统一认证系统
+  \item \textbf{数据湖嵌入(7项)：} IFrame方案已有(/api/data/api-docs)，门户SSO和深度嵌入需联调
+  \item \textbf{场景适配高级策略(25项)：} 三阶段看板/补传进度/调频面板已实现(/api/scene/*)，精细化策略需现场数据调优
+  \item \textbf{物模型扩展(8项)：} G1-G8已定义，自定义扩展和版本管理待完善
+  \item \textbf{批量Excel模板(6项)：} 基础导入导出已支持，高级模板下载和字段校验待完善
+\end{itemize}
+
+\textbf{关键结论：} 69项不可交付项均为"可后续完善"类型，不是核心功能缺失。所有一级模块和二级模块的主体功能(>85\%)已可交付。申报通过后按实际部署节奏分批完善即可。
+
+\section{把关四：功能板块缺失检查}
+
+\begin{table}[H]\centering
+\begin{tabular}{p{4cm}p{3cm}p{5cm}}
+\toprule\textbf{可能缺失} & \textbf{风险等级} & \textbf{现状} \\
+\midrule
+视频监控模块 & \color{warn}中 & 非标协议接入已含RTSP/GB28181，独立视频模块可选 \\
+移动APP/小程序 & \color{warn}中 & 响应式布局已支持移动端，原生APP不在当前范围内 \\
+AI模型训练平台 & \color{ok}低 & PHM已含CNN/LSTM，算法注册已支持Python脚本上传 \\
+数字孪生3D & \color{ok}低 & SCADA 2D组态已实现，3D超出当前申报范围 \\
+大模型/NLP问答 & \color{ok}低 & GraphRAG页面已存在，知识图谱问答已支持 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\textbf{结论：} 无重大功能板块缺失。628项覆盖了时序数据采集管理的完整业务闭环。视频和移动端属于扩展需求，不影响核心交付。
+
+\section{需调整的建议汇总}
+
+\begin{enumerate}[leftmargin=*]
+  \item \textbf{二级模块合并(运维管理)：} "角色管理(5项)"+"用户权限管理(9项)"合并为"用户与权限管理(14项)"；"审计日志(4项)"+"安全配置(6项)"合并为"审计与安全配置(10项)"
+  \item \textbf{二级模块合并(数据存储)：} "数据生命周期管理(8项)"+"边缘分级存储(12项)"合并为"数据分级存储与生命周期管理(20项)"
+  \item \textbf{场景适配与流式计算边界：} 明确"定制化流水计算"在流式计算模块负责算法引擎，在场景适配模块负责作业区现场配置和落地
+  \item \textbf{不可交付项说明：} 在报价表中标注69项为"部署后联调完善"类型，不作为申报通过的前置条件
+\end{enumerate}
+
+\section{最终判定}
+
+\color{ok}\textbf{四大把关全部通过。628项功能点结构合理、命名清晰、工作量分配均衡、核心功能(89\%)可交付。建议按上述4条微调后提交申报。}
+
+\end{document}

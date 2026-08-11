@@ -38,10 +38,10 @@
         <div class="ldd-h"><span class="av" style="width:40px;height:40px;font-size:18px">{{ (sel.username||'?')[0].toUpperCase() }}</span><div><div style="font-size:16px;color:#e0e0e0;font-weight:bold">{{ sel.username }}</div><div style="font-size:12px;color:#6a8aaa">ID: {{ sel.objectId }}</div></div><el-tag type="success" size="small">用户</el-tag></div>
         <el-descriptions :column="2" size="small" border style="margin:12px 0"><el-descriptions-item label="用户名">{{ sel.username }}</el-descriptions-item><el-descriptions-item label="角色">{{ sel.role||'未分配' }}</el-descriptions-item><el-descriptions-item label="创建">{{ f(sel.createdAt) }}</el-descriptions-item><el-descriptions-item label="更新">{{ f(sel.updatedAt) }}</el-descriptions-item></el-descriptions>
         <div class="sec">角色分配</div>
-        <el-select v-model="ar" placeholder="选择角色" size="small" style="width:200px" @change="assignRole"><el-option v-for="r in roles" :key="r.objectId" :label="r.name" :value="r.objectId" /></el-select>
+        <div style="display:flex;gap:8px"><el-select v-model="ar" placeholder="选择角色" size="small" style="width:200px"><el-option v-for="r in roles" :key="r.objectId" :label="r.name" :value="r.objectId" /></el-select><el-button type="primary" size="small" @click="assignRole">保存</el-button></div>
         <div class="sec" style="margin-top:8px">部门分配</div>
-        <el-select v-model="ad" placeholder="选择部门" size="small" style="width:200px" @change="assignDept"><el-option v-for="r in roles" :key="r.objectId" :label="r.name" :value="r.objectId" /></el-select>
-        <div class="acts"><el-button type="danger" size="small" @click="del">🗑 删除</el-button></div>
+        <div style="display:flex;gap:8px"><el-select v-model="ad" placeholder="选择部门" size="small" style="width:200px"><el-option v-for="r in roles" :key="r.objectId" :label="r.name" :value="r.objectId" /></el-select><el-button type="primary" size="small" @click="assignDept">保存</el-button></div>
+        <div class="acts"><el-button type="danger" size="small" @click="del">删除</el-button></div>
       </div>
       <div class="ld-right ld-empty" v-else><span>👈 点击用户查看详情</span></div>
     </div>
@@ -54,7 +54,7 @@
 import { ref, computed, onMounted } from 'vue'
 import { ElMessage } from 'element-plus'
 
-const users = ref([]); const roles = ref([]); const sel = ref(null)
+const users = ref([]); const roles = ref([]); const depts = ref([]); const sel = ref(null)
 const tab = ref('users'); const vis = ref(false); const ar = ref(''); const ad = ref('')
 const fm = ref({ username:'', password:'', role:'default', department:'' })
 
@@ -63,12 +63,14 @@ function f(ts) { return ts ? new Date(ts).toLocaleString() : '-' }
 
 async function load() {
   // 使用 admin API
-  const [ur, rr] = await Promise.all([
+  const [ur, rr, dr] = await Promise.all([
     fetch('/api/admin/users').then(r=>r.json()),
     fetch('/api/admin/roles').then(r=>r.json()),
+    fetch('/api/admin/departments').then(r=>r.json()),
   ])
   users.value = ur.results || []
-  roles.value = (rr.results || []).flatMap(r => [r, ...(r.children||[])])
+  roles.value = rr.results || []
+  depts.value = dr.results || []
   // 存session
   const token = localStorage.getItem('dgiot_session')
   if (!token) {
@@ -80,12 +82,13 @@ async function load() {
 
 const roleTree = computed(() => {
   const m = {}; const roots = []
-  roles.value.forEach(r => { m[r.objectId] = { ...r, _c:[],_d:0,_u:uCount(r.objectId) } })
-  roles.value.forEach(r => { if (r.parent_id && m[r.parent_id]) { const c = m[r.objectId]; c._d=m[r.parent_id]._d+1; m[r.parent_id]._c.push(c) } else if (!r.parent_id) roots.push(m[r.objectId]) })
+  depts.value.forEach(r => { m[r.objectId] = { ...r, _c:[],_d:0,_u:r._u||0 } })
+  depts.value.forEach(r => { if (r.parent_id && m[r.parent_id]) { const c = m[r.objectId]; c._d=m[r.parent_id]._d+1; m[r.parent_id]._c.push(c) } else if (!r.parent_id) roots.push(m[r.objectId]) })
   return roots
 })
 
-async function assign(v) { if(!sel.value)return; await fetch(`/api/admin/users/${sel.value.objectId}/role`, { method:'PUT', headers:{'Content-Type':'application/json'}, body:JSON.stringify({role:v}) }); ElMessage.success('已分配'); load() }
+async function assignRole() { if(!sel.value||!ar.value)return; await fetch(`/api/admin/users/${sel.value.objectId}/role`, { method:'PUT', headers:{'Content-Type':'application/json'}, body:JSON.stringify({role:ar.value}) }); sel.value.role = ar.value; ElMessage.success('角色已保存') }
+async function assignDept() { if(!sel.value||!ad.value)return; await fetch(`/api/admin/users/${sel.value.objectId}/dept`, { method:'PUT', headers:{'Content-Type':'application/json'}, body:JSON.stringify({dept:ad.value}) }); sel.value.department = ad.value; ElMessage.success('部门已保存') }
 function showAdd() { fm.value={username:'',password:'',role:'default'}; vis.value=true }
 async function add() { await fetch('/api/users',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({username:fm.value.username,password:fm.value.password,role:fm.value.role,email:''})}); ElMessage.success('已创建'); vis.value=false; load() }
 async function del() { if(!sel.value)return; await fetch(`/api/classes/_User/${sel.value.objectId}`,{method:'DELETE'}); ElMessage.success('已删除'); sel.value=null; load() }

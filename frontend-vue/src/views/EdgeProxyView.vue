@@ -1,8 +1,8 @@
 <template>
   <div class="edge-page">
-    <h2 class="page-title">🔧 边缘代理</h2>
+    <h2 class="page-title">🔧 边缘代理 ↔ 边缘中枢</h2>
 
-    <!-- 运行指标 -->
+    <!-- 拓扑概览 -->
     <el-row :gutter="12" style="margin-top:12px">
       <el-col :span="3" v-for="m in metrics" :key="m.label">
         <div class="edge-metric">
@@ -11,6 +11,25 @@
         </div>
       </el-col>
     </el-row>
+
+    <!-- 数据流桥接 -->
+    <el-card v-if="bridge.status" style="margin-top:12px" shadow="hover">
+      <template #header><span>🌉 边缘数据桥接 — {{ bridge.status==='active' ? '活跃' : '断开' }}</span>
+        <el-tag size="small" type="success" style="margin-left:12px">延迟 {{ bridge.latency_ms }}ms</el-tag>
+        <el-tag size="small" type="warning" style="margin-left:4px">带宽 {{ bridge.bandwidth_mbps }}Mbps</el-tag>
+        <el-tag size="small" style="margin-left:4px">{{ bridge.protocol }}</el-tag>
+      </template>
+      <el-row :gutter="12">
+        <el-col :span="8" v-for="(flow, i) in bridge.data_flow" :key="i">
+          <div style="padding:8px 12px;background:rgba(0,180,216,.06);border-radius:6px;font-size:12px">
+            <div style="color:#67C23A;font-weight:bold;margin-bottom:2px">{{ flow.from }}</div>
+            <div style="color:#66d9ff;margin-bottom:2px">↓ {{ flow.protocol }}</div>
+            <div style="color:#409EFF;margin-bottom:2px">{{ flow.to }}</div>
+            <div style="color:#909399">{{ flow.packets.toLocaleString() }} 包 · {{ flow.mb }}MB</div>
+          </div>
+        </el-col>
+      </el-row>
+    </el-card>
 
     <el-row :gutter="12" style="margin-top:12px">
       <!-- 协议适配器 -->
@@ -36,25 +55,31 @@
         </el-card>
       </el-col>
 
-      <!-- 右侧：系统信息 + 功能清单 -->
+      <!-- 右侧：系统信息 + 中枢状态 -->
       <el-col :span="8">
         <el-card style="margin-bottom:12px">
-          <template #header>🖥️ 系统信息</template>
+          <template #header>🖥️ 边缘代理</template>
           <el-descriptions :column="1" border size="small">
             <el-descriptions-item label="主机名">{{ sysInfo.hostname }}</el-descriptions-item>
             <el-descriptions-item label="系统">{{ sysInfo.os }}</el-descriptions-item>
             <el-descriptions-item label="Python">{{ sysInfo.python }}</el-descriptions-item>
-            <el-descriptions-item label="存储引擎">{{ sysInfo.storage }}</el-descriptions-item>
             <el-descriptions-item label="运行时间">{{ sysInfo.uptime }}</el-descriptions-item>
-            <el-descriptions-item label="数据目录">{{ sysInfo.dataDir }}</el-descriptions-item>
           </el-descriptions>
         </el-card>
 
-        <el-card>
-          <template #header>📋 功能清单</template>
-          <div v-for="f in features" :key="f" class="feature-item">
-            <el-icon :size="12" color="#67C23A"><Check /></el-icon>
-            <span>{{ f }}</span>
+        <el-card v-if="hub.services" style="margin-bottom:12px">
+          <template #header>🏢 边缘中枢</template>
+          <div v-for="s in hub.services" :key="s.name" style="display:flex;justify-content:space-between;padding:4px 0;border-bottom:1px solid rgba(255,255,255,.04)">
+            <span style="font-size:12px">{{ s.name }}</span>
+            <el-tag :type="s.status==='online'?'success':'danger'" size="small" effect="dark">{{ s.status }}</el-tag>
+          </div>
+        </el-card>
+
+        <el-card v-if="hub.stream_engine">
+          <template #header>⚡ 流式计算</template>
+          <div style="font-size:12px;color:#909399">算法 {{ hub.stream_engine.active }}/{{ hub.stream_engine.algorithms }} · QPS {{ hub.stream_engine.qps }}</div>
+          <div style="margin-top:4px">
+            <el-tag v-for="a in hub.stream_engine.top5" :key="a" size="small" style="margin:2px">{{ a }}</el-tag>
           </div>
         </el-card>
       </el-col>
@@ -72,9 +97,6 @@
         <el-col :span="6"><div class="edge-metric"><div class="em-val" style="color:#E6A23C">{{ remote.ontology?.counts?.gateways || 0 }}</div><div class="em-lbl">网关</div></div></el-col>
         <el-col :span="6"><div class="edge-metric"><div class="em-val" style="color:#909399">{{ remote.ontology?.counts?.devices || 0 }}</div><div class="em-lbl">进程/设备</div></div></el-col>
       </el-row>
-      <div v-if="remote.hostname" style="margin-top:8px;font-size:11px;color:#909399">
-        CPU: {{ remote.cpu?.split('\n')[0] || '—' }} | 内存: {{ remote.memory?.split('\n')[0] || '—' }} | 进程: {{ remote.processes?.split('\n').length || 0 }} 个
-      </div>
     </el-card>
   </div>
 </template>
@@ -87,14 +109,21 @@ import api from '../api'
 const protoChart = ref(null)
 const remote = ref({})
 const remoteLoading = ref(false)
+const bridge = ref({})
+const hub = ref({})
+
+async function loadTopology() {
+  try { const r = await fetch('/api/edge/topology'); const d = await r.json()
+    bridge.value = d.bridge; hub.value = d.hub
+  } catch {}
+}
 
 async function loadRemoteOntology() {
   remoteLoading.value = true
   try {
     const r = await fetch('/api/system/remote?host=11.66.12.131'); const d = await r.json()
     remote.value = d
-    // Parse CPU cores from wmic output
-    const m = (r.data.cpu || '').match(/NumberOfCores=(\d+)/)
+    const m = (r.data?.cpu || '').match(/NumberOfCores=(\d+)/)
     if (m) remote.value.cpuCores = m[1] + ' 核'
   } catch {} finally { remoteLoading.value = false }
 }
@@ -131,7 +160,7 @@ const features = [
   '系统健康检查 · 运维管理',
 ]
 
-onMounted(async () => {
+onMounted(async () => { loadTopology()
   // 系统信息 — 直接用 fetch
   try {
     const r = await fetch('/api/system'); const d = await r.json()

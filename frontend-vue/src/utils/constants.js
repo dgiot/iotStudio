@@ -18,14 +18,24 @@ export const DEVICE_STATUS_MAP = {
   online: '在线', offline: '离线', alarm: '告警', maintenance: '检修',
 }
 
+// 部署模式: 'agent' = 边缘代理 (IO服务器, 轻量), 'hub' = 边缘中枢 (DMZ, 完整)
+export const DEPLOY_MODE = (import.meta.env.VITE_DEPLOY_MODE || 'hub')
+
+// 各部署模式显示的菜单组
+export const MENU_VISIBILITY = {
+  hub:   ['dashboard', 'device', 'protocol', 'compute', 'data', 'system', 'zone'],
+  agent: ['dashboard', 'device', 'protocol'],
+}
+
+// 7 一级服务模块 — 对齐申报
 export const MENU_GROUPS = {
-  monitor: { label: '📊 监控', order: 0 },
-  device:  { label: '🔌 设备', order: 1 },
-  hmi:     { label: '🗺️ 组态', order: 2 },
-  data:    { label: '📡 数据', order: 3 },
-  network: { label: '🔧 网络诊断', order: 4 },
-  tool:    { label: '🛠️ 工具', order: 5 },
-  system:  { label: '⚙️ 系统', order: 6 },
+  dashboard:    { label: '分析展示', order: 0 },
+  device:       { label: '设备管理', order: 1 },
+  protocol:     { label: '协议管理', order: 2 },
+  compute:      { label: '流式计算', order: 3 },
+  data:         { label: '数据管理', order: 4 },
+  system:       { label: '运维管理', order: 5 },
+  zone:         { label: '场景适配', order: 6 },
 }
 
 export const PROTOCOL_COLORS = {

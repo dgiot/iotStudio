@@ -1,0 +1,205 @@
+% ============================================================
+% 附件③ — 油田个性化需求清单
+% 评审会六项附件待办第 3 项 | 2026-07-13 评审会
+% 编译: xelatex -interaction=nonstopmode 附件3-油田个性化需求清单.tex
+% ============================================================
+\documentclass[11pt,a4paper]{ctexart}
+\usepackage{xeCJK}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{fancyhdr}
+\usepackage{hyperref}
+\usepackage{geometry}
+\usepackage{longtable}
+\usepackage{booktabs}
+\usepackage{enumitem}
+\usepackage{caption}
+\usepackage{array}
+
+% 字体
+\setCJKmainfont{Microsoft YaHei}
+
+% 页面
+\geometry{a4paper, margin=2.5cm}
+
+% 页眉页脚
+\pagestyle{fancy}
+\fancyhead[L]{时序数据采集与应用管理系统 — 附件③}
+\fancyhead[R]{油田个性化需求清单}
+\fancyfoot[C]{\thepage}
+
+\hypersetup{
+  colorlinks=true, linkcolor=black, urlcolor=blue,
+  pdftitle={油田个性化需求清单},
+}
+
+\begin{document}
+
+\begin{center}
+{\Huge\bfseries 油田个性化需求清单}\\[14pt]
+{\large 时序数据采集与应用管理系统 — 附件③}\\[8pt]
+{\large 版本 V1.0 \quad 编制日期 2026-08}
+\end{center}
+
+\vspace{1em}
+\noindent\hrulefill
+\vspace{1em}
+
+% ═══════════════════════════════════════════
+\section{编制说明}
+
+\begin{itemize}[leftmargin=*]
+  \item \textbf{来源}：10 个试点作业区现场调研计划（设备/点位/协议/流程逐区确认）+ 评审会确认范围（动态 IP、视频流、智能仪表、新能源为明确方向）+ 油田公开的生产应用需求；
+  \item \textbf{分级}：\textbf{一期}（2026-08 至 11-30 交付，本项目范围）/ \textbf{二期}（可选续签，全油田推广时按需启用）；
+  \item \textbf{原则}：所有需求均为标准采集服务无法覆盖的差异化需求；通用开源组件直接复用的能力（标准协议汇聚等）不列入本清单；
+  \item \textbf{对应关系}：每条需求标注《定制开发功能表》编号，与工作量分解（附件④）一一对应。
+\end{itemize}
+
+% ═══════════════════════════════════════════
+\section{设备接入个性化需求（协议/厂家清单）}
+
+\subsection{动态 IP 移动网关接入（10 家厂家）}
+
+试点作业区进场网关移动频繁（动态 IP），设备有删有减、点位动态变化，且不修改 DTU、不影响原业务。
+
+\begin{table}[H]\centering
+\caption{移动网关厂家适配清单（4.1-1/二-4）}
+\begin{tabular}{p{4.5cm} p{8.5cm}}
+\toprule
+\textbf{厂家} & \textbf{接入要点} \\
+\midrule
+宏电 / 映翰通 / 亿帆 & 注册帧识别、设备标识提取、透传解析、心跳保活 \\
+有人 / 四信 / 移远 / 合宙 & 移动网络接入、弱网退避、断网缓存补传 \\
+中易云 / 万物纵横 / 莱特 & 私有透传协议适配、设备增删事件上报 \\
+\midrule
+统一能力 & 静态 IP + 移动网关统一动态感知：上线/下线/设备增删事件、网关台账（二-4） \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Modbus TCP 动态识别（4.1-3）}
+
+\begin{itemize}[leftmargin=*]
+  \item MBAP 从站/寄存器解析，点位集合自动 diff；
+  \item 流量学习：设备/点位/指纹/帧漂移自动建模；
+  \item 设备源统一适配，无需人工逐点配置。
+\end{itemize}
+
+\subsection{非标协议接入（4.1-7，按需）}
+
+\begin{longtable}{p{3.2cm} p{4.2cm} p{3.6cm} p{2.4cm}}
+\caption{非标协议源清单（A11 未覆盖设备源）}\\
+\toprule
+\textbf{设备源类别} & \textbf{典型设备} & \textbf{协议/接口} & \textbf{分期} \\
+\midrule
+工程器械 & 修井机、压裂车组、吊车 & 私有串口/网络协议 & 一期按需 \\
+能源计量 & 电表、水表、气表（智能仪表） & DL/T 645、Modbus、私有协议 & 一期 \\
+安防 & 视频摄像头、门禁、周界 & RTSP 视频流、ONVIF & 一期 \\
+新能源 & 光伏、储能、充电桩 & Modbus TCP、MQTT & 二期 \\
+\bottomrule
+\end{longtable}
+
+\subsection{视频流接入（RTSP）}
+
+井场视频流为评审会明确方向：RTSP 流接入 + 关键帧提取，与生产数据同流上送，支撑远程巡检与异常联动（二期可选：AI 视频分析）。
+
+\subsection{多 IO 服务器差异化适配（1.3 节）}
+
+每台 IO 服务器存在 DCS 厂家、PLC 厂家、自身业务三方面差异，逐台适配：
+\begin{itemize}[leftmargin=*]
+  \item OPC DA 直采：DCS/PLC 厂家权限/协议/点位差异适配，pSpace 数值比对（偏差 <1\%），三级回退；
+  \item 协议开发对接：psAPISDK 直连、CommBridge 协议解析、\textbf{12 种设备建模}、Tag ID 自动发现（4.2-7）；
+  \item 术前体检：节拍/资源/进程/端口/链路/协议/冲突/数据 8 维度，逐台三态评估（4.2-4）。
+\end{itemize}
+
+% ═══════════════════════════════════════════
+\section{采集频率个性化需求}
+
+\begin{table}[H]\centering
+\caption{频率策略需求（4.1-4）}
+\begin{tabular}{p{4.2cm} p{8.8cm}}
+\toprule
+\textbf{需求} & \textbf{说明} \\
+\midrule
+可配置采集周期 & 500ms--60s 区间可配置（替代固定分钟级抽吸） \\
+异常自动加密 & 检测到异常事件自动从 10min 加密到秒级采集（皮带断裂、电潜泵参数突变等场景） \\
+低峰降频 & 生产低峰期自动降频，节约通道资源 \\
+弱网退避 & 移动网络弱信号自动退避，恢复后按时序补传 \\
+错峰调度 & 多设备/多网关错峰上报，避免通道拥塞 \\
+热加载/回滚 & 频率策略在线调整、失败回滚、全程审计 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+% ═══════════════════════════════════════════
+\section{工况诊断个性化需求}
+
+基于电参数据的高频工况诊断是油田明确方向（局地试点已证明算法可行性，需高频数据底座支撑规模化）：
+
+\begin{longtable}{p{3.6cm} p{5.6cm} p{2.6cm} p{1.6cm}}
+\caption{工况诊断需求清单}\\
+\toprule
+\textbf{场景} & \textbf{个性化需求} & \textbf{依赖采集频率} & \textbf{分期} \\
+\midrule
+电参功图诊断 & G1--G8 油水井物模型（64 点）地址对齐、自动配点（4.2-6） & 秒级 & 一期 \\
+电潜泵预警 & 捕捉 0.1\% 级参数异常，提前 10--15 天预警 & 秒级 & 一期 \\
+皮带断裂预警 & 电流跌落 1/2 判据 + 有功功率联动判据 & 秒级 & 一期 \\
+频率跃升冲击 & 数据密度跃升场景（单井 1 次/分钟 $\rightarrow$ 1 次/100ms，日数据量扩至数十 GB 级）的写入与存储适配 & 100ms 级 & 一期 \\
+定制算法 & 每作业区 $\geq$1 种定制算法（注册制、批量校验、算法模板库，4.3-1） & 按区定制 & 一期 \\
+\bottomrule
+\end{longtable}
+
+\section{流式计算算法清单（15 种内置 + 定制）}
+
+\begin{table}[H]\centering
+\caption{内置算法清单（一-5，单条 <1ms）}
+\begin{tabular}{p{3.0cm} p{10.0cm}}
+\toprule
+\textbf{类别} & \textbf{算法} \\
+\midrule
+滑窗特征（6 种） & 滑动平均、波动率、变化率、波峰、连续异常、基线偏离 \\
+规则计算（9 种） & 阈值、突变、趋势、波动率、频次、量程校验、滑窗统计、组合规则、自定义表达式 \\
+\midrule
+定制算法 & 每作业区 $\geq$1 种现场定制，注册制加载（4.3-1） \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\section{断网保障与健康日报（4.1-5/4.1-6）}
+
+\begin{itemize}[leftmargin=*]
+  \item 断网本地缓存、恢复后按时序补传、去重；
+  \item RTU 状态感知：在线/连续性/抖动/网络质量监测；
+  \item 健康日报：在线率/完整率/成功率日报，多作业区横向对比（红黄绿告警）。
+\end{itemize}
+
+\section{需求 — 功能映射表}
+
+\begin{longtable}{p{5.2cm} p{3.2cm} p{2.4cm}}
+\caption{个性化需求 → 定制开发功能表编号（与附件④工作量分解对应）}\\
+\toprule
+\textbf{需求类别} & \textbf{功能编号} & \textbf{分期} \\
+\midrule
+动态 IP 移动网关（10 家） & 4.1-1 / 二-4 & 一期 \\
+Modbus TCP 动态识别 & 4.1-3 & 一期 \\
+频率策略（加密/降频/退避） & 4.1-4 & 一期 \\
+断网缓存补传 & 4.1-5 & 一期 \\
+RTU 健康日报 & 4.1-6 & 一期 \\
+非标协议（工程/计量/安防） & 4.1-7 & 一期按需 \\
+视频流（RTSP） & 4.1-7 + 二期扩展 & 一期按需 \\
+新能源接入 & 二期 & 二期 \\
+多 IO 服务器适配（含 12 种设备建模） & 4.2-1~4.2-7 & 一期 \\
+电参功图物模型 & 4.2-6 & 一期 \\
+工况诊断定制算法 & 4.3-1 & 一期 \\
+\bottomrule
+\end{longtable}
+
+\vspace{1em}
+\noindent\hrulefill
+
+\begin{center}
+\small 本清单随项目申报材料提交，为评审会附件待办之第 3 项，具体协议列表以现场调研确认结果为准。\\
+编制单位：迪格(杭州)物联科技有限公司 \quad 2026-08
+\end{center}
+
+\end{document}

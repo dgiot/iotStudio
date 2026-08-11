@@ -1,0 +1,361 @@
+% ============================================================
+% 桥接主形态推演 — 需求 · 技术路径 · 价值评估
+% 按终端接入形态正确口径（静态=client 主动采集 / 动态=抢占 IP:端口桥接）
+% 与桥接切换三条操作纪律，重推需求、技术路径与价值
+% 编译: xelatex -interaction=nonstopmode 论证-桥接主形态推演.tex
+% 口径对齐: 附件② 4.1/4.3、附件④、全景文档、报价策略要点-V8.md
+% ============================================================
+\documentclass[11pt,a4paper]{ctexart}
+\usepackage{xeCJK}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{fancyhdr}
+\usepackage{hyperref}
+\usepackage{geometry}
+\usepackage{longtable}
+\usepackage{booktabs}
+\usepackage{enumitem}
+\usepackage{caption}
+\usepackage{array}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta, positioning, backgrounds}
+
+% 字体
+\setCJKmainfont{Microsoft YaHei}
+
+% 页面
+\geometry{a4paper, margin=2.5cm}
+
+% 页眉页脚
+\pagestyle{fancy}
+\fancyhead[L]{时序数据采集与应用管理系统 — 论证材料}
+\fancyhead[R]{桥接主形态推演}
+\fancyfoot[C]{\thepage}
+
+\hypersetup{
+  colorlinks=true, linkcolor=black, urlcolor=blue,
+  pdftitle={桥接主形态推演——需求、技术路径与价值评估},
+}
+
+\begin{document}
+
+\begin{center}
+{\Huge\bfseries 桥接主形态推演}\\[10pt]
+{\Large 需求 · 技术路径 · 价值评估}\\[8pt]
+{\large 时序数据采集与应用管理系统 \quad 版本 V1.0 \quad 编制日期 2026-08}
+\end{center}
+
+\vspace{1em}
+\noindent\hrulefill
+\vspace{1em}
+
+% ═══════════════════════════════════════════
+\section{推演背景与技术口径}
+
+\subsection{终端接入形态的正确口径}
+
+本项目双路采集的连接形态，按\textbf{终端接入类型}划分，其本质是\textbf{连接形态}而非数据获取形态：
+
+\begin{table}[H]\centering
+\caption{终端接入形态口径（本推演的技术基准）}
+\begin{tabular}{p{3.4cm} p{5.0cm} p{5.4cm}}
+\toprule
+\textbf{终端类型} & \textbf{连接形态} & \textbf{采集方式} \\
+\midrule
+静态 IP 终端（有线/固定链路） & 设备侧为\textbf{服务端}（server），数据端点在设备 & \textbf{旁路方案}：本系统以\textbf{客户端身份主动连接采集}——不改设备配置、设备侧无感知（服务端仅多一个客户端连接）、原 A11 采集链路原样不动 \\
+动态 IP 终端（4G/移动网关） & 设备侧为\textbf{客户端}（client），主动建连至原服务器 & \textbf{桥接方案}：不改设备层 IP，\textbf{必须将原服务器 IP 与端口抢占做桥接}——桥接层绑定原 IP:端口，设备连接行为不变，数据到达后复制一份并透明转发原 A11 服务，唯此一路径方能全覆盖 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\textbf{关键辨析}：\textbf{抢占端口不等于接管数据}——桥接层占用原地址端口仅作透明过手，数据流始终全量流向 A11，本项目仅复制一份副本。
+
+\begin{figure}[H]\centering
+\begin{tikzpicture}[
+  font=\small,
+  node distance=0.8cm,
+  box/.style={draw, rounded corners=2pt, align=center, inner sep=4pt},
+  term/.style={box, fill=gray!12},
+  ours/.style={box, fill=blue!12},
+  a11/.style={box, fill=orange!12},
+  dat/.style={box, fill=green!12},
+  arrow/.style={-{Stealth}, thick},
+  note/.style={font=\scriptsize\itshape, align=center}
+]
+% 生产网背景
+\begin{scope}[on background layer]
+  \node[draw, dashed, rounded corners=4pt, fill=gray!4,
+    minimum width=15.6cm, minimum height=9.6cm, label={[anchor=north east]生产网}] at (8.2,4.8) {};
+  \node[draw, dashed, rounded corners=4pt, fill=gray!4,
+    minimum width=15.6cm, minimum height=1.4cm, label={[anchor=north east]办公网}] at (8.2,0.9) {};
+\end{scope}
+
+% 终端
+\node[term] (srv) at (3.2,8.2) {\textbf{静态 IP 终端}\\\small 设备侧为服务端（server）\\\small 数据端点在设备};
+\node[term] (cli) at (8.6,8.2) {\textbf{动态 IP 终端}\\\small 设备侧为客户端（client）\\\small 主动建连至原服务器};
+
+% 本系统两条采集路径
+\node[ours] (client) at (3.2,5.6) {\textbf{采集器（协议 client）}\\\small 主动连接采集 · 旁路\\\small 不改设备 · 设备无感知};
+\node[ours] (bridge) at (8.6,5.6) {\textbf{桥接层}\\\small 抢占原 IP:端口 \\\small 复制一份 + 原样转发};
+
+% A11 原链路
+\node[a11] (a11svc) at (13.2,5.6) {\textbf{原 A11 服务}\\\small 迁至备用地址/端口\\\small 继续承载原业务};
+
+% 汇聚与存储
+\node[ours] (pipe) at (6.4,3.2) {\textbf{统一采集管道 + 边缘流式计算}\\\small 调频策略 · 15 种算法 · 告警闭环};
+\node[dat] (dmz) at (6.4,1.6) {\textbf{DMZ 短期缓存}};
+\node[dat] (lake) at (6.4,0.2) {\textbf{数据湖（主数据唯一源头）}};
+
+% 箭头：终端→采集
+\draw[arrow] (srv) -- node[note, left] {旁路：\\原链路不动} (client);
+\draw[arrow] (cli) -- node[note, right] {桥接：\\设备零感知} (bridge);
+% 箭头：桥接→原服务（原样转发）
+\draw[arrow] (bridge.east) -- node[note, above] {原样转发（原链路持续）} (a11svc.west);
+% 箭头：两条路径→汇聚
+\draw[arrow] (client.south) -- (pipe.west);
+\draw[arrow] (bridge.south) -- (pipe.east);
+% 箭头：汇聚→DMZ→数据湖
+\draw[arrow] (pipe.south) -- (dmz.north);
+\draw[arrow] (dmz.south) -- (lake.north);
+\end{tikzpicture}
+\caption{双路径采集架构：静态 IP 旁路采集（client 主动连接）+ 动态 IP 桥接（抢占原 IP:端口、复制并原样转发），下游统一汇聚入数据湖}
+\end{figure}
+
+\subsection{桥接切换三条操作纪律}
+
+桥接层启用（抢占原地址端口）遵循三条操作纪律，是本推演的需求来源与价值基石：
+
+\begin{enumerate}[leftmargin=*]
+  \item \textbf{切换窗口期要非常短}：仅业务低峰窗口执行，窗口压缩至秒级（目标毫秒级），业务可感知中断趋近于零；
+  \item \textbf{切换前业务流摸清}：设备清单、连接会话、端口占用、心跳保活机制、流量特征逐项建档，切换方案按清单逐项核对、不留盲区；
+  \item \textbf{异常即时回退}：全程值守，任何异常按预案秒级切回原 IP:端口、链路自动恢复，出具切换前后对比记录验证无损。
+\end{enumerate}
+
+\subsection{推演目的}
+
+按上述正确口径与操作纪律，重新推演本项目的\textbf{需求体系、技术路径与价值构成}，检验既有报价体系（附件④ 工作量、五板块计价）是否与"桥接为主形态"的事实匹配，为方案定稿与商务谈判提供依据。
+
+% ═══════════════════════════════════════════
+\section{需求推演}
+
+\subsection{新增需求：四条操作纪律需求}
+
+桥接抢占形态落地后，需求从"技术可行性约束"升级为"\textbf{运维可操作性约束}"——系统需在生产系统上执行受控的短暂切换且保证无损，派生 4 条新增需求：
+
+\begin{table}[H]\centering
+\caption{新增需求（由桥接抢占派生）}
+\begin{tabular}{p{1.0cm} p{3.4cm} p{4.6cm} p{3.8cm}}
+\toprule
+\textbf{编号} & \textbf{需求} & \textbf{内容} & \textbf{性质} \\
+\midrule
+N1 & 切换窗口极短 & 抢占切换窗口压缩至秒级（目标毫秒级），低峰窗口执行 & 性能指标级，列入验收 \\
+N2 & 业务流全面摸底 & 设备/会话/端口/保活/流量特征逐项建档，切换前完成 & 独立工作项，现场调研前置 \\
+N3 & 回退预案与演练 & 秒级切回原 IP:端口，切换全程值守，回退演练留痕 & 验收项（附件② 4.3） \\
+N4 & 切换协同机制 & 切换方案甲方确认、窗口批准、三方值守（甲方生产运维、原 A11 服务方、我方） & 流程约束，升级约束 14 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{加深的既有约束}
+
+\begin{itemize}[leftmargin=*]
+  \item \textbf{约束 5（原有业务零影响）}：验证点从"事后对比"前置到"切换时刻"——零中断从全周期承诺变为"\textbf{切换窗口内趋近于零 + 失败即回退}"的双保险；
+  \item \textbf{约束 12（IO 服务器共存部署）}：新增含义——桥接层与原 A11 服务同机并存，切换是两者地址的\textbf{瞬间互换}，共存与切换同时成立；
+  \item \textbf{约束 15（生产网操作纪律）}：补充——切换、值守、回退演练均需经甲方书面批准后执行。
+\end{itemize}
+
+\subsection{需求定性变化：责任边界浮出水面}
+
+动生产系统意味着\textbf{责任判定}需求显性化：切换窗口内任何问题，责任归属需事先约定——甲方签署切换方案、我方出具过程记录，责任边界随\textbf{审批流 + 记录流}清晰化。这是报价书与合同层面需要显式覆盖的新维度（见第 5 节商务影响）。
+
+% ═══════════════════════════════════════════
+\section{技术路径推演}
+
+\subsection{双路径总览}
+
+\begin{table}[H]\centering
+\caption{两条采集路径对比}
+\begin{tabular}{p{2.6cm} p{5.2cm} p{5.0cm}}
+\toprule
+\textbf{维度} & \textbf{路径 A：静态 IP（设备侧 server）} & \textbf{路径 B：动态 IP（设备侧 client）} \\
+\midrule
+形态 & client 主动采集（旁路） & 抢占原 IP:端口桥接 \\
+核心工作 & 协议 client 开发、点位读取、调频策略 & 桥接层：原地址端口抢占、透明应答、复制+转发、会话跟踪、秒级回退 \\
+前置工作 & 点位表、协议文档 & 业务流摸底台账、切换方案、回退演练 \\
+难度 & 中（常规采集器） & 高（动原服务地址端口） \\
+风险 & 低；新风险点：设备并发连接上限（多一个 client 可能挤占 A11 连接，摸底时核实） & 中高：窗口中断风险（目标趋近零）、原服务迁移后行为兼容、甲方与原 A11 服务方配合 \\
+工作量 & 复用附件④ 协议/适配行（模块一） & 模块二 45 + 模块一 45 + 模块八 50 人天 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{路径 B：桥接层工作分解}
+
+\begin{enumerate}[leftmargin=*]
+  \item \textbf{原 IP 与端口抢占}：桥接层接管原服务器 IP 与端口，原 A11 服务迁至备用地址/端口——切换与甲方协调、选低峰窗口执行，全程可回退；
+  \item \textbf{透明应答与转发}：桥接层代替原服务完成 TCP 建连应答，数据复制一份后原样转发原 A11 服务，设备连接行为零感知；
+  \item \textbf{TCP 流完整重组}：乱序、重传、分段、粘连按会话重组为完整应用层数据；
+  \item \textbf{时序与顺序严格保持}：副本与源流一致，供流式计算与历史回放使用；
+  \item \textbf{长连接会话跟踪}：设备重连、端口漂移、会话重建持续跟踪识别；
+  \item \textbf{故障隔离与快速回退}：桥接层任何故障不影响业务续传——原服务秒级切回原 IP:端口，链路自动恢复。
+\end{enumerate}
+
+\begin{figure}[H]\centering
+\begin{tikzpicture}[
+  font=\small,
+  box/.style={draw, rounded corners=2pt, align=center, inner sep=5pt},
+  arrow/.style={-{Stealth}, thick},
+  note/.style={font=\scriptsize, align=center}
+]
+% 顶部：A11 业务全程在线
+\draw[very thick] (0.6,4.6) -- (15.4,4.6);
+\node[note] at (8.0,4.95) {\textbf{原 A11 业务全程在线}（零中断目标）};
+
+% 三阶段
+\node[box, fill=gray!12] (obs) at (3.2,3.1) {\textbf{① 观察}\\\small bypass\\\small 只读观察、不介入};
+\node[box, fill=blue!12] (mir) at (8.0,3.1) {\textbf{② 桥接复制}\\\small mirror\\\small 抢占原 IP:端口\\\small 复制 + 原样转发};
+\node[box, fill=green!12] (sta) at (12.8,3.1) {\textbf{③ 稳定并行}\\\small stable\\\small 长期运行\\\small 持续调优};
+
+% 阶段间箭头 + 窗口标注
+\draw[arrow] (obs.east) -- node[note, above] {\textbf{低峰窗口切换}\\秒级（目标毫秒级）} (mir.west);
+\draw[arrow] (mir.east) -- node[note, above] {验证通过} (sta.west);
+
+% 每阶段下方能力说明
+\node[note] at (3.2,1.7) {业务流摸底台账\\切换方案核对};
+\node[note] at (8.0,1.7) {透明应答·会话跟踪\\TCP 流重组};
+\node[note] at (12.8,1.7) {全程值守\\切换前后对比记录};
+
+% 回退
+\draw[arrow, red!70!black, dashed] (12.8,0.9) -- node[note, below] {任何阶段异常：\textbf{即时回退}，秒级切回原 IP:端口，链路自动恢复} (0.9,0.9);
+\end{tikzpicture}
+\caption{桥接切换三阶段时序：观察 $\rightarrow$ 桥接复制 $\rightarrow$ 稳定并行，低峰窗口秒级切换，任何异常即时回退}
+\end{figure}
+
+\subsection{路径 A：client 主动采集工作分解}
+
+\begin{itemize}[leftmargin=*]
+  \item 各协议客户端采集器（Modbus/OPC/厂家透传协议），按点位读取、500ms--60s 可配置频率与动态调频策略；
+  \item 与 A11 同为服务端客户端时，需核实\textbf{设备并发连接上限}——摸底阶段一并验证，避免挤占 A11 既有连接；
+  \item 改动面小、可独立试点，是\textbf{低风险先行路径}，适合首期验证。
+\end{itemize}
+
+\subsection{收敛点与复用}
+
+两条路径在采集侧分化，但\textbf{下游完全收敛}：统一采集管道 $\rightarrow$ 边缘流式计算 $\rightarrow$ 告警闭环 $\rightarrow$ 混合存储 $\rightarrow$ 数据湖主数据体系。汇聚层、计算层、存储层复用既有设计，\textbf{新增复杂度集中在桥接层一处}——不影响既有五板块的模块边界。
+
+\subsection{工作量与验证联动}
+
+桥接层工作量（附件④ 模块二 45 + 模块一 45 + 模块八 50 人天）按"桥接为主形态"排布，与试点联调（模块八，含 A11 桥接验证 50 人天）联动：\textbf{试点验证结果作为工作量复核依据}，验证充分后按实际覆盖范围核定二期推广工作量——既保障主形态投入充足，又避免在未验证前放大承诺。
+
+% ═══════════════════════════════════════════
+\section{价值评估}
+
+\subsection{四维价值重估}
+
+\begin{table}[H]\centering
+\caption{新口径下的价值评估}
+\begin{tabular}{p{2.6cm} p{5.6cm} p{2.6cm} p{2.0cm}}
+\toprule
+\textbf{维度} & \textbf{新口径评估} & \textbf{变化} & \textbf{结论} \\
+\midrule
+技术壁垒 & 透明转发层 + 会话保持 + 秒级回退，竞品无此能力 & $\uparrow$ & 核心壁垒 \\
+操作壁垒 & 敢动生产系统 + 有预案 + 有协同机制，竞品不敢承诺 & $\uparrow\uparrow$ & 新增维度，服务承诺壁垒 \\
+性价比 & 725 万量级 vs 改造 A11 亿元级——改造贵的根源正是"动生产系统"，本方案以秒级窗口+回退预案解决同一问题 & $=$ & 逻辑更硬 \\
+风险对冲 & 窗口/责任/配合三类风险，以纪律 + 审批流 + 验收记录对冲 & 需管理 & 可控 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{价值叙事：手术级安全采集}
+
+\vspace{-0.5em}
+\begin{itemize}[leftmargin=*]
+  \item \textbf{低峰窗口 = 手术时间}：切换只在业务低峰执行，窗口压缩至秒级（目标毫秒级）；
+  \item \textbf{业务流摸底 = 术前检查}：切换前对原有业务流全面建档、逐项核对，不留盲区；
+  \item \textbf{即时回退 = 抢救预案}：任何异常秒级切回原 IP:端口，链路自动恢复。
+\end{itemize}
+
+\begin{figure}[H]\centering
+\begin{tikzpicture}[
+  font=\small,
+  box/.style={draw, rounded corners=2pt, align=center, inner sep=6pt},
+  note/.style={font=\scriptsize, align=center}
+]
+\node[box, fill=gray!10, minimum width=14.6cm] (title) at (7.3,4.2) {\textbf{桥接切换三条操作纪律 $\times$ 手术级安全保障}};
+
+\node[box, fill=blue!10] (w1) at (2.5,2.0) {\textbf{窗口期要非常短}\\[2pt] \normalsize\itshape 手术时间\\[2pt]\scriptsize 低峰窗口 · 秒级（目标毫秒级）\\\scriptsize 业务可感知中断趋近于零};
+\node[box, fill=blue!10] (w2) at (7.3,2.0) {\textbf{切换前业务流摸清}\\[2pt] \normalsize\itshape 术前检查\\[2pt]\scriptsize 设备/会话/端口/保活逐项建档\\\scriptsize 切换方案按清单逐项核对};
+\node[box, fill=blue!10] (w3) at (12.1,2.0) {\textbf{异常即时回退}\\[2pt] \normalsize\itshape 抢救预案\\[2pt]\scriptsize 全程值守 · 秒级切回原 IP:端口\\\scriptsize 链路自动恢复 · 记录留痕};
+
+\draw[-{Stealth}, thick] (w1.north) -- (title.south west);
+\draw[-{Stealth}, thick] (w2.north) -- (title.south);
+\draw[-{Stealth}, thick] (w3.north) -- (title.south east);
+\end{tikzpicture}
+\caption{三条操作纪律与手术级安全保障的对应关系——客户视角的价值语言}
+\end{figure}
+
+\vspace{0.5em}
+\textbf{一句话价值}：本项目是"唯一能在不动 A11、不改设备的前提下，拿到动态 IP 终端数据"的手段——\textbf{难度即壁垒，纪律即信任，记录即责任}。
+
+\subsection{风险清单与对冲}
+
+\begin{longtable}{p{3.2cm} p{5.2cm} p{4.4cm}}
+\toprule
+\textbf{风险} & \textbf{表现} & \textbf{对冲措施} \\
+\midrule
+\endfirsthead
+\multicolumn{3}{c}{(续表)} \\
+\toprule
+\textbf{风险} & \textbf{表现} & \textbf{对冲措施} \\
+\midrule
+\endhead
+
+切换窗口风险 & 抢占瞬间业务流短暂中断 & 低峰窗口 + 秒级/毫秒级压缩 + 切换前后对比记录 \\
+责任边界风险 & 切换窗口内问题责任不清 & 切换方案甲方签字确认、过程记录留痕（N4） \\
+甲方配合风险 & 摸底/窗口/值守依赖甲方与 A11 服务方 & 协同机制写入实施计划，摸底列为前置里程碑 \\
+设备并发风险 & client 采集挤占设备连接上限 & 摸底阶段核实并发上限，超限终端改桥接形态 \\
+原服务兼容风险 & A11 迁移备用地址后行为变化 & 迁移前行为基线比对，异常即时回退 \\
+\bottomrule
+\end{longtable}
+
+% ═══════════════════════════════════════════
+\section{商务与实施影响}
+
+\subsection{模块与计价对应}
+
+\begin{itemize}[leftmargin=*]
+  \item \textbf{路径 B 桥接层}：附件④ 模块二（路由监听分析 45 人天）+ 模块一（A11 专有协议帧解析 45 人天）+ 模块八（试点联调 A11 桥接验证 50 人天）——桥接是主形态，\textbf{对应工作量是价值核心，不应被压缩}；
+  \item \textbf{路径 A client 采集}：模块一协议驱动行 + 板块四网关适配/定制动态采集行——常规采集能力，按既有定价；
+  \item \textbf{N2 业务流摸底}：建议在实施计划显式排期（试点联调前置），对应模块八实施联调工作。
+\end{itemize}
+
+\subsection{合同服务条款建议}
+
+\begin{enumerate}[leftmargin=*]
+  \item \textbf{切换审批流}：切换方案、窗口安排、值守人员清单经甲方书面确认后执行，切换过程记录存档；
+  \item \textbf{回退义务}：任何异常按预案即时回退，回退后原链路自动恢复，不影响 A11 业务；
+  \item \textbf{验收口径}：切换窗口时长、业务流摸底清单、回退演练记录随 M4 联调报告提交（与附件② 4.3 一致）。
+\end{enumerate}
+
+% ═══════════════════════════════════════════
+\section{结论}
+
+\begin{enumerate}[leftmargin=*]
+  \item \textbf{需求}：15 条前置约束 + 4 条操作纪律需求（窗口极短 / 业务流摸底 / 回退预案 / 切换协同）——零影响承诺从"并联架构"升级为"切换纪律 + 回退能力"双保险，责任边界通过审批流 + 记录流清晰化；
+  \item \textbf{技术路径}：路径 A（client 主动采集）常规复用、低风险先行；路径 B（抢占 IP:端口桥接）为主形态，复杂度集中在桥接层一处，工作量与试点验证联动复核；
+  \item \textbf{价值}：从"旁路拿数据"升级为"手术级安全采集能力"——技术壁垒与操作壁垒双高，性价比逻辑更硬，风险全部有纪律化对冲。
+\end{enumerate}
+
+\begin{center}
+\large\textbf{难度即壁垒，纪律即信任，记录即责任。}
+\end{center}
+
+\vspace{1em}
+\noindent\hrulefill
+
+\begin{center}
+\small 本论证随项目申报材料提交，与《软件定制开发报价书》、附件②--④、附件⑥、全景论证、第三方证据链报告配套使用。\\
+编制单位：迪格(杭州)物联科技有限公司 \quad 2026-08
+\end{center}
+
+\end{document}

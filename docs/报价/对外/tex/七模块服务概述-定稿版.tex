@@ -1,0 +1,50 @@
+% 七模块服务概述 — 定稿版 2026.08
+\documentclass[11pt,a4paper]{ctexart}
+\usepackage[top=2cm,bottom=2cm,left=2.2cm,right=2.2cm]{geometry}
+\usepackage{xcolor,booktabs,array,enumitem,fancyhdr,hyperref,setspace}
+\setCJKmainfont{Microsoft YaHei}
+\setstretch{1.15}
+\definecolor{pri}{HTML}{0f2347}\definecolor{accent}{HTML}{00b4d8}\definecolor{gray}{HTML}{64748b}
+\pagestyle{fancy}\fancyhf{}
+\fancyhead[L]{\small\color{gray}时序数据采集与应用管理系统}
+\fancyhead[R]{\small\color{gray}七模块服务概述 · 定稿版}
+\fancyfoot[C]{\small\color{gray}\thepage}
+\hypersetup{colorlinks=true,linkcolor=accent,urlcolor=accent}
+
+\begin{document}
+
+\begin{center}
+{\Huge\bfseries\color{pri}技术服务内容——七模块服务概述}\\[6pt]
+{\large 时序数据采集与应用管理系统 \quad 2026.08 定稿版}
+\end{center}
+\vspace{1em}\hrulefill\vspace{1em}
+
+\section{多维度分析与展示服务}
+
+含数字驾驶舱KPI卡片与采集链路拓扑、协议分布分析、数据库性能监控、告警态势分析、报表中心日报月报年报自动生成与健康日报推送、可视化展示拖拽式仪表盘组态与GIS地图层级下钻等。
+
+\section{设备管理服务}
+
+含设备台账管理五态生命周期流转与批量导入导出、采集场景管理静态IP与动态IP双模式链路监控、场景编排批量配置下发与定时巡检、物模型G1至G8一键配点与原系统的点位一致性、设备详情六页签全方位信息聚合等。
+
+\section{协议管理服务}
+
+含多协议解析引擎覆盖原系统专有与Modbus、OPC、IEC104、MQTT等十余种工业协议、双路采集管理静态IP客户端主动采集与动态IP桥接转发不影响现有业务、十家网关厂家适配与GIS在线地图、非标协议视频与智能仪表接入扩展、设备统一动态感知与指纹识别自动注册等。
+
+\section{流式计算搭建与管理服务}
+
+含内置算法库15种开箱即用油田算法覆盖工况诊断预警统计三类、定制算法注册每作业区不少于一种与批量校验、逐井调优单井独立参数配置与AB版本对比、可视化规则编排拖拽式搭建与模板复用、流式告警规则引擎四级分级管理与工单闭环流转、规则引擎联动采集触发条件判定动作执行与设备影子远程下发等。
+
+\section{数据存储与管理服务}
+
+含混合存储引擎TDengine时序库与PostgreSQL关系库双库协同、边缘分级存储边缘SQLite缓存到DMZ汇聚到中心持久化三级架构、数据生命周期管理热温冷自动分层与保留策略灵活配置、MQTT消息中间件千万级汇聚与全链路贯通、REST API标准化数据接口与在线文档、历史数据回放时间轴拖拽定位与多格式导出等。
+
+\section{运维管理服务}
+
+含用户权限管理三种角色化视图千人千面与SSO集成、角色管理菜单按钮级权限精细控制与按作业区数据隔离、全操作审计留痕AOP自动采集与多维检索、安全配置加密算法组件与密码策略会话安全、信创全栈适配麒麟Linux与飞腾CPU与达梦数据库全栈验证、系统健康自监控分布式节点状态与服务可用性探测等。
+
+\section{作业区场景适配服务}
+
+含作业区独立部署边缘代理即插即接入与配置独立管理、采集策略定制按作业区独立配置采集频率与算法优先级及策略模板化复制、定制化流水计算边缘侧入库前判定告警单条耗时低于一毫秒与物模型驱动配点、断网缓存补传边缘SQLite本地缓存网络恢复自动按序补传去重与进度可视化、智能动态调频综合网络与业务时段自动调整采集节奏、三阶段渐进接入从观察到桥接复制到稳定并行全程可验证可交付等。
+
+\end{document}

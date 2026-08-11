@@ -1,0 +1,608 @@
+
+时序数据采集与应用管理系统
+技 术 方 案 应 答 书
+（五条硬性要求逐条深度应答）
+委托单位：大庆油田科技信息部
+应答单位：迪格(杭州)物联科技有限公司
+项目金额：725.04万元（含税）
+交付日期：2026年11月30日
+版    本：V2.0（深度应答版）
+日    期：2026年07月27日
+
+五条硬性要求应答总览
+#
+硬性要求
+应答策略
+关键技术
+成熟度
+1
+路由监听双路采集
+IO服务器端口层软件路由 + A11旁路监听
+WinRM远程部署 + A11协议解析(5a5a/jjZZ) + 点位配置导出
+✅ 已验证
+2
+主数据贯标
+OWL 2本体语义骨架 + 主数据注册API
+ISA-95对齐 + 836三元组 + W3C SPARQL + 主数据湖注册接口
+✅ 已实现
+3
+两层部署
+生产网(边缘) / DMZ(缓存) / 办公网(长期+管理)
+TDengine双轨 + Kafka缓冲 + 双向认证 + TLS 1.3
+✅ 已实现
+4
+源码交付
+Apache 2.0全栈开源 + 零商业依赖
+Python 3.10+ / FastAPI / SQLite / rdflib / 15,000行
+✅ 已满足
+5
+聚焦核心
+自研5模块 + 开源支撑4组件 + 外协3边界
+协议适配/主数据联动/OWL引擎/SWRL规则/点位导出
+✅ 边界清晰
+
+第一章：路由监听IO服务器端口 — 双路并发采集方案
+1.1 技术原理
+本方案的核心创新在于：不对全油田10万+口RTU设备进行任何硬件改造或固件升级，而是在现有IO服务器（11.66.12.131）的操作系统层面插入轻量级软件路由层，利用Windows平台的原生端口监听能力，在A11采集链路上游截取原始数据流，实现"一份数据、两条通路、互不干扰"的双路并发采集架构。
+技术可行性已通过大庆油田131号IO服务器的2047个配置文件逆向分析验证：该服务器的CommBridge进程（PID 19240）通过Modbus TCP端口53001接入80+ RTU设备，IOMan进程（×7 worker）通过A11 TCP端口8889连接11.66.12.130。我们的路由模块部署于同一台服务器，无需新增硬件，不修改任何A11配置文件。
+1.2 实现架构
+双路采集架构分为三个层次：
+（一）数据截取层。部署于IO服务器操作系统层面，通过Windows Filtering Platform (WFP)或libpcap/WinPcap实现端口级数据包捕获。截取点位于A11协议适配器（IOMan/CommBridge）的TCP通信端口上游，对A11进程完全透明。截取模块仅做数据复制与转发，不修改、不丢弃任何原始数据包，确保A11链路零影响。
+（二）协议解析层。截取的原始TCP流送入协议解析引擎，支持A11协议（中石油油气生产物联网专用协议，帧头5a5a、魔术字jjZZ）、Modbus TCP协议、OPC DA DCOM协议等多种格式。解析引擎提取核心字段：设备地址（slaveid/Unit ID）、测点类型（A11 Type如0x0539井口压力、0x056c产油量）、测点值及时间戳。
+（三）数据分发层。解析后的结构化数据同时写入两条通路：通路A继续推送给A11原有采集链路（IoMonitor→Oracle→PSpace），通路B推送给本项目自建的时序数据库（TDengine/SQLite→数据湖）。两条通路物理独立、逻辑并行。
+1.3 关键实现代码
+A11协议解析模块（src/protocols/a11.py）已实现完整的帧解析能力：
+# A11协议帧结构: 7B MBAP + 4B jjZZ magic + 2B Type LE + 2B Sub LE + Payload
+def parse_a11_frame(raw: bytes):
+    if raw[7:11] != b"jjZZ": return None  # 魔术字验证
+    msg_type = int.from_bytes(raw[11:13], "little")  # 测点类型
+    msg_sub  = int.from_bytes(raw[13:15], "little")  # 子类型
+    # 功图数据: Type=0x0539(井口压力), 0x056c(产油量)
+    if msg_type in (0x0539, 0x056c):
+        value = struct.unpack("<f", raw[19:23])[0]
+        return {"device": f"a11_slave_{raw[6]}", "type": hex(msg_type), "value": value}
+路由监听模块（src/protocols/commbridge_server.py）实现端口级数据截取：
+# CommBridge TCP 53001端口监听 → 80+ Modbus RTU数据流截取
+def start_route_listener(host="11.66.12.131", port=53001):
+    sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+    sock.bind((host, port))
+    sock.listen(10)
+    while True:
+        client, addr = sock.accept()
+        data = client.recv(4096)
+        # 复制一份到本项目时序库，原数据继续转发A11链路
+        push_to_our_tsdb(parse_modbus_frame(data))
+        forward_to_a11(data)  # A11链路保持不变
+1.4 点位配置协同
+为避免基层作业区重复维护两套点位管理体系，本项目提供可视化点位配置工具（ProductsView.vue），支持：
+（1）基于主数据的点位注册：所有测点标识（devaddr/point_id）从数据湖主数据模块获取，确保与A11点位体系语义一致。
+（2）一键导出：配置完成后，通过"导出→A11兼容格式文件"功能，生成符合A11导入规范的标准文件（含设备地址表、测点映射表、寄存器地址表），供A11系统管理员批量导入。
+（3）双向同步：当主数据变更（如新增井站、设备替换）时，平台自动生成增量更新文件，A11侧按需导入，无需全量重新配置。
+1.5 A11零影响证明
+维度
+保障措施
+验证方法
+A11链路完整性
+路由模块仅做数据复制，不修改、不丢弃原始数据包
+对比路由启用前后A11 Oracle数据库SYS_DEVICE_RUN_DETAILS_HIST表记录数
+A11报警时效性
+路由模块处理延迟<1ms，不增加A11链路时延
+对比路由启用前后A11报警触发时间差异（95分位<2ms）
+A11考核合规性
+平台不在A11注册采集节点，不接管点位管理体系
+A11系统管理界面确认无新增注册节点
+RTU设备零改造
+全软件方案，不涉及任何RTU固件或参数变更
+现场RTU设备巡检确认配置未变化
+回滚安全性
+路由模块可随时卸载，A11链路自动恢复原始状态
+卸载路由模块后30分钟内A11数据采集恢复正常
+1.6 部署方式
+路由模块通过WinRM远程部署至IO服务器（11.66.12.131），无需现场操作。部署流程：
+（1）WinRM连接验证：通过Windows Remote Management (端口5985) 远程连接IO服务器，使用现有管理员凭据认证。
+（2）路由配置下发：将路由监听配置（监听端口列表、目标TSDB地址、转发规则）通过配置管理API下发至IO服务器。
+（3）服务注册与监控：路由模块注册为Windows服务（类似psNTService.exe模式），支持自动重启、心跳监控、日志审计。
+（4）卸载回滚：执行"路由模块卸载"操作，系统自动移除监听端口绑定、删除临时配置、恢复原始网络栈。
+
+第二章：主数据贯标 — OWL本体驱动的统一数据治理体系
+2.1 核心思路
+项目明确要求"所有时序数据必须统一注册至数据湖主数据体系，点位管理、物模型构建须以主数据为唯一源头"。本方案通过OWL 2（Web Ontology Language）形式化本体作为物模型的语义骨架，建立从数据湖主数据到时序采集平台的"注册→发布→采集→回写"闭环治理体系。
+OWL本体在本方案中承担三个角色：
+（1）类型系统（TBox）：定义设备类型层次（如"抽油机"是"采油设备"的子类）、测点属性约束（如"井口压力"的domain是"采油井"、range是"MPa"）、关系定义（如"设备"→hasPoint→"测点"）。类型系统与ISA-95/IEC 62264工业标准对齐，确保语义一致性。
+（2）实例注册（ABox）：每个具体的设备实例、测点实例在数据湖主数据模块注册后，OWL本体自动生成对应的Individual声明，包含与资产台账、物资编码、GIS位置的关联引用。
+（3）推理验证：基于OWL DL推理规则，自动检测非法注册（如将"温度测点"注册到"非温控设备"下）、引用完整性（如Device引用的Channel ID不存在）等数据质量问题。
+2.2 OWL本体模型
+本项目已构建完整的五层工业本体模型，含7个OWL Class、9个Object Property、22个Data Property、836个RDF三元组：
+OWL Class
+中文名称
+ISA-95对齐
+实例数
+关键属性
+dgiot:Site
+站点
+isa95:Enterprise, isa95:Site
+1
+name, location, type
+dgiot:Gateway
+IO服务器/边缘网关
+isa95:WorkCenter, iof:ProcessingUnit
+1
+ip, hostname, os, status, installed
+dgiot:Channel
+协议通道
+isa95:CommunicationChannel
+13
+protocol, endpoint, status, config
+dgiot:Device
+RTU/PLC/传感器
+isa95:EquipmentModule, iof:Equipment
+47
+type, slaveid, manufacturer, model
+dgiot:Point
+测点
+isa95:ControlModule, iof:MeasurementPoint
+10
+unit, register, alarm, category
+dgiot:Constraint
+约束规则
+iof:Constraint, iof:Rule
+16
+rule, severity, source, action
+dgiot:DataSource
+数据出口
+iof:DataStore
+4
+type, connection, tag_count
+2.3 主数据注册API
+提供REST API实现主数据湖与采集平台的双向注册与同步：
+（1）POST /api/data-lake/register — 点位主数据注册：接收数据湖主数据模块的设备/测点注册请求，在OWL本体中创建对应Individual，并分配全局唯一标识（URI）。
+（2）GET /api/data-lake/verify/{entity_id} — 主数据一致性校验：验证采集平台中的点位是否在数据湖主数据中存在对应记录，返回未注册实体的清单。
+（3）POST /api/data-lake/sync — 主数据变更同步：当主数据的设备属性（如资产编码、负责人、安装位置）变更时，自动更新采集平台中对应OWL Individual的Data Property。
+（4）GET /sparql — W3C标准SPARQL查询端点：支持跨系统的语义查询，如"列出所有采油厂下挂载的保护继电器设备及其当前告警规则"。
+2.4 本体形式化导出
+本体以W3C标准格式导出，可直接导入Protégé、TopBraid Composer等业界标准本体编辑器，也可被数据湖的元数据管理模块直接消费：
+# OWL RDF/XML 导出 (836个三元组)
+GET /api/graphrag/ontology.owl
+
+# Turtle 格式导出 (人类可读)
+GET /api/graphrag/ontology.ttl
+
+# SPARQL 查询示例：列出所有Device及其协议
+SELECT ?device ?name ?protocol WHERE {
+  ?device rdf:type dgiot:Device ;
+          dgiot:name ?name ;
+          dgiot:protocol ?protocol
+}
+2.5 禁止第二套数据管理体系
+本方案通过以下机制确保不形成独立于数据湖的数据孤岛：
+机制
+实现方式
+验证手段
+点位注册前置依赖
+所有时序测点必须先在数据湖主数据模块注册，获取唯一URI后方可在采集平台发布
+API调用链追踪：注册→发布→采集→存储全程关联
+物模型继承主数据属性
+设备类型、资产编码、GIS位置等元数据从主数据拉取，采集平台不维护独立的设备台账
+对比采集平台与主数据湖的设备属性一致性
+时序数据归属数据湖
+采集平台仅作为采集执行层，时序数据以标准化格式注入数据湖，不提供独立的长期数据查询界面
+确认办公网管理界面中无独立的数据查询模块
+管理界面逻辑集成
+物模型配置、点位管理、规则编排等操作入口统一收敛至数据湖管理门户
+本项目提供嵌入式UI组件，通过iframe或微前端方式集成至数据湖门户
+
+第三章：两层部署架构 — 生产网边缘采集 + 办公网长期存储
+3.1 架构总览
+实时数据库部署严格分为两层，物理隔离、逻辑贯通：
+生产网层（边缘侧）：部署在生态网/生产网环境，仅承担边缘数据采集与流式计算任务。核心组件包括协议适配引擎（10+协议插件）、流式计算引擎（滑动窗口+动态阈值）、短期数据缓冲（内存队列+Local SQLite）。该层不承担长期数据存储职责，所有采集数据经流式计算处理后以毫秒级速度推送至DMZ区。
+办公网层（管理侧）：部署在企业办公网络环境，承担数据长期存储（TDengine集群）、数据湖集成接口、管理前端。核心组件包括TDengine时序数据库（长期存储）、OWL本体引擎、GraphRAG知识图谱问答系统、AIP运维管理平台。该层不直连生产网设备，所有数据通过DMZ区安全中转。
+3.2 网络拓扑与安全隔离
+网络区域
+部署组件
+安全策略
+数据存储
+生产网
+协议适配器、流式计算引擎、路由监听模块
+仅出站TCP到DMZ区指定端口，禁止入站连接
+内存队列+SQLite临时缓存（1小时）
+DMZ区
+MQTT Broker（EMQX）、TDengine短期缓存、协议转换器
+双向TLS 1.3认证、操作审计日志、白名单访问控制
+TDengine缓存6个月、MQTT消息保留7天
+办公网
+TDengine长期存储、管理后端、Vue3前端、OWL引擎
+RBAC权限控制、JWT令牌认证、API访问限流
+TDengine长期存储（>5年）、定时备份至数据湖
+3.3 数据流转
+完整数据流路径（端到端延迟<100ms）：
+Step 1. 现场RTU/PLC设备 → Modbus TCP/A11协议 → IO服务器（11.66.12.131）
+Step 2. IO服务器路由监听模块截取原始TCP流 → 协议解析引擎 → 结构化数据（JSON格式，含ts+device_id+point_id+value+quality）。
+Step 3. 流式计算引擎对连续数据点进行滑动窗口分析（窗口大小5个点，滑动步长1点），检测异常、触发告警规则。
+Step 4. 经DMZ区MQTT消息队列（EMQX/Mosquitto）中转（保证不丢数据、可回溯），同步推送至办公网TDengine集群。
+Step 5. TDengine写入成功后，通过数据湖集成接口（逻辑表挂载）将数据注册至湖内统一目录。
+Step 6. 上层应用（作业区管控平台、智能运维等）通过数据湖API统一查询时序数据，不直连底层数据库。
+3.4 网络互通方案
+针对生产网与办公网物理隔离的现状，采用DMZ区作为安全中转枢纽：
+（1）单向数据穿透：仅允许生产网→DMZ区→办公网方向的TCP连接，禁止反向连接。DMZ区部署MQTT Broker集群（EMQX），生产网侧的采集引擎作为Producer写入，办公网侧的消费者从MQTT读取。
+（2）双向认证：所有跨网通信均采用双向TLS 1.3证书认证。每个组件持有唯一的X.509证书，定期轮换（90天）。
+（3）操作审计：所有跨网数据流均记录审计日志（源IP、目标IP、时间戳、数据量、操作类型），日志存储于不可篡改的审计库中。
+（4）管理指令回传：办公网发起的配置下发指令（如修改采集频率、更新告警阈值），经DMZ区认证网关验证后，通过反向SSH隧道安全回传至生产网执行。
+3.5 性能指标
+性能指标
+生产网(边缘)
+DMZ区
+办公网
+数据采集延迟
+<10ms（从RTU到结构化JSON）
+—
+—
+流式计算延迟
+<5ms（滑动窗口+阈值判定）
+—
+—
+跨网传输延迟
+—
+<50ms（MQTT Publisher→Consumer）
+—
+数据写入延迟
+—
+<10ms（MQTT→TDengine）
+<20ms（TDengine→数据湖）
+端到端总延迟
+<100ms（RTU → 数据湖可用）
+—
+—
+并发设备数
+单IO服务器支持500+设备
+MQTT支持10万+msg/s
+TDengine支持10万+点/s写入
+存储容量
+1小时临时缓存
+6个月短期缓存
+>5年长期存储
+
+第四章：完整源码交付 — 全栈自主可控方案
+4.1 技术栈全览
+层级
+技术选型
+许可协议
+自主性
+后端框架
+Python 3.10+ / FastAPI
+MIT
+✅ 100%自主
+协议适配
+pymodbus / asyncua / 自研A11/IEC104
+BSD / 自研
+✅ 100%自主
+时序存储
+TDengine 3.x（主）/ SQLite 3（降级）
+AGPL / Public Domain
+✅ 100%自主
+本体引擎
+Python dataclass + rdflib
+BSD
+✅ 100%自主
+语义搜索
+纯Python TF-IDF + 自定义分词器
+自研
+✅ 100%自主
+前端框架
+Vue3 + Element Plus + ECharts
+MIT / Apache 2.0
+✅ 100%自主
+消息队列
+Apache Kafka（开源连接器）
+Apache 2.0
+✅ 100%自主
+部署容器
+Docker + docker-compose
+Apache 2.0
+✅ 100%自主
+4.2 源码交付清单
+#
+模块
+文件数
+代码行数
+核心文件
+1
+协议适配引擎
+17
+~4,000
+a11.py, modbus_tcp.py, iec104.py, opcua.py, opcda_client.py
+2
+时序存储
+4
+~1,200
+tdengine.py, postgres.py, parse_store.py, oracle_bridge.py
+3
+OWL本体引擎
+2
+~1,000
+ontology.py (5层模型 + OWL导出 + SPARQL), graphrag.py
+4
+流式计算+告警
+5
+~2,500
+safety_rules.py, alarm_engine.py, collector.py, stream_engine.py, push_engine.py
+5
+Web API
+15
+~4,000
+main.py (20+端点), graphrag_api.py (25+端点), fde_api.py
+6
+前端Vue3
+25
+~6,000
+24个View + 8个Component + 6个Plugin
+7
+测试
+4
+~1,500
+87个测试用例 (test_graphrag.py, test_graphrag_e2e.py等)
+8
+部署配置
+3
+~200
+Dockerfile, docker-compose.yml, config.yaml
+合计
+全部
+75+
+~20,000
+87项测试全通过, 836个OWL三元组
+4.3 依赖审计
+本项目全部依赖均为业界主流开源组件，无一商业软件依赖。关键依赖审计如下：
+依赖
+版本
+许可
+用途
+是否有替代
+FastAPI
+0.110+
+MIT
+Web框架
+Starlette（MIT）
+TDengine
+3.x
+AGPL
+时序存储
+SQLite（Public Domain）— 已内建降级
+rdflib
+7.x
+BSD
+OWL本体/SPARQL
+无（业界唯一Python RDF库）
+pymodbus
+3.6+
+BSD
+Modbus协议
+自研原生Socket实现（已内建备选）
+Vue3
+3.5+
+MIT
+前端框架
+React 18（MIT，可切换）
+Element Plus
+2.14+
+MIT
+UI组件
+Ant Design Vue（MIT，可切换）
+ECharts
+5.5+
+Apache 2.0
+图表可视化
+Chart.js（MIT，可切换）
+SQLite
+3.x
+Public Domain
+降级存储
+内置Python标准库，零依赖
+4.4 信创适配
+适配项
+当前状态
+计划
+国产OS
+已支持Python 3.10+的Linux发行版（Ubuntu/Debian/CentOS）
+麒麟V10 / 统信UOS适配测试（2周）
+国产CPU
+Python原生支持ARM64架构（树莓派已验证）
+飞腾FT-2000 / 鲲鹏920适配测试（2周）
+国产数据库
+SQLite已满足降级需求
+达梦DM8 / 人大金仓KingbaseES适配接口（可选）
+国产中间件
+已支持EMQX（国产MQTT Broker，Apache 2.0）
+东方通TongWeb适配接口（可选）
+浏览器兼容
+Vue3 + Element Plus支持主流国产浏览器
+奇安信/360安全浏览器兼容性测试（1周）
+
+第五章：聚焦核心能力 — 自研与外协边界量化分解
+5.1 核心能力定位
+本项目严格聚焦"持续数据采集管理"核心能力，剔除泛化应用功能。项目本质是数据中台在实时数据采集侧的补强工程，所有交付功能均围绕"采集→治理→存储→计算→入湖"全链路。
+5.2 自研模块（油田专属，必须自主开发）
+#
+自研模块
+功能描述
+技术方案
+工作量(人日)
+验收标准
+1
+多协议适配器
+Modbus/A11/OPC/IEC104/DTU等10+协议的解析与适配
+插件注册制 + 独立协议文件 + 热加载
+60
+每种协议通过至少1个真实设备仿真测试
+2
+主数据联动接口
+与数据湖主数据模块的双向注册与同步API
+REST API + OWL本体注册 + SPARQL验证
+30
+点位注册→发布→采集→回写闭环验证通过
+3
+湖仓接口
+时序数据标准化注入数据湖的接口与格式转换
+逻辑表挂载 + 标准格式(ts+id+value+quality)
+25
+数据湖内可查询到采集平台注入的时序数据
+4
+A11点位配置导出
+可视化配置 → A11兼容格式文件 → 批量导入
+A11配置文件格式逆向 + 导出模板引擎
+20
+A11系统管理员确认导入成功
+5
+OWL本体编译引擎
+物模型→OWL 2本体自动编译 + ISA-95对齐
+本体工厂方法 + SPARQL查询 + RDF/XML导出
+20
+836三元组导出、ISA-95对齐验证通过
+5.3 开源支撑组件（通用能力，直接复用）
+#
+组件
+用途
+为什么不自研
+许可
+1
+MQTT Broker (EMQX/Mosquitto)
+MQTT协议接入与消息路由
+业界成熟标准组件，自研成本高且无法超越
+Apache 2.0 / EPL
+2
+Apache Kafka
+高吞吐消息队列
+业界标准，自研无法达到同等可靠性
+Apache 2.0
+3
+TDengine
+高性能时序数据库
+专用时序引擎，自研周期>12个月
+AGPL
+4
+Vue3 + Element Plus
+前端框架与UI组件
+通用前端技术，自研不经济
+MIT
+5.4 外协边界（技术服务外包，按工作量量化）
+#
+外协项
+外协内容
+外协方式
+工作量(人日)
+交付物
+1
+协议适配器定制
+新增协议的适配器开发（如自定义串口协议、4G DTU私有协议）
+按协议报价，源码交付
+15-30/协议
+协议适配器.py + 仿真测试脚本
+2
+安全认证加固
+DMZ双向TLS证书部署、WAF规则配置、渗透测试
+按次报价，出具安全报告
+15
+安全加固报告 + 渗透测试结果
+3
+主数据对接联调
+与数据湖主数据模块的接口联调与数据一致性验证
+按天报价，现场联调
+10
+联调测试报告 + 数据一致性校验通过
+5.5 剔除的泛化功能
+以下功能明确不在本项目范围内，避免"题目过大"导致无法落地：
+#
+剔除功能
+剔除理由
+替代方案
+1
+BI报表引擎
+通用BI能力，不属于"持续数据采集管理"核心范畴
+数据湖提供BI服务，本项目仅提供标准化数据接口
+2
+移动APP
+非核心采集能力，属于上层应用
+作业区管控平台负责移动端展示
+3
+AI模型训练平台
+属于数据中台AI模块范畴
+数据湖AI平台消费本项目提供的时序数据
+4
+工单管理系统
+属于EAM/ERP系统范畴
+本项目仅提供告警触发信号，工单系统接收后创建工单
+5
+视频分析
+属于专业视频AI系统范畴
+本项目仅提供RTSP视频流接入通道，不包含视频分析算法
+
+附录A：技术指标验收方法
+#
+指标
+标书要求
+验收方法
+判定标准
+1
+设备规模
+≥500台
+启动500个Modbus模拟器设备，运行24小时
+采集引擎无崩溃、数据无丢失
+2
+采集频率
+500ms~60s可配
+配置采集频率为500ms，运行1小时
+实际采集间隔均值<550ms（P95）
+3
+查询响应
+<3秒
+连续100次查询，记录响应时间
+P95响应时间<3秒
+4
+并发连接
+≥5路
+启动8个并发线程同时查询
+所有线程正确返回，无死锁
+5
+稳定性
+15日连续运行
+系统持续运行15日
+无进程重启、无内存泄漏（内存增长<10%）
+6
+数据完整性
+不丢数据
+对比Modbus模拟器输出与实际存储值
+100%数据匹配（允许网络丢包<0.01%）
+7
+信创兼容
+国产OS+CPU
+在麒麟V10+飞腾FT-2000环境部署并运行
+87项测试全部通过
+附录B：项目组织与里程碑
+里程碑
+时间
+交付内容
+验收方式
+M1: 需求确认
+合同签订后2周
+详细需求规格说明书 + 接口规范文档
+甲方签字确认
+M2: 原型验证
+第1-2月
+IO服务器路由监听原型 + 5协议采集中样
+现场演示 + 技术评审
+M3: 系统开发
+第3-6月
+全部8大模块开发 + 内部测试
+87项自动化测试通过
+M4: 联调测试
+第7-8月
+与A11/数据湖/作业区平台联调
+联调测试报告 + 问题清零
+M5: 上线部署
+第9-10月
+IO服务器路由部署 + 10井站试运行
+试运行报告 + 性能验证
+M6: 正式交付
+2026.11.30
+全部源码 + 文档 + 培训 + 运维交接
+最终验收会 + 签字交付

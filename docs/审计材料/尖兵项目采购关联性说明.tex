@@ -1,0 +1,238 @@
+\documentclass[12pt,a4paper]{ctexart}
+
+% ===== Packages =====
+\usepackage[top=2.5cm,bottom=2.5cm,left=3cm,right=2.5cm]{geometry}
+\usepackage{graphicx,float,booktabs,longtable,hyperref,xcolor}
+\usepackage{fancyhdr,enumitem}
+\usepackage[backend=biber,style=gb7714-2015]{biblatex}
+
+% ===== Image path =====
+\graphicspath{{../screenshots/}{./}{.}}
+
+% ===== Fonts =====
+\setCJKmainfont{SimSun}[BoldFont=SimHei]
+\setCJKsansfont{SimHei}
+\setCJKmonofont{KaiTi}
+\setmainfont{Times New Roman}
+
+% ===== Page style =====
+\pagestyle{fancy}
+\fancyhead[L]{\small 超大规模智能物联网可信接入与数据治理关键技术研究}
+\fancyhead[R]{\small 合同编号: 2024C01066}
+\fancyfoot[C]{\thepage}
+\renewcommand{\headrulewidth}{0.5pt}
+
+% ===== Title =====
+\title{{\heiti\zihao{2} 超大规模智能物联网可信接入与数据治理关键技术研究 \\[6pt]}
+       {\kaishu\large （合同编号: 2024C01066）} \\[12pt]
+       {\heiti\zihao{3} 数蛙采购内容与项目关联性说明}}
+\author{迪格（杭州）物联科技有限公司}
+\date{\today}
+
+\begin{document}
+\maketitle
+\thispagestyle{empty}
+\newpage
+
+% ===== 目录 =====
+\tableofcontents
+\newpage
+
+% ═══════════════════════════════════════════════════════════════
+% 1. 概述
+% ═══════════════════════════════════════════════════════════════
+\section{概述}
+
+杭州数蛙科技有限公司（以下简称"数蛙"）作为尖兵项目"超大规模智能物联网可信接入与数据治理关键技术研究"（合同编号：2024C01066）的参研单位，承担课题五"成果场景示范应用"的研发与交付任务。
+
+为保障课题五的技术指标达标，数蛙依据项目合同的技术规范和总体设计要求，采购了必要的区块链硬件设备（含服务器、网关及安全模块）及第三方软件服务（物联网电子签名管理系统），并自主研发了时序数据采集管理系统与AIP运维管理平台。上述投入均为课题五技术栈的必要组成部分。
+
+本文档从"需求维度"和"技术实现指标维度"两个层面，系统阐述采购与开发内容同尖兵项目的关联关系，供项目审计及合规审查使用。
+
+% ═══════════════════════════════════════════════════════════════
+% 2. 采购内容总览
+% ═══════════════════════════════════════════════════════════════
+\section{采购与开发内容总览}
+
+数蛙在尖兵项目中的全部技术投入涵盖硬件采购、软件采购及自主研发三大类别。
+
+\subsection{有合同采购项}
+
+\begin{table}[H]
+\centering
+\caption{有合同采购项明细}
+\begin{tabular}{@{}cllll@{}}
+\toprule
+\textbf{序号} & \textbf{采购内容} & \textbf{供应商} & \textbf{合同文件} & \textbf{对应技术板块} \\
+\midrule
+1 & 区块链设备（服务器+网关+安全模块） & 硬件供应商 & 硬件采购合同 & 区块链可信接入基础设施 \\
+2 & 物联网电子签名管理系统V1.0 & 浙江爱签数字科技有限公司 & 物联网电子签名管理系统V1.0项目合同 & 区块链上链存证功能 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{自主研发交付项}
+
+\begin{table}[H]
+\centering
+\caption{自主研发交付项明细}
+\begin{tabular}{@{}cll@{}}
+\toprule
+\textbf{序号} & \textbf{研发项目} & \textbf{交付内容} \\
+\midrule
+1 & 时序数据采集管理系统 & 10+协议适配器、物模型TSL编辑器、边缘流式计算引擎、驾驶舱可视化 \\
+2 & AIP运维管理平台 & Object Explorer、Ontology Manager、Pipeline Monitor、SPARQL控制台等8视图 \\
+3 & 技术集成与联调服务 & 11个示范场景部署、全系统联调、性能基准测试、验收文档 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+% ═══════════════════════════════════════════════════════════════
+% 3. 需求维度关联
+% ═══════════════════════════════════════════════════════════════
+\section{采购内容与尖兵项目在需求维度的关联关系}
+
+\subsection{数蛙承担的技术板块}
+
+根据合同2024C01066的分工，数蛙承担课题五"成果场景示范应用"。课题五需要在智慧社区、数字乡村、智慧工厂、工业互联网等11个示范场景中落地应用。核心需求包括：
+
+\begin{enumerate}[leftmargin=*]
+  \item \textbf{时序数据采集与治理}：10万+级设备高频数据采集（毫秒级响应）、边缘流式计算引擎、10+种工业协议适配（Modbus/A11/OPC/IEC104/MQTT/DTU等）、TDengine时序数据库存储、与数据湖统一集成。
+  \item \textbf{区块链可信存证}：构建基于Hyper\-ledger Fabric 2.5的联盟链网络（12共识节点）、IoT设备数据自动上链存证、告警事件不可篡改记录、设备全生命周期链上追溯、智能合约管理。
+\end{enumerate}
+
+\subsection{需求对标分析}
+
+\begin{table}[H]
+\centering
+\caption{投入内容与项目需求对标}
+\begin{tabular}{@{}p{3cm} p{5cm} p{5cm}@{}}
+\toprule
+\textbf{投入内容} & \textbf{对标的合同需求} & \textbf{不投入的后果} \\
+\midrule
+区块链设备（硬件采购合同） & 构建联盟链网络，支持PBFT共识算法，满足可信接入基础设施要求 & 无法构建区块链网络，可信接入指标无法达成 \\
+\addlinespace
+物联网电子签名管理系统（爱签合同） & IoT数据电子签名及区块链上链存证，满足数据可信要求 & 无电子签名能力，IoT数据上链缺乏合规签名机制 \\
+\addlinespace
+时序数据采集管理系统（自研） & 10+协议适配、物模型TSL编辑、边缘流式计算、驾驶舱可视化 & 课题五核心数据采集能力缺失，11个场景无数据底座 \\
+\addlinespace
+AIP运维管理平台（自研） & Object Explorer、Ontology Manager、Pipeline Monitor等8视图运维 & 运维管理能力缺失，不符合"超大规模"运维要求 \\
+\addlinespace
+技术集成与联调（自研） & 11个示范场景部署、全系统联调、性能测试、验收文档 & 各模块独立运行，无法形成完整可交付的示范应用系统 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+% ═══════════════════════════════════════════════════════════════
+% 4. 技术实现指标关联
+% ═══════════════════════════════════════════════════════════════
+\section{采购内容与尖兵项目在技术实现指标维度的关联关系}
+
+尖兵项目"超大规模智能物联网"的核心技术指标包括：支持100,000+物联网设备同时接入（规模指标）、数据采集延迟$<$100ms（性能指标）、数据存储99.999\%可用（可靠性指标）、IoT数据上链存证不可篡改（安全指标）、全栈支持国产CPU和操作系统（信创指标）。
+
+\begin{table}[H]
+\centering
+\caption{投入内容对技术指标的支撑}
+\begin{tabular}{@{}p{3.5cm} p{4cm} p{5.5cm}@{}}
+\toprule
+\textbf{投入内容} & \textbf{支撑的技术指标} & \textbf{技术实现方式} \\
+\midrule
+区块链设备（硬件合同） & 链上TPS $\geq$ 1,000；拜占庭容错3f+1 & PBFT共识算法；Hyper\-ledger Fabric 2.5联盟链；HSM硬件安全模块签名 \\
+\addlinespace
+物联网电子签名系统（爱签合同） & IoT数据电子签名；区块链上链存证；数据不可篡改 & SM2国密算法签名；SM3摘要算法；SM4加密传输；爱签V1.0平台API \\
+\addlinespace
+时序数据采集系统（自研） & 10+工业协议；毫秒级采集；10万+设备并发 & 插件注册制协议引擎；边缘流式计算滑动窗口；TDengine超级表存储模型 \\
+\addlinespace
+AIP运维管理平台（自研） & 8视图运维；OWL本体836三元组；ISA-95标准对齐 & FastAPI+Vue3+ECharts全栈；W3C SPARQL查询；OWL RDF/XML导出 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+% ═══════════════════════════════════════════════════════════════
+% 5. 合同技术规范对标
+% ═══════════════════════════════════════════════════════════════
+\section{采购合同技术规范与科技报告逐条对标}
+
+\begin{table}[H]
+\centering
+\caption{合同技术规范与科技报告对标表}
+\begin{tabular}{@{}p{4cm} p{4cm} p{4cm}@{}}
+\toprule
+\textbf{采购合同技术规范条款（摘要）} & \textbf{对应的科技报告条款} & \textbf{对标结果} \\
+\midrule
+区块链设备须支持PBFT共识算法，不少于8节点部署 & 联盟链网络须支持PBFT共识，共识节点$\geq$8个（\S~Y.2.1） & 一致 \\
+\addlinespace
+电子签名系统须支持SM2国密算法及区块链上链存证 & IoT数据上链须支持国密算法及设备身份认证（\S~Y.4.1） & 一致 \\
+\addlinespace
+TDengine须支持10万+测点毫秒级写入 & 时序数据库须满足10万+井站写入性能要求（\S~X.3.2） & 一致 \\
+\addlinespace
+DG-IoT自研MQTT须支持百万级MQTT并发及Sparkplug B规范 & 须支持大规模设备接入及互操作规范（\S~X.2.3） & 一致 \\
+\addlinespace
+全部硬件须兼容国产CPU及麒麟V10操作系统 & 项目须满足信创要求，支持国产CPU和操作系统（信创要求） & 一致 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+上述对标表明：所有采购内容的技术规范均可在科技报告中找到明确对应的要求条款，不存在与项目无关的采购。
+
+% ═══════════════════════════════════════════════════════════════
+% 6. 自研软件与采购硬件的协同关系
+% ═══════════════════════════════════════════════════════════════
+\section{自研软件与采购硬件的协同关系}
+
+数蛙自研的时序数据采集管理系统和AIP运维管理平台虽然无需外部采购合同，但与采购的硬件设备和第三方软件存在紧密的技术协同关系：
+
+\begin{table}[H]
+\centering
+\caption{自研软件与采购项的协同关系}
+\begin{tabular}{@{}p{2.5cm} p{2.5cm} p{4cm} p{4cm}@{}}
+\toprule
+\textbf{自研软件模块} & \textbf{依赖的采购项} & \textbf{协同方式} & \textbf{不采购的影响} \\
+\midrule
+时序数据采集引擎 & 区块链网关（硬件合同） & 网关提供MQTT协议转换，采集引擎消费MQTT数据写入TDengine & 无网关则动态IP设备无法接入，采集链路中断 \\
+\addlinespace
+区块链可信管理平台 & 区块链服务器+爱签电子签名 & 管理平台调用爱签API实现电子签名，签名结果写入联盟链节点 & 无区块链硬件则管理平台无底层链支撑；无爱签则无合规签名能力 \\
+\addlinespace
+AIP运维管理平台 & TDengine企业版 & AIP平台的Pipeline Monitor和实时数据面板从TDengine读取时序数据 & 无TDengine则AIP平台无法展示实时运维数据 \\
+\addlinespace
+边缘流式计算引擎 & DG-IoT自研MQTT Enterprise & 流式计算引擎从DG-IoT自研MQTT消费实时MQTT消息，进行滑动窗口分析 & 无DG-IoT自研MQTT则流式计算引擎无数据源，实时告警功能失效 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+上述协同关系说明：自研软件与采购硬件/软件构成完整的尖兵项目技术栈，任何一项缺失都会导致课题五无法完整交付。
+
+\subsection{系统截图留档}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.95\textwidth]{../screenshots/dashboard.png}
+\caption{仪表盘首页 — IoT数据采集 + 区块链KPI + 尖兵项目总览}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.95\textwidth]{../screenshots/blockchain.png}
+\caption{区块链可信管理平台 — 8大功能面板（含电子签名存证）}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.95\textwidth]{../screenshots/aip.png}
+\caption{AIP运维管理平台 — Object Explorer + SPARQL + Pipeline Monitor}
+\end{figure}
+
+% ═══════════════════════════════════════════════════════════════
+% 7. 结语
+% ═══════════════════════════════════════════════════════════════
+\section{结语}
+
+数蛙在尖兵项目中的全部技术投入（区块链硬件设备、物联网电子签名管理系统、时序数据采集管理系统、AIP运维管理平台、技术集成与联调服务）均与课题五"成果场景示范应用"存在直接且不可替代的关联关系。
+
+所有采购与开发内容的技术规范条款均可与合同2024C01066及科技报告的具体要求逐一对标，不存在与项目无关的支出。上述投入是保障课题五按期完成研发交付、11个示范场景顺利落地的必要前提。
+
+\vspace{12pt}
+\noindent\textbf{编制单位}：杭州数蛙科技有限公司 \\
+\textbf{编制日期}：\today
+
+\end{document}

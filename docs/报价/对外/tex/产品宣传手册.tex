@@ -1,0 +1,141 @@
+% ============================================================
+% 产品宣传手册 — 时序数据采集与应用管理系统
+% ============================================================
+\documentclass[11pt,a4paper]{ctexart}
+\usepackage{xeCJK,xcolor,graphicx,float,fancyhdr,hyperref,geometry,booktabs,enumitem,tikz}
+\usetikzlibrary{arrows.meta,positioning,calc,shapes.geometric}
+\setCJKmainfont{Microsoft YaHei}
+\geometry{a4paper,margin=2.2cm}
+\pagestyle{fancy}
+\fancyhead[L]{时序数据采集与应用管理系统}
+\fancyhead[R]{产品宣传手册}
+\fancyfoot[C]{\thepage}
+\hypersetup{colorlinks=true,linkcolor=black,urlcolor=blue}
+\definecolor{dblue}{HTML}{1a56db}
+\definecolor{dgreen}{HTML}{059669}
+\definecolor{dorange}{HTML}{d97706}
+
+\begin{document}
+
+\begin{center}
+{\Huge\bfseries 时序数据采集与应用管理系统}\\[8pt]
+{\Large\bfseries\color{dblue} 让每一口井的数据，实时可见、秒级可算、一目了然}\\[14pt]
+{\large 大庆油田 · 16厂 · 100+作业区 · 260万+设备点位}\\[8pt]
+{\large 版本 V1.0 \quad 2026年8月}
+\end{center}
+\vspace{1em}\noindent\hrulefill\vspace{1em}
+
+\section{核心能力}
+
+\begin{center}
+\begin{tikzpicture}[font=\small,box/.style={draw,rounded corners=4pt,align=center,inner sep=8pt,text width=4.5cm,fill=white}]
+\node[box,fill=blue!5] (a) {\textbf{采得全}\\[4pt]10+工业协议\\A11专有·Modbus·OPC DA\\双路采集·10家网关\\断网缓存补传};
+\node[box,fill=green!5,right=1cm of a] (b) {\textbf{算得准}\\[4pt]15种内置算法\\每作业区定制注册\\入库前流水计算\\秒级告警判定};
+\node[box,fill=orange!5,right=1cm of b] (c) {\textbf{看得见}\\[4pt]驾驶舱大屏一图总览\\9大功能模块\\拓扑·仪表盘·GIS\\角色化千人千面};
+\draw[-{Stealth},very thick,dblue] (a) -- (b);
+\draw[-{Stealth},very thick,dblue] (b) -- (c);
+\end{tikzpicture}
+\end{center}
+
+\section{系统架构}
+
+\begin{figure}[H]\centering
+\begin{tikzpicture}[font=\footnotesize,
+  layer/.style={draw,rounded corners=3pt,align=center,inner sep=6pt,text width=12cm}]
+\node[layer,fill=orange!10] (L5) {{\bfseries ⑤ 应用展示层}\\[2pt]驾驶舱大屏 · 设备管理 · 设备接入 · 算法管理 · 告警中心 · 数据服务 · 可视化 · 自动化 · 系统管理};
+\node[layer,fill=blue!8,below=1cm of L5] (L4) {{\bfseries ④ 计算分析层}\\[2pt]流水计算引擎（15内置算法+定制注册）· 流式告警规则引擎 · 可视化规则编排};
+\node[layer,fill=green!8,below=1cm of L4] (L3) {{\bfseries ③ 存储与消息层}\\[2pt]TDengine时序 + PostgreSQL关系 + SQLite边缘 · MQTT消息中间件 · 冷热分层};
+\node[layer,fill=gray!10,below=1cm of L3] (L2) {{\bfseries ② 采集接入层（边缘代理）}\\[2pt]10+协议解析引擎 · 双路采集（静态/动态）· 动态调频 · 断网补传};
+\node[layer,fill=gray!25,below=1cm of L2] (L1) {{\bfseries ① 终端设备层}\\[2pt]RTU · DCS · PLC · 智能仪表 · 摄像头 · 12种继电保护装置（全部利旧）};
+\end{tikzpicture}
+\caption{五层架构——从终端到领导屏幕的数据流水线}
+\end{figure}
+
+\section{关键数字}
+
+\begin{table}[H]\centering
+\begin{tabular}{p{4.5cm} p{2.5cm} p{6cm}}
+\toprule
+\textbf{指标} & \textbf{数值} & \textbf{说明} \\
+\midrule
+覆盖范围 & 16厂·100+作业区 & 全油田 \\
+设备点位 & 260万+ & 全量采集 \\
+单作业区测点 & 4.7万 & 第四作业区实测 \\
+并发接入 & 200+ IO服务器 & 每作业区1台 \\
+采集协议 & 10+种 & A11/Modbus/OPC/IEC104/MQTT/HTTP \\
+网关厂家 & 10家 & 全部适配 \\
+内置算法 & 15种 & 工况诊断/预警/统计 \\
+系统界面 & 9大模块 & 管理后台 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\section{产品亮点}
+
+\begin{enumerate}[leftmargin=*]
+  \item \textbf{不替代A11，不改变现有设备}——A11继续运行，本系统并行新通道，零风险搭桥
+  \item \textbf{按作业区定制采集策略}——全油田不是一种节奏，每区独立定制频率/算法/优先级
+  \item \textbf{定制化流水计算}——15种内置算法+每区注册定制算法，数据入库前完成判定
+  \item \textbf{断网补传进度可视化}——链路断了数据不丢，恢复后自动补传，业界独有
+  \item \textbf{Python+Vue3全栈}——源码交付，甲方自主运维，不被供应商锁定
+  \item \textbf{信创全栈适配}——麒麟/统信UOS · 飞腾/鲲鹏 · 达梦/金仓
+\end{enumerate}
+
+\section{部署拓扑}
+
+\begin{figure}[H]\centering
+\begin{tikzpicture}[font=\footnotesize,
+  zone/.style={draw=black!40,fill=#1,rounded corners=4pt,minimum width=4.8cm,minimum height=3.5cm},
+  node/.style={draw,rounded corners=2pt,fill=white,align=center,inner sep=3pt,font=\scriptsize},
+  arr/.style={-{Stealth},thick}]
+\node[zone=orange!6] (prod) at (0,0) {};
+\node[zone=blue!5,right=0.4cm of prod] (dmz) {};
+\node[zone=green!6,right=0.4cm of dmz] (office) {};
+\node[above=0.05cm of prod.north,font=\bfseries] {生产网（工控区）};
+\node[above=0.05cm of dmz.north,font=\bfseries] {DMZ 区};
+\node[above=0.05cm of office.north,font=\bfseries] {办公网（应用区）};
+
+\node[node,below=0.3cm of prod.north,anchor=north,text width=4.2cm] (device) {RTU·DCS·PLC\\智能仪表·摄像头};
+\node[node,fill=red!8,below=0.2cm of device,text width=4.2cm] (io) {\textbf{边缘代理（IO服务器）}\\协议解析·双路采集\\断网缓存·数据上报};
+\node[node,fill=gray!10,below=0.2cm of io,text width=4.2cm] (a11) {A11原系统\\pSpace + Oracle\\保留不动};
+
+\node[node,fill=blue!10,below=0.3cm of dmz.north,anchor=north,text width=4.2cm] (hub) {\textbf{边缘中枢（麒麟Linux）}\\MQTT汇聚·流水计算\\告警引擎·混合存储};
+\node[node,fill=blue!5,below=0.2cm of hub,text width=4.2cm] (fw) {\textbf{工业防火墙/网闸}\\生产网→DMZ 单向只读};
+
+\node[node,fill=green!10,below=0.3cm of office.north,anchor=north,text width=4.2cm] (app) {驾驶舱大屏\\管理后台·9大模块\\REST API数据服务};
+\node[node,fill=green!5,below=0.2cm of app,text width=4.2cm] (store) {TDengine时序\\PostgreSQL关系};
+
+\draw[arr,red!60] (device) -- (io);
+\draw[arr,red!60] (io) -- (a11);
+\draw[arr,cyan,dashed] (io.east) -- node[above,fill=white,font=\tiny]{MQTT} (hub.west);
+\draw[arr] (hub) -- (fw);
+\draw[arr,cyan,dashed] (hub.east) -- node[above,fill=white,font=\tiny]{MQTT} (app.west);
+\draw[arr,green!70] (app) -- (store);
+\end{tikzpicture}
+\caption{三区隔离部署——边缘代理采数据，边缘中枢汇算存展}
+\end{figure}
+
+\section{技术栈}
+
+\begin{table}[H]\centering
+\begin{tabular}{p{3cm} p{3.5cm} p{3.5cm} p{3cm}}
+\toprule
+\textbf{层次} & \textbf{技术} & \textbf{版本} & \textbf{许可证} \\
+\midrule
+后端框架 & Python FastAPI & 0.100+ & MIT \\
+MQTT Broker & dgiot (Erlang/OTP) & 4.9.1 & Apache 2.0 \\
+时序数据库 & TDengine & 3.x & AGPL \\
+关系数据库 & PostgreSQL & 15+ & PostgreSQL \\
+前端框架 & Vue3 + Vite + Element Plus & 3.x & MIT \\
+数据可视化 & ECharts & 5.x & Apache 2.0 \\
+国密算法 & 自研 sm\_crypto & — & — \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\vspace{1em}\noindent\hrulefill
+\begin{center}\small
+迪格(杭州)物联科技有限公司 \quad 2026-08 \quad 配套：产品说明书·用户手册·技术白皮书·报价书
+\end{center}
+
+\end{document}

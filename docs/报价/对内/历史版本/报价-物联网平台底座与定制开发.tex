@@ -1,0 +1,195 @@
+% ============================================================
+% 报价文档 — 边缘中枢汇聚 + 边缘数据采集与历史计算
+% 编译: xelatex -interaction=nonstopmode 报价-物联网平台底座与定制开发.tex
+% ============================================================
+\documentclass[11pt,a4paper]{ctexart}
+\usepackage{xeCJK}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{fancyhdr}
+\usepackage{hyperref}
+\usepackage{geometry}
+\usepackage{longtable}
+\usepackage{booktabs}
+\usepackage{enumitem}
+\usepackage{caption}
+\usepackage{array}
+
+% 字体
+\setCJKmainfont{Microsoft YaHei}
+
+% 页面
+\geometry{a4paper, margin=2.5cm}
+
+% 页眉页脚
+\pagestyle{fancy}
+\fancyhead[L]{边缘中枢汇聚与边缘数据采集历史计算报价}
+\fancyhead[R]{V1.1}
+\fancyfoot[C]{\thepage}
+
+\hypersetup{
+  colorlinks=true, linkcolor=black, urlcolor=blue,
+  pdftitle={边缘中枢汇聚与边缘数据采集历史计算报价},
+}
+
+\begin{document}
+
+\begin{center}
+{\Huge\bfseries 边缘中枢汇聚功能\\[6pt] 与\\[6pt] 边缘数据采集和历史计算功能\\[12pt] 报价说明}\\[12pt]
+{\large 大庆油田时序数据采集与应用管理系统}\\[8pt]
+{\large 版本 V1.1 \quad 编制日期 2026-08}\\[4pt]
+{\large （供方案评审参考）}
+\end{center}
+
+\vspace{1em}
+\noindent\hrulefill
+\vspace{1em}
+
+% ═══════════════════════════════════════════
+\section{报价说明}
+
+\begin{enumerate}[leftmargin=*]
+  \item 本报价按两大功能域组织：\textbf{边缘中枢汇聚功能}（平台侧汇聚、存储、分发）与\textbf{边缘数据采集和历史计算功能}（边缘采集、动态感知、流式计算、历史计算）。
+  \item 报价基准按 \textbf{2,500 元/人天} 估算，含税；实际按最终方案范围与工期核定。
+  \item 报价不含：硬件（服务器/采集机/存储）、第三方授权费用（DCS 厂家配合费）、现场差旅、税费。
+  \item 边缘采集遵循 \textbf{不修改 DTU、不影响 A11 正常使用} 的搭桥原则，零侵入采集。
+\end{enumerate}
+
+% ═══════════════════════════════════════════
+\section{一、边缘中枢汇聚功能}
+
+\subsection{1.1 功能描述}
+
+边缘中枢汇聚功能承担平台侧的数据汇聚、存储、分发与管控能力：
+\textbf{多协议接入汇聚}（10+ 协议）、\textbf{时序与关系存储}（TDengine/PG 双库 + 三级存储）、\textbf{告警与推送}（MQTT/HTTP 双通道）、\textbf{平台管控}（设备/资产/报表）、\textbf{安全可信}（国密）与\textbf{管理后台}（Vue3）。
+
+\subsection{1.2 功能清单与报价}
+
+\begin{longtable}{p{4.2cm} p{2.2cm} p{2.2cm} p{4.8cm}}
+\toprule
+\textbf{功能模块} & \textbf{人天} & \textbf{报价(万元)} & \textbf{功能说明} \\
+\midrule
+\endfirsthead
+\midrule
+\multicolumn{4}{r}{(续表)} \\
+\toprule
+\textbf{功能模块} & \textbf{人天} & \textbf{报价(万元)} & \textbf{功能说明} \\
+\midrule
+\endhead
+平台内核 & 15 & 3.75 & FastAPI 路由/配置/插件注册制框架，200+ API \\
+协议汇聚适配 & 80 & 20.00 & Modbus RTU/TCP、IEC104、OPC UA/DA、A11、MQTT、HTTP 等 10+ 协议汇聚接入 \\
+汇聚推送通道 & 10 & 2.50 & MQTT/HTTP 双通道推送、边缘中枢通道 ch\_edge\_hub、事件总线 \\
+时序与关系存储 & 15 & 3.75 & TDengine 时序 + PostgreSQL 关系 + SQLite 降级 + 三级存储（SSD/HDD/Archive） \\
+告警引擎 & 8 & 2.00 & 入库前流水判定、告警闭环（去重/工单/通知/知识/分析/追溯） \\
+管理后台 & 15 & 3.75 & Vue3 + Element Plus：设备/告警/资产/报表/GIS 视图 \\
+安全可信 & 8 & 2.00 & 国密 SM2/SM3/SM4、认证授权、操作审计 \\
+测试与文档 & 10 & 2.50 & 闭环测试、部署手册、运维文档 \\
+\midrule
+\textbf{汇聚功能合计} & \textbf{161} & \textbf{40.25} & \\
+\bottomrule
+\end{longtable}
+
+\textbf{注}：协议汇聚按独立计价（8 人天/协议），若按核心 6 协议计价可降至约 25 万；前端可另行外包。
+
+% ═══════════════════════════════════════════
+\section{二、边缘数据采集和历史计算功能}
+
+\subsection{2.1 功能描述}
+
+边缘数据采集和历史计算功能承担边缘侧的数据采集、动态感知、流式计算与历史计算：
+\textbf{边缘采集}（多协议采集 + 入库前流水计算）、\textbf{作业区适配层}（A11 桥接/OPC DA/Modbus 感知/网关适配，搭桥手术三件套）、\textbf{流式计算}（15 种公共算法 + 每作业区 ≥1 种定制算法）、\textbf{历史计算}（历史统计/回放/报表计算）与\textbf{术前体检}（8 维度 + 台账）。
+
+\subsection{2.2 功能清单与报价}
+
+\begin{longtable}{p{4.2cm} p{2.2cm} p{2.2cm} p{4.8cm}}
+\toprule
+\textbf{功能模块} & \textbf{人天} & \textbf{报价(万元)} & \textbf{功能说明} \\
+\midrule
+\endfirsthead
+\midrule
+\multicolumn{4}{r}{(续表)} \\
+\toprule
+\textbf{功能模块} & \textbf{人天} & \textbf{报价(万元)} & \textbf{功能说明} \\
+\midrule
+\endhead
+边缘采集引擎 & 10 & 2.50 & 多协议采集、统一管道、入库前流水计算（替代入库-轮询-告警） \\
+流式计算引擎 & 10 & 2.50 & 15 种公共算法（滑窗特征+规则），单条 <1ms \\
+作业区适配层 & 8 & 2.00 & ZoneAdapter 编排器，配置驱动加载 4 子模块，作业区隔离 \\
+A11 桥接 & 12 & 3.00 & bypass → takeover → stable 三阶段，不改 DTU，透传原 IO 零影响 \\
+Modbus 动态感知 & 12 & 3.00 & 静态 IP + 移动网关统一感知，设备增删、点位学习、10 家网关注册帧识别 \\
+OPC DA 直采 & 15 & 3.75 & 5 端点（4 RSLinx + 1 WinCC）DCOM 直采，与 pSpace 数值比对 \\
+IO 术前体检 & 10 & 2.50 & 8 维度体检（节拍/资源/进程/端口/链路/协议/冲突/数据）+ 多作业区台账 \\
+被动监听搭桥 & 10 & 2.50 & Npcap 零发包监听、流量学习、协议解码、设备指纹/帧漂移检测 \\
+作业区定制算法 & 20 & 5.00 & 120 作业区 × 每区 ≥1 种定制算法（抽油机示功图/注水波动等） \\
+历史计算 & 10 & 2.50 & 日/周/月统计、历史回放、报表生成（HTML/JSON） \\
+稳定性保障 & 12 & 3.00 & 7×24 观察、重连策略、性能调优 \\
+\midrule
+\textbf{采集与计算合计} & \textbf{129} & \textbf{32.25} & \\
+\bottomrule
+\end{longtable}
+
+\subsection{2.3 打包方案}
+
+\begin{table}[H]\centering
+\caption{边缘采集与历史计算打包方案}
+\begin{tabular}{p{4.5cm} p{2.5cm} p{2.5cm} p{3.5cm}}
+\toprule
+\textbf{方案} & \textbf{人天} & \textbf{报价(万元)} & \textbf{范围} \\
+\midrule
+A. 基础采集 & 75 & 18.75 & 采集引擎 + A11 桥接 + Modbus 感知 + 10 家网关 \\
+\textbf{B. 标准（推荐）} & \textbf{100} & \textbf{25.00} & A + OPC 直采 + 物模型自动配点 + 历史计算 \\
+C. 全量 & 129 & 32.25 & B + 120 区定制算法 + 7×24 保障 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+% ═══════════════════════════════════════════
+\section{三、总报价}
+
+\begin{table}[H]\centering
+\caption{总报价（推荐组合）}
+\begin{tabular}{p{4.5cm} p{3cm} p{2.5cm} p{3.5cm}}
+\toprule
+\textbf{功能域} & \textbf{内容} & \textbf{报价(万元)} & \textbf{备注} \\
+\midrule
+边缘中枢汇聚功能 & 平台汇聚+存储+推送+后台+安全 & 40.25 & 可复用多项目 \\
+边缘采集与历史计算 & 采集+适配层+流式+历史（标准 B） & 25.00 & 专属大庆油田 \\
+\midrule
+\textbf{合计} & & \textbf{65.25} & 含税估算 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{3.1 敏感性分析（按人天基准）}
+
+\begin{table}[H]\centering
+\caption{报价敏感性}
+\begin{tabular}{p{3cm} p{2.8cm} p{2.8cm} p{2.8cm}}
+\toprule
+\textbf{基准} & \textbf{汇聚功能} & \textbf{采集计算(标准)} & \textbf{合计} \\
+\midrule
+2,000 元/人天 & 32.20 & 20.00 & 52.20 \\
+\textbf{2,500 元/人天} & \textbf{40.25} & \textbf{25.00} & \textbf{65.25} \\
+3,000 元/人天 & 48.30 & 30.00 & 78.30 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+% ═══════════════════════════════════════════
+\section{四、报价边界}
+
+\begin{enumerate}[leftmargin=*]
+  \item \textbf{已含}：软件开发、闭环测试、部署文档、1 年质保。
+  \item \textbf{未含}：硬件（Npcap 采集机/存储/服务器）、第三方授权（DCS 厂家配合费）、现场差旅、税费。
+  \item 本报价为估算参考，最终以合同方案为准。
+\end{enumerate}
+
+\vspace{2em}
+\noindent\hrulefill
+\vspace{1em}
+
+\begin{center}
+\small 编制单位：迪格(杭州)物联科技有限公司 \quad 报价有效期：30 天
+\end{center}
+
+\end{document}

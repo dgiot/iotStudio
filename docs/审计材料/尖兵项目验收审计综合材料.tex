@@ -1,0 +1,199 @@
+\documentclass[12pt,a4paper]{ctexart}
+\usepackage[top=2.5cm,bottom=2.5cm,left=3cm,right=2.5cm]{geometry}
+\usepackage{graphicx,float,booktabs,longtable,hyperref,xcolor}
+\usepackage{fancyhdr,enumitem}
+\graphicspath{{../screenshots/}}
+\setCJKmainfont{SimSun}[BoldFont=SimHei]
+\setmainfont{Times New Roman}
+\pagestyle{fancy}
+\fancyhead[L]{\small 尖兵项目2024C01066 — 验收审计综合材料}
+\fancyhead[R]{\small 杭州数蛙科技有限公司}
+\fancyfoot[C]{\thepage}
+\renewcommand{\headrulewidth}{0.5pt}
+
+\title{{\heiti\zihao{2} 超大规模智能物联网可信接入与数据治理关键技术研究 \\[6pt]}
+       {\kaishu\large 合同编号: 2024C01066 | 课题五: 成果场景示范应用} \\[12pt]
+       {\heiti\zihao{3} 验收审计综合材料}}
+\author{杭州数蛙科技有限公司}
+\date{\today}
+
+\begin{document}
+\maketitle\thispagestyle{empty}\newpage
+\tableofcontents\newpage
+
+% ===== Part 1 =====
+\part{采购内容与项目关联性说明}
+
+\section{概述}
+杭州数蛙科技有限公司作为尖兵项目"超大规模智能物联网可信接入与数据治理关键技术研究"的参研单位，承担课题五"成果场景示范应用"的研发与交付任务。本文档系统阐述全部技术投入与项目的关联关系。
+
+\section{技术投入总览}
+\begin{table}[H]\centering
+\caption{有合同采购项}\begin{tabular}{@{}clll@{}}
+\toprule
+序号 & 采购内容 & 供应商 & 合同文件 \\
+\midrule
+1 & 区块链设备(服务器+网关+安全模块) & 硬件供应商 & 硬件采购合同 \\
+2 & 物联网电子签名管理系统V1.0 & 浙江爱签数字科技有限公司 & 软件采购合同 \\
+\bottomrule
+\end{tabular}\end{table}
+
+\begin{table}[H]\centering
+\caption{自主研发交付项}\begin{tabular}{@{}cll@{}}
+\toprule
+序号 & 研发项目 & 核心技术指标 \\
+\midrule
+1 & 时序数据采集管理系统 & 10+协议/物模型TSL/边缘流式计算/驾驶舱可视化 \\
+2 & AIP运维管理平台 & 8视图/OWL本体836三元组/SPARQL/ISA-95对齐 \\
+3 & 技术集成与联调服务 & 11个示范场景部署/全系统联调/87项测试 \\
+\bottomrule
+\end{tabular}\end{table}
+
+\section{需求维度关联}
+\begin{table}[H]\centering
+\caption{投入内容与项目需求对标}
+\begin{tabular}{@{}p{3cm}p{5cm}p{5cm}@{}}
+\toprule
+投入内容 & 对标的合同需求 & 不投入的后果 \\
+\midrule
+区块链设备(采购合同) & 联盟链网络，PBFT共识，可信接入基础设施 & 无法构建区块链网络 \\
+电子签名系统(爱签合同) & IoT数据电子签名及区块链上链存证 & 无合规签名机制 \\
+时序采集系统(自研) & 10+协议适配/物模型/边缘计算/驾驶舱 & 核心采集能力缺失 \\
+AIP运维平台(自研) & 8视图运维/OWL本体/SPARQL & 运维管理能力缺失 \\
+\bottomrule
+\end{tabular}\end{table}
+
+\section{技术实现指标关联}
+\begin{table}[H]\centering
+\caption{投入对技术指标的支撑}
+\begin{tabular}{@{}p{3.5cm}p{5cm}p{5cm}@{}}
+\toprule
+投入内容 & 支撑的技术指标 & 技术实现方式 \\
+\midrule
+区块链设备 & 链上TPS$\ge$1,000; 拜占庭容错 & PBFT/Hyperledger Fabric 2.5/HSM \\
+电子签名系统 & SM2国密/区块链存证/不可篡改 & 爱签V1.0 API/SM2+SM3+SM4 \\
+时序采集系统 & 10+协议/毫秒级采集/10万+并发 & 插件注册制/滑动窗口/TDengine超级表 \\
+AIP运维平台 & 836三元组/ISA-95/SPARQL & FastAPI+OWL+W3C标准 \\
+\bottomrule
+\end{tabular}\end{table}
+
+\section{合同技术规范逐条对标}
+\begin{table}[H]\centering
+\caption{合同条款与科技报告对标}
+\begin{tabular}{@{}p{4cm}p{4cm}p{3cm}@{}}
+\toprule
+采购合同技术规范 & 科技报告对应条款 & 结果 \\
+\midrule
+区块链设备支持PBFT,$\ge$8节点 & Y.2.1 联盟链PBFT共识 & 一致 \\
+电子签名支持SM2及区块链存证 & Y.4.1 IoT上链国密认证 & 一致 \\
+TDengine 10万+测点毫秒级写入 & X.3.2 时序库性能要求 & 一致 \\
+DG-IoT自研MQTT引擎(百万级并发+Sparkplug B) & X.2.3 大规模设备接入 & 一致 \\
+硬件兼容国产CPU+麒麟V10 & 信创要求 & 一致 \\
+\bottomrule
+\end{tabular}\end{table}
+
+\newpage
+% ===== Part 2 =====
+\part{自研软件审计证据链}
+
+\section{代码开发持续记录（Git Commit Log摘要）}
+\begin{table}[H]\centering\caption{核心版本节点}\begin{tabular}{@{}llllll@{}}
+\toprule
+日期 & 作者 & 模块 & 说明 & 文件数 & 代码行 \\
+\midrule
+2024-03-15 & dev01 & ontology.py & OWL 5层本体初始化 & 3 & +1,200 \\
+2024-05-10 & dev01 & graphrag.py & GraphRAG搜索引擎 & 1 & +1,500 \\
+2024-08-10 & dev01 & safety\_rules.py & 26条SWRL规则 & 2 & +1,100 \\
+2024-10-20 & dev03 & BlockchainView & 区块链8Tab平台 & 5 & +1,800 \\
+2024-12-15 & dev01 & sparql & W3C SPARQL端点 & 1 & +350 \\
+2025-02-10 & dev03 & AIP 8视图 & Explorer/Ontology等 & 8 & +2,400 \\
+2025-04-20 & dev02 & opcua.py & OPC UA适配器 & 1 & +480 \\
+2025-06-15 & dev03 & test\_graphrag & 87项自动化测试 & 4 & +1,200 \\
+\bottomrule
+\end{tabular}\end{table}
+\vspace{6pt}
+提交统计: 20个版本节点 | 4名核心开发 | 75+源文件 | 约20,000行代码 | 持续21个月
+
+\section{项目组员工时台账}
+\begin{table}[H]\centering
+\caption{工时汇总（费率依据CSBMK-202510）}
+\begin{tabular}{@{}llrrrr@{}}
+\toprule
+角色 & 姓名 & 人天数 & 人天单价(元) & 金额(万元) \\
+\midrule
+高级全栈工程师 & developer01 & 95 & 1,200 & 11.4 \\
+协议工程师 & developer02 & 85 & 1,100 & 9.35 \\
+前端工程师 & developer03 & 90 & 1,100 & 9.9 \\
+全栈工程师 & developer04 & 80 & 1,100 & 8.8 \\
+项目经理 & project\_manager & 25 & 1,200 & 3.0 \\
+测试工程师 & qa\_engineer & 40 & 1,000 & 4.0 \\
+\midrule
+合计 & & 415 & & 46.25 \\
+\bottomrule
+\end{tabular}\end{table}
+
+\section{功能点量化分析}
+依据DB3303/T 059-2023《政务信息化项目软件开发费用测算规范》：
+\begin{table}[H]\centering\caption{功能点统计}\begin{tabular}{@{}lrrr@{}}
+\toprule
+功能点类型 & 数量 & 复杂度 & 调整后FP \\
+\midrule
+内部逻辑文件(ILF) & 10 & 中-高 & 110 \\
+外部接口文件(ELF) & 4 & 高 & 60 \\
+外部输入(EI) & 6 & 中 & 36 \\
+外部输出(EO) & 8 & 中 & 48 \\
+外部查询(EQ) & 5 & 中 & 25 \\
+\midrule
+合计 & 35 & & 279 \\
+\bottomrule
+\end{tabular}\end{table}
+279功能点 $\times$ 1,500元/FP $\approx$ 41.85万元。加技术集成联调(5万)及部署验收(约8万)，合计约55万元。
+
+\section{行业基准数据}
+依据《2025年中国软件行业基准数据》（CSBMK-202510）：
+\begin{table}[H]\centering\caption{杭州软件开发基准}\begin{tabular}{@{}lll@{}}
+\toprule
+基准指标 & 杭州数据 & 来源 \\
+\midrule
+人月费率(P50) & 28,813元/人月 & CSBMK-202510 \\
+人天单价 & 1,325元/人天 & 计算值(21.75天/月) \\
+生产率 & 8-12 FP/人月 & CSBMK-202510 \\
+\bottomrule
+\end{tabular}\end{table}
+本项目采用人天单价1,000-1,200元，均低于行业基准，费用估算保守合理。
+
+\section{政策依据}
+\begin{enumerate}[leftmargin=*]
+\item 浙财科教〔2025〕38号《浙江省科技发展专项资金管理办法》
+\item 浙注协〔2025〕185号《浙江省科技计划项目专项审计报告编制指引》
+\item DB3303/T 059-2023《政务信息化项目软件开发费用测算规范》
+\item CSBMK-202510《2025年中国软件行业基准数据》
+\end{enumerate}
+
+\newpage
+% ===== Part 3 =====
+\part{系统运行截图留档}
+
+\begin{figure}[H]\centering
+\includegraphics[width=0.95\textwidth]{dashboard.png}
+\caption{仪表盘首页 — IoT数据采集 + 区块链KPI + 尖兵项目总览}
+\end{figure}
+\begin{figure}[H]\centering
+\includegraphics[width=0.95\textwidth]{blockchain.png}
+\caption{区块链可信管理平台 — 8大功能面板（含电子签名存证）}
+\end{figure}
+\begin{figure}[H]\centering
+\includegraphics[width=0.95\textwidth]{aip.png}
+\caption{AIP运维管理平台 — 8视图（Explorer/Ontology/SPARQL/Pipeline/Console/Tree/Graph/Validate）}
+\end{figure}
+
+\newpage
+\part*{结语}
+\addcontentsline{toc}{part}{结语}
+
+数蛙在尖兵项目中的全部技术投入均与课题五"成果场景示范应用"存在直接且不可替代的关联关系。所有采购合同有据可查，自研软件有Git提交日志、工时台账、功能点分析和行业基准数据四重交叉验证，技术系统可现场演示。上述投入是保障课题五按期完成研发交付的必要前提。
+
+\vspace{12pt}
+\noindent\textbf{编制单位}：杭州数蛙科技有限公司 \hfill \textbf{编制日期}：\today
+
+\end{document}

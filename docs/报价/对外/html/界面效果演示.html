@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>时序数据采集与应用管理系统 - 管理后台</title>
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family: 'Microsoft YaHei', sans-serif; background:#0a1628; color:#c8d6e5; height:100vh; display:flex; flex-direction:column; }
+/* 顶部 */
+.topbar { display:flex; align-items:center; background:#0f1f38; padding:0 20px; height:48px; border-bottom:1px solid #1a3050; gap:16px; }
+.topbar .logo { font-size:15px; font-weight:bold; color:#fff; white-space:nowrap; }
+.topbar .status { background:#0a3d1a; color:#22c55e; padding:2px 10px; border-radius:10px; font-size:11px; white-space:nowrap; }
+.topbar .search { flex:1; max-width:300px; background:#152540; border:1px solid #203a58; border-radius:4px; padding:6px 12px; color:#94a3b8; font-size:12px; }
+.topbar .alarm { position:relative; color:#f59e0b; cursor:pointer; font-size:18px; }
+.topbar .alarm .badge { position:absolute; top:-6px; right:-8px; background:#ef4444; color:#fff; font-size:10px; border-radius:8px; padding:0 5px; }
+.topbar .user { color:#94a3b8; font-size:13px; margin-left:auto; }
+/* 布局 */
+.layout { display:flex; flex:1; overflow:hidden; }
+/* 侧栏 */
+.sidebar { width:200px; background:#0d1b30; border-right:1px solid #1a3050; padding:8px 0; overflow-y:auto; }
+.sidebar .nav-group { padding:4px 0; }
+.sidebar .nav-item { display:flex; align-items:center; gap:8px; padding:10px 20px; color:#94a3b8; font-size:13px; cursor:pointer; transition:all .15s; border-left:3px solid transparent; }
+.sidebar .nav-item:hover { background:#152540; color:#e2e8f0; }
+.sidebar .nav-item.active { background:#1a3050; color:#fff; border-left-color:#3b82f6; }
+.sidebar .nav-item .icon { width:16px; text-align:center; font-size:14px; }
+/* 主区 */
+.main { flex:1; padding:20px; overflow-y:auto; display:flex; flex-direction:column; gap:16px; }
+/* KPI卡片 */
+.kpi-row { display:grid; grid-template-columns:repeat(4, 1fr); gap:16px; }
+.kpi { background:#11223b; border:1px solid #1a3050; border-radius:8px; padding:16px; }
+.kpi .label { font-size:12px; color:#64748b; margin-bottom:4px; }
+.kpi .value { font-size:28px; font-weight:bold; }
+.kpi .delta { font-size:11px; margin-top:4px; }
+.kpi .value.green { color:#22c55e; }
+.kpi .value.amber { color:#f59e0b; }
+.kpi .value.blue { color:#3b82f6; }
+.delta.up { color:#22c55e; }
+.delta.down { color:#ef4444; }
+/* 中间区域 */
+.mid { display:grid; grid-template-columns:1fr 300px; gap:16px; flex:1; }
+/* 拓扑区 */
+.topo { background:#11223b; border:1px solid #1a3050; border-radius:8px; padding:16px; min-height:360px; position:relative; }
+.topo .title { font-size:14px; font-weight:bold; color:#e2e8f0; margin-bottom:12px; }
+.topo svg { width:100%; height:300px; }
+/* 告警区 */
+.alarm-panel { background:#11223b; border:1px solid #1a3050; border-radius:8px; padding:16px; display:flex; flex-direction:column; }
+.alarm-panel .title { font-size:14px; font-weight:bold; color:#e2e8f0; margin-bottom:12px; }
+.alarm-item { display:flex; align-items:flex-start; gap:8px; padding:8px 0; border-bottom:1px solid #1a3050; font-size:12px; }
+.alarm-item .dot { width:8px; height:8px; border-radius:50%; margin-top:4px; flex-shrink:0; }
+.alarm-item .dot.crit { background:#ef4444; }
+.alarm-item .dot.warn { background:#f59e0b; }
+.alarm-item .time { color:#64748b; font-size:10px; }
+/* 底部 */
+.bottom-row { display:grid; grid-template-columns:2fr 1fr; gap:16px; }
+.chart-panel { background:#11223b; border:1px solid #1a3050; border-radius:8px; padding:16px; }
+.chart-panel .title { font-size:13px; color:#94a3b8; margin-bottom:8px; }
+.chart-bar { display:flex; align-items:flex-end; gap:4px; height:80px; }
+.chart-bar .b { flex:1; background:#3b82f6; border-radius:2px 2px 0 0; min-width:12px; opacity:.7; }
+.chart-bar .b:hover { opacity:1; }
+.chart-bar .b.hi { background:#22c55e; }
+.quick-panel { background:#11223b; border:1px solid #1a3050; border-radius:8px; padding:16px; }
+.quick-item { display:flex; justify-content:space-between; padding:8px 0; border-bottom:1px solid #1a3050; font-size:12px; cursor:pointer; }
+.quick-item:hover { color:#fff; }
+.quick-item .val { color:#3b82f6; }
+</style>
+</head>
+<body>
+
+<!-- 顶部 -->
+<div class="topbar">
+  <span class="logo">时序数据采集与应用管理系统</span>
+  <span class="status">● 系统运行正常</span>
+  <input class="search" placeholder="搜索设备 / 测点 / 告警...">
+  <span class="alarm">🔔<span class="badge">3</span></span>
+  <span class="user">管理员 · 采油二厂</span>
+</div>
+
+<!-- 主体 -->
+<div class="layout">
+  <!-- 侧栏 -->
+  <div class="sidebar">
+    <div class="nav-item active"><span class="icon">📊</span>驾驶舱</div>
+    <div class="nav-item"><span class="icon">📱</span>设备管理</div>
+    <div class="nav-item"><span class="icon">📡</span>设备接入</div>
+    <div class="nav-item"><span class="icon">🧮</span>算法管理</div>
+    <div class="nav-item"><span class="icon">🔔</span>告警中心</div>
+    <div class="nav-item"><span class="icon">📈</span>数据服务</div>
+    <div class="nav-item"><span class="icon">🗺️</span>可视化</div>
+    <div class="nav-item"><span class="icon">⚡</span>自动化</div>
+    <div class="nav-item" style="margin-top:auto"><span class="icon">⚙️</span>系统管理</div>
+  </div>
+
+  <!-- 主区 -->
+  <div class="main">
+    <!-- KPI -->
+    <div class="kpi-row">
+      <div class="kpi"><div class="label">链路健康率</div><div class="value green">98.6%</div><div class="delta up">▲ 0.3%</div></div>
+      <div class="kpi"><div class="label">采集完整率</div><div class="value green">99.2%</div><div class="delta up">▲ 0.1%</div></div>
+      <div class="kpi"><div class="label">设备在线率</div><div class="value amber">96.8%</div><div class="delta down">▼ 0.5%</div></div>
+      <div class="kpi"><div class="label">今日采集点数</div><div class="value blue">1,284万</div><div class="delta up">▲ 2.1%</div></div>
+    </div>
+
+    <!-- 中部：拓扑+告警 -->
+    <div class="mid">
+      <div class="topo">
+        <div class="title">采集链路拓扑（作业区 → 设备 → 链路）</div>
+        <svg viewBox="0 0 700 300">
+          <!-- 中心 -->
+          <rect x="300" y="10" width="100" height="30" rx="4" fill="#1e3a5f" stroke="#3b82f6"/>
+          <text x="350" y="30" text-anchor="middle" fill="#3b82f6" font-size="11">边缘中枢应用</text>
+          <!-- DMZ -->
+          <rect x="300" y="70" width="100" height="30" rx="4" fill="#1e3a5f" stroke="#22d3ee"/>
+          <text x="350" y="90" text-anchor="middle" fill="#22d3ee" font-size="11">边缘中枢 DMZ</text>
+          <line x1="350" y1="40" x2="350" y2="70" stroke="#3b82f6" stroke-width="1.5"/>
+          <!-- 作业区 -->
+          <rect x="30" y="140" width="80" height="26" rx="4" fill="#152540" stroke="#334155"/>
+          <text x="70" y="157" text-anchor="middle" fill="#94a3b8" font-size="10">作业区一</text>
+          <rect x="130" y="140" width="80" height="26" rx="4" fill="#152540" stroke="#334155"/>
+          <text x="170" y="157" text-anchor="middle" fill="#94a3b8" font-size="10">作业区二</text>
+          <rect x="230" y="140" width="80" height="26" rx="4" fill="#152540" stroke="#f59e0b"/>
+          <text x="270" y="157" text-anchor="middle" fill="#f59e0b" font-size="10">作业区三</text>
+          <rect x="470" y="140" width="80" height="26" rx="4" fill="#152540" stroke="#334155"/>
+          <text x="510" y="157" text-anchor="middle" fill="#94a3b8" font-size="10">作业区四</text>
+          <rect x="570" y="140" width="80" height="26" rx="4" fill="#152540" stroke="#ef4444"/>
+          <text x="610" y="157" text-anchor="middle" fill="#ef4444" font-size="10">作业区五</text>
+          <!-- 线 -->
+          <line x1="350" y1="100" x2="70" y2="140" stroke="#334155" stroke-width="1"/>
+          <line x1="350" y1="100" x2="170" y2="140" stroke="#334155" stroke-width="1"/>
+          <line x1="350" y1="100" x2="270" y2="140" stroke="#334155" stroke-width="1"/>
+          <line x1="350" y1="100" x2="510" y2="140" stroke="#334155" stroke-width="1"/>
+          <line x1="350" y1="100" x2="610" y2="140" stroke="#334155" stroke-width="1"/>
+          <!-- 设备节点 -->
+          <circle cx="50" cy="200" r="7" fill="#22c55e"/><text x="50" y="216" text-anchor="middle" fill="#64748b" font-size="9">RTU-12</text>
+          <circle cx="95" cy="200" r="7" fill="#22c55e"/><text x="95" y="216" text-anchor="middle" fill="#64748b" font-size="9">RTU-15</text>
+          <circle cx="155" cy="200" r="7" fill="#22c55e"/><text x="155" y="216" text-anchor="middle" fill="#64748b" font-size="9">DCS-A</text>
+          <circle cx="250" cy="200" r="7" fill="#f59e0b"/><text x="250" y="216" text-anchor="middle" fill="#f59e0b" font-size="9">RTU-37↓</text>
+          <circle cx="295" cy="200" r="7" fill="#22c55e"/><text x="295" y="216" text-anchor="middle" fill="#64748b" font-size="9">PLC-01</text>
+          <circle cx="490" cy="200" r="7" fill="#22c55e"/><text x="490" y="216" text-anchor="middle" fill="#64748b" font-size="9">DCS-C</text>
+          <circle cx="535" cy="200" r="7" fill="#22c55e"/><text x="535" y="216" text-anchor="middle" fill="#64748b" font-size="9">RTU-42</text>
+          <circle cx="590" cy="200" r="7" fill="#ef4444"/><text x="590" y="216" text-anchor="middle" fill="#ef4444" font-size="9">4G-2378✕</text>
+          <circle cx="635" cy="200" r="7" fill="#22c55e"/><text x="635" y="216" text-anchor="middle" fill="#64748b" font-size="9">RTU-51</text>
+          <!-- 线 -->
+          <line x1="70" y1="166" x2="50" y2="193" stroke="#1a3050" stroke-width="0.8"/>
+          <line x1="70" y1="166" x2="95" y2="193" stroke="#1a3050" stroke-width="0.8"/>
+          <line x1="170" y1="166" x2="155" y2="193" stroke="#1a3050" stroke-width="0.8"/>
+          <line x1="270" y1="166" x2="250" y2="193" stroke="#1a3050" stroke-width="0.8"/>
+          <line x1="270" y1="166" x2="295" y2="193" stroke="#1a3050" stroke-width="0.8"/>
+          <line x1="510" y1="166" x2="490" y2="193" stroke="#1a3050" stroke-width="0.8"/>
+          <line x1="510" y1="166" x2="535" y2="193" stroke="#1a3050" stroke-width="0.8"/>
+          <line x1="610" y1="166" x2="590" y2="193" stroke="#1a3050" stroke-width="0.8"/>
+          <line x1="610" y1="166" x2="635" y2="193" stroke="#1a3050" stroke-width="0.8"/>
+          <!-- 图例 -->
+          <circle cx="200" cy="270" r="5" fill="#22c55e"/><text x="210" y="274" fill="#64748b" font-size="10">正常</text>
+          <circle cx="280" cy="270" r="5" fill="#f59e0b"/><text x="290" y="274" fill="#64748b" font-size="10">降频</text>
+          <circle cx="360" cy="270" r="5" fill="#ef4444"/><text x="370" y="274" fill="#64748b" font-size="10">离线</text>
+        </svg>
+      </div>
+
+      <!-- 告警 -->
+      <div class="alarm-panel">
+        <div class="title">实时告警 <span style="float:right;color:#ef4444;font-size:11px">未处置 3 条</span></div>
+        <div class="alarm-item"><div class="dot crit"></div><div><div style="color:#ef4444">[严重]</div>作业区五 · 设备 4G-2378 离线<div class="time">14:20</div></div></div>
+        <div class="alarm-item"><div class="dot warn"></div><div><div style="color:#f59e0b">[重要]</div>作业区三 · RTU-37 采集降频至 30s<div class="time">14:15</div></div></div>
+        <div class="alarm-item"><div class="dot" style="background:#94a3b8"></div><div><div style="color:#94a3b8">[一般]</div>作业区一 · 智能仪表 IM-056 校时偏差<div class="time">13:58</div></div></div>
+        <div class="alarm-item"><div class="dot" style="background:#94a3b8"></div><div><div style="color:#94a3b8">[一般]</div>作业区四 · 网关 GW-09 双链路切换<div class="time">13:41</div></div></div>
+      </div>
+    </div>
+
+    <!-- 底部 -->
+    <div class="bottom-row">
+      <div class="chart-panel">
+        <div class="title">近 24 小时全油田采集频率（万点/时）</div>
+        <div class="chart-bar">
+          <div class="b" style="height:65%"></div><div class="b" style="height:50%"></div><div class="b" style="height:72%"></div><div class="b" style="height:58%"></div><div class="b" style="height:45%"></div><div class="b" style="height:62%"></div>
+          <div class="b" style="height:55%"></div><div class="b" style="height:70%"></div><div class="b" style="height:80%"></div><div class="b hi" style="height:88%"></div><div class="b hi" style="height:95%"></div><div class="b hi" style="height:100%"></div>
+          <div class="b hi" style="height:92%"></div><div class="b hi" style="height:85%"></div><div class="b" style="height:78%"></div><div class="b" style="height:72%"></div><div class="b" style="height:65%"></div><div class="b" style="height:58%"></div>
+          <div class="b" style="height:52%"></div><div class="b" style="height:68%"></div><div class="b" style="height:75%"></div><div class="b" style="height:62%"></div><div class="b" style="height:55%"></div><div class="b" style="height:48%"></div>
+        </div>
+        <div style="display:flex;justify-content:space-between;margin-top:4px;color:#64748b;font-size:10px">
+          <span>00:00</span><span>06:00</span><span>12:00</span><span>18:00</span><span>24:00</span>
+        </div>
+      </div>
+      <div class="quick-panel">
+        <div class="title" style="font-size:13px;color:#94a3b8">快捷入口</div>
+        <div class="quick-item"><span>设备接入状态</span><span class="val">928 台在线</span></div>
+        <div class="quick-item"><span>断网补传进度</span><span class="val">2 台补传中</span></div>
+        <div class="quick-item"><span>定制算法运行</span><span class="val">152 个生效</span></div>
+        <div class="quick-item"><span>今日健康日报</span><span class="val">已生成</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

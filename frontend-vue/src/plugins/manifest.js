@@ -21,7 +21,7 @@ export const MANIFEST = {
   network: true,   // 报文解析 · 通道管理 · 边缘代理
 
   // 调试工具
-  tool:    true,   // MQTT 调试 · 模拟器
+  tool:    true,   // MQTT 调试 · 设备模拟
 
   // 系统管理
   system:  true,   // 系统概览 · 运维 · 用户
