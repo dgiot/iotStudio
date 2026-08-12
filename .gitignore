@@ -22,3 +22,92 @@ token*
 secret*
 *.pem
 *.key
+
+
+# ===== 内部插件/敏感内容 (2026-08-13 加固) =====
+# 以下内容做成插件形式保留本地，绝不上库
+
+# IO服务器逆向与扫描（插件形式）
+plugins/
+scan_*.py
+scan_*.ps1
+scan_*.bat
+*131*
+*130*
+*129*
+reverse/
+pcap*
+*.pcap
+*.pcapng
+
+# 现场拓扑与本体
+zones/
+io_ontology*
+ontology_site*
+ontology_gateway*
+ontology_channel*
+
+# 抓包与分析工具
+tools/capture*
+tools/download*
+tools/upload*
+tools/http_upload*
+tools/extract_*
+tools/parse_*
+tools/opc_*
+tools/rtdb*
+tools/oracle*
+tools/proxy*
+tools/injector*
+tools/replay*
+tools/check_131*
+tools/mock_131*
+tools/simulate_131*
+tools/deploy_test*
+tools/restart_131*
+tools/test_opc_on_131*
+tools/loop_*
+tools/entry_*
+tools/find_kepware*
+tools/path12*
+tools/rtu_field*
+tools/run_vendor_oilmon*
+tools/run_opc*
+tools/run_commbridge*
+tools/run_subsystem*
+tools/dump_*
+tools/fetch_*
+tools/import_*
+tools/insert_*
+tools/export_*
+tools/query_*
+tools/probe_*
+tools/read_*
+tools/scan_*
+tools/continuous*
+tools/gen_*
+tools/mock_*
+tools/modbus_sim*
+tools/fix_device*
+tools/create_devices*
+tools/debug_*
+tools/e2e_*
+
+# 日志与输出
+logs/
+output/
+*.log
+*.csv
+*.etl
+
+# 部署/重启/上传脚本（含IP）
+upload_*.py
+restart_*.py
+deploy_*.py
+http_*.py
+*.ps1
+
+# 测试现场数据
+tests/pv_result*
+tests/report.json
+tests/stress_test_report.json

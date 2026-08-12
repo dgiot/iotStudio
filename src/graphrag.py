@@ -731,8 +731,8 @@ def _build_openai_caller(api_key: str, model: str = "gpt-4o",
 GRAPH_RAG_SYSTEM_PROMPT = """你是 DG-IoT 工业物联网平台的智能助手，负责基于本体知识图谱回答用户问题。
 
 ## 你的知识来源
-你收到的上下文来自油气现场的 5 层本体模型：
-- Site (站点) → Gateway (IO服务器) → Channel (协议通道) → Device (设备) → Point (测点)
+你收到的上下文来自工厂现场的 5 层本体模型：
+- Site (站点) → Gateway (IO网关) → Channel (协议通道) → Device (设备) → Point (测点)
 - 以及关联的 Constraint (安全约束规则)
 
 ## 回答规则

@@ -64,7 +64,7 @@ THING_MODEL = {
             "env_wind_speed":  {"name": "风速",        "unit": "m/s",  "type": "float32", "category": "environment","min": 0,   "max": 15, "default": 3},
         }
     },
-    # === 油气田设备 (来自 shixu 项目2) ===
+    # === 工业园设备 (来自 shixu 项目2) ===
     "oilwell": {
         "product_name": "抽油机井",
         "points": {
@@ -125,7 +125,7 @@ THING_MODEL = {
         }
     },
     "oilfield_rtu": {
-        "product_name": "油气RTU (G1-G8全量142点)",
+        "product_name": "工厂RTU (G1-G8全量142点)",
         "points": {},
     },
 }
@@ -139,7 +139,7 @@ def get_product_model(device_type: str) -> dict:
 
 
 def _load_oilfield_rtu_model() -> dict:
-    """从 shixu JSON 加载油气田 RTU 142 点物模型（带缓存）"""
+    """从 shixu JSON 加载工业园 RTU 142 点物模型（带缓存）"""
     import os, json
     json_path = os.environ.get(
         "OILFIELD_MODEL_JSON",
@@ -170,7 +170,7 @@ def _load_oilfield_rtu_model() -> dict:
                     "register_addr": p.get("dataForm", {}).get("address", ""),
                     "group_id": p.get("group_id", 0),
                 }
-            result = {"product_name": "油气RTU (G1-G8, {}点)".format(len(points)), "points": points}
+            result = {"product_name": "工厂RTU (G1-G8, {}点)".format(len(points)), "points": points}
     except Exception:
         result = _get_builtin_oilfield_model()
 
@@ -179,10 +179,10 @@ def _load_oilfield_rtu_model() -> dict:
 
 
 def _get_builtin_oilfield_model() -> dict:
-    """内置精简油井模型（复用 THING_MODEL['oilwell'] 点位定义）"""
+    """内置精简井口模型（复用 THING_MODEL['oilwell'] 点位定义）"""
     oilwell = THING_MODEL.get("oilwell", {}).get("points", {})
     return {
-        "product_name": "油气RTU (内置模板)",
+        "product_name": "工厂RTU (内置模板)",
         "points": {k: dict(v) for k, v in oilwell.items()},
     }
 

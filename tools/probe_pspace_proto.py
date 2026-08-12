@@ -18,10 +18,10 @@ def pkt(tag, data, note=""):
 # ═══════════════════════════════════════
 def probe_real_server():
     print("=" * 55)
-    print("Phase 1: 探测 192.168.10.130:8889 RTDB 协议")
+    print("Phase 1: 探测 127.0.0.1:8889 RTDB 协议")
     print("=" * 55)
 
-    host, port = "192.168.10.130", 8889
+    host, port = "127.0.0.1", 8889
 
     # 尝试不同的握手帧格式
     probes = [
@@ -109,7 +109,7 @@ def tick_tag(dev_id, tag_idx):
     return name, val, unit, int(time.time() * 1000)
 
 class IOServerSimulator:
-    """1:1 模拟 192.168.10.130 IO Server (RTDB protocol)"""
+    """1:1 模拟 127.0.0.1 IO Server (RTDB protocol)"""
 
     def __init__(self, port=8889):
         self.port = port

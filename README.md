@@ -83,7 +83,7 @@ python scripts/init_dgiot.py
 
 ### 本体引擎
 ```
-Site (采油厂) → Gateway (IO服务器) → Device (RTU/井站) → Point (测点)
+Site (工业站点) → Gateway (IO网关) → Device (RTU/站点) → Point (测点)
                                                     ↓
                         MQTT: dgiot/{site}/{gateway}/{device}/{point}/data
 ```

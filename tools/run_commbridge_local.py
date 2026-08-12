@@ -3,7 +3,7 @@
 本地 LegacyComm 全链路模拟
 ===========================
 启动 commbridge_server → 接入 mock RTU → 观察真实协议交互
-基于 7.10.pcapng 逆向的协议格式
+基于 7.10.pcapng 分析的协议格式
 """
 import asyncio, struct, time, random, math, json, sys
 from pathlib import Path

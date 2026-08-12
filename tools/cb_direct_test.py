@@ -3,12 +3,12 @@
 import os, sys, base64, time
 for k in ['HTTP_PROXY','HTTPS_PROXY','http_proxy','https_proxy']:
     os.environ.pop(k, None)
-os.environ['NO_PROXY'] = '192.168.10.131,11.*,172.*'
+os.environ['NO_PROXY'] = '127.0.0.1,11.*,172.*'
 
 import winrm
 
 s = winrm.Session(
-    'http://192.168.10.131:5985/wsman',
+    'http://127.0.0.1:5985/wsman',
     auth=('administrator', r'CHANGEME'),
     transport='ntlm', read_timeout_sec=60)
 
@@ -36,7 +36,7 @@ certutil -decode '{b64file}' '{binfile}' | Out-Null
 $bin = [System.IO.File]::ReadAllBytes('C:\Users\Administrator\cb_req.bin')
 try {
     $c = New-Object System.Net.Sockets.TcpClient
-    $c.Connect('192.168.10.131', 53001)
+    $c.Connect('127.0.0.1', 53001)
     $st = $c.GetStream()
     $st.Write($bin, 0, $bin.Length)
     Start-Sleep -Milliseconds 1000
@@ -76,7 +76,7 @@ tests = [
     ('Modbus TCP MBAP 03读1个', '000100000006010300000001'),
 ]
 
-print('=== 从131直连 192.168.10.131:53001 探测协议 ===')
+print('=== 从131直连 127.0.0.1:53001 探测协议 ===')
 for name, hexdata in tests:
     ps_test(name, base64.b64encode(bytes.fromhex(hexdata)).decode())
     time.sleep(0.3)  # 避免太快

@@ -1,6 +1,6 @@
 {
   "name": "南4联合站",
-  "zone": "采油二厂-第四作业区",
+  "zone": "工业二厂-第四工业区",
   "a11_bridge": {
     "mode": "bypass",
     "server_port": 8889,
@@ -21,7 +21,7 @@
   "io_business": {
     "oracle_dsn": "INDUSTRYPROD",
     "commit_span": 300,
-    "io_ip": "192.168.10.131"
+    "io_ip": "127.0.0.1"
   },
   "health": {
     "collect_beat": {"commit_real_span": 300, "commit_his_span": 500, "commit_tag_once": 15000},

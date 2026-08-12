@@ -166,7 +166,7 @@ const products = ref([  // DG-IoT Product aligned: devType, nodeType, netType
   { key:'charger', icon:'🔌', name:'充电桩', devType:'charger', nodeType:0, netType:'ethernet', cat:'energy', desc:'电动汽车充放电', count:0, pointCount:0 },
   { key:'meter', icon:'📟', name:'智能电表', devType:'meter', nodeType:1, netType:'cellular', cat:'meter', desc:'三相电量计量采集', count:0, pointCount:0 },
   { key:'sensor', icon:'🌡️', name:'环境传感器', devType:'sensor', nodeType:1, netType:'lora', cat:'sensor', desc:'温湿度/辐照/风速', count:0, pointCount:0 },
-  { key:'oilwell', icon:'🛢️', name:'抽油机井', devType:'oilwell', nodeType:1, netType:'cellular', cat:'oilfield', desc:'油气田采油设备', count:0, pointCount:0 },
+  { key:'oilwell', icon:'🛢️', name:'泵机设备', devType:'oilwell', nodeType:1, netType:'cellular', cat:'oilfield', desc:'工业泵类设备', count:0, pointCount:0 },
   { key:'rtu', icon:'📡', name:'RTU终端', devType:'rtu', nodeType:1, netType:'cellular', cat:'oilfield', desc:'远程采集终端', count:0, pointCount:0 },
   { key:'compressor', icon:'⚙️', name:'压缩机', devType:'compressor', nodeType:0, netType:'ethernet', cat:'oilfield', desc:'离心/往复压缩机', count:0, pointCount:0 },
   { key:'pipeline', icon:'🔗', name:'集输管线', devType:'pipeline', nodeType:0, netType:'ethernet', cat:'oilfield', desc:'油气集输管道', count:0, pointCount:0 },
@@ -174,7 +174,7 @@ const products = ref([  // DG-IoT Product aligned: devType, nodeType, netType
 
 const categories = [
   { key:'energy', name:'⚡ 能源设备' }, { key:'meter', name:'📟 计量仪表' },
-  { key:'sensor', name:'🌡️ 传感器' }, { key:'oilfield', name:'🛢️ 油气设备' },
+  { key:'sensor', name:'🌡️ 传感器' }, { key:'oilfield', name:'🛢️ 工厂设备' },
 ]
 const catFilter = ref('')
 const filteredProducts = computed(() =>

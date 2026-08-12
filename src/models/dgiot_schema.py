@@ -96,7 +96,7 @@ SEED_PRODUCTS = [
     {"objectId": "meter", "devType": "meter", "name": "智能电表",
      "icon": "📟", "desc": "三相电量计量采集", "nodeType": 1, "netType": "cellular"},
     {"objectId": "oilwell", "devType": "oilwell", "name": "抽油机井",
-     "icon": "🛢️", "desc": "油气田采油设备", "nodeType": 1, "netType": "cellular"},
+     "icon": "🛢️", "desc": "工业园工业设备", "nodeType": 1, "netType": "cellular"},
     {"objectId": "rtu", "devType": "rtu", "name": "RTU终端",
      "icon": "📡", "desc": "远程采集终端", "nodeType": 1, "netType": "cellular"},
     {"objectId": "compressor", "devType": "compressor", "name": "压缩机",

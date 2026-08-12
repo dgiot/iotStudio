@@ -1,12 +1,12 @@
 """Build 32-bit OPC DA test on 131 — 3 steps: upload, compile, run"""
 import os, base64, time
-os.environ['NO_PROXY'] = '192.168.10.131,11.*,172.*'
-os.environ['no_proxy'] = '192.168.10.131,11.*,172.*'
+os.environ['NO_PROXY'] = '127.0.0.1,11.*,172.*'
+os.environ['no_proxy'] = '127.0.0.1,11.*,172.*'
 for k in ['HTTP_PROXY','HTTPS_PROXY','http_proxy','https_proxy']:
     os.environ.pop(k, None)
 
 import winrm
-s = winrm.Session('http://192.168.10.131:5985/wsman',
+s = winrm.Session('http://127.0.0.1:5985/wsman',
     auth=('administrator', r'CHANGEME'),
     transport='ntlm', read_timeout_sec=90)
 

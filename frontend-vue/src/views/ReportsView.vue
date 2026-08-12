@@ -90,16 +90,16 @@ function protoColor(p) {
 const loadRank = () => {
   // 模拟排行数据 — 后续接真实 API
   const base = [
-    { device: '\\DEVICE_D\\Z611SYWS\\压缩机V301', proto: 'A11', daily: 12500, weekly: 87500, monthly: 375000 },
-    { device: '\\DEVICE_D\\Z611SYWS\\阀门VC#', proto: 'A11', daily: 10200, weekly: 71400, monthly: 306000 },
+    { device: '\\SITE01\\GW01\\压缩机V301', proto: 'A11', daily: 12500, weekly: 87500, monthly: 375000 },
+    { device: '\\SITE01\\GW01\\阀门VC#', proto: 'A11', daily: 10200, weekly: 71400, monthly: 306000 },
     { device: '11.249.61.243 电力仪表#3', proto: 'Modbus', daily: 8900, weekly: 62300, monthly: 267000 },
     { device: '11.248.203.74 RTU-02', proto: 'Modbus', daily: 7600, weekly: 53200, monthly: 228000 },
     { device: '192.168.10.23 RSLinx OPC', proto: 'OPC', daily: 14500, weekly: 101500, monthly: 435000 },
     { device: '192.168.10.23 PLC-S7', proto: 'OPC', daily: 11200, weekly: 78400, monthly: 336000 },
-    { device: '\\DEVICE_D\\Z612XYGS\\压缩机#1', proto: 'A11', daily: 9800, weekly: 68600, monthly: 294000 },
+    { device: '\\SITE01\\GW02\\压缩机#1', proto: 'A11', daily: 9800, weekly: 68600, monthly: 294000 },
     { device: '11.249.61.243 电力仪表#7', proto: 'Modbus', daily: 6500, weekly: 45500, monthly: 195000 },
     { device: 'IEC104-RTU-北区', proto: 'IEC104', daily: 4200, weekly: 29400, monthly: 126000 },
-    { device: '\\DEVICE_D\\Z613FQ\\流量计#2', proto: 'A11', daily: 5500, weekly: 38500, monthly: 165000 },
+    { device: '\\SITE01\\GW03\\流量计#2', proto: 'A11', daily: 5500, weekly: 38500, monthly: 165000 },
     { device: '11.248.198.45 RTU-05', proto: 'Modbus', daily: 3800, weekly: 26600, monthly: 114000 },
     { device: 'IEC104-RTU-南区', proto: 'IEC104', daily: 3100, weekly: 21700, monthly: 93000 },
   ]

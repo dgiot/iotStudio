@@ -36,7 +36,7 @@ def get_state():
 def check_ping():
     """预检: ping 131"""
     try:
-        r = subprocess.run(["ping", "-n", "1", "-w", "1500", "192.168.10.131"],
+        r = subprocess.run(["ping", "-n", "1", "-w", "1500", "127.0.0.1"],
                           capture_output=True, timeout=3)
         return r.returncode == 0
     except: return False
@@ -45,9 +45,9 @@ def check_winrm():
     """WinRM 全检"""
     for k in ['HTTP_PROXY','HTTPS_PROXY','http_proxy','https_proxy']:
         os.environ.pop(k, None)
-    os.environ['NO_PROXY'] = '192.168.10.131,11.*,172.*'
+    os.environ['NO_PROXY'] = '127.0.0.1,11.*,172.*'
     import winrm
-    s = winrm.Session('http://192.168.10.131:5985/wsman',
+    s = winrm.Session('http://127.0.0.1:5985/wsman',
         auth=('administrator', r'CHANGEME'),
         transport='ntlm', read_timeout_sec=8, operation_timeout_sec=6)
 
@@ -62,7 +62,7 @@ def check_winrm():
     sck = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     sck.settimeout(4)
     try:
-        sck.connect(('192.168.10.131', 53002))
+        sck.connect(('127.0.0.1', 53002))
         sck.send(bytes.fromhex('aa0130323230343036303130300d'))
         time.sleep(1); rp = sck.recv(64); sck.close()
         results['protocol'] = len(rp) >= 8

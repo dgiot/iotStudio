@@ -9,7 +9,7 @@ IO 服务器扫描通道 — WinRM CONNECT
   POST /api/channels/ch_io_131/stop     → 断开
 
 配置 JSON (io_config.json):
-  {"ip":"192.168.10.131","user":"admin","password":"xxx",
+  {"ip":"127.0.0.1","user":"admin","password":"xxx",
    "vendor":"force|opc|rockwell","ports":"8889 502 135"}
 """
 import os, sys, json, logging, asyncio
@@ -171,7 +171,7 @@ def _register_plugin():
         register_channel_plugin(
             channel_id="ch_io_scanner",
             cType=CType.CONNECT,
-            name="IO服务器扫描器 (WinRM)",
+            name="IO网关扫描器 (WinRM)",
             version="1.0",
             description="通用 IO 服务器扫描 — WinRM 连接 → 进程/服务/软件/OPC/端口 全量扫描",
             config={

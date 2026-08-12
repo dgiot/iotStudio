@@ -13,7 +13,7 @@
   - 资源可控: CPU 增量 2-5%, 内存 <100MB (scapy store=False)
 
 架构:
-  IO服务器网卡 ──Npcap镜像──→ sniff() ──→ flow_table 流跟踪
+  IO网关网卡 ──Npcap镜像──→ sniff() ──→ flow_table 流跟踪
                                           └──→ RingBuffer 帧缓冲
                                           └──→ 解码器回调 (A11/Modbus/IEC104)
                                           └──→ 流量学习器 (设备/点位变化)

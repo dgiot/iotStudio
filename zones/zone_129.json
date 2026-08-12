@@ -1,6 +1,6 @@
 {
   "name": "萨北21站",
-  "zone": "采油三厂-第八作业区",
+  "zone": "工业三厂-第八工业区",
   "a11_bridge": {
     "mode": "bypass",
     "server_port": 8889,
@@ -17,7 +17,7 @@
   "io_business": {
     "oracle_dsn": "INDUSTRYPROD",
     "commit_span": 500,
-    "io_ip": "192.168.10.129"
+    "io_ip": "192.168.1.129"
   },
   "health": {
     "collect_beat": {"commit_real_span": 2000, "commit_his_span": 3000, "commit_tag_once": 30000},

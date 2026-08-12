@@ -2,7 +2,7 @@
 dgiot_lite 本体论引擎 — 4 层模型
 与 Erlang dgiot_ontology.erl 对齐
 
-层1 Site    采油厂/井场/场站 (human-readable name)
+层1 Site    工业厂/井场/场站 (human-readable name)
 层2 Channel 协议通道 (MD5: get_channelid)
 层3 Device  RTU/传感器 (MD5: get_deviceid, Gateway = Device type=gateway)
 层4 Point   测点 (thing_model identifier, 产品内唯一)
@@ -20,7 +20,7 @@ from typing import Optional, List, Dict, Any
 
 @dataclass
 class Site:
-    """层1: 物理站点 — 采油厂/井场/变电站"""
+    """层1: 物理站点 — 工业厂/井场/变电站"""
     id: str
     name: str
     type: str = "oil_field"          # oil_field, substation, factory
@@ -30,7 +30,7 @@ class Site:
 
 @dataclass
 class Gateway:
-    """层2: IO服务器 / 边缘网关 — 物理或虚拟主机"""
+    """层2: IO网关 / 边缘网关 — 物理或虚拟主机"""
     id: str
     ip: str
     site: str                         # Site.id
@@ -350,7 +350,7 @@ class OntologyEngine:
 # ═══════════════════════════════════════════════════════════
 
 def build_131_ontology() -> OntologyEngine:
-    """从 2026-07-12 131 IO服务器 2047文件逐字精读结果构建完整本体
+    """从 2026-07-12 131 IO网关 2047文件逐字精读结果构建完整本体
 
     数据源: D:\\ai\\dgiot_lite\\io服务器分析\\IO ServerOnLine\\
     分析范围: 2047 文件, 含 INI/TXT/DAT/DLL/LOG/ZIO/CHM/DOC
@@ -359,15 +359,15 @@ def build_131_ontology() -> OntologyEngine:
 
     # ── 层1: Site ──
     engine.register(Site(
-        id="industry_c1", name="示例采油厂", type="oil_field",
-        location="黑龙江省示例市",
-        description="PLANT_A_SITE_C(DEVICE_C) + PLANT_A_SITE_D(DEVICE_D)。IO服务器 192.168.10.131(IO-SERVER-01)"
-              " + Oracle 192.168.10.129:1521 + RTDB 192.168.10.141:8889"
+        id="industry_c1", name="某工业工业厂", type="oil_field",
+        location="黑龙江省某工业市",
+        description="PLANT_A_SITE_C(DEVICE_C) + PLANT_A_SITE_D(DEVICE_D)。IO网关 127.0.0.1(IO-SERVER-01)"
+              " + Oracle 192.168.1.129:1521 + RTDB 192.168.1.102:8889"
     ))
 
     # ── 层2: Gateway (含完整已安装组件) ──
     engine.register(Gateway(
-        id="gw_131", ip="192.168.10.131", site="industry_c1",
+        id="gw_131", ip="127.0.0.1", site="industry_c1",
         hostname="IO-SERVER-01",
         os="Windows Server 2016 (10.0.14393)",
         status="online",
@@ -375,7 +375,7 @@ def build_131_ontology() -> OntologyEngine:
             "平台": "GENERIC_VENDOR ForceControl 7.x / IoMonitor v6.0.0.1",
             "守护进程": "psNTService.exe (6服务自动重启/心跳监控)",
             "LegacyComm": "v6.x, PID 19240 — 80+ Modbus TCP 到井口RTU ← 主采集入口",
-            "IOMan": "workers ×7 — A11 TCP 到 192.168.10.130:8889 ← 功图采集",
+            "IOMan": "workers ×7 — A11 TCP 到 127.0.0.1:8889 ← 功图采集",
             "IoMonitor": "v6.0.0.1, PID 18400 — 数据汇聚 + Oracle 提交 (无直接现场连接)",
             "IoCommit": "12组并发提交 (DB0~DB11), 300ms实时/500ms历史",
             "OPC_FC_Client": "活跃 — 采集 JB1V2/DX6PZ/Z22Y/Z1PZ/DX1ZRZ (OPC DA)",
@@ -407,7 +407,7 @@ def build_131_ontology() -> OntologyEngine:
             },
             devices=["dev_opc_device_1"]),
         Channel(id="ch_a11_rtu", gateway="gw_131", name="A11 RTU 功图采集",
-            protocol="a11_tcp", endpoint="TCP → 192.168.10.130:8889",
+            protocol="a11_tcp", endpoint="TCP → 127.0.0.1:8889",
             status="running", config={
                 "driver": "E:\\IO ServerOnLine\\IO Servers\\IM_A11_RTU\\ioapi.dll (v6.0.1.34)",
                 "sql_service": "A11SQLSERVICE.exe → Oracle (1s周期, 1 ADO)",
@@ -426,7 +426,7 @@ def build_131_ontology() -> OntologyEngine:
                 "fc6_write": True, "fc16_write": True,
             }, devices=[]),
         Channel(id="ch_oracle", gateway="gw_131", name="Oracle 数据出口",
-            protocol="oracle_sql", endpoint="192.168.10.129:1521/orcl",
+            protocol="oracle_sql", endpoint="192.168.1.129:1521/orcl",
             status="running", config={
                 "connection": "Provider=OraOLEDB.Oracle.1;User ID=INDUSTRYPROD;Data Source=orcl",
                 "password": "INDUSTRYA11_pass (from DataSource.ini)",
@@ -436,7 +436,7 @@ def build_131_ontology() -> OntologyEngine:
                     "SYS_POINTRELATION_WELL (4567测点)"],
             }, devices=[]),
         Channel(id="ch_rtdb", gateway="gw_131", name="RTDB 实时库",
-            protocol="rtdb", endpoint="192.168.10.141:8889",
+            protocol="rtdb", endpoint="192.168.1.102:8889",
             status="stopped", config={
                 "server": "RTDBServer64.exe v6.0.1.9",
                 "api": "RTDBAPI.dll (313KB)",
@@ -462,7 +462,7 @@ def build_131_ontology() -> OntologyEngine:
                     "DTU_FOUR_FAITH": "四信", "DTU_HONGDIAN": "宏电",
                     "DTU_InHand": "映翰通", "DTU_BHYN": "博海粤能",
                     "DTU_DATA6211": "唐山平升Data6211", "DTU_DATA86": "唐山平升Data6100",
-                    "DTU_DLHB_HJT212": "HJ/T212国标", "DTU_DQQY": "示例庆远",
+                    "DTU_DLHB_HJT212": "HJ/T212国标", "DTU_DQQY": "某工业庆远",
                     "DTU_ETUNG": "亿通", "DTU_FENGSHI": "山东锋士",
                     "DTU_CAIMAO": "莱司凯茂", "DTU_LANDI": "唐山蓝迪",
                 },
@@ -524,7 +524,7 @@ def build_131_ontology() -> OntologyEngine:
         status="online",
     ))
 
-    # 16 口油井 RTU (from runBack1.zio)
+    # 16 口井口 RTU (from runBack1.zio)
     well_rtus = [
         "DEV_A","M5","S21","Y9065","Y9371","Y9721","Y9831","Y9832",
         "YK1_20","YP1","YX1_6","YX1_7","YX1_8","YZ2_7_4X","YZ4_2_3","YPing1",
@@ -532,9 +532,9 @@ def build_131_ontology() -> OntologyEngine:
     for well_id in well_rtus:
         engine.register(Device(
             id=f"dev_well_{well_id}", channel="ch_modbus_tcp",
-            name=f"油井 {well_id}",
+            name=f"井口 {well_id}",
             type="oil_well", protocol="modbus_tcp",
-            manufacturer="OIL_FIELD", model="A11 RTU",
+            manufacturer="某工业基地", model="A11 RTU",
             status="online",
         ))
 
@@ -672,10 +672,10 @@ def build_131_ontology() -> OntologyEngine:
     # ── DataSources ──
     datasources = [
         DataSource(id="ds_oracle", gateway="gw_131", type="oracle",
-            connection="192.168.10.129:1521/orcl (INDUSTRYPROD)",
+            connection="192.168.1.129:1521/orcl (INDUSTRYPROD)",
             status="online", tag_count=4_814_742),
         DataSource(id="ds_rtdb", gateway="gw_131", type="rtdb",
-            connection="192.168.10.141:8889",
+            connection="192.168.1.102:8889",
             status="stopped", tag_count=500),
         DataSource(id="ds_redundancy", gateway="gw_131", type="redundancy",
             connection="192.168.10.102:6000/6001",

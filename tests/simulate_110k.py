@@ -2,7 +2,7 @@
 """
 11 万设备边缘中枢模拟器 — 百万级测点灌入
 ==========================================
-对标 技术方案应答书: 百万压测通过边缘中枢(ch_edge_hub)模拟100+作业区接入
+对标 技术方案应答书: 百万压测通过边缘中枢(ch_edge_hub)模拟100+工业区接入
 规模: 110,000 设备 × 20 测点 = 2,200,000 测点 (百万级)
 
 两种灌数模式:
@@ -25,7 +25,7 @@ POINT_TYPES = ["套压", "油压", "电流A", "电流B", "电流C", "冲次", "�
                "出口压力", "入口压力", "润滑油温"]
 
 class Zone:
-    """作业区 — 1000 设备/区, 每设备 20 测点"""
+    """工业区 — 1000 设备/区, 每设备 20 测点"""
     def __init__(self, zone_id: int, seed: int):
         self.rng = random.Random(seed)
         self.devices = []
@@ -52,7 +52,7 @@ class Zone:
 
 # ── MQTT 模式 ──
 def mqtt_worker(host, port, tenant, gateway, zones, idx, workers, stop_flag, stats):
-    """一个 MQTT 连接负责若干作业区"""
+    """一个 MQTT 连接负责若干工业区"""
     try:
         import paho.mqtt.client as mqtt
     except ImportError:
@@ -90,7 +90,7 @@ def tdengine_insert(host, port, zones, stop_flag, stats):
         stats["errs"] += 1
         return
 
-    # 每作业区一个 subtable (1000 设备 × 20 点合并为 20 列 × 1000 行)
+    # 每工业区一个 subtable (1000 设备 × 20 点合并为 20 列 × 1000 行)
     cols = ",".join(f"p{i}" for i in range(1, 21))
     stmt = (f"CREATE STABLE IF NOT EXISTS {db}.st_k (ts TIMESTAMP, {cols} FLOAT) "
             f"TAGS (did NCHAR(64))")
@@ -134,7 +134,7 @@ def main():
     zones = [Zone(i + 1, seed=i * 777) for i in range(zones_count)]
     total_points = sum(len(z.devices) * 20 for z in zones)
     print(f"=== 11万设备边缘中枢模拟器 ===")
-    print(f"  作业区: {zones_count}  (1000设备/区)  设备: {len(zones)*1000}")
+    print(f"  工业区: {zones_count}  (1000设备/区)  设备: {len(zones)*1000}")
     print(f"  测点: {total_points:,}  (20测点/设备)  模式: {args.mode}")
     print(f"  轮间隔: {args.interval}s  时长: {args.duration}s")
     print()

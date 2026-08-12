@@ -51,7 +51,7 @@ export const constantRoutes = [
 
       // ===== 工具 =====
       { path: '/mqtt-tool', name: 'MqttTool', component: () => import('../views/MqttToolView.vue'), meta: { title: 'MQTT调试', icon: 'ChatDotRound', group: 'tool' } },
-      { path: '/io-clone', name: 'IOClone', component: () => import('../views/IOCloneView.vue'), meta: { title: 'IO服务器克隆', icon: 'CopyDocument', group: 'tool' } },
+      { path: '/io-clone', name: 'IOClone', component: () => import('../views/IOCloneView.vue'), meta: { title: 'IO网关克隆', icon: 'CopyDocument', group: 'tool' } },
       { path: '/simulators', name: 'Simulators', component: () => import('../views/SimulatorView.vue'), meta: { title: '模拟器管理', icon: 'VideoCameraFilled', group: 'tool' } },
       { path: '/fde', name: 'FdeWizard', component: () => import('../views/FdeWizardView.vue'), meta: { title: 'FDE六步工作法', icon: 'MagicStick', group: 'tool' } },
       { path: '/graphrag', name: 'GraphRag', component: () => import('../views/GraphRagView.vue'), meta: { title: '知识图谱问答', icon: 'Search', group: 'tool' } },

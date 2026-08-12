@@ -2,14 +2,14 @@
 import os, time, base64, sys
 for k in ['HTTP_PROXY','HTTPS_PROXY','http_proxy','https_proxy']:
     os.environ.pop(k, None)
-os.environ['NO_PROXY'] = '192.168.10.131,11.*,172.*'
+os.environ['NO_PROXY'] = '127.0.0.1,11.*,172.*'
 import winrm
 
 KEPWARE_CLSID = "6E6170F0-FF2D-11D2-8087-00105AA8F840"
 OPC_HOSTS = ["192.168.10.23", "192.168.10.23", "172.28.5.200"]
 TAGS = sys.argv[1:] if len(sys.argv) > 1 else ["02204060100.Ia", "02204060100.Ua"]
 
-s = winrm.Session('http://192.168.10.131:5985/wsman',
+s = winrm.Session('http://127.0.0.1:5985/wsman',
     auth=('administrator', r'CHANGEME'),
     transport='ntlm', read_timeout_sec=40, operation_timeout_sec=35)
 

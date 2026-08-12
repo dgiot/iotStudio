@@ -43,7 +43,7 @@ class MiniMqttBroker:
         """topic ACL: admin全通, 其他只读#read topic"""
         if role == 'admin':
             return True
-        # oil-monitor: 只能读油井数据
+        # oil-monitor: 只能读井口数据
         if role == 'oil-monitor':
             return 'oilwell' in topic or 'dgiot/stat' in topic or 'dgiot/#' in topic
         # 默认只读

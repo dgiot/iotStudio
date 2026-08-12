@@ -76,10 +76,10 @@ class TestA11Config(unittest.TestCase):
         self.assertEqual(c.heartbeat_interval, 5)
 
     def test_custom_config(self):
-        c = A11Config(device_id='rtu-oil-001', host='192.168.10.130',
+        c = A11Config(device_id='rtu-oil-001', host='127.0.0.1',
                       port=8889, unit_id=1, heartbeat_interval=10,
                       dds_enabled=True)
-        self.assertEqual(c.host, '192.168.10.130')
+        self.assertEqual(c.host, '127.0.0.1')
         self.assertEqual(c.unit_id, 1)
         self.assertEqual(c.heartbeat_interval, 10)
         self.assertTrue(c.dds_enabled)
@@ -113,7 +113,7 @@ class TestA11ProtocolAdapter(unittest.TestCase):
         self.assertFalse(adapter._connected)
 
     def test_security_report(self):
-        config = A11Config(device_id='test-001', host='192.168.10.130')
+        config = A11Config(device_id='test-001', host='127.0.0.1')
         adapter = A11ProtocolAdapter(config)
         report = adapter.security_report()
         self.assertIn('total_events', report)

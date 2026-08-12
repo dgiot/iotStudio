@@ -43,7 +43,7 @@ class SlaveScanner:
 class IPv6SlaveScanner:
     """IPv6 前缀扫描器 — 扫描 IPv6 地址段 + Modbus 从站
 
-    油气田场景：RTU 通过 IPv6 组网，前缀 240C:8042:F000::
+    工业园场景：RTU 通过 IPv6 组网，前缀 240C:8042:F000::
     用法: scanner = IPv6SlaveScanner('240C:8042:F000::', port=502)
           results = scanner.scan_subnets(1, 50, slave_range=(1, 20))
     """

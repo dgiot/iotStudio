@@ -14,7 +14,7 @@
     IOFileServer :7001  — 配置文件服务
 
   外围:
-    IO Server    :18889 — RTDB 数据源 (192.168.10.130)
+    IO Server    :18889 — RTDB 数据源 (127.0.0.1)
     OPC Server   :13500 — Kepware OPC DA
     DTU/RTU      ×5    — 现场保护测控装置
 
@@ -368,7 +368,7 @@ class MockIoCommit:
 # 6. IO Server / RTDB (:18889)
 # ═══════════════════════════════════════════════════
 class MockIOServer:
-    """模拟 IO Server (192.168.10.130:8889)"""
+    """模拟 IO Server (127.0.0.1:8889)"""
     def __init__(self, port=18889):
         self.port = port
         self.running = True

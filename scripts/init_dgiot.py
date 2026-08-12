@@ -97,7 +97,7 @@ def seed_products():
         {"product_id": "meter", "name": "智能电表", "icon": "📟",
          "desc": "三相电量计量采集", "protocols": ["modbus_rtu", "iec104"]},
         {"product_id": "oilwell", "name": "抽油机井", "icon": "🛢️",
-         "desc": "油气田采油设备", "protocols": ["a11", "modbus_rtu"]},
+         "desc": "工业泵类设备", "protocols": ["a11", "modbus_rtu"]},
         {"product_id": "rtu", "name": "RTU终端", "icon": "📡",
          "desc": "远程采集终端", "protocols": ["modbus_tcp", "modbus_rtu"]},
         {"product_id": "compressor", "name": "压缩机", "icon": "⚙️",
