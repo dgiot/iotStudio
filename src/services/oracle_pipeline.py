@@ -62,7 +62,7 @@ class OraclePipeline:
             from ..config import cfg
             mqtt_cfg = cfg.mqtt if hasattr(cfg, 'mqtt') else None
             if mqtt_cfg:
-                self._mqtt = mqtt.Client(client_id=getattr(mqtt_cfg, 'client_id', 'dgiot_lite_pipeline'))
+                self._mqtt = mqtt.Client(client_id=getattr(mqtt_cfg, 'client_id', 'iotStudio_pipeline'))
                 if getattr(mqtt_cfg, 'username', ''):
                     self._mqtt.username_pw_set(mqtt_cfg.username, mqtt_cfg.password)
                 self._mqtt.connect_async(mqtt_cfg.host, mqtt_cfg.port)

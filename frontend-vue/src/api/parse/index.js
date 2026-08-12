@@ -1,5 +1,5 @@
 /**
- * Parse REST API — iotStudio 标准 (适配 dgiot_lite)
+ * Parse REST API — iotStudio 标准 (适配 iotStudio)
  * ====================================================
  * 映射 iotStudio src/api/Parse/index.js 7个核心函数
  * 适配: element-ui → element-plus, axios → dgiot fetch

@@ -232,7 +232,7 @@ td{{padding:8px 12px;border-bottom:1px solid #eee}}
   {dev_rows}
 </table>
 
-<div class="footer">本报告由 dgiot_lite 时序数据采集与应用管理系统自动生成</div>
+<div class="footer">本报告由 iotStudio 时序数据采集与应用管理系统自动生成</div>
 </body>
 </html>"""
 

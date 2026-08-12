@@ -439,7 +439,7 @@ def _json_str(obj: Any) -> str:
     return json.dumps(obj)
 
 
-# Parse → dgiot_lite 字段映射
+# Parse → iotStudio 字段映射
 _PARSE_FIELD_MAP = {
     "devaddr": "device_id",
     "name": "device_name",
@@ -489,12 +489,12 @@ _DGIOT_DEFAULTS = {
     "config": {},
 }
 
-# dgiot_lite → Parse 反向字段映射
+# iotStudio → Parse 反向字段映射
 _PARSE_REVERSE_MAP = {v: k for k, v in _PARSE_FIELD_MAP.items()}
 
 
 def _to_parse(data: Dict) -> Dict:
-    """转换 dgiot_lite 字段名 → Parse 格式"""
+    """转换 iotStudio 字段名 → Parse 格式"""
     result = {}
     for k, v in data.items():
         if v is None:
@@ -508,7 +508,7 @@ def _to_parse(data: Dict) -> Dict:
             result[mapped] = v
         else:
             result[mapped] = str(v)
-    result["product"] = "dgiot_lite"
+    result["product"] = "iotStudio"
     return result
 
 
@@ -524,7 +524,7 @@ def _parse_date(v: Any) -> Optional[datetime]:
 
 
 def _from_parse(pobj: Dict) -> Dict:
-    """转换 Parse 格式 → dgiot_lite 字段名"""
+    """转换 Parse 格式 → iotStudio 字段名"""
     result = dict(_DGIOT_DEFAULTS)  # 先填默认值
     for k, v in pobj.items():
         if k in ("ACL", "className", "updatedAt", "__type"):

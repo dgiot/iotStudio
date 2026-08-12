@@ -8,5 +8,5 @@ export default {
   showLogo: true,
   showFooter: true,
   collapse: false,
-  title: 'dgiot_lite',
+  title: 'iotStudio',
 }

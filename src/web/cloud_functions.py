@@ -43,7 +43,7 @@ def cloud_func(name: str):
 @cloud_func("hello")
 async def hello(params: dict, request: Request) -> Any:
     """健康检查 — 对标 Parse.Cloud.define('hello')"""
-    return {"result": "Hi from dgiot_lite", "timestamp": __import__('time').time()}
+    return {"result": "Hi from iotStudio", "timestamp": __import__('time').time()}
 
 
 @cloud_func("exist")

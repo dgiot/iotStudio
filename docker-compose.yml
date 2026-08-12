@@ -1,6 +1,6 @@
 version: '3.8'
 services:
-  dgiot-lite:
+  iotStudio:
     build: .
     ports:
       - "8000:8000"

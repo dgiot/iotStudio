@@ -1,4 +1,4 @@
-# dgiot_lite — 轻量级物联网边缘平台
+# iotStudio — 物联网边缘应用框架
 
 [![Python](https://img.shields.io/badge/Python-3.10+-blue)](https://python.org)
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.110+-green)](https://fastapi.tiangolo.com)
@@ -117,7 +117,7 @@ network: true,   // 需要报文解析
 ## 项目结构
 
 ```
-dgiot_lite/
+iotStudio/
 ├── run.py                    # 启动入口
 ├── config.yaml               # TDengine/MQTT/Parse 配置
 ├── src/
@@ -179,10 +179,10 @@ storage_mode: "sqlite"         # sqlite | postgres
 
 ## 与 DG-IoT 联动
 
-dgiot_lite 采集数据通过 MQTT 推送至 DG-IoT 主平台：
+iotStudio 采集数据通过 MQTT 推送至 DG-IoT 主平台：
 
 ```
-dgiot_lite  ──MQTT──→  EMQX (:1883)  ──→  Parse Server  ──→  TDengine
+iotStudio  ──MQTT──→  EMQX (:1883)  ──→  Parse Server  ──→  TDengine
   边缘代理              中枢汇聚             存储引擎           时序引擎
 ```
 

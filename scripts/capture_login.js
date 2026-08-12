@@ -41,7 +41,7 @@ function checkAPI() {
   await pg.setViewport({ width: 1920, height: 1080 });
   await pg.evaluateOnNewDocument((t) => { localStorage.setItem('dgiot_token', t); localStorage.setItem('dgiot_user', 'admin'); }, token);
 
-  const dir = 'D:/ai/dgiot_lite/output/screenshots/';
+  const dir = 'D:/ai/iotStudio/output/screenshots/';
 
   // Pages to capture with wait conditions
   const captures = [

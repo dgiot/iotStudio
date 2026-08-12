@@ -1,5 +1,5 @@
 """
-dgiot_lite → DG-IOT 边缘中枢 MQTT 桥接
+iotStudio → DG-IOT 边缘中枢 MQTT 桥接
 从 capture_server :8765 拉取工业报文，注入 DG-IOT 中心
 """
 import json
@@ -131,7 +131,7 @@ class EdgeBridge:
 
 if __name__ == "__main__":
     print("=" * 55)
-    print("  dgiot_lite -> DG-IOT 边缘中枢 MQTT 桥接")
+    print("  iotStudio -> DG-IOT 边缘中枢 MQTT 桥接")
     print("=" * 55)
     bridge = EdgeBridge()
     bridge.connect()

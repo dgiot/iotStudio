@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-dgiot_lite 数据库初始化 — 对齐 DG-IoT Parse Schema
+iotStudio 数据库初始化 — 对齐 DG-IoT Parse Schema
 ==================================================
 1. 从 schemas.json 读取 23 个类的定义
 2. 通过 FastAPI 创建 Schema + 种子数据
@@ -25,7 +25,7 @@ def login(username: str = "admin", password: str = "CHANGEME") -> str:
 
 
 def api(method: str, path: str, body: dict = None) -> dict:
-    """调用 dgiot_lite REST API"""
+    """调用 iotStudio REST API"""
     url = API + path
     headers = {"Content-Type": "application/json"}
     if TOKEN:
@@ -162,7 +162,7 @@ def seed_menu():
 
 if __name__ == "__main__":
     print("=" * 55)
-    print("  dgiot_lite 数据库初始化 (DG-IoT Parse 对齐)")
+    print("  iotStudio 数据库初始化 (DG-IoT Parse 对齐)")
     print("=" * 55)
 
     try:
@@ -171,7 +171,7 @@ if __name__ == "__main__":
         print("  ✅ admin 登录成功")
     except Exception as e:
         print(f"  ⚠ 登录失败: {e}")
-        print("  可能是 dgiot_lite 未启动，尝试直接写入 SQLite...")
+        print("  可能是 iotStudio 未启动，尝试直接写入 SQLite...")
 
     print("\n[2/6] Schema...")
     create_schemas()

@@ -1,5 +1,5 @@
 """
-dgiot_lite — 安全判据引擎 (Safety Rules Engine)
+iotStudio — 安全判据引擎 (Safety Rules Engine)
 
 基于 shixu 项目 rule_engine.py 移植，提供 L1/L2/L3 + ESD 共 26 条安全规则评估。
 

@@ -1,5 +1,5 @@
 """
-dgiot_lite 本体论引擎 — 4 层模型
+iotStudio 本体论引擎 — 4 层模型
 与 Erlang dgiot_ontology.erl 对齐
 
 层1 Site    工业厂/井场/场站 (human-readable name)
@@ -352,7 +352,7 @@ class OntologyEngine:
 def build_131_ontology() -> OntologyEngine:
     """从 2026-07-12 131 IO网关 2047文件逐字精读结果构建完整本体
 
-    数据源: D:\\ai\\dgiot_lite\\io服务器分析\\IO ServerOnLine\\
+    数据源: D:\\ai\\iotStudio\\io服务器分析\\IO ServerOnLine\\
     分析范围: 2047 文件, 含 INI/TXT/DAT/DLL/LOG/ZIO/CHM/DOC
     """
     engine = OntologyEngine()

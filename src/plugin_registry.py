@@ -1,5 +1,5 @@
 """
-dgiot_lite 后端插件注册中心
+iotStudio 后端插件注册中心
 
 每个协议/服务插件 = Python 模块 + 标准接口:
   {name, version, adapter_class, config_schema, on_start(), on_stop()}

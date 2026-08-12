@@ -1,5 +1,5 @@
 /**
- * dgiot_lite 插件注册中心
+ * iotStudio 插件注册中心
  *
  * 每个插件 = { name, routes[], menuItems[], store?, onInstall() }
  * 部署时只启需要的插件，裁剪包体

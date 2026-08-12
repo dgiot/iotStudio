@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # ============================================================
-# dgiot_lite — Modbus TCP 原生 Socket 客户端
+# iotStudio — Modbus TCP 原生 Socket 客户端
 # 来源: dgiot_collector/src/core/modbus_client.py
 # 特性: IPv4/IPv6双栈, 报文追溯, 连接统计, 零外部依赖
 # ============================================================
