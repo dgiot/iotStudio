@@ -111,15 +111,9 @@ def seed_products():
 def seed_channels():
     """通道 — 对齐 DG-IoT Channel"""
     channels = [
-        {"device_id": "ch_vendor_oilmon", "device_name": "🛢 油液监测", "protocol": "http_rest",
-         "device_type": "sensor", "tenant_id": "oil-monitor",
-         "comm_params": {"host": "vendor_oilmon.com", "port": 443, "vendor": "vendor_oilmon"}},
         {"device_id": "ch_boiler", "device_name": "🔥 锅炉能效", "protocol": "modbus_tcp",
          "device_type": "meter", "tenant_id": "default",
          "comm_params": {"host": "127.0.0.1", "port": 502}},
-        {"device_id": "ch_vib", "device_name": "📊 声振温", "protocol": "http_rest",
-         "device_type": "sensor", "tenant_id": "default",
-         "comm_params": {"host": "127.0.0.1", "port": 8500, "vendor": "vendor_phm"}},
         {"device_id": "ch_bolt", "device_name": "🔩 智能螺栓", "protocol": "mqtt",
          "device_type": "sensor", "tenant_id": "default",
          "comm_params": {"host": "127.0.0.1", "port": 1883, "vendor": "boguan"}},
