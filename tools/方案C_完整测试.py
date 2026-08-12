@@ -7,7 +7,7 @@ from src.protocols.commbridge_server import LegacyCommServer
 
 for k in ['HTTP_PROXY','HTTPS_PROXY','http_proxy','https_proxy']:
     os.environ.pop(k, None)
-os.environ['NO_PROXY'] = '192.168.10.131,11.*,172.*'
+os.environ['NO_PROXY'] = '127.0.0.1,11.*,172.*'
 import winrm
 
 # ═══════ Monitor ═══════
@@ -38,7 +38,7 @@ def upload_and_run():
     b64_content = base64.b64encode(ps1_content).decode()
 
     s = winrm.Session(
-        'http://192.168.10.131:5985/wsman',
+        'http://127.0.0.1:5985/wsman',
         auth=('administrator', r'CHANGEME'),
         transport='ntlm', read_timeout_sec=30, operation_timeout_sec=20)
 
@@ -99,10 +99,10 @@ async def main():
 
     # Cleanup portproxy
     s = winrm.Session(
-        'http://192.168.10.131:5985/wsman',
+        'http://127.0.0.1:5985/wsman',
         auth=('administrator', r'CHANGEME'),
         transport='ntlm', read_timeout_sec=20, operation_timeout_sec=15)
-    s.run_cmd(r'netsh interface portproxy delete v4tov4 listenport=53002 listenaddress=192.168.10.131')
+    s.run_cmd(r'netsh interface portproxy delete v4tov4 listenport=53002 listenaddress=127.0.0.1')
     print("\n  端口转发已清理")
     print("  方案C测试完成!")
 

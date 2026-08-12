@@ -27,9 +27,9 @@ def make_xlsx():
     ws = wb.active; ws.title = "实体清单"
     ws.append(["层", "类别", "实体名称", "数量/标识", "属性/说明", "数据源"])
     for row in [
-        ["Data", "服务器", "IO 服务器", "192.168.10.131", "Win2016, E:\\IO ServerOnLine", "WinRM"],
-        ["Data", "服务器", "RTDB 服务器", "192.168.10.130", "psAPI :8889, GENERIC_VENDOR6.0.1.9", "psAPISDK"],
-        ["Data", "服务器", "Oracle 11g", "192.168.10.129:1521", "INDUSTRYPROD, OLEDB", "ADO"],
+        ["Data", "服务器", "IO 服务器", "127.0.0.1", "Win2016, E:\\IO ServerOnLine", "WinRM"],
+        ["Data", "服务器", "RTDB 服务器", "127.0.0.1", "psAPI :8889, GENERIC_VENDOR6.0.1.9", "psAPISDK"],
+        ["Data", "服务器", "Oracle 11g", "192.168.1.129:1521", "INDUSTRYPROD, OLEDB", "ADO"],
         ["Data", "设备", "RTU (Modbus)", "191台", "11.248-250.x, 主动连接:53001", "LegacyComm"],
         ["Data", "设备", "OPC DA 端点", "5台", "Kepware 4.x, CLSID:6E6170F0-...", "DCOM"],
         ["Data", "设备", "保护装置", "12种", "DSL-31A/DST-31A/DSB-31A/...", "Device.ini"],
@@ -140,9 +140,9 @@ def insert_parse_db():
 
     # ── Site ──
     db.execute("INSERT OR IGNORE INTO ontology_site VALUES (?,?,?,?)",
-               ("site_industry", "OIL_FIELD作业区", "192.168.10.0/24", json.dumps({
-                   "io_server": "192.168.10.131", "rtdb": "192.168.10.130:8889",
-                   "oracle": "192.168.10.129:1521", "rtu_count": 191
+               ("site_industry", "某工业基地工业区", "192.168.1.0/24", json.dumps({
+                   "io_server": "127.0.0.1", "rtdb": "127.0.0.1:8889",
+                   "oracle": "192.168.1.129:1521", "rtu_count": 191
                }, ensure_ascii=False)))
 
     # ── Gateway (LegacyComm) ──
@@ -156,9 +156,9 @@ def insert_parse_db():
     channels = [
         ("ch_modbus_tcp", "Modbus TCP", "gw_cb_131", "connect", ":502"),
         ("ch_opc_da", "OPC DA DCOM", "gw_cb_131", "dcom", "192.168.10.23:135"),
-        ("ch_rtdb", "RTDB psAPI", "gw_cb_131", "connect", "192.168.10.130:8889"),
+        ("ch_rtdb", "RTDB psAPI", "gw_cb_131", "connect", "127.0.0.1:8889"),
         ("ch_dtu", "DTU Transparent", "gw_cb_131", "listen", ":53001"),
-        ("ch_oracle", "Oracle OLEDB", "gw_cb_131", "poll", "192.168.10.129:1521"),
+        ("ch_oracle", "Oracle OLEDB", "gw_cb_131", "poll", "192.168.1.129:1521"),
     ]
     for ch_id, ch_name, gw, mode, addr in channels:
         db.execute("INSERT OR IGNORE INTO ontology_channel VALUES (?,?,?,?,?)",
@@ -221,12 +221,12 @@ def insert_parse_db():
 
     # ── DataSources ──
     db.execute("INSERT OR IGNORE INTO ontology_datasource VALUES (?,?,?,?,?,?)",
-               ("ds_rtdb", "RTDB 6.0", "192.168.10.130:8889", "psAPI",
+               ("ds_rtdb", "RTDB 6.0", "127.0.0.1:8889", "psAPI",
                 "admin", json.dumps({"sdk_version": "6.0.1.9", "exports": 3525,
                  "connect_fn": "psAPI_Server_Connect", "read_fn": "psAPI_Real_ReadList",
                  "handle_type": "uint16"}, ensure_ascii=False)))
     db.execute("INSERT OR IGNORE INTO ontology_datasource VALUES (?,?,?,?,?,?)",
-               ("ds_oracle", "Oracle 11g", "192.168.10.129:1521", "OLEDB",
+               ("ds_oracle", "Oracle 11g", "192.168.1.129:1521", "OLEDB",
                 "INDUSTRYPROD", json.dumps({"tables": ["TAGPAR","SYS_POINTRELATION",
                  "PROJECT_IODATASOURCE"]}, ensure_ascii=False)))
     db.execute("INSERT OR IGNORE INTO ontology_datasource VALUES (?,?,?,?,?,?)",

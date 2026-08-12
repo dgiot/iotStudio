@@ -91,7 +91,7 @@ const remoteLoading = ref(false)
 async function loadRemoteOntology() {
   remoteLoading.value = true
   try {
-    const r = await fetch('/api/system/remote?host=192.168.10.131'); const d = await r.json()
+    const r = await fetch('/api/system/remote?host=127.0.0.1'); const d = await r.json()
     remote.value = d
     // Parse CPU cores from wmic output
     const m = (r.data.cpu || '').match(/NumberOfCores=(\d+)/)

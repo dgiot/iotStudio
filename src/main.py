@@ -698,7 +698,7 @@ async def simulators_status():
         {"id": "iec104_2404",     "name": "IEC 104 储能PCS",   "protocol": "IEC 104",    "port": 2404, "device": "储能PCS从站",    "itemCount": 14},
         {"id": "opcua_4840",      "name": "OPC UA 充电桩",     "protocol": "OPC UA",     "port": 4840, "device": "充电桩+环境",    "itemCount": 12},
         {"id": "opcda_9090",      "name": "OPC DA 数据源",     "protocol": "OPC DA",     "port": 9090, "device": "光储充数据源",   "itemCount": 19},
-        {"id": "a11_8889",        "name": "A11 CNPC 网关",      "protocol": "A11 CNPC",   "port": 8889, "device": "油气田RTU",       "itemCount": 142},
+        {"id": "a11_8889",        "name": "A11 CNPC 网关",      "protocol": "A11 CNPC",   "port": 8889, "device": "工业园RTU",       "itemCount": 142},
     ]
     for sim in simulators:
         sim["status"] = "running" if _check_port(sim["port"], ttl=15) else "stopped"

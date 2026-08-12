@@ -4,7 +4,7 @@
 #
 # 协议栈: ModbusTCP MBAP (7B) + jjZZ MAGIC (4B) + Type LE(2B) + Sub LE(2B) + Payload
 #
-# 基于 pcap 逆向分析 — 2026-07-03
+# 基于 pcap 分析分析 — 2026-07-03
 # 参考: A11-GRM 规范文档, 7.3.pcapng 抓包数据
 # ============================================================
 import asyncio
@@ -30,7 +30,7 @@ A11_HEADER_LEN = 8  # MAGIC(4) + TYPE(2) + SUB(2)
 FRAME_MIN_LEN = MBAP_HEADER_LEN + A11_HEADER_LEN  # 15 字节
 
 # ============================================================
-# A11 消息类型枚举 (从 pcap 逆向 + 推断)
+# A11 消息类型枚举 (从 pcap 分析 + 推断)
 # ============================================================
 class A11MsgType:
     """A11 协议消息类型定义"""
@@ -205,7 +205,7 @@ class A11ProtocolAdapter(BaseProtocolAdapter):
       - 安全: TLS 可选，输入验证
 
     Usage:
-        config = A11Config(host='192.168.10.130', port=8889, device_id='rtu-001',
+        config = A11Config(host='127.0.0.1', port=8889, device_id='rtu-001',
                           points=[{'point_id':'p1','point_name':'井口压力','a11_type':0x0539}])
         adapter = A11ProtocolAdapter(config)
         await adapter.connect()

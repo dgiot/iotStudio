@@ -6,9 +6,9 @@ import winrm, os, sys
 def get_session():
     for k in ['HTTP_PROXY','HTTPS_PROXY','http_proxy','https_proxy']:
         os.environ.pop(k, None)
-    os.environ['NO_PROXY'] = '192.168.10.131,11.*,172.*'
+    os.environ['NO_PROXY'] = '127.0.0.1,11.*,172.*'
     return winrm.Session(
-        'http://192.168.10.131:5985/wsman',
+        'http://127.0.0.1:5985/wsman',
         auth=('administrator', r'CHANGEME'),
         transport='ntlm',
         read_timeout_sec=60

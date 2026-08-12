@@ -1,6 +1,6 @@
 # dgiot_lite — 运行状态
 
-> 最后更新: 2026-07-12 · LegacyComm 逆向工程阶段
+> 最后更新: 2026-07-12 · LegacyComm 分析工程阶段
 
 ## 项目整体状态
 
@@ -13,21 +13,21 @@
 | MQTT 推送 | ✅ | Mosquitto :1883, dgiot/# |
 | WebSocket | ✅ | :8000/ws, 替代10s轮询 |
 | 前端(Vue3) | ✅ | 20+视图, Element Plus |
-| LegacyComm 逆向 | ⚠️ 80% | 架构/公式已确认, 帧头尾魔数待定 |
+| LegacyComm 分析 | ⚠️ 80% | 架构/公式已确认, 帧头尾魔数待定 |
 | LegacyComm 接管 | 📋 规划中 | 见 COMMBRIDGE_TAKEOVER_PLAN.md |
 
-## 示例 IO 服务器 (192.168.10.131)
+## 示例 IO 服务器 (127.0.0.1)
 
 | 模块 | 状态 | 细节 |
 |------|------|------|
 | LegacyComm.exe | ✅ 运行中 | PID 19240, 191 RTU 连接, :53001 |
 | IOMan.exe (OPC DA) | ✅ 5实例 | 172.23.9.x 5台 DCS |
-| IOMan.exe (A11) | ✅ 7实例 | 192.168.10.130:8889 |
+| IOMan.exe (A11) | ✅ 7实例 | 127.0.0.1:8889 |
 | IoMonitor.exe | ✅ 运行中 | GUI + Oracle OLEDB |
 | Oracle | ✅ 可读 | 44,977 测点, 4.8M 功图记录 |
 | RTDB | ⚠️ 不可直连 | FSmartWorx Web API 需认证 |
 
-## 逆向工程产出 (reverse/commbridge/)
+## 分析工程产出 (reverse/commbridge/)
 
 | 产出 | 大小 | 状态 |
 |------|------|------|

@@ -2,17 +2,17 @@
 import os, time, base64
 for k in ['HTTP_PROXY','HTTPS_PROXY','http_proxy','https_proxy']:
     os.environ.pop(k, None)
-os.environ['NO_PROXY'] = '192.168.10.131,11.*,172.*'
+os.environ['NO_PROXY'] = '127.0.0.1,11.*,172.*'
 import winrm
 
-s = winrm.Session('http://192.168.10.131:5985/wsman',
+s = winrm.Session('http://127.0.0.1:5985/wsman',
     auth=('administrator', r'CHANGEME'),
     transport='ntlm', read_timeout_sec=25, operation_timeout_sec=20)
 
 # PATH 1: Oracle with Easy Connect
 print("=== PATH 1: Oracle Easy Connect ===")
 vbs = r'''Set conn = CreateObject("ADODB.Connection")
-conn.Open "Provider=OraOLEDB.Oracle;Data Source=192.168.10.129:1521/INDUSTRYPROD;User ID=industrya11;Password=INDUSTRYA11_pass;"
+conn.Open "Provider=OraOLEDB.Oracle;Data Source=192.168.1.129:1521/INDUSTRYPROD;User ID=industrya11;Password=INDUSTRYA11_pass;"
 Set rs = conn.Execute("SELECT table_name FROM user_tables WHERE table_name LIKE '%OPC%' OR table_name LIKE '%IODATA%' OR table_name LIKE '%PROJECT%' OR table_name LIKE '%POINT%' OR table_name LIKE '%TAG%' ORDER BY table_name")
 Do While Not rs.EOF
     WScript.Echo rs.Fields(0).Value

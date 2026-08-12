@@ -3,17 +3,17 @@
 import os, sys, base64
 for k in ['HTTP_PROXY','HTTPS_PROXY','http_proxy','https_proxy']:
     os.environ.pop(k, None)
-os.environ['NO_PROXY'] = '192.168.10.131,11.*,172.*'
+os.environ['NO_PROXY'] = '127.0.0.1,11.*,172.*'
 import winrm
 
 s = winrm.Session(
-    'http://192.168.10.131:5985/wsman',
+    'http://127.0.0.1:5985/wsman',
     auth=('administrator', r'CHANGEME'),
     transport='ntlm', read_timeout_sec=120)
 
 # 下载目标 DTU DLL
 targets = [
-    ('DTU_DQQY/DTUAPI.dll', 'OIL_FIELD专用'),
+    ('DTU_DQQY/DTUAPI.dll', '某工业基地专用'),
     ('DTU_SUNWAY/DTUAPI.dll', '桑威'),
     ('DTU_HONGDIAN/DTUAPI.dll', '宏电'),
 ]

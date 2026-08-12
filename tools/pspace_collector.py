@@ -14,7 +14,7 @@ RTDB OPC DA 自主采集器 — 指定 Tag ID 读取实时数据
   # 扫描活跃 Tag
   C:/Python311-32/python.exe tools/rtdb_collector.py --scan
 
-连接: 192.168.10.130:8889 (RTDB IO Server)
+连接: 127.0.0.1:8889 (RTDB IO Server)
 凭据: admin / INDUSTRYA11_pass
 """
 import ctypes, os, struct, sys, time, json, argparse
@@ -36,7 +36,7 @@ FLOAT_OFFSET = 16
 TS_OFFSET = 0
 
 class PSpaceCollector:
-    def __init__(self, host="192.168.10.130", port=8889, user="admin", pwd="INDUSTRYA11_pass"):
+    def __init__(self, host="127.0.0.1", port=8889, user="admin", pwd="INDUSTRYA11_pass"):
         self.host = host
         self.port = port
         self.user = user

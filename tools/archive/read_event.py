@@ -3,8 +3,8 @@ Read Event.txt using cmd type (no encoding issues)
 """
 import winrm, os, sys
 
-os.environ['NO_PROXY']='192.168.10.131,11.*,172.*'
-s=winrm.Session('http://192.168.10.131:5985/wsman',auth=('administrator','CHANGEME'),transport='ntlm',read_timeout_sec=60)
+os.environ['NO_PROXY']='127.0.0.1,11.*,172.*'
+s=winrm.Session('http://127.0.0.1:5985/wsman',auth=('administrator','CHANGEME'),transport='ntlm',read_timeout_sec=60)
 
 # Use PowerShell Get-Content to read Event.txt
 r=s.run_ps('$ErrorActionPreference="SilentlyContinue"; Get-Content "E:\\IO ServerOnLine\\Event.txt" -Encoding UTF8 -ErrorAction SilentlyContinue | ForEach-Object { Write-Host $_ }')

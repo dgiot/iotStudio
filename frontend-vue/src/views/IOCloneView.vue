@@ -6,7 +6,7 @@
     <el-card class="card" shadow="never">
       <template #header><span>添加 IO 服务器</span></template>
       <el-form :inline="true" :model="form" @submit.prevent="addServer">
-        <el-form-item label="IP"><el-input v-model="form.ip" placeholder="192.168.10.131" size="small"/></el-form-item>
+        <el-form-item label="IP"><el-input v-model="form.ip" placeholder="127.0.0.1" size="small"/></el-form-item>
         <el-form-item label="端口"><el-input v-model="form.port" placeholder="5985" size="small" style="width:80px"/></el-form-item>
         <el-form-item label="账号"><el-input v-model="form.user" placeholder="administrator" size="small"/></el-form-item>
         <el-form-item label="密码"><el-input v-model="form.pwd" type="password" placeholder="WinRM 密码" size="small"/></el-form-item>

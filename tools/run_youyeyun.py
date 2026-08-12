@@ -2,7 +2,7 @@
 """快捷启动: 有叶云油液数据采集器"""
 import os, sys
 script = os.path.normpath(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
-    "..", "..", "svn_work", "项目投标", "OIL_FIELD", "08_交付", "设备完整性", "04-模拟环境", "vendor_oilmon_collector.py"))
+    "..", "..", "svn_work", "项目投标", "某工业基地", "08_交付", "设备完整性", "04-模拟环境", "vendor_oilmon_collector.py"))
 if os.path.exists(script):
     os.execv(sys.executable, [sys.executable, script] + sys.argv[1:])
 else:
