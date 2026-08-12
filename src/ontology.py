@@ -396,7 +396,7 @@ def build_131_ontology() -> OntologyEngine:
     channels = [
         # 原有通道
         Channel(id="ch_opc_da", gateway="gw_131", name="OPC DA Client",
-            protocol="opc_da", endpoint="DCOM :135 → 192.168.10.23/.3/.18.194/.26.6.3",
+            protocol="opc_da", endpoint="DCOM :135 → 192.168.10.20/.3/.18.194/.26.6.3",
             status="running", config={
                 "driver": "E:\\IO ServerOnLine\\IO Servers\\OPC_FC_Client\\ioapi.dll",
                 "progid": "KEPware.KEPServerEx.V4",

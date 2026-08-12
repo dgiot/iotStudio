@@ -12,8 +12,8 @@ POLL_INTERVAL = 10  # 采集间隔（秒）
 
 # OPC 服务器列表
 OPC_SERVERS = [
-    {"name": "RSLinx OPC Server", "host": "192.168.10.23", "tags": []},
-    {"name": "RSLinx OPC Server", "host": "192.168.10.23", "tags": []},
+    {"name": "RSLinx OPC Server", "host": "192.168.10.20", "tags": []},
+    {"name": "RSLinx OPC Server", "host": "192.168.10.20", "tags": []},
 ]
 
 
