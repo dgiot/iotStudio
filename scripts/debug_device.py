@@ -1,5 +1,5 @@
 import os, sys; sys.path.insert(0, '.')
-os.environ['PARSE_PG_DSN'] = 'postgresql://dgiot:CHANGEME@127.0.0.1:7432/parse'
+os.environ['PARSE_PG_DSN'] = 'postgresql://dgiot:YOUR_PG_PASSWORD@127.0.0.1:7432/parse'
 from src.parse_db import reset_backend; reset_backend()
 from src.parse_lite import parse_query
 r = parse_query('Device', {'limit': 1})

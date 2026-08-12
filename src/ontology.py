@@ -526,7 +526,7 @@ def build_131_ontology() -> OntologyEngine:
 
     # 16 口井口 RTU (from runBack1.zio)
     well_rtus = [
-        "DEV_A","M5","S21","Y9065","Y9371","Y9721","Y9831","Y9832",
+        "DEV_A","DEV_B","S21","Y9065","Y9371","Y9721","Y9831","Y9832",
         "YK1_20","YP1","YX1_6","YX1_7","YX1_8","YZ2_7_4X","YZ4_2_3","YPing1",
     ]
     for well_id in well_rtus:

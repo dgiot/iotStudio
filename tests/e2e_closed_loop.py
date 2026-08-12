@@ -282,7 +282,7 @@ def test_alarms():
 
 @test("module", "auth", "POST login → token")
 def test_auth_login():
-    r = api_post("/api/auth/login", {"username": "admin", "password": "CHANGEME"}, timeout=5)
+    r = api_post("/api/auth/login", {"username": "admin", "password": os.environ.get("ADMIN_PASS", "changeme")}, timeout=5)
     assert "_error" not in r, f"login failed: {r}"
     assert "token" in r, "token missing"
     return {"username": r.get("username"), "role": r.get("role")}
@@ -290,7 +290,7 @@ def test_auth_login():
 @test("module", "auth", "GET auth/me")
 def test_auth_me():
     token = None
-    r = api_post("/api/auth/login", {"username": "admin", "password": "CHANGEME"}, timeout=5)
+    r = api_post("/api/auth/login", {"username": "admin", "password": os.environ.get("ADMIN_PASS", "changeme")}, timeout=5)
     if "_error" not in r and "token" in r:
         token = r["token"]
     if not token:
@@ -608,7 +608,7 @@ def test_http_rest_bearer():
                 "auth": {
                     "type": "bearer",
                     "token_url": f"{_MOCK_REST}/api/login",
-                    "credentials": {"user": "admin", "pass": "CHANGEME"},
+                    "credentials": {"user": "admin", "pass": os.environ.get("ADMIN_PASS", "changeme")},
                 },
                 "point_mapping": {"id": "point_id", "value": "point_value"},
             },

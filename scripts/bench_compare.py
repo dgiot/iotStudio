@@ -83,7 +83,7 @@ if r.status_code < 400:
 
 # 3. Login
 print("\n--- 认证 ---")
-bench("login", "GET", "/login", params={"username": "admin", "password": "CHANGEME"})
+bench("login", "GET", "/login", params={"username": "admin", "password": os.environ.get("ADMIN_PASS", "changeme")})
 
 # 4. Batch
 print("\n--- 批量 ---")

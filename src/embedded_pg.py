@@ -23,7 +23,7 @@ PG_DATA = Path(os.path.join(os.path.dirname(__file__), "..", "data", "pgdata"))
 PG_PORT = 15432
 PG_DB = "parse"
 PG_USER = "dgiot"
-PG_PASS = "CHANGEME"
+PG_PASS = os.environ.get("PG_PASSWORD", "changeme")
 
 
 def _tcp_ping(host: str, port: int, timeout: float = 1.0) -> bool:
