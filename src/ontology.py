@@ -388,7 +388,7 @@ def build_131_ontology() -> OntologyEngine:
                    "ch_s7","ch_mitsubishi","ch_beckhoff","ch_omron","ch_ge"],
         notes="现场采集两大入口: LegacyComm(Modbus TCP :53001→80+RTU) + IOMan(A11 :8889→130)。"
               "IoMonitor 只连 Oracle :1521 做数据出口。"
-              "OPC DA(DCOM :135)从未活跃, 172.23.9.x 无实际连接。"
+              "OPC DA(DCOM :135)从未活跃, 192.168.10.x 无实际连接。"
               "OPC_FC_Client/ 是历史废配置, 系统实际不用 OPC。"
     ))
 

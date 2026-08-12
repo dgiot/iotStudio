@@ -21,7 +21,7 @@
 | 模块 | 状态 | 细节 |
 |------|------|------|
 | LegacyComm.exe | ✅ 运行中 | PID 19240, 191 RTU 连接, :53001 |
-| IOMan.exe (OPC DA) | ✅ 5实例 | 172.23.9.x 5台 DCS |
+| IOMan.exe (OPC DA) | ✅ 5实例 | 192.168.10.x 5台 DCS |
 | IOMan.exe (A11) | ✅ 7实例 | 127.0.0.1:8889 |
 | IoMonitor.exe | ✅ 运行中 | GUI + Oracle OLEDB |
 | Oracle | ✅ 可读 | 44,977 测点, 4.8M 功图记录 |
