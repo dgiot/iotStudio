@@ -150,25 +150,16 @@ def _register_fallback_channels(app_config=None):
                      protocol="winrm-http", endpoint="edge-io-server:5985")
 
     # ── Oracle 管道 (POLL) ──
-    if "ch_oracle_pipe" not in registered:
-        async def start_oracle():
             try:
-                from .services.oracle_pipeline import OraclePipeline
                 pipe = OraclePipeline()
-                _channels_state['oracle_pipeline'] = pipe
                 await pipe.start()
             except ImportError:
-                log.info("[ch_oracle_pipe] 模块不可用, skip")
 
-        async def stop_oracle():
-            pipe = _channels_state.pop('oracle_pipeline', None)
             if pipe:
                 await pipe.stop()
 
-        make_channel("ch_oracle_pipe", CType.POLL, "Oracle 数据管道",
                      config={"source": "Oracle", "sink": "TDengine+MQTT"},
-                     on_start=start_oracle, on_stop=stop_oracle,
-                     protocol="oracle-jdbc")
+                     protocol="jdbc")
 
     # ── FastAPI HTTP (LISTEN) — 由 uvicorn 管理 ──
     if "ch_api_server" not in registered:
