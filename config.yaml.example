@@ -16,14 +16,14 @@ db:
   host: "127.0.0.1"
   port: 5432
   user: "postgres"
-  password: "postgres"
+  password: "YOUR_PASSWORD"
   database: "iot_platform"
 
 tdengine:
   host: "192.168.10.167"     # edge-dmz 边缘中枢
   port: 6041                 # taosAdapter RESTful
   user: "root"
-  password: "taosdata"
+  password: "YOUR_PASSWORD"
   database: "iot_telemetry"
   # Windows 无 TDengine → 自动降级 SQLite (data/telemetry.db)
 
@@ -48,11 +48,11 @@ plugins:
 
 # 第三方凭证 (敏感信息, 其他配置全部入库 parse_lite Channel 表)
 credentials:
-  vendor_oilmon_username: "CHANGEME_EMAIL"
-  vendor_oilmon_password: "A1234567"
+  vendor_oilmon_username: "YOUR_USER".com"
+  vendor_oilmon_password: "YOUR_PASSWORD"
   oracle_relay_host: "127.0.0.1"
   oracle_relay_user: "administrator"
-  oracle_relay_pass: "CHANGEME"
+  oracle_relay_pass: "YOUR_WINRM_PASSWORD"
 
 # Parse-lite (嵌入式 — 替代 Parse Server)
 parse:
@@ -64,7 +64,7 @@ mqtt:
   host: "127.0.0.1"
   port: 1883
   username: ""
-  password: ""
+  password: "YOUR_PASSWORD"
   client_id: "pythonIot-pusher"
 
 # ============================================================
@@ -76,7 +76,7 @@ phm_platform:
   realm: "phm"
   client_id: "phm-web"
   username: "qut-admin"
-  password: "qut-admin"
+  password: "YOUR_PASSWORD"
   poll_interval: 60
 
 # ============================================================
@@ -89,7 +89,7 @@ remote_capture:
   host: "127.0.0.1"
   port: 5985
   username: "administrator"
-  password: "CHANGEME"
+  password: "YOUR_PASSWORD"
 
 a11_devices:
 #   - protocol_type: a11

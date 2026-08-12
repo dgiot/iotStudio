@@ -7,7 +7,7 @@ for k in ['HTTP_PROXY','HTTPS_PROXY','http_proxy','https_proxy']:
 
 import winrm
 s = winrm.Session('http://127.0.0.1:5985/wsman',
-    auth=('administrator', r'CHANGEME'),
+    auth=('administrator', r'YOUR_WINRM_PASSWORD'),
     transport='ntlm', read_timeout_sec=90)
 
 def ps(script):

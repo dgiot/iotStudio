@@ -4,7 +4,7 @@ const http = require('http');
 
 function getToken() {
   return new Promise((resolve) => {
-    const data = JSON.stringify({ username: 'admin', password: 'CHANGEME' });
+    const data = JSON.stringify({ username: 'admin', password: os.environ.get('ADMIN_PASS', 'changeme') });
     const req = http.request({ hostname: 'localhost', port: 8000, path: '/api/auth/login', method: 'POST', headers: { 'Content-Type': 'application/json', 'Content-Length': data.length } }, (res) => {
       let body = ''; res.on('data', c => body += c); res.on('end', () => { try { resolve(JSON.parse(body).token); } catch { resolve(null); } });
     });

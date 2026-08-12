@@ -113,7 +113,7 @@ class SQLiteBackend(DBBackend):
 class PostgresBackend(DBBackend):
     def __init__(self, dsn: str = None):
         self._dsn = dsn or os.getenv("PARSE_PG_DSN",
-            "postgresql://dgiot:CHANGEME@127.0.0.1:7432/parse")
+            "postgresql://dgiot:YOUR_PG_PASSWORD@127.0.0.1:7432/parse")
         self._pool = None
         self._placeholder = "%s"
         import asyncio
@@ -336,7 +336,7 @@ def get_backend() -> DBBackend:
         log.warning(f"[parse_db] Embedded PG error: {e}")
 
     # Direct PG connect
-    _backend = PostgresBackend("postgresql://dgiot:CHANGEME@127.0.0.1:7432/parse")
+    _backend = PostgresBackend("postgresql://dgiot:YOUR_PG_PASSWORD@127.0.0.1:7432/parse")
     if _backend.connect():
         log.info("[parse_db] PG connected")
         return _backend
