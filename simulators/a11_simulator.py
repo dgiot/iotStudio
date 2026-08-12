@@ -12,7 +12,7 @@ A11 协议模拟器 — 模拟 DG-IoT 网关行为
   python simulators/a11_simulator.py --port 18889
 
   # 从 pcap 加载真实消息回放
-  python simulators/a11_simulator.py --replay D:/wsl/kylin/7.3.pcapng
+  python simulators/a11_simulator.py --replay ./test_data/sample.pcapng
 """
 
 import asyncio

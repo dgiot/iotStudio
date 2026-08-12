@@ -1030,7 +1030,7 @@ class GraphRAG:
         matches = sorted(semantic_matches, key=lambda x: -x.get("score", 0))
 
         # 协议名特殊boost: 用户明确提协议名 → 大幅提升对应通道 (合并后执行)
-        protocols_mentioned = [p for p in ['modbus','opc','a11','iec104','s7','dtu','oracle','rtdb']
+        protocols_mentioned = [p for p in ['modbus','opc','a11','iec104','s7','dtu']
                                if p in question.lower()]
         if protocols_mentioned:
             for m in matches:
