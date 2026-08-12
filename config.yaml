@@ -1,0 +1,115 @@
+# ============================================================
+# pythonIot — 主配置文件
+# ============================================================
+title: "DG-IoT 轻量物联网平台"
+version: "1.0.0"
+host: "0.0.0.0"
+port: 8000
+log_level: "INFO"
+data_dir: "./data"
+sqlite_path: "./data/local.db"
+
+# 存储模式: "parse" (连接Parse Server) | "sqlite" (单机版)
+storage_mode: "sqlite"
+
+db:
+  host: "127.0.0.1"
+  port: 5432
+  user: "postgres"
+  password: "postgres"
+  database: "iot_platform"
+
+tdengine:
+  host: "192.168.10.167"     # edge-dmz 边缘中枢
+  port: 6041                 # taosAdapter RESTful
+  user: "root"
+  password: "taosdata"
+  database: "iot_telemetry"
+  # Windows 无 TDengine → 自动降级 SQLite (data/telemetry.db)
+
+# 插件管理 — 启用/禁用协议和服务
+plugins:
+  protocol:
+    modbus_tcp: true
+    modbus_rtu: false
+    iec104: false
+    opcua: false
+    a11: true
+    http_rest_vendor_oilmon: true
+  service:
+    collector: true
+    alarm_engine: true
+    push_engine: true
+    phm_engine: true
+    safety_rules: true
+  storage:
+    tdengine: true     # 无则自动降级 SQLite
+    sqlite: true       # 始终可用
+
+# 第三方凭证 (敏感信息, 其他配置全部入库 parse_lite Channel 表)
+credentials:
+  vendor_oilmon_username: "CHANGEME_EMAIL"
+  vendor_oilmon_password: "A1234567"
+  oracle_relay_host: "192.168.10.131"
+  oracle_relay_user: "administrator"
+  oracle_relay_pass: "CHANGEME"
+
+# Parse-lite (嵌入式 — 替代 Parse Server)
+parse:
+  db_path: "./data/parse.db"   # SQLite 单机版
+  app_id: "<redacted-appid>"
+  master_key: "<redacted-masterkey>"
+
+mqtt:
+  host: "127.0.0.1"
+  port: 1883
+  username: ""
+  password: ""
+  client_id: "pythonIot-pusher"
+
+# ============================================================
+# PHM 云平台 (设备预测性维护)
+# ============================================================
+phm_platform:
+  base_url: "https://test.pubsci.top"
+  api_base: "http://localhost:18183"   # 后端 API 内网地址
+  realm: "phm"
+  client_id: "phm-web"
+  username: "qut-admin"
+  password: "qut-admin"
+  poll_interval: 60
+
+# ============================================================
+# A11 协议设备配置 (行业油气生产物联网)
+# 协议栈: ModbusTCP(7B MBAP) + jjZZ(4B) + Type LE(2B) + Sub LE(2B) + Payload
+# 参考: A11 正式规范白皮书 V1.0
+# ============================================================
+# # 远程抓包 — WinRM 连接到 IO 服务器
+remote_capture:
+  host: "192.168.10.131"
+  port: 5985
+  username: "administrator"
+  password: "CHANGEME"
+
+a11_devices:
+#   - protocol_type: a11
+#     device_id: oilfield-gw-001
+#     device_name: 某采油厂A11网关
+#     host: 192.168.10.130
+#     port: 8889
+#     unit_id: 0
+#     heartbeat_interval: 5
+#     enabled: true
+#     points:
+#       - point_id: well_pressure_001
+#         point_name: 1号井口压力
+#         a11_type: 0x0539
+#         unit: MPa
+#       - point_id: well_temp_001
+#         point_name: 1号井口温度
+#         a11_type: 0x0539
+#         unit: degC
+#       - point_id: oilflow_001
+#         point_name: 1号井产油量
+#         a11_type: 0x056c
+#         unit: m3/d

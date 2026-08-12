@@ -1,0 +1,38 @@
+# Git
+.git
+.gitignore
+.gitattributes
+
+# Python
+__pycache__
+*.py[cod]
+*.egg-info
+.venv
+venv
+*.egg
+
+# Node
+frontend-vue/node_modules
+
+# IDE
+.vscode
+.idea
+*.swp
+*.swo
+
+# Data (mounted as volumes)
+data/
+logs/
+
+# Docs & Project Materials
+docs/
+*.docx
+*.pptx
+*.pdf
+*.mp3
+
+# Misc
+*.bat
+test*/
+tests/
+simulators/
