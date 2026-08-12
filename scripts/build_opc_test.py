@@ -74,10 +74,10 @@ print(compile_result)
 # === STEP 3: Test all OPC servers ===
 print("\n=== STEP 3: Test OPC Servers ===")
 for target in [
-    ('192.168.10.23', 'RSLinx OPC Server'),
-    ('192.168.10.23', 'RSLinx OPC Server'),
-    ('172.26.6.3', 'RSLinx OPC Server'),
-    ('192.168.10.23', 'RSLinx OPC Server'),
+    ('192.168.10.20', 'RSLinx OPC Server'),
+    ('192.168.10.20', 'RSLinx OPC Server'),
+    ('192.168.10.20', 'RSLinx OPC Server'),
+    ('192.168.10.20', 'RSLinx OPC Server'),
 ]:
     host, progid = target
     print(f"\n--- {host} ---")
