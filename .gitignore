@@ -1,106 +1,24 @@
-# Python
-__pycache__/
-*.py[cod]
-*.egg-info/
-dist/
-build/
-.venv/
-env/
-
-# IDE
-.vscode/
-.idea/
-
-# Data
+# Sensitive
+docs/
+doc/
+output/
 data/
 *.db
-
-# LaTeX
-*.aux
-*.log
-*.out
-*.toc
-*.synctex.gz
-*.lot
-*.lof
-
-# Env
-.env
-
-# Parse Server (太重，不入库)
-parse-server/
-
-# IO 服务器分析数据 (太大)
-io服务器分析/
-
-# 嵌入式 git 仓库
-h-opc/
-
-# OPC 二进制库
-*.dll
-*.msi
-*.zip
-
-# PyInstaller
-dgiot_lite.spec
-build/
-dist/
-
-# TDengine/SQLite 数据
-*.db
-
-# IO Server plugin — binaries excluded
-plugins/io_server/*.dll
-plugins/io_server/*.exe
-plugins/io_server/*.pdb
-plugins/io_server/*.msi
-plugins/io_server/*.ocx
-plugins/io_server/*.sys
-plugins/io_server/*.vxd
-plugins/io_server/*.zip
-plugins/io_server/11.*/
-plugins/io_server/DALog/
-plugins/io_server/Log/
-plugins/io_server/IOSaveErr/
-plugins/io_server/back/
-plugins/io_server/port/
-plugins/io_server/run/
-plugins/io_server/DTU/
-plugins/io_server/Data Servers/
-plugins/io_server/DownLoadDir/
-plugins/io_server/IO Servers/
-plugins/io_server/reverse/commbridge/downloaded/
-plugins/io_server/reverse/commbridge/dtu_dlls/
-
-# Large data
-data/*.db
-logs/*.jsonl
-*.log
-
-# ── 项目材料 (SVN 投标体系跟踪，不入平台 git) ──
-docs/*.docx
-docs/*.pptx
-docs/*.pdf
-docs/*.mp3
-docs/*.bcf
-docs/*.run.xml
-docs/screenshots/
-docs/research/
-docs/docs/
-docs/区块链采购/
-docs/软著材料/
-docs/技术报告/
-docs/技术方案/
-docs/标准录音 74.*
-docs/采购内容与尖兵项目关联性说明.docx
-docs/数蛙采购内容与尖兵项目关联性说明.docx
-docs/合规附件汇编-持续数据采集管理技术服务.docx
-docs/尖兵项目-*.docx
-docs/尖兵项目-*.md
-docs/尖兵项目*.pdf
-docs/尖兵项目*.tex
-docs/技术方案应答书-*.docx
-docs/评审答辩-*.pptx
-docs/16-项目审批*.docx
-docs/Compliance_Attachments_Data_Collection_System.docx
+*.sqlite3
+*.xlsx
+*.docx
+*.pdf
+*报告*
+*方案*
+*投标*
+*报价*
+*合同*
 nul
+*.tmp
+*.bak
+.env
+credentials*
+token*
+secret*
+*.pem
+*.key
