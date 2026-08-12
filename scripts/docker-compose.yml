@@ -1,0 +1,82 @@
+# ============================================================
+# pythonIot — Docker Compose 一键部署
+# ============================================================
+version: "3.8"
+
+services:
+  # ---- IoT 平台核心 ----
+  iot-platform:
+    build:
+      context: ..
+      dockerfile: scripts/Dockerfile
+    container_name: iot-platform
+    ports:
+      - "8000:8000"
+    environment:
+      - IOT_CONFIG=/app/config.yaml
+      - PG_HOST=postgres
+      - PG_PORT=5432
+      - PG_USER=iotuser
+      - PG_PASSWORD=iotpass
+      - PG_DB=iot_platform
+      - TD_HOST=tdengine
+      - TD_PORT=6030
+      - TD_USER=root
+      - TD_PASSWORD=taosdata
+      - TD_DB=iot_telemetry
+      - MQTT_HOST=emqx
+      - MQTT_PORT=1883
+    depends_on:
+      - postgres
+      - tdengine
+      - emqx
+    volumes:
+      - ../config.yaml:/app/config.yaml:ro
+      - iot_data:/app/data
+    restart: unless-stopped
+
+  # ---- PostgreSQL ----
+  postgres:
+    image: postgres:15-alpine
+    container_name: iot-postgres
+    environment:
+      POSTGRES_USER: iotuser
+      POSTGRES_PASSWORD: iotpass
+      POSTGRES_DB: iot_platform
+    ports:
+      - "5432:5432"
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+    restart: unless-stopped
+
+  # ---- TDengine ----
+  tdengine:
+    image: tdengine/tdengine:3.3.4.0
+    container_name: iot-tdengine
+    environment:
+      TAOS_FIRST_EP: tdengine
+    ports:
+      - "6030:6030"
+      - "6041:6041"
+      - "6044:6044"
+    volumes:
+      - td_data:/var/lib/taos
+    restart: unless-stopped
+
+  # ---- EMQ X MQTT Broker ----
+  emqx:
+    image: emqx/emqx:5.6
+    container_name: iot-emqx
+    ports:
+      - "1883:1883"
+      - "8083:8083"
+      - "18083:18083"
+    environment:
+      EMQX_NAME: iot-emqx
+      EMQX_HOST: emqx
+    restart: unless-stopped
+
+volumes:
+  pg_data:
+  td_data:
+  iot_data:

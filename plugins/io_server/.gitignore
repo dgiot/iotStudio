@@ -1,0 +1,6 @@
+*.dmp
+*.log
+*.txt
+IOSaveErr/
+DALog/
+Log/

@@ -1,0 +1,32 @@
+/* 低空经济主题 — 天空蓝 · 玻璃态 · 通透感 */
+:root {
+  --side-width: 220px;
+  --side-collapse-width: 64px;
+  --nav-height: 50px;
+  --tabs-height: 36px;
+  --footer-height: 28px;
+  /* 天空色系 */
+  --color-primary: #4FC3F7;
+  --color-primary-light: #81D4FA;
+  --color-accent: #00BCD4;
+  --color-sky: #29B6F6;
+  --color-success: #66BB6A;
+  --color-warning: #FFB74D;
+  --color-danger: #EF5350;
+  /* 背景 — 天空渐变 */
+  --bg-sky-deep: #0a1628;
+  --bg-sky-mid: #0d2940;
+  --bg-sky-high: #4FC3F720;
+  --bg-dark: #0a1628;
+  --bg-panel: rgba(13, 41, 64, 0.6);
+  --bg-card: rgba(13, 36, 56, 0.5);
+  --bg-glass: rgba(255,255,255,0.03);
+  /* 边框 — 冰蓝 */
+  --border-color: rgba(79,195,247,0.15);
+  --border-glow: rgba(79,195,247,0.3);
+  /* 文字 — 清透白 */
+  --text-primary: #E8F4FD;
+  --text-secondary: #8AB8D4;
+  --text-muted: #5A88A4;
+  --text-glow: #4FC3F7;
+}

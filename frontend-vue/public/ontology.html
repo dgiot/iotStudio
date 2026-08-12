@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IO 服务器 DLAS 本体浏览器</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Microsoft YaHei',sans-serif;background:#f0f4f8;display:flex;height:100vh;overflow:hidden}
+.sidebar{width:280px;background:#fff;border-right:1px solid #d0dce8;display:flex;flex-direction:column}
+.sidebar-header{padding:16px;border-bottom:1px solid #e0e8f0;background:linear-gradient(135deg,#0284c7,#38bdf8);color:#fff}
+.sidebar-header h2{font-size:16px;margin-bottom:4px}
+.sidebar-header p{font-size:11px;opacity:.8}
+.tabs{display:flex;border-bottom:1px solid #e0e8f0}
+.tab{flex:1;padding:10px;text-align:center;cursor:pointer;font-size:13px;border-bottom:2px solid transparent;transition:.2s}
+.tab:hover{background:#f4f7fb}
+.tab.active{border-bottom-color:#0284c7;color:#0284c7;font-weight:bold}
+.tree{flex:1;overflow-y:auto;padding:8px 0}
+.tree-item{padding:6px 16px;cursor:pointer;font-size:13px;display:flex;align-items:center;gap:8px;transition:.15s}
+.tree-item:hover{background:#e8f0f8}
+.tree-item.selected{background:#dbeafe;color:#0284c7;font-weight:bold}
+.tree-item .icon{font-size:16px;width:20px;text-align:center}
+.tree-item .badge{font-size:10px;padding:1px 6px;border-radius:8px;margin-left:auto}
+.badge-data{background:#dbeafe;color:#1e40af}
+.badge-logic{background:#fef3c7;color:#92400e}
+.badge-action{background:#d1fae5;color:#065f46}
+.badge-security{background:#fee2e2;color:#991b1b}
+.main{flex:1;display:flex;flex-direction:column}
+.toolbar{padding:12px 16px;background:#fff;border-bottom:1px solid #d0dce8;display:flex;gap:8px;align-items:center}
+.toolbar button{padding:6px 14px;border:1px solid #d0dce8;border-radius:6px;background:#fff;cursor:pointer;font-size:13px;transition:.2s}
+.toolbar button:hover{background:#f0f4f8;border-color:#0284c7}
+.toolbar .stats{font-size:12px;color:#5c7080;margin-left:auto}
+.content{flex:1;display:flex;overflow:hidden}
+.graph-panel{flex:1;position:relative;background:#f8fafd}
+.graph-panel canvas{position:absolute;top:0;left:0}
+.detail-panel{width:350px;background:#fff;border-left:1px solid #d0dce8;overflow-y:auto;padding:16px;display:none}
+.detail-panel.active{display:block}
+.detail-panel h3{font-size:15px;margin-bottom:12px;padding-bottom:8px;border-bottom:2px solid #0284c7}
+.detail-panel .field{margin-bottom:10px}
+.detail-panel .field-label{font-size:11px;color:#8ca0b4;text-transform:uppercase;margin-bottom:2px}
+.detail-panel .field-value{font-size:14px;color:#1a2a3a}
+.detail-panel .rel-item{padding:8px;margin-bottom:4px;border-radius:6px;background:#f4f7fb;cursor:pointer;font-size:13px;display:flex;align-items:center;gap:8px}
+.detail-panel .rel-item:hover{background:#dbeafe}
+.node-circle{width:10px;height:10px;border-radius:50%;display:inline-block}
+.node-data{background:#3b82f6}
+.node-logic{background:#f59e0b}
+.node-action{background:#10b981}
+.node-security{background:#ef4444}
+.node-relation{background:#6366f1}
+</style>
+</head>
+<body>
+
+<div class="sidebar">
+  <div class="sidebar-header">
+    <h2>IO 服务器 DLAS 本体</h2>
+    <p>油气作业区 · v4.1 · 60设备/100关系/26约束</p>
+  </div>
+  <div class="tabs">
+    <div class="tab active" onclick="switchTab('data')">Data 实体</div>
+    <div class="tab" onclick="switchTab('logic')">Logic 规则</div>
+    <div class="tab" onclick="switchTab('action')">Action 流</div>
+  </div>
+  <div class="tree" id="tree"></div>
+</div>
+
+<div class="main">
+  <div class="toolbar">
+    <button onclick="resetView()">全景视图</button>
+    <button onclick="focusNode(null)">数据流动画</button>
+    <span class="stats" id="stats"></span>
+  </div>
+  <div class="content">
+    <div class="graph-panel" id="graph"></div>
+    <div class="detail-panel" id="detail"></div>
+  </div>
+</div>
+
+<script>
+// ====== ONTOLOGY DATA ======
+const ONTOLOGY = {
+  entities: [
+    // Data layer
+    {id:"site_industry",name:"INDUSTRY 作业区",layer:"data",type:"Site",desc:"192.168.10.0/24, RTDB:130:8889, Oracle:129:1521"},
+    {id:"gw_cb_131",name:"LegacyComm 网关",layer:"data",type:"Gateway",desc:"DTU透传, :53001, 191 RTU"},
+    {id:"ch_modbus_tcp",name:"Modbus TCP 通道",layer:"data",type:"Channel",desc:":502, 56设备"},
+    {id:"ch_opc_da",name:"OPC DA 通道",layer:"data",type:"Channel",desc:"DCOM :135, Kepware 192.168.10.23"},
+    {id:"ch_rtdb",name:"RTDB 通道",layer:"data",type:"Channel",desc:"psAPI :8889, 192.168.10.130"},
+    {id:"ch_dtu",name:"DTU 透传通道",layer:"data",type:"Channel",desc:":53001, 透传Modbus"},
+    {id:"02204060100",name:"DSL-31A 断路器 A1",layer:"data",type:"Device",desc:"20通道, Ia=4.8A, 实时"},
+    {id:"02105100097",name:"DST-31A 变压器差动",layer:"data",type:"Device",desc:"15通道, Ia=3.2A, 实时"},
+    {id:"02106290043",name:"DSB-31A 变压器后备",layer:"data",type:"Device",desc:"20通道, Ia=8.5A, 实时"},
+    {id:"ds_rtdb",name:"RTDB 6.0 数据源",layer:"data",type:"DataSource",desc:"130:8889, admin, exports=3525"},
+    {id:"ds_opc",name:"Kepware OPC DA",layer:"data",type:"DataSource",desc:"192.168.10.23:135, CLSID:6E6170F0"},
+    {id:"ds_oracle",name:"Oracle 11g",layer:"data",type:"DataSource",desc:"129:1521, INDUSTRYPROD"},
+    {id:"ds_tagspace",name:"RTDB Tag 空间",layer:"data",type:"DataSource",desc:"9活跃块, 双命名空间"},
+    // Logic layer
+    {id:"C_L1",name:"L1 帧校验",layer:"logic",type:"Constraint",desc:"abs(expected-actual)<=2, severity=danger"},
+    {id:"C_L2",name:"L2 值范围",layer:"logic",type:"Constraint",desc:"I:0-500A, U:100-400V, P:0-300kW"},
+    {id:"C_L3",name:"L3 三相平衡",layer:"logic",type:"Constraint",desc:"(Imax-Imin)/Iavg<25%"},
+    {id:"C_coeff",name:"ChangeData 转换",layer:"logic",type:"Constraint",desc:"Y*Coefficient[i], base=8192"},
+    {id:"tag_scan",name:"Tag ID 扫描法",layer:"logic",type:"Method",desc:"ReadList逐块, 不依赖Oracle"},
+    // Action layer
+    {id:"path_psapi",name:"psAPISDK 直连",layer:"action",type:"Path",desc:"Connect→ReadList, 实时"},
+    {id:"path_mock",name:"本机全栈模拟",layer:"action",type:"Path",desc:"7服务+56设备, 离线"},
+    {id:"path_oracle",name:"Oracle 管线",layer:"action",type:"Path",desc:"26万条, 历史同步"},
+    {id:"path_ioman",name:"IOMan 注入",layer:"action",type:"Path",desc:"自定义设备列表, 实时"},
+    {id:"path_dcom",name:"DCOM 直连",layer:"action",type:"Path",desc:"Kepware OPC Browse"},
+    // Security
+    {id:"sec_ro",name:"生产网只读",layer:"security",type:"Rule",desc:"禁止安装/重启/停服"},
+    {id:"sec_cred",name:"凭据保护",layer:"security",type:"Rule",desc:"admin/INDUSTRYA11_pass"},
+  ],
+  relations: [
+    {source:"gw_cb_131",target:"ch_dtu",label:"hosts"},
+    {source:"gw_cb_131",target:"ch_modbus_tcp",label:"hosts"},
+    {source:"ch_opc_da",target:"ds_opc",label:"connects"},
+    {source:"ch_rtdb",target:"ds_rtdb",label:"connects"},
+    {source:"ds_rtdb",target:"ds_opc",label:"bridges"},
+    {source:"02204060100",target:"ch_opc_da",label:"collected_by"},
+    {source:"02105100097",target:"ch_modbus_tcp",label:"collected_by"},
+    {source:"02106290043",target:"ch_modbus_tcp",label:"collected_by"},
+    {source:"C_L1",target:"02204060100",label:"validates"},
+    {source:"C_L2",target:"02204060100",label:"validates"},
+    {source:"C_L3",target:"02204060100",label:"validates"},
+    {source:"tag_scan",target:"ds_tagspace",label:"discovers"},
+    {source:"path_psapi",target:"ds_rtdb",label:"reads"},
+    {source:"path_mock",target:"ch_modbus_tcp",label:"simulates"},
+    {source:"path_oracle",target:"ds_oracle",label:"reads"},
+    {source:"path_ioman",target:"ch_rtdb",label:"injects"},
+    {source:"sec_ro",target:"gw_cb_131",label:"protects"},
+    {source:"sec_cred",target:"ds_rtdb",label:"protects"},
+    {source:"site_industry",target:"gw_cb_131",label:"contains"},
+    {source:"ds_tagspace",target:"ch_rtdb",label:"maps"},
+    {source:"C_coeff",target:"02204060100",label:"converts"},
+  ]
+};
+
+// ====== RENDER ======
+const layerColors = {data:'#3b82f6',logic:'#f59e0b',action:'#10b981',security:'#ef4444',relation:'#6366f1'};
+const layerIcons = {data:'D',logic:'L',action:'A',security:'S'};
+const layerNames = {data:'Data 实体',logic:'Logic 规则',action:'Action 流程',security:'Security 安全'};
+
+let activeTab = 'data';
+let selectedNode = null;
+let nodes = [], rels = [];
+
+function switchTab(tab) {
+    activeTab = tab;
+    document.querySelectorAll('.tab').forEach(t => t.classList.toggle('active', t.textContent.includes(tab==='data'?'Data':tab==='logic'?'Logic':'Action')));
+    renderTree();
+}
+
+function renderTree() {
+    const tree = document.getElementById('tree');
+    const filtered = ONTOLOGY.entities.filter(e => e.layer === activeTab || (activeTab==='data' && e.layer==='security'));
+    tree.innerHTML = filtered.map(e => `
+        <div class="tree-item" onclick="selectEntity('${e.id}')" id="tr-${e.id}">
+            <span class="icon" style="color:${layerColors[e.layer]}">${layerIcons[e.layer]||'?'}</span>
+            <span>${e.name}</span>
+            <span class="badge badge-${e.layer}">${e.type}</span>
+        </div>
+    `).join('');
+    updateStats();
+}
+
+function selectEntity(id) {
+    selectedNode = id;
+    document.querySelectorAll('.tree-item').forEach(t => t.classList.remove('selected'));
+    const tr = document.getElementById('tr-'+id);
+    if (tr) tr.classList.add('selected');
+    showDetail(id);
+    drawGraph(id);
+}
+
+function showDetail(id) {
+    const e = ONTOLOGY.entities.find(x => x.id === id);
+    if (!e) return;
+    const detail = document.getElementById('detail');
+    detail.classList.add('active');
+    const relsFrom = ONTOLOGY.relations.filter(r => r.source === id);
+    const relsTo = ONTOLOGY.relations.filter(r => r.target === id);
+    detail.innerHTML = `
+        <h3 style="color:${layerColors[e.layer]}">${layerIcons[e.layer]} ${e.name}</h3>
+        <div class="field"><div class="field-label">类型</div><div class="field-value">${e.type} · ${layerNames[e.layer]}</div></div>
+        <div class="field"><div class="field-label">描述</div><div class="field-value">${e.desc}</div></div>
+        <div class="field"><div class="field-label">关系 (${relsFrom.length+relsTo.length})</div>
+            ${relsFrom.map(r => `<div class="rel-item" onclick="selectEntity('${r.target}')">
+                <span class="node-circle node-relation"></span> → ${r.label} → ${(ONTOLOGY.entities.find(x=>x.id===r.target)||{}).name||r.target}</div>`).join('')}
+            ${relsTo.map(r => `<div class="rel-item" onclick="selectEntity('${r.source}')">
+                <span class="node-circle node-relation"></span> ← ${r.label} ← ${(ONTOLOGY.entities.find(x=>x.id===r.source)||{}).name||r.source}</div>`).join('')}
+        </div>`;
+}
+
+function drawGraph(focusId) {
+    const container = document.getElementById('graph');
+    const W = container.clientWidth, H = container.clientHeight;
+    container.innerHTML = `<canvas width="${W}" height="${H}" style="width:${W}px;height:${H}px"></canvas>`;
+    const ctx = container.querySelector('canvas').getContext('2d');
+
+    // Layout: circular + force
+    const allEntities = ONTOLOGY.entities;
+    const positions = {};
+    const cx = W/2, cy = H/2;
+
+    // Position by layer (concentric circles)
+    const layers = ['data','logic','action','security'];
+    layers.forEach((layer, li) => {
+        const items = allEntities.filter(e => e.layer === layer);
+        const r = 120 + li * 80;
+        items.forEach((e, i) => {
+            const angle = (i / items.length) * Math.PI * 2 - Math.PI/2;
+            positions[e.id] = {x: cx + Math.cos(angle)*r, y: cy + Math.sin(angle)*r};
+        });
+    });
+
+    // Draw relations
+    ctx.strokeStyle = '#c0d0e0';
+    ctx.lineWidth = 1;
+    ONTOLOGY.relations.forEach(r => {
+        const s = positions[r.source], t = positions[r.target];
+        if (!s || !t) return;
+        ctx.beginPath();
+        ctx.moveTo(s.x, s.y);
+        ctx.lineTo(t.x, t.y);
+        if (focusId && (r.source === focusId || r.target === focusId)) {
+            ctx.strokeStyle = '#0284c7';
+            ctx.lineWidth = 2;
+        } else {
+            ctx.strokeStyle = '#d0dce8';
+            ctx.lineWidth = 1;
+        }
+        ctx.stroke();
+
+        // Arrow midpoint
+        const mx = (s.x+t.x)/2, my = (s.y+t.y)/2;
+        ctx.fillStyle = '#8ca0b4';
+        ctx.font = '10px sans-serif';
+        ctx.fillText(r.label, mx-15, my-4);
+    });
+
+    // Draw nodes
+    allEntities.forEach(e => {
+        const p = positions[e.id];
+        if (!p) return;
+        const isFocused = focusId === e.id;
+        const r = isFocused ? 14 : 10;
+
+        // Glow on focus
+        if (isFocused) {
+            ctx.beginPath(); ctx.arc(p.x, p.y, r+6, 0, Math.PI*2);
+            ctx.fillStyle = layerColors[e.layer]+'30'; ctx.fill();
+        }
+
+        // Node circle
+        ctx.beginPath(); ctx.arc(p.x, p.y, r, 0, Math.PI*2);
+        ctx.fillStyle = layerColors[e.layer];
+        ctx.fill();
+        ctx.strokeStyle = '#fff'; ctx.lineWidth = 2; ctx.stroke();
+
+        // Label
+        ctx.fillStyle = '#1a2a3a';
+        ctx.font = (isFocused?'bold ':'')+'11px sans-serif';
+        const label = e.name.length > 10 ? e.name.substring(0,10)+'..' : e.name;
+        ctx.fillText(label, p.x+r+4, p.y+4);
+    });
+}
+
+function resetView() {
+    selectedNode = null;
+    document.getElementById('detail').classList.remove('active');
+    drawGraph(null);
+}
+
+function updateStats() {
+    const counts = {data:0,logic:0,action:0,security:0};
+    ONTOLOGY.entities.forEach(e => counts[e.layer]++);
+    document.getElementById('stats').textContent =
+        `实体: D${counts.data} L${counts.logic} A${counts.action} S${counts.security} | 关系: ${ONTOLOGY.relations.length}`;
+}
+
+// Init
+renderTree();
+drawGraph(null);
+updateStats();
+
+// Handle resize
+window.addEventListener('resize', () => drawGraph(selectedNode));
+</script>
+</body>
+</html>

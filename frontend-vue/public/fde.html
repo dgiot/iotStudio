@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>FDE 六步工作法 — 不写代码构建工业智能体</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Segoe UI','Microsoft YaHei',sans-serif;background:#0a0e17;color:#c0d5e8;min-height:100vh}
+.topbar{background:#111827;padding:12px 24px;border-bottom:1px solid #1e293b;text-align:center}
+.topbar h1{font-size:20px;color:#e2e8f0}
+.topbar h1 span{color:#4a9eff}
+.topbar p{font-size:12px;color:#64748b;margin-top:4px}
+.steps{display:flex;gap:0;padding:16px 24px;background:#0f172a;border-bottom:1px solid #1e293b;overflow-x:auto}
+.step{flex:1;min-width:120px;text-align:center;padding:12px 8px;cursor:pointer;border-radius:8px;transition:.2s;position:relative}
+.step:hover{background:#1a2332}
+.step.active{background:#1e3a5f}
+.step .n{width:28px;height:28px;border-radius:50%;background:#1e293b;color:#64748b;display:inline-flex;align-items:center;justify-content:center;font-size:13px;font-weight:bold;margin-bottom:4px}
+.step.active .n{background:#4a9eff;color:white}
+.step.done .n{background:#10b981;color:white}
+.step .t{font-size:12px;color:#94a3b8}
+.step.active .t{color:#e2e8f0}
+.step .s{font-size:10px;color:#64748b;margin-top:2px}
+.step.done::after{content:'✓';position:absolute;top:4px;right:8px;color:#10b981;font-size:12px}
+.main{max-width:900px;margin:0 auto;padding:24px}
+.card{background:#1a2332;border:1px solid #1e293b;border-radius:8px;padding:20px;margin-bottom:16px}
+.card h2{font-size:16px;color:#e2e8f0;margin-bottom:12px}
+.card h3{font-size:13px;color:#94a3b8;margin-bottom:8px}
+.form-row{display:flex;gap:10px;margin-bottom:10px;align-items:center}
+.form-row label{width:80px;font-size:13px;color:#94a3b8;text-align:right;flex-shrink:0}
+.form-row input,.form-row select{flex:1;background:#0a0e17;border:1px solid #1e293b;border-radius:4px;color:#c0d5e8;padding:8px 12px;font-size:13px;font-family:inherit}
+.form-row textarea{flex:1;background:#0a0e17;border:1px solid #1e293b;border-radius:4px;color:#c0d5e8;padding:8px 12px;font-size:13px;font-family:inherit;min-height:80px;resize:vertical}
+.btn{padding:8px 20px;border-radius:6px;font-size:13px;cursor:pointer;border:none;font-family:inherit;margin-right:8px}
+.btn.primary{background:#2563eb;color:white}.btn.primary:hover{background:#1d4ed8}
+.btn.success{background:#10b981;color:white}.btn.success:hover{background:#059669}
+.btn.outline{background:transparent;border:1px solid #334155;color:#94a3b8}
+.btn.outline:hover{border-color:#4a9eff;color:#4a9eff}
+.result{background:#0a0e17;border:1px solid #1e293b;border-radius:4px;padding:12px;font-size:11px;font-family:monospace;white-space:pre-wrap;max-height:300px;overflow-y:auto;margin-top:10px}
+.point-row{display:flex;gap:6px;margin-bottom:6px;align-items:center}
+.point-row input{width:100px;background:#0a0e17;border:1px solid #1e293b;border-radius:4px;color:#c0d5e8;padding:4px 8px;font-size:12px}
+.point-row select{width:90px;background:#0a0e17;border:1px solid #1e293b;border-radius:4px;color:#c0d5e8;padding:4px 6px;font-size:12px}
+.tag{display:inline-block;padding:2px 8px;border-radius:4px;font-size:10px;margin:2px}
+.tag.ok{background:#1a3a2a;color:#10b981}.tag.warn{background:#3a2a1a;color:#f59e0b}
+.nl-input{width:100%;background:#0a0e17;border:1px solid #1e293b;border-radius:8px;color:#c0d5e8;padding:14px;font-size:14px;font-family:inherit;min-height:80px;resize:vertical;margin-bottom:12px}
+.hint-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}
+.hint{font-size:11px;padding:8px 12px;background:#0f172a;border:1px solid #1e293b;border-radius:6px;cursor:pointer}
+.hint:hover{border-color:#4a9eff;color:#4a9eff}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <h1>⚙️ FDE <span>六步工作法</span></h1>
+  <p>物模型定义 → 本体语义建模 → 多协议接入 → 时序存储 → 规则引擎 → 驾驶舱可视化</p>
+</div>
+
+<div class="steps">
+  <div class="step active" id="step1" onclick="goStep(1)"><div class="n">1</div><div class="t">物模型定义</div><div class="s">Product Model</div></div>
+  <div class="step" id="step2" onclick="goStep(2)"><div class="n">2</div><div class="t">本体编译</div><div class="s">Ontology</div></div>
+  <div class="step" id="step3" onclick="goStep(3)"><div class="n">3</div><div class="t">协议发现</div><div class="s">Scan</div></div>
+  <div class="step" id="step4" onclick="goStep(4)"><div class="n">4</div><div class="t">规则引擎</div><div class="s">Rules</div></div>
+  <div class="step" id="step5" onclick="goStep(5)"><div class="n">5</div><div class="t">驾驶舱</div><div class="s">Dashboard</div></div>
+  <div class="step" id="step6" onclick="goStep(6)"><div class="n">6</div><div class="t">AI Agent</div><div class="s">NL→Auto</div></div>
+</div>
+
+<div class="main" id="main"></div>
+
+<script>
+const API='/api/fde/wizard';
+let state={step:1,product:null,ontology:null,scanResult:null,dashboard:null};
+
+function goStep(n){state.step=n;render();document.querySelectorAll('.step').forEach((s,i)=>s.classList.toggle('active',i+1===n))}
+function render(){
+  const m=document.getElementById('main');
+  switch(state.step){
+    case 1: renderStep1(m); break;
+    case 2: renderStep2(m); break;
+    case 3: renderStep3(m); break;
+    case 4: renderStep4(m); break;
+    case 5: renderStep5(m); break;
+    case 6: renderStep6(m); break;
+  }
+}
+
+// ═══ Step 1: 物模型定义 ═══
+function renderStep1(m){
+  m.innerHTML=`
+    <div class="card"><h2>📦 Step 1: 物模型定义</h2>
+      <div class="form-row"><label>产品名称</label><input id="pName" value="光伏逆变器" placeholder="如: 光伏逆变器"></div>
+      <div class="form-row"><label>设备类型</label><input id="pType" value="inverter" placeholder="如: inverter"></div>
+      <div class="form-row"><label>分类</label><select id="pCat"><option value="energy">能源设备</option><option value="meter">计量仪表</option><option value="sensor">传感器</option><option value="industrial">工业设备</option></select></div>
+      <div class="form-row"><label>协议</label><select id="pProto"><option value="modbus_tcp">Modbus TCP</option><option value="modbus_rtu">Modbus RTU</option><option value="iec104">IEC 104</option><option value="opcua">OPC UA</option></select></div>
+      <h3>测点定义 (至少1个)</h3>
+      <div id="pointsEditor">
+        <div class="point-row">
+          <input placeholder="测点名" value="有功功率"><input placeholder="单位" value="W" style="width:60px">
+          <select><option value="float32">float32</option><option value="int16">int16</option></select>
+          <select><option value="electrical">电气</option><option value="temperature">温度</option><option value="status">状态</option></select>
+          <input placeholder="地址" value="0" style="width:50px">
+          <input placeholder="告警高" value="5000" style="width:60px"><input placeholder="告警低" style="width:60px">
+        </div>
+        <div class="point-row">
+          <input placeholder="测点名" value="A相电压"><input placeholder="单位" value="V" style="width:60px">
+          <select><option value="float32">float32</option></select>
+          <select><option value="electrical">电气</option></select>
+          <input placeholder="地址" value="2" style="width:50px">
+          <input placeholder="告警高" value="260" style="width:60px"><input placeholder="告警低" value="200" style="width:60px">
+        </div>
+        <div class="point-row">
+          <input placeholder="测点名" value="A相电流"><input placeholder="单位" value="A" style="width:60px">
+          <select><option value="float32">float32</option></select>
+          <select><option value="electrical">电气</option></select>
+          <input placeholder="地址" value="4" style="width:50px">
+          <input placeholder="告警高" value="30" style="width:60px"><input placeholder="告警低" style="width:60px">
+        </div>
+      </div>
+      <button class="btn outline" onclick="addPointRow()">+ 添加测点</button>
+      <button class="btn primary" onclick="submitStep1()" style="margin-left:8px">✅ 创建物模型 → Step 2</button>
+    </div>`;
+}
+
+function addPointRow(){
+  const d=document.getElementById('pointsEditor');
+  d.insertAdjacentHTML('beforeend',`<div class="point-row"><input placeholder="测点名"><input placeholder="单位" style="width:60px"><select><option value="float32">float32</option><option value="int16">int16</option></select><select><option value="electrical">电气</option><option value="temperature">温度</option><option value="status">状态</option></select><input placeholder="地址" style="width:50px"><input placeholder="告警高" style="width:60px"><input placeholder="告警低" style="width:60px"></div>`);
+}
+
+async function submitStep1(){
+  const name=document.getElementById('pName').value,devType=document.getElementById('pType').value;
+  const rows=document.querySelectorAll('#pointsEditor .point-row');
+  const points=[];
+  rows.forEach(r=>{
+    const ins=r.querySelectorAll('input,select');
+    if(!ins[0].value)return;
+    points.push({name:ins[0].value,unit:ins[1].value,data_type:ins[2].value,category:ins[3].value,register_addr:ins[4].value,alarm_high:parseFloat(ins[5].value)||null,alarm_low:parseFloat(ins[6].value)||null});
+  });
+  try{
+    const r=await fetch(API+'/product',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name,devType,category:document.getElementById('pCat').value,protocol:document.getElementById('pProto').value,points})});
+    state.product=await r.json();
+    document.getElementById('step1').classList.add('done');
+    goStep(2);
+  }catch(e){alert('创建失败: '+e.message)}
+}
+
+// ═══ Step 2: 本体编译 ═══
+function renderStep2(m){
+  m.innerHTML=`
+    <div class="card"><h2>🧠 Step 2: 本体语义建模</h2>
+    <p style="font-size:13px;color:#94a3b8;margin-bottom:12px">从物模型自动编译为五层本体 (Site→Gateway→Channel→Device→Point) + 约束规则 + OWL导出</p>
+    <div class="form-row"><label>产品类型</label><input id="compileDevType" value="${state.product?.devType||'inverter'}" readonly></div>
+    <button class="btn primary" onclick="submitStep2()">🔨 编译本体</button>
+    <div id="compileResult"></div></div>`;
+}
+
+async function submitStep2(){
+  const devType=document.getElementById('compileDevType').value;
+  try{
+    const r=await fetch(API+'/compile',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({devType})});
+    state.ontology=await r.json();
+    const d=state.ontology;
+    document.getElementById('compileResult').innerHTML=`<div class="result">${JSON.stringify(d,null,2)}</div>
+      <div style="margin-top:8px"><span class="tag ok">✅ Site: ${d.ontology.sites}</span><span class="tag ok">Gateway: ${d.ontology.gateways}</span><span class="tag ok">Devices: ${d.ontology.devices}</span><span class="tag ok">Points: ${d.ontology.points}</span><span class="tag ok">Constraints: ${d.ontology.constraints}</span></div>`;
+    document.getElementById('step2').classList.add('done');
+    setTimeout(()=>goStep(3),500);
+  }catch(e){alert(e.message)}
+}
+
+// ═══ Step 3: 协议发现 ═══
+function renderStep3(m){
+  m.innerHTML=`
+    <div class="card"><h2>🔌 Step 3: 协议自动发现</h2>
+    <div class="form-row"><label>目标IP</label><input id="scanHost" value="127.0.0.1"></div>
+    <div class="form-row"><label>端口</label><input id="scanPort" value="502" type="number"></div>
+    <div class="form-row"><label>从站范围</label><input id="scanStart" value="1" type="number" style="width:70px"><span style="color:#64748b">~</span><input id="scanEnd" value="10" type="number" style="width:70px"></div>
+    <button class="btn primary" onclick="submitStep3()">🔍 开始扫描</button>
+    <div id="scanResult"></div></div>`;
+}
+
+async function submitStep3(){
+  const host=document.getElementById('scanHost').value,port=parseInt(document.getElementById('scanPort').value);
+  const start=parseInt(document.getElementById('scanStart').value),end=parseInt(document.getElementById('scanEnd').value);
+  document.getElementById('scanResult').innerHTML='<div style="color:#f59e0b;margin-top:10px">⏳ 扫描中...</div>';
+  try{
+    const r=await fetch(API+'/scan',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({host,port,start_addr:start,end_addr:end})});
+    state.scanResult=await r.json();
+    const d=state.scanResult;
+    let h=`<div class="result" style="margin-top:12px">${d.summary}<br>`;
+    d.slaves.forEach(s=>{
+      if(s.active) h+=`\n从站#${s.slave_id}: 🟢在线 | 寄存器: ${s.registers.length}个 ${s.registers.slice(0,5).map(r=>`[${r.address}]=${r.value}`).join(' ')}`;
+      else h+=`\n从站#${s.slave_id}: 🔴无响应`;
+    });
+    h+='</div>';
+    document.getElementById('scanResult').innerHTML=h;
+    document.getElementById('step3').classList.add('done');
+  }catch(e){document.getElementById('scanResult').innerHTML='<div style="color:#ef4444">'+e.message+'</div>'}
+}
+
+// ═══ Step 4: 规则引擎 ═══
+function renderStep4(m){
+  m.innerHTML=`
+    <div class="card"><h2>⚙️ Step 4: 规则引擎</h2>
+    <p style="font-size:13px;color:#94a3b8;margin-bottom:12px">物模型中的告警阈值已自动编译为约束规则</p>
+    <div class="result">${state.ontology?JSON.stringify(state.ontology.entities.constraints,null,2):'请先完成 Step 2 本体编译'}</div>
+    <p style="font-size:12px;color:#64748b;margin-top:8px">✅ 规则引擎已就绪。告警触发时自动执行: 阈值判定 → 约束匹配 → 动作推送</p>
+    <button class="btn primary" onclick="goStep(5)">下一步 →</button></div>`;
+  document.getElementById('step4').classList.add('done');
+}
+
+// ═══ Step 5: 驾驶舱 ═══
+function renderStep5(m){
+  const devType=state.product?.devType||'inverter';
+  m.innerHTML=`
+    <div class="card"><h2>📊 Step 5: 驾驶舱一键生成</h2>
+    <div class="form-row"><label>产品类型</label><input id="dashDevType" value="${devType}"></div>
+    <button class="btn primary" onclick="submitStep5()">🎨 生成驾驶舱</button>
+    <div id="dashResult"></div></div>`;
+}
+
+async function submitStep5(){
+  const devType=document.getElementById('dashDevType').value;
+  try{
+    const r=await fetch(API+'/dashboard',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({devType})});
+    state.dashboard=await r.json();
+    document.getElementById('dashResult').innerHTML=`<div class="result">${JSON.stringify(state.dashboard.dashboard,null,2)}</div>
+      <div style="margin-top:8px"><span class="tag ok">KPI卡片: ${state.dashboard.dashboard.cards.length}个</span><span class="tag ok">趋势点: ${state.dashboard.dashboard.trend_chart.points.length}个</span><span class="tag ok">告警: ${state.dashboard.dashboard.alarm_panel.points.length}个</span></div>`;
+    document.getElementById('step5').classList.add('done');
+  }catch(e){alert(e.message)}
+}
+
+// ═══ Step 6: AI Agent ═══
+function renderStep6(m){
+  m.innerHTML=`
+    <div class="card"><h2>🤖 Step 6: AI Agent 自动生成</h2>
+    <p style="font-size:13px;color:#94a3b8;margin-bottom:12px">用自然语言描述需求，AI 自动完成全部 6 步配置</p>
+    <textarea class="nl-input" id="nlDesc" placeholder="例如: 我需要监控一台光伏逆变器，采集功率电压电流，功率超过5000W告警，温度超过80°C告警"></textarea>
+    <div class="hint-grid">
+      <div class="hint" onclick="document.getElementById('nlDesc').value='我需要监控一台光伏逆变器，采集有功功率、A相电压、A相电流、温度，功率超过5000W告警，温度超过80°C告警';submitStep6()">☀️ 光伏逆变器监控</div>
+      <div class="hint" onclick="document.getElementById('nlDesc').value='监控储能PCS，采集SOC、SOH、有功功率、电芯温度，温度超过50°C告警';submitStep6()">🔋 储能PCS监控</div>
+      <div class="hint" onclick="document.getElementById('nlDesc').value='监控充电桩，采集充电功率、输出电压电流、模块温度，温度超过60°C告警';submitStep6()">🔌 充电桩监控</div>
+      <div class="hint" onclick="document.getElementById('nlDesc').value='监控箱变降压变，采集三相电压、三相电流、频率、变压器温度';submitStep6()">🔲 箱变监控</div>
+    </div>
+    <button class="btn success" onclick="submitStep6()" style="margin-top:12px;font-size:14px;padding:10px 24px">🚀 一键生成全部配置</button>
+    <div id="agentResult"></div></div>`;
+}
+
+async function submitStep6(){
+  const desc=document.getElementById('nlDesc').value;
+  if(!desc)return alert('请输入描述');
+  document.getElementById('agentResult').innerHTML='<div style="color:#f59e0b;margin-top:10px">⏳ AI 正在分析...</div>';
+  try{
+    const r=await fetch(API+'/agent',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({description:desc})});
+    const d=await r.json();
+    let h=`<div class="result" style="margin-top:12px"><b>🤖 推断结果:</b> ${d.inferred.product_name} (${d.inferred.device_type}) | ${d.inferred.points} 个测点</div>`;
+    h+=`<div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px">`;
+    h+=`<span class="tag ok">✅ Step1: 物模型已创建 (${d.step1_product.point_count}点)</span>`;
+    h+=`<span class="tag ok">✅ Step2: 本体已编译 (${d.step2_ontology.devices}设备/${d.step2_ontology.points}点/${d.step2_ontology.constraints}规则)</span>`;
+    h+=`<span class="tag ok">✅ Step3: ${d.step3_scan_hint}</span>`;
+    h+=`<span class="tag ok">✅ Step4: ${d.step5_rules.length}条规则</span>`;
+    h+=`<span class="tag ok">✅ Step5: 驾驶舱已生成</span>`;
+    h+=`<span class="tag ok">✅ Step6: ${d.step6_deploy}</span>`;
+    h+=`</div>`;
+    document.getElementById('agentResult').innerHTML=h;
+    state.product={devType:d.inferred.device_type};
+    state.ontology={entities:{constraints:d.step5_rules}};
+    [1,2,3,4,5,6].forEach(i=>document.getElementById('step'+i).classList.add('done'));
+  }catch(e){document.getElementById('agentResult').innerHTML='<div style="color:#ef4444">'+e.message+'</div>'}
+}
+
+render();
+</script>
+</body>
+</html>
