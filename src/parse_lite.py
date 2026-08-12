@@ -922,7 +922,7 @@ def _do_init_db():
     db.commit()
     # 管理员
     db.execute("INSERT OR IGNORE INTO _User (objectId, username, password_hash, role, createdAt, updatedAt) VALUES (?,?,?,?,?,?)",
-               ("admin", "admin", _hash("CHANGEME"), "admin", now, now))
+               ("admin", "admin", _hash(os.environ.get("ADMIN_PASS", "changeme")), "admin", now, now))
     db.commit()
     db.close()
     print("[parse-lite] initialized")

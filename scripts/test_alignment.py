@@ -8,7 +8,7 @@ parse_lite ↔ Parse Server 对齐测试套件
 import os, sys, json, time, hashlib
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
 
-os.environ['PARSE_PG_DSN'] = 'postgresql://dgiot:CHANGEME@127.0.0.1:7432/parse'
+os.environ['PARSE_PG_DSN'] = 'postgresql://dgiot:YOUR_PG_PASSWORD@127.0.0.1:7432/parse'
 
 from src.parse_db import reset_backend; reset_backend()
 from src.parse_lite import *
@@ -157,7 +157,7 @@ check("TC5.2 Aggregate response 是 dict", "results" in r)
 # ============================================================
 print("\n--- TC6: User / Session ---")
 
-r = parse_login("admin", "CHANGEME")
+r = parse_login("admin", os.environ.get("ADMIN_PASS", "changeme"))
 check("TC6.1 登录返回 sessionToken", r and "sessionToken" in r, str(r)[:60] if r else "None")
 
 r = parse_login("nobody", "wrong")

@@ -1,5 +1,5 @@
 from src.parse_db import PostgresBackend
-be = PostgresBackend("postgresql://dgiot:CHANGEME@127.0.0.1:7432/parse")
+be = PostgresBackend("postgresql://dgiot:YOUR_PG_PASSWORD@127.0.0.1:7432/parse")
 be.connect()
 cols = "objectId TEXT PRIMARY KEY, data TEXT DEFAULT '{}', ACL TEXT DEFAULT '{}', createdAt TEXT, updatedAt TEXT"
 print("Input:", cols)

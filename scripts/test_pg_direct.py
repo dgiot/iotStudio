@@ -1,5 +1,5 @@
 """Minimal PG test: create → query → verify"""
-import os; os.environ['PARSE_PG_DSN'] = 'postgresql://dgiot:CHANGEME@127.0.0.1:7432/parse'
+import os; os.environ['PARSE_PG_DSN'] = 'postgresql://dgiot:YOUR_PG_PASSWORD@127.0.0.1:7432/parse'
 import sys; sys.path.insert(0, '.')
 from src.parse_db import get_backend, get_db_compat, reset_backend; reset_backend()
 from src.parse_lite import ensure_table, parse_create, parse_get, parse_query

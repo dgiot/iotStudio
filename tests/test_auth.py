@@ -54,7 +54,7 @@ class TestAuthenticate:
     """authenticate 函数测试"""
 
     def test_admin_login_success(self):
-        token = authenticate("admin", "CHANGEME")
+        token = authenticate("admin", os.environ.get("ADMIN_PASS", "changeme"))
         assert token is not None
         payload = verify_token(token)
         assert payload["sub"] == "admin"

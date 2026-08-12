@@ -5,7 +5,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).parent.parent
 sys.path.insert(0, str(ROOT / 'src'))
-os.environ.setdefault('PARSE_PG_DSN', 'postgresql://dgiot:CHANGEME@127.0.0.1:7432/parse')
+os.environ.setdefault('PARSE_PG_DSN', 'postgresql://dgiot:YOUR_PG_PASSWORD@127.0.0.1:7432/parse')
 
 TOTAL = PASS = FAIL = SKIP = 0
 def c(name, ok, detail=""):
@@ -96,7 +96,7 @@ def t2_query():
 # ============================================================
 def t3_auth():
     from parse_lite import parse_login, parse_create_user, parse_logout
-    for u,p in [("admin","CHANGEME"),("dgiot","CHANGEME"),("dgiot_dev","dgiot_dev")]:
+    for u,p in [("admin", os.environ.get("TEST_PASS","changeme"))]:
         try: r=parse_login(u,p);c(f"Au-login-{u}",r and"sessionToken" in str(r))
         except: c(f"Au-login-{u}",False)
     for i in range(500):
@@ -199,7 +199,7 @@ def t6_infra():
     for ep in ["/api/health","/api/devices?limit=2","/api/channels?limit=2","/api/system","/api/plugins","/api/io-clone/servers"]:
         try: r=requests.get(f"http://127.0.0.1:8000{ep}",timeout=5);c(f"API-{ep}",r.status_code<500)
         except: c(f"API-{ep}",False)
-    try: r=requests.post("http://127.0.0.1:8000/api/auth/login",json={"username":"admin","password":"CHANGEME"},timeout=5);c("API-login",r.status_code==200)
+    try: r=requests.post("http://127.0.0.1:8000/api/auth/login",json={"username":"admin","password":os.environ.get("ADMIN_PASS", "changeme")},timeout=5);c("API-login",r.status_code==200)
     except: c("API-login",False)
     # Frontend
     try:

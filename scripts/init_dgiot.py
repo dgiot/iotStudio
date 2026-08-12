@@ -13,7 +13,7 @@ API = os.environ.get("DGIOT_API", "http://localhost:8000/api")
 TOKEN = None
 
 
-def login(username: str = "admin", password: str = "CHANGEME") -> str:
+def login(username: str = "admin", password: str = os.environ.get("ADMIN_PASS", "changeme")) -> str:
     """获取 JWT token"""
     r = requests.post(f"{API}/auth/login",
                       json={"username": username, "password": password}, timeout=5)
@@ -76,8 +76,8 @@ def seed_tenants():
 def seed_users():
     """用户 — 对齐 DG-IoT _User"""
     users = [
-        {"username": "admin", "password": "CHANGEME", "role": "admin"},
-        {"username": "dgiot", "password": "CHANGEME", "role": "admin"},
+        {"username": "admin", "password": os.environ.get("ADMIN_PASS", "changeme"), "role": "admin"},
+        {"username": os.environ.get("DG_USER","dgiot"), "password": os.environ.get("DG_PASS","changeme"), "role": "admin"},
         {"username": "operator", "password": "oper123", "role": "operator"},
     ]
     for u in users:

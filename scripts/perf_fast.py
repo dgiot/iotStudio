@@ -27,7 +27,7 @@ for name, url in tests:
         t0 = time.perf_counter()
         try:
             if 'login' in url:
-                r = requests.post(url, json={'username': 'admin', 'password': 'CHANGEME'}, timeout=5)
+                r = requests.post(url, json={'username': 'admin', 'password': os.environ.get('ADMIN_PASS', 'changeme')}, timeout=5)
             else:
                 r = requests.get(url, timeout=5)
             if r.status_code < 400:

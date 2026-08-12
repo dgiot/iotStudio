@@ -1,6 +1,6 @@
 import sys, os, json
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', 'src'))
-os.environ.setdefault('PARSE_PG_DSN', 'postgresql://dgiot:CHANGEME@127.0.0.1:7432/parse')
+os.environ.setdefault('PARSE_PG_DSN', 'postgresql://dgiot:YOUR_PG_PASSWORD@127.0.0.1:7432/parse')
 from parse_db import reset_backend
 reset_backend()
 from parse_lite import parse_query

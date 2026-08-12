@@ -16,7 +16,7 @@ tests = [
     ('query 20',    'GET', f'/classes/{TBL}?limit=20'),
     ('query where', 'GET', f'/classes/{TBL}?where={{"name":"test"}}'),
     ('count',       'GET', f'/classes/{TBL}?count=1&limit=0'),
-    ('login',       'GET', '/login?username=admin&password=CHANGEME'),
+    ('login',       'GET', '/login?username=admin&password='),
 ]
 
 for name, method, path in tests:

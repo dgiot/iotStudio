@@ -131,8 +131,8 @@ def seed_data():
 
     # === 用户 (DG-IoT _User) ===
     users = [
-        {"username": "admin", "password": "CHANGEME", "role": "admin", "name": "管理员"},
-        {"username": "dgiot", "password": "CHANGEME", "role": "admin", "name": "DG-IoT管理员"},
+        {"username": "admin", "password": os.environ.get("ADMIN_PASS", "changeme"), "role": "admin", "name": "管理员"},
+        {"username": os.environ.get("DG_USER","dgiot"), "password": os.environ.get("DG_PASS","changeme"), "role": "admin", "name": "DG-IoT管理员"},
     ]
     for u in users:
         api("POST", "/users", u)

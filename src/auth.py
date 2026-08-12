@@ -17,7 +17,7 @@ TOKEN_EXPIRE = 86400 * 7  # 7 天
 # 默认用户
 USERS = {
     "admin": {
-        "password": hashlib.sha256("CHANGEME".encode()).hexdigest(),
+        "password": hashlib.sha256(os.environ.get("ADMIN_PASS", "changeme").encode()).hexdigest(),
         "role": "admin",
         "name": "管理员",
         "desc": "系统管理员",
@@ -33,7 +33,7 @@ USERS = {
         "created": "2026-01-01",
     },
     "dgiot": {
-        "password": hashlib.sha256("CHANGEME".encode()).hexdigest(),
+        "password": hashlib.sha256(os.environ.get("DG_PASS","changeme").encode()).hexdigest(),
         "role": "admin",
         "name": "DG-IoT管理员",
         "desc": "平台管理员",

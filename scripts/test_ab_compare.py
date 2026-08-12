@@ -8,7 +8,7 @@ import os, sys, json, time
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..'))
 import requests
 
-os.environ['PARSE_PG_DSN'] = 'postgresql://dgiot:CHANGEME@127.0.0.1:7432/parse'
+os.environ['PARSE_PG_DSN'] = 'postgresql://dgiot:YOUR_PG_PASSWORD@127.0.0.1:7432/parse'
 from src.parse_db import reset_backend; reset_backend()
 from src.parse_lite import *
 
@@ -112,10 +112,10 @@ ab_check("TC3.2 查询 results 数组", q_py, q_ps, ["results"])
 
 # ---- TC4: 用户登录 ----  #
 print("\n--- TC4: 用户系统 ---")
-u_py = parse_login("admin", "CHANGEME")
+u_py = parse_login("admin", os.environ.get("ADMIN_PASS", "changeme"))
 try:
     u_ps = requests.get(f"{PARSE_URL}/login",
-        params={"username": "admin", "password": "CHANGEME"}, headers=HEADERS, timeout=5).json()
+        params={"username": "admin", "password": os.environ.get("ADMIN_PASS", "changeme")}, headers=HEADERS, timeout=5).json()
     u_ps["_error"] = ""
 except Exception as e:
     u_ps = {"_error": str(e)}

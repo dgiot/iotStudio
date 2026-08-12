@@ -7,7 +7,7 @@ parse_lite 独立服务 — Parse 兼容 REST API :1334
 """
 import os, sys
 sys.path.insert(0, os.path.dirname(__file__))
-os.environ['PARSE_PG_DSN'] = 'postgresql://dgiot:CHANGEME@127.0.0.1:7432/parse'
+os.environ['PARSE_PG_DSN'] = 'postgresql://dgiot:YOUR_PG_PASSWORD@127.0.0.1:7432/parse'
 
 from fastapi import FastAPI, Request, HTTPException
 from fastapi.responses import JSONResponse
