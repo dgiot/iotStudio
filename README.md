@@ -52,7 +52,6 @@ python scripts/init_dgiot.py
 | OPC UA | pymodbus / asyncua | 订阅 + 轮询 |
 | OPC DA | DCOM 识别 | RSLinx 协议可识 |
 | IEC 104 | `protocols/` | 电力远动规约 |
-| HTTP REST | `protocols/vendor_oilmon.py` | 有叶云油液监测平台 |
 
 ### 数据存储
 | 方案 | 用途 | 安装 |
@@ -129,7 +128,7 @@ iotStudio/
 │   ├── storage/tdengine.py   # TDengine + SQLite 降级
 │   ├── models/               # dgiot_schema + device ORM
 │   ├── services/             # collector · phm · safety_rules
-│   └── web/                  # tenant_api · io_body_api
+│   └── web/                  # tenant_api
 ├── frontend-vue/
 │   └── src/
 │       ├── plugins/          # 7插件 (manifest tree-shaking)

@@ -31,7 +31,7 @@ ONTOLOGY_DIR = Path(os.environ.get('ONTOLOGY_DIR', 'D:/ai/iotStudio'))
 THING_MODEL = ONTOLOGY_DIR / 'thing_model.json'
 IO_ONTOLOGY = ONTOLOGY_DIR / 'io_ontology.py'
 REPORT_FILE = Path(os.environ.get('MEMORY_DIR',
-    os.path.expanduser('~/.claude/projects/D--ai-kylin/memory'))) / 'dgaiot-ontology-loop.md'
+    os.path.expanduser('~/.claude/memory'))) / 'dgaiot-ontology-loop.md'
 
 MANDATORY_FIELDS = {
     'Device': ['productid', 'devaddr', 'name'],

@@ -326,10 +326,7 @@ async def health():
     dev_count = parse_query("Device", {"count":1}).get("count", 0)
     ps_data = {}
     try:
-        from .services.oracle_pipeline import get_pipeline
-        p = get_pipeline()
-        ps = p.get_stats()
-        ps_data = {"pipeline": {"running": ps["running"], "points": ps["points_written"], "errors": ps["errors"]}}
+
     except: pass
 
     return {
@@ -725,8 +722,7 @@ async def collector_stats():
 
     # 补充 Pipeline 数据
     try:
-        from .services.oracle_pipeline import get_pipeline
-        p = get_pipeline()
+
         ps = p.get_stats()
         pts = ps.get("points_written", 0)
         base["pipeline_running"] = ps.get("running", False)
@@ -1943,7 +1939,7 @@ from .web.tenant_api import router as tenant_router
 app.include_router(tenant_router)
 
 # ---- IO 本体 API ----
-from .web.io_body_api import router as io_body_router
+
 app.include_router(io_body_router)
 
 # ---- 系统信息 + 插件 API ----
