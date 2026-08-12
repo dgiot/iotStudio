@@ -3,7 +3,7 @@
 ========================================================
 真正集成链路:
   iotStudio Parse 写入 → afterSave Hook → MQTT → EdgeHubPusher → 边缘中枢
-  dgiot_lite afterSave Hook → EventBus → MQTT broker (:1883)
+  iotStudio afterSave Hook → EventBus → MQTT broker (:1883)
 
 推送格式 (DG-IoT 标准 JSON):
   topic: dgiot/{tenant}/gw_{gateway}/ch_{channel}/{device}/{point}
@@ -11,7 +11,7 @@
 
 API 代理 (Nginx):
   location /api/ { proxy_pass http://192.168.10.1:8000/api/; }
-  → WSL → Windows dgiot_lite :8000
+  → WSL → Windows iotStudio :8000
 """
 import json, time, logging
 from typing import Optional

@@ -1,4 +1,4 @@
-# dgiot_lite — 运行状态
+# iotStudio — 运行状态
 
 > 最后更新: 2026-07-12 · LegacyComm 分析工程阶段
 

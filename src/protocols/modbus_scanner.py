@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-""" dgiot_lite — Modbus 从站+点位扫描器 (pymodbus) + IPv6 支持 """
+""" iotStudio — Modbus 从站+点位扫描器 (pymodbus) + IPv6 支持 """
 import logging
 import socket
 import struct

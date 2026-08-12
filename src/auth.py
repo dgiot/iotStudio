@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # ============================================================
-# dgiot_lite — JWT 认证模块
+# iotStudio — JWT 认证模块
 # ============================================================
 import hashlib
 import time
@@ -11,7 +11,7 @@ from typing import Optional
 from fastapi import Request, HTTPException, Depends
 
 # 简单 JWT（无外部依赖）
-SECRET = "dgiot_lite_2026_secret_key"
+SECRET = "iotStudio_2026_secret_key"
 TOKEN_EXPIRE = 86400 * 7  # 7 天
 
 # 默认用户
@@ -145,7 +145,7 @@ def require_role(role: str = "admin"):
 
 # ===== 多租户 — Parse CLP 等效中间件 =====
 # DG-IoT 用 Parse _Role + ACL/CLP 做数据隔离。
-# dgiot_lite 等效方案: X-Tenant-ID header + tenant_id column 过滤。
+# iotStudio 等效方案: X-Tenant-ID header + tenant_id column 过滤。
 
 async def get_current_tenant(request: Request) -> str:
     """提取当前租户 ID — 优先级: JWT > Header > default"""

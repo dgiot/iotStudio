@@ -1,4 +1,4 @@
-"""dgiot_lite — auth 模块测试"""
+"""iotStudio — auth 模块测试"""
 import pytest
 import time
 import hashlib

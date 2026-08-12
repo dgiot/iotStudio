@@ -142,7 +142,7 @@ from typing import Any, Dict, List, Optional as _Opt
 from .base import BaseProtocolAdapter as _BaseAdapter, ProtocolConfig as _PConfig, PointValue as _PV
 
 class vendor_aProtocolAdapter(_BaseAdapter):
-    """有叶云 BaseProtocolAdapter 包装 — 接入 dgiot_lite 采集引擎"""
+    """有叶云 BaseProtocolAdapter 包装 — 接入 iotStudio 采集引擎"""
 
     def __init__(self, config: _PConfig):
         super().__init__(config)

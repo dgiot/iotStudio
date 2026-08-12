@@ -1,5 +1,5 @@
 # ============================================================
-# dgiot_lite — 博感 MQTT TLV 协议适配器 (智能螺栓/声振温)
+# iotStudio — 博感 MQTT TLV 协议适配器 (智能螺栓/声振温)
 # ============================================================
 """
 博感 GU100X 网关 MQTT 协议适配器。
@@ -24,7 +24,7 @@ TLV 协议格式 (消息类型 0x10):
 {
     "broker": "dev.dgiotcloud.cn",
     "port": 1883,
-    "client_id": "dgiot_lite_bogan",
+    "client_id": "iotStudio_bogan",
     "subscribe_topics": ["iot/v3/gw/+/+/message/up"],
     "gw_mac": "eca24a560c89",           # 可选: 只处理指定网关
     "devices": {
@@ -165,7 +165,7 @@ class BoganMqttAdapter(BaseProtocolAdapter):
         extra = self.config.extra
         broker = extra.get("broker", "dev.dgiotcloud.cn")
         port = extra.get("port", 1883)
-        client_id = extra.get("client_id", f"dgiot_lite_bogan_{self.device_id}")
+        client_id = extra.get("client_id", f"iotStudio_bogan_{self.device_id}")
 
         # 设备映射
         devices = extra.get("devices", {})

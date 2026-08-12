@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # ============================================================
-# dgiot_lite — Modbus RTU Server 模拟器
+# iotStudio — Modbus RTU Server 模拟器
 # 模拟 RS-485 电表设备
 # ============================================================
 """
@@ -9,7 +9,7 @@ Modbus RTU 从站模拟器 — 模拟 RS-485 电表
 Windows 需要虚拟串口对 (com0com):
   https://sourceforge.net/projects/com0com/
   安装后创建 COM2-COM3 虚拟串口对
-  本脚本监听 COM2，dgiot_lite 连接 COM3
+  本脚本监听 COM2，iotStudio 连接 COM3
 
 Linux/macOS:
   socat -d -d pty,raw,echo=0 pty,raw,echo=0  # 创建虚拟串口对
@@ -137,7 +137,7 @@ async def main():
     context = ModbusServerContext(slaves=slaves, single=False)
 
     identity = ModbusDeviceIdentification()
-    identity.VendorName = "dgiot_lite"
+    identity.VendorName = "iotStudio"
     identity.ProductName = "Smart Meter Simulator"
     identity.Model = "RTU-METER-01"
     identity.Version = "V1.0"

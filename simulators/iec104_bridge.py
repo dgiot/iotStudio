@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 # ============================================================
-# dgiot_lite — IEC 104 桥接器 (Python 3.11)
-# c104 client → 读取 c104 服务器 → HTTP POST 到 dgiot_lite
+# iotStudio — IEC 104 桥接器 (Python 3.11)
+# c104 client → 读取 c104 服务器 → HTTP POST 到 iotStudio
 # 运行: py -3.11 iec104_bridge.py
 # ============================================================
 import c104

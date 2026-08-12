@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # ============================================================
-# dgiot_lite — Modbus RTU over TCP 桥接模拟器
+# iotStudio — Modbus RTU over TCP 桥接模拟器
 # 在 TCP 端口上模拟 RTU 帧格式，解决 Windows 无串口问题
 # 启动: python modbus_rtu_tcp_bridge.py
 # ============================================================
@@ -32,7 +32,7 @@ async def main():
     hr=ModbusSequentialDataBlock(0,[0]*100)
     ctx=ModbusSlaveContext(hr=hr,ir=ModbusSequentialDataBlock(0,[0]*100),co=ModbusSequentialDataBlock(0,[0]*100),di=ModbusSequentialDataBlock(0,[0]*100))
     srv_ctx=ModbusServerContext(slaves={1:ctx},single=False)
-    identity=ModbusDeviceIdentification();identity.VendorName="dgiot_lite";identity.ProductName="RTU电表模拟器";identity.Version="V1.0"
+    identity=ModbusDeviceIdentification();identity.VendorName="iotStudio";identity.ProductName="RTU电表模拟器";identity.Version="V1.0"
     server=ModbusTcpServer(context=srv_ctx,identity=identity,address=("0.0.0.0",503))
     asyncio.create_task(update_registers(hr))
     logger.info("Modbus RTU 桥接模拟器 -> 0.0.0.0:503 (电表)")

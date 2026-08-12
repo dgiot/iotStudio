@@ -1,5 +1,5 @@
 """
-边缘中枢通道 — ch_edge_hub (dgiot_lite Channel 插件)
+边缘中枢通道 — ch_edge_hub (iotStudio Channel 插件)
 =====================================================
 注册为通道插件, 对标 ch_mqtt_bridge / ch_oracle_pipe
 

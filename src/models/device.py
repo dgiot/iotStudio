@@ -1,5 +1,5 @@
 # ============================================================
-# dgiot_lite — 设备模型 (多租户)
+# iotStudio — 设备模型 (多租户)
 # ============================================================
 from datetime import datetime
 from typing import Optional, Dict, Any

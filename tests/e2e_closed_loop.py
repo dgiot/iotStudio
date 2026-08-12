@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-dgiot_lite 闭环覆盖测试 (Closed-Loop Coverage Test)
+iotStudio 闭环覆盖测试 (Closed-Loop Coverage Test)
 
 遍历所有协议和模块，验证 simulator→collector→storage→API→frontend 每跳连通。
 
@@ -698,7 +698,7 @@ def run_all(protocol_filter: str = None):
 def print_results(results: dict):
     symbol = {"passed": "✅", "failed": "❌", "skipped": "⏭️", "filtered": "⏭️"}
     print(f"\n{'='*60}")
-    print(f"  dgiot_lite 闭环覆盖测试报告")
+    print(f"  iotStudio 闭环覆盖测试报告")
     print(f"  通过: {results['passed']}  失败: {results['failed']}  跳过: {results['skipped']}  合计: {results['total']}")
     print(f"{'='*60}")
 
@@ -726,7 +726,7 @@ def print_results(results: dict):
 
 
 if __name__ == "__main__":
-    ap = argparse.ArgumentParser(description="dgiot_lite 闭环覆盖测试")
+    ap = argparse.ArgumentParser(description="iotStudio 闭环覆盖测试")
     ap.add_argument("--protocol", "-p", help="按协议筛选 (modbus, opc, iec, a11, ...)")
     ap.add_argument("--list", action="store_true", help="列出所有可测项目")
     args = ap.parse_args()

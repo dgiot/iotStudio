@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # ============================================================
-# dgiot_lite — A11 协议适配器 (CNPC 油气生产物联网)
+# iotStudio — A11 协议适配器 (CNPC 油气生产物联网)
 #
 # 协议栈: ModbusTCP MBAP (7B) + jjZZ MAGIC (4B) + Type LE(2B) + Sub LE(2B) + Payload
 #
