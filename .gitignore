@@ -1,0 +1,24 @@
+# Sensitive
+docs/
+doc/
+output/
+data/
+*.db
+*.sqlite3
+*.xlsx
+*.docx
+*.pdf
+*报告*
+*方案*
+*投标*
+*报价*
+*合同*
+nul
+*.tmp
+*.bak
+.env
+credentials*
+token*
+secret*
+*.pem
+*.key

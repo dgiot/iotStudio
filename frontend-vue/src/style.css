@@ -1,0 +1,80 @@
+/* DG-IoT Dark Theme — 对标 Azure IoT Fluent + 工业监控标准 */
+:root {
+  /* 背景层级 (不纯黑, 减少眼疲劳) */
+  --el-bg-color-page: #0d1117;
+  --el-bg-color: #161b22;
+  --el-bg-color-overlay: #1c2333;
+  --el-fill-color: #161b22;
+  --el-fill-color-light: #1c2333;
+  --el-fill-color-lighter: #21262d;
+  --el-fill-color-blank: #0d1117;
+
+  /* 文字层级 (WCAG AA 4.5:1+) */
+  --el-text-color-primary: #e6edf3;
+  --el-text-color-regular: #c9d1d9;
+  --el-text-color-secondary: #8b949e;
+  --el-text-color-placeholder: #6e7681;
+
+  /* 边框 */
+  --el-border-color: #30363d;
+  --el-border-color-light: #21262d;
+  --el-border-color-lighter: #1c2333;
+  --el-border-color-dark: #484f58;
+
+  /* 主色调 — Azure IoT 蓝 */
+  --el-color-primary: #2f81f7;
+  --el-color-primary-light-3: #58a6ff;
+  --el-color-primary-light-5: #79c0ff;
+  --el-color-primary-dark-2: #1f6feb;
+
+  /* 状态色 — 工业标准 */
+  --el-color-success: #3fb950;       /* 在线/正常 */
+  --el-color-warning: #d29922;       /* 告警 */
+  --el-color-danger: #f85149;        /* 离线/故障 */
+  --el-color-info: #8b949e;          /* 信息 */
+
+  /* 卡片/面板 */
+  --el-color-white: #161b22;
+  --el-color-black: #e6edf3;
+
+  /* 遮罩/弹窗 */
+  --el-popup-modal-bg-color: rgba(0,0,0,0.6);
+  --el-mask-color: rgba(0,0,0,0.5);
+
+  color-scheme: dark;
+  font-family: 'Microsoft YaHei', system-ui, -apple-system, sans-serif;
+}
+
+/* 全局 */
+body {
+  margin: 0;
+  background: var(--el-bg-color-page);
+  color: var(--el-text-color-primary);
+  min-height: 100vh;
+}
+
+/* 侧栏/顶栏暗色背景 */
+.sidebar, .topbar, .el-menu { background: #0d1117 !important; }
+
+/* 滚动条 */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #30363d; border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: #484f58; }
+
+/* 链接 */
+a { color: var(--el-color-primary); }
+a:hover { color: var(--el-color-primary-light-3); }
+
+/* 表格暗色 */
+.el-table { --el-table-tr-bg-color: #0d1117; --el-table-header-bg-color: #161b22; }
+.el-table td, .el-table th { border-bottom-color: #21262d !important; }
+
+/* 输入框暗色 */
+.el-input__wrapper { background: #0d1117 !important; box-shadow: 0 0 0 1px #30363d inset !important; }
+
+/* 卡片 */
+.el-card { background: #161b22; border: 1px solid #30363d; }
+
+/* 菜单 */
+.el-menu { border-right: none !important; }

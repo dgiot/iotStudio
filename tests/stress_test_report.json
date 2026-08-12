@@ -1,0 +1,22 @@
+{
+  "timestamp": "2026-08-04T05:41:41.204809+00:00",
+  "duration_h": 1.0,
+  "devices": 500,
+  "total_points": 10000,
+  "total_pushes": 72000000,
+  "total_alarms": 0,
+  "total_errors": 0,
+  "fault_events": 12,
+  "latency_us": {
+    "avg": 0.2,
+    "p50": 0.2,
+    "p95": 0.4,
+    "p99": 0.7
+  },
+  "verdict": {
+    "device_count": "PASS",
+    "latency_10ms": "PASS",
+    "stream_5ms": "PASS",
+    "integrity": "PASS"
+  }
+}
