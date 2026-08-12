@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # ============================================================
-# dgiot_lite — OPC DA 协议客户端 (基于 OpenOPC)
+# iotStudio — OPC DA 协议客户端 (基于 OpenOPC)
 # pip install OpenOPC-DA
 # ============================================================
 """

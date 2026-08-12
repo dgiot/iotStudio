@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-A11 回放集成测试 — 用 pcap 提取的真实消息验证 dgiot_lite 接管能力
+A11 回放集成测试 — 用 pcap 提取的真实消息验证 iotStudio 接管能力
 ================================================================
 用法: pytest tests/test_a11_replay.py -v
 """
@@ -12,7 +12,7 @@ A11_MAGIC = b'\x6a\x6a\x5a\x5a'
 REPLAY_FILE = 'D:/wsl/kylin/replay_messages.json'
 
 class TestA11Replay(unittest.TestCase):
-    """回放测试 — 验证 dgiot_lite 能否处理全部真实消息"""
+    """回放测试 — 验证 iotStudio 能否处理全部真实消息"""
 
     @classmethod
     def setUpClass(cls):

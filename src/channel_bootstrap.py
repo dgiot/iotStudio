@@ -120,7 +120,7 @@ def _register_fallback_channels(app_config=None):
             bridge = DGIoTBridge({
                 "host": _cfg.mqtt.host, "port": _cfg.mqtt.port,
                 "username": _cfg.mqtt.username, "password": _cfg.mqtt.password,
-                "product_id": "dgiot_lite",
+                "product_id": "iotStudio",
             })
             _channels_state['dgiot_bridge'] = bridge
 

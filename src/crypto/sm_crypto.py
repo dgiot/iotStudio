@@ -355,14 +355,14 @@ def sm2_sign(data: bytes, privkey: bytes = None) -> bytes:
 if __name__ == "__main__":
     # SM3
     h = SM3()
-    h.update(b"dgiot_lite SM3 test")
+    h.update(b"iotStudio SM3 test")
     assert len(h.digest()) == 32
     print(f"SM3: {h.hexdigest()}")
 
     # SM4
     key = b"0123456789abcdef"
     sm4 = SM4(key)
-    ct = sm4.encrypt(b"Hello dgiot_lite")
+    ct = sm4.encrypt(b"Hello iotStudio")
     pt = sm4.decrypt(ct)
     assert pt.startswith(b"Hello")
     print(f"SM4: encrypt/decrypt OK")

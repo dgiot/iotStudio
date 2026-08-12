@@ -1,11 +1,11 @@
 # ============================================================
-# dgiot_lite — DG-IoT 联动推送器
+# iotStudio — DG-IoT 联动推送器
 # 将采集数据推送到 DG-IoT 主平台
 # ============================================================
 """
 DG-IoT 联动方式:
-  1. MQTT 直推 — dgiot_lite → DG-IoT MQTT Broker → DG-IoT 规则引擎
-  2. HTTP API  — dgiot_lite → DG-IoT REST API
+  1. MQTT 直推 — iotStudio → DG-IoT MQTT Broker → DG-IoT 规则引擎
+  2. HTTP API  — iotStudio → DG-IoT REST API
   3. TDengine  — 共用同一个 TDengine 实例，数据直接写入
 
 推荐方式 1: MQTT，零侵入，双方解耦。
@@ -29,7 +29,7 @@ except ImportError:
 class DGIoTBridge:
     """DG-IoT 联动桥接器
 
-    将 dgiot_lite 采集的数据按 DG-IoT 物模型格式推送。
+    将 iotStudio 采集的数据按 DG-IoT 物模型格式推送。
     DG-IoT 侧只需配置规则引擎订阅对应 Topic 即可自动接收。
 
     DG-IoT 物模型消息格式:
@@ -61,7 +61,7 @@ class DGIoTBridge:
         self.host = config.get("host", "127.0.0.1")
         self.port = config.get("port", 1883)
         self.topic = config.get("topic", "dgiot/device/telemetry")
-        self.product_id = config.get("product_id", "dgiot_lite_device")
+        self.product_id = config.get("product_id", "iotStudio_device")
         self._client = None
 
     async def push(self, message: Dict[str, Any]) -> bool:
@@ -113,7 +113,7 @@ class DGIoTBridge:
         loop = asyncio.get_event_loop()
 
         def _do_connect():
-            client_id = f"dgiot_lite_{int(time.time() * 1000)}"
+            client_id = f"iotStudio_{int(time.time() * 1000)}"
             client = mqtt.Client(client_id=client_id)
             username = self.config.get("username", "")
             password = self.config.get("password", "")
@@ -130,7 +130,7 @@ class DGIoTBridge:
 class DGIoTDirectTD:
     """DG-IoT 直连 TDengine 模式
 
-    如果 dgiot_lite 和 DG-IoT 共用同一个 TDengine 实例，
+    如果 iotStudio 和 DG-IoT 共用同一个 TDengine 实例，
     采集数据写入 DG-IoT 的超级表，DG-IoT 直接读取。
     """
 
@@ -141,7 +141,7 @@ class DGIoTDirectTD:
     async def push(self, message: Dict[str, Any]) -> bool:
         """写入 DG-IoT 的 TDengine 超级表"""
         # DG-IoT 默认超级表: dgiot.device_data
-        # 需要 dgiot_lite 有 TDengine 写入权限
+        # 需要 iotStudio 有 TDengine 写入权限
         # 此模式适用于同一 TDengine 集群
         logger.debug("[dgiot:td] 直写 TDengine 模式 (需共用实例)")
         return True  # 由 TDengineStore 统一写入

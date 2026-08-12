@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # ============================================================
-# dgiot_lite — OPC DA Server 模拟器
+# iotStudio — OPC DA Server 模拟器
 # 基于 Pyro5 + OpenOPC-DA Gateway 模式
 # 启动: python opcda_server.py
 # ============================================================
@@ -11,7 +11,7 @@ OPC DA 模拟数据源 — 提供模拟设备数据项。
   1. 下载安装: https://www.matrikonopc.com/opc-drivers/opc-simulation-server/
   2. 默认 ProgID: "Matrikon.OPC.Simulation.1"
   3. 内置项: Random.Int1~Int4, Random.Real4~Real8, Saw-toothed.Int1~Int2 等
-  4. dgiot_lite 直接连接即可
+  4. iotStudio 直接连接即可
 
 方式二: 本脚本作为 Pyro5 远程数据源
   启动后提供 Pyro5 对象，OpenOPC-DA Gateway 可连接
@@ -219,12 +219,12 @@ def print_info():
     """打印推荐方案"""
     print("""
 ╔══════════════════════════════════════════════════════╗
-║       dgiot_lite — OPC DA 模拟数据源                 ║
+║       iotStudio — OPC DA 模拟数据源                 ║
 ╠══════════════════════════════════════════════════════╣
 ║                                                      ║
 ║  方式一 (推荐): Matrikon OPC Simulation Server        ║
 ║    下载 → 安装 → ProgID: "Matrikon.OPC.Simulation.1" ║
-║    dgiot_lite 直接连接，无需本脚本                    ║
+║    iotStudio 直接连接，无需本脚本                    ║
 ║                                                      ║
 ║  方式二: 本脚本 HTTP API (已启动)                     ║
 ║    模拟设备数据通过 HTTP 接口暴露                     ║

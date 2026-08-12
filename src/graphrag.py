@@ -1,5 +1,5 @@
 """
-dgiot_lite GraphRAG — 本体图检索增强生成 (v1.0)
+iotStudio GraphRAG — 本体图检索增强生成 (v1.0)
 =================================================
 
 基于 OntologyEngine 5 层模型的 GraphRAG 实现。
@@ -306,7 +306,7 @@ class LiveContextStore:
     def __init__(self, db_path: str = None):
         import os as _os
         if db_path is None:
-            # 默认路径: dgiot_lite/data/telemetry.db
+            # 默认路径: iotStudio/data/telemetry.db
             db_path = _os.path.join(
                 _os.path.dirname(_os.path.dirname(_os.path.abspath(__file__))),
                 "data", "telemetry.db"

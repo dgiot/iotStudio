@@ -238,7 +238,7 @@ class ModbusSimServer:
     async def start_server(self, port, context, name):
         """启动单个 Modbus TCP Server"""
         identity = ModbusDeviceIdentification()
-        identity.VendorName = "dgiot_lite"; identity.ProductName = name
+        identity.VendorName = "iotStudio"; identity.ProductName = name
         identity.Model = "SIM-2026"; identity.Version = "V1.0"
         await StartAsyncTcpServer(
             context=ModbusServerContext(slaves={1: context}, single=False),

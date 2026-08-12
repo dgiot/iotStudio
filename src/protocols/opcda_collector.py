@@ -7,7 +7,7 @@ import time, json, urllib.request, sys
 from datetime import datetime
 
 # 配置
-DGIOT_API = "http://127.0.0.1:8000/api"  # dgiot_lite 地址（131 本地回环）
+DGIOT_API = "http://127.0.0.1:8000/api"  # iotStudio 地址（131 本地回环）
 POLL_INTERVAL = 10  # 采集间隔（秒）
 
 # OPC 服务器列表
@@ -57,7 +57,7 @@ def read_tags(opc, tags):
 
 
 def push_to_dgiot(data, device_id="opc_da_gateway"):
-    """推送数据到 dgiot_lite"""
+    """推送数据到 iotStudio"""
     try:
         req = urllib.request.Request(
             f"{DGIOT_API}/devices/{device_id}/telemetry",

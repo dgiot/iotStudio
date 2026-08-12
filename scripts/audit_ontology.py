@@ -27,7 +27,7 @@ CST = timezone(timedelta(hours=8))
 # 配置
 # ═══════════════════════════════════════════
 
-ONTOLOGY_DIR = Path(os.environ.get('ONTOLOGY_DIR', 'D:/ai/dgiot_lite'))
+ONTOLOGY_DIR = Path(os.environ.get('ONTOLOGY_DIR', 'D:/ai/iotStudio'))
 THING_MODEL = ONTOLOGY_DIR / 'thing_model.json'
 IO_ONTOLOGY = ONTOLOGY_DIR / 'io_ontology.py'
 REPORT_FILE = Path(os.environ.get('MEMORY_DIR',

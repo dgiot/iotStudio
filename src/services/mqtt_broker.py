@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-""" dgiot_lite — 内置微型 MQTT Broker (asyncio TCP)
+""" iotStudio — 内置微型 MQTT Broker (asyncio TCP)
     支持: CONNECT/CONNACK, PUBLISH, SUBSCRIBE, PINGREQ/PINGRESP
     端口 1883, 纯 TCP, 无外部依赖
 """

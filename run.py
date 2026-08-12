@@ -25,7 +25,7 @@ class _TeeOutput:
 sys.stdout = _TeeOutput(_LOG_FILE, sys.stdout)
 sys.stderr = _TeeOutput(_LOG_FILE, sys.stderr)
 
-print(f"[{time.strftime('%Y-%m-%d %H:%M:%S')}] dgiot_lite 启动...")
+print(f"[{time.strftime('%Y-%m-%d %H:%M:%S')}] iotStudio 启动...")
 print(f"  exe={sys.executable}")
 print(f"  cwd={os.getcwd()}")
 print(f"  log={_LOG_FILE}")
