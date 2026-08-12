@@ -106,7 +106,7 @@ class DataSource:
     """数据出口 — 持久化目标"""
     id: str
     gateway: str
-    type: str                         # oracle, tdengine, rtdb, eforcecon, sqlite
+    type: str                         # oracle, tdengine, realtime_db, eforcecon, sqlite
     connection: str = ""              # connection string
     status: str = "unknown"
     tag_count: int = 0
@@ -359,7 +359,7 @@ def build_131_ontology() -> OntologyEngine:
 
     # ── 层1: Site ──
     engine.register(Site(
-        id="industry_c1", name="某工业工业厂", type="oil_field",
+        id="industry_c1", name="示例工业园区", type="oil_field",
         location="黑龙江省某工业市",
         description="PLANT_A_SITE_C(DEVICE_C) + PLANT_A_SITE_D(DEVICE_D)。IO网关 127.0.0.1(IO-SERVER-01)"
               " + Oracle 192.168.1.129:1521 + RTDB 192.168.1.102:8889"
@@ -383,7 +383,7 @@ def build_131_ontology() -> OntologyEngine:
             "OPC Core Components": "2.00 SDK v2.00.220 (32-bit, installed 2025-12-16)",
             "RTDB Server": "v6.0.1.9 @ RTDBServer64.exe (已停用)",
         },
-        channels=["ch_modbus_tcp","ch_a11_rtu","ch_oracle","ch_opc_da","ch_rtdb",
+        channels=["ch_modbus_tcp","ch_a11_rtu","ch_oracle","ch_opc_da","ch_realtime_db",
                    "ch_eforcecon","ch_redundancy","ch_dtu_pool",
                    "ch_s7","ch_mitsubishi","ch_beckhoff","ch_omron","ch_ge"],
         notes="现场采集两大入口: LegacyComm(Modbus TCP :53001→80+RTU) + IOMan(A11 :8889→130)。"
@@ -428,15 +428,15 @@ def build_131_ontology() -> OntologyEngine:
         Channel(id="ch_oracle", gateway="gw_131", name="Oracle 数据出口",
             protocol="oracle_sql", endpoint="192.168.1.129:1521/orcl",
             status="running", config={
-                "connection": "Provider=OraOLEDB.Oracle.1;User ID=INDUSTRYPROD;Data Source=orcl",
-                "password": "INDUSTRYA11_pass (from DataSource.ini)",
+                "connection": "Provider=OraOLEDB.Oracle.1;User ID=INDUSTRYDB;Data Source=orcl",
+                "password": "CHANGEME (from DataSource.ini)",
                 "ado_count": 4, "execute_cycle_ms": 1000,
                 "key_tables": ["PC_FD_PUMPJACK_FDYNA_DIA_T (481万行)",
                     "SYS_DEVICE_RUN_DETAILS_HIST (23万行)", "SYS_SINGLE_WELL_BASE_INFO (966口井)",
                     "SYS_POINTRELATION_WELL (4567测点)"],
             }, devices=[]),
-        Channel(id="ch_rtdb", gateway="gw_131", name="RTDB 实时库",
-            protocol="rtdb", endpoint="192.168.1.102:8889",
+        Channel(id="ch_realtime_db", gateway="gw_131", name="RTDB 实时库",
+            protocol="realtime_db", endpoint="192.168.1.102:8889",
             status="stopped", config={
                 "server": "RTDBServer64.exe v6.0.1.9",
                 "api": "RTDBAPI.dll (313KB)",
@@ -672,9 +672,9 @@ def build_131_ontology() -> OntologyEngine:
     # ── DataSources ──
     datasources = [
         DataSource(id="ds_oracle", gateway="gw_131", type="oracle",
-            connection="192.168.1.129:1521/orcl (INDUSTRYPROD)",
+            connection="192.168.1.129:1521/orcl (INDUSTRYDB)",
             status="online", tag_count=4_814_742),
-        DataSource(id="ds_rtdb", gateway="gw_131", type="rtdb",
+        DataSource(id="ds_realtime_db", gateway="gw_131", type="realtime_db",
             connection="192.168.1.102:8889",
             status="stopped", tag_count=500),
         DataSource(id="ds_redundancy", gateway="gw_131", type="redundancy",
