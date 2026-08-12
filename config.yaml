@@ -50,7 +50,7 @@ plugins:
 credentials:
   vendor_oilmon_username: "CHANGEME_EMAIL"
   vendor_oilmon_password: "A1234567"
-  oracle_relay_host: "192.168.10.131"
+  oracle_relay_host: "127.0.0.1"
   oracle_relay_user: "administrator"
   oracle_relay_pass: "CHANGEME"
 
@@ -86,7 +86,7 @@ phm_platform:
 # ============================================================
 # # 远程抓包 — WinRM 连接到 IO 服务器
 remote_capture:
-  host: "192.168.10.131"
+  host: "127.0.0.1"
   port: 5985
   username: "administrator"
   password: "CHANGEME"
@@ -94,8 +94,8 @@ remote_capture:
 a11_devices:
 #   - protocol_type: a11
 #     device_id: oilfield-gw-001
-#     device_name: 某采油厂A11网关
-#     host: 192.168.10.130
+#     device_name: 工业A11网关
+#     host: 127.0.0.1
 #     port: 8889
 #     unit_id: 0
 #     heartbeat_interval: 5

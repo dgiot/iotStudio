@@ -61,7 +61,7 @@ def list_plugins():
 
 # ---- 远程 IO 服务器信息 (WinRM) ----
 @router.get("/system/remote")
-def remote_system_info(host: str = "192.168.10.131"):
+def remote_system_info(host: str = "127.0.0.1"):
     """通过 WinRM 获取远程 IO 服务器真实系统信息"""
     try:
         from winrm.protocol import Protocol
@@ -114,7 +114,7 @@ def _parse_to_ontology(hostname, host, sysinfo, mem, cpu, disk, net, procs):
     gw_id = f"gw_{hostname}"
 
     # Layer 1: Site
-    engine.register(Site(id=site_id, name="IO服务器集群", type="control_center"))
+    engine.register(Site(id=site_id, name="IO网关集群", type="control_center"))
 
     # Layer 2: Gateway
     engine.register(Gateway(id=gw_id, ip=host, site=site_id, hostname=hostname,

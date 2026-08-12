@@ -1,7 +1,7 @@
 """
 LegacyComm 兼容 TCP Server — 替代 LegacyComm.exe 接管 RTU 采集 v2.0
 =====================================================================
-基于 7.10.pcapng 真实报文逆向 (2026-07-12):
+基于 7.10.pcapng 真实报文分析 (2026-07-12):
 
 真实协议 (已确认):
   RTU注册:    0xAA + SlaveID(1B) + ASCII_DeviceID + 0x0D
@@ -32,7 +32,7 @@ log = logging.getLogger("commbridge")
 FRAME_HEADER = 0xAA
 FRAME_TAIL = 0x0D
 
-# 帧类型常量 (从逆向代码段确认)
+# 帧类型常量 (从分析代码段确认)
 FT_HEARTBEAT = 0x00
 FT_REGISTER = 0xAA
 

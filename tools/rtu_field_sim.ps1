@@ -15,7 +15,7 @@ function Get-CRC16($data) {
 
 try {
     $c = New-Object System.Net.Sockets.TcpClient
-    $c.Connect('192.168.10.131', 53002)
+    $c.Connect('127.0.0.1', 53002)
     $st = $c.GetStream()
     Write-Host "CONNECTED to 131:53002"
 

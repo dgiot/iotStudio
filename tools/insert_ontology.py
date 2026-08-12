@@ -10,15 +10,15 @@ now = time.strftime("%Y-%m-%dT%H:%M:%S.000Z")
 db.execute("""INSERT OR IGNORE INTO ontology_site
     (objectId,name,type,location,description,data,createdAt,updatedAt)
     VALUES (?,?,?,?,?,?,?,?)""",
-    ("site_industry", "INDUSTRY_IO", "OilField", "192.168.10.0/24",
+    ("site_industry", "INDUSTRY_IO", "OilField", "192.168.1.0/24",
      "RTDB=130:8889, Oracle=129:1521, RTU=191, OPC=5",
-     json.dumps({"rtdb": "192.168.10.130:8889", "rtu_count": 191}), now, now))
+     json.dumps({"rtdb": "127.0.0.1:8889", "rtu_count": 191}), now, now))
 
 # Gateway
 db.execute("""INSERT OR IGNORE INTO ontology_gateway
     (objectId,name,ip,site_id,hostname,os,status,installed,channels,notes,data,createdAt,updatedAt)
     VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)""",
-    ("gw_cb_131", "LegacyComm_DTU", "192.168.10.131", "site_industry",
+    ("gw_cb_131", "LegacyComm_DTU", "127.0.0.1", "site_industry",
      "win-nj7vp96r2nm", "Win2016", "online", "2021", "5",
      "DTU gateway, 191 RTU",
      json.dumps({"port": 53001, "protocol": "DTU Modbus"}), now, now))
@@ -27,9 +27,9 @@ db.execute("""INSERT OR IGNORE INTO ontology_gateway
 for oid, name, proto, ep, cfg, devs in [
     ("ch_modbus_tcp", "Modbus_TCP", "Modbus TCP", ":502", "modbus", "56"),
     ("ch_opc_da", "OPC_DA", "OPC DA DCOM", "192.168.10.23:135", "dcom", "10"),
-    ("ch_rtdb", "RTDB", "RTDB psAPI", "192.168.10.130:8889", "psapi", "100+"),
+    ("ch_rtdb", "RTDB", "RTDB psAPI", "127.0.0.1:8889", "psapi", "100+"),
     ("ch_dtu", "DTU", "DTU Transparent", ":53001", "serial", "191"),
-    ("ch_oracle", "Oracle", "Oracle ADO", "192.168.10.129:1521", "oracle", "0"),
+    ("ch_oracle", "Oracle", "Oracle ADO", "192.168.1.129:1521", "oracle", "0"),
 ]:
     db.execute("""INSERT OR IGNORE INTO ontology_channel
         (objectId,name,gateway_id,protocol,endpoint,status,config,devices,data,createdAt,updatedAt)
@@ -94,9 +94,9 @@ for cid, name, rule, entity, sev, src, action in [
 
 # DataSources
 for oid, gw, typ, conn, status, tags, data in [
-    ("ds_rtdb", "gw_cb_131", "RTDB 6.0.1.9", "192.168.10.130:8889", "connected", 5000,
+    ("ds_rtdb", "gw_cb_131", "RTDB 6.0.1.9", "127.0.0.1:8889", "connected", 5000,
      json.dumps({"sdk": "6.0.1.9", "exports": 3525, "user": "admin", "handle": "uint16"})),
-    ("ds_oracle", "gw_cb_131", "Oracle 11g", "192.168.10.129:1521/INDUSTRYPROD", "connected", 0,
+    ("ds_oracle", "gw_cb_131", "Oracle 11g", "192.168.1.129:1521/INDUSTRYPROD", "connected", 0,
      json.dumps({"tables": ["TAGPAR", "SYS_POINTRELATION"]})),
     ("ds_opc", "gw_cb_131", "Kepware OPC DA", "192.168.10.23:135", "connected", 1000,
      json.dumps({"clsid": "6E6170F0-FF2D-11D2-8087-00105AA8F840"})),

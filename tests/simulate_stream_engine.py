@@ -2,7 +2,7 @@
 """
 边缘流式计算全算法模拟 + 性能基准
 ====================================
-模拟 100 作业区 × 1 万测点 = 百万级并发场景
+模拟 100 工业区 × 1 万测点 = 百万级并发场景
 验证全部 15 种流式计算算法 + <1ms 延迟
 """
 import sys, os, time, random, statistics, json
@@ -18,7 +18,7 @@ from src.services.stream_engine import (
 # 模拟参数
 # ═══════════════════════════════════════════
 
-NUM_ZONES = 10            # 作业区数量 (演示用，实际可达100+)
+NUM_ZONES = 10            # 工业区数量 (演示用，实际可达100+)
 POINTS_PER_ZONE = 50      # 每区模拟测点数 (实际可达万级，演示取50)
 WINDOW_SIZE = 20          # 滑窗大小
 SIMULATION_ROUNDS = 20    # 模拟轮次
@@ -37,7 +37,7 @@ DEVICE_TYPES = {
 # ═══════════════════════════════════════════
 
 class DataSimulator:
-    """模拟油气工业时序数据 — 含正常波动 + 异常注入"""
+    """模拟工厂工业时序数据 — 含正常波动 + 异常注入"""
 
     def __init__(self, seed: int = 42):
         self.rng = random.Random(seed)
@@ -178,7 +178,7 @@ def performance_benchmark():
     print("=" * 70)
     print("  边缘流式引擎 — 15算法全覆盖模拟 + 性能基准")
     print("=" * 70)
-    print(f"  模拟规模: {NUM_ZONES} 作业区 × {POINTS_PER_ZONE} 测点")
+    print(f"  模拟规模: {NUM_ZONES} 工业区 × {POINTS_PER_ZONE} 测点")
     print(f"  滑窗大小: {WINDOW_SIZE}  模拟轮次: {SIMULATION_ROUNDS}")
     print()
 

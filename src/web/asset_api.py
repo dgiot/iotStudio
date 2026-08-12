@@ -1,7 +1,7 @@
 """
 资产全生命周期管理 API — 模块5
 ================================
-五级资产层级: 采油厂 → 作业区 → 站库 → 设备组 → 设备
+五级资产层级: 工业厂 → 工业区 → 站库 → 设备组 → 设备
 维保记录 + 报废流程 + 资产台账
 """
 from fastapi import APIRouter, HTTPException, Query
@@ -290,16 +290,16 @@ def asset_dashboard():
 
 @router.post("/seed-demo")
 def seed_demo_assets():
-    """一键播种演示资产数据：100作业区 × 5站 × 4组 × 20设备"""
+    """一键播种演示资产数据：100工业区 × 5站 × 4组 × 20设备"""
     db = _get_db()
     now = datetime.now(timezone.utc).isoformat()
     count = 0
 
     for zone_idx in range(1, 101):
         zone_id = f"zone_{zone_idx:03d}"
-        # 作业区
+        # 工业区
         db.execute("INSERT OR REPLACE INTO asset_tree VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
-                  (zone_id, f"第{zone_idx}作业区", "industry_c1", 1, "作业区",
+                  (zone_id, f"第{zone_idx}工业区", "industry_c1", 1, "工业区",
                    "", "active", "", "", "", "", "", now, now))
 
         for station_idx in range(1, 6):
@@ -319,8 +319,8 @@ def seed_demo_assets():
                     dtype = ["抽油机", "螺杆泵", "注水井", "压缩机", "电表"][dev_idx % 5]
                     db.execute("INSERT OR REPLACE INTO asset_tree VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
                               (dev_id, f"{dtype}#{dev_idx:02d}", group_id, 4, "设备",
-                               dtype, "active", "", f"示例PLANT_A第{zone_idx}作业区",
-                               "OIL_FIELD装备", f"CYJ{zone_idx}-{dev_idx}", f"SN{zone_idx:03d}{dev_idx:03d}",
+                               dtype, "active", "", f"PLANT_A第{zone_idx}工业区",
+                               "某工业基地装备", f"CYJ{zone_idx}-{dev_idx}", f"SN{zone_idx:03d}{dev_idx:03d}",
                                now, now))
                     count += 1
 

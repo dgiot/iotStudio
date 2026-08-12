@@ -3,18 +3,18 @@
 import os, time
 for k in ['HTTP_PROXY','HTTPS_PROXY','http_proxy','https_proxy']:
     os.environ.pop(k, None)
-os.environ['NO_PROXY'] = '192.168.10.131,11.*,172.*'
+os.environ['NO_PROXY'] = '127.0.0.1,11.*,172.*'
 
 import winrm
 
 s = winrm.Session(
-    'http://192.168.10.131:5985/wsman',
+    'http://127.0.0.1:5985/wsman',
     auth=('administrator', r'CHANGEME'),
     transport='ntlm', read_timeout_sec=60)
 
 ps_script = r'''
 $c = New-Object System.Net.Sockets.TcpClient
-$c.Connect('192.168.10.131', 53001)
+$c.Connect('127.0.0.1', 53001)
 $st = $c.GetStream()
 $c.ReceiveTimeout = 10000
 

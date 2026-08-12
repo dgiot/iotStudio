@@ -3,11 +3,11 @@
 import os, sys, base64, time
 for k in ['HTTP_PROXY','HTTPS_PROXY','http_proxy','https_proxy']:
     os.environ.pop(k, None)
-os.environ['NO_PROXY'] = '192.168.10.131,11.*,172.*'
+os.environ['NO_PROXY'] = '127.0.0.1,11.*,172.*'
 import winrm
 
 s = winrm.Session(
-    'http://192.168.10.131:5985/wsman',
+    'http://127.0.0.1:5985/wsman',
     auth=('administrator', r'CHANGEME'),
     transport='ntlm', read_timeout_sec=120)
 
@@ -28,7 +28,7 @@ DTU_REG_MESSAGES = [
     (b'PORT:53001\r\nID:123456789012345\r\n', 'PORT+ID'),
     # BYE 断开
     (b'BYE\r\n', 'BYE'),
-    # OIL_FIELD可能的定制格式
+    # 某工业基地可能的定制格式
     (b'INDUSTRY:001\r\n', 'INDUSTRY:001'),
     (b'DQ:001\r\n', 'DQ:001'),
     # 特殊格式
@@ -49,7 +49,7 @@ for idx, (data, desc) in enumerate(DTU_REG_MESSAGES):
 $data = [Convert]::FromBase64String('{b64}')
 try {{
     $c = New-Object System.Net.Sockets.TcpClient
-    $c.Connect('192.168.10.131', 53001)
+    $c.Connect('127.0.0.1', 53001)
     $st = $c.GetStream()
     $st.Write($data, 0, $data.Length)
     Start-Sleep -Milliseconds 1500

@@ -19,7 +19,7 @@ TOPIC_EVENT = "dgiot/device/edge_lite/{device_id}/event"
 
 # ── 模拟工业设备 ──
 DEVICES = [
-    {"id": "a11_001", "type": "A11", "ip": "192.168.7.3", "desc": "采油井口"},
+    {"id": "a11_001", "type": "A11", "ip": "192.168.7.3", "desc": "工业井口"},
     {"id": "a11_002", "type": "A11", "ip": "192.168.7.10", "desc": "注水井口"},
     {"id": "modbus_206", "type": "Modbus", "ip": "192.168.1.206", "desc": "RTU控制器"},
     {"id": "opc_001", "type": "OPC", "ip": "127.0.0.1", "desc": "RSLinx/WinCC"},

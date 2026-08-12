@@ -137,7 +137,7 @@ class ConfigurableRtuSimulator:
 async def main():
     print("=" * 70)
     print("  LegacyComm TCP Server — :53002 部署测试")
-    print("  模拟 5 台油气保护装置, 30 秒持续采集")
+    print("  模拟 5 台工厂保护装置, 30 秒持续采集")
     print("=" * 70)
 
     dashboard = LiveDashboard()
