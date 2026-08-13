@@ -131,7 +131,7 @@ onMounted(() => { loadEndpoints(); setTimeout(injectSample, 1000) })
 const endpoints = ref([])
 const remoteEndpoint = ref('')
 const showEpDialog = ref(false)
-const epForm = reactive({ objectId:'', name:'', host:'127.0.0.1', port:5985, username:'administrator', password:'' })
+const epForm = reactive({ objectId:'', name:'', host:'127.0.0.1', port:5985, username:'', password:'' })
 
 async function loadEndpoints() {
   try { const r = await fetch('/api/capture/endpoints'); const d = await r.json(); endpoints.value = d.endpoints || []
@@ -182,7 +182,7 @@ const devs = [
 ]
 const stats = [
   {l:'A11帧数(7.10)',v:'93,913'},
-  {l:'通信端口',v:'192.168.1.11:8889'},
+  {l:'通信端口',v:'127.0.0.1:8889'},
   {l:'心跳短帧',v:'93,455 (99%)'},
   {l:'<span style="color:#67c23a">0xF062</span> 设备列表',v:'~200 帧'},
   {l:'<span style="color:#e6a23c">0xF050</span> 单井数据',v:'~500 帧'},
@@ -191,18 +191,18 @@ const stats = [
 ]
 
 const allPkts = [
-  {id:1,time:"09:31:22.103",dir:"TX",src:"192.168.1.10:502",dst:"192.168.1.11:8889",sz:1204,msg:"0xF062",hex:"5a5ab2040100260062f02f000900000a0024060000230000005c43593143384b5c5a363131535957535c5a44303130383338444f5658563330315643230000005c435931...",fields:[{"f": "Magic", "v": "5a5a", "d": "A11帧起始"}, {"f": "FrameLen", "v": "0x04B2=1202(LE)", "d": "不含2B头小端长度"}, {"f": "Flags", "v": "01002600", "d": "控制标志"}, {"f": "MsgType", "v": "0xF062", "d": "设备列表查询"}, {"f": "Payload", "v": "1194B", "d": "ASCII设备路径名"}],str:["\\SITE01\\GATEWAY01\\DEVICE01#(阀门开)", "\\SITE01\\GATEWAY01\\DEVICE01#(阀门关)"]},
-  {id:2,time:"09:31:22.105",dir:"RX",src:"192.168.1.11:8889",dst:"131:62531",sz:25,msg:"0x87B2",hex:"5a5a170000003900b28735000500800a00000000006a6a",fields:[{"f": "Magic", "v": "5a5a", "d": "帧起始"}, {"f": "FrameLen", "v": "0x17=23", "d": "23字节"}, {"f": "MsgType", "v": "0x87B2", "d": "心跳应答"}, {"f": "jjZZ", "v": "6a6a", "d": "魔术字封尾"}],str:[]},
-  {id:3,time:"09:31:22.201",dir:"TX",src:"192.168.1.10:501",dst:"192.168.1.11:8889",sz:217,msg:"0xF050",hex:"5a5ad9000000390050f033000400000a00090000002f0f00000d0f00006a6a5a5a06050300...",fields:[{"f": "Magic", "v": "5a5a", "d": "帧起始"}, {"f": "MsgType", "v": "0xF050", "d": "单设备数据查询"}, {"f": "jjZZ", "v": "6a6a5a5a", "d": "内嵌A11子帧type=0x0506"}],str:[]},
-  {id:4,time:"09:31:22.205",dir:"RX",src:"192.168.1.11:8889",dst:"131:58646",sz:117,msg:"0x0000",hex:"5a5a730000003e0000000000020000000004000000340000008719000007bd69506ae4030b000000c01e454240c0008819000007bd69506ae4030b0000006066e63c40...",fields:[{"f": "Magic", "v": "5a5a", "d": "帧起始"}, {"f": "MsgType", "v": "0x0000", "d": "LegacyComm二次封装"}, {"f": "jjZZ", "v": "6a6a5a5a@offset", "d": "内嵌子帧"}, {"f": "Float1", "v": "~0xC01EC000", "d": "传感器读数1"}, {"f": "Float2", "v": "~0x3CE66660", "d": "传感器读数2"}],str:[]},
-  {id:5,time:"09:31:22.401",dir:"TX",src:"131:62531",dst:"192.168.1.11:8889",sz:4096,msg:"0xF062",hex:"5a5a314000003900b28735000500000a00c503000032e0000031da0000...",fields:[{"f": "Magic", "v": "5a5a", "d": "帧起始"}, {"f": "FrameLen", "v": "0x4031=16433", "d": "批量数据帧"}, {"f": "MsgType", "v": "0xF062", "d": "批量设备查询"}],str:[]},
-  {id:6,time:"09:31:22.480",dir:"RX",src:"192.168.1.11:8889",dst:"131:62534",sz:73,msg:"0x3667",hex:"5a5a4900000039006736...",fields:[{"f": "Magic", "v": "5a5a", "d": "帧起始"}, {"f": "MsgType", "v": "0x3667", "d": "批量数据上报"}, {"f": "Data", "v": "float数组", "d": "传感器测量值"}],str:[]},
-  {id:7,time:"09:31:23.001",dir:"TX",src:"131:62533",dst:"192.168.1.11:8889",sz:19,msg:"0x87B3",hex:"5a5a130000003900b38703000500800a00006a6a",fields:[{"f": "Magic", "v": "5a5a", "d": "帧起始"}, {"f": "MsgType", "v": "0x87B3", "d": "心跳请求"}],str:[]},
-  {id:8,time:"09:31:23.102",dir:"TX",src:"131:53001",dst:"11.249.61.243:502",sz:12,msg:"Modbus",hex:"df05000000060103012b0004",fields:[{"f": "TID", "v": "0xDF05", "d": "事务ID"}, {"f": "UnitID", "v": "1", "d": "从站1"}, {"f": "FC", "v": "3", "d": "读保持寄存器"}, {"f": "Addr", "v": "299", "d": "起始地址"}, {"f": "Count", "v": "4", "d": "4个寄存器"}],str:[]},
-  {id:9,time:"09:31:23.150",dir:"RX",src:"11.249.61.243:502",dst:"131:53001",sz:17,msg:"Modbus",hex:"df050000000b0103083eda20fbc61c3c00",fields:[{"f": "TID", "v": "0xDF05", "d": "事务ID"}, {"f": "ByteCnt", "v": "8", "d": "8字节数据"}, {"f": "Values", "v": "[15930,8420,50780,0]", "d": "寄存器原始值"}],str:[]},
+  {id:1,time:"09:31:22.103",dir:"TX",src:"127.0.0.1:502",dst:"127.0.0.1:8889",sz:1204,msg:"0xF062",hex:"5a5ab2040100260062f02f000900000a0024060000230000005c44454d4f...",fields:[{"f": "Magic", "v": "5a5a", "d": "A11帧起始"}, {"f": "FrameLen", "v": "0x04B2=1202(LE)", "d": "不含2B头小端长度"}, {"f": "Flags", "v": "01002600", "d": "控制标志"}, {"f": "MsgType", "v": "0xF062", "d": "设备列表查询"}, {"f": "Payload", "v": "1194B", "d": "ASCII设备路径名"}],str:["\\SITE01\\GATEWAY01\\DEVICE01#(阀门开)", "\\SITE01\\GATEWAY01\\DEVICE01#(阀门关)"]},
+  {id:2,time:"09:31:22.105",dir:"RX",src:"127.0.0.1:8889",dst:"edge:62531",sz:25,msg:"0x87B2",hex:"5a5a170000003900b28735000500800a00000000006a6a",fields:[{"f": "Magic", "v": "5a5a", "d": "帧起始"}, {"f": "FrameLen", "v": "0x17=23", "d": "23字节"}, {"f": "MsgType", "v": "0x87B2", "d": "心跳应答"}, {"f": "jjZZ", "v": "6a6a", "d": "魔术字封尾"}],str:[]},
+  {id:3,time:"09:31:22.201",dir:"TX",src:"127.0.0.1:501",dst:"127.0.0.1:8889",sz:217,msg:"0xF050",hex:"5a5ad9000000390050f033000400000a00090000002f0f00000d0f00006a6a5a5a06050300...",fields:[{"f": "Magic", "v": "5a5a", "d": "帧起始"}, {"f": "MsgType", "v": "0xF050", "d": "单设备数据查询"}, {"f": "jjZZ", "v": "6a6a5a5a", "d": "内嵌A11子帧type=0x0506"}],str:[]},
+  {id:4,time:"09:31:22.205",dir:"RX",src:"127.0.0.1:8889",dst:"edge:58646",sz:117,msg:"0x0000",hex:"5a5a730000003e0000000000020000000004000000340000008719000007bd69506ae4030b000000c01e454240c0008819000007bd69506ae4030b0000006066e63c40...",fields:[{"f": "Magic", "v": "5a5a", "d": "帧起始"}, {"f": "MsgType", "v": "0x0000", "d": "LegacyComm二次封装"}, {"f": "jjZZ", "v": "6a6a5a5a@offset", "d": "内嵌子帧"}, {"f": "Float1", "v": "~0xC01EC000", "d": "传感器读数1"}, {"f": "Float2", "v": "~0x3CE66660", "d": "传感器读数2"}],str:[]},
+  {id:5,time:"09:31:22.401",dir:"TX",src:"edge:62531",dst:"127.0.0.1:8889",sz:4096,msg:"0xF062",hex:"5a5a314000003900b28735000500000a00c503000032e0000031da0000...",fields:[{"f": "Magic", "v": "5a5a", "d": "帧起始"}, {"f": "FrameLen", "v": "0x4031=16433", "d": "批量数据帧"}, {"f": "MsgType", "v": "0xF062", "d": "批量设备查询"}],str:[]},
+  {id:6,time:"09:31:22.480",dir:"RX",src:"127.0.0.1:8889",dst:"edge:62534",sz:73,msg:"0x3667",hex:"5a5a4900000039006736...",fields:[{"f": "Magic", "v": "5a5a", "d": "帧起始"}, {"f": "MsgType", "v": "0x3667", "d": "批量数据上报"}, {"f": "Data", "v": "float数组", "d": "传感器测量值"}],str:[]},
+  {id:7,time:"09:31:23.001",dir:"TX",src:"edge:62533",dst:"127.0.0.1:8889",sz:19,msg:"0x87B3",hex:"5a5a130000003900b38703000500800a00006a6a",fields:[{"f": "Magic", "v": "5a5a", "d": "帧起始"}, {"f": "MsgType", "v": "0x87B3", "d": "心跳请求"}],str:[]},
+  {id:8,time:"09:31:23.102",dir:"TX",src:"edge:53001",dst:"11.249.61.243:502",sz:12,msg:"Modbus",hex:"df05000000060103012b0004",fields:[{"f": "TID", "v": "0xDF05", "d": "事务ID"}, {"f": "UnitID", "v": "1", "d": "从站1"}, {"f": "FC", "v": "3", "d": "读保持寄存器"}, {"f": "Addr", "v": "299", "d": "起始地址"}, {"f": "Count", "v": "4", "d": "4个寄存器"}],str:[]},
+  {id:9,time:"09:31:23.150",dir:"RX",src:"11.249.61.243:502",dst:"edge:53001",sz:17,msg:"Modbus",hex:"df050000000b0103083eda20fbc61c3c00",fields:[{"f": "TID", "v": "0xDF05", "d": "事务ID"}, {"f": "ByteCnt", "v": "8", "d": "8字节数据"}, {"f": "Values", "v": "[15930,8420,50780,0]", "d": "寄存器原始值"}],str:[]},
   {id:10,time:"09:31:23.201",dir:"RX",src:"192.168.10.20:58648",dst:"192.168.10.20:49778",sz:1460,msg:"OPC-DA",hex:"05000003100000008c080000b8760200640800000100030002ac...",fields:[{"f": "Version", "v": "5.0", "d": "DCE/RPC v5"}, {"f": "PktType", "v": "0(Request)", "d": "OPC DA请求"}, {"f": "FragLen", "v": "0x088C=2188", "d": "分片长度"}],str:[]},
   {id:11,time:"09:31:23.250",dir:"RX",src:"192.168.10.20:3514",dst:"192.168.10.20:135",sz:120,msg:"OPC-DA",hex:"05000b03100000007800280066020000d016d016...",fields:[{"f": "PktType", "v": "11(Bind)", "d": "DCOM对象绑定"}, {"f": "Server", "v": "RSLinx", "d": "Rockwell OPC"}],str:[]},
-  {id:12,time:"09:31:23.301",dir:"TX",src:"131:53001",dst:"11.248.203.74:502",sz:12,msg:"Modbus",hex:"7400000000060203012b0004",fields:[{"f": "UnitID", "v": "2", "d": "从站2"}, {"f": "FC", "v": "3", "d": "读保持寄存器"}, {"f": "Addr", "v": "299", "d": "起始地址"}],str:[]},
+  {id:12,time:"09:31:23.301",dir:"TX",src:"edge:53001",dst:"11.248.203.74:502",sz:12,msg:"Modbus",hex:"7400000000060203012b0004",fields:[{"f": "UnitID", "v": "2", "d": "从站2"}, {"f": "FC", "v": "3", "d": "读保持寄存器"}, {"f": "Addr", "v": "299", "d": "起始地址"}],str:[]},
 ]
 const packets = ref([])
 
@@ -257,7 +257,7 @@ async function toggle() {
         await fetch('/api/capture/local/start',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({ports:'8889,502,2404'})})
       } else {
         const ep = endpoints.value.find(e => e.objectId === remoteEndpoint.value)
-        const host = ep?.host || '127.0.0.1'
+        const host = ep?.host || '127.0.0.10'
         await fetch(`/api/capture/remote/start?host=${host}&ports=8889,53001,502`,{method:'POST'})
       }
       capturing.value = true

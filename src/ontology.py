@@ -374,7 +374,7 @@ def build_131_ontology() -> OntologyEngine:
         installed={
             "平台": "GENERIC_VENDOR ForceControl 7.x / IoMonitor v6.0.0.1",
             "守护进程": "psNTService.exe (6服务自动重启/心跳监控)",
-            "LegacyComm": "v6.x, PID 19240 — 80+ Modbus TCP 到井口RTU ← 主采集入口",
+            "LegacyComm": "v6.x — 80+ Modbus TCP 到井口RTU ← 主采集入口",
             "IOMan": "workers ×7 — A11 TCP 到 127.0.0.1:8889 ← 功图采集",
             "IoMonitor": "v6.0.0.1, PID 18400 — 数据汇聚 + Oracle 提交 (无直接现场连接)",
             "IoCommit": "12组并发提交 (DB0~DB11), 300ms实时/500ms历史",

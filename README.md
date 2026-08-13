@@ -48,7 +48,7 @@ python scripts/init_dgiot.py
 | 协议 | 文件 | 说明 |
 |------|------|------|
 | Modbus TCP/RTU | `protocols/modbus_tcp.py` | 多从站轮询，寄存器扫描 |
-| A11 (CNPC) | `protocols/a11.py` | 行业油气生产物联网 5a5a 帧 |
+| A11 | `protocols/a11.py` | 油气生产物联网 5a5a 帧 |
 | OPC UA | pymodbus / asyncua | 订阅 + 轮询 |
 | OPC DA | DCOM 识别 | RSLinx 协议可识 |
 | IEC 104 | `protocols/` | 电力远动规约 |

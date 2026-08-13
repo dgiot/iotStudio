@@ -57,8 +57,8 @@ credentials:
 # Parse-lite (嵌入式 — 替代 Parse Server)
 parse:
   db_path: "./data/parse.db"   # SQLite 单机版
-  app_id: "<redacted-appid>"
-  master_key: "<redacted-masterkey>"
+  app_id: "<your-app-id>"
+  master_key: "<your-master-key>"
 
 mqtt:
   host: "127.0.0.1"
@@ -80,11 +80,11 @@ phm_platform:
   poll_interval: 60
 
 # ============================================================
-# A11 协议设备配置 (行业油气生产物联网)
+# A11 协议设备配置 (油气生产物联网)
 # 协议栈: ModbusTCP(7B MBAP) + jjZZ(4B) + Type LE(2B) + Sub LE(2B) + Payload
 # 参考: A11 正式规范白皮书 V1.0
 # ============================================================
-# # 远程抓包 — WinRM 连接到 IO 服务器
+# # 远程抓包 — WinRM 连接到边缘服务器
 remote_capture:
   host: "127.0.0.1"
   port: 5985
@@ -93,7 +93,7 @@ remote_capture:
 
 a11_devices:
 #   - protocol_type: a11
-#     device_id: oilfield-gw-001
+#     device_id: demo-gw-001
 #     device_name: 工业A11网关
 #     host: 127.0.0.1
 #     port: 8889

@@ -111,3 +111,4 @@ http_*.py
 tests/pv_result*
 tests/report.json
 tests/stress_test_report.json
+STATE.md
