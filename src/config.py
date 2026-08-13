@@ -1,5 +1,5 @@
-# ============================================================
-# pythonIot — 配置管理
+﻿# ============================================================
+# pythonIot 鈥?閰嶇疆绠＄悊
 # ============================================================
 import os
 import sys
@@ -10,10 +10,9 @@ from typing import Optional, Dict, Any
 
 
 def _get_base_dir() -> Path:
-    """项目根目录 — 兼容 PyInstaller 冻结和开发模式"""
+    """椤圭洰鏍圭洰褰?鈥?鍏煎 PyInstaller 鍐荤粨鍜屽紑鍙戞ā寮?""
     if getattr(sys, 'frozen', False):
-        # PyInstaller 打包: exe 同目录（方便用户放置 config.yaml）
-        return Path(sys.executable).parent
+        # PyInstaller 鎵撳寘: exe 鍚岀洰褰曪紙鏂逛究鐢ㄦ埛鏀剧疆 config.yaml锛?        return Path(sys.executable).parent
     return Path(__file__).resolve().parent.parent
 
 BASE_DIR = _get_base_dir()
@@ -54,13 +53,12 @@ class MQTTConfig(BaseModel):
     username: str = ""
     password: str = ""
     client_id: str = "pythonIot-pusher"
-    builtin_broker_port: int = 21883  # 内置 Mini MQTT Broker 端口，避免与 EMQX :1883 冲突
+    builtin_broker_port: int = 21883  # 鍐呯疆 Mini MQTT Broker 绔彛锛岄伩鍏嶄笌 EMQX :1883 鍐茬獊
 
 
 class AppConfig(BaseModel):
-    model_config = {"extra": "allow"}  # 允许 yaml 中额外字段
-    title: str = "光储充微电网物联网平台"
-    version: str = "1.0.0"
+    model_config = {"extra": "allow"}  # 鍏佽 yaml 涓澶栧瓧娈?    title: str = "鍏夊偍鍏呭井鐢电綉鐗╄仈缃戝钩鍙?
+    version: str = "4.3.7"
     host: str = "0.0.0.0"
     port: int = 8000
     db: DBConfig = DBConfig()
@@ -72,13 +70,13 @@ class AppConfig(BaseModel):
 
     @classmethod
     def _find_config(cls, path: Optional[str] = None) -> Optional[str]:
-        """查找 config.yaml — 兼容 PyInstaller/开发模式"""
+        """鏌ユ壘 config.yaml 鈥?鍏煎 PyInstaller/寮€鍙戞ā寮?""
         if path:
             return path
         env_path = os.getenv("IOT_CONFIG")
         if env_path:
             return env_path
-        # 搜索顺序: exe 同目录 → _MEIPASS 打包目录 → BASE_DIR
+        # 鎼滅储椤哄簭: exe 鍚岀洰褰?鈫?_MEIPASS 鎵撳寘鐩綍 鈫?BASE_DIR
         search = [str(Path(sys.executable).parent / "config.yaml") if getattr(sys, 'frozen', False) else None,
                   str(Path(getattr(sys, '_MEIPASS', '')) / "config.yaml") if getattr(sys, 'frozen', False) else None,
                   str(BASE_DIR / "config.yaml")]
@@ -97,7 +95,7 @@ class AppConfig(BaseModel):
 
     @classmethod
     def from_env(cls) -> "AppConfig":
-        """从环境变量加载（Docker 模式）"""
+        """浠庣幆澧冨彉閲忓姞杞斤紙Docker 妯″紡锛?""
         return cls(
             db=DBConfig(
                 host=os.getenv("PG_HOST", "127.0.0.1"),
@@ -122,5 +120,5 @@ class AppConfig(BaseModel):
         )
 
 
-# 全局配置实例
+# 鍏ㄥ眬閰嶇疆瀹炰緥
 cfg = AppConfig.from_yaml()
