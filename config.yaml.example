@@ -46,7 +46,7 @@ plugins:
     tdengine: true     # 无则自动降级 SQLite
     sqlite: true       # 始终可用
 
-# 第三方凭证 (敏感信息, 其他配置全部入库 parse_lite Channel 表)
+# 第三方密钥 (敏感信息, 其他配置全部入库 parse_lite Channel 表)
 credentials:
   vendor_oilmon_username: "YOUR_USER".com"
   vendor_oilmon_password: "YOUR_PASSWORD"
