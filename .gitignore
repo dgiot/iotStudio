@@ -112,3 +112,7 @@ tests/pv_result*
 tests/report.json
 tests/stress_test_report.json
 STATE.md
+
+# Claude 会话产物
+.coverage
+**/__pycache__/
