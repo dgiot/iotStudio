@@ -109,7 +109,7 @@ hub:     false,  // 不需要边缘中枢联调 → Vite tree-shake 自动裁掉
 network: true,   // 需要报文解析
 ```
 
-6 个厂商通道插件：🛢 油液监测 · 🔥 锅炉能效 · 📊 声振温 · 🔩 智能螺栓 · 📷 视频监控 · ⛽ TDLAS 气体检测
+通道插件按 manifest.js 按需启用，支持自定义厂商协议接入。
 
 ---
 
@@ -124,7 +124,7 @@ iotStudio/
 │   ├── parse_lite.py         # Parse Server Python 兼容层
 │   ├── ontology.py           # 4层本体引擎
 │   ├── auth.py               # JWT + 多租户中间件
-│   ├── protocols/            # Modbus/A11/OPC/IEC104/vendor_a
+│   ├── protocols/            # Modbus/A11/OPC/IEC104
 │   ├── storage/tdengine.py   # TDengine + SQLite 降级
 │   ├── models/               # dgiot_schema + device ORM
 │   ├── services/             # collector · phm · safety_rules
@@ -191,4 +191,4 @@ iotStudio  ──MQTT──→  EMQX (:1883)  ──→  Parse Server  ──→
 
 ## 维护
 
-DGIOT LLC (Dallas, TX) — [DG-IoT 主平台](https://github.com/dgiot/dgiot)
+DGIOT LLC (Dallas, TX) — [DG-IoT Platform](https://github.com/dgiot/dgiot)
