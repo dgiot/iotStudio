@@ -37,6 +37,12 @@ iotStudio 主视图走 Parse（Device/Product/Channel 类）；轻量契约视�
 |---|---|---|
 | `scripts/ontology_server.py` | 48765 | 本体图谱图数据（`GET /graph`）+ 视图 + 健康检查，仅 127.0.0.1 |
 
+## 开发知识（源自 vue-shell/README.md，合并保留）
+
+- **编译坑（Vue 3 编译提升）**：`v-if` 与 `v-for` 同元素会触发 Vue 3 编译提升 → `p.url` TypeError 白屏；必须用 `<template v-for>` 包裹提升写法（见 `views/iot/*.vue` 与 `Sidebar/index.vue` 外部菜单分支的写法）。
+- **双类插件语义**（源自 basePlugins.js）：tab 型 = 工程内视图（`/api/iot/*` 契约，后端实现标准接口即可复用）；url 型 = 底座服务外链（`meta.external`，新窗口）。
+- **服务端口纪律**：本体图谱服务用冷僻端口段（48765，dsh 家族 48757-48760 之后），新服务先扫描占用避免冲突。
+
 ## 来源说明
 
 - 数据：本体图 `ontology_graph_v3.json` 为本地构建产物（不入库），`/ontology-graph` 视图内嵌示例数据（92 节点 / 59 边，qwen2.5:7b 全本地语义提取）
