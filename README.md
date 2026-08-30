@@ -189,6 +189,18 @@ iotStudio  ──MQTT──→  EMQX (:1883)  ──→  Parse Server  ──→
 
 ---
 
+## IOT 底座插件（plugins-base 合并）
+
+本仓合并自 `plugins-base`（IOT 底座通用插件包），按能力归位、内容不丢失，详见 [BASE_PLUGINS.md](BASE_PLUGINS.md)。
+
+- **布局模板**：`frontend-vue/src/components/ShellDark/`（深色布局，可选）+ `CloseLoop/`（闭环组件）+ `assets/base-icons.js`
+- **轻量契约视图**：`/iot/devices|products|channels`（`/api/iot/*`，`views/iot/`）
+- **本体图谱**：`/ontology-graph` → `public/ontology_graph.html`（ECharts Force 图，本地 vendor 资源，离网可用；与 `ontology.html` DLAS 树形互补）
+- **部署脚本**：`scripts/ontology_server.py`（本体图谱服务，回环 48765）、`scripts/dsh-mobile-check.cjs`（移动端验收，凭据走环境变量）——与 `init_db`/`seed_*`/`audit_ontology` 同目录
+- **url 型外链**：菜单项 `meta.external` → 新窗口打开（Sidebar 支持）
+
+---
+
 ## 维护
 
 DGIOT LLC (Dallas, TX) — [DG-IoT Platform](https://github.com/dgiot/dgiot)
