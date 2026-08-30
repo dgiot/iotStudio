@@ -14,7 +14,7 @@
 | `plugins/ontology-graph/ontology_view.html` | `frontend-vue/public/ontology_graph.html` | ECharts Force 图（与 `ontology.html` DLAS 树形互补），入口 `/ontology-graph`；echarts 用本地 `public/vendor/echarts.min.js`（离网可运行，不走 CDN） |
 | `plugins/ontology-graph/ontology_server.py` | `scripts/ontology_server.py` | 部署脚本 — 图数据独立服务（回环 48765，`ONTOLOGY_GRAPH` 环境变量可配数据路径），与 `audit_ontology.py` 等同目录 |
 | `plugins/dsh-tools/dsh-mobile-check.cjs` | `scripts/dsh-mobile-check.cjs` | 部署脚本 — 移动端验收（凭据走 `DSH_AUTH_USER/PASS` 环境变量） |
-| `README.md` | `docs/plugins-base.md` | 本文件 |
+| `README.md` | `BASE_PLUGINS.md`（仓库根，docs/ 被 .gitignore 忽略） | 本文件 |
 
 ## 接线点（本次合并已接）
 
