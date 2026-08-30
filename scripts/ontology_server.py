@@ -18,6 +18,11 @@ sys.stdout.reconfigure(encoding='utf-8', errors='replace')
 PORT = 48765
 HERE = os.path.dirname(os.path.abspath(__file__))
 VIEW = os.path.join(HERE, 'ontology_view.html')
+# 视图回退：合并版视图在 frontend-vue/public/ontology_graph.html（同源），无本地视图时复用
+if not os.path.isfile(VIEW):
+    _alt_view = os.path.join(HERE, '..', 'frontend-vue', 'public', 'ontology_graph.html')
+    if os.path.isfile(_alt_view):
+        VIEW = _alt_view
 # 图数据默认取插件同目录（本地构建产物，不入库）；可通过环境变量指定
 GRAPH = os.environ.get('ONTOLOGY_GRAPH', os.path.join(HERE, 'ontology_graph_v3.json'))
 
