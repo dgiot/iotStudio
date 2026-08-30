@@ -323,11 +323,11 @@ async def health():
     from .parse_lite import parse_query
     stats = await collector.get_stats()
 
-    dev_count = parse_query("Device", {"count":1}).get("count", 0)
-    ps_data = {}
     try:
-
-    except: pass
+        dev_count = parse_query("Device", {"count":1}).get("count", 0)
+    except:
+        dev_count = 0
+    ps_data = {}
 
     return {
         "status": "ok", "version": cfg.version,
@@ -1938,9 +1938,9 @@ async def simulator_get_registers(sim_id: str):
 from .web.tenant_api import router as tenant_router
 app.include_router(tenant_router)
 
-# ---- IO 本体 API ----
-
-app.include_router(io_body_router)
+# ---- IOT 底座轻量契约 API（plugins-base 合并配套）----
+from .web.iot_contract import router as iot_contract_router
+app.include_router(iot_contract_router)
 
 # ---- 系统信息 + 插件 API ----
 from .web.system_api import router as system_router
@@ -1951,20 +1951,32 @@ from .web.vendor_api import router as vendor_router
 app.include_router(vendor_router)
 
 # ---- 采集端点管理 API ----
-from .web.capture_endpoint_api import router as cap_ep_router
-app.include_router(cap_ep_router)
+try:
+    from .web.capture_endpoint_api import router as cap_ep_router
+    app.include_router(cap_ep_router)
+except ImportError:
+    logger.warning("[web] capture_endpoint_api 未安装（敏感模块不入公网库），跳过")
+
 
 # ---- 本地网卡抓包 (netsh trace, 无需 Npcap) ----
 from .web.local_capture import router as local_cap_router
 app.include_router(local_cap_router)
 
 # ---- PCAP 文件读取 API ----
-from .web.pcap_api import router as pcap_router
-app.include_router(pcap_router)
+try:
+    from .web.pcap_api import router as pcap_router
+    app.include_router(pcap_router)
+except ImportError:
+    logger.warning("[web] pcap_api 未安装（敏感模块不入公网库），跳过")
+
 
 # ---- 远程抓包 API ----
-from .web.remote_capture import router as remote_cap_router
-app.include_router(remote_cap_router)
+try:
+    from .web.remote_capture import router as remote_cap_router
+    app.include_router(remote_cap_router)
+except ImportError:
+    logger.warning("[web] remote_capture 未安装（敏感模块不入公网库），跳过")
+
 
 # Parse REST API (对齐 iotStudio)
 from .web.parse_router import router as parse_router
@@ -1977,8 +1989,12 @@ from .web.dashboard_edge_api import router as edge_dash_router
 app.include_router(edge_dash_router)
 from .web.admin_panel import router as admin_router
 app.include_router(admin_router)
-from .web.io_clone_api import router as io_clone_router
-app.include_router(io_clone_router)
+try:
+    from .web.io_clone_api import router as io_clone_router
+    app.include_router(io_clone_router)
+except ImportError:
+    logger.warning("[web] io_clone_api 未安装（敏感模块不入公网库），跳过")
+
 
 # ---- FDE 六步工作法 API ----
 from .web.fde_api import router as fde_router
@@ -1992,8 +2008,12 @@ app.include_router(graphrag_router)
 from .web.asset_api import router as asset_router
 app.include_router(asset_router)
 
-from .web.passive_api import router as passive_router
-app.include_router(passive_router)
+try:
+    from .web.passive_api import router as passive_router
+    app.include_router(passive_router)
+except ImportError:
+    logger.warning("[web] passive_api 未安装（敏感模块不入公网库），跳过")
+
 
 # ---- Vue3 前端托管 ----
 from pathlib import Path as _Path
