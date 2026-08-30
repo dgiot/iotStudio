@@ -1,5 +1,7 @@
 # iotStudio — 物联网边缘应用框架
 
+**🌏 语言切换 Language: [中文](README.md) | [English](README_EN.md)**
+
 [![Python](https://img.shields.io/badge/Python-3.10+-blue)](https://python.org)
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.110+-green)](https://fastapi.tiangolo.com)
 [![Vue](https://img.shields.io/badge/Vue-3.x-cyan)](https://vuejs.org)
