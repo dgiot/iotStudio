@@ -56,6 +56,14 @@ export const constantRoutes = [
       { path: '/fde', name: 'FdeWizard', component: () => import('../views/FdeWizardView.vue'), meta: { title: 'FDE六步工作法', icon: 'MagicStick', group: 'tool' } },
       { path: '/graphrag', name: 'GraphRag', component: () => import('../views/GraphRagView.vue'), meta: { title: '知识图谱问答', icon: 'Search', group: 'tool' } },
 
+      // ===== IOT 底座（合并自 plugins-base，/api/iot/* 轻量契约）=====
+      { path: '/iot/devices', name: 'IotDevices', component: () => import('../views/iot/DeviceView.vue'), meta: { title: '设备台账', icon: 'Monitor', group: 'base' } },
+      { path: '/iot/products', name: 'IotProducts', component: () => import('../views/iot/ProductView.vue'), meta: { title: '产品台账', icon: 'Goods', group: 'base' } },
+      { path: '/iot/channels', name: 'IotChannels', component: () => import('../views/iot/ChannelView.vue'), meta: { title: '通道台账', icon: 'Connection', group: 'base' } },
+      { path: '/ontology-graph', name: 'OntologyGraph', component: () => import('../views/OntologyGraphView.vue'), meta: { title: '本体图谱', icon: 'Share', group: 'base' } },
+      // url 型外链（底座服务，新窗口打开，见 Sidebar external 分支）
+      { path: '/dsh-mobile', name: 'DshMobile', component: () => import('../views/EmptyView.vue'), meta: { title: 'DSH 移动端', icon: 'Iphone', group: 'base', external: 'https://dsh.dgiotcloud.cn:48758/' } },
+
       // ===== 系统 =====
       { path: '/system-overview', name: 'SystemOverview', component: () => import('../views/SystemOverview.vue'), meta: { title: '系统概览', icon: 'Monitor', group: 'system' } },
       { path: '/maintenance', name: 'Maintenance', component: () => import('../views/MaintenanceView.vue'), meta: { title: '运维管理', icon: 'Setting', group: 'system' } },

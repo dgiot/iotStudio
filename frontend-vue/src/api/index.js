@@ -62,3 +62,9 @@ export const getStats        = () => request({ url: '/stats', method: 'get' })
 export const batch           = (reqs) => Parse.batch(reqs)
 
 export default request
+
+// ── IOT 底座轻量契约（/api/iot/*，合并自 plugins-base）──
+// 契约: GET /api/iot/{devices|products|channels} → { total, items:[{id,code,name,...}] }
+export const iotDevices   = (p = {}) => request({ url: '/iot/devices', method: 'get', params: p })
+export const iotProducts  = (p = {}) => request({ url: '/iot/products', method: 'get', params: p })
+export const iotChannels  = (p = {}) => request({ url: '/iot/channels', method: 'get', params: p })
