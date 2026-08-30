@@ -14,7 +14,7 @@
     "axios": "^1.18.1",
     "echarts": "^6.1.0",
     "element-plus": "^2.14.2",
-    "fabric": "^6.9.1",
+    "fabric": "^7.4.0",
     "js-cookie": "^3.0.8",
     "mqtt": "^5.15.1",
     "puppeteer": "^25.2.1",
@@ -26,5 +26,19 @@
   "devDependencies": {
     "@vitejs/plugin-vue": "^6.0.7",
     "vite": "^8.1.0"
+  },
+  "overrides": {
+    "brace-expansion@<2": "1.1.18",
+    "brace-expansion@>=2": "2.1.4",
+    "ip-address": "10.7.0",
+    "linkify-it": "5.0.2",
+    "nanoid": "3.3.18",
+    "path-to-regexp": "6.3.0",
+    "postcss": "8.5.26",
+    "qs": "6.16.0",
+    "tar": "7.5.22",
+    "tinymce": "7.9.3",
+    "uuid": "11.1.1",
+    "xlsx": "https://cdn.sheetjs.com/xlsx-0.20.3/xlsx-0.20.3.tgz"
   }
 }
