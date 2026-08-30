@@ -150,14 +150,8 @@ def _register_fallback_channels(app_config=None):
                      protocol="winrm-http", endpoint="edge-io-server:5985")
 
     # ── Oracle 管道 (POLL) ──
-            try:
-                pipe = OraclePipeline()
-                await pipe.start()
-            except ImportError:
-
-            if pipe:
-                await pipe.stop()
-
+    if "ch_oracle" not in registered:
+        make_channel("ch_oracle", CType.POLL, "Oracle 数据出口",
                      config={"source": "Oracle", "sink": "TDengine+MQTT"},
                      protocol="jdbc")
 
