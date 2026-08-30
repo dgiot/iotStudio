@@ -25,6 +25,7 @@ export const MENU_GROUPS = {
   data:    { label: '📡 数据', order: 3 },
   network: { label: '🔧 网络诊断', order: 4 },
   tool:    { label: '🛠️ 工具', order: 5 },
+  base:    { label: '🧩 底座', order: 5.5 },
   system:  { label: '⚙️ 系统', order: 6 },
 }
 
