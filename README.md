@@ -189,9 +189,11 @@ iotStudio  ──MQTT──→  EMQX (:1883)  ──→  Parse Server  ──→
 
 ---
 
-## IOT 底座插件（plugins-base 合并）
+## IOT 底座插件（plugins-base 合并） / IOT Base Plugins (merged)
 
-本仓合并自 `plugins-base`（IOT 底座通用插件包），按能力归位、内容不丢失，详见 [BASE_PLUGINS.md](BASE_PLUGINS.md)。
+本仓合并自 `plugins-base`（IOT 底座通用插件包），按能力归位、内容不丢失，详见 [BASE_PLUGINS.md](BASE_PLUGINS.md)（English: [BASE_PLUGINS_EN.md](BASE_PLUGINS_EN.md)）。
+
+> This repo merged the shared IOT base plugin package (`plugins-base`) with capability-based placement — nothing lost. See [BASE_PLUGINS.md](BASE_PLUGINS.md) (中文) / [BASE_PLUGINS_EN.md](BASE_PLUGINS_EN.md) (English).
 
 - **布局模板**：`frontend-vue/src/components/ShellDark/`（深色布局，可选）+ `CloseLoop/`（闭环组件）+ `assets/base-icons.js`
 - **轻量契约视图**：`/iot/devices|products|channels`（`/api/iot/*`，`views/iot/`）
