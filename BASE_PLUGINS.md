@@ -29,13 +29,13 @@
 GET /api/iot/devices|products|channels → { total, items:[{id,code,name,type,model,protocol,status,online,location,last_active}] }
 ```
 
-iotStudio 主视图走 Parse（Device/Product/Channel 类）；轻量契约视图供后端以标准接口接入的场景复用。
+**后端配套已实现**（`src/web/iot_contract.py`，a1fce9fd）：devices/products 直读 parse.db（Device/Product 类），channels 读 ChannelManager 快照；第三方后端实现同构标准接口即可复用视图。
 
 ## 底座服务
 
 | 服务 | 端口 | 说明 |
 |---|---|---|
-| `scripts/ontology_server.py` | 48765 | 本体图谱图数据（`GET /graph`）+ 视图 + 健康检查，仅 127.0.0.1 |
+| `scripts/ontology_server.py` | 48765 | 本体图谱图数据（`GET /graph`）+ 视图 + 健康检查，仅 127.0.0.1；视图缺省回退 `frontend-vue/public/ontology_graph.html`（同源） |
 
 ## 开发知识（源自 vue-shell/README.md，合并保留）
 
