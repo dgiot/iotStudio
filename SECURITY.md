@@ -1,6 +1,24 @@
-# 依赖安全记录
+# Security Policy / 安全策略
 
-## 2026-08-31 依赖漏洞治理（dependabot 45 → 8）
+## English Summary / 英文概要
+
+**Dependency vulnerability status (2026-08-31): 45 alerts → 8 moderate. Critical: 0, High: 0.**
+
+- Fixed via `package.json` overrides (11 packages forced to patched versions) + `fabric` 6 → 7 upgrade.
+- The 8 remaining moderate findings are pinned by `amis@6.13.0` internals (echarts 5.5.1 / froala-editor 3.1.1 / markdown-it 12.3.2). Upgrading them to fixed majors risks breaking amis low-code rendering; revisit after an amis major upgrade.
+- `xlsx` is overridden to the official SheetJS CDN tarball (0.20.3) — the npm registry release stops at 0.18.5 (ReDoS advisory).
+- Recheck command: `npm audit --registry=https://registry.npmjs.org` (the default npmmirror mirror does not support the audit endpoint).
+- Note: GitHub's alert count (6) differs from `npm audit` (8) due to dependency-path evaluation differences — SECURITY.md reflects the `npm audit` result.
+
+**Credential policy / 凭据纪律**: credentials never enter this repository. Local build artifacts (`data/`, logs) and internal tooling are gitignored.
+
+---
+
+## 中文详情 / Chinese Details
+
+## 依赖安全记录
+
+### 2026-08-31 依赖漏洞治理（dependabot 45 → 8）
 
 `frontend-vue` 依赖漏洞治理：**45 告警 → 8 moderate**（critical 0 / high 0）。
 
