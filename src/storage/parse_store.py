@@ -3,6 +3,7 @@
 # ============================================================
 import asyncio
 import logging
+import os
 from datetime import datetime, timezone
 from types import SimpleNamespace
 from typing import Any, Dict, List, Optional
@@ -32,8 +33,9 @@ class ParseStore:
 
     def __init__(self):
         self.base_url = "http://localhost:1337/parse"
-        self.app_id = "af690d0aca8ab2b99be9e98a2de65547"
-        self.master_key = "9a3898f4a24854f020db6ea1177e1b8b"
+        # 凭据从环境变量 / config.yaml 读取，不硬编码（2026-09-01 清理历史残留）
+        self.app_id = os.environ.get("PARSE_APP_ID") or getattr(getattr(cfg, "parse", None), "app_id", "")
+        self.master_key = os.environ.get("PARSE_MASTER_KEY") or getattr(getattr(cfg, "parse", None), "master_key", "")
         self._client: Optional[httpx.AsyncClient] = None
         self._connected = False
         self._sqlite_lock = asyncio.Lock()  # 防 SQLite 并发死锁
