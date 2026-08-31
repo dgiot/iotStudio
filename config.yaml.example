@@ -20,7 +20,7 @@ db:
   database: "iot_platform"
 
 tdengine:
-  host: "192.168.10.167"     # edge-dmz 边缘中枢
+  host: "tdengine.example.com"     # edge-dmz 边缘中枢
   port: 6041                 # taosAdapter RESTful
   user: "root"
   password: "YOUR_PASSWORD"

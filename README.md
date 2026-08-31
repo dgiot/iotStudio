@@ -150,7 +150,7 @@ iotStudio/
 ```yaml
 # 存储 (无则降级 SQLite)
 tdengine:
-  host: "192.168.10.167"       # 远端 TDengine (可选)
+  host: "tdengine.example.com" # 远端 TDengine (可选，示例)
   port: 6041
 
 # Parse-lite 嵌入式
@@ -207,4 +207,9 @@ iotStudio  ──MQTT──→  EMQX (:1883)  ──→  Parse Server  ──→
 
 ## 维护
 
-DGIOT LLC (Dallas, TX) — [DG-IoT Platform](https://github.com/dgiot/dgiot)
+**DGIOT LLC** — Dallas, Texas, United States
+
+- GitHub 组织: https://github.com/dgiot · Issues: https://github.com/dgiot/iotStudio/issues
+- Docker Hub: https://hub.docker.com/u/dgiot
+- 安全披露: 见 [SECURITY.md](SECURITY.md)
+- 邮箱: LLC 信箱启用后公布（当前请通过 GitHub Issues / Security Advisories 联系）
