@@ -150,7 +150,7 @@ iotStudio/
 ```yaml
 # Storage (falls back to SQLite if absent)
 tdengine:
-  host: "192.168.10.167"       # remote TDengine (optional)
+  host: "tdengine.example.com" # remote TDengine (optional, example)
   port: 6041
 
 # Embedded Parse-lite
@@ -206,4 +206,9 @@ This repo merged the shared IOT base plugin package (`plugins-base`) with capabi
 
 ## Maintenance
 
-DGIOT LLC (Dallas, TX) — [DG-IoT Platform](https://github.com/dgiot/dgiot)
+**DGIOT LLC** — Dallas, Texas, United States
+
+- GitHub Organization: https://github.com/dgiot · Issues: https://github.com/dgiot/iotStudio/issues
+- Docker Hub: https://hub.docker.com/u/dgiot
+- Security disclosures: see [SECURITY.md](SECURITY.md)
+- Email: published once the LLC mailbox is live — for now, reach us via GitHub Issues / Security Advisories
