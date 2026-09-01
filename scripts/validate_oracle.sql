@@ -1,6 +1,6 @@
 -- ============================================================
 -- A11 逆向验证脚本 — Oracle 端 (只读, 不影响生产)
--- 当 Oracle 恢复后执行: sqlplus user/pass@192.168.10.129:1521/db @validate_oracle.sql
+-- 当 Oracle 恢复后执行: sqlplus user/pass@10.0.0.129:1521/db @validate_oracle.sql
 -- ============================================================
 
 SET PAGESIZE 200

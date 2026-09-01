@@ -83,7 +83,7 @@ const runCards = ref([
 const services = ref([
   { name:'HTTP API', desc:'FastAPI 主服务', icon:'🌐', ok:true, addr:'localhost:8000', latency:'-', msg:'运行中' },
   { name:'SQLite', desc:'关系数据库 (零安装)', icon:'💾', ok:true, addr:'data/parse.db', latency:'-', msg:'可用' },
-  { name:'TDengine', desc:'时序数据 (远端)', icon:'⏱️', ok:false, addr:'192.168.10.167:6041', latency:'-', msg:'检测中...' },
+  { name:'TDengine', desc:'时序数据 (远端)', icon:'⏱️', ok:false, addr:'10.0.0.167:6041', latency:'-', msg:'检测中...' },
   { name:'MQTT Broker', desc:'消息推送', icon:'📡', ok:false, addr:'config.yaml mqtt.host', latency:'-', msg:'检测中...' },
 ])
 

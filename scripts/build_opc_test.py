@@ -29,14 +29,14 @@ def cmd(command):
         return f'CMD_ERR: {e}'
 
 # Read C# source and base64 encode
-with open(r'D:\ai\iotStudio\opc_package\OpcTest.cs', 'rb') as f:
+with open(r'D:\ai\gitee\iotStudio\opc_package\OpcTest.cs', 'rb') as f:
     cs_b64 = base64.b64encode(f.read()).decode()
 print(f"C# source: {len(cs_b64)} bytes base64")
 
 # === STEP 1: Upload via certutil (chunked echo) ===
 print("\n=== STEP 1: Upload ===")
 # Write base64 in chunks of 5000 chars
-with open(r'D:\ai\iotStudio\scripts\_up.py', 'r') as f:
+with open(r'D:\ai\gitee\iotStudio\scripts\_up.py', 'r') as f:
     pass  # just checking it exists
 
 # Actually, let's just try small chunks via run_ps
@@ -74,10 +74,10 @@ print(compile_result)
 # === STEP 3: Test all OPC servers ===
 print("\n=== STEP 3: Test OPC Servers ===")
 for target in [
-    ('192.168.10.20', 'RSLinx OPC Server'),
-    ('192.168.10.20', 'RSLinx OPC Server'),
-    ('192.168.10.20', 'RSLinx OPC Server'),
-    ('192.168.10.20', 'RSLinx OPC Server'),
+    ('10.0.0.20', 'RSLinx OPC Server'),
+    ('10.0.0.20', 'RSLinx OPC Server'),
+    ('10.0.0.20', 'RSLinx OPC Server'),
+    ('10.0.0.20', 'RSLinx OPC Server'),
 ]:
     host, progid = target
     print(f"\n--- {host} ---")
