@@ -10,7 +10,7 @@
   payload: {"ts":"...", "value":123.4, "unit":"A", "quality":192}
 
 API 代理 (Nginx):
-  location /api/ { proxy_pass http://192.168.10.1:8000/api/; }
+  location /api/ { proxy_pass http://10.0.0.1:8000/api/; }
   → WSL → Windows iotStudio :8000
 """
 import json, time, logging
