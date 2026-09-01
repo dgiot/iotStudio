@@ -388,7 +388,7 @@ def build_131_ontology() -> OntologyEngine:
                    "ch_s7","ch_mitsubishi","ch_beckhoff","ch_omron","ch_ge"],
         notes="现场采集两大入口: LegacyComm(Modbus TCP :53001→80+RTU) + IOMan(A11 :8889→130)。"
               "IoMonitor 只连 Oracle :1521 做数据出口。"
-              "OPC DA(DCOM :135)从未活跃, 192.168.10.x 无实际连接。"
+              "OPC DA(DCOM :135)从未活跃, 10.0.0.x 无实际连接。"
               "OPC_FC_Client/ 是历史废配置, 系统实际不用 OPC。"
     ))
 
@@ -396,7 +396,7 @@ def build_131_ontology() -> OntologyEngine:
     channels = [
         # 原有通道
         Channel(id="ch_opc_da", gateway="gw_131", name="OPC DA Client",
-            protocol="opc_da", endpoint="DCOM :135 → 192.168.10.20/.3/.18.194/.26.6.3",
+            protocol="opc_da", endpoint="DCOM :135 → 10.0.0.20/.3/.18.194/.26.6.3",
             status="running", config={
                 "driver": "E:\\IO ServerOnLine\\IO Servers\\OPC_FC_Client\\ioapi.dll",
                 "progid": "KEPware.KEPServerEx.V4",
@@ -446,9 +446,9 @@ def build_131_ontology() -> OntologyEngine:
             protocol="eforcecon", status="stopped"),
         # 新增通道
         Channel(id="ch_redundancy", gateway="gw_131", name="冗余通道",
-            protocol="redundancy", endpoint="192.168.10.102:6000/6001",
+            protocol="redundancy", endpoint="10.0.0.102:6000/6001",
             status="running", config={
-                "partner_ip": "192.168.10.102",
+                "partner_ip": "10.0.0.102",
                 "recv_port": 6000, "send_port": 6001,
                 "heartbeat_ms": 1500, "timeout_count": 3,
                 "failover_time": "4.5s",
@@ -625,7 +625,7 @@ def build_131_ontology() -> OntologyEngine:
         Constraint(id="c_redundancy", name="冗余心跳 1500ms×3",
             rule="心跳 1500ms, 3 次超时 (4.5s) → 主备切换",
             entity="ch_redundancy", severity="danger", source="RedunndancyCfg.ini",
-            action="备机 192.168.10.102 接管"),
+            action="备机 10.0.0.102 接管"),
         # --- 设备告警约束 (Device.ini) ---
         Constraint(id="c_overcurrent", name="线路过流保护",
             rule="Ia/Ib/Ic > 5A + 持续>1s → 过流告警→跳闸",
@@ -678,7 +678,7 @@ def build_131_ontology() -> OntologyEngine:
             connection="192.168.1.102:8889",
             status="stopped", tag_count=500),
         DataSource(id="ds_redundancy", gateway="gw_131", type="redundancy",
-            connection="192.168.10.102:6000/6001",
+            connection="10.0.0.102:6000/6001",
             status="running", tag_count=0),
         DataSource(id="ds_syncplatform", gateway="gw_131", type="sync",
             connection="D:\\SyncPlatform0402\\bin\\SyncTaskManager.exe",
