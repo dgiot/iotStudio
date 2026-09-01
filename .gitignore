@@ -116,3 +116,12 @@ STATE.md
 # Claude 会话产物
 .coverage
 **/__pycache__/
+
+# ===== 凭据与本地产物加固 (2026-09-01) =====
+config.yaml
+config.project.yaml
+build/
+dist/
+_ocr索引/
+dist/
+scripts/network-jump/config.env
