@@ -101,6 +101,14 @@ async def lifespan(app: FastAPI):
     except Exception as e:
         logger.warning(f"[main] 通道体系启动失败: {e}")
 
+    # ── 统一插件运行时 (PR0): plugins/*/plugin.py — 一切皆插件 ──
+    try:
+        from .plugin_runtime import runtime
+        rt_health = runtime.load_all()
+        logger.info(f"[main] 插件运行时: {rt_health}")
+    except Exception as e:
+        logger.warning(f"[main] 插件运行时加载失败: {e}")
+
     try:
         await collector.start()
     except Exception as e:
@@ -123,6 +131,12 @@ async def lifespan(app: FastAPI):
     logger.info(f"[main] {cfg.title} V{cfg.version} 启动完成")
     yield
     # 关闭
+    # 统一插件运行时: 逐个跑插件 disposers (生命周期可逆收口)
+    try:
+        from .plugin_runtime import runtime
+        runtime.shutdown()
+    except Exception:
+        pass
     try: from .channel_bootstrap import shutdown_channels; await shutdown_channels()
     except: pass
     try: await collector.stop()
@@ -2115,6 +2129,7 @@ else:
 
 # ---- 插件管理 API ----
 from .plugin_registry import list_all, list_enabled, health as plugin_health, enable, disable, discover as _discover
+from .plugin_runtime import runtime
 
 # 启动时自动发现并注册所有协议/服务插件
 _discover("src/protocols", "src.protocols")
@@ -2122,8 +2137,8 @@ _discover("src/services", "src.services")
 _discover("src/push", "src.push")
 
 @app.get("/api/plugins")
-def get_plugins(category: str = None):
-    """获取所有插件及其状态"""
+def get_plugins(category: str = None, user: dict = Depends(get_current_user)):
+    """获取所有插件及其状态 (PR0 起需登录; 含统一运行时视图 + 前端模块开关)"""
     return {
         "plugins": [
             {"name": p["name"], "category": p["category"], "version": p["version"],
@@ -2131,18 +2146,28 @@ def get_plugins(category: str = None):
              "depends": p.get("depends", [])}
             for p in list_all(category)
         ],
-        "health": plugin_health()
+        "health": plugin_health(),
+        "runtime": runtime.summary(),
+        "frontend": runtime.frontend_modules(),
     }
 
 @app.post("/api/plugins/{name}/enable")
-def enable_plugin(name: str):
-    enable(name)
-    return {"status": "enabled", "name": name}
+def enable_plugin(name: str, scope: str = "backend", user: dict = Depends(require_admin)):
+    """启用插件 (仅管理员) — scope: backend=插件重新 apply | frontend=前端模块恢复加载"""
+    if scope == "frontend":
+        runtime.set_frontend(name, True)
+    else:
+        runtime.enable(name)   # 内含 plugin_registry.enable 同步
+    return {"status": "enabled", "name": name, "scope": scope}
 
 @app.post("/api/plugins/{name}/disable")
-def disable_plugin(name: str):
-    disable(name)
-    return {"status": "disabled", "name": name}
+def disable_plugin(name: str, scope: str = "backend", user: dict = Depends(require_admin)):
+    """停用插件 (仅管理员) — backend: 跑 disposers 下线能力; frontend: 前端不再加载该模块"""
+    if scope == "frontend":
+        runtime.set_frontend(name, False)
+    else:
+        runtime.disable(name)
+    return {"status": "disabled", "name": name, "scope": scope}
 
 # ---- 通道管理 API (边缘中枢 dlink 对齐) ----
 from .channel_registry import ChannelManager
