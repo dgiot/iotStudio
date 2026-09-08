@@ -3,6 +3,66 @@
 <head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>DG-IoT AIP — Palantir-Style Operations</title>
+<script>
+/* AIP Auth — fetch 全局包装: 附加 Bearer token + 401 拦截登录门
+   token 存储约定与 Vue 端一致: Cookie Admin-Token + localStorage dgiot_token/sessionToken */
+(function(){
+  function aipToken(){
+    var m=document.cookie.match(/(?:^|;\s*)Admin-Token=([^;]+)/);
+    return (m&&decodeURIComponent(m[1]))||localStorage.getItem('dgiot_token')||localStorage.getItem('sessionToken')||'';
+  }
+  window.aipToken=aipToken;
+  var _fetch=window.fetch.bind(window);
+  window.fetch=function(input,init){
+    init=init||{};
+    var url=typeof input==='string'?input:(input&&input.url)||'';
+    if(url.indexOf('/api/')>-1){
+      var t=aipToken();
+      var h=new Headers(init.headers||{});
+      if(t&&!h.has('Authorization'))h.set('Authorization','Bearer '+t);
+      init.headers=h;
+    }
+    return _fetch(input,init).then(function(res){
+      if(res.status===401)window.showAipLogin();
+      return res;
+    });
+  };
+  window.showAipLogin=function(){
+    if(document.getElementById('aipLoginMask'))return;
+    var mask=document.createElement('div');
+    mask.id='aipLoginMask';
+    mask.style.cssText='position:fixed;inset:0;background:rgba(2,6,17,.93);z-index:9999;display:flex;align-items:center;justify-content:center';
+    mask.innerHTML='<div style="width:300px;background:#111827;border:1px solid #1e293b;border-radius:8px;padding:22px;box-shadow:0 10px 40px rgba(0,0,0,.6)">'
+      +'<div style="font-size:14px;color:#e2e8f0;margin-bottom:14px;text-align:center">⚙️ DG-IoT <span style="color:#4a9eff">AIP</span> 登录</div>'
+      +'<input id="aipUser" placeholder="用户名" style="width:100%;margin-bottom:8px;padding:8px;background:#0a0e17;border:1px solid #1e293b;border-radius:4px;color:#c0d5e8">'
+      +'<input id="aipPass" type="password" placeholder="密码" style="width:100%;margin-bottom:12px;padding:8px;background:#0a0e17;border:1px solid #1e293b;border-radius:4px;color:#c0d5e8">'
+      +'<button id="aipLoginBtn" style="width:100%;padding:8px;background:#1e3a5f;border:1px solid #2563eb;border-radius:4px;color:#93c5fd;cursor:pointer;font-size:12px">登录</button>'
+      +'<div id="aipLoginErr" style="font-size:10px;color:#ef4444;margin-top:8px;min-height:12px"></div>'
+      +'<div style="font-size:9px;color:#64748b;margin-top:6px;text-align:center">默认 admin / changeme（ADMIN_PASS 环境变量可覆盖）</div></div>';
+    document.body.appendChild(mask);
+    function doLogin(){
+      var u=document.getElementById('aipUser').value.trim(),p=document.getElementById('aipPass').value;
+      _fetch('/api/auth/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({username:u,password:p})})
+        .then(function(r){return r.json().then(function(j){return{ok:r.ok,j:j}})})
+        .then(function(o){
+          if(o.ok&&o.j.token){
+            var t=o.j.token;
+            document.cookie='Admin-Token='+encodeURIComponent(t)+';path=/;max-age=604800';
+            localStorage.setItem('dgiot_token',t);localStorage.setItem('sessionToken',t);
+            mask.remove();location.reload();
+          }else{
+            document.getElementById('aipLoginErr').textContent=(o.j&&o.j.detail)||'登录失败';
+          }
+        }).catch(function(e){document.getElementById('aipLoginErr').textContent=e.message});
+    }
+    document.getElementById('aipLoginBtn').onclick=doLogin;
+    document.getElementById('aipPass').onkeydown=function(e){if(e.key==='Enter')doLogin()};
+  };
+  document.addEventListener('DOMContentLoaded',function(){
+    if(!aipToken())window.showAipLogin();
+  });
+})();
+</script>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:'Segoe UI','Microsoft YaHei',sans-serif;background:#0a0e17;color:#c0d5e8;height:100vh;display:flex;flex-direction:column}
@@ -394,8 +454,15 @@ async function loadValidate(){
       </table>`;
   }catch(e){document.getElementById('validateResult').innerHTML='<span style="color:#ef4444">'+e.message+'</span>'}
 }
-function downloadOwl(){window.open('/api/graphrag/ontology.owl')}
-function downloadTtl(){window.open('/api/graphrag/ontology.ttl')}
+async function aipDownload(url,name){
+  try{
+    const r=await fetch(url);if(!r.ok)throw new Error('HTTP '+r.status);
+    const b=await r.blob();const a=document.createElement('a');
+    a.href=URL.createObjectURL(b);a.download=name;a.click();URL.revokeObjectURL(a.href);
+  }catch(e){alert('下载失败: '+e.message)}
+}
+async function downloadOwl(){aipDownload('/api/graphrag/ontology.owl','dgiot_ontology.owl')}
+async function downloadTtl(){aipDownload('/api/graphrag/ontology.ttl','dgiot_ontology.ttl')}
 
 function switchView(v){
   ['explorer','manager','pipeline','console','sparql','tree','graph','validate'].forEach((name,i)=>{

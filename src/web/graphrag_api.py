@@ -15,15 +15,24 @@ GraphRAG REST API — 本体图检索增强生成接口
 
 from __future__ import annotations
 
+import json
 import logging
 from typing import Optional
 
-from fastapi import APIRouter, HTTPException, Query
+from fastapi import APIRouter, Depends, HTTPException, Query
 from pydantic import BaseModel, Field
+
+try:
+    from ..auth import get_current_user, require_admin
+except ImportError:
+    from auth import get_current_user, require_admin
 
 logger = logging.getLogger(__name__)
 
-router = APIRouter(prefix="/api/graphrag", tags=["graphrag"])
+# 鉴权: 路由器级 — 所有 /api/graphrag/* 均需登录 (Authorization: Bearer JWT)。
+# 写操作/执行类端点在各自装饰器上追加 require_admin (仅 admin 角色)。
+router = APIRouter(prefix="/api/graphrag", tags=["graphrag"],
+                   dependencies=[Depends(get_current_user)])
 
 # ═══════════════════════════════════════════════════════════
 # 惰性初始化 (首次访问时才加载本体 + LLM)
@@ -394,7 +403,7 @@ def _judge_alarm(value: float, alarm: dict) -> str:
     return "normal"
 
 
-@router.post("/live/seed")
+@router.post("/live/seed", dependencies=[Depends(require_admin)])
 async def graphrag_seed_telemetry():
     """一键播种演示遥测数据 — 为 ontology 中的 sample points 写入模拟值
 
@@ -664,44 +673,178 @@ async def aip_object_detail(entity_id: str):
     }
 
 
+# ═══════════════════════════════════════════════════════════
+# Action Framework — 动作审计 + 写回 (Palantir Actions 风格)
+# ═══════════════════════════════════════════════════════════
+
 class ActionRequest(BaseModel):
-    action: str = Field(..., description="动作类型: acknowledge_alarm|restart_channel|check_device|diagnose")
+    action: str = Field(..., description="动作类型: acknowledge_alarm|command_down|diagnose|trend_check|health_check")
     target_id: str = Field(..., description="目标实体 ID")
-    params: Optional[dict] = Field(None, description="动作参数")
+    params: Optional[dict] = Field(None, description="动作参数 (command_down: 作为下行 payload)")
+
+
+_ACTION_DB_PATH = None
+
+
+def _action_db_path() -> str:
+    """动作审计库路径 — data/aip_actions.db (独立于 parse.db, 避免写锁竞争)"""
+    global _ACTION_DB_PATH
+    if _ACTION_DB_PATH is None:
+        import os
+        root = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+        path = os.path.join(root, "data", "aip_actions.db")
+        os.makedirs(os.path.dirname(path), exist_ok=True)
+        _ACTION_DB_PATH = path
+    return _ACTION_DB_PATH
+
+
+def _record_action(action: str, target_id: str, params: dict, actor: str,
+                   role: str, status: str, result: dict, mqtt_topic: str = "") -> dict:
+    """动作审计落库 — 对应 Palantir Actions 的审计特性, 返回回执"""
+    import secrets
+    import sqlite3
+    from datetime import datetime
+
+    db = sqlite3.connect(_action_db_path())
+    try:
+        db.execute("""CREATE TABLE IF NOT EXISTS action_log (
+            objectId TEXT PRIMARY KEY, action TEXT, target_id TEXT,
+            params TEXT, actor TEXT, role TEXT, status TEXT,
+            result TEXT, mqtt_topic TEXT, createdAt TEXT)""")
+        oid = secrets.token_hex(10)
+        ts = datetime.now().isoformat()
+        db.execute("INSERT INTO action_log VALUES (?,?,?,?,?,?,?,?,?,?)",
+                   (oid, action, target_id,
+                    json.dumps(params or {}, ensure_ascii=False),
+                    actor, role, status,
+                    json.dumps(result, ensure_ascii=False, default=str)[:2000],
+                    mqtt_topic, ts))
+        db.commit()
+        return {"objectId": oid, "createdAt": ts}
+    finally:
+        db.close()
+
+
+def _entity_cmd_topic(engine, entity_id: str) -> str:
+    """解析实体下行指令 topic — dgiot/{site}/{gateway}/{channel}/{device}/cmd
+
+    与 ontology.get_path 的上行数据 topic 同构, 按实体层级截取段数。
+    """
+    try:
+        if entity_id in engine.points:
+            return "/".join(engine.get_path(entity_id).split("/")[:-1]) + "/cmd"
+        if entity_id in engine.devices:
+            dev = engine.devices[entity_id]
+            ch = engine.channels.get(dev.channel)
+            gw = engine.gateways.get(ch.gateway) if ch else None
+            site = engine.sites.get(gw.site) if gw else None
+            if site and gw and ch:
+                return f"dgiot/{site.id}/{gw.id}/{ch.id}/{dev.id}/cmd"
+        if entity_id in engine.channels:
+            ch = engine.channels[entity_id]
+            gw = engine.gateways.get(ch.gateway)
+            site = engine.sites.get(gw.site) if gw else None
+            if site and gw:
+                return f"dgiot/{site.id}/{gw.id}/{ch.id}/cmd"
+        if entity_id in engine.gateways:
+            gw = engine.gateways[entity_id]
+            site = engine.sites.get(gw.site)
+            if site:
+                return f"dgiot/{site.id}/{gw.id}/cmd"
+        if entity_id in engine.sites:
+            return f"dgiot/{entity_id}/cmd"
+        constraint = engine.constraints.get(entity_id)
+        if constraint and constraint.entity:
+            return _entity_cmd_topic(engine, constraint.entity)
+    except Exception as e:
+        logger.warning(f"[aip] cmd topic 解析失败 {entity_id}: {e}")
+    return f"dgiot/default/cmd/{entity_id}"
+
+
+def _mqtt_publish(topic: str, payload: dict) -> str:
+    """MQTT 下行 — 沿用 parse_hooks 短连接范式 (低频动作, 即用即断)"""
+    try:
+        import time as _t
+
+        import paho.mqtt.client as mqtt
+        host, port = "127.0.0.1", 1883
+        try:
+            from ..config import cfg
+            host, port = cfg.mqtt.host, cfg.mqtt.port
+        except Exception:
+            pass
+        client = mqtt.Client(client_id=f"aip_action_{int(_t.time() * 1000)}")
+        client.connect(host, port, keepalive=30)
+        client.publish(topic, json.dumps(payload, ensure_ascii=False), qos=1)
+        client.disconnect()
+        return topic
+    except Exception as e:
+        logger.warning(f"[aip] MQTT 下行失败 ({topic}): {e}")
+        return ""
 
 
 @router.post("/aip/actions/execute")
-async def aip_execute_action(body: ActionRequest):
+async def aip_execute_action(body: ActionRequest, user: dict = Depends(get_current_user)):
     """Action Framework — 执行运维动作 (Palantir Actions 风格)
 
-    支持:
-      - diagnose: 对设备/测点进行故障诊断
-      - acknowledge_alarm: 确认告警
-      - trend_check: 趋势检查
-      - health_check: 健康检查
+    每个动作先审计落库 (data/aip_actions.db) 再执行:
+      - acknowledge_alarm: 确认告警 — 登录用户即可 (operator 日常职责), 附 MQTT 通知
+      - command_down: 设备下行指令 — 仅 admin, params 作为 payload 发布到实体 cmd topic
+      - diagnose / trend_check / health_check: 只读分析, 同样留痕
     """
     rag, engine = _get_rag()
+    actor = user.get("sub", "?")
+    role = user.get("role", "?")
+    params = body.params or {}
+
+    if body.action == "command_down" and role != "admin":
+        _record_action(body.action, body.target_id, params, actor, role,
+                       "denied", {"reason": "仅管理员可下发设备指令"})
+        raise HTTPException(403, "仅管理员可下发设备指令")
+
+    mqtt_topic = ""
 
     if body.action == "diagnose":
-        result = rag.analyze_alarm(body.target_id, body.params or {})
-        return {"action": "diagnose", "result": result}
+        result = {"result": rag.analyze_alarm(body.target_id, params)}
 
     elif body.action == "trend_check":
-        hours = (body.params or {}).get("hours", 1)
-        result = rag.trend(body.target_id, hours)
-        return {"action": "trend_check", "result": result}
+        result = {"result": rag.trend(body.target_id, params.get("hours", 1))}
 
     elif body.action == "health_check":
         ctx = rag.live_context(body.target_id)
-        return {"action": "health_check",
-                "status": ctx.get("live", {}).get("status", "unknown"),
-                "context": ctx.get("text_context", "")}
+        result = {"status": ctx.get("live", {}).get("status", "unknown"),
+                  "context": ctx.get("text_context", "")}
 
     elif body.action == "acknowledge_alarm":
-        return {"action": "acknowledge_alarm", "target": body.target_id,
-                "status": "acknowledged", "message": f"告警 {body.target_id} 已确认"}
+        import time as _t
+        mqtt_topic = _mqtt_publish(_entity_cmd_topic(engine, body.target_id), {
+            "ts": int(_t.time() * 1000), "source": "aip_action",
+            "action": "acknowledge_alarm", "target": body.target_id,
+            "actor": actor,
+        })
+        result = {"status": "acknowledged",
+                  "message": f"告警 {body.target_id} 已由 {actor} 确认",
+                  "mqtt_topic": mqtt_topic or None}
 
-    return {"action": body.action, "status": "unknown_action"}
+    elif body.action == "command_down":
+        import time as _t
+        topic = params.pop("topic", None) or _entity_cmd_topic(engine, body.target_id)
+        mqtt_topic = _mqtt_publish(topic, {
+            "ts": int(_t.time() * 1000), "source": "aip_action",
+            "action": "command_down", "target": body.target_id,
+            "actor": actor, "params": params,
+        })
+        result = {"status": "sent" if mqtt_topic else "mqtt_unavailable",
+                  "mqtt_topic": mqtt_topic or None}
+
+    else:
+        receipt = _record_action(body.action, body.target_id, params, actor, role,
+                                 "unknown_action", {})
+        return {"action": body.action, "status": "unknown_action", "receipt": receipt}
+
+    receipt = _record_action(body.action, body.target_id, params, actor, role,
+                             "executed", result, mqtt_topic)
+    return {"action": body.action, "target": body.target_id, **result, "receipt": receipt}
 
 
 class ScenarioRequest(BaseModel):
@@ -780,7 +923,7 @@ def _persist_engine(engine):
         return {"error": str(e)}
 
 
-@router.post("/aip/objects/create")
+@router.post("/aip/objects/create", dependencies=[Depends(require_admin)])
 async def aip_object_create(body: OntologyObjectCreate):
     """创建本体对象 — 含前置校验 + 持久化"""
     from ..ontology import Site, Gateway, Channel, Device, Point, Constraint, DataSource
@@ -850,7 +993,7 @@ async def aip_object_create(body: OntologyObjectCreate):
     }
 
 
-@router.put("/aip/objects/{entity_id}")
+@router.put("/aip/objects/{entity_id}", dependencies=[Depends(require_admin)])
 async def aip_object_update(entity_id: str, body: dict):
     """更新本体对象属性 — 含变更记录 + 持久化"""
     _, engine = _get_rag()
@@ -882,7 +1025,7 @@ async def aip_object_update(entity_id: str, body: dict):
     }
 
 
-@router.delete("/aip/objects/{entity_id}")
+@router.delete("/aip/objects/{entity_id}", dependencies=[Depends(require_admin)])
 async def aip_object_delete(entity_id: str):
     """删除本体对象 — 含级联影响检查 + 持久化"""
     _, engine = _get_rag()
@@ -927,7 +1070,7 @@ async def aip_objects_validate():
     return result
 
 
-@router.post("/aip/objects/sync")
+@router.post("/aip/objects/sync", dependencies=[Depends(require_admin)])
 async def aip_objects_sync():
     """手动持久化本体到 SQLite"""
     _, engine = _get_rag()
@@ -942,7 +1085,7 @@ async def aip_objects_changelog(limit: int = Query(50, ge=1, le=200)):
     return {"total": len(engine._changelog), "changes": engine.changelog(limit)}
 
 
-@router.post("/aip/objects/import")
+@router.post("/aip/objects/import", dependencies=[Depends(require_admin)])
 async def aip_objects_import(body: OntologyBatchImport):
     """批量导入本体对象"""
     _, engine = _get_rag()
@@ -1029,60 +1172,87 @@ class CodeRequest(BaseModel):
     timeout: float = Field(5.0, ge=1, le=30, description="超时秒数")
 
 
-@router.post("/aip/console")
-async def aip_code_console(body: CodeRequest):
-    """Code Console — 浏览器内安全执行 Python (Palantir Code Workbook 风格)
+# 沙箱白名单 — 无副作用核心内建 (刻意不含 open/exec/eval/import/__import__/getattr)
+_SANDBOX_BUILTINS = {
+    "len": len, "range": range, "str": str, "int": int, "float": float,
+    "bool": bool, "list": list, "dict": dict, "set": set, "tuple": tuple,
+    "round": round, "min": min, "max": max, "sum": sum, "sorted": sorted,
+    "abs": abs, "enumerate": enumerate, "zip": zip, "any": any, "all": all,
+    "repr": repr, "format": format, "type": type, "isinstance": isinstance,
+    "Exception": Exception, "ValueError": ValueError, "KeyError": KeyError,
+    "IndexError": IndexError, "TypeError": TypeError, "StopIteration": StopIteration,
+}
 
-    预置变量:
-      engine — OntologyEngine 实例
-      rag    — GraphRAG 实例
-      search(q) → list   语义搜索
-      ask(q)   → dict    GraphRAG 问答
+
+def sandbox_exec(code: str, timeout: float = 5.0) -> dict:
+    """受限执行用户代码 — 返回 {stdout, result, error, ok}
+
+    三层防线:
+      1. 源码预检: 拒绝任何双下划线 (阻断 __import__/__class__/__subclasses__ 逃逸链)
+      2. builtins 白名单: 空 builtins + 无副作用子集, print 为受控实现
+      3. 独立线程 + 超时; 只捕获注入 print 的输出 (不再全局劫持 sys.stdout)
+    注意: 这是进程内 best-effort 沙箱, 不构成安全边界; 强隔离需 subprocess/容器 (P2)。
     """
-    import io, sys as _sys, traceback, threading, time as _t
+    import io
+    import threading
+    import traceback
 
-    _, engine = _get_rag()
-    rag = _get_rag()[0]
+    if "__" in code:
+        return {"stdout": "", "result": None,
+                "error": "沙箱拒绝: 代码包含双下划线 (dunder) 访问", "ok": False}
+
+    rag, engine = _get_rag()
 
     output = io.StringIO()
-    old_stdout = _sys.stdout
-    _sys.stdout = output
 
-    result = None
-    error = None
+    def _print(*args, **kwargs):
+        kwargs.pop("file", None)
+        output.write(kwargs.pop("sep", " ").join(str(a) for a in args) + kwargs.pop("end", "\n"))
+
+    preset = {
+        "engine": engine, "rag": rag,
+        "search": lambda q, k=5: rag.search(q, k),
+        "ask": lambda q: rag.ask(q),
+        "ctx": lambda eid: engine.local_context(eid),
+        "summary": lambda l="site": engine.community_summary(l),
+        "json": json,
+    }
+    preset_keys = set(preset) | {"__builtins__", "print"}
+
+    result_holder = {}
+    error_holder = [None]
 
     def _run():
-        nonlocal result, error
         try:
-            _locals = {
-                "engine": engine, "rag": rag,
-                "search": lambda q, k=5: rag.search(q, k),
-                "ask": lambda q: rag.ask(q),
-                "ctx": lambda eid: engine.local_context(eid),
-                "summary": lambda l="site": engine.community_summary(l),
-                "json": __import__("json"),
-            }
-            exec(body.code, {"__builtins__": __builtins__}, _locals)
-            result = {k: str(v)[:200] for k, v in _locals.items()
-                      if not k.startswith("_") and k not in ("engine", "rag", "search", "ask", "ctx", "summary", "json")}
-        except Exception as e:
-            error = traceback.format_exc()
+            g = {**preset, "print": _print, "__builtins__": dict(_SANDBOX_BUILTINS)}
+            exec(code, g)  # noqa: S102 — 进程内受限沙箱, 见 docstring
+            result_holder.update({k: str(v)[:200] for k, v in g.items()
+                                  if k not in preset_keys and not k.startswith("__")})
+        except Exception:
+            error_holder[0] = traceback.format_exc(limit=5)
 
     t = threading.Thread(target=_run, daemon=True)
     t.start()
-    t.join(timeout=body.timeout)
+    t.join(timeout=timeout)
     if t.is_alive():
-        error = f"执行超时 ({body.timeout}s)"
-
-    _sys.stdout = old_stdout
-    stdout = output.getvalue()
+        error_holder[0] = f"执行超时 ({timeout}s) — 线程无法强杀, 请避免死循环"
 
     return {
-        "stdout": stdout[:2000],
-        "result": result if not error else None,
-        "error": error,
-        "ok": error is None,
+        "stdout": output.getvalue()[:2000],
+        "result": result_holder if not error_holder[0] else None,
+        "error": error_holder[0],
+        "ok": error_holder[0] is None,
     }
+
+
+@router.post("/aip/console", dependencies=[Depends(require_admin)])
+async def aip_code_console(body: CodeRequest):
+    """Code Console — 浏览器内受限执行 Python (Palantir Code Workbook 风格)
+
+    仅 admin 可用, 三层沙箱防线见 sandbox_exec。
+    预置变量: engine / rag / search(q) / ask(q) / ctx(id) / summary(level) / json
+    """
+    return sandbox_exec(body.code, body.timeout)
 
 
 # ============================================================
