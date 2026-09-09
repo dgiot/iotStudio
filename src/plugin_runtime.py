@@ -34,8 +34,8 @@ from typing import Any, Callable, Dict, List, Optional
 
 log = logging.getLogger("plugin.runtime")
 
-# 七类 capability 与角色缺省
-CAPABILITY_TYPES = {"channel", "pusher", "action", "tool", "profile", "hook", "connector"}
+# 七类 capability 与角色缺省 ("一切皆插件": 动作执行器也是插件能力)
+CAPABILITY_TYPES = {"channel", "pusher", "action", "tool", "profile", "hook", "connector", "executor"}
 DEFAULT_CAP_ROLE = {"action": "admin", "tool": "admin", "connector": "admin"}
 
 _REPO_ROOT = Path(__file__).resolve().parent.parent
@@ -85,6 +85,12 @@ class PluginContext:
 
     def register_connector(self, name: str, factory: Callable = None, *, description: str = "") -> None:
         self.register_capability("connector", name, {"factory": factory, "description": description})
+
+    def register_executor(self, name: str, fn: Callable = None, *, description: str = "",
+                          external_side_effect: bool = True) -> None:
+        """动作执行器插件点 — 运输实现 (MQTT/HTTP/日志...) 与动作类型解耦"""
+        self.register_capability("executor", name, {"fn": fn, "description": description,
+                                                    "external_side_effect": external_side_effect})
 
     # ── 服务面 ───────────────────────────────────────────────
     @property

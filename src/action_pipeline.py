@@ -102,6 +102,7 @@ class ActionPipeline:
         self.executor = executor          # fn(defn, target_id, params) -> dict
         self.authorizer = authorizer or MemoryAuthorizer()
         self._audit_path = audit_path
+        self._wlock = threading.Lock()    # 审计追加串行化 (并行世界共用一份日志)
 
     # ── 审计留痕 (JSONL append; params 只记指纹) ──
     def _audit(self, event: dict) -> None:
@@ -109,8 +110,9 @@ class ActionPipeline:
         path = self._audit_path or _audit_path()
         try:
             os.makedirs(os.path.dirname(path) or ".", exist_ok=True)
-            with open(path, "a", encoding="utf-8") as f:
-                f.write(json.dumps(event, ensure_ascii=False, default=str) + "\n")
+            with self._wlock:
+                with open(path, "a", encoding="utf-8") as f:
+                    f.write(json.dumps(event, ensure_ascii=False, default=str) + "\n")
         except OSError:
             pass  # 审计落盘失败不阻断管线; 内存态仍可用
 
@@ -177,3 +179,23 @@ class ActionPipeline:
         return {"state": "executed", "result": result,
                 "reconciliation": recon, "decided_by": decided_by,
                 "external_side_effect": defn.external_side_effect}
+
+    # ── 平行世界: 并行批量派发 (隔离 — 单项失败不拖垮批次) ──
+    def submit_many(self, submissions: list, max_workers: int = 4) -> list:
+        """并行提交一批动作; submissions 每项 = submit() 的 kwargs 字典。
+
+        世界是平行的: 各项在线程池中独立走完整三段式, 单项异常被隔离为
+        {"state": "error"} — 其他项照常推进; 返回顺序与输入一致。
+        """
+        from concurrent.futures import ThreadPoolExecutor
+
+        def _one(sub: dict) -> dict:
+            try:
+                return self.submit(**sub)
+            except Exception as e:  # 隔离: 任何插件级异常只影响该项
+                self._audit({"event": "error", "action": sub.get("action", "?"),
+                             "error": str(e)})
+                return {"state": "error", "error": str(e)}
+
+        with ThreadPoolExecutor(max_workers=max(1, max_workers)) as pool:
+            return list(pool.map(_one, list(submissions)))

@@ -31,9 +31,10 @@ GOOD_PLUGIN = """
 """
 
 
-def test_capability_types_seven():
+def test_capability_types_eight():
+    # "一切皆插件" — 动作执行器 (executor) 也是一等 capability
     assert CAPABILITY_TYPES == {"channel", "pusher", "action", "tool",
-                                "profile", "hook", "connector"}
+                                "profile", "hook", "connector", "executor"}
 
 
 def test_missing_manifest_fails_isolated(tmp_path):
@@ -140,7 +141,8 @@ def test_builtin_plugins_load(tmp_path):
     mgr.load_all()
     summary = {e["name"]: e for e in mgr.summary()}
 
-    for name in ("ontology_demo", "actions_core", "graphrag_tools", "pushers"):
+    for name in ("ontology_demo", "actions_core", "graphrag_tools", "pushers",
+                 "actions_pipeline"):
         assert name in summary, f"内置插件缺失: {name}"
         assert summary[name]["status"] == "loaded", f"{name}: {summary[name]}"
 
@@ -150,8 +152,9 @@ def test_builtin_plugins_load(tmp_path):
     assert actions["command_down"]["external_side_effect"] is True
     assert actions["acknowledge_alarm"]["min_role"] == "operator"
 
-    # graphrag_tools: 与 sandbox 预置变量对应
-    assert set(mgr.tools()) == {"search", "ask", "ctx", "summary"}
+    # graphrag_tools: 与 sandbox 预置变量对应; actions_pipeline 另贡献三个工具
+    assert {"search", "ask", "ctx", "summary"} <= set(mgr.tools())
+    assert {"action_submit", "action_dispatch", "action_authorize"} <= set(mgr.tools())
 
     # pushers: 四出口工厂 (类名已核实)
     assert set(mgr.pushers()) == {"mqtt", "http", "dgiot", "edge_hub"}
