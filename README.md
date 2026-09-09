@@ -189,6 +189,20 @@ iotStudio  ──MQTT──→  EMQX (:1883)  ──→  Parse Server  ──→
 
 数据格式对齐 DG-IoT 物模型标准，实现边缘采集 → 中心汇聚的全链路。
 
+### 中枢一键部署（开源精简版）
+
+`scripts/deploy_hub.sh` 在 openEuler/Kylin 上源码构建并部署 DG-IoT 中枢（参考 [dgaiot](https://gitee.com/dgaiot/dgaiot) 单机部署思路，只装必要）：
+
+- 不依赖 Docker，不改系统源，不装全家桶（无 ollama/milvus/dify/parse-server）
+- 复用已有 TDengine/PostgreSQL，端口冲突预检（1883/8083/8084/18083）
+- 全量走 gitee 镜像（github 依赖自动重写），幂等可重跑，systemd/nohup 双模式
+
+```bash
+sudo bash scripts/deploy_hub.sh          # 默认 TAG=v4.9.3, 安装到 /data/dgiot
+# TAG=v4.9.2 SRC=/opt/dgiot-4.2 sudo -E bash scripts/deploy_hub.sh  # 自定义
+python scripts/hub_smoke.py              # 边缘→中枢 MQTT 回环验证
+```
+
 ---
 
 ## IOT 底座插件（plugins-base 合并） / IOT Base Plugins (merged)
