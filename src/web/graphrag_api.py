@@ -17,6 +17,7 @@ from __future__ import annotations
 
 import json
 import logging
+from dataclasses import asdict
 from typing import Optional
 
 from fastapi import APIRouter, Depends, HTTPException, Query
@@ -26,6 +27,11 @@ try:
     from ..auth import get_current_user, require_admin
 except ImportError:
     from auth import get_current_user, require_admin
+
+try:
+    from ..ontology import LINK_RELATIONS, Link
+except ImportError:
+    from ontology import LINK_RELATIONS, Link
 
 logger = logging.getLogger(__name__)
 
@@ -845,6 +851,75 @@ async def aip_execute_action(body: ActionRequest, user: dict = Depends(get_curre
     receipt = _record_action(body.action, body.target_id, params, actor, role,
                              "executed", result, mqtt_topic)
     return {"action": body.action, "target": body.target_id, **result, "receipt": receipt}
+
+
+# ═══════════════════════════════════════════════════════════
+# R1: 显式关系 (Link) — /aip/links
+# ═══════════════════════════════════════════════════════════
+
+class LinkRequest(BaseModel):
+    source: str = Field(..., description="源实体 ID (须已注册)")
+    target: str = Field(..., description="目标实体 ID (须已注册)")
+    relation: str = Field(..., description=f"关系词 (词表: {sorted(LINK_RELATIONS)})")
+    description: str = Field("", max_length=500)
+    props: dict = Field(default_factory=dict, description="附加语义: constraint 引用/协议路径等")
+
+
+@router.get("/aip/links")
+async def aip_list_links(relation: str = None, entity: str = None, user: dict = Depends(get_current_user)):
+    """关系边清单 — 可按 relation/entity 过滤; 返回词表"""
+    rag, engine = _get_rag()
+    links = engine.get_links(entity) if entity else list(engine.links.values())
+    if relation:
+        links = [l for l in links if l.relation == relation]
+    return {
+        "links": [asdict(l) for l in links],
+        "relations": sorted(LINK_RELATIONS),
+        "count": len(links),
+        "counts_by_relation": {
+            r: sum(1 for x in engine.links.values() if x.relation == r)
+            for r in sorted(LINK_RELATIONS)
+        },
+    }
+
+
+@router.post("/aip/links", dependencies=[Depends(require_admin)])
+async def aip_create_link(body: LinkRequest, user: dict = Depends(get_current_user)):
+    """创建显式关系边 (仅管理员) — 端点必须已注册, 关系词必须在词表内; 全程审计"""
+    rag, engine = _get_rag()
+    actor = user.get("sub", "?"); role = user.get("role", "?")
+    if body.relation not in LINK_RELATIONS:
+        raise HTTPException(400, f"未知关系词 '{body.relation}' (词表: {sorted(LINK_RELATIONS)})")
+    for end in (body.source, body.target):
+        if engine.entity_type(end) is None:
+            raise HTTPException(400, f"端点实体 '{end}' 未注册")
+    if body.source == body.target:
+        raise HTTPException(400, "自环边不允许")
+    link_id = body.props.get("id") or f"lnk_{body.source}_{body.relation}_{body.target}"
+    if link_id in engine.links:
+        raise HTTPException(409, f"关系边 {link_id} 已存在")
+    link = Link(id=link_id, source=body.source, target=body.target,
+                relation=body.relation, description=body.description,
+                props={k: v for k, v in body.props.items() if k != "id"})
+    engine.register(link)
+    receipt = _record_action("link_create", link.id,
+                             {"source": body.source, "target": body.target,
+                              "relation": body.relation}, actor, role, "executed",
+                             {"description": body.description})
+    return {"link": asdict(link), "receipt": receipt}
+
+
+@router.delete("/aip/links/{link_id}", dependencies=[Depends(require_admin)])
+async def aip_delete_link(link_id: str, user: dict = Depends(get_current_user)):
+    """删除关系边 (仅管理员) — 审计留痕"""
+    rag, engine = _get_rag()
+    actor = user.get("sub", "?"); role = user.get("role", "?")
+    if link_id not in engine.links:
+        raise HTTPException(404, f"关系边 {link_id} 不存在")
+    removed = asdict(engine.links.pop(link_id))
+    receipt = _record_action("link_delete", link_id, {"relation": removed.get("relation")},
+                             actor, role, "executed", {"removed": removed})
+    return {"deleted": removed, "receipt": receipt}
 
 
 class ScenarioRequest(BaseModel):

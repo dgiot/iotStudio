@@ -99,6 +99,7 @@ class Constraint:
     source: str = ""                  # 规则出处 (操作手册/工艺规范/合规文件)
     action: str = ""                  # 触发动作描述
     enabled: bool = True
+    rule_kind: str = "validation"     # R1 五分类: mapping|validation|state|inference|automation
 
 
 @dataclass
@@ -111,6 +112,35 @@ class DataSource:
     status: str = "unknown"
     tag_count: int = 0
     tables: List[str] = field(default_factory=list)
+
+
+# ═══════════════════════════════════════════════════════════
+# 显式关系 (R1: Link 层 — 对齐 Ontexus 四要素的 Relation)
+# ═══════════════════════════════════════════════════════════
+
+# 关系词表 — 与 DGAIOT 生态对齐 (repo-skeleton 已入库 34 条种子:
+# has_defect/has_issue/maps_to/relates_to), 加边缘域扩展四词
+LINK_RELATIONS = {
+    "maps_to",       # 映射: 测点→协议路径, 数据出口→通道
+    "relates_to",    # 泛关联: 相邻保护/联动实体
+    "has_defect",    # 缺陷归属: 实体→已知缺陷 (props.constraint 引约束)
+    "has_issue",     # 问题归属: 实体→已知问题/故障模式
+    "feeds_into",    # 数据/能量流入: 通道→出口通道, 电源→负载
+    "monitors",      # 监测: 保护/传感器→被监测设备 (跨通道)
+    "controls",      # 控制: 网关→通道启停/策略
+    "powered_by",    # 供电: 设备→上级供电实体
+}
+
+
+@dataclass
+class Link:
+    """显式业务关系边 — 跨层级连线, 与隐式层级父子互补"""
+    id: str
+    source: str                       # 源实体 ID
+    target: str                       # 目标实体 ID
+    relation: str                     # LINK_RELATIONS 之一 (validate 校验)
+    description: str = ""
+    props: Dict[str, Any] = field(default_factory=dict)   # 约束引用/路径等附加语义
 
 
 # ═══════════════════════════════════════════════════════════
@@ -136,6 +166,7 @@ class OntologyEngine:
         self.points: Dict[str, Point] = {}
         self.constraints: Dict[str, Constraint] = {}
         self.datasources: Dict[str, DataSource] = {}
+        self.links: Dict[str, Link] = {}
         self._mqtt = mqtt_client
 
     # ── register ──
@@ -145,7 +176,7 @@ class OntologyEngine:
             Site: self.sites, Gateway: self.gateways,
             Channel: self.channels, Device: self.devices,
             Point: self.points, Constraint: self.constraints,
-            DataSource: self.datasources
+            DataSource: self.datasources, Link: self.links
         }
         t = type(node)
         if t in table:
@@ -179,6 +210,227 @@ class OntologyEngine:
 
     def get_channels(self, gateway_id: str) -> List[Channel]:
         return [c for c in self.channels.values() if c.gateway == gateway_id]
+
+    # ── 关系层 (R1) ──
+    def _entity_tables(self) -> Dict[str, dict]:
+        return {"site": self.sites, "gateway": self.gateways, "channel": self.channels,
+                "device": self.devices, "point": self.points,
+                "constraint": self.constraints, "datasource": self.datasources,
+                "link": self.links}
+
+    def entity_type(self, entity_id: str) -> Optional[str]:
+        """实体类型 (site/gateway/channel/device/point/constraint/datasource/link)"""
+        for tname, table in self._entity_tables().items():
+            if entity_id in table:
+                return tname
+        return None
+
+    def entity_name(self, entity_id: str) -> str:
+        for table in (self.sites, self.gateways, self.channels, self.devices, self.points,
+                      self.constraints, self.datasources):
+            if entity_id in table:
+                e = table[entity_id]
+                return getattr(e, "name", None) or getattr(e, "hostname", None) or entity_id
+        return entity_id
+
+    def _parent_id(self, entity_id: str) -> Optional[str]:
+        """隐式层级父实体 (由外键字段推导, 不依赖缓存列表)"""
+        p = self.points.get(entity_id)
+        if p: return p.device
+        d = self.devices.get(entity_id)
+        if d: return d.channel
+        c = self.channels.get(entity_id)
+        if c: return c.gateway
+        g = self.gateways.get(entity_id)
+        if g: return g.site
+        ds = self.datasources.get(entity_id)
+        if ds: return ds.gateway
+        return None
+
+    def _child_ids(self, entity_id: str) -> List[str]:
+        if entity_id in self.sites:
+            return [g.id for g in self.gateways.values() if g.site == entity_id]
+        if entity_id in self.gateways:
+            return [c.id for c in self.channels.values() if c.gateway == entity_id]
+        if entity_id in self.channels:
+            return [d.id for d in self.devices.values() if d.channel == entity_id]
+        if entity_id in self.devices:
+            return [p.id for p in self.points.values() if p.device == entity_id]
+        return []
+
+    def get_links(self, entity_id: str, relation: str = None) -> List[Link]:
+        """实体的全部关系边 (出边+入边), 可按关系词过滤"""
+        return [l for l in self.links.values()
+                if entity_id in (l.source, l.target)
+                and (relation is None or l.relation == relation)]
+
+    # ── 子图 / 上下文 / 社区摘要 (graphrag_api 与 CLI 依赖) ──
+    def subgraph(self, entity_id: str, depth: int = 2) -> dict:
+        """BFS 子图 — 隐式层级边 + Link 显式关系边 (Graph 视图数据源)"""
+        if self.entity_type(entity_id) is None:
+            raise KeyError(f"Entity {entity_id} not found")
+        nodes: Dict[str, dict] = {}
+        edge_keys = set()
+        edges: List[dict] = []
+
+        def add_node(eid: str):
+            if eid in nodes: return
+            nodes[eid] = {"id": eid, "type": self.entity_type(eid),
+                          "name": self.entity_name(eid)}
+
+        def add_edge(src: str, dst: str, kind: str, relation: str = ""):
+            key = (kind, relation, src, dst)
+            if key in edge_keys: return
+            edge_keys.add(key)
+            edges.append({"source": src, "target": dst, "kind": kind, "relation": relation})
+
+        add_node(entity_id)
+        frontier = [entity_id]
+        for _ in range(max(0, depth)):
+            next_frontier = []
+            for eid in frontier:
+                pid = self._parent_id(eid)
+                if pid and self.entity_type(pid):
+                    add_node(pid); add_edge(eid, pid, "hierarchy")
+                    next_frontier.append(pid)
+                for cid in self._child_ids(eid):
+                    add_node(cid); add_edge(eid, cid, "hierarchy")
+                    next_frontier.append(cid)
+                for l in self.get_links(eid):
+                    add_node(l.source); add_node(l.target)
+                    add_edge(l.source, l.target, "link", l.relation)
+                    next_frontier.append(l.target if l.source == eid else l.source)
+            frontier = next_frontier
+        return {"root": entity_id, "nodes": list(nodes.values()), "edges": edges,
+                "node_count": len(nodes), "edge_count": len(edges)}
+
+    def local_context(self, entity_id: str) -> dict:
+        """实体本地上下文 — 父/子/同级 + 约束 + 关系边 + 可读文本"""
+        t = self.entity_type(entity_id)
+        if t is None:
+            raise KeyError(f"Entity {entity_id} not found")
+        entity = self._entity_tables()[t][entity_id]
+        pid = self._parent_id(entity_id)
+        children = self._child_ids(entity_id)
+        siblings = [s for s in (self._child_ids(pid) if pid else []) if s != entity_id]
+        constraints = [c for c in self.constraints.values() if c.entity == entity_id]
+        links = self.get_links(entity_id)
+
+        lines = [f"[{t}] {entity_id} — {self.entity_name(entity_id)}"]
+        if pid:
+            lines.append(f"  上级: [{self.entity_type(pid)}] {pid} ({self.entity_name(pid)})")
+        for cid in children:
+            lines.append(f"  下级: [{self.entity_type(cid)}] {cid} ({self.entity_name(cid)})")
+        for sid in siblings:
+            lines.append(f"  同级: [{self.entity_type(sid)}] {sid} ({self.entity_name(sid)})")
+        for l in links:
+            extra = f" — {l.description}" if l.description else ""
+            lines.append(f"  关系: {l.source} -[{l.relation}]-> {l.target}{extra}")
+        for c in constraints:
+            lines.append(f"  约束: {c.name} ({c.severity}/{c.rule_kind}) {c.rule}")
+        return {"entity_id": entity_id, "type": t, "entity": asdict(entity),
+                "parent": pid, "children": children, "siblings": siblings,
+                "constraints": [asdict(c) for c in constraints],
+                "links": [asdict(l) for l in links],
+                "text_context": "\n".join(lines)}
+
+    def community_summary(self, level: str = "site", entity_id: str = None) -> dict:
+        """层级社区摘要 — site/gateway/channel 聚合 (rag.ask_community 数据源)"""
+        if entity_id:
+            sub = self.subgraph(entity_id, depth=2)
+            return {"level": level, "entity_id": entity_id, "groups": [{
+                "id": entity_id, "name": self.entity_name(entity_id),
+                "node_count": sub["node_count"], "edge_count": sub["edge_count"],
+                "links": sum(1 for e in sub["edges"] if e["kind"] == "link"),
+                "text": f"{entity_id}: {sub['node_count']} 节点 / {sub['edge_count']} 边",
+            }], "text": f"{entity_id}: {sub['node_count']} 节点 / {sub['edge_count']} 边"}
+        roots = {"site": self.sites, "gateway": self.gateways, "channel": self.channels}.get(level)
+        if roots is None:
+            raise ValueError(f"未知层级: {level} (可选 site/gateway/channel)")
+        depth = {"site": 3, "gateway": 2, "channel": 1}[level]
+        groups = []
+        for r in roots.values():
+            sub = self.subgraph(r.id, depth=depth)
+            cons = [c for c in self.constraints.values() if c.entity == r.id]
+            groups.append({"id": r.id, "name": self.entity_name(r.id), "type": level,
+                           "node_count": sub["node_count"], "edge_count": sub["edge_count"],
+                           "links": sum(1 for l in self.links.values()
+                                        if r.id in (l.source, l.target)),
+                           "constraints": len(cons)})
+        text = "\n".join(f"- [{g['type']}] {g['id']} {g['name']}: "
+                         f"{g['node_count']} 节点 / {g['edge_count']} 边 / "
+                         f"{g['links']} 关系 / {g['constraints']} 约束" for g in groups)
+        return {"level": level, "groups": groups, "text": text}
+
+    # ── OWL/RDF 导出 (rdflib; ObjectProperty = R1 关系词表) ──
+    def _rdf_graph(self):
+        try:
+            from rdflib import Graph, Namespace, RDF, RDFS, OWL, Literal
+        except ImportError as e:
+            raise RuntimeError("OWL 导出需要 rdflib (pip install rdflib)") from e
+        DG = Namespace("http://dgiot.cloud/ontology#")
+        g = Graph()
+        g.bind("dgiot", DG); g.bind("owl", OWL); g.bind("rdfs", RDFS)
+        g.add((DG[""], RDF.type, OWL.Ontology))
+        classes = {"site": "Site", "gateway": "Gateway", "channel": "Channel",
+                   "device": "Device", "point": "Point",
+                   "constraint": "Constraint", "datasource": "DataSource"}
+        for cls in classes.values():
+            g.add((DG[cls], RDF.type, OWL.Class))
+            g.add((DG[cls], RDFS.label, Literal(cls)))
+        hier = [("hasGateway", "Site", "Gateway"), ("hasChannel", "Gateway", "Channel"),
+                ("hasDevice", "Channel", "Device"), ("hasPoint", "Device", "Point"),
+                ("hasConstraint", "Device", "Constraint")]
+        for prop, dom, rng in hier:
+            g.add((DG[prop], RDF.type, OWL.ObjectProperty))
+            g.add((DG[prop], RDFS.domain, DG[dom]))
+            g.add((DG[prop], RDFS.range, DG[rng]))
+        for rel in sorted(LINK_RELATIONS):
+            g.add((DG[rel], RDF.type, OWL.ObjectProperty))
+            g.add((DG[rel], RDFS.label, Literal(rel)))
+        individuals = [
+            (self.sites, "Site"), (self.gateways, "Gateway"), (self.channels, "Channel"),
+            (self.devices, "Device"), (self.points, "Point"),
+            (self.constraints, "Constraint"), (self.datasources, "DataSource"),
+        ]
+        for table, cls in individuals:
+            for eid, e in table.items():
+                g.add((DG[eid], RDF.type, DG[cls]))
+                g.add((DG[eid], RDFS.label, Literal(self.entity_name(eid))))
+        for gw in self.gateways.values():
+            g.add((DG[gw.site], DG["hasGateway"], DG[gw.id]))
+        for c in self.channels.values():
+            g.add((DG[c.gateway], DG["hasChannel"], DG[c.id]))
+        for d in self.devices.values():
+            g.add((DG[d.channel], DG["hasDevice"], DG[d.id]))
+        for p in self.points.values():
+            g.add((DG[p.device], DG["hasPoint"], DG[p.id]))
+        for c in self.constraints.values():
+            if c.entity and self.entity_type(c.entity) not in (None, "link"):
+                g.add((DG[c.entity], DG["hasConstraint"], DG[c.id]))
+                g.add((DG[c.id], RDFS.comment, Literal(f"{c.rule} [{c.rule_kind}]")))
+        for l in self.links.values():
+            g.add((DG[l.source], DG[l.relation], DG[l.target]))
+            if l.description:
+                g.add((DG[l.source], RDFS.comment,
+                       Literal(f"-[{l.relation}]-> {l.target}: {l.description}")))
+        return g
+
+    def export_owl(self, path: str = None) -> str:
+        """导出 OWL/RDF(XML) — 含 R1 关系词表的 ObjectProperty"""
+        xml = self._rdf_graph().serialize(format="xml")
+        if path:
+            from pathlib import Path as _P
+            _P(path).write_text(xml, encoding="utf-8")
+        return xml
+
+    def export_turtle(self, path: str = None) -> str:
+        """导出 Turtle — 同一张 RDF 图的 TTL 序列化"""
+        ttl = self._rdf_graph().serialize(format="turtle")
+        if path:
+            from pathlib import Path as _P
+            _P(path).write_text(ttl, encoding="utf-8")
+        return ttl
 
     # ── 树形导出 ──
     def tree(self, site_id: str = None) -> dict:
@@ -246,6 +498,7 @@ class OntologyEngine:
             "points": {k: asdict(v) for k, v in self.points.items()},
             "constraints": {k: asdict(v) for k, v in self.constraints.items()},
             "datasources": {k: asdict(v) for k, v in self.datasources.items()},
+            "links": {k: asdict(v) for k, v in self.links.items()},
         }
 
     # ── sync to Parse ──
@@ -302,6 +555,12 @@ class OntologyEngine:
                 (ds.id, ds.gateway, ds.type, ds.connection, ds.status,
                  ds.tag_count, json.dumps(asdict(ds)), now, now))
 
+        for l in self.links.values():
+            db.execute(
+                "INSERT OR REPLACE INTO ontology_link (objectId,source_id,target_id,relation,description,data,createdAt,updatedAt) VALUES (?,?,?,?,?,?,?,?)",
+                (l.id, l.source, l.target, l.relation, l.description,
+                 json.dumps(asdict(l)), now, now))
+
         db.commit(); db.close()
         return {"status": "synced", "counts": self.health()["counts"]}
 
@@ -322,6 +581,17 @@ class OntologyEngine:
         for pt in self.points.values():
             if pt.device not in self.devices:
                 issues.append(f"Point {pt.id}: device '{pt.device}' not found")
+        for l in self.links.values():
+            for end in (l.source, l.target):
+                if self.entity_type(end) is None:
+                    issues.append(f"Link {l.id}: endpoint '{end}' not found")
+            if l.source == l.target:
+                issues.append(f"Link {l.id}: 自环边")
+            if l.relation not in LINK_RELATIONS:
+                issues.append(f"Link {l.id}: 未知关系词 '{l.relation}' (词表: {sorted(LINK_RELATIONS)})")
+        for c in self.constraints.values():
+            if c.rule_kind not in ("mapping", "validation", "state", "inference", "automation"):
+                issues.append(f"Constraint {c.id}: 未知 rule_kind '{c.rule_kind}'")
         return {
             "valid": len(issues) == 0,
             "issues": issues,
@@ -330,9 +600,9 @@ class OntologyEngine:
 
     def health(self) -> dict:
         return {
-            "ontology": "5-layer: Site > Gateway > Channel > Device > Point",
+            "ontology": "5-layer: Site > Gateway > Channel > Device > Point + Link",
             "mqtt_topic": "dgiot/{site}/{gateway}/{channel}/{device}/{point}/data",
-            "version": "2.0",
+            "version": "2.1",
             "counts": {
                 "sites": len(self.sites),
                 "gateways": len(self.gateways),
@@ -341,6 +611,7 @@ class OntologyEngine:
                 "points": len(self.points),
                 "constraints": len(self.constraints),
                 "datasources": len(self.datasources),
+                "links": len(self.links),
             }
         }
 
@@ -686,5 +957,79 @@ def build_131_ontology() -> OntologyEngine:
     ]
     for ds in datasources:
         engine.register(ds)
+
+    # ── R1: 显式关系种子 (词表: maps_to/relates_to/has_defect/has_issue 对齐 DGAIOT 生态
+    #    + 边缘域 feeds_into/monitors/controls/powered_by) — 数据链与电力链 ──
+    seed_links = [
+        # 电力链: 保护继电器 → 井口/泵 (跨通道能量依赖)
+        Link("lnk_pw_a", "dev_well_DEV_A", "dev_relay_00", "powered_by",
+             "DEV_A 井馈线由 DSL-31A 线路保护供电"),
+        Link("lnk_pw_b", "dev_well_DEV_B", "dev_relay_00", "powered_by",
+             "DEV_B 井馈线由 DSL-31A 线路保护供电"),
+        Link("lnk_pw_s1", "dev_sim_sj0001", "dev_relay_40", "powered_by",
+             "仿真泵母线由电动机保护供电"),
+        # 监测: 保护设备 → 被保护对象 (跨通道)
+        Link("lnk_mon_a", "dev_relay_00", "dev_well_DEV_A", "monitors",
+             "DSL-31A 监测 DEV_A 馈线电流/电压 (Ia/Ib/Ic/Ua/Ub/Uc)"),
+        Link("lnk_mon_s1", "dev_relay_40", "dev_sim_sj0001", "monitors",
+             "电动机保护监测仿真泵堵转/过流"),
+        # 数据链: 采集通道 → 提交出口
+        Link("lnk_flow_mb", "ch_modbus_tcp", "ch_oracle", "feeds_into",
+             "Modbus 遥测经 IoMonitor 汇入 Oracle 提交通道 (300ms 实时)"),
+        Link("lnk_flow_a11", "ch_a11_rtu", "ch_oracle", "feeds_into",
+             "A11 功图数据经 A11SQLSERVICE 汇入 Oracle (1s 周期)"),
+        Link("lnk_flow_red", "ch_redundancy", "ch_oracle", "feeds_into",
+             "冗余同步数据汇入 Oracle 出口"),
+        # 映射: 出口→通道, 测点→协议路径
+        Link("lnk_map_ds", "ds_oracle", "ch_oracle", "maps_to",
+             "Oracle 数据出口映射到其协议通道"),
+        Link("lnk_map_rtdb", "ds_realtime_db", "ch_realtime_db", "maps_to",
+             "RTDB 出口映射到实时库通道"),
+        Link("lnk_map_tgp", "pt_tgp", "ch_modbus_tcp", "maps_to",
+             "套压测点映射到 Modbus 采集路径",
+             props={"path": "/DEVICE_D/WELL_001/STATION_01WELL_001TGP"}),
+        # 泛关联
+        Link("lnk_rel_bus", "dev_relay_00", "dev_relay_10", "relates_to",
+             "同段母线相邻保护 (线路保护/变压器差动)"),
+        Link("lnk_rel_red", "ds_redundancy", "ch_redundancy", "relates_to",
+             "冗余出口与冗余通道联动"),
+        # 已知缺陷/问题 (props.constraint 引用约束, 闭环到 Logic 层)
+        Link("lnk_def_epoch", "ch_oracle", "ds_oracle", "has_defect",
+             "epoch zero 存储失败 (大量 CommitErr)",
+             props={"constraint": "c_data_epoch_zero"}),
+        Link("lnk_iss_crash", "gw_131", "ch_oracle", "has_issue",
+             "IoCommit C0000005 崩溃 10 次 (2022-2023, psNTService 自动重启)",
+             props={"constraint": "c_commit_crash"}),
+        Link("lnk_iss_break", "ch_a11_rtu", "gw_131", "has_issue",
+             "1669 个功图断点文件 (BreakTime/)",
+             props={"constraint": "c_breaktime"}),
+        # 控制: 网关 → 通道策略
+        Link("lnk_ctl_mb", "gw_131", "ch_modbus_tcp", "controls",
+             "LegacyComm 通道启停由网关调度 (同型通道间隔≥10s)",
+             props={"constraint": "c_channel_spacing"}),
+        Link("lnk_ctl_red", "gw_131", "ch_redundancy", "controls",
+             "心跳 1500ms×3 裁决主备切换 (4.5s)",
+             props={"constraint": "c_redundancy"}),
+        Link("lnk_ctl_a11", "gw_131", "ch_a11_rtu", "controls",
+             "RTU 时间同步与 30min 在线判定策略",
+             props={"constraint": "c_device_check"}),
+    ]
+    for l in seed_links:
+        engine.register(l)
+
+    # ── R1: 约束 rule_kind 五分类标注 (mapping/validation/state/inference/automation) ──
+    rule_kinds = {
+        "c_commit_real": "mapping", "c_commit_batch": "mapping",
+        "c_cache_flush": "mapping", "c_ado_pool": "mapping",
+        "c_overcurrent": "validation", "c_voltage_abnormal": "validation",
+        "c_motor_stall": "validation", "c_breaktime": "validation",
+        "c_data_epoch_zero": "validation",
+        "c_io_timeout": "state", "c_device_check": "state", "c_redundancy": "state",
+        "c_channel_spacing": "automation", "c_time_sync": "automation",
+        "c_commit_crash": "inference",
+    }
+    for cid, kind in rule_kinds.items():
+        if cid in engine.constraints:
+            engine.constraints[cid].rule_kind = kind
 
     return engine

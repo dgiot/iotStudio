@@ -910,6 +910,7 @@ def _do_init_db():
     be.create_table("ontology_point", "objectId TEXT PRIMARY KEY, name TEXT, device_id TEXT, unit TEXT, description TEXT, register TEXT, alarm TEXT, range_min REAL, range_max REAL, category TEXT, data TEXT DEFAULT '{}', createdAt TEXT, updatedAt TEXT")
     be.create_table("ontology_constraint", "objectId TEXT PRIMARY KEY, name TEXT, rule TEXT, entity TEXT, severity TEXT, source TEXT, action TEXT, enabled INTEGER DEFAULT 1, data TEXT DEFAULT '{}', createdAt TEXT, updatedAt TEXT")
     be.create_table("ontology_datasource", "objectId TEXT PRIMARY KEY, gateway_id TEXT, type TEXT, connection TEXT, status TEXT, tag_count INTEGER DEFAULT 0, data TEXT DEFAULT '{}', createdAt TEXT, updatedAt TEXT")
+    be.create_table("ontology_link", "objectId TEXT PRIMARY KEY, source_id TEXT, target_id TEXT, relation TEXT, description TEXT, data TEXT DEFAULT '{}', createdAt TEXT, updatedAt TEXT")
     db.commit()
 
     now = now_iso()
