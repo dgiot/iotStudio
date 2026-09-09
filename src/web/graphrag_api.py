@@ -33,6 +33,19 @@ try:
 except ImportError:
     from ontology import LINK_RELATIONS, Link
 
+try:
+    from ..action_defs import (ActionDefinition, check_submit_criteria, get as get_action_def,
+                               list_defs, register as register_action_def,
+                               role_allowed, seed_builtin, unregister as unregister_action_def,
+                               validate_params)
+except ImportError:
+    from action_defs import (ActionDefinition, check_submit_criteria, get as get_action_def,
+                             list_defs, register as register_action_def,
+                             role_allowed, seed_builtin, unregister as unregister_action_def,
+                             validate_params)
+
+seed_builtin()  # R2: 内建动作定义 (幂等)
+
 logger = logging.getLogger(__name__)
 
 # 鉴权: 路由器级 — 所有 /api/graphrag/* 均需登录 (Authorization: Bearer JWT)。
@@ -704,29 +717,123 @@ def _action_db_path() -> str:
     return _ACTION_DB_PATH
 
 
+def _ensure_action_db(db) -> None:
+    """建表 + R2 列迁移 (幂等; 老库 ALTER 补列, 已存在则跳过)"""
+    import sqlite3
+    db.execute("""CREATE TABLE IF NOT EXISTS action_log (
+        objectId TEXT PRIMARY KEY, action TEXT, target_id TEXT,
+        params TEXT, actor TEXT, role TEXT, status TEXT,
+        result TEXT, mqtt_topic TEXT, createdAt TEXT)""")
+    for col in ("def_id", "reconciliation", "reconciled_by", "reconciled_at"):
+        try:
+            db.execute(f"ALTER TABLE action_log ADD COLUMN {col} TEXT DEFAULT ''")
+        except sqlite3.OperationalError:
+            pass  # 列已存在
+
+
 def _record_action(action: str, target_id: str, params: dict, actor: str,
-                   role: str, status: str, result: dict, mqtt_topic: str = "") -> dict:
-    """动作审计落库 — 对应 Palantir Actions 的审计特性, 返回回执"""
+                   role: str, status: str, result: dict, mqtt_topic: str = "",
+                   def_id: str = "", reconciliation: str = "") -> dict:
+    """动作审计落库 — 对应 Palantir Actions 的审计特性, 返回回执
+
+    R2: 增加 def_id (动作类型) 与 reconciliation 三列;
+    老库经 ALTER TABLE 自动迁移 (列已存在则跳过)。
+    """
     import secrets
     import sqlite3
     from datetime import datetime
 
     db = sqlite3.connect(_action_db_path())
     try:
-        db.execute("""CREATE TABLE IF NOT EXISTS action_log (
-            objectId TEXT PRIMARY KEY, action TEXT, target_id TEXT,
-            params TEXT, actor TEXT, role TEXT, status TEXT,
-            result TEXT, mqtt_topic TEXT, createdAt TEXT)""")
+        _ensure_action_db(db)
         oid = secrets.token_hex(10)
         ts = datetime.now().isoformat()
-        db.execute("INSERT INTO action_log VALUES (?,?,?,?,?,?,?,?,?,?)",
-                   (oid, action, target_id,
-                    json.dumps(params or {}, ensure_ascii=False),
-                    actor, role, status,
-                    json.dumps(result, ensure_ascii=False, default=str)[:2000],
-                    mqtt_topic, ts))
+        db.execute(
+            "INSERT INTO action_log (objectId,action,target_id,params,actor,role,status,"
+            "result,mqtt_topic,createdAt,def_id,reconciliation,reconciled_by,reconciled_at) "
+            "VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
+            (oid, action, target_id,
+             json.dumps(params or {}, ensure_ascii=False),
+             actor, role, status,
+             json.dumps(result, ensure_ascii=False, default=str)[:2000],
+             mqtt_topic, ts, def_id, reconciliation, "", ""))
         db.commit()
         return {"objectId": oid, "createdAt": ts}
+    finally:
+        db.close()
+
+
+_ACTION_ROW_COLS = ("objectId", "action", "target_id", "params", "actor", "role", "status",
+                    "result", "mqtt_topic", "createdAt", "def_id", "reconciliation",
+                    "reconciled_by", "reconciled_at")
+_ACTION_ROW_SQL = ",".join(_ACTION_ROW_COLS)
+
+
+def _action_row_to_dict(row) -> dict:
+    d = dict(zip(_ACTION_ROW_COLS, row))
+    for col in ("params", "result"):
+        try:
+            d[col] = json.loads(d[col]) if d[col] else {}
+        except (TypeError, ValueError):
+            pass
+    return d
+
+
+def _fetch_action(receipt_id: str):
+    import sqlite3
+    db = sqlite3.connect(_action_db_path())
+    try:
+        _ensure_action_db(db)
+        cur = db.execute(f"SELECT {_ACTION_ROW_SQL} FROM action_log WHERE objectId=?",
+                         (receipt_id,))
+        row = cur.fetchone()
+        return _action_row_to_dict(row) if row else None
+    finally:
+        db.close()
+
+
+def _list_actions(reconciliation: str = None, action: str = None, limit: int = 50) -> list:
+    import sqlite3
+    sql = f"SELECT {_ACTION_ROW_SQL} FROM action_log WHERE 1=1"
+    args: list = []
+    if reconciliation:
+        sql += " AND reconciliation=?"
+        args.append(reconciliation)
+    if action:
+        sql += " AND action=?"
+        args.append(action)
+    sql += " ORDER BY createdAt DESC LIMIT ?"
+    args.append(int(limit))
+    db = sqlite3.connect(_action_db_path())
+    try:
+        _ensure_action_db(db)
+        return [_action_row_to_dict(r) for r in db.execute(sql, args).fetchall()]
+    finally:
+        db.close()
+
+
+def _set_reconciliation(receipt_id: str, outcome: str, by: str, note: str = "") -> dict:
+    """人工对账落笔 — 只允许 pending → succeeded|retry; 返回结果 (None=回执不存在)"""
+    import sqlite3
+    from datetime import datetime
+    if outcome not in ("succeeded", "retry"):
+        raise ValueError(f"对账结论只能是 succeeded|retry, 得到 {outcome!r}")
+    db = sqlite3.connect(_action_db_path())
+    try:
+        _ensure_action_db(db)
+        cur = db.execute("SELECT reconciliation FROM action_log WHERE objectId=?",
+                         (receipt_id,))
+        row = cur.fetchone()
+        if row is None:
+            return None
+        if row[0] != "pending":
+            raise ValueError(f"回执 {receipt_id} 对账状态为 '{row[0] or '(空)'}', 仅 pending 可对账")
+        db.execute("UPDATE action_log SET reconciliation=?, reconciled_by=?, reconciled_at=? "
+                   "WHERE objectId=?",
+                   (outcome, by, datetime.now().isoformat(), receipt_id))
+        db.commit()
+        return {"objectId": receipt_id, "reconciliation": outcome,
+                "reconciled_by": by, "note": note}
     finally:
         db.close()
 
@@ -789,68 +896,219 @@ def _mqtt_publish(topic: str, payload: dict) -> str:
         return ""
 
 
+# ── R2: 执行器注册表 — 类型 (action_defs) 与执行 (此处) 分离 ──
+# 返回 (result, mqtt_topic, delivered):
+#   delivered=True   外部副作用确认送达 → reconciliation=succeeded
+#   delivered=False  确认未送达 (连接期失败, 未发出任何报文) → not_run
+#   delivered=None   无外部副作用 (只读) 或以本地审计为准 → not_run / succeeded
+def _exec_acknowledge_alarm(rag, engine, defn, body, params, actor):
+    import time as _t
+    mqtt_topic = _mqtt_publish(_entity_cmd_topic(engine, body.target_id), {
+        "ts": int(_t.time() * 1000), "source": "aip_action",
+        "action": "acknowledge_alarm", "target": body.target_id,
+        "actor": actor,
+    })
+    result = {"status": "acknowledged",
+              "message": f"告警 {body.target_id} 已由 {actor} 确认",
+              "mqtt_topic": mqtt_topic or None}
+    return result, mqtt_topic, True   # 对账基准 = 审计落库; MQTT 通知尽力而为
+
+
+def _exec_command_down(rag, engine, defn, body, params, actor):
+    import time as _t
+    topic = params.pop("topic", None) or _entity_cmd_topic(engine, body.target_id)
+    mqtt_topic = _mqtt_publish(topic, {
+        "ts": int(_t.time() * 1000), "source": "aip_action",
+        "action": "command_down", "target": body.target_id,
+        "actor": actor, "params": params,
+    })
+    result = {"status": "sent" if mqtt_topic else "mqtt_unavailable",
+              "mqtt_topic": mqtt_topic or None}
+    return result, mqtt_topic, bool(mqtt_topic)  # False = 连接期失败, 确认未发出
+
+
+def _exec_diagnose(rag, engine, defn, body, params, actor):
+    return {"result": rag.analyze_alarm(body.target_id, params)}, "", None
+
+
+def _exec_trend_check(rag, engine, defn, body, params, actor):
+    return {"result": rag.trend(body.target_id, params.get("hours", 1))}, "", None
+
+
+def _exec_health_check(rag, engine, defn, body, params, actor):
+    ctx = rag.live_context(body.target_id)
+    return {"status": ctx.get("live", {}).get("status", "unknown"),
+            "context": ctx.get("text_context", "")}, "", None
+
+
+_ACTION_EXECUTORS = {
+    "acknowledge_alarm": _exec_acknowledge_alarm,
+    "command_down": _exec_command_down,
+    "diagnose": _exec_diagnose,
+    "trend_check": _exec_trend_check,
+    "health_check": _exec_health_check,
+}
+
+
 @router.post("/aip/actions/execute")
 async def aip_execute_action(body: ActionRequest, user: dict = Depends(get_current_user)):
-    """Action Framework — 执行运维动作 (Palantir Actions 风格)
+    """Action Framework — 执行运维动作 (R2: 类型驱动)
 
-    每个动作先审计落库 (data/aip_actions.db) 再执行:
-      - acknowledge_alarm: 确认告警 — 登录用户即可 (operator 日常职责), 附 MQTT 通知
-      - command_down: 设备下行指令 — 仅 admin, params 作为 payload 发布到实体 cmd topic
-      - diagnose / trend_check / health_check: 只读分析, 同样留痕
+    流程: 定义查找 → 角色门 → 参数 schema 校验 → 提交规则 → 执行器 → 审计落库。
+    铁律: external_side_effect=True 且结果不明 → reconciliation=pending,
+    必须人工对账 (POST /aip/actions/{id}/reconcile), 绝不自动重放。
     """
     rag, engine = _get_rag()
     actor = user.get("sub", "?")
     role = user.get("role", "?")
     params = body.params or {}
 
-    if body.action == "command_down" and role != "admin":
-        _record_action(body.action, body.target_id, params, actor, role,
-                       "denied", {"reason": "仅管理员可下发设备指令"})
-        raise HTTPException(403, "仅管理员可下发设备指令")
-
-    mqtt_topic = ""
-
-    if body.action == "diagnose":
-        result = {"result": rag.analyze_alarm(body.target_id, params)}
-
-    elif body.action == "trend_check":
-        result = {"result": rag.trend(body.target_id, params.get("hours", 1))}
-
-    elif body.action == "health_check":
-        ctx = rag.live_context(body.target_id)
-        result = {"status": ctx.get("live", {}).get("status", "unknown"),
-                  "context": ctx.get("text_context", "")}
-
-    elif body.action == "acknowledge_alarm":
-        import time as _t
-        mqtt_topic = _mqtt_publish(_entity_cmd_topic(engine, body.target_id), {
-            "ts": int(_t.time() * 1000), "source": "aip_action",
-            "action": "acknowledge_alarm", "target": body.target_id,
-            "actor": actor,
-        })
-        result = {"status": "acknowledged",
-                  "message": f"告警 {body.target_id} 已由 {actor} 确认",
-                  "mqtt_topic": mqtt_topic or None}
-
-    elif body.action == "command_down":
-        import time as _t
-        topic = params.pop("topic", None) or _entity_cmd_topic(engine, body.target_id)
-        mqtt_topic = _mqtt_publish(topic, {
-            "ts": int(_t.time() * 1000), "source": "aip_action",
-            "action": "command_down", "target": body.target_id,
-            "actor": actor, "params": params,
-        })
-        result = {"status": "sent" if mqtt_topic else "mqtt_unavailable",
-                  "mqtt_topic": mqtt_topic or None}
-
-    else:
+    defn = get_action_def(body.action)
+    if defn is None:
         receipt = _record_action(body.action, body.target_id, params, actor, role,
                                  "unknown_action", {})
         return {"action": body.action, "status": "unknown_action", "receipt": receipt}
 
+    if not role_allowed(defn, role):
+        need = "/".join(defn.allowed_roles) or "admin"
+        _record_action(body.action, body.target_id, params, actor, role, "denied",
+                       {"reason": f"角色 '{role}' 无权执行 (需要 {need})"}, def_id=defn.name)
+        raise HTTPException(403, f"角色 '{role}' 无权执行 {body.action} (需要 {need})")
+
+    perrors = validate_params(defn, params)
+    if perrors:
+        _record_action(body.action, body.target_id, params, actor, role, "invalid_params",
+                       {"errors": perrors}, def_id=defn.name)
+        raise HTTPException(422, f"参数校验失败: {'; '.join(perrors)}")
+
+    cfailed = check_submit_criteria(defn, engine, body.target_id, params)
+    if cfailed:
+        _record_action(body.action, body.target_id, params, actor, role, "criteria_failed",
+                       {"failed": cfailed}, def_id=defn.name)
+        raise HTTPException(422, f"提交规则未通过: {'; '.join(cfailed)}")
+
+    executor = _ACTION_EXECUTORS.get(body.action)
+    if executor is None:
+        receipt = _record_action(body.action, body.target_id, params, actor, role,
+                                 "no_executor",
+                                 {"reason": "类型已声明但未绑定执行器 — 自定义定义需在代码内绑定"},
+                                 def_id=defn.name, reconciliation="not_run")
+        return {"action": body.action, "status": "no_executor", "receipt": receipt}
+
+    try:
+        result, mqtt_topic, delivered = executor(rag, engine, defn, body, params, actor)
+    except Exception as e:
+        logger.exception(f"[aip] 动作 {body.action} 执行异常")
+        if defn.external_side_effect:
+            receipt = _record_action(body.action, body.target_id, params, actor, role,
+                                     "unknown_outcome", {"error": str(e)[:500]},
+                                     def_id=defn.name, reconciliation="pending")
+            return {"action": body.action, "status": "unknown_outcome",
+                    "reconciliation": "pending", "receipt": receipt,
+                    "message": "外部副作用结果不明 — 已置 pending, 请人工对账 (绝不自动重放)"}
+        _record_action(body.action, body.target_id, params, actor, role,
+                       "failed", {"error": str(e)[:500]}, def_id=defn.name)
+        raise HTTPException(500, f"动作执行失败: {e}")
+
+    if defn.external_side_effect:
+        reconciliation = "succeeded" if delivered else ("not_run" if delivered is False else "pending")
+    else:
+        reconciliation = "not_run"
+
     receipt = _record_action(body.action, body.target_id, params, actor, role,
-                             "executed", result, mqtt_topic)
-    return {"action": body.action, "target": body.target_id, **result, "receipt": receipt}
+                             "executed", result, mqtt_topic, def_id=defn.name,
+                             reconciliation=reconciliation)
+    return {"action": body.action, "target": body.target_id,
+            "reconciliation": reconciliation, **result, "receipt": receipt}
+
+
+# ── R2: 动作类型管理 + 人工对账 ──
+
+class ActionDefCreate(BaseModel):
+    name: str = Field(..., description="动作名 ^[a-z][a-z0-9_]{2,40}$")
+    title: str = Field("", max_length=100)
+    description: str = Field("", max_length=500)
+    params_schema: dict = Field(default_factory=dict)
+    submit_criteria: list = Field(default_factory=list)
+    allowed_roles: list = Field(default_factory=list)
+    target_layer: str = Field("any")
+    external_side_effect: bool = False
+    strict_params: bool = True
+
+
+class ReconcileRequest(BaseModel):
+    outcome: str = Field(..., description="对账结论: succeeded | retry")
+    note: str = Field("", max_length=500)
+
+
+@router.get("/aip/actions/definitions")
+async def aip_list_action_defs(user: dict = Depends(get_current_user)):
+    """动作类型清单 — 含参数 schema 与提交规则 (表单/前端据此渲染)"""
+    return {"definitions": list_defs(), "count": len(list_defs())}
+
+
+@router.post("/aip/actions/definitions", dependencies=[Depends(require_admin)])
+async def aip_create_action_def(body: ActionDefCreate, user: dict = Depends(get_current_user)):
+    """注册自定义动作类型 (仅管理员) — 进程内有效, 执行器需代码绑定"""
+    actor = user.get("sub", "?"); role = user.get("role", "?")
+    if get_action_def(body.name) is not None:
+        raise HTTPException(409, f"动作 {body.name} 已存在")
+    defn = ActionDefinition(
+        name=body.name, title=body.title, description=body.description,
+        params_schema=body.params_schema, submit_criteria=list(body.submit_criteria),
+        allowed_roles=list(body.allowed_roles), target_layer=body.target_layer,
+        external_side_effect=body.external_side_effect, strict_params=body.strict_params,
+        builtin=False)
+    try:
+        register_action_def(defn)
+    except ValueError as e:
+        raise HTTPException(400, str(e))
+    receipt = _record_action("actiondef_create", body.name,
+                             {"title": body.title, "external": body.external_side_effect},
+                             actor, role, "executed", {}, def_id=body.name)
+    return {"definition": defn.to_dict(), "receipt": receipt}
+
+
+@router.delete("/aip/actions/definitions/{name}", dependencies=[Depends(require_admin)])
+async def aip_delete_action_def(name: str, user: dict = Depends(get_current_user)):
+    """删除自定义动作类型 (仅管理员) — 内建定义不可删"""
+    actor = user.get("sub", "?"); role = user.get("role", "?")
+    defn = get_action_def(name)
+    if defn is None:
+        raise HTTPException(404, f"动作 {name} 不存在")
+    if defn.builtin:
+        raise HTTPException(403, "内建动作定义不可删除")
+    unregister_action_def(name)
+    receipt = _record_action("actiondef_delete", name, {}, actor, role, "executed", {})
+    return {"deleted": name, "receipt": receipt}
+
+
+@router.get("/aip/actions/log", dependencies=[Depends(require_admin)])
+async def aip_action_log(reconciliation: str = None, action: str = None,
+                         limit: int = Query(50, ge=1, le=200),
+                         user: dict = Depends(get_current_user)):
+    """动作审计日志 (仅管理员) — 可按对账状态过滤, pending 即待人工对账清单"""
+    rows = _list_actions(reconciliation, action, limit)
+    return {"actions": rows, "count": len(rows)}
+
+
+@router.post("/aip/actions/{receipt_id}/reconcile", dependencies=[Depends(require_admin)])
+async def aip_reconcile_action(receipt_id: str, body: ReconcileRequest,
+                               user: dict = Depends(get_current_user)):
+    """人工对账 (仅管理员) — 仅 pending 回执可对账; retry 只做标记, 重放须重新显式执行"""
+    actor = user.get("sub", "?"); role = user.get("role", "?")
+    if body.outcome not in ("succeeded", "retry"):
+        raise HTTPException(400, "对账结论只能是 succeeded | retry")
+    row = _fetch_action(receipt_id)
+    if row is None:
+        raise HTTPException(404, f"回执 {receipt_id} 不存在")
+    if row.get("reconciliation") != "pending":
+        raise HTTPException(409, f"回执对账状态为 '{row.get('reconciliation') or '(空)'}', 仅 pending 可对账")
+    try:
+        result = _set_reconciliation(receipt_id, body.outcome, actor, body.note)
+    except ValueError as e:
+        raise HTTPException(409, str(e))
+    return {**result, "action": row.get("action"), "def_id": row.get("def_id")}
 
 
 # ═══════════════════════════════════════════════════════════
