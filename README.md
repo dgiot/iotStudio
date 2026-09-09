@@ -189,6 +189,12 @@ iotStudio  ──MQTT──→  EMQX (:1883)  ──→  Parse Server  ──→
 
 数据格式对齐 DG-IoT 物模型标准，实现边缘采集 → 中心汇聚的全链路。
 
+### 生态互链 / Ecosystem
+
+- [dgaiot](https://gitee.com/dgaiot/dgaiot) — 中枢：EMQX fork + OWL 本体引擎（Erlang，本仓库的 hub 侧）
+- [dgiot](https://gitee.com/dgiiot/dgiot) — 完整 Erlang IoT 平台（稳定版中枢）
+- GitHub 组织: https://github.com/dgiot · Issues: https://github.com/dgiot/iotStudio/issues
+
 ### 中枢一键部署（开源精简版）
 
 `scripts/deploy_hub.sh` 在 openEuler/Kylin 上源码构建并部署 DG-IoT 中枢（参考 [dgaiot](https://gitee.com/dgaiot/dgaiot) 单机部署思路，只装必要）：
