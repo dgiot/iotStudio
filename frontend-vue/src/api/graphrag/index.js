@@ -183,6 +183,80 @@ export default {
   /** 系统健康 */
   aipHealth: () => request({ url: '/graphrag/aip/health', method: 'get' }),
 
+  // ── R3 图分析 ──
+
+  /** 全部最短路径 (层级+关系边) */
+  graphPath: (fromId, toId, maxPaths = 10) => request({
+    url: '/graphrag/aip/graph/path',
+    method: 'get',
+    params: { from: fromId, to: toId, max_paths: maxPaths },
+  }),
+
+  /** 影响半径 (加权传播 + 指数衰减) */
+  graphImpact: (entityId, opts = {}) => request({
+    url: `/graphrag/aip/graph/impact/${entityId}`,
+    method: 'get',
+    params: {
+      decay: opts.decay ?? 0.5,
+      max_radius: opts.maxRadius ?? 4,
+      min_confidence: opts.minConfidence ?? 0.05,
+    },
+  }),
+
+  /** 中心性 (degree | betweenness) */
+  graphCentrality: (mode = 'degree', top = 10) => request({
+    url: '/graphrag/aip/graph/centrality',
+    method: 'get',
+    params: { mode, top },
+  }),
+
+  /** 关系基数评估 (Foundry Link Type 语义) */
+  graphCardinality: () => request({ url: '/graphrag/aip/graph/cardinality', method: 'get' }),
+
+  // ── P1 标准互操作 ──
+
+  /** DTDL v3 模型导出 */
+  exportDtdl: () => request({ url: '/graphrag/aip/export/dtdl', method: 'get' }),
+
+  /** SSN/SOSA JSON-LD 导出 */
+  exportSsn: () => request({ url: '/graphrag/aip/export/ssn', method: 'get' }),
+
+  // ── R4 质量审计 Agent ──
+
+  /** 运行质量审计 (with_llm 可选 LLM 归因) */
+  agentAudit: (withLlm = false) => request({
+    url: '/graphrag/aip/agent/audit',
+    method: 'post',
+    data: { with_llm: withLlm },
+  }),
+
+  /** 提案清单 (status: pending|approved|dismissed) */
+  agentProposals: (status = null, limit = 100) => request({
+    url: '/graphrag/aip/agent/proposals',
+    method: 'get',
+    params: { status, limit },
+  }),
+
+  /** 审计运行史 */
+  agentRuns: (limit = 20) => request({
+    url: '/graphrag/aip/agent/runs',
+    method: 'get',
+    params: { limit },
+  }),
+
+  /** 审批执行提案 (仅管理员) */
+  agentApprove: (proposalId) => request({
+    url: `/graphrag/aip/agent/proposals/${proposalId}/approve`,
+    method: 'post',
+  }),
+
+  /** 驳回提案 (仅管理员) */
+  agentDismiss: (proposalId, note = '') => request({
+    url: `/graphrag/aip/agent/proposals/${proposalId}/dismiss`,
+    method: 'post',
+    data: { note },
+  }),
+
   /** LLM 测试 */
   llmTest: () => request({ url: '/graphrag/llm/test', method: 'get' }),
 }

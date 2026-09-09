@@ -42,6 +42,7 @@ export const constantRoutes = [
       { path: '/alarms', name: 'Alarms', component: () => import('../views/AlarmListView.vue'), meta: { title: '告警管理', icon: 'Bell', group: 'data' } },
       { path: '/stream', name: 'Stream', component: () => import('../views/StreamView.vue'), meta: { title: '流计算引擎', icon: 'MagicStick', group: 'data' } },
       { path: '/phm', name: 'Phm', component: () => import('../views/PhmView.vue'), meta: { title: '预测性维护', icon: 'Cpu', group: 'data' } },
+      { path: '/graph-analysis', name: 'GraphAnalysis', component: () => import('../views/GraphAnalysisView.vue'), meta: { title: '图谱分析', icon: 'Share', group: 'data' } },
 
       // ===== 网络诊断 =====
       { path: '/packet-analysis', name: 'PacketAnalysis', component: () => import('../views/A11AnalysisView.vue'), meta: { title: '报文解析', icon: 'DataAnalysis', group: 'network' } },
@@ -66,6 +67,7 @@ export const constantRoutes = [
 
       // ===== 系统 =====
       { path: '/system-overview', name: 'SystemOverview', component: () => import('../views/SystemOverview.vue'), meta: { title: '系统概览', icon: 'Monitor', group: 'system' } },
+      { path: '/agent-audit', name: 'AgentAudit', component: () => import('../views/AgentAuditView.vue'), meta: { title: '质量审计', icon: 'Finished', group: 'system' } },
       { path: '/maintenance', name: 'Maintenance', component: () => import('../views/MaintenanceView.vue'), meta: { title: '运维管理', icon: 'Setting', group: 'system' } },
       { path: '/users', name: 'Users', component: () => import('../views/UsersView.vue'), meta: { title: '用户管理', icon: 'UserFilled', group: 'system' } },
     ]
