@@ -43,6 +43,7 @@ export const constantRoutes = [
       { path: '/stream', name: 'Stream', component: () => import('../views/StreamView.vue'), meta: { title: '流计算引擎', icon: 'MagicStick', group: 'data' } },
       { path: '/phm', name: 'Phm', component: () => import('../views/PhmView.vue'), meta: { title: '预测性维护', icon: 'Cpu', group: 'data' } },
       { path: '/graph-analysis', name: 'GraphAnalysis', component: () => import('../views/GraphAnalysisView.vue'), meta: { title: '图谱分析', icon: 'Share', group: 'data' } },
+      { path: '/bi', name: 'BiDashboard', component: () => import('../views/BiEmbedView.vue'), meta: { title: 'BI 看板', icon: 'DataBoard', group: 'data' } },
 
       // ===== 网络诊断 =====
       { path: '/packet-analysis', name: 'PacketAnalysis', component: () => import('../views/A11AnalysisView.vue'), meta: { title: '报文解析', icon: 'DataAnalysis', group: 'network' } },
