@@ -1180,6 +1180,51 @@ async def aip_delete_link(link_id: str, user: dict = Depends(get_current_user)):
     return {"deleted": removed, "receipt": receipt}
 
 
+# ── R3: 图分析 — 路径 / 影响半径 / 中心性 (只读) ──
+
+@router.get("/aip/graph/path")
+async def aip_graph_path(from_id: str = Query(..., alias="from"),
+                         to_id: str = Query(..., alias="to"),
+                         max_paths: int = Query(10, ge=1, le=50),
+                         user: dict = Depends(get_current_user)):
+    """最短路径 — 层级 + 功能关系边统一寻路, 返回全部最短路径 (≤max_paths)"""
+    rag, engine = _get_rag()
+    try:
+        return engine.graph_path(from_id, to_id, max_paths)
+    except KeyError as e:
+        raise HTTPException(404, str(e).strip("'"))
+
+
+@router.get("/aip/graph/impact/{entity_id}")
+async def aip_graph_impact(entity_id: str, decay: float = Query(0.5, gt=0, le=1),
+                           max_radius: int = Query(4, ge=1, le=8),
+                           min_confidence: float = Query(0.05, gt=0, lt=1),
+                           user: dict = Depends(get_current_user)):
+    """影响半径 blast-radius — 加权传播 + 指数衰减
+
+    语义: 该实体失效时谁受影响、置信多高。powered_by 反向遍历 = 断电打击面;
+    has_defect/has_issue 静态归属不传播。severity: critical ≥0.7 / high ≥0.4 /
+    medium ≥0.2 / low。
+    """
+    rag, engine = _get_rag()
+    try:
+        return engine.graph_impact(entity_id, decay, max_radius, min_confidence)
+    except KeyError as e:
+        raise HTTPException(404, str(e).strip("'"))
+
+
+@router.get("/aip/graph/centrality")
+async def aip_graph_centrality(mode: str = Query("degree", pattern="^(degree|betweenness)$"),
+                               top: int = Query(10, ge=1, le=50),
+                               user: dict = Depends(get_current_user)):
+    """GDS 式中心性 — degree | betweenness (百级节点纯 Python 实现)"""
+    rag, engine = _get_rag()
+    try:
+        return engine.graph_centrality(mode, top)
+    except ValueError as e:
+        raise HTTPException(400, str(e))
+
+
 class ScenarioRequest(BaseModel):
     entity_id: str = Field(..., description="目标实体")
     change: dict = Field(..., description="变更: {parameter: new_value}")

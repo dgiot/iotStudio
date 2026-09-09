@@ -1304,6 +1304,10 @@ def main():
     parser.add_argument("--summary", "-s", action="store_true", help="打印社区摘要")
     parser.add_argument("--context", "-c", default=None, metavar="ENTITY_ID", help="打印实体上下文")
     parser.add_argument("--subgraph", "-g", default=None, metavar="ENTITY_ID", help="导出子图 JSON")
+    parser.add_argument("--path", nargs=2, default=None, metavar=("FROM_ID", "TO_ID"),
+                        help="R3: 打印两实体间全部最短路径 (层级+关系边)")
+    parser.add_argument("--impact", default=None, metavar="ENTITY_ID",
+                        help="R3: 打印失效影响半径 (blast-radius)")
     parser.add_argument("--no-llm", action="store_true", help="不使用 LLM (仅结构化输出)")
     args = parser.parse_args()
 
@@ -1317,6 +1321,39 @@ def main():
         rag = GraphRAG(engine, llm_call=None)
     else:
         rag = GraphRAG(engine)  # 自动检测环境变量
+
+    if args.path:
+        frm, to = args.path
+        try:
+            r = engine.graph_path(frm, to)
+        except KeyError as e:
+            print(f"实体不存在: {e}")
+            return
+        if not r["found"]:
+            print(f"不连通: {r['message']}")
+            return
+        print(f"\n最短路径 {frm} -> {to}  长度={r['length']}  共 {len(r['paths'])} 条:")
+        for i, path in enumerate(r["paths"], 1):
+            hops = " -> ".join(
+                f"--[{h['relation'] or '层级'}]--> {h['to']}" for h in path)
+            print(f"  路径{i}: {frm} {hops}")
+        return
+
+    if args.impact:
+        try:
+            r = engine.graph_impact(args.impact)
+        except KeyError as e:
+            print(f"实体不存在: {e}")
+            return
+        print(f"\n影响半径: {args.impact} 失效波及 {r['count']} 个实体 "
+              f"{r['summary']}")
+        for a in r["affected"][:15]:
+            kinds = " > ".join(f"{p['relation'] or '层级'}" for p in a["path"])
+            print(f"  [{a['severity']:8s}] {a['confidence']:.2f} {a['id']} "
+                  f"({a['type']}) {a['name']}  经: {kinds}")
+        if r["count"] > 15:
+            print(f"  ... 其余 {r['count'] - 15} 个略")
+        return
 
     if args.subgraph:
         sg = engine.subgraph(args.subgraph)

@@ -432,6 +432,216 @@ class OntologyEngine:
             _P(path).write_text(ttl, encoding="utf-8")
         return ttl
 
+    # ── R3: 图分析 (AEGIS 两项移植 + GDS 式中心性; 只借算法思想) ──
+    # 关系影响语义: (传播方向, 权重); has_defect/has_issue 是静态归属, 不传播
+    RELATION_IMPACT = {
+        "powered_by": ("reverse", 1.0),   # 供电方失效 → 供电对象受击 (断电链: t→s 遍历)
+        "feeds_into": ("forward", 0.9),   # 上游失效 → 下游断流 (s→t)
+        "controls":   ("forward", 0.8),   # 控制方失效 → 被控对象失管
+        "monitors":   ("forward", 0.5),   # 监测方失效 → 被监测对象失监
+        "maps_to":    ("both", 0.3),      # 映射一致性破坏, 双向弱传播
+        "relates_to": ("forward", 0.3),   # 泛关联, 弱传播
+        "has_defect": None,
+        "has_issue": None,
+    }
+    _HIER_DOWN_W = 1.0   # 包容失效下行: 父挂子随
+    _HIER_UP_W = 0.2     # 上行仅"上级感知降级"
+
+    def _directed_adjacency(self) -> Dict[str, List[dict]]:
+        """带权有向邻接 — 影响传播视角 (层级按方向定权; Link 按关系语义定向; has_* 不入图)"""
+        adj: Dict[str, List[dict]] = {}
+
+        def add(a: str, b: str, kind: str, relation: str, weight: float):
+            adj.setdefault(a, []).append({"to": b, "kind": kind,
+                                          "relation": relation, "weight": weight})
+
+        for g in self.gateways.values():
+            add(g.site, g.id, "hierarchy", "", self._HIER_DOWN_W)
+            add(g.id, g.site, "hierarchy", "", self._HIER_UP_W)
+        for c in self.channels.values():
+            add(c.gateway, c.id, "hierarchy", "", self._HIER_DOWN_W)
+            add(c.id, c.gateway, "hierarchy", "", self._HIER_UP_W)
+        for d in self.devices.values():
+            add(d.channel, d.id, "hierarchy", "", self._HIER_DOWN_W)
+            add(d.id, d.channel, "hierarchy", "", self._HIER_UP_W)
+        for p in self.points.values():
+            add(p.device, p.id, "hierarchy", "", self._HIER_DOWN_W)
+            add(p.id, p.device, "hierarchy", "", self._HIER_UP_W)
+        for ds in self.datasources.values():
+            add(ds.gateway, ds.id, "hierarchy", "", self._HIER_DOWN_W)
+            add(ds.id, ds.gateway, "hierarchy", "", self._HIER_UP_W)
+        for l in self.links.values():
+            spec = self.RELATION_IMPACT.get(l.relation)
+            if not spec:
+                continue  # 静态归属不传播
+            direction, w = spec
+            if direction in ("forward", "both"):
+                add(l.source, l.target, "link", l.relation, w)
+            if direction in ("reverse", "both"):
+                add(l.target, l.source, "link", l.relation, w)
+        return adj
+
+    def _undirected_adjacency(self) -> Dict[str, List[dict]]:
+        """无向邻接 — 路径发现视角 (功能连通性; has_defect/has_issue 归属边不计入路径)"""
+        adj: Dict[str, List[dict]] = {}
+
+        def add(a: str, b: str, kind: str, relation: str = ""):
+            adj.setdefault(a, []).append({"to": b, "kind": kind, "relation": relation})
+
+        for gid, g in self.gateways.items():
+            add(g.site, gid, "hierarchy"); add(gid, g.site, "hierarchy")
+        for cid, c in self.channels.items():
+            add(c.gateway, cid, "hierarchy"); add(cid, c.gateway, "hierarchy")
+        for did, d in self.devices.items():
+            add(d.channel, did, "hierarchy"); add(did, d.channel, "hierarchy")
+        for pid, p in self.points.items():
+            add(p.device, pid, "hierarchy"); add(pid, p.device, "hierarchy")
+        for ds in self.datasources.values():
+            add(ds.gateway, ds.id, "hierarchy"); add(ds.id, ds.gateway, "hierarchy")
+        for l in self.links.values():
+            if l.relation in ("has_defect", "has_issue"):
+                continue
+            add(l.source, l.target, "link", l.relation)
+            add(l.target, l.source, "link", l.relation)
+        return adj
+
+    def graph_path(self, from_id: str, to_id: str, max_paths: int = 10) -> dict:
+        """全部最短路径 (BFS 层级 + 功能关系边; AEGIS allShortestPaths 思路)"""
+        if self.entity_type(from_id) is None:
+            raise KeyError(f"Entity {from_id} not found")
+        if self.entity_type(to_id) is None:
+            raise KeyError(f"Entity {to_id} not found")
+        if from_id == to_id:
+            return {"found": True, "from": from_id, "to": to_id, "length": 0,
+                    "paths": [[]], "nodes": [from_id]}
+        adj = self._undirected_adjacency()
+        dist = {from_id: 0}
+        frontier = [from_id]
+        while frontier:
+            nxt = []
+            for cur in frontier:
+                for e in adj.get(cur, []):
+                    if e["to"] not in dist:
+                        dist[e["to"]] = dist[cur] + 1
+                        nxt.append(e["to"])
+            frontier = nxt
+        if to_id not in dist:
+            return {"found": False, "from": from_id, "to": to_id,
+                    "length": None, "paths": [], "nodes": [],
+                    "message": "两实体在当前功能图中不连通"}
+        paths: List[List[dict]] = []
+
+        def backwalk(node: str, acc: List[dict]):
+            if len(paths) >= max_paths:
+                return
+            if node == from_id:
+                paths.append(list(reversed(acc)))
+                return
+            for e in adj.get(node, []):
+                if dist.get(e["to"], -1) == dist[node] - 1:
+                    backwalk(e["to"], acc + [{"from": e["to"], "to": node,
+                                              "kind": e["kind"], "relation": e["relation"]}])
+
+        backwalk(to_id, [])
+        first = paths[0] if paths else []
+        nodes = [from_id] + [hop["to"] for hop in first]
+        return {"found": True, "from": from_id, "to": to_id,
+                "length": dist[to_id], "paths": paths, "nodes": nodes}
+
+    def graph_impact(self, entity_id: str, decay: float = 0.5,
+                     max_radius: int = 4, min_confidence: float = 0.05) -> dict:
+        """风险传播 blast-radius — 加权传播 + 指数衰减
+
+        语义: 该实体失效时谁受影响、置信多高。
+        置信 = 沿最优路径边权连乘 × decay^跳数 (max-confidence 松弛)。
+        """
+        if self.entity_type(entity_id) is None:
+            raise KeyError(f"Entity {entity_id} not found")
+        adj = self._directed_adjacency()
+        conf = {entity_id: 1.0}
+        best_edge: Dict[str, dict] = {}
+        parent: Dict[str, str] = {}
+        frontier = [entity_id]
+        for hop in range(1, max_radius + 1):
+            nxt = []
+            for cur in frontier:
+                for e in adj.get(cur, []):
+                    # 衰减从第 2 跳起算: 直接受害者不吃传播不确定性
+                    cand = conf[cur] * e["weight"] * (decay ** (hop - 1))
+                    if cand >= min_confidence and cand > conf.get(e["to"], 0.0):
+                        conf[e["to"]] = cand
+                        best_edge[e["to"]] = {"from": cur, "to": e["to"],
+                                              "kind": e["kind"], "relation": e["relation"]}
+                        parent[e["to"]] = cur
+                        nxt.append(e["to"])
+            frontier = nxt
+        affected = []
+        for eid, c in conf.items():
+            if eid == entity_id:
+                continue
+            chain, node = [], eid
+            while node != entity_id and node in parent:
+                chain.append(best_edge[node])
+                node = parent[node]
+            severity = ("critical" if c >= 0.7 else "high" if c >= 0.4
+                        else "medium" if c >= 0.2 else "low")
+            affected.append({"id": eid, "type": self.entity_type(eid),
+                             "name": self.entity_name(eid),
+                             "confidence": round(c, 4), "severity": severity,
+                             "hops": len(chain), "path": list(reversed(chain))})
+        affected.sort(key=lambda x: -x["confidence"])
+        summary = {"critical": 0, "high": 0, "medium": 0, "low": 0}
+        for a in affected:
+            summary[a["severity"]] += 1
+        return {"root": entity_id, "decay": decay, "max_radius": max_radius,
+                "min_confidence": min_confidence, "count": len(affected),
+                "summary": summary, "affected": affected}
+
+    def graph_centrality(self, mode: str = "degree", top: int = 10) -> dict:
+        """GDS 式中心性 (百级节点纯 Python 足够) — degree | betweenness"""
+        adj = self._undirected_adjacency()
+        nodes = list(dict.fromkeys(
+            list(self.sites) + list(self.gateways) + list(self.channels)
+            + list(self.devices) + list(self.points)
+            + list(self.constraints) + list(self.datasources) + list(self.links)))
+        if mode == "degree":
+            scores = {n: float(len(adj.get(n, []))) for n in nodes}
+        elif mode == "betweenness":
+            scores = {n: 0.0 for n in nodes}
+            neighbors = {n: [e["to"] for e in adj.get(n, [])] for n in nodes}
+            for s in nodes:                      # Brandes 算法
+                stack, order = [], []
+                sigma = {s: 1}
+                d = {s: 0}
+                queue = [s]
+                while queue:
+                    v = queue.pop(0)
+                    order.append(v); stack.append(v)
+                    for w in neighbors.get(v, []):
+                        if w not in d:
+                            d[w] = d[v] + 1
+                            sigma[w] = 0
+                            queue.append(w)
+                        if d[w] == d[v] + 1:
+                            sigma[w] += sigma[v]
+                delta = {w: 0.0 for w in order}
+                for w in reversed(order):
+                    if sigma.get(w):
+                        coeff = (1 + delta[w]) / sigma[w]
+                        for v in neighbors.get(w, []):
+                            if d.get(v) == d.get(w, -1) - 1 and sigma.get(v):
+                                delta[v] += sigma[v] * coeff    # 后继汇入前驱
+                    if w != s:
+                        scores[w] += delta[w]
+            scores = {n: v / 2 for n, v in scores.items()}   # 无向图折半
+        else:
+            raise ValueError(f"未知中心性模式: {mode} (可选 degree|betweenness)")
+        ranked = sorted(scores.items(), key=lambda kv: -kv[1])[:max(1, top)]
+        return {"mode": mode, "graph_nodes": len(nodes),
+                "top": [{"id": n, "type": self.entity_type(n),
+                         "name": self.entity_name(n), "score": round(v, 4)}
+                        for n, v in ranked]}
+
     # ── 树形导出 ──
     def tree(self, site_id: str = None) -> dict:
         """导出完整本体树，用于前端渲染"""
