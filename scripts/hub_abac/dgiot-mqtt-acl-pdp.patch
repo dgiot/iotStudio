@@ -1,0 +1,16 @@
+diff --git a/apps/dgiot_dlink/src/proctol/dgiot_mqtt_acl.erl b/apps/dgiot_dlink/src/proctol/dgiot_mqtt_acl.erl
+index e2d5042..732e4b7 100644
+--- a/apps/dgiot_dlink/src/proctol/dgiot_mqtt_acl.erl
++++ b/apps/dgiot_dlink/src/proctol/dgiot_mqtt_acl.erl
+@@ -30,8 +30,9 @@ check_acl(ClientInfo, PubSub, <<"$dg/", _/binary>> = Topic, _NoMatchAction, _Par
+             ok
+     end;
+ 
+-check_acl(_ClientInfo, _PubSub, _Topic, _NoMatchAction, _Params) ->
+-    ok.
++check_acl(ClientInfo, PubSub, Topic, _NoMatchAction, _Params) ->
++    %% P2 ABAC: doctrine dgiot/ namespace -> attribute PDP (hot-reload)
++    dgiot_pdp_acl:check(PubSub, Topic, ClientInfo).
+ 
+ description() -> "Acl with Dlink".
+ 
