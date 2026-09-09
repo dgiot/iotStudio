@@ -70,7 +70,12 @@ class MiniMqttBroker:
         cid=f"anon_{id(w)}"
         try:
             while self._running:
-                hdr=await r.readexactly(2); ctrl=(hdr[0]>>4)&0x0F; rlen=hdr[1]
+                first=await r.readexactly(1); ctrl=(first[0]>>4)&0x0F
+                rlen=0; mult=1                     # MQTT 剩余长度 varint
+                while True:
+                    b=(await r.readexactly(1))[0]
+                    rlen+=(b&0x7F)*mult; mult*=128
+                    if not b&0x80: break
                 body=await r.readexactly(rlen) if rlen>0 else b''
                 if ctrl==CONNECT:
                     cid, user, pwd = self._parse_connect(body)
@@ -101,12 +106,24 @@ class MiniMqttBroker:
                             ok.append(0x80)  # failure
                             logger.warning(f"[mqtt-acl] {self._clients.get(w)} denied topic={t}")
                     pid=struct.unpack('>H',body[0:2])[0]
-                    suback=b'\x90'+struct.pack('>B',2+len(ok))+struct.pack('>H',pid)+bytes(ok)
+                    body_ack=struct.pack('>H',pid)+bytes(ok)
+                    suback=b'\x90'+self._varint(len(body_ack))+body_ack
                     w.write(suback); await w.drain()
                 elif ctrl==PINGREQ: w.write(b'\xd0\x00'); await w.drain()
                 elif ctrl==DISCONNECT: break
         except (asyncio.IncompleteReadError,ConnectionResetError): pass
         finally: self._cleanup(w)
+
+    @staticmethod
+    def _varint(n: int) -> bytes:
+        """MQTT 剩余长度编码 (≥128 字节必须 varint, 单字节会产出非法帧)"""
+        out = b""
+        while True:
+            d = n % 128; n //= 128
+            if n:
+                out += bytes([d | 0x80])
+            else:
+                return out + bytes([d])
 
     def _parse_connect(self,d):
         try:
@@ -132,25 +149,32 @@ class MiniMqttBroker:
             q=d[off+2+tl] if off+2+tl<len(d) else 0; ts.append((t,q)); off+=2+tl+1
         return ts
 
-    async def _relay(self,topic,payload,sender):
-        pt=topic.split('/'); tp=''
-        for i,p in enumerate(pt):
-            tp=(tp+'/'+p).lstrip('/')
-            if tp in self._subs:
-                for w in list(self._subs[tp]):
-                    if w is sender: continue
-                    try:
-                        t=topic.encode(); pl=struct.pack('>H',len(t))+t+payload
-                        w.write(bytes([PUBLISH<<4,len(pl)])+pl); await w.drain()
-                    except: pass
-        # # wildcard
-        if '#' in self._subs:
-            for w in list(self._subs['#']):
-                if w is sender: continue
+    @staticmethod
+    def _match(filt: str, topic: str) -> bool:
+        """MQTT 标准通配匹配: '+' 单层, '#' 多层尾部 (含父级)"""
+        f = filt.split('/'); t = topic.split('/')
+        for i, seg in enumerate(f):
+            if seg == '#':
+                return True                      # 匹配剩余全部层级 (含 dgiot/# ↔ dgiot 本身)
+            if i >= len(t):
+                return False
+            if seg != '+' and seg != t[i]:
+                return False
+        return len(f) == len(t)
+
+    async def _relay(self, topic, payload, sender):
+        # 订阅过滤器数量为 mini 规模, 直接全量匹配 (标准 MQTT 通配语义)
+        for filt, writers in list(self._subs.items()):
+            if not self._match(filt, topic):
+                continue
+            for w in list(writers):
+                if w is sender:
+                    continue
                 try:
-                    t=topic.encode(); pl=struct.pack('>H',len(t))+t+payload
-                    w.write(bytes([PUBLISH<<4,len(pl)])+pl); await w.drain()
-                except: pass
+                    t = topic.encode(); pl = struct.pack('>H', len(t)) + t + payload
+                    w.write(bytes([PUBLISH << 4]) + self._varint(len(pl)) + pl); await w.drain()
+                except Exception:
+                    pass
 
     def _cleanup(self,w):
         self._clients.pop(w,None); self._roles.pop(w,None)
