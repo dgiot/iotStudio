@@ -20,7 +20,7 @@ import logging
 from dataclasses import asdict
 from typing import Optional
 
-from fastapi import APIRouter, Depends, HTTPException, Query
+from fastapi import APIRouter, Body, Depends, HTTPException, Query
 from pydantic import BaseModel, Field
 
 try:
@@ -55,6 +55,11 @@ try:
     from ..interop import evaluate_cardinality, export_dtdl, export_prov, export_ssn
 except ImportError:
     from interop import evaluate_cardinality, export_dtdl, export_prov, export_ssn
+
+try:
+    from ..enterprise import EnterpriseConnector, register_objects
+except ImportError:
+    from enterprise import EnterpriseConnector, register_objects
 
 seed_builtin()  # R2: 内建动作定义 (幂等)
 
@@ -1280,6 +1285,37 @@ async def aip_export_prov(format: str = Query("turtle", pattern="^(turtle|xml)$"
     return Response(content=body, media_type=media)
 
 
+# ═══════════════════════════════════════════════════════════
+# P1 企业连接器 — PULL 企业元数据入本体 / PUSH 快照到中枢 DataHub
+# ═══════════════════════════════════════════════════════════
+
+@router.post("/aip/datasources/{ds_id}/pull", dependencies=[Depends(require_admin)])
+async def aip_ds_pull(ds_id: str, body: dict = Body(default={})):
+    """PULL: 从企业 REST 端点拉取元数据注册为本体对象"""
+    _, engine = _get_rag()
+    connector = EnterpriseConnector(engine)
+    try:
+        return await connector.pull_metadata(ds_id, path=body.get("path", "/api/metadata"))
+    except ValueError as e:
+        raise HTTPException(400, str(e))
+    finally:
+        await connector.dispose()
+
+
+@router.post("/aip/datasources/{ds_id}/push", dependencies=[Depends(require_admin)])
+async def aip_ds_push(ds_id: str, body: dict = Body(...)):
+    """PUSH: 本体元数据快照上报中枢 DataHub (凭证经 token_env 环境变量引用)"""
+    _, engine = _get_rag()
+    connector = EnterpriseConnector(engine)
+    try:
+        return await connector.push_metadata(ds_id, body.get("hub_url", ""),
+                                             token_env=body.get("token_env"))
+    except ValueError as e:
+        raise HTTPException(400, str(e))
+    finally:
+        await connector.dispose()
+
+
 @router.get("/aip/graph/cardinality")
 async def aip_graph_cardinality(user: dict = Depends(get_current_user)):
     """关系基数评估 — 声明 (Foundry Link Type 同语义) vs 实测出/入度分布 + 违规清单"""
@@ -1584,31 +1620,12 @@ async def aip_objects_sync():
 
 @router.post("/aip/objects/import", dependencies=[Depends(require_admin)])
 async def aip_objects_import(body: OntologyBatchImport):
-    """批量导入本体对象"""
+    """批量导入本体对象 — 复用企业连接器注册器 (dataclass 字段过滤)"""
     _, engine = _get_rag()
-    created, errors = 0, []
-    for obj in body.objects:
-        try:
-            from ..ontology import Site, Gateway, Channel, Device, Point, Constraint, DataSource
-            layers = {
-                "site": Site, "gateway": Gateway, "channel": Channel,
-                "device": Device, "point": Point,
-                "constraint": Constraint, "datasource": DataSource,
-            }
-            layer = obj.get("layer", "")
-            cls = layers.get(layer)
-            if not cls:
-                errors.append(f"未知层级: {layer}")
-                continue
-            kwargs = {"id": obj["id"], "name": obj.get("name", "")}
-            kwargs.update(obj.get("props", {}))
-            engine.register(cls(**kwargs))
-            created += 1
-        except Exception as e:
-            errors.append(f"{obj.get('id', '?')}: {e}")
-
+    counts = register_objects(engine, body.objects)
     _persist_engine(engine)
-    return {"status": "imported", "created": created, "errors": errors,
+    return {"status": "imported", "created": counts["created"],
+            "updated": counts["updated"], "errors": counts["errors"],
             "health": engine.health()["counts"]}
 
 
