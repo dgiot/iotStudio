@@ -1311,8 +1311,8 @@ def main():
     parser.add_argument("--audit", action="store_true",
                         help="R4: 运行质量审计 Agent (六维检查 + 修复建议)")
     parser.add_argument("--export", default=None,
-                        choices=["dtdl", "ssn", "cardinality"],
-                        help="P1: 导出 DTDL v3 / SSN-SOSA 模型, 或关系基数评估")
+                        choices=["dtdl", "ssn", "prov", "cardinality"],
+                        help="P1: 导出 DTDL v3 / SSN-SOSA / PROV-O 模型, 或关系基数评估")
     parser.add_argument("--no-llm", action="store_true", help="不使用 LLM (仅结构化输出)")
     args = parser.parse_args()
 
@@ -1378,11 +1378,13 @@ def main():
         return
 
     if args.export:
-        from .interop import evaluate_cardinality, export_dtdl, export_ssn
+        from .interop import evaluate_cardinality, export_dtdl, export_prov, export_ssn
         if args.export == "dtdl":
             print(json.dumps(export_dtdl(engine), ensure_ascii=False, indent=2))
         elif args.export == "ssn":
             print(json.dumps(export_ssn(engine), ensure_ascii=False, indent=2))
+        elif args.export == "prov":
+            print(export_prov(engine, fmt="turtle"))
         else:
             r = evaluate_cardinality(engine)
             print(f"基数评估: 检查 {r['links_checked']} 条关系边, "

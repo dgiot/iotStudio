@@ -4,7 +4,7 @@
 import pytest
 
 from src.interop import (CARDINALITY_RULES, evaluate_cardinality, export_dtdl,
-                         export_ssn)
+                         export_prov, export_ssn)
 from src.ontology import Link, build_131_ontology
 
 
@@ -125,3 +125,56 @@ def test_cardinality_declared_metadata_exposed(engine):
     r = evaluate_cardinality(engine)
     mt = r["per_relation"]["maps_to"]["declared"]
     assert mt == {"src_max": 1, "tgt_max": 4}
+
+
+# ── PROV-O 数据血缘 ──
+
+def _prov_graph(engine):
+    import rdflib
+    return rdflib.Graph().parse(data=export_prov(engine), format="turtle")
+
+
+def test_prov_structure_classes(engine):
+    from rdflib import Namespace, RDF
+    PROV = Namespace("http://www.w3.org/ns/prov#")
+    g = _prov_graph(engine)
+    assert len(list(g.subjects(RDF.type, PROV.Activity))) >= 10    # 通道
+    assert len(list(g.subjects(RDF.type, PROV.SoftwareAgent))) >= 1  # 网关
+    assert len(list(g.subjects(RDF.type, PROV.Entity))) >= 50      # 设备+测点+数据源
+
+
+def test_prov_generation_chain(engine):
+    """测点 wasGeneratedBy 通道活动; 活动 used 设备"""
+    from rdflib import Namespace, URIRef
+    PROV = Namespace("http://www.w3.org/ns/prov#")
+    DG = Namespace("http://dgiot.cloud/ontology#")
+    g = _prov_graph(engine)
+    gen_by = {str(o) for s, _, o in g.triples((None, PROV.wasGeneratedBy, None))}
+    assert any(x.endswith("ch_modbus_tcp") for x in gen_by)
+    used = {str(o) for s, _, o in g.triples((None, PROV.used, None))}
+    assert any(x.endswith("dev_well_DEV_A") or x.endswith("pt_tgp") for x in used)
+
+
+def test_prov_derivation_via_feeds_into(engine):
+    """feeds_into 链 → wasDerivedFrom (数据派生)"""
+    from rdflib import Namespace
+    PROV = Namespace("http://www.w3.org/ns/prov#")
+    g = _prov_graph(engine)
+    derived = {str(o) for s, _, o in g.triples((None, PROV.wasDerivedFrom, None))}
+    assert any(x.endswith("ch_modbus_tcp") for x in derived)
+
+
+def test_prov_attribution(engine):
+    """网关 actedOnBehalfOf 站点"""
+    from rdflib import Namespace
+    PROV = Namespace("http://www.w3.org/ns/prov#")
+    g = _prov_graph(engine)
+    behalf = {str(o) for s, _, o in g.triples((None, PROV.actedOnBehalfOf, None))}
+    assert any(x.endswith("industry_c1") for x in behalf)
+
+
+def test_prov_pure_and_idempotent(engine):
+    before = _counts(engine)
+    a, b = export_prov(engine), export_prov(engine)
+    assert a == b
+    assert _counts(engine) == before

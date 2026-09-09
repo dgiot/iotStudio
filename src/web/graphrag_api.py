@@ -52,9 +52,9 @@ except ImportError:
                              _decide_proposal, _list_proposals)
 
 try:
-    from ..interop import evaluate_cardinality, export_dtdl, export_ssn
+    from ..interop import evaluate_cardinality, export_dtdl, export_prov, export_ssn
 except ImportError:
-    from interop import evaluate_cardinality, export_dtdl, export_ssn
+    from interop import evaluate_cardinality, export_dtdl, export_prov, export_ssn
 
 seed_builtin()  # R2: 内建动作定义 (幂等)
 
@@ -652,6 +652,21 @@ async def aip_objects(
             break
 
     return {"total": len(results), "objects": results[:limit], "layers": list(layers.keys())}
+
+
+@router.get("/aip/objects/validate")
+async def aip_objects_validate():
+    """运行本体正确性校验 — 6 维度综合检查"""
+    _, engine = _get_rag()
+    result = engine.validate()
+    return result
+
+
+@router.get("/aip/objects/changelog")
+async def aip_objects_changelog(limit: int = Query(50, ge=1, le=200)):
+    """变更审计日志"""
+    _, engine = _get_rag()
+    return {"total": len(engine._changelog), "changes": engine.changelog(limit)}
 
 
 @router.get("/aip/objects/{entity_id}")
@@ -1253,6 +1268,18 @@ async def aip_export_ssn(user: dict = Depends(get_current_user)):
     return export_ssn(engine)
 
 
+@router.get("/aip/export/prov")
+async def aip_export_prov(format: str = Query("turtle", pattern="^(turtle|xml)$"),
+                          user: dict = Depends(get_current_user)):
+    """PROV-O 数据血缘导出 — W3C PROVENANCE (turtle | rdf-xml)"""
+    rag, engine = _get_rag()
+    body = export_prov(engine, fmt=format)
+    media = ("text/turtle; charset=utf-8" if format == "turtle"
+             else "application/rdf+xml; charset=utf-8")
+    from fastapi.responses import Response
+    return Response(content=body, media_type=media)
+
+
 @router.get("/aip/graph/cardinality")
 async def aip_graph_cardinality(user: dict = Depends(get_current_user)):
     """关系基数评估 — 声明 (Foundry Link Type 同语义) vs 实测出/入度分布 + 违规清单"""
@@ -1547,27 +1574,12 @@ async def aip_object_delete(entity_id: str):
     }
 
 
-@router.get("/aip/objects/validate")
-async def aip_objects_validate():
-    """运行本体正确性校验 — 6 维度综合检查"""
-    _, engine = _get_rag()
-    result = engine.validate()
-    return result
-
-
 @router.post("/aip/objects/sync", dependencies=[Depends(require_admin)])
 async def aip_objects_sync():
     """手动持久化本体到 SQLite"""
     _, engine = _get_rag()
     result = _persist_engine(engine)
     return {"status": "synced", "result": str(result), "health": engine.health()["counts"]}
-
-
-@router.get("/aip/objects/changelog")
-async def aip_objects_changelog(limit: int = Query(50, ge=1, le=200)):
-    """变更审计日志"""
-    _, engine = _get_rag()
-    return {"total": len(engine._changelog), "changes": engine.changelog(limit)}
 
 
 @router.post("/aip/objects/import", dependencies=[Depends(require_admin)])

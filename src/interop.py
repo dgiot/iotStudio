@@ -201,3 +201,76 @@ def export_ssn(engine) -> dict:
         "@graph": graph,
         "meta": {"nodes": len(graph), "entity_counts": engine.health()["counts"]},
     }
+
+
+def export_prov(engine, fmt: str = "turtle") -> str:
+    """导出 W3C PROV-O 数据血缘 (rdflib; 与 OWL 导出器同一依赖)
+
+    映射:
+      Point (数据流) → prov:Entity, prov:wasGeneratedBy 通道采集活动
+      Channel        → prov:Activity, prov:used 设备
+      DataSource     → prov:Entity, prov:wasGeneratedBy 映射通道;
+                       feeds_into 链 → prov:wasDerivedFrom 派生关系
+      Device         → prov:Entity, prov:wasAttributedTo 网关
+      Gateway        → prov:SoftwareAgent, prov:actedOnBehalfOf 站点
+      Site           → prov:Organization
+    纯函数: 只读 engine, 不落任何状态。
+    """
+    from rdflib import Graph, Namespace, RDF, URIRef
+
+    PROV = Namespace("http://www.w3.org/ns/prov#")
+    DG = Namespace(DG_NS)
+    g = Graph()
+    g.bind("prov", PROV)
+    g.bind("dg", DG)
+
+    def U(x: str) -> URIRef:
+        return DG[x]
+
+    # 站点 = 组织 Agent; 网关 = 软件 Agent
+    for sid, s in engine.sites.items():
+        g.add((U(sid), RDF.type, PROV.Organization))
+        g.add((U(sid), RDF.type, PROV.Agent))
+    for gid, gw in engine.gateways.items():
+        g.add((U(gid), RDF.type, PROV.SoftwareAgent))
+        g.add((U(gid), RDF.type, PROV.Agent))
+        g.add((U(gid), PROV.actedOnBehalfOf, U(gw.site)))
+
+    # 设备 = Entity (被观测对象), 归属网关
+    for did, d in engine.devices.items():
+        g.add((U(did), RDF.type, PROV.Entity))
+        g.add((U(did), PROV.wasAttributedTo, U(d.channel)))  # 通道即其接入面
+        ch = engine.channels.get(d.channel)
+        if ch:
+            g.add((U(did), PROV.wasAttributedTo, U(ch.gateway)))
+
+    # 通道 = 采集活动
+    for cid, c in engine.channels.items():
+        g.add((U(cid), RDF.type, PROV.Activity))
+
+    # 测点 = Entity, 由通道活动生成
+    for pid, p in engine.points.items():
+        g.add((U(pid), RDF.type, PROV.Entity))
+        dev = engine.devices.get(p.device)
+        if dev:
+            g.add((U(pid), PROV.wasGeneratedBy, U(p.device)))
+            g.add((U(dev.id), PROV.used, U(pid)))
+        ch = engine.channels.get(dev.channel) if dev else None
+        if ch:
+            g.add((U(pid), PROV.wasGeneratedBy, U(ch.id)))
+
+    # 数据源 = Entity, 由映射通道生成 (maps_to); feeds_into → 派生链
+    for dsid, ds in engine.datasources.items():
+        g.add((U(dsid), RDF.type, PROV.Entity))
+    for l in engine.links.values():
+        if l.relation == "maps_to":
+            ch = l.source if l.source in engine.channels else l.target
+            ds = l.target if l.source == ch else l.source
+            if ch in engine.channels and ds in engine.datasources:
+                g.add((U(ds), PROV.wasGeneratedBy, U(ch)))
+        elif l.relation == "feeds_into":
+            g.add((U(l.target), PROV.wasDerivedFrom, U(l.source)))
+
+    if fmt == "xml":
+        return g.serialize(format="xml")
+    return g.serialize(format="turtle")
