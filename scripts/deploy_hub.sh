@@ -6,7 +6,9 @@
 # Philosophy: install ONLY what is necessary.
 #   - NO docker required (native build)
 #   - NO repo clobbering (never touches /etc/yum.repos.d)
-#   - NO optional stack (ollama/milvus/dify/parse-server/redis/report/n2n/wifi)
+#   - NO optional stack (ollama/milvus/dify/redis/report/n2n/wifi)
+#   - parse-server (Node, :1337) IS included: dgiot business plane
+#     (login/devices/channels) dies with code 1 "disconnect" without it
 #   - REUSES existing TDengine(6030/6041) and PostgreSQL if present
 #   - IDEMPOTENT: re-running skips completed steps
 # Ports used by hub: 1883/8883(tcp-mqtt) 8083/8084(ws) 18083(dashboard)
@@ -149,6 +151,35 @@ EOF
   fi
 }
 
+# ------------------------------------------------------- [6.5/7] parse-server
+# dgiot business plane stack: EMQX(:1883/:5080) + PostgreSQL + parse-server(:1337).
+# All parse-backed routes (login, users, devices, channels) answer
+# code 1 "disconnect" when the Node parse-server is down.
+start_parse_server() {
+  local PS_DIR=""
+  for d in "$DEST/dgiot_parse_server" /data/dgiot/dgiot_parse_server; do
+    [ -f "$d/server/start.js" ] && PS_DIR="$d" && break
+  done
+  if [ -z "$PS_DIR" ]; then
+    warn "parse-server not installed (business plane degraded - install dgiot_parse_server)"; return
+  fi
+  if ss -tln 2>/dev/null | grep -q ':1337 '; then warn "parse-server already running (:1337)"; return; fi
+  say "starting parse-server ($PS_DIR)"
+  mkdir -p "$DEST/log"
+  # setsid detaches from this session: WSL kills plain nohup children when
+  # the launching session exits (observed: process died between probes)
+  (cd "$PS_DIR" && setsid nohup node server/start.js \
+     >> "$DEST/log/parse_server.log" 2>&1 < /dev/null &)
+  local i
+  for i in 1 2 3 4 5 6 7 8 9 10; do
+    sleep 2
+    ss -tln 2>/dev/null | grep -q ':1337 ' && break
+  done
+  ss -tln 2>/dev/null | grep -q ':1337 ' \
+    || die "parse-server did not bind :1337 (see $DEST/log/parse_server.log)"
+  say "parse-server UP (:1337) - business plane enabled"
+}
+
 # ---------------------------------------------------------------- [7/7] start
 start_verify() {
   if "$DEST/bin/emqx" ping >/dev/null 2>&1; then warn "hub already running (from $DEST)"
@@ -163,9 +194,15 @@ start_verify() {
   say "hub is UP (ping=pong)"
   ss -tln 2>/dev/null | grep -oE ':(1883|8883|8083|8084|18083) ' | sort -u | tr -d ' :' \
     | while read -r p; do say "  listening: $p"; done
+  if ss -tln 2>/dev/null | grep -q ':1337 '; then
+    say "  business plane: parse-server :1337 UP (login/devices live)"
+  else
+    warn "  business plane: parse-server DOWN - run deploy again or start manually"
+  fi
   echo "=================================================="
   echo " DG-IoT hub deployed:  MQTT tcp://$(hostname -I | awk '{print $1}'):1883"
   echo " dashboard:            http://$(hostname -I | awk '{print $1}'):18083"
+  echo " business api:         http://$(hostname -I | awk '{print $1}'):5080/iotapi"
   echo " verify from edge:     python hub_smoke.py  (iotStudio/scripts)"
   echo "=================================================="
 }
@@ -176,4 +213,5 @@ fetch_source
 apply_patches
 build_hub
 install_release
+start_parse_server
 start_verify
