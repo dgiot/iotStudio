@@ -161,4 +161,4 @@ def test_push_engine_falls_back_to_hardcoded_when_registry_empty(tmp_path):
     asyncio.run(eng.start())
     from src.push.mqtt_pusher import MQTTPusher
     assert isinstance(eng._pushers["m1"], MQTTPusher)
-    assert "u1" not in eng._pushers  # edge_hub 异形推送器暂不收编
+    assert "u1" not in eng._pushers  # stub 注册表无 edge_hub, legacy 回落表亦无 (插件路径已收编)

@@ -58,7 +58,7 @@ class PushEngine:
 
     @staticmethod
     def _compatible(pusher) -> bool:
-        """pusher 协议探测: 需具备 async push(message) (edge_hub 等异形推送器暂不收编)"""
+        """pusher 协议探测: 需具备 async push(message) (edge_hub 已适配收编)"""
         push = getattr(pusher, "push", None)
         return callable(push) and inspect.iscoroutinefunction(push)
 
