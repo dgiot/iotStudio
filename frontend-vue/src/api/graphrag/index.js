@@ -244,6 +244,13 @@ export default {
     params: { limit },
   }),
 
+  /** 审计发现一键生成待审批提案 (kind/target/extra) */
+  agentGenerateProposal: (kind, target, extra = {}) => request({
+    url: '/graphrag/aip/agent/proposals/generate',
+    method: 'post',
+    data: { kind, target, extra },
+  }),
+
   /** 审批执行提案 (仅管理员) */
   agentApprove: (proposalId) => request({
     url: `/graphrag/aip/agent/proposals/${proposalId}/approve`,

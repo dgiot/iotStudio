@@ -411,6 +411,15 @@ class AuditAgent:
                         description=f"审计提案 {proposal_id}")
             eng.register(link)
             result = {"link": asdict(link)}
+        elif p["kind"] == "wire_constraint":
+            cid, entity = payload.get("constraint_id"), payload.get("entity", "")
+            c = eng.constraints.get(cid)
+            if c is None:
+                raise ValueError(f"约束 {cid} 不存在")
+            if eng.entity_type(entity) is None:
+                raise ValueError(f"接线目标 '{entity}' 不存在")
+            eng.update(cid, {"entity": entity})
+            result = {"constraint": cid, "entity": entity}
         else:
             raise ValueError(f"未知提案类型 '{p['kind']}'")
 
@@ -419,3 +428,68 @@ class AuditAgent:
             receipt = self._receipt_fn(f"proposal_{p['kind']}", proposal_id, payload,
                                        "executed", result)
         return _decide_proposal(proposal_id, "approved", by, receipt)
+
+
+# ═══════════════════════════════════════════════════════════
+# 一键生成: 审计发现 → 修复提案 (确定性映射, 无 LLM)
+# ═══════════════════════════════════════════════════════════
+
+# 可确定性转提案的发现类型; 其余 (isolated/覆盖缺口/重名) 无安全自动修复, 拒绝生成
+GENERATABLE_KINDS = ("unmapped_channel", "unmapped_datasource",
+                     "unwired_constraint", "broken_constraint_ref")
+
+
+def propose_from_finding(engine, kind: str, target: str,
+                         extra: dict = None) -> dict:
+    """把审计发现转换为待审批提案 — 明确性优先: 端点存在性预校验,
+    目标歧义时要求操作员指定 (extra), 绝不静默猜测。"""
+    extra = extra or {}
+    rationale = f"来自审计发现 {kind}:{target} 的一键生成 (人工确认后执行)"
+
+    if kind == "unmapped_channel":
+        if engine.entity_type(target) != "channel":
+            raise ValueError(f"{target} 不是有效通道")
+        ds = extra.get("target_ds")
+        if not ds:
+            dss = list(engine.datasources)
+            if len(dss) == 1:
+                ds = dss[0]
+            else:
+                raise ValueError("存在多个数据源, 需指定 target_ds")
+        if engine.entity_type(ds) != "datasource":
+            raise ValueError(f"数据源 {ds} 不存在")
+        return _save_proposal("add_link",
+                              {"source": target, "target": ds, "relation": "maps_to"},
+                              rationale)
+
+    if kind == "unmapped_datasource":
+        if engine.entity_type(target) != "datasource":
+            raise ValueError(f"{target} 不是有效数据源")
+        ch = extra.get("target_channel")
+        if not ch:
+            chs = [c for c in engine.channels]
+            if len(chs) == 1:
+                ch = chs[0]
+            else:
+                raise ValueError("存在多个通道, 需指定 target_channel")
+        if engine.entity_type(ch) != "channel":
+            raise ValueError(f"通道 {ch} 不存在")
+        return _save_proposal("add_link",
+                              {"source": ch, "target": target, "relation": "maps_to"},
+                              rationale)
+
+    if kind in ("unwired_constraint", "broken_constraint_ref"):
+        cid = target
+        c = engine.constraints.get(cid)
+        if c is None:
+            raise ValueError(f"约束 {cid} 不存在")
+        entity = extra.get("entity", "")
+        if not entity:
+            raise ValueError("需指定接线实体 (entity)")
+        if engine.entity_type(entity) is None:
+            raise ValueError(f"接线目标 '{entity}' 不存在")
+        return _save_proposal("wire_constraint",
+                              {"constraint_id": cid, "entity": entity},
+                              rationale)
+
+    raise ValueError(f"发现类型 '{kind}' 无确定性修复动作, 不可一键生成")

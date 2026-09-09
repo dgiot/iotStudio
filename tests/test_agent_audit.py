@@ -4,7 +4,7 @@
 import pytest
 
 from src.agent_audit import (AuditAgent, _get_proposal, _list_proposals,
-                             _save_proposal)
+                             _save_proposal, propose_from_finding)
 from src.ontology import Device, Link, build_131_ontology
 
 
@@ -182,3 +182,86 @@ def test_score_drops_with_more_findings(engine, agent_db):
                          relation="relates_to"))
     dirty = AuditAgent(engine, rag=None).run_audit()
     assert dirty["score"] < clean["score"]
+
+
+# ── 一键生成: 审计发现 → 待审批提案 (确定性映射) ──
+
+def _minimal_engine():
+    """1 站 1 网关 1 通道 1 数据源 — 唯一性自动选定的受控环境"""
+    from src.ontology import OntologyEngine, Site, Gateway, Channel, DataSource
+    eng = OntologyEngine()
+    eng.register(Site(id="s1", name="测试站"))
+    eng.register(Gateway(id="g1", ip="10.0.0.1", site="s1"))
+    eng.register(Channel(id="c1", gateway="g1", name="通道一", protocol="modbus_tcp"))
+    eng.register(DataSource(id="d1", gateway="g1", type="oracle"))
+    return eng
+
+
+def test_generate_unmapped_channel_auto_pick(agent_db):
+    """唯一数据源 → 自动选定, 生成 add_link 提案并可通过审批执行"""
+    eng = _minimal_engine()
+    p = propose_from_finding(eng, "unmapped_channel", "c1")
+    assert p["kind"] == "add_link" and p["status"] == "pending"
+    assert p["payload"] == {"source": "c1", "target": "d1", "relation": "maps_to"}
+    ag = AuditAgent(eng, rag=None)   # 引擎须与提案生成时一致
+    decided = ag.execute_proposal(p["id"], "admin")
+    assert decided["status"] == "approved"
+    assert any(l.source == "c1" and l.target == "d1" and l.relation == "maps_to"
+               for l in eng.links.values())
+
+
+def test_generate_unmapped_channel_ambiguous_requires_extra(engine, agent_db):
+    """种子含 4 个数据源 — 歧义必须显式指定"""
+    from src.ontology import Channel
+    engine.register(Channel(id="ch_audit_x", gateway="gw_131",
+                            name="审计测试通道", protocol="modbus_tcp"))
+    with pytest.raises(ValueError, match="target_ds"):
+        propose_from_finding(engine, "unmapped_channel", "ch_audit_x")
+    p = propose_from_finding(engine, "unmapped_channel", "ch_audit_x",
+                             extra={"target_ds": "ds_redundancy"})
+    assert p["payload"]["target"] == "ds_redundancy"
+
+
+def test_generate_unmapped_datasource_explicit_channel(engine, agent_db):
+    from src.ontology import DataSource, Channel
+    engine.register(DataSource(id="ds_orphan", gateway="gw_131", type="tdengine"))
+    engine.register(Channel(id="ch_audit_x", gateway="gw_131",
+                            name="审计测试通道", protocol="modbus_tcp"))
+    with pytest.raises(ValueError, match="target_channel"):
+        propose_from_finding(engine, "unmapped_datasource", "ds_orphan")
+    p = propose_from_finding(engine, "unmapped_datasource", "ds_orphan",
+                             extra={"target_channel": "ch_audit_x"})
+    assert p["payload"] == {"source": "ch_audit_x", "target": "ds_orphan",
+                            "relation": "maps_to"}
+
+
+def test_generate_wire_constraint_and_execute(engine, agent, agent_db):
+    from src.ontology import Constraint
+    engine.register(Constraint(id="crit_wire", name="接线测试",
+                               rule="temperature>85 → alarm", entity=""))
+    with pytest.raises(ValueError, match="entity"):
+        propose_from_finding(engine, "unwired_constraint", "crit_wire")
+    with pytest.raises(ValueError, match="不存在"):
+        propose_from_finding(engine, "unwired_constraint", "crit_wire",
+                             extra={"entity": "ghost_dev"})
+    p = propose_from_finding(engine, "unwired_constraint", "crit_wire",
+                             extra={"entity": "dev_well_DEV_A"})
+    assert p["kind"] == "wire_constraint"
+    agent.execute_proposal(p["id"], "admin")
+    assert engine.constraints["crit_wire"].entity == "dev_well_DEV_A"
+
+
+def test_generate_broken_constraint_ref_same_path(engine, agent_db):
+    from src.ontology import Constraint
+    engine.register(Constraint(id="crit_broken", name="断线测试",
+                               rule="x>1 → alarm", entity="ghost_ref"))
+    p = propose_from_finding(engine, "broken_constraint_ref", "crit_broken",
+                             extra={"entity": "dev_well_DEV_A"})
+    assert p["kind"] == "wire_constraint"
+
+
+def test_generate_rejects_non_generatable_kinds(engine, agent_db):
+    for kind in ("isolated", "device_no_relation", "duplicate_name",
+                 "point_no_alarm", "bogus_kind"):
+        with pytest.raises(ValueError, match="无确定性修复动作"):
+            propose_from_finding(engine, kind, "whatever")

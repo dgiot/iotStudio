@@ -45,6 +45,15 @@
             <el-table-column prop="kind" label="类型" width="170" show-overflow-tooltip />
             <el-table-column prop="target" label="目标" width="140" show-overflow-tooltip />
             <el-table-column prop="message" label="说明" show-overflow-tooltip />
+            <el-table-column label="操作" width="100">
+              <template #default="{ row }">
+                <el-button v-if="GENERATABLE.includes(row.kind)" size="small"
+                           type="warning" plain @click="generateProposal(row)">
+                  生成提案
+                </el-button>
+                <span v-else class="no-fix">—</span>
+              </template>
+            </el-table-column>
           </el-table>
           <el-collapse style="margin-top:10px">
             <el-collapse-item title="Agent Trace (ReAct 步骤)">
@@ -146,6 +155,40 @@ const sevType = { high: 'danger', medium: 'warning', low: 'info' }
 const proposals = ref([])
 const prpStatus = ref('pending')
 const runs = ref([])
+
+// 可确定性转提案的发现类型 (与后端 GENERATABLE_KINDS 对齐)
+const GENERATABLE = ['unmapped_channel', 'unmapped_datasource',
+                     'unwired_constraint', 'broken_constraint_ref']
+
+async function generateProposal(finding) {
+  let extra = {}
+  try {
+    if (finding.kind === 'unmapped_channel') {
+      const r = await ElMessageBox.prompt(
+        '映射到哪个数据源? (留空 = 自动选择唯一数据源)', '生成提案: 通道→数据源 maps_to',
+        { confirmButtonText: '生成', cancelButtonText: '取消', inputValue: '' })
+      if (r.value) extra.target_ds = r.value.trim()
+    } else if (finding.kind === 'unmapped_datasource') {
+      const r = await ElMessageBox.prompt(
+        '由哪个通道映射? (留空 = 自动选择唯一通道)', '生成提案: 通道→数据源 maps_to',
+        { confirmButtonText: '生成', cancelButtonText: '取消', inputValue: '' })
+      if (r.value) extra.target_channel = r.value.trim()
+    } else {
+      const r = await ElMessageBox.prompt(
+        '接线到哪个实体 ID? (必填)', '生成提案: 约束接线',
+        { confirmButtonText: '生成', cancelButtonText: '取消', inputValue: '' })
+      extra.entity = (r.value || '').trim()
+    }
+  } catch { return }  // 用户取消
+  try {
+    const resp = await api.agentGenerateProposal(finding.kind, finding.target, extra)
+    ElMessage.success(`提案已生成 (${resp.proposal.id}), 待审批页签可见`)
+    prpStatus.value = 'pending'
+    await loadProposals()
+  } catch (e) {
+    ElMessage.error(e.response?.data?.detail || '生成失败')
+  }
+}
 
 const gradeType = computed(() => {
   const g = report.value?.grade
@@ -254,6 +297,7 @@ onMounted(() => { loadProposals(); loadRuns() })
 .trace-obs { color: #8aa0b4; font-size: 12px; }
 .payload { color: #8aa0b4; font-size: 11px; word-break: break-all; }
 .decided-at { color: #8aa0b4; font-size: 11px; }
+.no-fix { color: #5a708a; font-size: 12px; }
 .fresh-hint { color: #8aa0b4; font-size: 12px; margin-top: 8px; }
 .empty-hint { margin-top: 40px; }
 </style>

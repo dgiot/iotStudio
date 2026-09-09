@@ -11,6 +11,7 @@ MQTT Topic: $dg/thing/{product_id}/{product_id}_{devaddr}/properties/report (dli
 """
 import json
 from dataclasses import dataclass, field, asdict
+from datetime import datetime
 from typing import Optional, List, Dict, Any
 
 
@@ -168,6 +169,45 @@ class OntologyEngine:
         self.datasources: Dict[str, DataSource] = {}
         self.links: Dict[str, Link] = {}
         self._mqtt = mqtt_client
+        self._changelog: List[Dict] = []   # 属性变更审计日志 (update 落账)
+
+    # ── 属性更新 + 变更审计 (PUT /aip/objects/{id} 与 wire_constraint 共用) ──
+    def update(self, entity_id: str, changes: dict) -> dict:
+        """更新实体属性 (只接受该层数据类已有字段; id 不可改)
+
+        返回实际变更 {field: {"old": ..., "new": ...}} —
+        实体不存在或无实际变化时返回 {}。
+        """
+        tables = (self.sites, self.gateways, self.channels, self.devices,
+                  self.points, self.constraints, self.datasources)
+        obj = None
+        for table in tables:
+            if entity_id in table:
+                obj = table[entity_id]
+                break
+        if obj is None:
+            return {}
+
+        changed: Dict[str, Dict] = {}
+        for key, new in (changes or {}).items():
+            if key == "id" or not hasattr(obj, key):
+                continue
+            old = getattr(obj, key)
+            if old != new:
+                setattr(obj, key, new)
+                changed[key] = {"old": old, "new": new}
+        if changed:
+            self._changelog.append({
+                "ts": datetime.now().isoformat(),
+                "entity_id": entity_id,
+                "entity_type": self.entity_type(entity_id) or "",
+                "changed": changed,
+            })
+        return changed
+
+    def changelog(self, limit: int = 50) -> List[Dict]:
+        """变更审计日志 (最新在前)"""
+        return list(reversed(self._changelog))[:limit]
 
     # ── register ──
     def register(self, node) -> str:

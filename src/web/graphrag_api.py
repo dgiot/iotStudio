@@ -46,10 +46,12 @@ except ImportError:
 
 try:
     from ..agent_audit import (AuditAgent, _AGENT_DB_PATH, list_runs,
-                               _decide_proposal, _list_proposals)
+                               _decide_proposal, _list_proposals,
+                               propose_from_finding)
 except ImportError:
     from agent_audit import (AuditAgent, _AGENT_DB_PATH, list_runs,
-                             _decide_proposal, _list_proposals)
+                             _decide_proposal, _list_proposals,
+                             propose_from_finding)
 
 try:
     from ..interop import evaluate_cardinality, export_dtdl, export_prov, export_ssn
@@ -1357,6 +1359,19 @@ async def aip_agent_proposals(status: str = Query(None, pattern="^(pending|appro
     """提案清单 — pending 即人工审批工作队列"""
     rows = _list_proposals(status, limit)
     return {"proposals": rows, "count": len(rows)}
+
+
+@router.post("/aip/agent/proposals/generate", dependencies=[Depends(require_admin)])
+async def aip_agent_proposal_generate(body: dict, user: dict = Depends(get_current_user)):
+    """审计发现 → 一键生成待审批提案 (确定性映射; 歧义时要求 extra 指定目标)"""
+    _, engine = _get_rag()
+    try:
+        proposal = propose_from_finding(engine, body.get("kind", ""),
+                                        body.get("target", ""),
+                                        extra=body.get("extra") or {})
+    except ValueError as e:
+        raise HTTPException(400, str(e))
+    return {"status": "created", "proposal": proposal}
 
 
 @router.get("/aip/agent/runs", dependencies=[Depends(require_admin)])
