@@ -199,3 +199,55 @@ class ActionPipeline:
 
         with ThreadPoolExecutor(max_workers=max(1, max_workers)) as pool:
             return list(pool.map(_one, list(submissions)))
+
+
+class SqliteProposalAuthorizer:
+    """授权凭证 = agent_audit 提案 (kind='action_auth', id prp_*)。
+
+    与本体修复提案同一条审计流、同一套审批 API (GET /aip/agent/proposals) —
+    治理事件单一真相源。一次性消费用 json_extract 原子扣减, 并行世界不双花。
+    """
+
+    def request(self, action: str, fingerprint: str, role: str) -> str:
+        from src.agent_audit import _save_proposal
+        rec = _save_proposal(
+            "action_auth",
+            {"action": action, "fingerprint": fingerprint, "role": role, "uses": 0},
+            f"动作 '{action}' 外部副作用执行授权 (role={role})")
+        return rec["id"]
+
+    def approve(self, auth_id: str, by: str) -> dict:
+        from src.agent_audit import _decide_proposal
+        return _decide_proposal(auth_id, "approved", by)
+
+    def reject(self, auth_id: str, by: str) -> dict:
+        from src.agent_audit import _decide_proposal
+        return _decide_proposal(auth_id, "rejected", by)
+
+    def verify_and_consume(self, action: str, fingerprint: str,
+                           auth_id: str) -> Tuple[bool, str, str]:
+        from src.agent_audit import _get_proposal, _agent_db
+        p = _get_proposal(auth_id)
+        if p is None or p.get("kind") != "action_auth":
+            return False, "", "授权不存在"
+        pl = p.get("payload") or {}
+        if pl.get("action") != action or pl.get("fingerprint") != fingerprint:
+            return False, p.get("decided_by", ""), "授权与动作/参数不匹配"
+        if p["status"] == "rejected":
+            return False, p.get("decided_by", ""), "授权已被拒绝"
+        if p["status"] == "pending":
+            return False, "", "授权待审批"
+        if p["status"] != "approved":
+            return False, "", f"未知授权状态 '{p['status']}'"
+        db = _agent_db()
+        try:
+            cur = db.execute(
+                "UPDATE agent_proposals SET payload=json_set(payload,'$.uses',1) "
+                "WHERE id=? AND status='approved' AND json_extract(payload,'$.uses')=0",
+                (auth_id,))
+            db.commit()
+            if cur.rowcount != 1:
+                return False, p.get("decided_by", ""), "授权已使用 (一次性)"
+        finally:
+            db.close()
+        return True, p.get("decided_by", ""), ""

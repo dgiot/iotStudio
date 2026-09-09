@@ -1146,6 +1146,101 @@ async def aip_reconcile_action(receipt_id: str, body: ReconcileRequest,
 
 
 # ═══════════════════════════════════════════════════════════
+# P1: ActionContract 管线 — 三段式 (校验→审批门→执行+对账)
+# 授权凭证 = agent_audit 提案 (kind=action_auth, prp_*) — 与本体修复提案
+# 同一条审计流、同一审批视图; R2 铁律由管线机制保证。
+# ═══════════════════════════════════════════════════════════
+
+class PipelineSubmitRequest(BaseModel):
+    action: str = Field(..., description="动作名 (须已注册)")
+    target_id: str = Field("", description="目标实体 ID")
+    params: Optional[dict] = Field(None)
+    auth_id: str = Field("", description="外部副作用动作的人工授权凭证 (prp_*)")
+
+
+class PipelineDispatchRequest(BaseModel):
+    submissions: list = Field(..., description="submit kwargs 字典列表 — 并行派发, 项间隔离")
+    max_workers: int = Field(4, ge=1, le=16)
+
+
+class PipelineAuthorizeRequest(BaseModel):
+    auth_id: str = Field(..., description="待审批授权凭证 (prp_*)")
+    decision: str = Field(..., description="approve | reject")
+
+
+_PIPELINE = None
+
+
+def _get_action_pipeline():
+    global _PIPELINE
+    if _PIPELINE is None:
+        from src.action_pipeline import ActionPipeline, SqliteProposalAuthorizer
+        rag, engine = _get_rag()
+
+        def _exec(defn, target_id, params):
+            fn = _ACTION_EXECUTORS.get(defn.name)
+            if fn is None:
+                return {"ok": False, "error": "no executor bound"}
+            body = ActionRequest(action=defn.name, target_id=target_id, params=params)
+            result, mqtt_topic, delivered = fn(rag, engine, defn, body, params, "pipeline")
+            recon = ("succeeded" if delivered else
+                     ("not_run" if delivered is False else "pending")) \
+                if defn.external_side_effect else "not_run"
+            return {"ok": bool(delivered) if defn.external_side_effect else True,
+                    "detail": result, "mqtt_topic": mqtt_topic, "reconciliation": recon}
+
+        _PIPELINE = ActionPipeline(engine=engine, executor=_exec,
+                                   authorizer=SqliteProposalAuthorizer())
+    return _PIPELINE
+
+
+@router.post("/aip/pipeline/actions/submit")
+async def aip_pipeline_submit(body: PipelineSubmitRequest,
+                              user: dict = Depends(get_current_user)):
+    """三段式单发 — external_side_effect 无凭证 → awaiting_approval (R2 机制化)"""
+    role = user.get("role", "admin")
+    return _get_action_pipeline().submit(body.action, params=body.params, role=role,
+                                         target_id=body.target_id, auth_id=body.auth_id)
+
+
+@router.post("/aip/pipeline/actions/dispatch")
+async def aip_pipeline_dispatch(body: PipelineDispatchRequest,
+                                user: dict = Depends(get_current_user)):
+    """并行批发 — 世界是平行的: 项间隔离, 单项异常不拖垮批次; 顺序与输入一致"""
+    role = user.get("role", "admin")
+    subs = []
+    for s in body.submissions:
+        s = dict(s or {})
+        s.setdefault("role", role)
+        s.setdefault("target_id", "")
+        subs.append(s)
+    results = _get_action_pipeline().submit_many(subs, max_workers=body.max_workers)
+    return {"results": results}
+
+
+@router.post("/aip/pipeline/actions/authorize", dependencies=[Depends(require_admin)])
+async def aip_pipeline_authorize(body: PipelineAuthorizeRequest,
+                                 user: dict = Depends(get_current_user)):
+    """人工审批门 (仅管理员) — approve/reject 一次性授权; decided_by=当前用户"""
+    by = user.get("sub", "?")
+    auth = _get_action_pipeline().authorizer
+    if body.decision == "approve":
+        return auth.approve(body.auth_id, by=by)
+    if body.decision == "reject":
+        return auth.reject(body.auth_id, by=by)
+    raise HTTPException(400, "decision 只能是 approve | reject")
+
+
+@router.get("/aip/pipeline/actions/auths", dependencies=[Depends(require_admin)])
+async def aip_pipeline_auths(status: str = None, limit: int = 50,
+                             user: dict = Depends(get_current_user)):
+    """授权凭证清单 — 即 kind=action_auth 的提案 (与本体提案同一审计流)"""
+    from src.agent_audit import _list_proposals
+    items = _list_proposals(status=status, limit=limit)
+    return {"auths": [i for i in items if i.get("kind") == "action_auth"]}
+
+
+# ═══════════════════════════════════════════════════════════
 # R1: 显式关系 (Link) — /aip/links
 # ═══════════════════════════════════════════════════════════
 
