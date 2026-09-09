@@ -20,4 +20,4 @@ jobs:
       - name: Install dependencies
         run: pip install -r requirements.txt
       - name: Run tests
-        run: pytest tests/ -q --tb=short
+        run: python -m pytest tests/ -q --tb=short
