@@ -1308,6 +1308,8 @@ def main():
                         help="R3: 打印两实体间全部最短路径 (层级+关系边)")
     parser.add_argument("--impact", default=None, metavar="ENTITY_ID",
                         help="R3: 打印失效影响半径 (blast-radius)")
+    parser.add_argument("--audit", action="store_true",
+                        help="R4: 运行质量审计 Agent (六维检查 + 修复建议)")
     parser.add_argument("--no-llm", action="store_true", help="不使用 LLM (仅结构化输出)")
     args = parser.parse_args()
 
@@ -1353,6 +1355,23 @@ def main():
                   f"({a['type']}) {a['name']}  经: {kinds}")
         if r["count"] > 15:
             print(f"  ... 其余 {r['count'] - 15} 个略")
+        return
+
+    if args.audit:
+        from .agent_audit import AuditAgent
+        report = AuditAgent(engine).run_audit(with_llm=False)
+        print(f"\n质量审计: 得分 {report['score']} / 等级 {report['grade']}  "
+              f"发现 {report['summary']['total']} 项 {report['summary']['severity']}")
+        for step in report["trace"]:
+            print(f"  [{step['tool']}] {step['observation']}")
+            for f in step["findings"][:5]:
+                tag = "提案" if f.get("proposal") else "建议"
+                print(f"    ({f['severity']}) {f['message']}  [{tag}]")
+        if report["summary"]["total"] > 0:
+            print(f"\n修复建议 (确定性模板, 执行需人工审批):")
+            for f in report["findings"]:
+                if f["severity"] == "high":
+                    print(f"  - {f['message']}")
         return
 
     if args.subgraph:

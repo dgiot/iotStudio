@@ -44,6 +44,13 @@ except ImportError:
                              role_allowed, seed_builtin, unregister as unregister_action_def,
                              validate_params)
 
+try:
+    from ..agent_audit import (AuditAgent, _AGENT_DB_PATH, list_runs,
+                               _decide_proposal, _list_proposals)
+except ImportError:
+    from agent_audit import (AuditAgent, _AGENT_DB_PATH, list_runs,
+                             _decide_proposal, _list_proposals)
+
 seed_builtin()  # R2: 内建动作定义 (幂等)
 
 logger = logging.getLogger(__name__)
@@ -1223,6 +1230,78 @@ async def aip_graph_centrality(mode: str = Query("degree", pattern="^(degree|bet
         return engine.graph_centrality(mode, top)
     except ValueError as e:
         raise HTTPException(400, str(e))
+
+
+# ── R4: 质量审计 Agent + 提案审批闭环 (全部 admin) ──
+
+class AuditRequest(BaseModel):
+    with_llm: bool = False
+
+
+class DismissRequest(BaseModel):
+    note: str = Field("", max_length=500)
+
+
+def _audit_agent() -> AuditAgent:
+    rag, engine = _get_rag()
+
+    def receipt_fn(action, target_id, params, status, result):
+        return _record_action(action, target_id, params, "agent_audit", "admin",
+                              status, result)
+
+    return AuditAgent(engine, rag=rag, receipt_fn=receipt_fn)
+
+
+@router.post("/aip/agent/audit", dependencies=[Depends(require_admin)])
+async def aip_agent_audit(body: AuditRequest, user: dict = Depends(get_current_user)):
+    """运行质量审计 — 六维确定性检查 (+可选 LLM 归因); 生成的提案入库待审批"""
+    report = _audit_agent().run_audit(with_llm=body.with_llm)
+    return report
+
+
+@router.get("/aip/agent/proposals", dependencies=[Depends(require_admin)])
+async def aip_agent_proposals(status: str = Query(None, pattern="^(pending|approved|dismissed)$"),
+                              limit: int = Query(100, ge=1, le=500),
+                              user: dict = Depends(get_current_user)):
+    """提案清单 — pending 即人工审批工作队列"""
+    rows = _list_proposals(status, limit)
+    return {"proposals": rows, "count": len(rows)}
+
+
+@router.get("/aip/agent/runs", dependencies=[Depends(require_admin)])
+async def aip_agent_runs(limit: int = Query(20, ge=1, le=100),
+                         user: dict = Depends(get_current_user)):
+    """审计运行史 — trace 落库即 Sovereign 式后训练原料"""
+    return {"runs": list_runs(limit)}
+
+
+@router.post("/aip/agent/proposals/{proposal_id}/approve", dependencies=[Depends(require_admin)])
+async def aip_agent_approve(proposal_id: str, user: dict = Depends(get_current_user)):
+    """审批执行提案 (仅管理员) — delete_link / add_link; 执行回执落动作审计库"""
+    actor = user.get("sub", "?")
+    agent = _audit_agent()
+    try:
+        result = agent.execute_proposal(proposal_id, actor)
+    except LookupError as e:
+        raise HTTPException(404, str(e))
+    except ValueError as e:
+        raise HTTPException(409, str(e))
+    return result
+
+
+@router.post("/aip/agent/proposals/{proposal_id}/dismiss", dependencies=[Depends(require_admin)])
+async def aip_agent_dismiss(proposal_id: str, body: DismissRequest,
+                            user: dict = Depends(get_current_user)):
+    """驳回提案 (仅管理员) — 留痕驳回理由"""
+    actor = user.get("sub", "?")
+    try:
+        result = _decide_proposal(proposal_id, "dismissed", actor,
+                                  {"note": body.note} if body.note else None)
+    except LookupError as e:
+        raise HTTPException(404, str(e))
+    except ValueError as e:
+        raise HTTPException(409, str(e))
+    return result
 
 
 class ScenarioRequest(BaseModel):
