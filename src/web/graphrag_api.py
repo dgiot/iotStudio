@@ -51,6 +51,11 @@ except ImportError:
     from agent_audit import (AuditAgent, _AGENT_DB_PATH, list_runs,
                              _decide_proposal, _list_proposals)
 
+try:
+    from ..interop import evaluate_cardinality, export_dtdl, export_ssn
+except ImportError:
+    from interop import evaluate_cardinality, export_dtdl, export_ssn
+
 seed_builtin()  # R2: 内建动作定义 (幂等)
 
 logger = logging.getLogger(__name__)
@@ -1230,6 +1235,29 @@ async def aip_graph_centrality(mode: str = Query("degree", pattern="^(degree|bet
         return engine.graph_centrality(mode, top)
     except ValueError as e:
         raise HTTPException(400, str(e))
+
+
+# ── P1: 标准互操作 — DTDL v3 / SSN-SOSA 导出 + 关系基数评估 (只读) ──
+
+@router.get("/aip/export/dtdl")
+async def aip_export_dtdl(user: dict = Depends(get_current_user)):
+    """DTDL v3 模型导出 — Azure Digital Twins 生态可摄入"""
+    rag, engine = _get_rag()
+    return export_dtdl(engine)
+
+
+@router.get("/aip/export/ssn")
+async def aip_export_ssn(user: dict = Depends(get_current_user)):
+    """SSN/SOSA JSON-LD 导出 — W3C 语义传感器网络本体"""
+    rag, engine = _get_rag()
+    return export_ssn(engine)
+
+
+@router.get("/aip/graph/cardinality")
+async def aip_graph_cardinality(user: dict = Depends(get_current_user)):
+    """关系基数评估 — 声明 (Foundry Link Type 同语义) vs 实测出/入度分布 + 违规清单"""
+    rag, engine = _get_rag()
+    return evaluate_cardinality(engine)
 
 
 # ── R4: 质量审计 Agent + 提案审批闭环 (全部 admin) ──
