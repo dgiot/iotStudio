@@ -70,14 +70,33 @@ def test_login_415_raises_auth_error():
         c.login("admin", "pw")
 
 
-def test_products_get_with_bearer_and_params():
+def test_products_reads_parse_class_route_with_bearer():
     c, s = make_client()
     c.login("admin", "pw")
-    out = c.products(limit=3, skip=0)
+    out = c.products(limit=3, skip=0, keys=["name"])
     assert out["results"][0]["objectId"] == "p1"
     url, params = s.gets[0]
-    assert url.endswith("/iotapi/product")
+    assert url.endswith("/iotapi/classes/Product")
     assert params["limit"] == 3
+    assert params["keys"] == "name"
+
+
+def test_devices_filters_by_product_pointer():
+    c, s = make_client()
+    c.login("admin", "pw")
+    c.devices(limit=2, product_id="prod1")
+    url, params = s.gets[0]
+    assert url.endswith("/iotapi/classes/Device")
+    assert '"className": "Product"' in params["where"]
+    assert '"objectId": "prod1"' in params["where"]
+
+
+def test_devices_without_product_omits_where():
+    c, s = make_client()
+    c.login("admin", "pw")
+    c.devices()
+    _, params = s.gets[0]
+    assert "where" not in params
 
 
 def test_forbidden_119_surfaces_as_studio_forbidden():

@@ -92,13 +92,30 @@ class IotStudio:
             raise StudioForbidden(path, payload)
         raise StudioError(f"{path} -> {r.status_code}: {str(payload)[:160]}")
 
-    def products(self, limit=100, skip=0):
-        """Product catalog; requires role-seeded rules on stock hubs."""
-        return self._get("/product", limit=limit, skip=skip)
+    def products(self, limit=100, skip=0, keys=None):
+        """Product catalog (parse-style: {"results": [...], "count": n}).
 
-    def devices(self, limit=100, skip=0):
-        """Device list; requires role-seeded rules on stock hubs."""
-        return self._get("/device", limit=limit, skip=skip)
+        Reads /iotapi/classes/Product: parse class reads honour each
+        object's ACL, so a caller only sees products its role may read
+        (hub-side role seeding required - see scripts/hub_bridge/
+        seed_roles.py). No master key is involved.
+        """
+        params = {"limit": limit, "skip": skip}
+        if keys:
+            params["keys"] = ",".join(keys)
+        return self._get("/classes/Product", **params)
+
+    def devices(self, limit=100, skip=0, product_id=None, keys=None):
+        """Device list, optionally narrowed to one product (filtering
+        stays server-side via a product pointer where-clause)."""
+        params = {"limit": limit, "skip": skip}
+        if keys:
+            params["keys"] = ",".join(keys)
+        if product_id:
+            params["where"] = json.dumps(
+                {"product": {"__type": "Pointer", "className": "Product",
+                             "objectId": product_id}})
+        return self._get("/classes/Device", **params)
 
     # -- TDengine direct read (lab/local mode) ---------------------------
     def td_query(self, sql):

@@ -3,6 +3,9 @@
 
 Run against a live hub (lab defaults shown; override via env):
     python3 sdk/examples/ten_lines.py
+
+Catalog read needs the hub-side role seed once (scripts/hub_bridge/
+seed_roles.py); the MQTT half works on any hub.
 """
 import os
 
@@ -15,9 +18,7 @@ c = IotStudio(base_url=base,
 s = Subscriber(host=os.environ.get("MQTT_HOST", "127.0.0.1"))
 s.subscribe("dgiot/#", lambda t, m: print("[live]", t, m))
 s.start()
-print("[catalog]", end=" ")
-try:
-    print(list(c.products(limit=3).items())[:1])
-except Exception as e:  # stock headless hubs lack role-seeded rules
-    print(f"catalog needs role seeding on the hub ({e})")
+cat = c.products(limit=3, keys=["name", "objectId"])["results"]
+print("[catalog]", [p["name"] for p in cat])
+print("[devices]", len(c.devices(limit=5, keys=["name"])["results"]), "rows")
 s.wait()
