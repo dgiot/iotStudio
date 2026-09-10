@@ -117,6 +117,38 @@ class IotStudio:
                              "objectId": product_id}})
         return self._get("/classes/Device", **params)
 
+    # -- downlink (command to a device) ---------------------------------
+    def send_command(self, device_id, data, messagetype="debug"):
+        """Downlink a command to one device through the hub.
+
+        POST /iotapi/device_debug {deviceid, messagetype, data} - the hub
+        resolves the device row (devaddr + product) and publishes to
+        $dg/device/{productId}/{devaddr}/{messagetype}, answering
+        {"status": 0, "data": {"topic": ...}}. status 0 means the hub
+        accepted and issued the publish; it is NOT a delivery receipt -
+        only a device subscribed with its product credentials on its own
+        $dg topic can confirm receipt (anonymous edge clients cannot
+        subscribe $dg/#; the hub-side internal publish path also has a
+        known silent-drop defect, see docs/ROADMAP.md P4 cut 3).
+
+        Requires the POST_DEVICE_DEBUG rule on the caller's role
+        (seed_roles.py adds it) and a device row carrying devaddr+product.
+        """
+        payload = {"deviceid": device_id, "messagetype": messagetype,
+                   "data": data}
+        r = self.session.post(self.base + "/device_debug", json=payload,
+                              timeout=self.timeout)
+        try:
+            reply = r.json()
+        except ValueError:
+            raise StudioError(f"device_debug -> {r.status_code}: "
+                              f"{r.text[:160]}")
+        if reply.get("code") == 119:
+            raise StudioForbidden("/device_debug", reply)
+        if reply.get("status") != 0:
+            raise StudioError(f"device_debug rejected: {reply}")
+        return reply
+
     # -- TDengine direct read (lab/local mode) ---------------------------
     def td_query(self, sql):
         """Run one SQL against TDengine REST; returns row dicts.

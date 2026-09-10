@@ -34,6 +34,8 @@ DEFAULT_RULES = [
     # business reads
     "GET_PRODUCT", "GET_DEVICE", "GET_PRODUCTTREE", "GET_THING",
     "GET_TDENGINE", "GET_CHANNEL", "GET_NOTIFY",
+    # business writes (downlink)
+    "POST_DEVICE_DEBUG", "POST_PRODUCT", "POST_DEVICE",
     # parse class reads / writes (route operation ids)
     "GET_CLASSES_PRODUCT", "GET_CLASSES_DEVICE", "GET_CLASSES_USER",
     "GET_CLASSES_ROLE", "GET_CLASSES_THING", "GET_CLASSES_CHANNEL",

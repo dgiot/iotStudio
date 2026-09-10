@@ -108,6 +108,47 @@ def test_forbidden_119_surfaces_as_studio_forbidden():
         c.products()
 
 
+def _post_returning(c, s, payload, status=200):
+    captured = {}
+
+    def fake_post(url, json=None, data=None, headers=None, timeout=None):
+        captured["url"] = url
+        captured["json"] = json
+        return FakeResponse(status, payload)
+
+    s.post = fake_post
+    return captured
+
+
+def test_send_command_posts_device_debug_payload():
+    c, s = make_client()
+    c.login("admin", "pw")
+    cap = _post_returning(c, s, {
+        "status": 0,
+        "data": {"topic": "$dg/device/p1/devaddr/debug"}})
+    reply = c.send_command("dev1", {"v": 1}, messagetype="debug")
+    assert reply["data"]["topic"].endswith("/debug")
+    assert cap["url"].endswith("/iotapi/device_debug")
+    assert cap["json"] == {"deviceid": "dev1", "messagetype": "debug",
+                           "data": {"v": 1}}
+
+
+def test_send_command_status_error_raises():
+    c, s = make_client()
+    c.login("admin", "pw")
+    _post_returning(c, s, {"status": "error", "msg": "not find device"})
+    with pytest.raises(client_mod.StudioError, match="not find device"):
+        c.send_command("ghost", {})
+
+
+def test_send_command_119_raises_forbidden():
+    c, s = make_client()
+    c.login("admin", "pw")
+    _post_returning(c, s, {"error": "POST_DEVICE_DEBUG Forbidden", "code": 119})
+    with pytest.raises(client_mod.StudioForbidden):
+        c.send_command("dev1", {})
+
+
 def test_doctrine_grammar_matches_and_rejects():
     ok = parse_doctrine_topic("dgiot/siteA/gw1/dev-siteA-d1/pt1/data")
     assert ok == {"site": "siteA", "gateway": "gw1",
