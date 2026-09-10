@@ -195,14 +195,14 @@ class _SubHandler:
 
 # -- plugin registration --
 try:
-    from plugin_registry import register
-    register("opcua", version="1.0", category="protocol",
-             adapter="OpcUaAdapter",
-             config={
-                 "endpoint_url": "opc.tcp://127.0.0.1:4840",
-                 "security_policy": "None",
-                 "username": "",
-                 "password": "",
-             })
+    from ..plugin_registry import register
 except ImportError:
-    pass
+    from plugin_registry import register
+register("opcua", version="1.0", category="protocol",
+         adapter="OpcUaAdapter",
+         config={
+             "endpoint_url": "opc.tcp://127.0.0.1:4840",
+             "security_policy": "None",
+             "username": "",
+             "password": "",
+         })

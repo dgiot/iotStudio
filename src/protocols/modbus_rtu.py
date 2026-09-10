@@ -246,14 +246,14 @@ def _parse_addr(addr_str: str) -> int:
 
 # -- plugin registration --
 try:
-    from plugin_registry import register
-    register("modbus_rtu", version="1.0", category="protocol",
-             adapter="ModbusRTUAdapter",
-             config={
-                 "port": "/dev/ttyUSB0",
-                 "baudrate": 9600,
-                 "parity": "N",
-                 "slave_id": 1,
-             })
+    from ..plugin_registry import register
 except ImportError:
-    pass
+    from plugin_registry import register
+register("modbus_rtu", version="1.0", category="protocol",
+         adapter="ModbusRTUAdapter",
+         config={
+             "port": "/dev/ttyUSB0",
+             "baudrate": 9600,
+             "parity": "N",
+             "slave_id": 1,
+         })

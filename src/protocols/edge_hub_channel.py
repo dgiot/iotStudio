@@ -123,24 +123,28 @@ class EdgeHubChannel:
 # ═══════════════════════════════════════════════════════════
 
 def _register():
+    # dual import: package path (src.*) or flat path (run.py style)
     try:
         from src.channel_registry import register_channel_plugin, CType
+    except ImportError:
+        from channel_registry import register_channel_plugin, CType
 
-        async def _start(config: dict = None):
-            ch = EdgeHubChannel(config or {})
-            await ch.start()
-            return ch
+    async def _start(config: dict = None):
+        ch = EdgeHubChannel(config or {})
+        await ch.start()
+        return ch
 
-        register_channel_plugin(
-            name="ch_edge_hub",
-            ctype=CType.PUSH if "CType" in dir() else "push",
-            version="1.0",
-            start=_start,
-            description="边缘中枢MQTT通道 — afterSave→EventBus→MQTT→中枢",
-        )
-        log.info("[edge_hub] 插件注册: ch_edge_hub v1.0")
-    except Exception as e:
-        log.warning(f"[edge_hub] 插件注册失败: {e}")
+    # 注册错误必须响亮: 不再吞进 warning, 模块导入失败由发现报告显形
+    register_channel_plugin(
+        channel_id="ch_edge_hub",
+        cType=CType.BRIDGE,
+        name="边缘中枢MQTT通道",
+        version="1.0",
+        config={},
+        on_start=_start,
+        description="afterSave→EventBus→MQTT→中枢",
+    )
+    log.info("[edge_hub] 插件注册: ch_edge_hub v1.0")
 
 
 _register()

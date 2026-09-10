@@ -117,14 +117,14 @@ class Iec104Adapter:
 
 # -- plugin registration --
 try:
-    from plugin_registry import register
-    register("iec104", version="1.0", category="protocol",
-             adapter="Iec104Adapter",
-             config={
-                 "host": "127.0.0.1",
-                 "port": 2404,
-                 "common_address": 1,
-                 "cause_of_transmission": 3,
-             })
+    from ..plugin_registry import register
 except ImportError:
-    pass
+    from plugin_registry import register
+register("iec104", version="1.0", category="protocol",
+         adapter="Iec104Adapter",
+         config={
+             "host": "127.0.0.1",
+             "port": 2404,
+             "common_address": 1,
+             "cause_of_transmission": 3,
+         })

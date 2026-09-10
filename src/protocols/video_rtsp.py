@@ -286,12 +286,12 @@ class RtspVideoAdapter(BaseProtocolAdapter):
 # -- 插件注册 --
 try:
     from ..plugin_registry import register
-    register("video_rtsp", version="1.0", category="protocol",
-             adapter="RtspVideoAdapter",
-             config={
-                 "rtsp_url": "rtsp://user:pass@nvr:554/Streaming/Channels/101",
-                 "snapshot_interval": 30,
-                 "ptz_http": {"host": "", "port": 80, "user": "admin", "pass": ""},
-             })
 except ImportError:
-    pass
+    from plugin_registry import register
+register("video_rtsp", version="1.0", category="protocol",
+         adapter="RtspVideoAdapter",
+         config={
+             "rtsp_url": "rtsp://user:pass@nvr:554/Streaming/Channels/101",
+             "snapshot_interval": 30,
+             "ptz_http": {"host": "", "port": 80, "user": "admin", "pass": ""},
+         })
