@@ -47,7 +47,11 @@ class Subscriber:
     @staticmethod
     def _default_client(client_id):
         import paho.mqtt.client as mqtt
-        return mqtt.Client(client_id=client_id, clean_session=False)
+        try:  # paho >= 2.0 pins the callback API version explicitly
+            return mqtt.Client(mqtt.CallbackAPIVersion.VERSION1,
+                               client_id=client_id, clean_session=False)
+        except AttributeError:  # paho 1.x
+            return mqtt.Client(client_id=client_id, clean_session=False)
 
     def _on_connect(self, client, _userdata, _flags, rc, _props=None):
         self._connected = True
