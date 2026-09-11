@@ -165,3 +165,26 @@ class IotStudio:
                               f"{data.get('desc')}")
         cols = [c[0] for c in data.get("column_meta", [])]
         return [dict(zip(cols, row)) for row in data.get("data", [])]
+
+    # -- TDengine 时序价值分析（P9-lite，TDgpt 式）------------------------
+    def td_anomaly(self, sql, column="v", band=3.0, loss_per_incident=1.0):
+        """对 TDengine 查询结果做 3σ 异常检测并量化价值。
+
+        返回 {problem, solution, metric, value, unit, assumption}——
+        value 的金额由 loss_per_incident（每次异常避免的损失）换算，
+        该参数是**显式假设**，调用方必须给出业务口径，不是编造。
+        """
+        from .analytics import value_report
+        rows = self.td_query(sql)
+        series = [{"ts": r.get("ts") or r.get("_ts") or i,
+                   "v": r.get(column)} for i, r in enumerate(rows)]
+        return value_report(series, band=band,
+                            loss_per_incident=loss_per_incident, key="v")
+
+    def td_forecast(self, sql, column="v", horizon=5, method="naive"):
+        """对 TDengine 查询结果做统计外推（朴素/线性）。"""
+        from .analytics import forecast
+        rows = self.td_query(sql)
+        series = [{"ts": r.get("ts") or r.get("_ts") or i,
+                   "v": r.get(column)} for i, r in enumerate(rows)]
+        return forecast(series, horizon=horizon, method=method, key="v")
