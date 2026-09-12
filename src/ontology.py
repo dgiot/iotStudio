@@ -10,9 +10,12 @@ iotStudio 本体论引擎 — 4 层模型
 MQTT Topic: $dg/thing/{product_id}/{product_id}_{devaddr}/properties/report (dlink standard)
 """
 import json
-from dataclasses import dataclass, field, asdict
+import logging
+from dataclasses import dataclass, field, asdict, fields
 from datetime import datetime
 from typing import Optional, List, Dict, Any
+
+logger = logging.getLogger(__name__)
 
 
 # ═══════════════════════════════════════════════════════════
@@ -58,7 +61,13 @@ class Channel:
 
 @dataclass
 class Device:
-    """层4: 设备 — RTU / PLC / 传感器 / 保护继电器"""
+    """层4: 设备 — RTU / PLC / 传感器 / 保护继电器
+
+    `id` 是本体的内部标识（`dev1` 这种），只在本体里有效。中枢（Erlang）
+    不认它 —— 中枢认的是 `(product, devaddr)` 推出来的 deviceId。所以这两个
+    平台侧字段必须跟着设备一起存：**少了它们，这条设备的数据发不到中枢**，
+    而且是在"主题拼不出来"和"发出去被静默丢弃"之间二选一，两种都很难查。
+    """
     id: str
     channel: str                      # Channel.id
     name: str
@@ -69,6 +78,8 @@ class Device:
     model: str = ""
     status: str = "unknown"
     points: List[str] = field(default_factory=list)  # Point.id[]
+    devaddr: str = ""                 # 平台设备地址（中枢按它 + product 定位设备）
+    product: str = ""                 # 平台 productId（10 位 objectId，不是产品名）
 
 
 @dataclass
@@ -148,6 +159,61 @@ class Link:
 # 本体引擎
 # ═══════════════════════════════════════════════════════════
 
+# 层级 → (指向父层的字段名, 父层表名)。**「什么算悬空引用」的唯一事实源** ——
+# engine.validate() 与 enterprise.register_objects() 都读这张表。
+# 以前两处各写各的四段 if，加一层就得改两个文件，漏一个就出现
+# 「单条 create 拦、批量导入放过」这类口径分叉。
+#
+# 只列单条 create 也会校验的四层：constraint.entity / datasource.gateway
+# 那边本来就不拦, 这里也不列, 免得再岔开一次。
+PARENT_REF = {
+    "gateway": ("site", "sites"),
+    "channel": ("gateway", "gateways"),
+    "device": ("channel", "channels"),
+    "point": ("device", "devices"),
+}
+
+
+def _row_get(row, key: str, pos: int):
+    """行列取值 — sqlite3.Row/dict 按键取, 朴素 tuple 连接按位置取
+
+    两条路都得能读: 生产走 DBWrapper(sqlite3.Row), 而测试里 monkeypatch
+    get_db 常直接塞一个裸 sqlite3 连接(tuple 行)。只认按键会在后者静默
+    读成空 —— 正好重演「只写不读」这个函数要修的毛病。
+    """
+    try:
+        return row[key]
+    except (KeyError, IndexError, TypeError):
+        pass
+    try:
+        return row[pos]
+    except (KeyError, IndexError, TypeError):
+        return None
+
+
+def _decode_data_column(raw) -> Optional[dict]:
+    """data 列 → dict; 空值或坏 JSON 返回 None (调用方计一次 skipped)"""
+    if not raw:
+        return None
+    try:
+        payload = json.loads(raw)
+    except (TypeError, ValueError):
+        return None
+    return payload if isinstance(payload, dict) else None
+
+
+def _filter_fields(cls, payload: dict) -> dict:
+    """只留数据类认得的键
+
+    行是**旧版本代码**写的, 而类会改。删掉的字段会在老行里留下多余键,
+    cls(**payload) 直接 TypeError —— 一次改名就足以让整个本体加载不出来。
+    加过的字段老行没有, 正好落回默认值。所以两个方向的兼容都得要:
+    多余的丢掉, 缺的不管。
+    """
+    names = {f.name for f in fields(cls)}
+    return {k: v for k, v in payload.items() if k in names}
+
+
 class OntologyEngine:
     """5层本体论引擎 — 与 Erlang dgiot_ontology 接口对齐
 
@@ -211,7 +277,21 @@ class OntologyEngine:
 
     # ── register ──
     def register(self, node) -> str:
-        """注册任意层节点"""
+        """注册任意层节点 — 返回测点的**本体内部路径**, 非测点返回自身 id
+
+        ⚠️ 返回的是 get_path() 的本体路径（site/gateway/channel/device/point），
+        **不是 MQTT 主题**。要发中枢用 dlink_topic()。返回值目前所有调用方
+        都丢弃，改形状不影响谁；留着只为诊断时看得见链路。
+
+        ⚠️ 测点的路径解析是**尽力而为**：节点上面那两行已经把它塞进表里了，
+        不能因为父层 (device/channel/gateway/site) 此刻还没注册，就把这次注册
+        整个判成失败。批量导入的载荷顺序不保证父在前 —— get_path 直接抛的话，
+        register_objects 会把它记进 errors，于是同一个测点既算 created 又算 errors，
+        而父层随后到位后它其实好端端躺在表里（计数和实况两边都不对）。
+
+        get_path() 本身仍然抛 —— 真要拼路径时链路不全就是不该拼，
+        这个区分是故意的：注册与拼路径是两件事，别让后者否决前者。
+        """
         table = {
             Site: self.sites, Gateway: self.gateways,
             Channel: self.channels, Device: self.devices,
@@ -222,12 +302,65 @@ class OntologyEngine:
         if t in table:
             table[t][node.id] = node
         if isinstance(node, Point):
-            return self.get_path(node.id)
+            try:
+                return self.get_path(node.id)
+            except KeyError:
+                return node.id
         return node.id
 
-    # ── get_path (5层) ──
+    def delete(self, entity_id: str) -> bool:
+        """删除任意层节点 —— 只删自己，**不做级联**。
+
+        级联交给调用方决定：/aip/objects/{id} 的 DELETE 会先算出 cascade 清单
+        写进审计日志，让「删了站点会带走多少东西」这件事有据可查，
+        而不是引擎默默连坐。找不到就返回 False，由调用方转 404。
+
+        Link 两端指向被删实体的一并清掉 —— 悬空的边没有意义，
+        留着还会让 subgraph / 影响半径算出一堆幽灵节点。
+        """
+        table = {
+            "site": self.sites, "gateway": self.gateways,
+            "channel": self.channels, "device": self.devices,
+            "point": self.points, "constraint": self.constraints,
+            "datasource": self.datasources, "link": self.links,
+        }
+        t = self.entity_type(entity_id)
+        if t is None:
+            return False
+        old_name = self.entity_name(entity_id)   # 必须在 pop 之前取，否则只剩 id
+        table[t].pop(entity_id, None)
+
+        if t != "link":
+            for lid in [l.id for l in list(self.links.values())
+                        if l.source == entity_id or l.target == entity_id]:
+                self.links.pop(lid, None)
+
+        # 变更记录 —— 字段名与 update() 对齐（entity_type / changed），
+        # 让 AIP 变更页用同一套渲染逻辑就能显示删除。
+        try:
+            self._changelog.append({
+                "ts": datetime.now().isoformat(),
+                "entity_id": entity_id,
+                "entity_type": t,
+                "changed": {"__deleted__": {"old": old_name, "new": None}},
+            })
+        except Exception:
+            pass  # 审计是尽力而为，不该因为它记不上就删不掉
+        return True
+
+    # ── get_path (5层, 本体内部路径) ──
     def get_path(self, point_id: str) -> str:
-        """构建 MQTT topic: dgiot/{site}/{gateway}/{channel}/{device}/{point}"""
+        """本体内部路径: {site}/{gateway}/{channel}/{device}/{point}（5 层全 id）
+
+        **这不是 MQTT 主题。** 早先这里返回的是 `dgiot/{site}/{gateway}/{channel}/{device}/{point}`，
+        前缀看着像主题，其实是"自造变体"：四段里没有一段是中枢认的
+        （site/gateway/channel 是中枢根本没有的概念，device 段是本体的 `dev1` 而不是 devaddr），
+        仓库里三处 `TOPIC_RE` 也全都不收它 —— 谁都没消费过，它只是长得像。
+
+        要发数据到中枢请用 `dlink_topic()`；要发到边缘内部（TD 存储那面）
+        请显式写 `dgiot/...` 的全串。留这个方法只做本体自己的寻径（注册回执、
+        关系展示、图谱分层），调用方别再拿它当主题的原料。
+        """
         point = self.points.get(point_id)
         if not point: raise KeyError(f"Point {point_id} not found")
         device = self.devices.get(point.device)
@@ -239,7 +372,30 @@ class OntologyEngine:
         site = self.sites.get(gateway.site)
         if not site: raise KeyError(f"Site {gateway.site} not found")
 
-        return f"dgiot/{site.id}/{gateway.id}/{channel.id}/{device.id}/{point.id}"
+        return f"{site.id}/{gateway.id}/{channel.id}/{device.id}/{point.id}"
+
+    # ── dlink_topic (中枢上行) ──
+    def dlink_topic(self, point_id: str) -> str:
+        """中枢上行主题: `$dg/thing/{product}/{devaddr}/properties/report`
+
+        中枢只认 `(product, devaddr)` 这一对。注意用的是 **device 的 devaddr
+        而不是 device.id**，product 也必须是 10 位 objectId —— 这两条都在
+        `models/dgiot_ids.py` 里连同 Erlang 出处钉死了。
+
+        链路缺字段时抛 KeyError（与 get_path 一致）：宁可拼不出来报错，
+        也不要拼一个能发出去但中枢会静默丢弃的主题 —— 后者没有任何症状。
+        """
+        from .models.dgiot_ids import dlink_topic
+        point = self.points.get(point_id)
+        if not point: raise KeyError(f"Point {point_id} not found")
+        device = self.devices.get(point.device)
+        if not device: raise KeyError(f"Device {point.device} not found")
+        if not device.devaddr:
+            raise KeyError(f"Device {device.id} 缺 devaddr，拼不出中枢主题")
+        if not device.product:
+            raise KeyError(f"Device {device.id} 缺 product，拼不出中枢主题")
+
+        return dlink_topic(device.product, device.devaddr, "properties", "report")
 
     # ── 快捷查询 ──
     def get_points(self, device_id: str) -> List[Point]:
@@ -272,6 +428,52 @@ class OntologyEngine:
                 e = table[entity_id]
                 return getattr(e, "name", None) or getattr(e, "hostname", None) or entity_id
         return entity_id
+
+    def search_entities(self, query: str, top_k: int = 10) -> List[Dict[str, Any]]:
+        """跨层关键词检索 —— **返回形状与 EntityIndex.search 完全一致**:
+        [{id, score, layer, name, type}] 按 score 降序
+
+        GraphRAG 那条链有两个消费方共用这个形状（`search()` 在 TF-IDF 没候选时
+        兜底、`ask()` 里做关键词精确融合），两条路的返回值混在同一个列表里排序，
+        形状或量纲不一致就会在排序那一步悄悄错掉。
+
+        **分数是 0-100 量纲，不是 0-1** —— 调用方拿 `>= 60` 当「关键词强命中」的
+        门槛（graphrag.py 里 boost 那几行），返回 0-1 的话门槛恒不成立，
+        融合逻辑会一声不响地全不触发。凡是按「id/name 实打实对上」给的分数
+        才过 60；协议名/类型这种弱命中给 40，够上榜但不当强命中。
+
+        纯字符串匹配，不碰索引 —— 本体刚改完、索引还没重建时也答得上来。
+        层数与 EntityIndex 对齐（site/gateway/channel/device/point 五层），
+        constraint/datasource/link 不进 —— 索引里没有它们，两条路得回答同一批实体。
+        """
+        q = (query or "").strip().lower()
+        if not q:
+            return []
+        scored: List[Dict[str, Any]] = []
+        for layer in ("site", "gateway", "channel", "device", "point"):
+            for eid, ent in getattr(self, layer + "s").items():
+                eid_l = str(eid).lower()
+                name = getattr(ent, "name", "") or ""
+                name_l = name.lower()
+                etype = getattr(ent, "type", "") or getattr(ent, "protocol", "") or ""
+                if eid_l == q:
+                    score = 100
+                elif name_l and name_l == q:
+                    score = 95
+                elif q in eid_l:
+                    score = 80
+                elif name_l and q in name_l:
+                    score = 70
+                elif q in etype.lower():
+                    score = 40
+                else:
+                    continue
+                scored.append({"id": eid, "score": score, "layer": layer,
+                               "name": name or eid, "type": etype})
+        # 同分时按 id 排 —— 不排序的话结果跟着 dict 插入顺序走，
+        # 同样的查询两次跑出来的 top_k 可能不是同一批
+        scored.sort(key=lambda r: (-r["score"], r["id"]))
+        return scored[:top_k]
 
     def _parent_id(self, entity_id: str) -> Optional[str]:
         """隐式层级父实体 (由外键字段推导, 不依赖缓存列表)"""
@@ -368,7 +570,10 @@ class OntologyEngine:
             lines.append(f"  关系: {l.source} -[{l.relation}]-> {l.target}{extra}")
         for c in constraints:
             lines.append(f"  约束: {c.name} ({c.severity}/{c.rule_kind}) {c.rule}")
-        return {"entity_id": entity_id, "type": t, "entity": asdict(entity),
+        # "layer" 与 "type" 并列给出：本函数自家叫 type，但上层消费方
+        # （graphrag.enhance_context 的 ctx["layer"]、AIP 对象接口）一律按 layer 读，
+        # 只给 type 会让它们 KeyError —— 与其在每处调用点补 or，不如这里一次给全。
+        return {"entity_id": entity_id, "type": t, "layer": t, "entity": asdict(entity),
                 "parent": pid, "children": children, "siblings": siblings,
                 "constraints": [asdict(c) for c in constraints],
                 "links": [asdict(l) for l in links],
@@ -707,7 +912,8 @@ class OntologyEngine:
 
     # ── push_point ──
     def push_point(self, point_id: str, value: float, quality: int = 192):
-        topic = f"{self.get_path(point_id)}/data"
+        """推一个测点值到中枢。主题走 dlink 形态，不是本体路径。"""
+        topic = self.dlink_topic(point_id)
         payload = json.dumps({
             "ts": int(__import__("time").time() * 1000),
             "v": value, "q": quality
@@ -738,6 +944,77 @@ class OntologyEngine:
                     triggered.append(c)
         return triggered
 
+    # ── judge_point ──
+    def judge_point(self, point_id: str, value: float) -> Dict[str, Any]:
+        """按**测点自带阈值**判定一个值是否安全 —— 唯一的判据出口
+
+        为什么单拎出来、而不是复用上面的 evaluate():
+          1. **阈值属于测点，不属于约束。** evaluate 遍历 constraints 再拿
+             point.alarm 去比，于是把每一条 entity 匹配的约束都算成"触发" ——
+             问"套压安全吗"会答出「实时提交延迟≤300ms」这种无关条目。
+          2. evaluate 的 contract 是"返回被触发的约束"，它没有"未触发"的表达，
+             也就没法回答"安全"—— 而安全问句要的正是这个。
+
+        判定次序 hh > high > low > ll，同侧取已越过的**最严**一档。
+        `alarm` 为空时回落到 `range`；两者都没有就返回 unknown ——
+        **没有判据就不说安全**，宁可答"无判据"也不要给一个假的安全结论。
+        """
+        point = self.points.get(point_id)
+        if not point:
+            return {"status": "unknown", "safe": None, "reason": f"测点 {point_id} 不存在"}
+        if value is None:
+            return {"status": "unknown", "safe": None, "unit": point.unit,
+                    "reason": "无当前值，无法判定"}
+
+        a = point.alarm or {}
+        v = float(value)
+        out = {"value": v, "unit": point.unit, "name": point.name}
+
+        # 越上限：hh 比 high 严，先判 hh
+        for key, level in (("hh", "hh"), ("high", "high")):
+            if key in a and v > a[key]:
+                return {**out, "status": level, "safe": False, "limit": a[key],
+                        "margin": round(v - a[key], 4),
+                        "reason": f"{point.name} {v}{point.unit} 超上限 "
+                                  f"{a[key]}{point.unit}（超 {round(v - a[key], 4)}）"}
+        # 越下限：ll 比 low 严
+        for key, level in (("ll", "ll"), ("low", "low")):
+            if key in a and v < a[key]:
+                return {**out, "status": level, "safe": False, "limit": a[key],
+                        "margin": round(a[key] - v, 4),
+                        "reason": f"{point.name} {v}{point.unit} 低于下限 "
+                                  f"{a[key]}{point.unit}（低 {round(a[key] - v, 4)}）"}
+
+        if a:
+            # 未越限：报出离得最近的那条边界，让"安全"带上余量而不只是一个字
+            hi = min([a[k] for k in ("high", "hh") if k in a], default=None)
+            lo = max([a[k] for k in ("low", "ll") if k in a], default=None)
+            margins = []
+            if hi is not None:
+                margins.append(hi - v)
+            if lo is not None:
+                margins.append(v - lo)
+            return {**out, "status": "ok", "safe": True,
+                    "limit": hi if hi is not None else lo,
+                    "margin": round(min(margins), 4) if margins else None,
+                    "reason": f"{point.name} {v}{point.unit} 在判据内"
+                              + (f"（最近边界余量 {round(min(margins), 4)}）" if margins else "")}
+
+        rng = point.range or []
+        if len(rng) == 2:
+            lo, hi = rng
+            if v < lo or v > hi:
+                return {**out, "status": "out_of_range", "safe": False,
+                        "limit": hi if v > hi else lo,
+                        "margin": round(abs(v - (hi if v > hi else lo)), 4),
+                        "reason": f"{point.name} {v}{point.unit} 超出量程 [{lo}, {hi}]"}
+            return {**out, "status": "ok", "safe": True, "limit": hi,
+                    "margin": round(min(hi - v, v - lo), 4),
+                    "reason": f"{point.name} {v}{point.unit} 在量程 [{lo}, {hi}] 内"}
+
+        return {**out, "status": "unknown", "safe": None,
+                "reason": f"{point.name} 未定义报警阈值/量程，无判据可依"}
+
     # ── 序列化 ──
     def to_dict(self) -> dict:
         return {
@@ -750,6 +1027,76 @@ class OntologyEngine:
             "datasources": {k: asdict(v) for k, v in self.datasources.items()},
             "links": {k: asdict(v) for k, v in self.links.items()},
         }
+
+    # ── load from Parse ──
+    def load_from_parse(self) -> dict:
+        """从 SQLite 回读本体实体 — sync_to_parse 的逆操作
+
+        没有它, sync_to_parse 就是**只写不读**: 用户在本体管理页建的对象落库
+        成功、界面正常, 服务一重启引擎却只从硬编码种子重建, 那些对象就没了
+        (数据还在库里, 只是再没人把它读回来)。这种失败不报错也不报警。
+
+        ⚠️ 只认 `data` 列, 不认那些展开的列。展开列是给 SQL 查询用的副本,
+        它们比数据类**少**字段: Device.devaddr / Device.product / Point.range /
+        Constraint.rule_kind / DataSource.tables / Link.props 都只在 data 里。
+        照展开列重建会把这些丢成默认值 —— 而 devaddr/product 一丢, 这条设备的
+        数据就发不到中枢(见 Device docstring), 且同样是静默的。
+
+        单行坏数据只跳过、不抛: 一行读不回来不该让整个本体加载失败。
+        某张表读不到时**保留该层现有内容**, 不清空 —— 读失败和"本来就没有"
+        是两回事, 后者在全新部署下与现有内容(空)等价, 前者不该误伤。
+        """
+        try:
+            from .parse_lite import get_db
+        except ImportError:
+            from parse_lite import get_db
+
+        plan = (
+            ("sites", "ontology_site", Site),
+            ("gateways", "ontology_gateway", Gateway),
+            ("channels", "ontology_channel", Channel),
+            ("devices", "ontology_device", Device),
+            ("points", "ontology_point", Point),
+            ("constraints", "ontology_constraint", Constraint),
+            ("datasources", "ontology_datasource", DataSource),
+            ("links", "ontology_link", Link),
+        )
+        db = get_db()
+        fresh: Dict[str, Dict[str, Any]] = {}
+        loaded = skipped = 0
+        try:
+            for attr, table, cls in plan:
+                try:
+                    rows = db.execute(
+                        f"SELECT objectId, data FROM {table}").fetchall()
+                except Exception:
+                    continue          # 表不存在或读失败: 保留该层现有内容
+                bucket: Dict[str, Any] = {}
+                for row in rows:
+                    payload = _decode_data_column(_row_get(row, "data", 1))
+                    if payload is None:
+                        skipped += 1
+                        continue
+                    payload.setdefault("id", _row_get(row, "objectId", 0) or "")
+                    try:
+                        node = cls(**_filter_fields(cls, payload))
+                    except (TypeError, ValueError):
+                        skipped += 1
+                        continue
+                    if not getattr(node, "id", ""):
+                        skipped += 1
+                        continue
+                    bucket[node.id] = node
+                    loaded += 1
+                fresh[attr] = bucket
+        finally:
+            db.close()
+
+        # 全部读完了才换 —— 中途出错时不留下一个被清空一半的引擎
+        for attr, bucket in fresh.items():
+            setattr(self, attr, bucket)
+        return {"loaded": loaded, "skipped": skipped,
+                "counts": self.health()["counts"]}
 
     # ── sync to Parse ──
     def sync_to_parse(self, tenant_id: str = "default"):
@@ -818,19 +1165,18 @@ class OntologyEngine:
     def validate(self) -> dict:
         """完整性校验 — 检查实体间引用完整性、必要字段"""
         issues = []
-        # 检查 dangling references
-        for gw in self.gateways.values():
-            if gw.site not in self.sites:
-                issues.append(f"Gateway {gw.id}: site '{gw.site}' not found")
-        for ch in self.channels.values():
-            if ch.gateway not in self.gateways:
-                issues.append(f"Channel {ch.id}: gateway '{ch.gateway}' not found")
-        for dev in self.devices.values():
-            if dev.channel not in self.channels:
-                issues.append(f"Device {dev.id}: channel '{dev.channel}' not found")
-        for pt in self.points.values():
-            if pt.device not in self.devices:
-                issues.append(f"Point {pt.id}: device '{pt.device}' not found")
+        # 检查 dangling references —— 表驱动, 与 enterprise.register_objects 共用 PARENT_REF。
+        # 注意: 这里**空引用也报** ("site '' not found") —— 对完整性体检来说
+        # 「没挂父层」本身就是缺陷。register_objects 那边对空引用是放过的
+        # (与单条 create 一致, 空的留给必填兜底)。两边策略不同, 但「哪些字段
+        # 指向哪层」这件事只有一份定义, 不会再各改各的。
+        for layer, (field, ptable) in PARENT_REF.items():
+            parent = getattr(self, ptable)
+            for ent in getattr(self, layer + "s").values():
+                ref = getattr(ent, field, "")
+                if ref not in parent:
+                    issues.append(
+                        f"{layer.capitalize()} {ent.id}: {field} '{ref}' not found")
         for l in self.links.values():
             for end in (l.source, l.target):
                 if self.entity_type(end) is None:
@@ -851,7 +1197,15 @@ class OntologyEngine:
     def health(self) -> dict:
         return {
             "ontology": "5-layer: Site > Gateway > Channel > Device > Point + Link",
-            "mqtt_topic": "dgiot/{site}/{gateway}/{channel}/{device}/{point}/data",
+            # 边缘内部文法 —— 与 CLAUDE.md 的『规范』和 abac.TOPIC_RE 三方对齐。
+            # 这里原先多写了一个 {channel} 段（6 段），是本仓唯一这么写的字符串：
+            # TOPIC_RE 强制 5 段、abac_live_test 用的也是 5 段，于是 health()
+            # 自述了一个本机 ACL 会直接 deny 的文法。channel 在 5 段式里不进主题，
+            # 它是本体第 3 层，只用于寻径（见 get_path）。
+            "mqtt_topic": "dgiot/{site}/{gateway}/{device}/{point}/data",
+            # 中枢认的两套（上行 thing / 下行 device），别和上面那条混为一谈
+            "dlink_topic_up": "$dg/thing/{productId}/{devaddr}/properties/report",
+            "dlink_topic_down": "$dg/device/{productId}/{devaddr}/properties",
             "version": "2.1",
             "counts": {
                 "sites": len(self.sites),
@@ -873,7 +1227,7 @@ class OntologyEngine:
 def build_131_ontology() -> OntologyEngine:
     """从 2026-07-12 131 IO网关 2047文件逐字精读结果构建完整本体
 
-    数据源: D:\\ai\\iotStudio\\io服务器分析\\IO ServerOnLine\\
+    数据源: 本地内部资料目录
     分析范围: 2047 文件, 含 INI/TXT/DAT/DLL/LOG/ZIO/CHM/DOC
     """
     engine = OntologyEngine()
@@ -883,7 +1237,7 @@ def build_131_ontology() -> OntologyEngine:
         id="industry_c1", name="示例工业园区", type="oil_field",
         location="黑龙江省某工业市",
         description="PLANT_A_SITE_C(DEVICE_C) + PLANT_A_SITE_D(DEVICE_D)。IO网关 127.0.0.1(IO-SERVER-01)"
-              " + Oracle 192.168.1.129:1521 + RTDB 192.168.1.102:8889"
+              " + Oracle 192.0.2.1.129:1521 + RTDB 192.0.2.1.102:8889"
     ))
 
     # ── 层2: Gateway (含完整已安装组件) ──
@@ -917,7 +1271,7 @@ def build_131_ontology() -> OntologyEngine:
     channels = [
         # 原有通道
         Channel(id="ch_opc_da", gateway="gw_131", name="OPC DA Client",
-            protocol="opc_da", endpoint="DCOM :135 → 10.0.0.20/.3/.18.194/.26.6.3",
+            protocol="opc_da", endpoint="DCOM :135 → 198.51.100.20/.3/.18.194/.26.6.3",
             status="running", config={
                 "driver": "E:\\IO ServerOnLine\\IO Servers\\OPC_FC_Client\\ioapi.dll",
                 "progid": "KEPware.KEPServerEx.V4",
@@ -947,7 +1301,7 @@ def build_131_ontology() -> OntologyEngine:
                 "fc6_write": True, "fc16_write": True,
             }, devices=[]),
         Channel(id="ch_oracle", gateway="gw_131", name="Oracle 数据出口",
-            protocol="oracle_sql", endpoint="192.168.1.129:1521/orcl",
+            protocol="oracle_sql", endpoint="192.0.2.1.129:1521/orcl",
             status="running", config={
                 "connection": "Provider=OraOLEDB.Oracle.1;User ID=INDUSTRYDB;Data Source=orcl",
                 "password": "CHANGEME (from DataSource.ini)",
@@ -957,7 +1311,7 @@ def build_131_ontology() -> OntologyEngine:
                     "SYS_POINTRELATION_WELL (4567测点)"],
             }, devices=[]),
         Channel(id="ch_realtime_db", gateway="gw_131", name="RTDB 实时库",
-            protocol="realtime_db", endpoint="192.168.1.102:8889",
+            protocol="realtime_db", endpoint="192.0.2.1.102:8889",
             status="stopped", config={
                 "server": "RTDBServer64.exe v6.0.1.9",
                 "api": "RTDBAPI.dll (313KB)",
@@ -967,9 +1321,9 @@ def build_131_ontology() -> OntologyEngine:
             protocol="eforcecon", status="stopped"),
         # 新增通道
         Channel(id="ch_redundancy", gateway="gw_131", name="冗余通道",
-            protocol="redundancy", endpoint="10.0.0.102:6000/6001",
+            protocol="redundancy", endpoint="198.51.100.102:6000/6001",
             status="running", config={
-                "partner_ip": "10.0.0.102",
+                "partner_ip": "198.51.100.102",
                 "recv_port": 6000, "send_port": 6001,
                 "heartbeat_ms": 1500, "timeout_count": 3,
                 "failover_time": "4.5s",
@@ -1146,7 +1500,7 @@ def build_131_ontology() -> OntologyEngine:
         Constraint(id="c_redundancy", name="冗余心跳 1500ms×3",
             rule="心跳 1500ms, 3 次超时 (4.5s) → 主备切换",
             entity="ch_redundancy", severity="danger", source="RedunndancyCfg.ini",
-            action="备机 10.0.0.102 接管"),
+            action="备机 198.51.100.102 接管"),
         # --- 设备告警约束 (Device.ini) ---
         Constraint(id="c_overcurrent", name="线路过流保护",
             rule="Ia/Ib/Ic > 5A + 持续>1s → 过流告警→跳闸",
@@ -1193,13 +1547,13 @@ def build_131_ontology() -> OntologyEngine:
     # ── DataSources ──
     datasources = [
         DataSource(id="ds_oracle", gateway="gw_131", type="oracle",
-            connection="192.168.1.129:1521/orcl (INDUSTRYDB)",
+            connection="192.0.2.1.129:1521/orcl (INDUSTRYDB)",
             status="online", tag_count=4_814_742),
         DataSource(id="ds_realtime_db", gateway="gw_131", type="realtime_db",
-            connection="192.168.1.102:8889",
+            connection="192.0.2.1.102:8889",
             status="stopped", tag_count=500),
         DataSource(id="ds_redundancy", gateway="gw_131", type="redundancy",
-            connection="10.0.0.102:6000/6001",
+            connection="198.51.100.102:6000/6001",
             status="running", tag_count=0),
         DataSource(id="ds_syncplatform", gateway="gw_131", type="sync",
             connection="D:\\SyncPlatform0402\\bin\\SyncTaskManager.exe",
@@ -1283,3 +1637,31 @@ def build_131_ontology() -> OntologyEngine:
             engine.constraints[cid].rule_kind = kind
 
     return engine
+
+
+# ═══════════════════════════════════════════════════════════
+# 引擎装配 — 落库优先, 库空才播种
+# ═══════════════════════════════════════════════════════════
+
+def build_engine() -> OntologyEngine:
+    """构建本体引擎 — 落库数据优先, 库空才退回硬编码示例种子
+
+    **需要引擎的入口都走这里**, 不要各自 build_131_ontology()。种子是
+    演示数据, 用户建的对象只存在于库里; 直接播种造出来的引擎不含它们,
+    而且失败是静默的 —— 界面照常, 只是东西不见了。
+
+    以前 graphrag_api 与 plugin_runtime 各建各的, 后果不只是"都没回读",
+    还在于**插件拿到的本体和 API 服务的本体是两个不同实例**: 通过 API
+    建的对象, 插件永远看不见。
+
+    库空(全新部署)时退回种子, 保持原有开箱行为。
+    """
+    engine = OntologyEngine()
+    loaded = engine.load_from_parse()
+    if loaded["loaded"]:
+        logger.info(
+            "本体: 从 parse.db 回读 — %s%s", loaded["counts"],
+            f", 跳过 {loaded['skipped']} 行坏数据" if loaded["skipped"] else "")
+        return engine
+    logger.info("本体: parse.db 无数据, 加载示例 IO 服务器本体")
+    return build_131_ontology()
