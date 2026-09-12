@@ -48,7 +48,7 @@ plugins:
 
 # 第三方密钥 (敏感信息, 其他配置全部入库 parse_lite Channel 表)
 credentials:
-  vendor_oilmon_username: "YOUR_USER".com"
+  vendor_oilmon_username: "YOUR_USER@example.com"
   vendor_oilmon_password: "YOUR_PASSWORD"
   oracle_relay_host: "127.0.0.1"
   oracle_relay_user: "administrator"
@@ -71,11 +71,11 @@ mqtt:
 # PHM 云平台 (设备预测性维护)
 # ============================================================
 phm_platform:
-  base_url: "https://test.pubsci.top"
+  base_url: "https://phm.example.com"
   api_base: "http://localhost:18183"   # 后端 API 内网地址
   realm: "phm"
   client_id: "phm-web"
-  username: "qut-admin"
+  username: "YOUR_USERNAME"
   password: "YOUR_PASSWORD"
   poll_interval: 60
 
