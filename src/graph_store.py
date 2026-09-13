@@ -136,12 +136,26 @@ class MemoryGraphProvider(GraphProvider):
                 rel.setdefault(e["relation"], []).append(e)
 
         cats = {c.get("id"): c for c in (ontology.get("categories") or []) if c.get("id")}
+        # data_kind 的语义必须是**推导**出来的，不能只认一个同名字面键。
+        # 原来各包是按本体里的 _synthetic / _sanitized 标的（「合成演示本体」），
+        # 只有少数包恰好也写了一个 data_kind 键。这里若只读字面键，那些没写的包
+        # 一律变空 —— 而空的 data_kind 到了页面上会被兜底成「现场真值」，
+        # 于是**合成数据被标成现场真值**（对外材料上的失实，是真出过的错）。
+        # 所以：字面键优先（显式覆盖），否则按与各包一致的规则推导。
+        if ontology.get("data_kind"):
+            data_kind = ontology["data_kind"]
+        elif ontology.get("_synthetic"):
+            data_kind = "合成演示本体"
+        elif ontology.get("_sanitized"):
+            data_kind = "脱敏副本"
+        else:
+            data_kind = ""
         with self._lock:
             self._ns[ns] = {
                 "meta": dict(meta or {}),
                 "name": ontology.get("name", ns),
                 "version": ontology.get("version", ""),
-                "data_kind": ontology.get("data_kind", ""),
+                "data_kind": data_kind,
                 "note": ontology.get("note", ""),
                 "nodes": by_id, "cats": cats,
                 "out": out, "in": in_, "rel": rel,
@@ -160,12 +174,17 @@ class MemoryGraphProvider(GraphProvider):
         with self._lock:
             return {
                 ns: {
+                    # 插件自报的 meta 先铺，**统计出来的数放最后** ——
+                    # 否则插件在 meta 里写一个同名字段就能盖掉这里数出来的数
+                    # （真出过：meta 里一个空的 data_kind 盖掉了推导出来的
+                    #  「合成演示本体」，到页面上就成了「现场真值」）。
+                    # 自报的可以补充，不能覆盖数出来的。
+                    **d["meta"],
                     "name": d["name"], "version": d["version"],
                     "data_kind": d["data_kind"], "note": d["note"],
                     "nodes": len(d["nodes"]), "edges": len(d["edges"]),
                     "category_count": len(d["cats"]), "relation_count": len(d["rel"]),
                     "dangling": len(d["dangling"]),
-                    **d["meta"],
                 }
                 for ns, d in self._ns.items()
             }

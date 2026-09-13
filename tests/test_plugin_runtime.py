@@ -31,10 +31,18 @@ GOOD_PLUGIN = """
 """
 
 
-def test_capability_types_eight():
+def test_capability_types_declared_set():
+    """能力类型是**精确集合**，不许多也不许少 —— 新加一条接缝必须同时改这里。
+
+    名字里原来带着数字（test_capability_types_eight）。数字写进测试名，
+    每加一条接缝就得改一次名字，而改名字比改断言更容易被顺手做掉：
+    上一个提交加 graph 时就是这么漏的 —— 断言红了没人看见，一直红着提交。
+    所以名字去掉数字，断言保持精确相等（不是子集，松一格就等于没判据）。
+    """
     # "一切皆插件" — 动作执行器 (executor) 也是一等 capability
     assert CAPABILITY_TYPES == {"channel", "pusher", "action", "tool",
-                                "profile", "hook", "connector", "executor"}
+                                "profile", "hook", "connector", "executor",
+                                "graph"}
 
 
 def test_missing_manifest_fails_isolated(tmp_path):
