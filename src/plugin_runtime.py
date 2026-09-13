@@ -5,14 +5,25 @@
 在既有 plugin_registry (内存注册表) 与 channel_registry (通道插件) 之上,
 提供统一插件契约:
 
+  plugins/<name>/plugin.json:            # 清单 (数据, 不执行代码即可读)
+    {"name": ..., "version": ..., "host_api": ..., "capabilities": [...],
+     "permissions": {...}, "entry": {...}, "description": ...}
   plugins/<name>/plugin.py:
-    PLUGIN_MANIFEST = {"name": ..., "version": ..., "capabilities": [...],
-                       "permissions": {...}, "description": ...}
+    PLUGIN_MANIFEST = {...}              # 兼容存量; plugin.json 存在时以数据为准
     def apply(ctx) -> list  # 返回 disposer 列表 (可逆停用)
 
-  七类 capability:
+  插件根: 本仓 plugins/ → 显式 extra_roots → 环境变量 IOTSTUDIO_PLUGIN_PATH
+          (os.pathsep 分隔)。同名首个胜出并告警 —— 业务插件可住底座仓之外。
+
+  八类 capability:
     channel(存量, 见 channel_registry) / pusher / action / tool
-    / profile(本体档案) / hook / connector
+    / profile(本体档案) / hook / connector / graph(本体挂进统一图库)
+
+  两条统一接缝 (PR-G, 「端口统一 + 数据库统一」):
+    ctx.register_graph(ontology)  本体挂进统一图库, 反查走底座 /api/graph/*
+                                  —— 插件不再各写一套领域端点
+    ctx.route(method, path, fn)   插件端点由**底座**发, 落在
+                                  /api/plugin/<插件名><path> —— 插件不再各起服务
 
 运行时规则 (设计语汇对标 DSH Cordis):
   1. 失败隔离 — 单插件 apply 抛错只标记 failed, 不影响宿主与其它插件
@@ -28,17 +39,35 @@ from __future__ import annotations
 import importlib.util
 import json
 import logging
+import os
 import sys
 from pathlib import Path
 from typing import Any, Callable, Dict, List, Optional
 
 log = logging.getLogger("plugin.runtime")
 
-# 七类 capability 与角色缺省 ("一切皆插件": 动作执行器也是插件能力)
-CAPABILITY_TYPES = {"channel", "pusher", "action", "tool", "profile", "hook", "connector", "executor"}
+# 八类 capability 与角色缺省 ("一切皆插件": 动作执行器也是插件能力)
+CAPABILITY_TYPES = {"channel", "pusher", "action", "tool", "profile", "hook",
+                    "connector", "executor", "graph"}
 DEFAULT_CAP_ROLE = {"action": "admin", "tool": "admin", "connector": "admin"}
 
 _REPO_ROOT = Path(__file__).resolve().parent.parent
+
+# 插件根：仓内 plugins/ 之后追加仓外根 —— 业务插件不必住进底座仓
+_PLUGIN_PATH_ENV = "IOTSTUDIO_PLUGIN_PATH"
+
+
+def _env_plugin_roots() -> List[Path]:
+    """IOTSTUDIO_PLUGIN_PATH 里的仓外插件根 (os.pathsep 分隔)"""
+    raw = os.environ.get(_PLUGIN_PATH_ENV, "")
+    out = []
+    for part in raw.split(os.pathsep):
+        part = part.strip()
+        if part:
+            p = Path(part)
+            if p not in out:
+                out.append(p)
+    return out
 
 
 class PluginContext:
@@ -92,6 +121,52 @@ class PluginContext:
         self.register_capability("executor", name, {"fn": fn, "description": description,
                                                     "external_side_effect": external_side_effect})
 
+    # ── 统一接缝 (PR-G) ──────────────────────────────────────
+    @property
+    def graph(self):
+        """统一图库 hub —— 插件把本体挂进来, 反查由底座 /api/graph/* 提供"""
+        return self._manager.graph
+
+    def register_graph(self, ontology: dict, *, namespace: str = None,
+                       meta: dict = None) -> Callable:
+        """把本插件的本体挂进统一图库 —— 返回 disposer (跑它就摘除)。
+
+        **这是「插件的领域端点全废」的落点**: 本体进了统一图库之后,
+        「协议→数据项」「台区→诊断→指标」那类反查不再需要各自写端点,
+        走 /api/graph/trace/<ns>/<节点> 一套通用查询即可 ——
+        也就没有了跨包字段名漂移可言 (每包一套字段名 = 客户端静默断)。
+        """
+        ns = namespace or self.plugin
+        self.graph.load(ns, ontology, meta=meta)
+        self.register_capability("graph", ns, {
+            "namespace": ns,
+            "nodes": len(ontology.get("nodes") or []),
+            "edges": len(ontology.get("edges") or []),
+            "description": (meta or {}).get("description", ""),
+        })
+
+        def _undo():
+            self.graph.unload(ns)
+        self._disposers.append(_undo)
+        return _undo
+
+    def route(self, method: str, path: str, handler: Callable, *,
+              description: str = "") -> Callable:
+        """注册一个 HTTP 端点 —— 由**底座**发, 插件不起自己的服务。
+
+        path 是**相对本插件命名空间**的 (`/selftest`), 底座补上前缀,
+        最终落在 `/api/plugin/<插件名>/selftest`。前缀归底座所有:
+        命名空间就成了注册期强制的, 而不是「请大家自觉加前缀」的约定。
+
+        handler(req) -> 可 JSON 序列化的对象, 或 (status, obj);
+        req = {"method", "path", "query", "body"}。**不要求插件 import 任何
+        web 框架** —— 插件住在底座仓之外, 不该被底座的框架版本绑住。
+        """
+        d = self._manager.register_route(self.plugin, method, path, handler,
+                                         description=description)
+        self._disposers.append(d)
+        return d
+
     # ── 服务面 ───────────────────────────────────────────────
     @property
     def cfg(self):
@@ -128,12 +203,26 @@ class PluginContext:
 class PluginManager:
     """统一插件运行时 — 发现/装载/隔离/启停/持久化"""
 
-    def __init__(self, plugins_dir: Path = None, state_path: Path = None):
+    def __init__(self, plugins_dir: Path = None, state_path: Path = None,
+                 extra_roots: List[Path] = None):
         self.plugins_dir = Path(plugins_dir) if plugins_dir else _REPO_ROOT / "plugins"
+        # 发现顺序 = 本仓 → 显式 extra_roots → 环境变量。同名首个胜出 (见 _plugin_dirs)
+        roots = [self.plugins_dir]
+        for r in list(extra_roots or []) + _env_plugin_roots():
+            p = Path(r)
+            if p not in roots:
+                roots.append(p)
+        self.plugin_roots = roots
         self.state_path = Path(state_path) if state_path else _REPO_ROOT / "data" / "plugins_state.json"
         self._loaded: Dict[str, dict] = {}      # name → {manifest, status, error, capabilities, disposers}
         self._state: dict = {"backend": {}, "frontend": {}}   # 持久化启停选择
         self._ontology = None
+        # 统一图库 hub (数据库统一) —— 插件本体挂这儿, 不在各包各存一份
+        from .graph_store import graph_store
+        self.graph = graph_store
+        # 插件端点表 (端口统一) —— (METHOD, 全路径) → {plugin, handler}
+        # 插件不再各起 HTTP 服务; 由 src/web/plugin_host.py 一处分发。
+        self._routes: Dict[tuple, dict] = {}
 
     # ── 状态持久化 ───────────────────────────────────────────
     def load_state(self) -> None:
@@ -158,10 +247,91 @@ class PluginManager:
 
     # ── 发现与装载 ───────────────────────────────────────────
     def _plugin_dirs(self) -> List[Path]:
-        if not self.plugins_dir.is_dir():
-            return []
-        return sorted(d for d in self.plugins_dir.iterdir()
-                      if d.is_dir() and (d / "plugin.py").exists())
+        """遍历所有插件根；同名**首个胜出**并告警，绝不静默覆盖。"""
+        found: Dict[str, Path] = {}
+        for root in self.plugin_roots:
+            if not root.is_dir():
+                continue
+            for d in sorted(root.iterdir()):
+                if not (d.is_dir() and (d / "plugin.py").exists()):
+                    continue
+                if d.name in found:
+                    log.warning(f"[runtime] 插件名冲突 {d.name}: "
+                                f"{found[d.name]} 胜出, 忽略 {d}")
+                    continue
+                found[d.name] = d
+        return [found[k] for k in sorted(found)]
+
+    def _resolve_dir(self, name: str) -> Optional[Path]:
+        """按名回查插件目录 (跨全部根) —— enable 时用。"""
+        hit = self._loaded.get(name, {}).get("dir")
+        if hit and Path(hit).exists():
+            return Path(hit)
+        for root in self.plugin_roots:
+            cand = root / name
+            if (cand / "plugin.py").exists():
+                return cand
+        return None
+
+    def plugin_dir(self, name: str) -> Optional[str]:
+        """按名回查插件目录的**公开**入口 (plugin_host 托管页面要用)"""
+        d = self._resolve_dir(name)
+        return str(d) if d else None
+
+    # ── 插件端点表 (端口统一) ────────────────────────────────
+    ROUTE_PREFIX = "/api/plugin"
+
+    def register_route(self, plugin: str, method: str, path: str,
+                       handler: Callable, *, description: str = "") -> Callable:
+        """登记一个插件端点 —— 返回 disposer。**重名(同方法同路径)抛错**。
+
+        前缀由底座补, 插件只给相对路径。这样两个插件的同名端点
+        (`/selftest`) 天然落在各自命名空间下, 撞不上。
+        """
+        method = (method or "GET").upper()
+        rel = "/" + (path or "").lstrip("/")
+        full = f"{self.ROUTE_PREFIX}/{plugin}{rel}"
+        key = (method, full)
+        if key in self._routes:
+            raise ValueError(f"端点 {method} {full} 已被插件 "
+                             f"{self._routes[key]['plugin']!r} 注册")
+        self._routes[key] = {"plugin": plugin, "handler": handler,
+                             "description": description}
+        log.info(f"[runtime] {plugin} 注册端点 {method} {full}")
+
+        def _undo():
+            self._routes.pop(key, None)
+        return _undo
+
+    def match_route(self, method: str, path: str) -> Optional[dict]:
+        """按 (方法, 全路径) 精确查 —— 查不到返回 None, 由调用方出 404"""
+        return self._routes.get(((method or "GET").upper(), path.rstrip("/") or path))
+
+    def routes(self) -> Dict[str, list]:
+        """端点清单 (按插件归拢) —— 给诊断面看「谁挂了什么」"""
+        out: Dict[str, list] = {}
+        for (m, p), v in sorted(self._routes.items()):
+            out.setdefault(v["plugin"], []).append({"method": m, "path": p,
+                                                    "description": v["description"]})
+        return out
+
+    @staticmethod
+    def _read_manifest(pdir: Path, module) -> Optional[dict]:
+        """清单源：plugin.json (数据) 优先, 回退模块内 PLUGIN_MANIFEST (存量插件)。
+
+        清单当数据读, 才谈得上「装了什么、哪个版本」的账 ——
+        .py 里的 dict 不执行代码读不出来。
+        """
+        pj = pdir / "plugin.json"
+        if pj.is_file():
+            try:
+                m = json.loads(pj.read_text(encoding="utf-8"))
+                if isinstance(m, dict) and m.get("name"):
+                    return m
+                log.warning(f"[runtime] {pdir.name}/plugin.json 缺 name, 回退模块常量")
+            except Exception as e:
+                log.warning(f"[runtime] {pdir.name}/plugin.json 不可解析 ({e}), 回退模块常量")
+        return getattr(module, "PLUGIN_MANIFEST", None)
 
     def _import_plugin(self, path: Path):
         mod_name = f"iotstudio_plugin_{path.parent.name}"
@@ -193,9 +363,9 @@ class PluginManager:
             return
         try:
             module = self._import_plugin(pdir / "plugin.py")
-            manifest = getattr(module, "PLUGIN_MANIFEST", None)
+            manifest = self._read_manifest(pdir, module)
             if not isinstance(manifest, dict) or not manifest.get("name"):
-                raise ValueError("缺少 PLUGIN_MANIFEST 或 manifest.name")
+                raise ValueError("缺少 plugin.json 与 PLUGIN_MANIFEST (或 manifest.name)")
             if manifest["name"] != pdir.name:
                 raise ValueError(f"manifest.name ({manifest['name']}) 必须与插件目录名一致")
             caps_declared = manifest.get("capabilities", [])
@@ -208,7 +378,20 @@ class PluginManager:
                                               "capabilities": {}, "ctx": ctx,
                                               "dir": str(pdir)}
             disposers = module.apply(ctx) or []
-            self._loaded[manifest["name"]]["disposers"] = list(disposers)
+            # ⚠️ 这里原来是 `= list(disposers)`, **整体覆盖** ——
+            #    ctx.on_shutdown() 登记的、以及 register_graph/route 自动挂的,
+            #    全被冲掉, 于是 disable 之后端点还活着、本体还挂在图库里,
+            #    「生命周期可逆」这条规则就只剩个说法。
+            #    必须合并: ① apply 的返回 ② ctx 自己收的。
+            #    合并要**去重**: 现有插件普遍写 `return [ctx.on_shutdown(f)]`,
+            #    而 on_shutdown 自己也 append 了一次 —— 不去重就会跑两遍。
+            seen, merged = set(), []
+            for fn in list(disposers) + list(ctx._disposers):
+                if id(fn) in seen:
+                    continue
+                seen.add(id(fn))
+                merged.append(fn)
+            self._loaded[manifest["name"]]["disposers"] = merged
 
             # 声明即校验
             caps_registered = set(self._loaded[manifest["name"]]["capabilities"].keys())
@@ -239,8 +422,8 @@ class PluginManager:
     def enable(self, name: str) -> bool:
         self._state["backend"][name] = True
         self.save_state()
-        pdir = self._loaded.get(name, {}).get("dir") or (self.plugins_dir / name)
-        if Path(pdir).exists():
+        pdir = self._resolve_dir(name)
+        if pdir and Path(pdir).exists():
             self._loaded.pop(name, None)
             self._load_one(Path(pdir))    # 重新 apply
         return True
@@ -302,10 +485,10 @@ class PluginManager:
     def get_ontology(self):
         if self._ontology is None:
             try:
-                from .ontology import build_131_ontology
+                from .ontology import build_engine
             except ImportError:
-                from ontology import build_131_ontology
-            self._ontology = build_131_ontology()
+                from ontology import build_engine
+            self._ontology = build_engine()
         return self._ontology
 
     # ── 视图/健康 ────────────────────────────────────────────

@@ -36,7 +36,11 @@ pg_store = ParseStore()
 td_store = TDEngineStore()
 collector = CollectorEngine(pg_store, td_store)
 alarm_engine = AlarmEngine(pg_store)
-push_engine = PushEngine(pg_store)
+# 设备接入身份表（devaddr → productId/deviceSecret）。push_engine 的出口靠它
+# 拼中枢主题；装载是异步的，在 lifespan 里 load + 起后台刷新。
+from .services.device_identity import DeviceIdentityRegistry
+identity_registry = DeviceIdentityRegistry(pg_store)
+push_engine = PushEngine(pg_store, resolver=identity_registry)
 safety_pipeline = SafetyPipeline(pg_store)
 phm_engine = PHMEngine()
 rules_engine = RulesEngine()
@@ -80,6 +84,15 @@ async def lifespan(app: FastAPI):
         await td_store.ensure_supertable("default")
     except Exception as e:
         logger.warning(f"[main] TDengine 连接失败: {e}")
+
+    # 先装载设备接入身份表，再起推送引擎 —— 否则首批数据推送时表还是空的，
+    # 会被当成"查不到身份"拒发（拒发本身是对的，但没必要白丢一批）。
+    try:
+        n = await identity_registry.load()
+        identity_registry.start()
+        logger.info(f"[main] 设备接入身份表: {n} 台 — {identity_registry.status()}")
+    except Exception as e:
+        logger.warning(f"[main] 设备接入身份表装载失败: {e}")
 
     try:
         await push_engine.start()
@@ -138,6 +151,10 @@ async def lifespan(app: FastAPI):
     except Exception:
         pass
     try: from .channel_bootstrap import shutdown_channels; await shutdown_channels()
+    except: pass
+    try: await stop_mqtt_eventbus_bridge()
+    except: pass
+    try: await identity_registry.stop()
     except: pass
     try: await collector.stop()
     except: pass
@@ -407,8 +424,18 @@ class TelemetryPoint(BaseModel):
 
 @app.post("/api/telemetry")
 async def write_telemetry(body: TelemetryPoint):
-    """边缘代理接收遥测数据 → 写 SQLite + 推 MQTT"""
-    import sqlite3, json, os, time as _time
+    """边缘代理接收遥测数据 → 写 SQLite + 走推送出口上中枢
+
+    这里原先自己搓了一个 paho 客户端：每个测点开一次 TCP、主题硬编码
+    `dgiot/default/gw_131/ch_edge_hub/{device}/{point}`、`except: pass` 吞掉
+    所有失败。三个问题叠在一起——主题不在中枢认的闭集里（发出去没人消费）、
+    网关写死成 gw_131（换现场要改代码）、连不上时既不报错也不计数。
+
+    正确做法是走已经在用的 PushEngine 出口：它拿着 DeviceIdentityRegistry
+    解析出 productId/deviceSecret，按 dlink 语法拼 `$dg/thing/{P}/{D}/properties/report`，
+    有连接池、有失败计数、有日志。同一个出口，不另起一条。
+    """
+    import sqlite3, os
     db_path = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "data", "telemetry.db")
     conn = sqlite3.connect(db_path)
     conn.execute("""CREATE TABLE IF NOT EXISTS telemetry
@@ -420,15 +447,13 @@ async def write_telemetry(body: TelemetryPoint):
     cnt = conn.execute("SELECT COUNT(*) FROM telemetry").fetchone()[0]
     conn.close()
 
-    # 推 MQTT → 边缘中枢
-    try:
-        import paho.mqtt.client as mqtt
-        topic = f"dgiot/default/gw_131/ch_edge_hub/{body.device}/{body.point}"
-        c = mqtt.Client(client_id='edge_agent')
-        c.connect('127.0.0.1', 1883, 5)
-        c.publish(topic, json.dumps({"value": body.value, "unit": body.unit, "ts": now_ts}))
-        c.disconnect()
-    except: pass
+    # 上中枢 —— 交给 PushEngine 的出口（与采集链路同一条），不在这里另开连接。
+    # PushEngine 未装载推送目标时 push() 直接返回，本机写入仍然成功。
+    if body.device and body.point:
+        from .protocols.base import PointValue
+        await push_engine.push(body.device, [PointValue(
+            device_id=body.device, point_id=body.point, point_name=body.point,
+            value=body.value, unit=body.unit or None)])
 
     return {"status": "ok", "total_rows": cnt}
 
@@ -1414,6 +1439,10 @@ def _setup_eventbus_ws_bridge():
 
 # ---- MQTT → EventBus 桥接 ----
 
+#: MQTT ↔ EventBus 桥接的 paho client 句柄（关闭时要 loop_stop，见 stop_mqtt_eventbus_bridge）
+_mqtt2bus_client = None
+
+
 def _setup_mqtt_eventbus_bridge():
     """订阅 MQTT 主题 → 触发 EventBus 事件"""
     try:
@@ -1437,9 +1466,31 @@ def _setup_mqtt_eventbus_bridge():
         mqtt_client.connect_async(mqtt_cfg.host, mqtt_cfg.port)
         mqtt_client.subscribe("dgiot/#")
         mqtt_client.loop_start()
+        # 留下句柄才能关。之前 client 是函数局部变量，loop_start() 起的线程
+        # 持有它，外部再也拿不到 —— 关闭时连接就那么挂着（线程是 daemon，
+        # 不挡进程退出，所以这个泄漏一直没症状，直到 broker 侧看到陈旧会话）。
+        global _mqtt2bus_client
+        _mqtt2bus_client = mqtt_client
         logger.info("[bridge] MQTT ↔ EventBus 已连接 (dgiot/#)")
     except Exception as e:
         logger.warning(f"[bridge] MQTT 桥接失败: {e}")
+
+
+async def stop_mqtt_eventbus_bridge() -> None:
+    """断开 MQTT ↔ EventBus 桥接 (loop_stop + disconnect)
+
+    与 DGIoTBridge.stop / ch_mqtt_bridge 的 stop_bridge 同一套收尾：
+    loop_start() 起的线程必须显式 loop_stop，否则连接只增不减。
+    """
+    global _mqtt2bus_client
+    client, _mqtt2bus_client = _mqtt2bus_client, None
+    if client is None:
+        return
+    try:
+        client.loop_stop()
+        client.disconnect()
+    except Exception as e:  # noqa: BLE001 - 收尾失败不该阻断关闭流程
+        logger.warning(f"[bridge] 断开 MQTT 桥接时出错: {e}")
 
 
 # 启动桥接
@@ -1998,6 +2049,22 @@ app.include_router(parse_router)
 
 from .web.user_manager_api import router as user_mgr_router
 app.include_router(user_mgr_router)
+
+from .web.view_api import router as view_router
+app.include_router(view_router)
+
+from .web.menu_api import router as menu_router
+app.include_router(menu_router)
+
+# ── 统一图库 + 插件托管 (PR-G: 端口统一 / 数据库统一) ──────────────
+# ⚠️ 这两条必须在下面 `@app.get("/{full_path:path}")` 那条 SPA 兜底**之前**
+#    include —— Starlette 按注册顺序取第一个完全匹配的路由, 排在兜底之后
+#    的永远匹配不上, 表现成「插件页面被兜成底座首页」且不报任何错。
+#    同理, 以后新增的 router 也一律加在这一段**之上**。
+from .web.graph_api import router as graph_router
+app.include_router(graph_router)
+from .web.plugin_host import router as plugin_host_router
+app.include_router(plugin_host_router)
 
 from .web.dashboard_edge_api import router as edge_dash_router
 app.include_router(edge_dash_router)
