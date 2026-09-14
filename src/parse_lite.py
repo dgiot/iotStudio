@@ -22,8 +22,11 @@ Parse-lite — Python Parse Server 兼容实现
   ✅ Schema API (GET/POST /schemas)
 """
 import json, os, time, hashlib, hmac, base64, secrets, re
+import logging
 from datetime import datetime, timedelta, date
 from typing import Optional, Callable
+
+log = logging.getLogger("parse.lite")
 
 class _DTEncoder(json.JSONEncoder):
     def default(self, obj):
@@ -245,6 +248,24 @@ def handle_relation_op(class_name: str, object_id: str, field: str, op: str, tar
 
 
 # ===================== CRUD =====================
+
+# 不参与租户隔离的类 —— 身份与模式本身不属于任何租户（_Role 是租户表自己，
+# 给它加租户过滤会把租户解析本身锁死）。parse_query 与 parse_get 共用这一份。
+_TENANT_EXEMPT = ("_User", "_Role", "_Session", "_SCHEMA")
+
+
+def _tenant_visible(row_tenant, user: dict) -> bool:
+    """一行数据对当前用户是否可见 —— 读侧租户判据的**唯一**实现。
+
+    语义与 parse_query 的注入式判据逐字一致：**空 = 共享**。
+    读侧第二个入口（parse_get）原先**连判据都没有**，只查 objectId 再走一个
+    ACL 默认全空的 check_acl —— 于是 /api/views/{id} 的越权读、越权删全靠没人知道 id。
+    """
+    if not user or not user.get("tenant_id"):
+        return True                      # 未接线路径：行为一字不变
+    return not row_tenant or row_tenant == user["tenant_id"]
+
+
 def parse_query(class_name: str, params: dict, user: dict = None, is_master: bool = False) -> dict:
     """GET /classes/:className — 完整查询"""
     if not check_clp(class_name, "find", user, is_master):
@@ -252,6 +273,9 @@ def parse_query(class_name: str, params: dict, user: dict = None, is_master: boo
     ensure_table(class_name)
     db = get_db()
     safe = class_name.replace('"', '""')
+
+    # 本表真实列名（小写集合）—— WHERE / ORDER BY 靠它区分「真列」与「data 里的 JSON 键」
+    cols = {d[1].lower() for d in db.execute(f'PRAGMA table_info("{safe}")').fetchall()}
 
     where = json.loads(params.get("where", "{}"))
     limit = min(int(params.get("limit", 100)), 10000)
@@ -262,10 +286,10 @@ def parse_query(class_name: str, params: dict, user: dict = None, is_master: boo
     count_mode = str(params.get("count", "")) == "1"
 
     # Build WHERE clause
-    conditions, vals = _build_where(where)
+    conditions, vals = _build_where(where, cols=cols)
 
     # 多租户注入
-    if class_name not in ("_User", "_Role", "_Session", "_SCHEMA") and user and user.get("tenant_id"):
+    if class_name not in _TENANT_EXEMPT and user and user.get("tenant_id"):
         conditions.append("(json_extract(data, '$.tenant_id') = ? OR json_extract(data, '$.tenant_id') IS NULL)")
         vals.append(user["tenant_id"])
 
@@ -277,7 +301,7 @@ def parse_query(class_name: str, params: dict, user: dict = None, is_master: boo
         o = o.strip()
         desc = o.startswith("-")
         field = o[1:] if desc else o
-        col = _col_ref(field)  # 系统列用列名, 其他走 json_extract
+        col = _col_ref(field, cols)  # 真列用列名, 其他走 json_extract
         direction = "DESC" if desc else "ASC"
         order_cols.append(f"{col} {direction}")
     order_sql = "ORDER BY " + ", ".join(order_cols) if order_cols else 'ORDER BY "createdAt" DESC'
@@ -318,6 +342,10 @@ def parse_get(class_name: str, object_id: str, user: dict = None, is_master: boo
         return None
     obj = _row_to_obj(row)
     if not check_acl(row["ACL"], (user or {}), "read") and not is_master:
+        return None
+    # 租户过滤 —— 原先这里没有，于是「按 id 取」是一条绕过 parse_query 租户注入的路。
+    # 语义与 parse_query 一致：行的 tenant_id 空 = 共享。user 不传 → 一字不变。
+    if class_name not in _TENANT_EXEMPT and not _tenant_visible(obj.get("tenant_id"), user):
         return None
     return obj
 
@@ -509,6 +537,65 @@ def parse_login(username: str, password: str) -> Optional[dict]:
             "sessionToken": token, "role": row["role"], "email": row["email"]}
 
 
+def _roles_of_user(db, user_id: str) -> list:
+    """用户的角色行 —— 租户在本模型里就是 _Role (见 _tenant_bundle)
+
+    `ORDER BY r.objectId` 不是装饰。`_tenant_bundle` 取 `roles[0]` 当**当前租户**，
+    而不带 ORDER BY 时 SQLite 给的行序是任意的 —— 同一个多角色用户，两次请求可以
+    落在两个租户上。（dgiot 那边 `USER_ROLE_ETS` 存的就是个**列表**，
+    dgiot_parse_auth.erl:165-189。）按 objectId 定序，至少每次是同一个答案。
+    """
+    return db.execute(
+        "SELECT r.objectId, r.name FROM _Role r JOIN _Join_users_Role j ON r.objectId = j.roleId"
+        " WHERE j.userId = ? ORDER BY r.objectId",
+        (user_id,)).fetchall()
+
+
+def _tenant_bundle(roles) -> dict:
+    """角色行 → 租户二元组。
+
+    ⚠️ **租户 = _Role.objectId**，不是 SQL 那张 `tenants` 表 —— 后者是 `web/tenant_api.py`
+    的数据源，而那个模块的 get_db() 引用了不存在的 `main.get_session`，端点一调即
+    ImportError。活的租户源只有这里。两套并存的账记在 CLAUDE.md 待裁决项里，
+    在它被裁决之前，**凡是解析租户都必须走本函数**，免得再多出第三个来源。
+    （dgiot 侧同一事实：全仓没有 Tenant/Org/Company 类，租户/部门就是 `_Role`；
+    `_User.department` 只是建用户时传 RoleId 的入参，建完就 `maps:without` 剥掉 ——
+    dgiot_parse_auth.erl:828-840。）
+
+    **多归属：不报错，但必须出声。** dgiot 让用户多角色并存、再靠「部门 token」显式
+    选一个当前角色（dgiot_parse_auth.erl:1071-1086 造 session，
+    dgiot_parse.erl:355-376 之后每个请求都拿它换掉 sessionToken）。iotStudio 没有
+    那个切换开关（前端那个 switchTenant 只写 localStorage，一个字节都不发给后端），
+    所以这里只能取第一个。既然只能取第一个，就得让人看得见「这里本来有得选」——
+    否则多租户部署里一个多角色用户会静默地只看得到其中一家的料。
+    """
+    if len(roles) > 1:
+        log.warning(
+            f"[tenant] 用户有 {len(roles)} 个角色 {[r['objectId'] for r in roles]}，"
+            f"当前租户取第一个 {roles[0]['objectId']!r} —— dgiot 靠部门 token 显式选，"
+            f"本仓无该开关；多租户部署下这里可能是错的")
+    return {"tenant_id": roles[0]["objectId"] if roles else "default",
+            "tenants": [{"tenant_id": r["objectId"], "name": r["name"]} for r in roles]}
+
+
+def parse_tenants_of_username(username: str) -> dict:
+    """按**用户名**解析租户 —— 给 auth.get_current_user 补齐 JWT 用。
+
+    存在的理由：`create_token` 的 payload 原先只有 {sub, role, iat, exp}，不带租户；
+    而前端把 JWT 塞在 sessionToken 头里，verify_token 直接成功 —— 于是
+    `_user_from_session`（唯一带 tenant_id 的那条分支）对前端**永不触发**，
+    前端请求里 user.tenant_id 恒为 None。修法是签发时带上，老 token 走这里补。
+    """
+    db = get_db()
+    row = db.execute("SELECT objectId FROM _User WHERE username = ?", (username,)).fetchone()
+    if not row:
+        db.close()
+        return {"tenant_id": "default", "tenants": []}
+    roles = _roles_of_user(db, row["objectId"])
+    db.close()
+    return _tenant_bundle(roles)
+
+
 def parse_get_user_by_session(token: str) -> Optional[dict]:
     db = get_db()
     row = db.execute(
@@ -516,13 +603,11 @@ def parse_get_user_by_session(token: str) -> Optional[dict]:
         (token, now_iso())).fetchone()
     if not row:
         db.close(); return None
-    roles = db.execute("SELECT r.objectId, r.name FROM _Role r JOIN _Join_users_Role j ON r.objectId = j.roleId WHERE j.userId = ?",
-                       (row["objectId"],)).fetchall()
+    bundle = _tenant_bundle(_roles_of_user(db, row["objectId"]))
     db.close()
     return {"objectId": row["objectId"], "username": row["username"],
             "role": row["role"], "sessionToken": row["sessionToken"],
-            "tenant_id": roles[0]["objectId"] if roles else "default",
-            "tenants": [{"tenant_id": r["objectId"], "name": r["name"]} for r in roles]}
+            **bundle}
 
 
 def parse_logout(token: str):
@@ -596,8 +681,12 @@ def parse_create_schema(body: dict):
 
 
 # ===================== 查询构建 =====================
-def _build_where(where: dict, prefix: str = ""):
-    """递归构建 WHERE 条件 — 支持所有 Parse 约束"""
+def _build_where(where: dict, prefix: str = "", cols=None):
+    """递归构建 WHERE 条件 — 支持所有 Parse 约束
+
+    cols = 当前表的真实列名集合（小写）。传了才知道 username/role/sessionToken
+    这些是真列而非 data JSON 里的键，见 _col_ref。
+    """
     conditions = []; vals = []
 
     if not where:
@@ -607,7 +696,7 @@ def _build_where(where: dict, prefix: str = ""):
         if k == "$or":
             or_conds = []
             for clause in v:
-                sub_conds, sub_vals = _build_where(clause, prefix)
+                sub_conds, sub_vals = _build_where(clause, prefix, cols)
                 if sub_conds:
                     or_conds.append("(" + " AND ".join(sub_conds) + ")")
                     vals.extend(sub_vals)
@@ -615,25 +704,33 @@ def _build_where(where: dict, prefix: str = ""):
                 conditions.append("(" + " OR ".join(or_conds) + ")")
         elif k == "$and":
             for clause in v:
-                sub_conds, sub_vals = _build_where(clause, prefix)
+                sub_conds, sub_vals = _build_where(clause, prefix, cols)
                 conditions.extend(sub_conds); vals.extend(sub_vals)
         elif isinstance(v, dict) and any(op.startswith("$") for op in v.keys()):
             for op, val in v.items():
-                cond, vs = _op_to_sql(k, op, val)
+                cond, vs = _op_to_sql(k, op, val, cols)
                 if cond:
                     conditions.append(cond); vals.extend(vs)
         elif isinstance(v, dict) and v.get("__type") == "Pointer":
             conditions.append(f"json_extract(data, '$.{k}.objectId') = ?")
             vals.append(v["objectId"])
         else:
-            col = _col_ref(k)
+            col = _col_ref(k, cols)
             conditions.append(f"{col} = ?")
             vals.append(_serialize(v))
     return conditions, vals
 
 
-def _col_ref(k: str) -> str:
-    """字段引用: 系统列双引号 (PG大小写), 其他走 json_extract"""
+def _col_ref(k: str, cols=None) -> str:
+    """字段引用: 真实列用列名, 其他走 json_extract
+
+    ⚠️ 原实现只认 objectId/createdAt/updatedAt/ACL 四个系统列，其余一律
+    json_extract(data, '$.k')。但 _User/_Role/_Session 是按**真实列**建的表
+    （username / role / sessionToken ...），其 data 列恒为 '{}' —— 于是
+    「按 username 过滤」永远 0 行，会话校验永远查不到。cols 传当前表真实列名集合即可纠正。
+    """
+    if cols and k.lower() in cols:
+        return '"' + k.replace('"', '""') + '"'
     if k.lower() in ("objectid", "createdat", "updatedat", "acl"):
         return f'"{k}"'
     return f"json_extract(data, '$.{k}')"
@@ -648,9 +745,25 @@ def _get_count_val(cr) -> int:
     except: return 0
 
 
-def _op_to_sql(field: str, op: str, val) -> tuple:
+def _op_to_sql(field: str, op: str, val, cols=None) -> tuple:
     """转换单个操作符"""
-    jf = f"json_extract(data, '$.{field}')"
+    # ⚠️ 下面 $in/$nin/$exists/$regex 四个分支原先写在无条件 return **之后**，
+    #    是死代码 —— 任何查询用这四个操作符都会静默退化成「无此条件」。
+    #    这里把集合类/存在类分支提到前面，比较类分支放最后。
+    jf = _col_ref(field, cols)
+    if op == "$in":
+        if not val:
+            return "1=0", []
+        return f"{jf} IN ({','.join(['?']*len(val))})", [_serialize(v) for v in val]
+    if op == "$nin":
+        if not val:
+            return "1=1", []
+        return f"({jf} NOT IN ({','.join(['?']*len(val))}) OR {jf} IS NULL)", [_serialize(v) for v in val]
+    if op == "$exists":
+        return (f"{jf} IS NOT NULL" if val else f"{jf} IS NULL"), []
+    if op == "$regex":
+        return f"{jf} REGEXP ?", [str(val)]
+
     sql_ops = {"$ne": "!=", "$lt": "<", "$lte": "<=", "$gt": ">", "$gte": ">="}
     sql_op = sql_ops.get(op)
     if not sql_op:
@@ -661,15 +774,6 @@ def _op_to_sql(field: str, op: str, val) -> tuple:
     if op == "$ne":
         return f"({jf} IS NULL OR {jf} {sql_op} ?)", [_serialize(val)]
     return f"{jf} {sql_op} ?", [_serialize(val)]
-    if op == "$in":
-        return f"{jf} IN ({','.join(['?']*len(val))})", [_serialize(v) for v in val]
-    if op == "$nin":
-        return f"({jf} NOT IN ({','.join(['?']*len(val))}) OR {jf} IS NULL)", [_serialize(v) for v in val]
-    if op == "$exists":
-        return ("json_extract(data, '$.{field}') IS NOT NULL" if val else "json_extract(data, '$.{field}') IS NULL").format(field=field), []
-    if op == "$regex":
-        return f"{jf} REGEXP ?", [str(val)]
-    return None, []
 
 
 def _serialize(val):
@@ -681,13 +785,25 @@ def _serialize(val):
     return str(val)
 
 
+# 逐列收全时挡掉的字段：密字段永不出接口。
+# _User 表里有 password_hash / sessionToken / sessionExpires，_Session 表整张都是令牌，
+# 通用收列会把它们带进 /api/admin/users 这类响应里 —— 白名单改黑名单，黑名单必须挡死。
+_DENY_COLS = {"password_hash", "password", "sessiontoken", "sessionexpires", "data", "acl"}
+
+
 def _row_to_obj(row, keys: list = None) -> dict:
     from datetime import datetime
+    # ⚠️ 成员判定必须查 row.keys()，不能写 `key in row`。
+    #    sqlite3.Row 的 __contains__ 走 __iter__，而 __iter__ 迭代的是「值」不是「键」：
+    #        "objectId" in row  → False        （拿字符串去比 admin/dgiot 这些值）
+    #        row["objectId"]    → 'admin'      （键明明在）
+    #    于是每一次 _g() 都落兜底空串，parse_query 对**所有表所有行**一律返回
+    #    {"objectId":"","createdAt":"","updatedAt":""} —— 用户管理、角色管理页面空壳的病根。
+    _colmap = {k.lower(): k for k in row.keys()}
+
     def _g(key, fallback=""):
-        if key in row: v = row[key]
-        elif key.lower() in row: v = row[key.lower()]
-        elif key.upper() in row: v = row[key.upper()]
-        else: v = fallback
+        real = _colmap.get(key.lower())
+        v = row[real] if real is not None else fallback
         if v is None: return fallback
         return v.isoformat() if isinstance(v, datetime) else (str(v) if isinstance(v, (int, float)) else v)
     obj = {"objectId": _g("objectId"), "createdAt": _g("createdAt"), "updatedAt": _g("updatedAt")}
@@ -699,13 +815,17 @@ def _row_to_obj(row, keys: list = None) -> dict:
             if isinstance(d, dict):
                 obj.update(d)
         except: pass
-    # PG direct columns (Node.js Parse Server schema)
-    for col in ["name", "devaddr", "status", "ip", "product", "device_type",
-                "protocol", "isEnable", "manufacturer", "model", "station_id",
-                "parentId", "route", "lastOnlineTime", "assetNum", "namenumber"]:
-        v = _g(col)
-        if v:
-            obj[col] = v
+    # 实体列 —— 逐列收全（原为固定白名单，是空壳问题的第二个来源）
+    # 白名单里没有 username / email / phone / role / alias / parent_id，
+    # 所以 _User、_Role 即便行取对了，这几列也照样被丢掉。
+    # 收全 + _DENY_COLS 挡密字段，比维护一份永远漏项的白名单可靠。
+    for real in row.keys():
+        if real in obj or real.lower() in _DENY_COLS:
+            continue
+        v = row[real]
+        if v is None or v == "":
+            continue
+        obj[real] = v.isoformat() if isinstance(v, datetime) else (str(v) if isinstance(v, (int, float)) else v)
     # JSON basedata/detail/profile columns (Parse Server)
     for json_col in ["basedata", "detail", "profile", "content", "location", "state"]:
         v = _g(json_col)
