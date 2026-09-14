@@ -196,8 +196,10 @@ class TestIdentityCarriesTenant:
         parse_assign_role(uid, "oil-monitor")          # 种子角色之一
 
         old = create_token("alice", "user")            # 老形制：payload 里没有 tenant_id
-        u = asyncio.get_event_loop().run_until_complete(
-            get_current_user(_request_with_token(old)))
+        # 用 asyncio.run 不用 get_event_loop：后者在 3.12 废弃、3.14 已移除
+        # 「无环时自动建环」，且它依赖线程局部状态 —— 全量跑时前面任何一处
+        # asyncio.run() 收尾都会把环置 None，这两条就必红（顺序依赖）。
+        u = asyncio.run(get_current_user(_request_with_token(old)))
         assert u["tenant_id"] == "oil-monitor", "必须补出这个用户真正的角色/租户"
 
     def test_无角色用户落到default(self, tmp_parse_db):
@@ -207,8 +209,7 @@ class TestIdentityCarriesTenant:
         parse_create_user({"username": "bob", "password": "x"})   # 不分配角色
 
         old = create_token("bob", "user")
-        u = asyncio.get_event_loop().run_until_complete(
-            get_current_user(_request_with_token(old)))
+        u = asyncio.run(get_current_user(_request_with_token(old)))
         assert u["tenant_id"] == "default"
 
     def test_解析失败不静默放行(self, monkeypatch):
