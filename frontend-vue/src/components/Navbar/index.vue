@@ -44,6 +44,14 @@
 </template>
 
 <script setup>
+// NotifyBell 必须在这里显式引入：它不是 Element Plus 图标（那些在 main.js 里
+// 全局注册），也不被 autoRegisterComponents 收 —— 那个扫描只认
+// `components/**/index.vue` 且注册名是 `dgiot-<kebab>`，NotifyBell.vue 两条都不沾。
+// 漏了 import 的症状是每次渲染都报 `Failed to resolve component: NotifyBell`，
+// 并把整棵 vnode 树 dump 一遍 —— vite 把浏览器 console 转发到终端，
+// 于是 dev server 日志能涨到几百 MB 并吃光内存。
+import NotifyBell from '../NotifyBell.vue'
+
 defineProps({
   title:       { type: String, default: '' },
   userName:    { type: String, default: '' },
