@@ -45,5 +45,5 @@ GET /api/iot/devices|products|channels → { total, items:[{id,code,name,type,mo
 
 ## Provenance
 
-- Data: `ontology_graph_v3.json` is a local build artifact (not committed); the `/ontology-graph` view embeds sample data (92 nodes / 59 edges, extracted fully locally by 本地模型).
+- Data: `ontology_graph_v3.json` is a local build artifact (not committed); the `/ontology-graph` view embeds sample data (90 nodes / 56 edges, extracted fully locally by 本地模型).
 - Repo discipline: credentials never enter git; local build scripts (build/governance) and internal tools are not committed.
