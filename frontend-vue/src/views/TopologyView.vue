@@ -4,7 +4,12 @@
       <h3>🔗 设备拓扑</h3>
       <div class="topo-actions">
         <el-switch v-model="editMode" active-text="编辑" inactive-text="查看" size="small" />
-        <span v-if="editMode" style="font-size:11px;color:#ffa726;margin-left:8px">拖拽节点移动位置</span>
+        <!-- 当前布局挂在后端哪个视图上 —— 原来存 localStorage 只有一份，
+             现在可以有多份，不说清楚就不知道自己在改谁 -->
+        <el-tag :type="viewId ? 'info' : 'warning'" size="small" effect="plain">
+          {{ viewId ? viewName : '默认布局' }}
+        </el-tag>
+        <span v-if="editMode" style="font-size:11px;color:#ffa726">拖拽节点移动位置</span>
         <el-button size="small" type="primary" @click="goScada" :disabled="!selected" style="margin-left:8px">🎮 组态</el-button>
         <span class="topo-legend">
           <span v-for="l in legend" :key="l.label" class="leg-item"><i :style="{background:l.color}"></i>{{ l.label }}</span>
@@ -58,17 +63,28 @@
 
 <script setup>
 import { ref, onMounted, onUnmounted, nextTick } from 'vue'
-import { useRouter } from 'vue-router'
+import { useRouter, useRoute } from 'vue-router'
+import { ElMessage } from 'element-plus'
 import api from '../api'
+import { getDefaultView, createView, updateView } from '../api/admin'
 import { DEVICE_TYPE_MAP, PROTOCOL_COLORS, PROTOCOLS } from '../utils/constants'
 
 const router = useRouter()
+const route = useRoute()
 const canvas=ref(null), wrap=ref(null)
 const editMode=ref(false), selected=ref(null), editing=ref(false)
 const protoColors = PROTOCOL_COLORS
 const legend = Object.entries(protoColors).map(([k,v])=>({label:k.replace('_',' ').toUpperCase(),color:v}))
 const protocols = PROTOCOLS
 const typeMap = DEVICE_TYPE_MAP
+
+// 布局存后端 view_api（原来是 localStorage['topo_positions']，只活在本机）
+const LEGACY_KEY = 'topo_positions'
+const siteKey = String(route.query.site || '')
+const viewId = ref(''), viewName = ref(''), viewVersion = ref(null)
+let savedPositions = {}   // 服务端读到的布局，loadDevices 按 device_id 套用
+let legacyLoaded = false
+let baseline = ''         // 载入完成时的布局快照，用来判断「用户真的动过吗」
 
 let ctx=null,animId=null,nodes=[],dragNode=null,dragOffX=0,dragOffY=0,ws=null
 
@@ -77,19 +93,51 @@ onMounted(async()=>{
   const c=canvas.value
   c.width=wrap.value.clientWidth; c.height=wrap.value.clientHeight
   ctx=c.getContext('2d')
+  await loadLayout()        // 顺序不能换：布局要先于设备就位，loadDevices 里要按 device_id 套
   await loadDevices()
+  baseline = JSON.stringify(snapshot())
   draw()
   try{const p=location.protocol==='https:'?'wss':'ws';ws=new WebSocket(`${p}://${location.host}/ws`);ws.onmessage=ev=>{const m=JSON.parse(ev.data);if(m.type==='telemetry'){const n=nodes.find(x=>x.device_id===m.device_id);if(n){n.collects++;n.online=true}}}}catch{}
 })
-onUnmounted(()=>{cancelAnimationFrame(animId);ws?.close();saveLayout()})
+// 只在用户**真的动过**节点时才回存。无条件存的话，每个来页面看一眼的人
+// 都会凭空产出一个后端视图（空布局），多站点下还会互相抢「本站默认」。
+onUnmounted(()=>{cancelAnimationFrame(animId);ws?.close();if(layoutChanged())saveLayout()})
+
+function snapshot(){
+  const pos={}; nodes.forEach(n=>{pos[n.device_id]={x:Math.round(n.x),y:Math.round(n.y)}})
+  return pos
+}
+function layoutChanged(){ return nodes.length > 0 && JSON.stringify(snapshot()) !== baseline }
+
+/** 取布局：服务端默认视图 → 本机旧版 → 默认网格（loadDevices 里算） */
+async function loadLayout() {
+  try {
+    const r = await getDefaultView('topology', siteKey)
+    if (r?.view?.objectId) {
+      viewId.value = r.view.objectId
+      viewName.value = r.view.name || ''
+      viewVersion.value = r.view.version ?? 0
+    }
+    if (r?.canvas && typeof r.canvas === 'object') savedPositions = r.canvas
+  } catch (e) {
+    ElMessage.error(`读取服务端布局失败：${e?.response?.data?.detail || e?.message || e}`)
+  }
+  if (Object.keys(savedPositions).length) return
+  // 本机旧版布局 —— 只载入不上传，等用户编辑后保存时再入库
+  try {
+    const legacy = JSON.parse(localStorage.getItem(LEGACY_KEY) || '{}')
+    if (legacy && Object.keys(legacy).length) {
+      savedPositions = legacy; legacyLoaded = true
+      ElMessage.info('本机存有旧版拓扑布局，已载入；编辑后「保存」即存入服务端')
+    }
+  } catch {}
+}
 
 async function loadDevices() {
   try {
     const r = await api.get('/devices',{params:{page_size:100}})
     const devs = r.data.devices||[]
-    // Load saved positions
-    let saved={}
-    try { saved=JSON.parse(localStorage.getItem('topo_positions')||'{}') } catch {}
+    const saved = savedPositions
     const cols=Math.ceil(Math.sqrt(devs.length))
     nodes = devs.map((d,i)=>({
       device_id:d.device_id, name:d.device_name||d.device_id, proto:d.protocol,
@@ -102,9 +150,39 @@ async function loadDevices() {
   } catch {}
 }
 
-function saveLayout() {
-  const pos={}; nodes.forEach(n=>{pos[n.device_id]={x:n.x,y:n.y}})
-  localStorage.setItem('topo_positions',JSON.stringify(pos))
+/**
+ * 存布局到服务端。带 version 做乐观锁 —— 两人同时拖节点时，
+ * 后保存的那个以前会整块盖掉前一个且毫无提示，现在后端拒 409，这里如实说。
+ */
+async function saveLayout() {
+  if (!nodes.length) return false
+  const pos = snapshot()
+  try {
+    if (!viewId.value) {
+      const name = viewName.value || (siteKey ? `${siteKey} 拓扑` : '默认拓扑')
+      const created = await createView({ name, type: 'topology', site: siteKey })
+      viewId.value = created.objectId
+      viewName.value = name
+      viewVersion.value = 0          // create_view 建出来的版本号就是 0
+    }
+    const r = await updateView(viewId.value, {
+      name: viewName.value, type: 'topology', site: siteKey,
+      canvas: pos, node_count: nodes.length, version: viewVersion.value,
+    })
+    // 后端回了新版本号，接着用它存下一次 —— 不接的话第二次保存必 409
+    viewVersion.value = r?.version ?? (viewVersion.value ?? 0) + 1
+    baseline = JSON.stringify(pos)
+    if (legacyLoaded) { localStorage.removeItem(LEGACY_KEY); legacyLoaded = false }
+    ElMessage.success(`布局已保存到服务端 · ${viewName.value}`)
+    return true
+  } catch (e) {
+    if (e?.response?.status === 409) {
+      ElMessage.error(e.response.data?.detail || '布局已被他人修改，本次未保存（刷新页面取回最新版）')
+    } else {
+      ElMessage.error(`保存布局失败：${e?.response?.data?.detail || e?.message || e}`)
+    }
+    return false
+  }
 }
 
 function draw() {
@@ -169,12 +247,13 @@ function onDblClick(e){
   if(n){ selected.value=n; editing.value=true }
 }
 
-function toggleEdit(){
+async function toggleEdit(){
   if (editing.value) {
-    // 保存
+    // 保存 —— 等结果再收面板，不然「保存」两个字点下去毫无准信
     const n = selected.value
-    if (n) { n.color = protoColors[n.proto] || '#8aa0b4'; saveLayout() }
+    if (n) n.color = protoColors[n.proto] || '#8aa0b4'
     editing.value = false
+    if (n) await saveLayout()
   } else {
     editing.value = true
   }
