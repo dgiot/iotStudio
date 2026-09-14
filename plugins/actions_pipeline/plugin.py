@@ -63,8 +63,30 @@ def apply(ctx):
         return {"ok": True, "ack": "logged", "executor": "log"}
 
     def mqtt_executor(defn, target_id, params):
-        topic = (params or {}).get("topic") or f"dgiot/cmd/{target_id}"
-        payload = {k: v for k, v in (params or {}).items() if k != "topic"}
+        """MQTT 下行执行器 — 只发 dlink 下行主题
+
+        中枢的下行闭集只有一个形态：`$dg/device/{productId}/{devaddr}/properties`
+        （dgiot_mqtt_message.erl:90、dgiot_task_dao.erl:100）。这里原先在没给
+        topic 时兜底拼 `dgiot/cmd/{target_id}` —— 那个串中枢不认，发布出去是
+        **静默丢弃**，调用方却拿到 ack="published"。兜底比报错更坏，删掉。
+
+        本插件的 engine 是 _NullEngine，拿不到 target_id → devaddr/productId
+        的映射（那需要本体），所以身份只能由 params 显式给：直给 topic，
+        或给 product_id + devaddr 由 dgiot_ids 拼。两样都没有就 ok=False ——
+        发不出去要说出来。
+        """
+        p = params or {}
+        topic = p.get("topic")
+        addressing = ("topic",)
+        if not topic:
+            pid, devaddr = p.get("product_id"), p.get("devaddr")
+            if not (pid and devaddr):
+                return {"ok": False, "executor": "mqtt",
+                        "error": "缺 topic 或 product_id+devaddr，拼不出 dlink 下行主题"}
+            from src.models.dgiot_ids import dlink_down_topic
+            topic = dlink_down_topic(pid, devaddr, "properties")
+            addressing = ("topic", "product_id", "devaddr")
+        payload = {k: v for k, v in p.items() if k not in addressing}
         ack = ctx.mqtt_publish(topic, payload)
         return {"ok": True, "ack": ack or "published", "executor": "mqtt", "topic": topic}
 
@@ -73,7 +95,8 @@ def apply(ctx):
     ctx.register_executor("log", log_executor,
                           description="审计型执行器 — 只留痕, 不出网")
     ctx.register_executor("mqtt", mqtt_executor,
-                          description="MQTT 下行执行器 — 发布到实体 cmd topic")
+                          description="MQTT 下行执行器 — 发布到 dlink 下行主题 "
+                                      "$dg/device/{productId}/{devaddr}/properties")
 
     # ── 工具面: 单发 / 并行批发 / 人工审批门 ──
     def tool_submit(action: str, params=None, role: str = "admin",

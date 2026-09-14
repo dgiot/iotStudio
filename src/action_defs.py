@@ -142,9 +142,14 @@ def seed_builtin() -> None:
         external_side_effect=True, builtin=True), overwrite=True)
     register(ActionDefinition(
         name="command_down", title="设备下行指令",
-        description="设备下行 — params 经 MQTT 发布到实体 cmd topic; 仅 admin",
+        description="设备下行 — params 经 MQTT 发布到 dlink 下行主题; 仅 admin。"
+                    "target 必须落得到单台设备（point/device），"
+                    "channel/gateway/site 无对应主题、不会发出。主题: "
+                    "$dg/device/{productId}/{devaddr}/properties",
         params_schema={"topic": {"type": "str", "required": False,
-                                 "description": "覆盖缺省 cmd topic"}},
+                                 "description": "覆盖缺省下行主题（缺省由 target "
+                                                "设备的 productId/devaddr 拼出；"
+                                                "给了就原样发，不做语法校验）"}},
         submit_criteria=["target_exists"],
         allowed_roles=["admin"], target_layer="any",
         external_side_effect=True, strict_params=False, builtin=True), overwrite=True)

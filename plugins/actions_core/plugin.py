@@ -35,8 +35,13 @@ def apply(ctx):
 
     ctx.register_action(
         "command_down", min_role="admin", external_side_effect=True,
-        params_schema={"topic": "str (可选, 缺省用实体 cmd topic)", "payload": "object"},
-        description="设备下行指令 — 仅管理员, params 作为 payload 发布到 dgiot/.../cmd")
+        params_schema={"topic": "str (可选, 缺省按 target 设备的 "
+                                "productId/devaddr 拼 dlink 下行主题)",
+                       "product_id": "str (无 topic 时与 devaddr 一起给)",
+                       "devaddr": "str (无 topic 时与 product_id 一起给)",
+                       "payload": "object"},
+        description="设备下行指令 — 仅管理员, payload 发布到 dlink 下行主题 "
+                    "$dg/device/{productId}/{devaddr}/properties")
 
     ctx.register_action(
         "diagnose", min_role="operator", external_side_effect=False,

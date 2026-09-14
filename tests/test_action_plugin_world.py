@@ -57,7 +57,12 @@ def world(tmp_path, monkeypatch):
         submit_criteria=["target_exists"], allowed_roles=["operator"],
         target_layer="any", external_side_effect=False, builtin=True), overwrite=True)
     register(ActionDefinition(
-        name="pipeline_down", title="下行", params_schema={"val": {"type": "int"}},
+        name="pipeline_down", title="下行",
+        # product_id/devaddr 是寻址（与真实 command_down 的声明一致），
+        # 不是载荷 —— 没它们 mqtt 执行器拼不出 dlink 主题，会拒绝执行
+        params_schema={"val": {"type": "int"},
+                       "product_id": {"type": "str", "required": False},
+                       "devaddr": {"type": "str", "required": False}},
         submit_criteria=["target_exists"], allowed_roles=["admin"],
         target_layer="any", external_side_effect=True, builtin=True), overwrite=True)
     spec = importlib.util.spec_from_file_location("plugin_actions_pipeline", _PLUGIN_PATH)
@@ -83,16 +88,43 @@ def test_plugin_registers_world(world):
 
 
 def test_binding_mqtt_executor_publishes(world):
+    """绑定即配置: 动作→执行器可换；mqtt 执行器发的是 dlink 下行主题"""
     mod, ctx, _ = world
     mod._BINDINGS["pipeline_down"] = "mqtt"  # 绑定即配置: 动作→执行器可换
     p = mod._get_pipeline()
-    r0 = p.submit("pipeline_down", {"val": 1}, role="admin", target_id="dev_9")
+    params = {"val": 1, "product_id": "152224c5ee", "devaddr": "DTU001"}
+    r0 = p.submit("pipeline_down", params, role="admin", target_id="dev_9")
     assert r0["state"] == "awaiting_approval"
+    mod._get_pipeline().authorizer.approve(r0["auth_id"], by="human")
+    r1 = mod._get_pipeline().submit("pipeline_down", params, role="admin",
+                                    target_id="dev_9", auth_id=r0["auth_id"])
+    assert r1["state"] == "executed" and r1["result"]["executor"] == "mqtt"
+    assert ctx.published and ctx.published[0][0] == \
+        "$dg/device/152224c5ee/DTU001/properties"
+    # product_id/devaddr 是寻址不是载荷 —— 别混进 payload
+    assert "product_id" not in ctx.published[0][1]
+    assert "devaddr" not in ctx.published[0][1]
+    assert ctx.published[0][1] == {"val": 1}
+
+
+def test_mqtt_executor_refuses_without_a_dlink_identity(world):
+    """拼不出 dlink 主题就报错 —— 不兜底发一个中枢不认的主题
+
+    这里原先兜底拼 `dgiot/cmd/{target_id}`：那个串中枢不认，发布出去是
+    **静默丢弃**，调用方却拿到 ack="published"。兜底比报错更坏。
+    本插件的 engine 是 _NullEngine，拿不到 target_id → devaddr/productId
+    的映射，所以身份只能由 params 给 —— 给不出就说发不出去。
+    """
+    mod, ctx, _ = world
+    mod._BINDINGS["pipeline_down"] = "mqtt"
+    p = mod._get_pipeline()
+    r0 = p.submit("pipeline_down", {"val": 1}, role="admin", target_id="dev_9")
     mod._get_pipeline().authorizer.approve(r0["auth_id"], by="human")
     r1 = mod._get_pipeline().submit("pipeline_down", {"val": 1}, role="admin",
                                     target_id="dev_9", auth_id=r0["auth_id"])
-    assert r1["state"] == "executed" and r1["result"]["executor"] == "mqtt"
-    assert ctx.published and ctx.published[0][0] == "dgiot/cmd/dev_9"
+    assert r1["result"]["ok"] is False
+    assert "product_id" in r1["result"]["error"]
+    assert ctx.published == [], f"没身份却发出去了: {ctx.published}"
 
 
 def test_log_executor_default_binding(world):
