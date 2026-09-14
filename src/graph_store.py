@@ -26,9 +26,23 @@ from __future__ import annotations
 
 import logging
 import threading
-from typing import Any, Callable, Dict, List, Optional
+from typing import Any, Callable, Dict, List, Optional, Set
 
 log = logging.getLogger("graph.store")
+
+# 作用域参数的语义, 全类共用一句话:
+#
+#   only = None        —— **不筛**。内部路径(装载、自检、运维)走这条, 行为一字不变。
+#   only = set(...)    —— 调用者**看得见**的命名空间上界。
+#
+# 形状照 dgiot: 它收口 View 查询时算的是 `$relatedTo _Role.views`
+# (apps/dgiot_parse/src/dgiot_parse_rest.erl:132-171) —— 「先算出这个调用者被允许的
+# id 集合, 再拿它约束查询」。这里只是把那句话从 Erlang 搬到 Python, 骨架没换。
+#
+# ⚠️ 但 dgiot 那段**实际不生效**: 它查 header 用的键是 `<<"sessiontoken">>`,
+#    而调用方传的是 `"X-Parse-Session-Token"`, 恒 undefined 落到兜底分支 ——
+#    整段过滤器从没执行过。所以本文件不照抄它的代码, 只照抄它的**骨架**,
+#    并且必须有一条门禁证明这里真的会红 (tests/test_tenant_scope.py)。
 
 
 class GraphProvider:
@@ -40,43 +54,50 @@ class GraphProvider:
     name = "abstract"
 
     # ── 装载 ────────────────────────────────────────────────
-    def load(self, ns: str, ontology: dict, *, meta: dict = None) -> None:
-        """把一个命名空间的本体载入 (同 ns 重复载入 = 替换)"""
+    def load(self, ns: str, ontology: dict, *, meta: dict = None,
+             tenant: str = None) -> None:
+        """把一个命名空间的本体载入 (同 ns 重复载入 = 替换)。
+
+        `tenant` 是**归属租户**, 由部署声明 (src/tenant_scope.py), 不由插件自报 ——
+        同一个包卖给第二家公司时, 包内写死的归属当场就是错的。
+        `None` = 无主 = 各租户共享 (单租户部署的全部情形)。
+        """
         raise NotImplementedError
 
     def unload(self, ns: str) -> None:
         """摘除一个命名空间 —— 跑 disposer 时调用"""
         raise NotImplementedError
 
-    def namespaces(self) -> Dict[str, dict]:
-        """ns → {name, version, nodes, edges, categories, ...}"""
+    def namespaces(self, *, only: Set[str] = None) -> Dict[str, dict]:
+        """ns → {name, version, tenant, nodes, edges, categories, ...}"""
         raise NotImplementedError
 
     # ── 查询 ────────────────────────────────────────────────
     def nodes(self, ns: str, *, category: str = None, q: str = None,
-              limit: int = None) -> List[dict]:
+              limit: int = None, only: Set[str] = None) -> List[dict]:
         raise NotImplementedError
 
-    def node(self, ns: str, nid: str) -> Optional[dict]:
+    def node(self, ns: str, nid: str, *, only: Set[str] = None) -> Optional[dict]:
         raise NotImplementedError
 
     def edges(self, ns: str, *, source: str = None, target: str = None,
-              relation: str = None) -> List[dict]:
+              relation: str = None, only: Set[str] = None) -> List[dict]:
         raise NotImplementedError
 
     def neighbors(self, ns: str, nid: str, *, direction: str = "both",
-                  relation: str = None) -> List[dict]:
+                  relation: str = None, only: Set[str] = None) -> List[dict]:
         """一跳邻居 —— 每条结果都带上「对面那个节点」, 不然调用方还得再查一次"""
         raise NotImplementedError
 
-    def search(self, q: str, *, ns: str = None, limit: int = 50) -> List[dict]:
+    def search(self, q: str, *, ns: str = None, limit: int = 50,
+               only: Set[str] = None) -> List[dict]:
         raise NotImplementedError
 
-    def categories(self, ns: str) -> List[dict]:
+    def categories(self, ns: str, *, only: Set[str] = None) -> List[dict]:
         """类别表 (含配色) —— 图视图按类别上色要用, 少了它页面只能自己编色"""
         raise NotImplementedError
 
-    def bundle(self, ns: str) -> dict:
+    def bundle(self, ns: str, *, only: Set[str] = None) -> dict:
         """**整份**命名空间 (name/version/categories/nodes/edges) —— 一次取全。
 
         给「图视图」这种要一次性渲染整张图的消费方用: 逐条 /nodes 拉 86 次
@@ -84,7 +105,7 @@ class GraphProvider:
         """
         raise NotImplementedError
 
-    def stats(self, ns: str = None) -> dict:
+    def stats(self, ns: str = None, *, only: Set[str] = None) -> dict:
         raise NotImplementedError
 
 
@@ -103,7 +124,8 @@ class MemoryGraphProvider(GraphProvider):
         self._lock = threading.RLock()
 
     # ── 装载 ────────────────────────────────────────────────
-    def load(self, ns: str, ontology: dict, *, meta: dict = None) -> None:
+    def load(self, ns: str, ontology: dict, *, meta: dict = None,
+             tenant: str = None) -> None:
         if not isinstance(ontology, dict):
             raise TypeError(f"本体必须是 dict, 收到 {type(ontology).__name__}")
         nodes = ontology.get("nodes") or []
@@ -153,6 +175,10 @@ class MemoryGraphProvider(GraphProvider):
         with self._lock:
             self._ns[ns] = {
                 "meta": dict(meta or {}),
+                # 归属租户 —— 部署声明的事实, 与 meta 分开存。
+                # 混进 meta 就会被插件自报的同名字段盖掉 (见下方 namespaces 的注释):
+                # 「这个包是谁家的」不该由包自己说。
+                "tenant": tenant or "",
                 "name": ontology.get("name", ns),
                 "version": ontology.get("version", ""),
                 "data_kind": data_kind,
@@ -170,7 +196,7 @@ class MemoryGraphProvider(GraphProvider):
         with self._lock:
             self._ns.pop(ns, None)
 
-    def namespaces(self) -> Dict[str, dict]:
+    def namespaces(self, *, only: Set[str] = None) -> Dict[str, dict]:
         with self._lock:
             return {
                 ns: {
@@ -179,23 +205,35 @@ class MemoryGraphProvider(GraphProvider):
                     # （真出过：meta 里一个空的 data_kind 盖掉了推导出来的
                     #  「合成演示本体」，到页面上就成了「现场真值」）。
                     # 自报的可以补充，不能覆盖数出来的。
+                    # `tenant` 同属「数出来的」这一侧：它由部署声明，
+                    # 插件不该能靠写一个 meta.tenant 把自己改挂到别家名下。
                     **d["meta"],
                     "name": d["name"], "version": d["version"],
+                    "tenant": d["tenant"],
                     "data_kind": d["data_kind"], "note": d["note"],
                     "nodes": len(d["nodes"]), "edges": len(d["edges"]),
                     "category_count": len(d["cats"]), "relation_count": len(d["rel"]),
                     "dangling": len(d["dangling"]),
                 }
                 for ns, d in self._ns.items()
+                if only is None or ns in only
             }
 
     # ── 内部 ────────────────────────────────────────────────
-    def _get(self, ns: str) -> dict:
+    def _get(self, ns: str, only: Set[str] = None) -> dict:
+        """取命名空间, 带作用域。
+
+        **拒绝与不存在走同一个出口、同一句话。** 403 等于确认「这个命名空间存在」——
+        那是个存在性预言机: 换个名字试一遍, 就能探出别家装了哪几个插件。
+        所以拒绝时不许有任何可区分的措辞, 连「可见」那份清单也只列调用者看得见的
+        (原先这里无条件列出全部 ns, 任何登录用户猜一个不存在的名字就能拿到全名单)。
+        """
         d = self._ns.get(ns)
-        if d is None:
+        if d is None or (only is not None and ns not in only):
             # 明确抛错, 不返回空集 —— 「命名空间不存在」与「这个命名空间里没有」
             # 长得一模一样, 前者必须是错误, 否则查询侧会把笔误读成空结果
-            raise KeyError(f"图库中没有命名空间 {ns!r}; 现有: {sorted(self._ns)}")
+            visible = sorted(n for n in self._ns if only is None or n in only)
+            raise KeyError(f"图库中没有命名空间 {ns!r}; 可见: {visible}")
         return d
 
     @staticmethod
@@ -204,8 +242,8 @@ class MemoryGraphProvider(GraphProvider):
                 "category": n.get("category"), "level": n.get("level")}
 
     # ── 查询 ────────────────────────────────────────────────
-    def nodes(self, ns, *, category=None, q=None, limit=None) -> List[dict]:
-        d = self._get(ns)
+    def nodes(self, ns, *, category=None, q=None, limit=None, only=None) -> List[dict]:
+        d = self._get(ns, only)
         out = list(d["nodes"].values())
         if category:
             out = [n for n in out if n.get("category") == category]
@@ -217,8 +255,8 @@ class MemoryGraphProvider(GraphProvider):
         out.sort(key=lambda n: (n.get("category") or "", n.get("id") or ""))
         return out[:limit] if limit else out
 
-    def node(self, ns, nid) -> Optional[dict]:
-        d = self._get(ns)
+    def node(self, ns, nid, *, only=None) -> Optional[dict]:
+        d = self._get(ns, only)
         n = d["nodes"].get(nid)
         if n is None:
             return None
@@ -227,8 +265,8 @@ class MemoryGraphProvider(GraphProvider):
                 "out_degree": len(d["out"].get(nid, [])),
                 "category_label": (d["cats"].get(n.get("category")) or {}).get("label", "")}
 
-    def edges(self, ns, *, source=None, target=None, relation=None) -> List[dict]:
-        d = self._get(ns)
+    def edges(self, ns, *, source=None, target=None, relation=None, only=None) -> List[dict]:
+        d = self._get(ns, only)
         out = d["edges"]
         if source:
             out = [e for e in out if e.get("source") == source]
@@ -238,8 +276,8 @@ class MemoryGraphProvider(GraphProvider):
             out = [e for e in out if e.get("relation") == relation]
         return out
 
-    def neighbors(self, ns, nid, *, direction="both", relation=None) -> List[dict]:
-        d = self._get(ns)
+    def neighbors(self, ns, nid, *, direction="both", relation=None, only=None) -> List[dict]:
+        d = self._get(ns, only)
         if nid not in d["nodes"]:
             raise KeyError(f"{ns} 中没有节点 {nid!r}")
         rows: List[dict] = []
@@ -259,11 +297,17 @@ class MemoryGraphProvider(GraphProvider):
                              "node": self._brief(d["nodes"][e["source"]])})
         return rows
 
-    def search(self, q, *, ns=None, limit=50) -> List[dict]:
+    def search(self, q, *, ns=None, limit=50, only=None) -> List[dict]:
         ql = (q or "").lower()
         if not ql:
             return []
-        targets = [ns] if ns else list(self._ns)
+        # 目标集合是 only 的**子集**, 在遍历**前**收窄 —— 不能查完再筛,
+        # 否则看不见的命名空间会把 limit 的名额占掉, 看得见的反被截断。
+        # ns 给了但看不见 → 空结果, 与「这个 ns 不存在」同一个出口 (那条也返回 [])。
+        if ns:
+            targets = [ns] if (only is None or ns in only) else []
+        else:
+            targets = [n for n in self._ns if only is None or n in only]
         hits: List[dict] = []
         for name in targets:
             d = self._ns.get(name)
@@ -280,8 +324,8 @@ class MemoryGraphProvider(GraphProvider):
                         return hits
         return hits
 
-    def categories(self, ns) -> List[dict]:
-        d = self._get(ns)
+    def categories(self, ns, *, only=None) -> List[dict]:
+        d = self._get(ns, only)
         # 按节点数排序: 页面图例的稳定顺序不该随 dict 插入序变化
         cnt: Dict[str, int] = {}
         for n in d["nodes"].values():
@@ -290,20 +334,20 @@ class MemoryGraphProvider(GraphProvider):
         rows.sort(key=lambda c: (-c["count"], c["id"]))
         return rows
 
-    def bundle(self, ns) -> dict:
-        d = self._get(ns)
+    def bundle(self, ns, *, only=None) -> dict:
+        d = self._get(ns, only)
         return {"namespace": ns, "name": d["name"], "version": d["version"],
                 "data_kind": d["data_kind"], "note": d["note"],
-                "categories": self.categories(ns),
+                "categories": self.categories(ns, only=only),
                 "nodes": list(d["nodes"].values()),
                 "edges": list(d["edges"])}
 
-    def stats(self, ns=None) -> dict:
+    def stats(self, ns=None, *, only=None) -> dict:
         if ns:
-            d = self._get(ns)
+            d = self._get(ns, only)
             orphans = [nid for nid in d["nodes"]
                        if not d["in"].get(nid) and not d["out"].get(nid)]
-            cats = self.categories(ns)
+            cats = self.categories(ns, only=only)
             return {"namespace": ns, "name": d["name"], "version": d["version"],
                     "data_kind": d["data_kind"],
                     "nodes": len(d["nodes"]), "edges": len(d["edges"]),
@@ -318,7 +362,9 @@ class MemoryGraphProvider(GraphProvider):
                     "by_category": {c["id"]: c["count"] for c in cats},
                     "orphans": len(orphans), "dangling": len(d["dangling"]),
                     "relations_used": sorted(d["rel"])}
-        allns = self.namespaces()
+        # 整体概况也按作用域收窄 —— 「一共 6 个命名空间」在多租户下本身就是
+        # 一条别家装了什么的情报, 与 /namespaces 那条口径必须一致
+        allns = self.namespaces(only=only)
         return {"namespaces": len(allns),
                 "nodes": sum(v["nodes"] for v in allns.values()),
                 "edges": sum(v["edges"] for v in allns.values()),
@@ -376,21 +422,24 @@ class GraphStore:
             return {"providers": sorted(self._providers), "default": self._default}
 
     # ── 消费面糖: 插件与 API 都走这几个, 不直接碰提供方 ──────────
+    # `only` 一路透传, 在糖这层不解释、不默认 —— 默认值只该有一个地方定义
     def load(self, ns: str, ontology: dict, *, meta: dict = None,
-             provider: str = None) -> None:
-        self.provider(provider).load(ns, ontology, meta=meta)
+             provider: str = None, tenant: str = None) -> None:
+        self.provider(provider).load(ns, ontology, meta=meta, tenant=tenant)
 
     def unload(self, ns: str, *, provider: str = None) -> None:
         self.provider(provider).unload(ns)
 
-    def namespaces(self, *, provider: str = None) -> dict:
-        return self.provider(provider).namespaces()
+    def namespaces(self, *, provider: str = None, only: Set[str] = None) -> dict:
+        return self.provider(provider).namespaces(only=only)
 
-    def stats(self, ns: str = None, *, provider: str = None) -> dict:
-        return self.provider(provider).stats(ns)
+    def stats(self, ns: str = None, *, provider: str = None,
+              only: Set[str] = None) -> dict:
+        return self.provider(provider).stats(ns, only=only)
 
-    def node(self, ns: str, nid: str, *, provider: str = None):
-        return self.provider(provider).node(ns, nid)
+    def node(self, ns: str, nid: str, *, provider: str = None,
+             only: Set[str] = None):
+        return self.provider(provider).node(ns, nid, only=only)
 
     def nodes(self, ns: str, **kw):
         return self.provider(kw.pop("provider", None)).nodes(ns, **kw)
@@ -404,14 +453,16 @@ class GraphStore:
     def search(self, q: str, **kw):
         return self.provider(kw.pop("provider", None)).search(q, **kw)
 
-    def categories(self, ns: str, *, provider: str = None):
-        return self.provider(provider).categories(ns)
+    def categories(self, ns: str, *, provider: str = None,
+                   only: Set[str] = None):
+        return self.provider(provider).categories(ns, only=only)
 
-    def bundle(self, ns: str, *, provider: str = None):
-        return self.provider(provider).bundle(ns)
+    def bundle(self, ns: str, *, provider: str = None, only: Set[str] = None):
+        return self.provider(provider).bundle(ns, only=only)
 
     def trace(self, ns: str, nid: str, *, depth: int = 2,
-              direction: str = "both", limit: int = 400) -> dict:
+              direction: str = "both", limit: int = 400,
+              only: Set[str] = None) -> dict:
         """通用反查 —— 多跳展开成一棵树。
 
         这是**领域端点的替代品**: 原来每个包各有若干个「协议→数据项」
@@ -419,7 +470,7 @@ class GraphStore:
         且每包一套字段名 (memory: 跨包一致性)。走这里就只有一种形状。
         """
         p = self.provider()
-        root = p.node(ns, nid)
+        root = p.node(ns, nid, only=only)
         if root is None:
             raise KeyError(f"{ns} 中没有节点 {nid!r}")
         seen = {nid}
@@ -430,7 +481,7 @@ class GraphStore:
             cur, d = frontier.pop(0)
             if d >= depth:
                 continue
-            for row in p.neighbors(ns, cur, direction=direction):
+            for row in p.neighbors(ns, cur, direction=direction, only=only):
                 other = row["node"]["id"]
                 links.append({"from": cur, "to": other,
                               "relation": row["relation"], "label": row["label"],

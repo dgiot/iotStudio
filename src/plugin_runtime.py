@@ -44,6 +44,8 @@ import sys
 from pathlib import Path
 from typing import Any, Callable, Dict, List, Optional
 
+from .tenant_scope import tenant_of
+
 log = logging.getLogger("plugin.runtime")
 
 # 八类 capability 与角色缺省 ("一切皆插件": 动作执行器也是插件能力)
@@ -137,7 +139,14 @@ class PluginContext:
         也就没有了跨包字段名漂移可言 (每包一套字段名 = 客户端静默断)。
         """
         ns = namespace or self.plugin
-        self.graph.load(ns, ontology, meta=meta)
+        # 归属由**部署**声明, 不由包自报 —— 同一个包卖给第二家公司时,
+        # 包内写死的归属当场就是错的, 而它错得安静 (见 src/tenant_scope.py)。
+        #
+        # 多租户部署里未声明归属的 ns 在这里抛错, 由 _load_one 既有的失败隔离
+        # 接住 → 插件标记 failed 并带上原因, 宿主与其它插件不受影响。
+        # **响, 且早**: 漏登记的包根本装载不上, 而不是安静地对全部租户可见。
+        # 单租户部署里 tenant_of 恒返回 None, 这一行不改变任何既有行为。
+        self.graph.load(ns, ontology, meta=meta, tenant=tenant_of(ns))
         self.register_capability("graph", ns, {
             "namespace": ns,
             "nodes": len(ontology.get("nodes") or []),
