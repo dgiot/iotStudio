@@ -22,25 +22,75 @@ _LAYER_TABLES = ("sites", "gateways", "channels", "devices",
 _TIMEOUT = httpx.Timeout(10.0)
 
 
-def register_objects(engine, objects: List[dict]) -> Dict[str, int]:
+def register_objects(engine, objects: List[dict],
+                     validate_refs: bool = False) -> Dict[str, int]:
     """注册对象列表到本体 — 与 /aip/objects/import 同形状: {id, layer, name?, props?}
 
     kwargs 按 dataclass 实际字段过滤 (Gateway/DataSource 无 name 字段,
     无条件传 name 会 TypeError) — 企业端点/导入端点共用。
+
+    validate_refs: 是否校验父层引用 (gateway.site / channel.gateway /
+    device.channel / point.device)。**默认关** —— 企业同步 (pull_metadata) 拉的是
+    远端权威数据, 且被 `objects[:limit]` 截断过, 父对象完全可能不在这批里;
+    对远端数据挑引用完整性是越权, 会让本该成功的同步整批失败。
+    面向人的导入端点 (UI「批量导入」) 打开它 —— 那儿一个拼错的 channel id
+    会静默产出悬空设备, 用户看不见。
     """
     import dataclasses
-    from .ontology import Site, Gateway, Channel, Device, Point, Constraint, DataSource
+    from .ontology import (PARENT_REF, Site, Gateway, Channel, Device, Point,
+                           Constraint, DataSource)
     classes = {"site": Site, "gateway": Gateway, "channel": Channel,
                "device": Device, "point": Point, "constraint": Constraint,
                "datasource": DataSource}
     tables = {name: getattr(engine, name) for name in _LAYER_TABLES}
     counts = {"created": 0, "updated": 0, "errors": 0, "error_details": []}
+
+    # 引用校验必须先算完再注册, 不能边注册边判:
+    #   · 批内顺序不保证父在前 (导出的 dump 常见子对象排在前面), 逐条判会把
+    #     合法父子拆散 —— 明明同一批里给了父, 却因为排在后面而被拒
+    #   · 父自己就是坏引用时, 子必须跟着拒; 否则悬空只是往下挪一层, 白拦
+    # 所以迭代到不动点 (每轮再拒掉「父落在被拒集合里」的)。层级只有 5 层,
+    # 6 轮足够收敛; 加轮次上限是防 objects 里有环状引用时转不出来。
+    rejected: Dict[str, str] = {}
+    if validate_refs:
+        in_batch: Dict[str, set] = {}
+        for obj in objects:
+            in_batch.setdefault(obj.get("layer", ""), set()).add(obj.get("id"))
+        for _ in range(6):
+            grew = False
+            for obj in objects:
+                oid = obj.get("id")
+                if oid in rejected:
+                    continue
+                field, ptable = PARENT_REF.get(obj.get("layer", ""), ("", ""))
+                if not field:
+                    continue
+                ref = (obj.get("props") or {}).get(field)
+                if not ref:
+                    continue  # 空引用放过 — 单条 create 也只在填了才校验
+                                # (engine.validate() 那边空引用是报的, 两处策略不同, 见该处注释)
+                if ref in getattr(engine, ptable):
+                    continue
+                pl = ptable[:-1]  # 表名 → 层级 (channels → channel)
+                if ref in in_batch.get(pl, set()) and ref not in rejected:
+                    continue
+                rejected[oid] = f"引用的 {pl} '{ref}' 不存在"
+                grew = True
+            if not grew:
+                break
+
     for obj in objects:
         try:
             layer = obj.get("layer", "")
             cls = classes.get(layer)
             if cls is None:
                 counts["errors"] += 1
+                continue
+            if obj.get("id") in rejected:
+                counts["errors"] += 1
+                if len(counts["error_details"]) < 5:
+                    counts["error_details"].append(
+                        f"{obj.get('id', '?')}: {rejected[obj['id']]}")
                 continue
             valid = {f.name: f for f in dataclasses.fields(cls)}
             kwargs = {"id": obj["id"]}
@@ -57,11 +107,12 @@ def register_objects(engine, objects: List[dict]) -> Dict[str, int]:
                     kwargs[fname] = ""
             kwargs = {k: v for k, v in kwargs.items() if k in valid}
             table = tables[layer + "s"]  # 层级名 → 表名 (device→devices)
-            if obj["id"] in table:
-                counts["updated"] += 1
-            else:
-                counts["created"] += 1
+            # 先记住「原来有没有」，但**等注册真成功了再计数** ——
+            # 原先把计数写在 engine.register() 前面，register 一抛异常
+            # 这个对象就同时进了 created 和 errors，两边都不对得上实况。
+            existed = obj["id"] in table
             engine.register(cls(**kwargs))
+            counts["updated" if existed else "created"] += 1
         except Exception as e:
             counts["errors"] += 1
             if len(counts["error_details"]) < 5:

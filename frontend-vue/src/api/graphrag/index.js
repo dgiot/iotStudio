@@ -156,6 +156,23 @@ export default {
     method: 'delete',
   }),
 
+  /** 批量导入本体对象 — objects: [{layer, id, name, props}] */
+  aipImportObjects: (objects) => request({
+    url: '/graphrag/aip/objects/import',
+    method: 'post',
+    data: { objects },
+  }),
+
+  /** 本体对象变更记录 */
+  aipObjectChangelog: (params = {}) => request({
+    url: '/graphrag/aip/objects/changelog',
+    method: 'get',
+    params,
+  }),
+
+  /** 本体健康检查 / 计数 */
+  aipHealth: () => request({ url: '/graphrag/aip/health', method: 'get' }),
+
   /** 执行运维动作 */
   aipExecuteAction: (action, targetId, params) => request({
     url: '/graphrag/aip/actions/execute',
