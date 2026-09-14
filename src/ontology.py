@@ -1237,7 +1237,7 @@ def build_131_ontology() -> OntologyEngine:
         id="industry_c1", name="示例工业园区", type="oil_field",
         location="黑龙江省某工业市",
         description="PLANT_A_SITE_C(DEVICE_C) + PLANT_A_SITE_D(DEVICE_D)。IO网关 127.0.0.1(IO-SERVER-01)"
-              " + Oracle 192.0.2.1.129:1521 + RTDB 192.0.2.1.102:8889"
+              " + Oracle 198.18.0.11:1521 + RTDB 198.18.0.12:8889"
     ))
 
     # ── 层2: Gateway (含完整已安装组件) ──
@@ -1271,7 +1271,7 @@ def build_131_ontology() -> OntologyEngine:
     channels = [
         # 原有通道
         Channel(id="ch_opc_da", gateway="gw_131", name="OPC DA Client",
-            protocol="opc_da", endpoint="DCOM :135 → 198.51.100.20/.3/.18.194/.26.6.3",
+            protocol="opc_da", endpoint="DCOM :135 → 198.51.100.20/.21/.22/.23/.24",
             status="running", config={
                 "driver": "E:\\IO ServerOnLine\\IO Servers\\OPC_FC_Client\\ioapi.dll",
                 "progid": "KEPware.KEPServerEx.V4",
@@ -1301,9 +1301,9 @@ def build_131_ontology() -> OntologyEngine:
                 "fc6_write": True, "fc16_write": True,
             }, devices=[]),
         Channel(id="ch_oracle", gateway="gw_131", name="Oracle 数据出口",
-            protocol="oracle_sql", endpoint="192.0.2.1.129:1521/orcl",
+            protocol="oracle_sql", endpoint="198.18.0.11:1521/orcl",
             status="running", config={
-                "connection": "Provider=OraOLEDB.Oracle.1;User ID=INDUSTRYDB;Data Source=orcl",
+                "connection": "Provider=OraOLEDB.Oracle.1;User ID=YOUR_SCHEMA;Data Source=orcl",
                 "password": "CHANGEME (from DataSource.ini)",
                 "ado_count": 4, "execute_cycle_ms": 1000,
                 "key_tables": ["PC_FD_PUMPJACK_FDYNA_DIA_T (481万行)",
@@ -1311,7 +1311,7 @@ def build_131_ontology() -> OntologyEngine:
                     "SYS_POINTRELATION_WELL (4567测点)"],
             }, devices=[]),
         Channel(id="ch_realtime_db", gateway="gw_131", name="RTDB 实时库",
-            protocol="realtime_db", endpoint="192.0.2.1.102:8889",
+            protocol="realtime_db", endpoint="198.18.0.12:8889",
             status="stopped", config={
                 "server": "RTDBServer64.exe v6.0.1.9",
                 "api": "RTDBAPI.dll (313KB)",
@@ -1547,10 +1547,10 @@ def build_131_ontology() -> OntologyEngine:
     # ── DataSources ──
     datasources = [
         DataSource(id="ds_oracle", gateway="gw_131", type="oracle",
-            connection="192.0.2.1.129:1521/orcl (INDUSTRYDB)",
+            connection="198.18.0.11:1521/orcl (YOUR_SCHEMA)",
             status="online", tag_count=4_814_742),
         DataSource(id="ds_realtime_db", gateway="gw_131", type="realtime_db",
-            connection="192.0.2.1.102:8889",
+            connection="198.18.0.12:8889",
             status="stopped", tag_count=500),
         DataSource(id="ds_redundancy", gateway="gw_131", type="redundancy",
             connection="198.51.100.102:6000/6001",

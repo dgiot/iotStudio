@@ -49,7 +49,7 @@ def _source_for(key, cfg):
 def _related_devices(key, cfg):
     defaults = {
         "oracle": [
-            {"id": "oracle_129", "name": "Oracle 11g @ 192.168.1.129:1521", "status": "online"},
+            {"id": "oracle_129", "name": "Oracle 11g @ 198.18.0.11:1521", "status": "online"},
             {"id": "relay_131", "name": "WinRM 中继 @ 127.0.0.1", "status": "online"},
         ],
         "vendor_oilmon": [
