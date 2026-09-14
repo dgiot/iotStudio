@@ -100,25 +100,46 @@ def load_policies(force: bool = False) -> dict:
 
 def resolve_subject(username: str = "", clientid: str = "") -> dict:
     """主体解析: 按 match 模板 (fnmatch glob) 找属性, FIRST-MATCH 胜。
-    身份占位: FROM_NAME=从 username 提取, FROM_CLIENT=从 clientid 提取"""
+    身份占位: FROM_NAME=从 username 提取, FROM_CLIENT=从 clientid 提取
+
+    「缺席 ≠ 不约束」是这里唯一容易写错的地方, 两个坑都在下方就地标注。
+    原则一句话: 规则声明了哪一维, 就必须真拿到那一维; 拿不到, 这条规则不成立。
+    """
     pol = load_policies()
     name_src = _name_attr(username)
     client_src = _name_attr(clientid)
     for entry in pol.get("subjects", []):
         m = entry.get("match", {})
         um, cm = m.get("username"), m.get("clientid")
-        if um and username and not fnmatch.fnmatch(username, um):
+        # 原先写的是 `if um and username and not fnmatch(...)`: username 为空时
+        # 整个条件短路成假, 于是一个**不带用户名的连接会命中第一条用户名规则**,
+        # 白拿它的 role —— 拿哪一条取决于策略文件里的书写顺序。种子里第一条恰好是
+        # 低权的 dev-*, 所以看起来没事; 换个把 admin 写在前的部署, 匿名连接直接
+        # 就是 admin。没给用户名 = 不匹配带用户名的规则, 不是无条件匹配。
+        if um and not (username and fnmatch.fnmatch(username, um)):
             continue
-        if cm and clientid and not fnmatch.fnmatch(clientid, cm):
+        # 同理: 没给 clientid 时, 带 clientid 的规则也不该成立。
+        if cm and not (clientid and fnmatch.fnmatch(clientid, cm)):
             continue
         if not (um or cm):
             continue
         attrs = dict(entry.get("attrs", {}))
+        resolved = True
         for key in ("site", "device"):
-            if attrs.get(key) == "FROM_NAME" and name_src.get(key):
-                attrs[key] = name_src[key]
-            elif attrs.get(key) == "FROM_CLIENT" and client_src.get(key):
-                attrs[key] = client_src[key]
+            tmpl = attrs.get(key)
+            if tmpl not in ("FROM_NAME", "FROM_CLIENT"):
+                continue                       # 策略里写死的值, 原样用
+            src = name_src if tmpl == "FROM_NAME" else client_src
+            if not src.get(key):
+                # 声明了身份却提取不出来 (比如 glob 写 sensor-* 而提取约定只认
+                # dev-/gw- 前缀) —— 此时若放行, attrs[key] 会留着字面量
+                # "FROM_NAME" 参与决策, 等于把占位符当站点名用: 主题里恰好写
+                # FROM_NAME 就能对上 subj.site == site 那条检查。
+                resolved = False
+                break
+            attrs[key] = src[key]
+        if not resolved:
+            continue
         return attrs
     return {}
 

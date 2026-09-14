@@ -8,6 +8,31 @@ phase1 (baseline, siteB=restricted):
 phase2 (after policy flip siteB=public via hot reload, NO broker restart):
   - fresh operator 'operator-2': siteB subscription now GRANTED
   - 'dev-siteB-d2' publishes own siteB topic -> operator-2 receives it
+
+KNOWN STATE - phase1 fails one line against a hub that has already run phase2
+---------------------------------------------------------------------------
+The two phases chained: phase2's whole point is to flip siteB, and it is the
+last thing that touches the policy. So a hub that has run phase2 carries
+markings.sites.siteB = "public", while phase1's precondition is
+siteB = "restricted". Running phase1 against such a hub reports:
+
+    [FAIL] operator siteB refused (got 1)
+
+That is a state mismatch, not a defect - the PDP granted exactly what the
+deployed policy says to grant. The seed (hub_abac/abac_policies.seed.json) is
+still the phase1 policy; only the deployed copy has drifted. The other four
+phase1 lines pass either way.
+
+To re-run phase1, restore the policy first: re-run the installer in
+hub_abac/, or set markings.sites.siteB back to "restricted" on the hub and let
+the PDP hot-reload it (no broker restart - that is the point of phase2).
+
+Deliberately NOT "fixed" here. Flipping the deployed policy back would make
+phase1 green but would silently undo a phase2 acceptance run that was already
+performed and logged. A test that rewrites the system under test to make
+itself pass is worse than one that reports honestly. Do not add a "reset to
+seed" step to this file without deciding, out loud, that the deployed state
+is disposable.
 """
 import sys
 import threading

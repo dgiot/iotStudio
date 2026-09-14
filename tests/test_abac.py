@@ -140,3 +140,69 @@ def test_bad_policy_file_keeps_old():
     r = abac.decide(username="operator-1", action="subscribe",
                     topic="dgiot/siteB/#")
     assert r["decision"] == "allow"               # 沿用旧策略, 不崩
+
+
+# ── 缺席的输入不得被当成满足的约束 ──
+# 这里四条都对应同一个曾经存在的洞: 规则声明了某一维, 但那一维没拿到时,
+# 旧代码让规则照常成立。种子里第一条恰好是低权的 dev-*, 所以从行为上看不出来;
+# 换个把 admin 写在前的部署就是匿名即管理员。
+
+def _write_policy(pol: dict):
+    with open(abac._policies_path(), "w", encoding="utf-8") as f:
+        json.dump(pol, f, ensure_ascii=False)
+    abac.load_policies(force=True)
+
+
+def test_no_username_no_subject():
+    """不带用户名的连接不该拿到任何主体的属性"""
+    assert abac.resolve_subject(username="", clientid="") == {}
+    assert abac.resolve_subject(username="", clientid="whatever") == {}
+
+
+def test_no_username_cannot_ride_the_first_rule():
+    """匿名连接不能白拿种子第一条规则的 role
+
+    旧行为下这里会 allow: role=device + site 留着未解析的占位符 "FROM_NAME",
+    而主题里正好可以写 FROM_NAME, 于是 subj.site == site 那条检查放行。
+    """
+    sub = abac.decide(username="", action="subscribe", topic="dgiot/FROM_NAME/#")
+    pub = abac.decide(username="", action="publish",
+                      topic="dgiot/FROM_NAME/gw/FROM_NAME/pt1/data")
+    assert sub["decision"] != "allow", sub
+    assert pub["decision"] != "allow", pub
+    assert sub["decision"] == "ignore"            # 无主体 → 交回 ACL 链
+
+
+def test_policy_order_does_not_grant_anonymous_privilege():
+    """把 admin 写在第一条, 匿名连接也不能变成 admin
+
+    这条是那个洞的要害: 危害不取决于种子写了什么, 取决于策略文件的书写顺序。
+    """
+    _write_policy({"subjects": [{"match": {"username": "admin"},
+                                 "attrs": {"role": "admin", "clearance": "secret"}}]})
+    r = abac.decide(username="", action="publish", topic="dgiot/x/g/d/p/data")
+    assert r["decision"] == "ignore", r
+
+
+def test_clientid_rule_still_works_without_username():
+    """只声明 clientid 的规则照常生效 —— 修的是「没给」，不是把这一维废掉"""
+    _write_policy({"subjects": [
+        {"match": {"clientid": "dev-*"},
+         "attrs": {"role": "device", "site": "FROM_CLIENT", "device": "FROM_CLIENT"}}]})
+    sub = abac.resolve_subject(username="", clientid="dev-siteA-d1")
+    assert sub == {"role": "device", "site": "siteA", "device": "dev-siteA-d1"}, sub
+
+
+def test_rule_whose_identity_cannot_be_resolved_does_not_apply():
+    """声明了身份占位却提取不出来 → 整条规则不成立, 不留下字面量占位符
+
+    glob 写 sensor-* 而提取约定只认 dev-/gw- 前缀。旧行为下 attrs 会留着
+    字面量 "FROM_NAME" 参与决策 —— 拿占位符当站点名用。
+    """
+    _write_policy({"subjects": [
+        {"match": {"username": "sensor-*"},
+         "attrs": {"role": "device", "site": "FROM_NAME", "device": "FROM_NAME"}}]})
+    assert abac.resolve_subject(username="sensor-1") == {}
+    assert abac.decide(username="sensor-1", action="publish",
+                       topic="dgiot/FROM_NAME/gw/FROM_NAME/pt1/data")["decision"] \
+        != "allow"
