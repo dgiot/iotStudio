@@ -18,14 +18,17 @@ export const DEVICE_STATUS_MAP = {
   online: '在线', offline: '离线', alarm: '告警', maintenance: '检修',
 }
 
+// 菜单分组 —— 按「人怎么找东西」分，不按代码模块分
+// 重排要点：图谱主题从 数据/底座/工具 三组归一；原「网络诊断」组去掉杂物改叫「接入」；
+//           原「工具」组撤销（成员各归其位）；台账类重复项移出菜单见 router hidden。
 export const MENU_GROUPS = {
   monitor: { label: '📊 监控', order: 0 },
   device:  { label: '🔌 设备', order: 1 },
   hmi:     { label: '🗺️ 组态', order: 2 },
   data:    { label: '📡 数据', order: 3 },
-  network: { label: '🔧 网络诊断', order: 4 },
-  tool:    { label: '🛠️ 工具', order: 5 },
-  base:    { label: '🧩 底座', order: 5.5 },
+  graph:   { label: '🕸️ 图谱', order: 3.5 },
+  network: { label: '🔧 接入', order: 4 },
+  base:    { label: '🧩 底座', order: 5 },
   system:  { label: '⚙️ 系统', order: 6 },
 }
 
