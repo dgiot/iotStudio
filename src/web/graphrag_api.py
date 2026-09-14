@@ -85,14 +85,13 @@ def _get_rag():
     global _graphrag, _engine
     if _graphrag is None:
         try:
-            from ..ontology import build_131_ontology
             from ..graphrag import GraphRAG
+            from ..ontology import build_engine
         except ImportError:
-            from ontology import build_131_ontology
             from graphrag import GraphRAG
+            from ontology import build_engine
 
-        logger.info("GraphRAG: 加载 示例 IO 服务器本体...")
-        _engine = build_131_ontology()
+        _engine = build_engine()
         counts = _engine.health()["counts"]
         logger.info(f"GraphRAG: 实体加载完成 — {counts}")
 
@@ -119,6 +118,9 @@ class AskResponse(BaseModel):
     entity: Optional[dict] = None
     summary: Optional[dict] = None
     matched_entities: list = []
+    #: 阈值判定（确定性计算）。前端要单独渲染"安全/越限"标签时读这个，
+    #: 不要去 parse answer 里的文本 —— 那是给人读的，改一次措辞就崩。
+    verdict: Optional[dict] = None
 
 
 # ═══════════════════════════════════════════════════════════
@@ -170,6 +172,7 @@ async def graphrag_ask(body: AskRequest):
                 mode="entity",
                 entity=result.get("entity"),
                 matched_entities=result.get("matched_entities", []),
+                verdict=result.get("verdict"),
             )
         elif body.mode == "community":
             result = rag.ask_community(body.question, body.level, body.entity_id)
@@ -188,6 +191,7 @@ async def graphrag_ask(body: AskRequest):
                 entity=result.get("entity"),
                 summary=result.get("summary"),
                 matched_entities=result.get("matched_entities", []),
+                verdict=result.get("verdict"),
             )
     except Exception as e:
         logger.exception("GraphRAG ask failed")
@@ -685,25 +689,41 @@ async def aip_object_detail(entity_id: str):
     rag, engine = _get_rag()
 
     # 基础上下文
-    ctx = rag.live_context(entity_id)
-    if "error" in ctx:
-        raise HTTPException(404, ctx["error"])
+    # ⚠️ local_context 对不存在的实体是**抛 KeyError**，不是返回 {"error": ...} ——
+    #    原先那个 `if "error" in ctx` 分支永远走不到，实体不存在直接 500。
+    try:
+        ctx = rag.live_context(entity_id)
+    except KeyError:
+        raise HTTPException(404, f"本体对象不存在: {entity_id}")
+
+    layer = ctx.get("layer") or ctx.get("type") or ""
 
     # 关联对象 (上下游)
+    # ⚠️ local_context 的 siblings / children 是**字符串 id 列表**，parent 是单个 id；
+    #    而这里原先按 [{"id":..,"name":..}] 去取 sib["id"] —— 对字符串取下标必炸。
+    #    统一走 _rel()，用 engine 把 id 翻成层与名。两种形态都容忍。
+    def _rel(entry, direction, relation):
+        eid = entry if isinstance(entry, str) else (entry or {}).get("id", "")
+        if not eid:
+            return None
+        return {"direction": direction, "layer": engine.entity_type(eid) or "",
+                "id": eid, "name": engine.entity_name(eid) or "",
+                "relation": relation}
+
     relations = []
-    if ctx.get("parent_chain"):
-        for p in ctx["parent_chain"]:
-            relations.append({"direction": "upstream", "layer": p["layer"],
-                              "id": p["id"], "name": p.get("name", ""),
-                              "relation": "parent"})
-    for sib in ctx.get("siblings", []):
-        relations.append({"direction": "lateral", "layer": ctx["layer"],
-                          "id": sib["id"], "name": sib.get("name", ""),
-                          "relation": "sibling"})
-    for child in ctx.get("children", []):
-        relations.append({"direction": "downstream", "layer": "",
-                          "id": child["id"], "name": child.get("name", ""),
-                          "relation": "child"})
+    up = ctx.get("parent_chain") or ([ctx["parent"]] if ctx.get("parent") else [])
+    for p in up:
+        r = _rel(p, "upstream", "parent")
+        if r:
+            relations.append(r)
+    for sib in ctx.get("siblings") or []:
+        r = _rel(sib, "lateral", "sibling")
+        if r:
+            relations.append(r)
+    for child in ctx.get("children") or []:
+        r = _rel(child, "downstream", "child")
+        if r:
+            relations.append(r)
 
     # 关联约束
     linked_constraints = ctx.get("constraints", [])
@@ -715,7 +735,7 @@ async def aip_object_detail(entity_id: str):
     subgraph = engine.subgraph(entity_id, depth=2)
 
     return {
-        "entity": {"id": entity_id, "layer": ctx["layer"],
+        "entity": {"id": entity_id, "layer": layer,
                    "name": ctx["entity"].get("name", "") if isinstance(ctx["entity"], dict) else str(ctx["entity"])},
         "properties": ctx["entity"] if isinstance(ctx["entity"], dict) else {},
         "relations": relations,
@@ -872,44 +892,62 @@ def _set_reconciliation(receipt_id: str, outcome: str, by: str, note: str = "") 
         db.close()
 
 
-def _entity_cmd_topic(engine, entity_id: str) -> str:
-    """解析实体下行指令 topic — dgiot/{site}/{gateway}/{channel}/{device}/cmd
+def _entity_device(engine, entity_id: str):
+    """实体 → 承载它的 Device。只有 point / device 落得到**单台设备**上。"""
+    if entity_id in engine.points:
+        return engine.devices.get(engine.points[entity_id].device)
+    if entity_id in engine.devices:
+        return engine.devices[entity_id]
+    return None
 
-    与 ontology.get_path 的上行数据 topic 同构, 按实体层级截取段数。
+
+def _entity_cmd_topic(engine, entity_id: str) -> str:
+    """解析实体下行指令 topic — `$dg/device/{productId}/{devaddr}/properties`
+
+    中枢的下行闭集只有一个形态（dgiot_mqtt_message.erl:90 /
+    dgiot_task_dao.erl:100，两处逐字相同）。本函数原先自己造了六种
+    `dgiot/{site}/{gateway}/.../cmd` 拼法，它们**中枢一个都不认** ——
+    发布出去是静默丢弃，调用方却拿到一个看着像"已送达"的主题串。
+    收口到 dlink 那一个形态。
+
+    由此有个**能力收缩**，是语法本身决定的而不是实现偷懒：
+    channel / gateway / site 落不到单台设备上（一个网关底下可能是几十台设备），
+    "给网关下令"在中枢下行语法里没有对应形态。这类实体返回 ""（空串）而不是
+    编一个主题 —— 空串会让 _mqtt_publish 走失败分支、让 _exec_command_down
+    的 delivered=False（对账记 not_run），正是"没送达"该有的语义。
+
+    拼不出来同样返回 ""（不抛异常）：这是"没有这样的主题"，不是"拼错了"。
     """
     try:
-        if entity_id in engine.points:
-            return "/".join(engine.get_path(entity_id).split("/")[:-1]) + "/cmd"
-        if entity_id in engine.devices:
-            dev = engine.devices[entity_id]
-            ch = engine.channels.get(dev.channel)
-            gw = engine.gateways.get(ch.gateway) if ch else None
-            site = engine.sites.get(gw.site) if gw else None
-            if site and gw and ch:
-                return f"dgiot/{site.id}/{gw.id}/{ch.id}/{dev.id}/cmd"
-        if entity_id in engine.channels:
-            ch = engine.channels[entity_id]
-            gw = engine.gateways.get(ch.gateway)
-            site = engine.sites.get(gw.site) if gw else None
-            if site and gw:
-                return f"dgiot/{site.id}/{gw.id}/{ch.id}/cmd"
-        if entity_id in engine.gateways:
-            gw = engine.gateways[entity_id]
-            site = engine.sites.get(gw.site)
-            if site:
-                return f"dgiot/{site.id}/{gw.id}/cmd"
-        if entity_id in engine.sites:
-            return f"dgiot/{entity_id}/cmd"
-        constraint = engine.constraints.get(entity_id)
-        if constraint and constraint.entity:
-            return _entity_cmd_topic(engine, constraint.entity)
+        dev = _entity_device(engine, entity_id)
+        if dev is None:
+            # constraint 是本体里的**约束节点**，它挂在一个真实实体上 —— 顺着找过去
+            constraint = engine.constraints.get(entity_id)
+            if constraint and constraint.entity:
+                return _entity_cmd_topic(engine, constraint.entity)
+            logger.info(f"[aip] {entity_id} 不是单台设备（channel/gateway/site），"
+                        f"中枢下行语法里没有对应主题，指令不发出")
+            return ""
+        if not dev.devaddr or not dev.product:
+            logger.warning(f"[aip] 设备 {dev.id} 缺 devaddr/product，拼不出中枢下行主题")
+            return ""
+        from ..models.dgiot_ids import dlink_down_topic
+        return dlink_down_topic(dev.product, dev.devaddr, "properties")
     except Exception as e:
         logger.warning(f"[aip] cmd topic 解析失败 {entity_id}: {e}")
-    return f"dgiot/default/cmd/{entity_id}"
+    return ""
 
 
 def _mqtt_publish(topic: str, payload: dict) -> str:
-    """MQTT 下行 — 沿用 parse_hooks 短连接范式 (低频动作, 即用即断)"""
+    """MQTT 下行 — 沿用 parse_hooks 短连接范式 (低频动作, 即用即断)
+
+    空 topic 直接判失败，不去连 broker：paho 对空主题要么抛、要么被 broker
+    以 QoS1 回一个没人处理的错误 —— 两种都不如在这里就返回 ""，
+    让上层按"没送达"记账。
+    """
+    if not topic:
+        logger.warning("[aip] 无下行主题（实体落不到单台设备），未发布")
+        return ""
     try:
         import time as _t
 
@@ -1730,12 +1768,18 @@ async def aip_objects_sync():
 
 @router.post("/aip/objects/import", dependencies=[Depends(require_admin)])
 async def aip_objects_import(body: OntologyBatchImport):
-    """批量导入本体对象 — 复用企业连接器注册器 (dataclass 字段过滤)"""
+    """批量导入本体对象 — 复用企业连接器注册器 (dataclass 字段过滤)
+
+    validate_refs=True: 和单条 create 一样拦父层引用不存在的对象。
+    企业同步那条路 (pull_metadata) 仍走默认的宽松语义 —— 理由见 register_objects 注释。
+    被拒的对象计入 errors, 并在 error_details 里给出原因, 不清一色成功。
+    """
     _, engine = _get_rag()
-    counts = register_objects(engine, body.objects)
+    counts = register_objects(engine, body.objects, validate_refs=True)
     _persist_engine(engine)
     return {"status": "imported", "created": counts["created"],
             "updated": counts["updated"], "errors": counts["errors"],
+            "error_details": counts.get("error_details", []),
             "health": engine.health()["counts"]}
 
 

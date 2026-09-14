@@ -291,6 +291,20 @@ class EntityIndex:
 # LiveContextStore — 实时遥测数据集成 (v1.0)
 # ═══════════════════════════════════════════════════════════
 
+#: judge_point 的 status 词表 → enhance_context 的历史status词表。
+#: 保留旧词是因为下游（text_context 的图标、可能的 API 消费方）按它读；
+#: 新增的 ok/unknown 一并映射，免得出现"映射不到就当 unknown"的静默降级。
+_VERDICT_TO_STATUS = {
+    "ok": "normal",
+    "high": "high",
+    "hh": "critical_high",
+    "low": "low",
+    "ll": "critical_low",
+    "out_of_range": "out_of_range",
+    "unknown": "unknown",
+}
+
+
 class LiveContextStore:
     """实时遥测数据查询 — 从 telemetry.db 读取测点当前值
 
@@ -419,7 +433,8 @@ class LiveContextStore:
             ctx["live"] = {"available": False}
             return ctx
 
-        layer = ctx["layer"]
+        # local_context 现在两个键都给；保留 or 兜底，免得将来又有人只改一头
+        layer = ctx.get("layer") or ctx.get("type") or ""
         live_info = {"available": True, "ts": ""}
 
         if layer == "point":
@@ -428,22 +443,15 @@ class LiveContextStore:
                 live_info["value"] = latest["value"]
                 live_info["unit"] = latest["unit"]
                 live_info["ts"] = latest["ts"]
-                # 阈值判定
-                entity = engine.points.get(entity_id)
-                if entity and entity.alarm:
-                    alarm = entity.alarm
-                    v = latest["value"]
-                    if "hh" in alarm and v > alarm["hh"]:
-                        live_info["status"] = "critical_high"
-                    elif "high" in alarm and v > alarm["high"]:
-                        live_info["status"] = "high"
-                    elif "ll" in alarm and v < alarm["ll"]:
-                        live_info["status"] = "critical_low"
-                    elif "low" in alarm and v < alarm["low"]:
-                        live_info["status"] = "low"
-                    else:
-                        live_info["status"] = "normal"
-                    live_info["threshold"] = alarm
+                # 阈值判定 —— 一律走 engine.judge_point，这里只做词表映射。
+                # 早先这里是**第二套**独立实现（hh>high>ll>low 各判一次），
+                # 与 judge_point 并存就等于两处判据各自演化：改了一头，
+                # /ask 与 /live 会对同一个值给出不同结论。
+                verdict = engine.judge_point(entity_id, latest["value"])
+                live_info["verdict"] = verdict
+                live_info["status"] = _VERDICT_TO_STATUS.get(verdict.get("status"), "unknown")
+                if engine.points.get(entity_id) and engine.points[entity_id].alarm:
+                    live_info["threshold"] = engine.points[entity_id].alarm
 
         elif layer == "device":
             snap = self.device_snapshot(entity_id)
@@ -891,10 +899,16 @@ class GraphRAG:
                 return {"answer": "未找到与问题相关的实体", "entities": [], "context": ""}
             entity_id = matches[0]["id"]
 
-        # 2. 收集上下文
-        ctx = self.engine.local_context(entity_id)
+        # 2. 收集上下文 —— 走 enhance_context 而不是 local_context：
+        # 前者已经在注入实时值并调 judge_point 算判定。两处各算一遍的话，
+        # /ask 与 /live 迟早对同一个值给出不同结论。
+        ctx = self._live.enhance_context(self.engine, entity_id)
         if "error" in ctx:
             return {"answer": f"实体 '{entity_id}' 未找到", "entities": [], "context": ""}
+
+        # 确定性判定（无实时值时是 None）。没有 LLM 也该答得出"安全吗"——
+        # 判据在测点上、当前值在 TDengine、判定是纯算术，不需要模型。
+        verdict = (ctx.get("live") or {}).get("verdict")
 
         # 3. LLM 回答 (有 LLM 则用，否则返回结构化上下文)
         if self._llm:
@@ -907,14 +921,20 @@ class GraphRAG:
 ## 关联安全规则
 {json.dumps(ctx.get('constraints', []), ensure_ascii=False, indent=2) if ctx.get('constraints') else '无关联规则'}
 
+## 阈值判定 (确定性计算，非推断)
+{json.dumps(verdict, ensure_ascii=False) if verdict else '无阈值或取不到当前值'}
+
 请根据以上上下文回答用户问题。"""
             answer = self._llm(GRAPH_RAG_SYSTEM_PROMPT, user_prompt)
         else:
-            answer = self._format_local_answer(ctx, question)
+            answer = self._format_local_answer(ctx, question, verdict)
 
         return {
             "answer": answer,
-            "entity": {"id": entity_id, "layer": ctx["layer"], "name": ctx["entity"].get("name", "")},
+            # 整份实体透传而不是只留 id/layer/name —— 上层要按 alarm/unit 判定，
+            # 裁掉这些字段等于逼调用方再查一次本体（且很容易忘）。
+            "entity": {"id": entity_id, "layer": ctx["layer"], **ctx["entity"]},
+            "verdict": verdict,
             "context": ctx["text_context"],
             "matched_entities": self.search(question, top_k=5),
         }
@@ -1055,9 +1075,36 @@ class GraphRAG:
 
     # ── 辅助 ──
     @staticmethod
-    def _format_local_answer(ctx: dict, question: str) -> str:
-        """无 LLM 时的模板化回答"""
-        lines = [f"📍 {ctx['layer'].upper()}: {ctx['entity'].get('name', '')}"]
+    def _format_local_answer(ctx: dict, question: str, verdict: dict = None) -> str:
+        """无 LLM 时的模板化回答
+
+        **判据块要排在最前**：用户问"套压安全吗"，要的是结论和依据，不是
+        "同级节点 3 个"。模板化回答最容易犯的错就是把能查到的都列一遍、
+        唯独不回答问题 —— 输出看着很充实，实际等于没答。
+        """
+        ent = ctx.get("entity", {})
+        lines = [f"📍 {ctx['layer'].upper()}: {ent.get('name', '')}"]
+
+        # 安全判据 —— 只在实体真的带阈值/量程时出现
+        alarm = ent.get("alarm") or {}
+        rng = ent.get("range") or []
+        unit = ent.get("unit", "")
+        if alarm or rng:
+            lines.append("安全判据:")
+            for k, label in (("hh", "高高限"), ("high", "上限"),
+                             ("low", "下限"), ("ll", "低低限")):
+                if k in alarm:
+                    lines.append(f"  {label} {alarm[k]}{unit}")
+            if rng and len(rng) == 2:
+                lines.append(f"  量程 [{rng[0]}, {rng[1]}]{unit}")
+
+        if verdict:
+            mark = {"ok": "✅ 安全", "unknown": "❔ 无法判定"}.get(
+                verdict.get("status"), "⚠️ 越限")
+            lines.append(f"判定: {mark} — {verdict.get('reason', '')}")
+            if verdict.get("value") is not None:
+                lines.append(f"当前值: {verdict['value']}{verdict.get('unit', '')}")
+
         if ctx.get("parent_chain"):
             path = " > ".join(p["name"] for p in reversed(ctx["parent_chain"]))
             lines.append(f"路径: {path}")
@@ -1069,7 +1116,7 @@ class GraphRAG:
             lines.append(f"同级节点: {len(ctx['siblings'])}个")
         if ctx.get("children"):
             lines.append(f"子节点: {len(ctx['children'])}个")
-        lines.append("\n[无 LLM 后端 — 返回结构化上下文]")
+        lines.append("\n[无 LLM 后端 — 结构化判定，非模型生成]")
         return "\n".join(lines)
 
     def status(self) -> dict:
@@ -1112,8 +1159,11 @@ class GraphRAG:
             except Exception as e:
                 yield {"type": "token", "data": f"\n[LLM 流式错误: {e}]"}
         else:
-            # 无 LLM — 模拟流式输出模板化回答
-            answer = self._format_local_answer(ctx if "error" not in ctx else {}, question)
+            # 无 LLM — 模拟流式输出模板化回答。verdict 从 ctx["live"] 取：
+            # enhance_context 已经算过一遍，两个端点对同一问题必须给同一答案。
+            answer = self._format_local_answer(
+                ctx if "error" not in ctx else {}, question,
+                (ctx.get("live") or {}).get("verdict"))
             for char in answer:
                 yield {"type": "token", "data": char}
 
@@ -1316,11 +1366,10 @@ def main():
     parser.add_argument("--no-llm", action="store_true", help="不使用 LLM (仅结构化输出)")
     args = parser.parse_args()
 
-    from .ontology import build_131_ontology
+    from .ontology import build_engine
 
-    print("加载 示例 IO 服务器本体...")
-    engine = build_131_ontology()
-    print(f"  实体: {engine.health()['counts']}")
+    engine = build_engine()
+    print(f"实体: {engine.health()['counts']}")
 
     if args.no_llm:
         rag = GraphRAG(engine, llm_call=None)
