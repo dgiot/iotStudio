@@ -10,7 +10,7 @@ EventBus — Hook 系统 (对标 DG-IoT dgiot_hook)
 用法:
   bus = EventBus()
   bus.on("device.connected", handle_connect, mode="one_for_more")
-  bus.emit("device.connected", device_id="rtu_001", ip="192.168.1.1")
+  bus.emit("device.connected", device_id="rtu_001", ip="198.18.1.1")
 
 命名规范:
   {domain}.{event}  例: device.connected, data.received, alarm.triggered
@@ -36,7 +36,17 @@ class EventBus:
             key: 事件名, 如 "device.connected"
             callback: 回调函数 fn(**kwargs) -> Optional[Any]
             mode: one_for_one (单回调) 或 one_for_more (多回调链)
+
+        ⚠️ key 必须是**完整事件名**，本实现没有通配符匹配 —— emit() 是
+        `self._hooks.get(key)` 的精确字典查找。写 `device.*.saved` 这种
+        通配 key 不会报错，只会静默地永不触发（emit 侧发的是 `device.saved`，
+        段数都对不上）。注册期就喊出来，别等到"这个回调怎么从来不走"。
         """
+        if "*" in key:
+            log.error(
+                f"[eventbus] Hook key 含通配符: {key!r} —— EventBus 是精确匹配，"
+                f"emit() 查完整字符串，这条注册永远不会被触发。"
+                f"要么改成实际 emit 的完整事件名，要么给 EventBus 加通配支持。")
         if mode == "one_for_one":
             self._hooks[key] = [{"fn": callback, "mode": mode}]
         else:
