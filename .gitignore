@@ -109,6 +109,18 @@ deploy_*.py
 http_*.py
 *.ps1
 
+# ===== 中枢侧一次性排查脚本 (2026-09-12) =====
+# hub_survey*/hub_diag*/hub_recover*/hub_abac_diff/hub_abac_verify 是为排查
+# WSL 里那套中枢现写现跑的：内容是本机中枢的部署路径、插件加载态、运行日志，
+# 属于中枢侧资产（归 dgiot 工程），且**一次性** —— 问题定位完就没有复用价值。
+# 不忽略的话，一次 `git add -A` 就顺手带上公开仓了。
+#
+# 不误伤说明：glob 的 `*` 不跨 `/`，所以本规则只落在 scripts/ 底下
+# 文件名以 hub_ 开头、.sh 结尾的那一批。已入库的长期资产不受影响 ——
+# hub_smoke.py / deploy_hub.sh（.py 与 deploy_ 前缀）不在范围内，
+# hub_abac/install_p2_abac.sh（子目录）也不在范围内。
+scripts/hub_*.sh
+
 # 测试现场数据
 tests/pv_result*
 tests/report.json

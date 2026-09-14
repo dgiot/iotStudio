@@ -42,7 +42,7 @@ python scripts/init_dgiot.py       # 初始化 dgiot_schema
 ```bash
 pytest tests/ -x -q               # 全量
 pytest tests/ -k mqtt -x -q       # 按关键字
-python scripts/hub_smoke.py       # 中枢回环冒烟（需中枢 1883 可达）
+DG_HUB_HOST=<host> python scripts/hub_smoke.py   # 中枢可达冒烟（broker 层回环；主机无默认值）
 ```
 
 ## 热工作流（主开发循环）
