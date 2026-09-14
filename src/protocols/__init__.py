@@ -3,5 +3,3 @@ try: from . import vendor_oilmon
 except ImportError: pass
 try: from . import phm_platform
 except ImportError: pass
-try: from . import edge_hub_channel
-except ImportError: pass

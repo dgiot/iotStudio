@@ -24,9 +24,10 @@ class PushEngine:
     DG-IoT 联动为可选功能——未配置时不影响独立运行。
     """
 
-    def __init__(self, pg_store: PostgresStore, registry=None):
+    def __init__(self, pg_store: PostgresStore, registry=None, resolver=None):
         self.pg = pg_store
         self._registry = registry            # None → 全局 runtime 单例 (DI 供测试)
+        self._resolver = resolver            # 接入凭据查表，注入给需要身份出口的 pusher
         self._pushers: Dict[str, Any] = {}   # target_id -> pusher (统一 push(message) 协议)
         self._initialized = False
 
@@ -74,6 +75,10 @@ class PushEngine:
             if not self._compatible(pusher):
                 logger.warning(f"[push] {t.target_type} 推送器不符合 push(message) 协议, 跳过")
                 continue
+            # 身份凭据走注入而不是进消息体 —— 消息是扇出给所有 pusher 的
+            # (含 HTTP webhook)，deviceSecret 塞进去等于交给每一个出口。
+            if self._resolver is not None and hasattr(pusher, "set_resolver"):
+                pusher.set_resolver(self._resolver)
             self._pushers[t.target_id] = pusher
             counts[t.target_type] = counts.get(t.target_type, 0) + 1
         self._initialized = True
@@ -95,6 +100,15 @@ class PushEngine:
             for r in results:
                 if isinstance(r, Exception):
                     logger.warning(f"[push] 推送失败: {r}")
+
+    def outlets(self) -> Dict[str, str]:
+        """出口清单: target_id → 推送器类名
+
+        给通道侧核对「dlink 上行出口到底装没装」用。在此之前，通道列表里的
+        `ch_dgiot_push` 只能自己 new 一个桥接对象假装在跑 —— 真实装配结果
+        （PG 里有没有 edge_hub 推送目标）谁也看不到。
+        """
+        return {tid: type(p).__name__ for tid, p in self._pushers.items()}
 
     def _build_message(self, device_id: str, points: List[PointValue]) -> Dict[str, Any]:
         """构造推送消息"""

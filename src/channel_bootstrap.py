@@ -69,6 +69,22 @@ def get_channel_health():
 # 回退通道 (尚未自注册的模块)
 # ═══════════════════════════════════════════
 
+def _push_outlets() -> dict:
+    """当前装配的推送出口 (target_id → 推送器类名)
+
+    单独抽出来是为了让测试能替换掉对 main 的依赖 —— 顺带也把"main 里到底
+    装了什么"收成一个口子，通道侧只问这一处。延迟导入是因为 main 是在
+    模块级 import channel_bootstrap 的（lifespan 里），这里反向引用要等
+    调用时才安全。
+    """
+    try:
+        from .main import push_engine
+        return push_engine.outlets()
+    except Exception as e:  # noqa: BLE001 - 取不到清单不该让通道启动整个失败
+        log.warning(f"[bootstrap] 取推送出口清单失败: {e}")
+        return {}
+
+
 def _register_fallback_channels(app_config=None):
     """尚未迁移到自注册的通道, 在此手动创建"""
     from .config import cfg
@@ -87,8 +103,10 @@ def _register_fallback_channels(app_config=None):
 
             def on_msg(client, userdata, msg):
                 try:
-                    from .eventbus import EventBus
-                    bus = EventBus()
+                    # 必须用 `bus` 单例 —— 原先是 `EventBus()` 新建实例，
+                    # 那个实例的 _hooks 永远是空的，emit 进去等于丢进垃圾桶。
+                    # 而且变量名还叫 bus，看着跟单例一模一样，谁读都发现不了。
+                    from .eventbus import bus
                     topic = msg.topic
                     parts = topic.split('/')
                     evt = "mqtt." + parts[-1] if len(parts) > 1 else "mqtt.message"
@@ -116,17 +134,29 @@ def _register_fallback_channels(app_config=None):
     # ── DG-IoT 边缘中枢上报 (AGENT) ──
     if "ch_dgiot_push" not in registered:
         async def start_push():
-            from .push.dgiot_pusher import DGIoTBridge
-            bridge = DGIoTBridge({
-                "host": _cfg.mqtt.host, "port": _cfg.mqtt.port,
-                "username": _cfg.mqtt.username, "password": _cfg.mqtt.password,
-                "product_id": "iotStudio",
-            })
-            _channels_state['dgiot_bridge'] = bridge
+            # 这里以前 new 一个 DGIoTBridge 塞进 _channels_state 就完事：
+            # 不连接、不推送，通道列表照样显示 "running"。
+            # 真正的 dlink 上行出口是 EdgeHubPusher，由 PushEngine 按 PG 里的
+            # `edge_hub` 推送目标装配 —— 那就如实反映那件事：装配了才 running，
+            # 没装配就报错。通道列表是用来判断"链路通没通"的，不是装饰。
+            hubs = [t for t, cls in _push_outlets().items()
+                    if cls == "EdgeHubPusher"]
+            if not hubs:
+                raise RuntimeError(
+                    "未装配 dlink 上行出口 —— 请添加一条 edge_hub 推送目标 "
+                    "(主题 $dg/thing/{productId}/{devaddr}/properties/report)")
+            _channels_state['edge_hub_targets'] = hubs
+
+        async def stop_push():
+            # 不能写成 `lambda: _channels_state.pop(...)` —— lambda 会把弹出的
+            # 对象当返回值，channel_registry 那边 `await ch._on_stop()` 拿到一个
+            # 对象就抛 "object can't be awaited"，每次关闭都记一条 ERROR。
+            # 收尾函数必须是 async 且返回 None。
+            _channels_state.pop('edge_hub_targets', None)
 
         make_channel("ch_dgiot_push", CType.AGENT, "边缘中枢 dlink 上报",
                      config={"host": _cfg.mqtt.host, "port": _cfg.mqtt.port},
-                     on_start=start_push, on_stop=lambda: _channels_state.pop('dgiot_bridge', None),
+                     on_start=start_push, on_stop=stop_push,
                      protocol="mqtt-dlink", target="edge-dmz")
 
     # ── Modbus TCP (CONNECT) ──

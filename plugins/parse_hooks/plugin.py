@@ -37,7 +37,14 @@ def apply(ctx):
 
     @hook("Device", "afterSave")
     def device_after_save(obj: dict, hctx, is_new: bool):
-        """设备保存后: EventBus → MQTT (经插件运行时配置化通道)"""
+        """设备保存后: 只发 EventBus
+
+        这里原先还往 `dgiot/default/gw_131/ch_edge_hub/{devaddr}/meta` 发一条
+        MQTT —— 中枢认的上行主题是闭集（properties/report、init/request、
+        firmware/report、report），没有 `meta` 这个后缀，发出去没人消费；
+        而本仓 main.py / ch_mqtt_bridge 又订阅 `dgiot/#` 再转回 EventBus，
+        于是它只是绕本机一圈又回来。MQTT 出口已删，要留痕进日志。
+        """
         import time
         payload = {"type": "device_saved", "devaddr": obj.get("devaddr"),
                    "is_new": is_new, "timestamp": time.time()}
@@ -49,8 +56,6 @@ def apply(ctx):
             bus.emit("device.saved", **payload)
         except Exception:
             pass
-        ctx.mqtt_publish(
-            f"dgiot/default/gw_131/ch_edge_hub/{obj.get('devaddr', '?')}/meta", payload)
 
     # ── Alarm ──
 

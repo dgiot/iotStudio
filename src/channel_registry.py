@@ -15,7 +15,7 @@ cType (9 种 dlink 模式):
   DTU       — 无线终端 (GPRS/CDMA)
 """
 from __future__ import annotations
-import asyncio, logging, time
+import asyncio, inspect, logging, time
 from enum import Enum
 from dataclasses import dataclass, field
 from typing import Dict, Optional, Any, Callable, Awaitable
@@ -125,7 +125,13 @@ class ChannelManager:
             return True
         try:
             if ch._on_stop:
-                await ch._on_stop()
+                # on_stop 允许同步/异步两种写法。之前只会 await，于是
+                # `on_stop=lambda: state.pop(k)` 这种返回值不为 None 的回调
+                # 每次关闭都抛 "object can't be awaited" —— 收尾阶段报的错
+                # 最容易没人看，就这么一直挂着。
+                ret = ch._on_stop()
+                if inspect.isawaitable(ret):
+                    await ret
             ch.status = "stopped"
             ch.started_at = 0
             log.info(f"[channel] {channel_id} stopped")
