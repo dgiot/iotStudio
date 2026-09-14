@@ -36,7 +36,7 @@ async def edge_scan():
         "scanner": {"running": True, "protocol": "Modbus TCP/IPv6双栈"},
         "stats": _edge['scan'],
         "slaves": [
-            {"ip": f"11.248.195.{72+i}", "port": 502, "slave_id": i % 20 + 1,
+            {"ip": f"192.0.2.195.{72+i}", "port": 502, "slave_id": i % 20 + 1,
              "device_type": "oilwell", "found_points": random.randint(10, 23)}
             for i in range(8)
         ],

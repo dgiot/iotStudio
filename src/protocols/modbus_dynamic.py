@@ -16,7 +16,7 @@ Modbus TCP 动态扫描与点位识别
   # ① 网段发现
   devices = scanner.discover_network("11.248", start=195, end=205)
   # ② 设备点位识别
-  points = scanner.recognize_points("11.248.195.1", 502, slave=1)
+  points = scanner.recognize_points("198.18.195.1", 502, slave=1)
   # ③ 定时巡检 + 差异
   report = scanner.patrol("11.248", 195, 205, interval_s=30)
 

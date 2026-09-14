@@ -14,7 +14,7 @@ PDP on the broker's client.check_acl face.
 
 Usage:
   python simulators/dgiot_hub_sim.py --product 1893e1feb3 \
-      --devaddr 192.168.100.23_1234 --secret TTYxNTE3 \
+      --devaddr 198.18.100.23_1234 --secret TTYxNTE3 \
       --count 3 --interval 1.0 [--host 127.0.0.1] [--port 1883]
   python simulators/dgiot_hub_sim.py --style doctrine \
       --site siteA --gateway gw1 --device dev-siteA-d1 --point pt1 \

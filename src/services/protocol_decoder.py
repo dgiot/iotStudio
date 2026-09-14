@@ -197,7 +197,7 @@ def _selftest():
     dec = ProtocolDecoder()
     t0 = _t.time()
 
-    def _frame(proto: str, payload: bytes, device_ip="192.168.1.10",
+    def _frame(proto: str, payload: bytes, device_ip="198.18.1.10",
                device_port=502, direction="RX"):
         return SimpleNamespace(ts=t0, proto=proto, payload=payload,
                                device_ip=device_ip, device_port=device_port,

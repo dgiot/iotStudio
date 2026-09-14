@@ -16,7 +16,7 @@
 用法:
   sense = GatewayDynamicSense()
   sense.on_event(callback)                  # 感知事件
-  sense.register_gateway("11.248.195.1", "static", port=502)  # 静态IP登记
+  sense.register_gateway("198.18.195.1", "static", port=502)  # 静态IP登记
   sense.on_gateway_frame(data, src_ip, src_port)              # 帧接入
   events = sense.poll_events()
 
@@ -237,29 +237,29 @@ def _selftest():
     sense = GatewayDynamicSense(gateway_timeout=2)
 
     # 1. 静态 IP 网关登记
-    sense.register_static("11.248.195.1", 502, vendor="quectel",
+    sense.register_static("198.18.195.1", 502, vendor="quectel",
                           device_id="861234567890123")
-    sense.register_static("11.248.196.10", 502, vendor="usr")
+    sense.register_static("198.18.196.10", 502, vendor="usr")
     print(f"[1] 静态网关: {len(sense.gateways())} 台 "
           f"({[g['ip'] for g in sense.gateways()]})")
 
     # 2. 移动网关: 宏电注册帧上线
     reg = b"\x78" + b"860123456789012" + b"\x00" * 4
-    sense.on_gateway_frame(reg, "10.20.30.40", 502)
+    sense.on_gateway_frame(reg, "203.0.113.40", 502)
     print(f"[2] 移动网关上线: 厂家识别 "
           f"{[g['vendor'] for g in sense.gateways() if g['type']=='mobile']}")
 
     # 3. Modbus TCP 帧: 从站发现 + 寄存器
     for sid in (1, 2):
         req = struct.pack(">HHHBBHH", 1, 0, 6, sid, 3, 400, 2)
-        sense.on_gateway_frame(req, "10.20.30.40", 502)
-    print(f"[3] Modbus 从站感知: {sorted(sense._gateways['10.20.30.40:502'].slaves)} "
+        sense.on_gateway_frame(req, "203.0.113.40", 502)
+    print(f"[3] Modbus 从站感知: {sorted(sense._gateways['203.0.113.40:502'].slaves)} "
           f"(期望 [1, 2])")
 
     # 4. 静态 IP 网关也走同一感知通道
     static_req = struct.pack(">HHHBBHH", 1, 0, 6, 1, 3, 40300, 10)
-    sense.on_gateway_frame(static_req, "11.248.195.1", 502)
-    g_static = sense._gateways["11.248.195.1:502"]
+    sense.on_gateway_frame(static_req, "198.18.195.1", 502)
+    g_static = sense._gateways["198.18.195.1:502"]
     print(f"[4] 静态网关点位感知: {len(g_static.reg_addrs)} 个寄存器 "
           f"(期望 ≥1, 含 40300)")
 

@@ -191,7 +191,7 @@ def _minimal_engine():
     from src.ontology import OntologyEngine, Site, Gateway, Channel, DataSource
     eng = OntologyEngine()
     eng.register(Site(id="s1", name="测试站"))
-    eng.register(Gateway(id="g1", ip="10.0.0.1", site="s1"))
+    eng.register(Gateway(id="g1", ip="198.51.100.1", site="s1"))
     eng.register(Channel(id="c1", gateway="g1", name="通道一", protocol="modbus_tcp"))
     eng.register(DataSource(id="d1", gateway="g1", type="oracle"))
     return eng

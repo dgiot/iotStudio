@@ -17,6 +17,7 @@ from fastapi import APIRouter, Request, HTTPException
 from pydantic import BaseModel
 from typing import Optional, Any
 import logging
+import os
 
 log = logging.getLogger("cloud")
 router = APIRouter(prefix="/api/functions", tags=["Cloud Functions"])
@@ -167,7 +168,13 @@ async def notify(params: dict, request: Request) -> Any:
         smtp_cfg = params.get("smtp", {})
         msg = MIMEText(body, "html", "utf-8")
         msg["Subject"] = subject
-        msg["From"] = smtp_cfg.get("from", "dgiot@iotn2n.com")
+        # 发件人没有默认值 —— 原先兜底的是一个内部域名邮箱（本仓已清），
+        # 既不该出现在公开仓，也不是一个能对外发信的地址。缺了就显式报错。
+        sender = smtp_cfg.get("from") or os.environ.get("SMTP_FROM")
+        if not sender:
+            return {"sent": False, "type": "mail",
+                    "error": "smtp.from / SMTP_FROM 未配置，无发件人"}
+        msg["From"] = sender
         msg["To"] = to
         try:
             with smtplib.SMTP(smtp_cfg.get("host", "localhost"), smtp_cfg.get("port", 25)) as server:
