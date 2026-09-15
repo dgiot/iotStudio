@@ -1,6 +1,6 @@
 # ============================================================
 # iotStudio — TDengine 物模型时序存储
-# 参考 shixu 项目: point_mapping → supertable TAG 模式
+# point_mapping → supertable TAG 模式
 # ============================================================
 """
 物模型 → TDengine 映射规则:

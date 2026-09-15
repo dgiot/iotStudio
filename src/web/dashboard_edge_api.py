@@ -1,5 +1,5 @@
 """
-边缘 Dashboard API — 从 shixu dashboard_api.py 同步
+边缘 Dashboard API
 =====================================================
 扫码统计 / Modbus采集指标 / 管线吞吐 / 流式计算
 """

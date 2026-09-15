@@ -20,8 +20,8 @@ for d in [
 
 # Oil tenant
 for d in [
-    {"objectId":"oil_ccs1_hyd","devaddr":"oil_ccs1_hyd","name":"CCS-1液压系统","device_type":"compressor","protocol":"http_rest","isEnable":True,"status":"online","basedata":{"manufacturer":"有叶云","model":"S2MX46"},"tenant_id":"oil-monitor"},
-    {"objectId":"oil_gear2","devaddr":"oil_gear2","name":"2号齿轮系统","device_type":"compressor","protocol":"http_rest","isEnable":True,"status":"online","basedata":{"manufacturer":"有叶云","model":"壳牌320"},"tenant_id":"oil-monitor"},
+    {"objectId":"oil_ccs1_hyd","devaddr":"oil_ccs1_hyd","name":"CCS-1液压系统","device_type":"compressor","protocol":"http_rest","isEnable":True,"status":"online","basedata":{"manufacturer":"演示厂商","model":"S2MX46"},"tenant_id":"oil-monitor"},
+    {"objectId":"oil_gear2","devaddr":"oil_gear2","name":"2号齿轮系统","device_type":"compressor","protocol":"http_rest","isEnable":True,"status":"online","basedata":{"manufacturer":"演示厂商","model":"齿轮油320"},"tenant_id":"oil-monitor"},
 ]:
     parse_create("Device", d)
 
@@ -29,7 +29,7 @@ for d in [
 for ch in [
     {"objectId":"ch_modbus","cType":"modbus_tcp","name":"Modbus TCP","isEnable":True,"status":"running","config":{"host":"0.0.0.0","port":502},"tenant_id":"default"},
     {"objectId":"ch_iec104","cType":"iec104","name":"IEC 104","isEnable":True,"status":"running","config":{"host":"127.0.0.1","port":2404},"tenant_id":"default"},
-    {"objectId":"ch_vendor_oilmon","cType":"http_rest","name":"油液监测","isEnable":True,"status":"stopped","config":{"host":"vendor_oilmon.com","port":443},"tenant_id":"oil-monitor"},
+    {"objectId":"ch_vendor_oil","cType":"http_rest","name":"油液监测","isEnable":True,"status":"stopped","config":{"host":"vendor-oil.example.com","port":443},"tenant_id":"oil-monitor"},
     {"objectId":"ch_boiler","cType":"modbus_tcp","name":"锅炉能效","isEnable":True,"status":"stopped","config":{"host":"198.18.2.11","port":502},"tenant_id":"default"},
     {"objectId":"ch_vib","cType":"http_rest","name":"声振温","isEnable":True,"status":"stopped","config":{"host":"127.0.0.1","port":8500},"tenant_id":"default"},
     {"objectId":"ch_bolt","cType":"mqtt","name":"智能螺栓","isEnable":False,"status":"stopped","config":{"host":"127.0.0.1","port":1883},"tenant_id":"default"},

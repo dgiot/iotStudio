@@ -64,7 +64,7 @@ THING_MODEL = {
             "env_wind_speed":  {"name": "风速",        "unit": "m/s",  "type": "float32", "category": "environment","min": 0,   "max": 15, "default": 3},
         }
     },
-    # === 工业园设备 (来自 shixu 项目2) ===
+    # === 工业园设备 ===
     "oilwell": {
         "product_name": "抽油机井",
         "points": {
@@ -139,11 +139,13 @@ def get_product_model(device_type: str) -> dict:
 
 
 def _load_oilfield_rtu_model() -> dict:
-    """从 shixu JSON 加载工业园 RTU 142 点物模型（带缓存）"""
+    """从外部 JSON 加载工业园 RTU 142 点物模型（带缓存）"""
     import os, json
+    # 外部物模型 JSON（可选）：未配置或文件不存在时回落到内置模板。
+    # 默认路径落在本仓 data/ 下 —— 不把某台机器的绝对路径写进代码。
     json_path = os.environ.get(
         "OILFIELD_MODEL_JSON",
-        r"D:\n2n\system\git\shixu\config\iot_model_final_new.json"
+        "./data/oilfield_model.json",
     )
     # 缓存：运行时只需加载一次
     if not hasattr(_load_oilfield_rtu_model, '_cache'):

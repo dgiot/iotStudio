@@ -1,7 +1,7 @@
 """
 iotStudio — 安全判据引擎 (Safety Rules Engine)
 
-基于 shixu 项目 rule_engine.py 移植，提供 L1/L2/L3 + ESD 共 26 条安全规则评估。
+提供 L1/L2/L3 + ESD 共 26 条安全规则评估。
 
 规则类型：
     threshold     高/高高/低/低低 阈值比较 (L1, ESD)
@@ -59,7 +59,7 @@ class RuleType(str, Enum):
 
 @dataclass
 class SafetyRule:
-    """安全规则定义（与 shixu AlarmRule 对应但更结构化）"""
+    """安全规则定义（结构化，含告警分级）"""
 
     rule_id: str
     name: str

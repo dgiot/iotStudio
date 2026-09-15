@@ -35,7 +35,7 @@ plugins:
     iec104: false
     opcua: false
     a11: true
-    http_rest_vendor_oilmon: true
+    http_rest_vendor: true    # 通用 HTTP 第三方接入（对接哪家由部署方定）
   service:
     collector: true
     alarm_engine: true
@@ -48,8 +48,8 @@ plugins:
 
 # 第三方密钥 (敏感信息, 其他配置全部入库 parse_lite Channel 表)
 credentials:
-  vendor_oilmon_username: "YOUR_USER@example.com"
-  vendor_oilmon_password: "YOUR_PASSWORD"
+  vendor_username: "YOUR_USER@example.com"
+  vendor_password: "YOUR_PASSWORD"
   oracle_relay_host: "127.0.0.1"
   oracle_relay_user: "administrator"
   oracle_relay_pass: "YOUR_WINRM_PASSWORD"

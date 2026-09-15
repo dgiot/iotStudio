@@ -106,10 +106,10 @@ SEED_PRODUCTS = [
 ]
 
 SEED_CHANNELS = [
-    {"objectId": "ch_vendor_oilmon", "cType": "http_rest", "name": "🛢 油液监测",
+    {"objectId": "ch_vendor_oil", "cType": "http_rest", "name": "🛢 油液监测",
      "isEnable": True, "status": "stopped",
-     "config": {"host": "vendor_oilmon.com", "port": 443, "interval": 300},
-     "desc": "有叶云油液传感器平台", "tenant_id": "oil-monitor"},
+     "config": {"host": "vendor-oil.example.com", "port": 443, "interval": 300},
+     "desc": "油液传感器平台", "tenant_id": "oil-monitor"},
     {"objectId": "ch_boiler", "cType": "modbus_tcp", "name": "🔥 锅炉能效",
      "isEnable": True, "status": "stopped",
      "config": {"host": "127.0.0.1", "port": 502, "slave_id": 1},

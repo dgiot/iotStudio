@@ -734,7 +734,7 @@ async def simulators_status():
         {"id": "iec104_2404",     "name": "IEC 104 储能PCS",   "protocol": "IEC 104",    "port": 2404, "device": "储能PCS从站",    "itemCount": 14},
         {"id": "opcua_4840",      "name": "OPC UA 充电桩",     "protocol": "OPC UA",     "port": 4840, "device": "充电桩+环境",    "itemCount": 12},
         {"id": "opcda_9090",      "name": "OPC DA 数据源",     "protocol": "OPC DA",     "port": 9090, "device": "光储充数据源",   "itemCount": 19},
-        {"id": "a11_8889",        "name": "A11 CNPC 网关",      "protocol": "A11 CNPC",   "port": 8889, "device": "工业园RTU",       "itemCount": 142},
+        {"id": "a11_8889",        "name": "A11 网关",           "protocol": "A11",        "port": 8889, "device": "工业园RTU",       "itemCount": 142},
     ]
     for sim in simulators:
         sim["status"] = "running" if _check_port(sim["port"], ttl=15) else "stopped"
@@ -859,7 +859,7 @@ def _parse_iec104_frame(raw: bytes) -> dict:
     return info
 
 def _parse_a11_frame(raw: bytes) -> dict:
-    """解析 A11 协议帧 (CNPC 油气生产物联网)"""
+    """解析 A11 协议帧 (油气生产物联网)"""
     if len(raw) < 15 or raw[7:11] != b'\x6a\x6a\x5a\x5a':
         return {}
     tid = int.from_bytes(raw[0:2], 'big')
@@ -1607,7 +1607,7 @@ _PROTO_PORTS = [
     ("iec104", "IEC 60870-5-104", "电力远动/储能PCS", 2404),
     ("opcua", "OPC UA", "充电桩/PLC统一架构", 4840),
     ("opcda", "OPC DA", "Windows COM/DCOM数据源", 9090),
-    ("a11", "A11 CNPC", "行业油气生产物联网", 8889),
+    ("a11", "A11", "行业油气生产物联网", 8889),
     ("mqtt", "MQTT Broker", "消息推送/实时数据", 1883),
 ]
 
@@ -2203,20 +2203,6 @@ _discover("src/protocols", "src.protocols")
 _discover("src/services", "src.services")
 _discover("src/push", "src.push")
 
-@app.get("/api/plugins")
-def get_plugins(category: str = None, user: dict = Depends(get_current_user)):
-    """获取所有插件及其状态 (PR0 起需登录; 含统一运行时视图 + 前端模块开关)"""
-    return {
-        "plugins": [
-            {"name": p["name"], "category": p["category"], "version": p["version"],
-             "enabled": p["enabled"], "config": p.get("config_schema", {}),
-             "depends": p.get("depends", [])}
-            for p in list_all(category)
-        ],
-        "health": plugin_health(),
-        "runtime": runtime.summary(),
-        "frontend": runtime.frontend_modules(),
-    }
 
 @app.post("/api/plugins/{name}/enable")
 def enable_plugin(name: str, scope: str = "backend", user: dict = Depends(require_admin)):
@@ -2244,10 +2230,6 @@ def channels_health():
     """所有通道健康状态 — 对标 dlink channel health"""
     return ChannelManager.health()
 
-@app.get("/api/channels")
-def channels_list():
-    """通道列表"""
-    return {"channels": ChannelManager.list_all()}
 
 @app.post("/api/channels/{channel_id}/start")
 async def channel_start(channel_id: str):
@@ -2261,102 +2243,7 @@ async def channel_stop(channel_id: str):
     ok = await ChannelManager.stop(channel_id)
     return {"channel_id": channel_id, "status": "stopped" if ok else "failed"}
 
-# ---- 系统信息 API (边缘代理本体扫描) ----
-@app.get("/api/system")
-def system_info():
-    import platform, os, time as _time, socket
-    info = {
-        "hostname": socket.gethostname(),
-        "os": f"{platform.system()} {platform.release()}",
-        "python": platform.python_version(),
-        "uptime": int(_time.time() - _startup_ts),
-    }
-    # CPU / Memory / Disk / Network (psutil)
-    try:
-        import psutil
-        info["cpu_percent"] = psutil.cpu_percent(interval=0.1)
-        info["cpu_cores"] = psutil.cpu_count()
-        mem = psutil.virtual_memory()
-        info["memory_used_gb"] = round(mem.used / (1024**3), 1)
-        info["memory_total_gb"] = round(mem.total / (1024**3), 1)
-        info["memory_percent"] = mem.percent
-        disk = psutil.disk_usage(cfg.data_dir)
-        info["disk_used_gb"] = round(disk.used / (1024**3), 1)
-        info["disk_total_gb"] = round(disk.total / (1024**3), 1)
-        info["disk_percent"] = disk.percent
-        # 网络接口
-        interfaces = []
-        for name, addrs in psutil.net_if_addrs().items():
-            iface = {"name": name, "ips": []}
-            for addr in addrs:
-                iface["ips"].append({"family": str(addr.family), "address": addr.address, "netmask": addr.netmask or ""})
-                if addr.family == 2 and not addr.address.startswith("127."):
-                    iface["ipv4"] = addr.address
-            if iface.get("ipv4"):
-                interfaces.append(iface)
-        info["interfaces"] = interfaces
-        # 网络流量
-        net = psutil.net_io_counters()
-        info["net_sent_mb"] = round(net.bytes_sent / (1024**2), 1)
-        info["net_recv_mb"] = round(net.bytes_recv / (1024**2), 1)
-        # 监听端口
-        ports = set()
-        for c in psutil.net_connections(kind='inet'):
-            if c.status == 'LISTEN':
-                ports.add(c.laddr.port)
-        info["listening_ports"] = sorted(ports)
-    except ImportError:
-        info["cpu_percent"] = None
-        info["memory_used_gb"] = None
-    # Storage mode
-    info["storage_mode"] = cfg.storage_mode
-    info["data_dir"] = cfg.data_dir
-    # Plugin registry health
-    try:
-        from .plugin_registry import health as plugin_health
-        info["plugins"] = plugin_health()
-    except: pass
-    return info
 
-# ---- 厂商通道 API ----
-@app.get("/api/channels")
-async def list_channels():
-    """协议通道 + 厂商通道状态"""
-    from .plugin_registry import list_all
-    protocol_channels = []
-    vendor_status = []
-    try:
-        from .parse_lite import parse_query
-        chs = parse_query("Channel", {})
-        for ch in chs.get("results", []):
-            protocol_channels.append({
-                "device_id": ch.get("objectId",""),
-                "device_name": ch.get("name",""),
-                "protocol": ch.get("cType",""),
-                "connected": ch.get("status") == "running",
-                "config": {
-                    "host": ch.get("config",{}).get("host","127.0.0.1") if isinstance(ch.get("config"),dict) else "127.0.0.1",
-                    "port": ch.get("config",{}).get("port",502) if isinstance(ch.get("config"),dict) else 502,
-                },
-                "success": 0, "fail": 0,
-            })
-        # Vendor channel status from parse_lite
-        vendors_map = {
-            "vendor_oilmon": "ch_vendor_oilmon", "boiler": "ch_boiler", "phm_vib": "ch_vib",
-            "bolt": "ch_bolt", "video": "ch_video", "tdlas": "ch_tdlas",
-        }
-        for key, chid in vendors_map.items():
-            ch = next((c for c in chs.get("results",[]) if c.get("objectId") == chid), None)
-            vendor_status.append({
-                "key": key,
-                "connected": ch.get("status") == "running" if ch else False,
-                "lastSync": ch.get("updatedAt","")[:16] if ch else None,
-                "devices": 2 if key == "vendor_oilmon" else 4 if key == "boiler" else 36 if key == "phm_vib" else 17 if key == "bolt" else 29 if key == "video" else 1,
-                "points": 45 if key == "vendor_oilmon" else 19 if key == "boiler" else 10 if key == "phm_vib" else 3,
-            })
-    except Exception as e:
-        logger.warning(f"Channel query failed: {e}")
-    return {"channels": protocol_channels, "vendors": vendor_status, "categories": {"protocol": len(protocol_channels)}}
 
 # ---- 采集端点管理 API ----
 from pydantic import BaseModel as PydanticBase
@@ -2386,49 +2273,3 @@ def delete_capture_endpoint(oid: str):
     from .parse_lite import parse_delete
     return parse_delete("CaptureEndpoint", oid)
 
-# ---- 厂商通道数据桥接 (oil-monitor.db) ----
-import sqlite3 as _sqlite3, os as _os
-_OIL_DB = _os.path.join(_os.path.dirname(__file__), "..", "data", "oil_monitor.db")
-
-@app.get("/api/vendor/{key}/status")
-def get_vendor_status(key: str):
-    """厂商通道实时状态 — 真实数据优先，无则模拟"""
-    # 油液监测: 真实数据
-    if key == "vendor_oilmon" and _os.path.exists(_OIL_DB):
-        db = _sqlite3.connect(_OIL_DB); db.row_factory = _sqlite3.Row
-        devices = db.execute("SELECT DISTINCT device_id, device_name FROM sensor_meta").fetchall()
-        points = db.execute("SELECT COUNT(DISTINCT key_id) as cnt FROM sensor_meta").fetchone()
-        last = db.execute("SELECT MAX(update_time) as t FROM sensor_realtime").fetchone()
-        db.close()
-        return {
-            "key": key, "connected": True,
-            "devices": len(devices), "points": points["cnt"] if points else 45,
-            "lastSync": str(last["t"])[:16] if last and last["t"] else "2026-07-09 01:43",
-            "relatedDevices": [{"id": d["device_id"], "name": d["device_name"], "status": "online"} for d in devices[:5]],
-        }
-    # 其他通道: 模拟器数据 (30s 刷新)
-    if key in _vendor_sim_data:
-        return _vendor_sim_data[key]
-    return {"key": key, "connected": False, "devices": 0, "points": 0, "lastSync": None, "relatedDevices": []}
-
-# ---- 厂商通道模拟器 (缺真实后端时自动生成演示数据) ----
-import threading, random as _random, time as _time
-
-_vendor_sim_data = {}
-def _vendor_sim_loop():
-    """后台模拟: 为缺后端的厂商通道生成演示数据"""
-    while True:
-        _time.sleep(30)
-        now = _time.strftime("%Y-%m-%d %H:%M")
-        for key in ["boiler", "phm_vib", "bolt", "video", "tdlas"]:
-            _vendor_sim_data[key] = {
-                "key": key, "connected": True, "lastSync": now,
-                "devices": {"boiler":4,"phm_vib":36,"bolt":17,"video":29,"tdlas":1}.get(key,0),
-                "points": {"boiler":19,"phm_vib":10,"bolt":3,"video":2,"tdlas":1}.get(key,0),
-                "relatedDevices": [{"id":f"{key}_dev{i}","name":f"{key}设备-{i}","status":"online" if _random.random()>0.2 else "offline"} for i in range(1,4)]
-            }
-
-# 启动模拟器线程
-try:
-    _t = threading.Thread(target=_vendor_sim_loop, daemon=True); _t.start()
-except: pass

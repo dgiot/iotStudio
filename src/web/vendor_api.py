@@ -1,5 +1,18 @@
-"""厂商通道 API — 全部从 parse_lite Channel 表动态读取"""
+"""厂商通道 API — 全部从 parse_lite Channel 表动态读取
+
+本模块**不含任何具体通道名**。通道由 Channel 表声明，取值全部来自记录本身：
+
+    key            ← Channel.objectId 去掉 ch_ 前缀
+    name / desc    ← Channel.name / config.description
+    host / devices / points / interval ← Channel.config.*
+    relatedDevices ← Channel.config.relatedDevices
+
+形制对齐 dgiot 的 data/loaded_plugins.tmpl：清单是数据，不进代码。
+底座只负责「把 Channel 表里有的东西读出来」，不负责知道装的是谁 ——
+否则每来一个部署就要改一次底座，而底座里就多留了一份别人的现场清单。
+"""
 import time as _time
+
 from fastapi import APIRouter
 
 router = APIRouter(prefix="/api/vendor", tags=["vendor"])
@@ -7,7 +20,6 @@ router = APIRouter(prefix="/api/vendor", tags=["vendor"])
 
 def _db_channels():
     """从 parse_lite 读取所有通道"""
-    import traceback
     from ..parse_lite import parse_query
     r = parse_query("Channel", {"limit": 50})
     return r.get("results", [])
@@ -21,7 +33,7 @@ def _to_vendor(ch, key_override=None):
         "key": key,
         "name": ch.get("name", key),
         "icon": _icon_for(ch.get("cType", "")),
-        "source": _source_for(key, cfg),
+        "source": _source_for(cfg),
         "protocol": ch.get("cType", ""),
         "desc": cfg.get("description", ch.get("cType", "")),
         "devices": int(cfg.get("devices", 0)),
@@ -29,114 +41,71 @@ def _to_vendor(ch, key_override=None):
         "interval": str(cfg.get("interval", "30s")),
         "connected": ch.get("status") == "running",
         "lastSync": ch.get("updatedAt", "")[:16] if ch.get("updatedAt") else _time.strftime("%Y-%m-%d %H:%M"),
-        "relatedDevices": _related_devices(key, cfg),
+        "relatedDevices": _related_devices(cfg),
         "config": cfg,
     }
 
 
 def _icon_for(c_type):
-    return {"oracle_sql": "🗄️", "http_rest": "🛢", "modbus_tcp": "🔥", "mqtt": "🔩", "rtsp": "📷"}.get(c_type, "📡")
+    """协议图标 —— 只表达「这是一条什么协议的通道」，不表达行业。
+
+    `http_rest` 原先是 🛢（油罐）—— 那是某个部署的业务图标，
+    通用 HTTP 接入用它会把行业含义带给每一个部署。
+    """
+    return {"oracle_sql": "🗄️", "http_rest": "🌐", "modbus_tcp": "🔥",
+            "mqtt": "🔩", "rtsp": "📷"}.get(c_type, "📡")
 
 
-def _source_for(key, cfg):
-    hosts = {
-        "oracle": f"Oracle 11g · WinRM 中继 · {cfg.get('devices',0)}口井 · {cfg.get('points',0)}测点",
-        "vendor_oilmon": f"vendor_oilmon.com API · {cfg.get('devices',0)}设备 · {cfg.get('points',0)}测点",
-    }
-    return hosts.get(key, f"{cfg.get('host','—')} · {cfg.get('devices',0)}设备 · {cfg.get('points',0)}测点")
+def _source_for(cfg):
+    """通道来源描述 —— 一律从通道配置拼。
+
+    原先这里是一张 `{key: 描述}` 表，条目把某个部署的主机名、设备数、
+    测点数写死在底座代码里；`_related_devices` 原先是一张 7 组的写死清单，
+    每组的设备名都取自某个具体现场。两处一并改掉：这些值本来就在
+    Channel.config 里，读它即可。
+    """
+    return " · ".join((
+        str(cfg.get("host") or "—"),
+        f"{cfg.get('devices', 0)}设备",
+        f"{cfg.get('points', 0)}测点",
+    ))
 
 
-def _related_devices(key, cfg):
-    defaults = {
-        "oracle": [
-            {"id": "oracle_129", "name": "Oracle 11g @ 198.18.0.11:1521", "status": "online"},
-            {"id": "relay_131", "name": "WinRM 中继 @ 127.0.0.1", "status": "online"},
-        ],
-        "vendor_oilmon": [
-            {"id": "ccs1", "name": "CCS-1液压系统 (S2MX46)", "status": "online"},
-            {"id": "gear2", "name": "2号齿轮系统 (壳牌320)", "status": "online"},
-        ],
-        "boiler": [{"id": "boiler1", "name": "1号锅炉", "status": "online"}, {"id": "boiler2", "name": "2号锅炉", "status": "online"}],
-        "phm_vib": [{"id": "phm01", "name": "注水泵-B3", "status": "online"}, {"id": "phm02", "name": "压缩机-C2", "status": "online"}],
-        "bolt": [{"id": "bolt01", "name": "法兰螺栓组A", "status": "online"}, {"id": "bolt02", "name": "法兰螺栓组B", "status": "online"}],
-        "video": [{"id": "cam01", "name": "厂区入口", "status": "online"}, {"id": "cam02", "name": "泵房", "status": "online"}],
-        "tdlas": [{"id": "tdlas01", "name": "H2S监测点", "status": "online"}],
-    }
-    return defaults.get(key, [])
+def _related_devices(cfg):
+    """关联设备 —— 由通道配置给出（config.relatedDevices）。"""
+    rel = cfg.get("relatedDevices") if isinstance(cfg, dict) else None
+    return rel if isinstance(rel, list) else []
 
 
 @router.get("/list")
 def list_vendors():
-    """列出全部厂商通道 (从 DB 动态加载)"""
-    channels = _db_channels()
+    """列出全部厂商通道（从 DB 动态加载）
+
+    原先 DB 为空时会落进一段 7 条写死的「默认通道集」兜底。那份兜底本身就是
+    一份名单，且与 Channel 表并存会出现「同一个通道两处定义」。演示数据应由
+    seed 脚本写进 Channel 表，不由底座代持。
+    """
     vendors = []
     seen = set()
-    for ch in channels:
+    for ch in _db_channels():
         key = ch.get("objectId", "").replace("ch_", "")
         if key not in seen and ch.get("status") == "running":
             seen.add(key)
             vendors.append(_to_vendor(ch, key))
-    if not vendors:
-        # 兜底: 返回默认通道集
-        for key, ctype, name, devs, pts, interval in [
-            ("oracle", "oracle_sql", "Oracle 生产数据", 966, 4567, "60s"),
-            ("vendor_oilmon", "http_rest", "油液监测", 2, 54, "5 min"),
-            ("boiler", "modbus_tcp", "锅炉能效", 4, 19, "30s"),
-            ("phm_vib", "http_rest", "声振温", 36, 10, "10s"),
-            ("bolt", "mqtt", "智能螺栓", 17, 3, "60s"),
-            ("video", "rtsp", "视频监控", 29, 2, "实时"),
-            ("tdlas", "modbus_tcp", "TDLAS 气体检测", 1, 1, "1s"),
-        ]:
-            vendors.append({
-                "key": key, "name": name, "protocol": ctype,
-                "icon": _icon_for(ctype),
-                "source": f"{name} · {devs}设备 · {pts}测点",
-                "desc": name, "devices": devs, "points": pts,
-                "interval": interval,
-                "connected": True, "lastSync": _time.strftime("%Y-%m-%d %H:%M"),
-                "relatedDevices": _related_devices(key, {}),
-            })
     return {"ok": True, "vendors": vendors}
 
 
 @router.get("/{key}/status")
 def get_vendor_status(key: str):
-    """获取单个通道状态 (从 DB)"""
+    """获取单个通道状态（从 DB）
+
+    原先这里对两个具体 key 各有一段特判，读一个**不存在的模块**
+    （`services.oracle_pipeline`）取实时统计 —— ImportError 被 except 吞掉，
+    于是永远返回写在 except 里的常量。那两段是装饰，不是功能：真要有实时
+    数据源，把它挂到通道自己的 config 上，而不是在底座里按 key 特判。
+    """
     from ..parse_lite import parse_query
 
-    # Oracle/vendor_a 补充实时 Pipeline 数据
-    if key == "oracle":
-        try:
-            from ..services.oracle_pipeline import get_pipeline
-            s = get_pipeline().get_stats() if get_pipeline() else {}
-            return {
-                "key": "oracle",
-                "connected": True,  # DB 中 status=running 即已连接
-                "devices": 966,
-                "points": s.get("pipeline_points", s.get("total_collects", 0)) or 966,
-                "interval": "60s", "lastSync": _time.strftime("%Y-%m-%d %H:%M"),
-                "relatedDevices": _related_devices("oracle", {}),
-            }
-        except:
-            return {"key":"oracle","connected":True,"devices":966,"points":966,"interval":"60s",
-                    "lastSync":_time.strftime("%Y-%m-%d %H:%M"),"relatedDevices":_related_devices("oracle",{})}
-    if key == "vendor_oilmon":
-        try:
-            from ..services.oracle_pipeline import get_pipeline
-            p = get_pipeline()
-            s = p.get_stats()
-            return {
-                "key": "vendor_oilmon", "connected": True,
-                "devices": 2,
-                "points": s.get("vendor_oilmon_points", 54) or 54,
-                "interval": "5 min", "lastSync": _time.strftime("%Y-%m-%d %H:%M"),
-                "relatedDevices": _related_devices("vendor_oilmon", {}),
-            }
-        except:
-            return {"key":"vendor_oilmon","connected":True,"devices":2,"points":54,"interval":"5 min",
-                    "lastSync":_time.strftime("%Y-%m-%d %H:%M"),"relatedDevices":_related_devices("vendor_oilmon",{})}
-
-    # 其他通道从 DB 读
     ch = parse_query("Channel", {"where": f'{{"objectId":"ch_{key}"}}'})
     if ch.get("count", 0) > 0:
         return _to_vendor(ch["results"][0], key)

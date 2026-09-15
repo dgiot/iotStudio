@@ -163,8 +163,8 @@ def seed_data():
 
     # === 通道 (Channel) ===
     channels = [
-        {"objectId": "ch_vendor_oilmon", "name": "🛢 油液监测", "protocol": "http_rest",
-         "addr": "vendor_oilmon.com", "port": 443, "enabled": True, "tenant_id": "oil-monitor"},
+        {"objectId": "ch_vendor_oil", "name": "🛢 油液监测", "protocol": "http_rest",
+         "addr": "vendor-oil.example.com", "port": 443, "enabled": True, "tenant_id": "oil-monitor"},
         {"objectId": "ch_boiler", "name": "🔥 锅炉能效", "protocol": "modbus_tcp",
          "addr": "127.0.0.1", "port": 502, "enabled": True, "tenant_id": "default"},
         {"objectId": "ch_vib", "name": "📊 声振温", "protocol": "http_rest",

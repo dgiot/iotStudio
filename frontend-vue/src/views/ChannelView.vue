@@ -211,17 +211,9 @@ watch(selVendor, (v) => {
     { time: t(new Date(now - 60000)), level: 'info', msg: `采集完成: ${v.devices} 设备, ${v.points} 测点` },
     { time: t(new Date(now - 120000)), level: 'info', msg: `连接验证成功: ${v.source}` },
   ]
-  if (v.key === 'vendor_oilmon') {
-    logs.push({ time: t(new Date(now - 180000)), level: 'info', msg: '有叶云 API 登录成功, Token 刷新' })
-    logs.push({ time: t(new Date(now - 300000)), level: 'info', msg: 'CCS-1液压系统: 28 测点 (含水量1.34ppm, 温度35.67°C)' })
-    logs.push({ time: t(new Date(now - 300000)), level: 'info', msg: '2号齿轮系统: 26 测点 (温度34.65°C, 含水量5.25ppm)' })
-  }
-  if (v.key === 'boiler') {
-    logs.push({ time: t(new Date(now - 180000)), level: 'warn', msg: '2号锅炉排烟温度偏高 (182°C > 180°C)' })
-  }
-  if (v.key === 'phm_vib') {
-    logs.push({ time: t(new Date(now - 120000)), level: 'warn', msg: '压缩机-C2振动超标 (7.2mm/s > 6mm/s)' })
-  }
+  // 这里**不再**按通道 key 编造专属日志。原先对三个具体 key 各 push 几条写死的
+  // 「现场日志」（含厂商名、设备名、测点值与阈值），等于把某个部署的现场事实钉在
+  // 前端代码里 —— 换一个部署就得改前端。日志应当来自后端，前端只负责渲染。
   logs.push({ time: t(new Date(now - 3600000)), level: 'info', msg: `通道初始化完成, 注册协议: ${v.protocol}` })
   selLogs.value = logs
 })

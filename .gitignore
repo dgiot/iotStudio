@@ -73,7 +73,6 @@ tools/entry_*
 tools/find_kepware*
 tools/path12*
 tools/rtu_field*
-tools/run_vendor_oilmon*
 tools/run_opc*
 tools/run_commbridge*
 tools/run_subsystem*
