@@ -3,6 +3,7 @@
 # ============================================================
 import asyncio
 import logging
+import os
 import uuid
 import time
 from contextlib import asynccontextmanager
@@ -74,6 +75,26 @@ class LiveQueryWSManager:
 async def lifespan(app: FastAPI):
     """应用生命周期"""
     # 启动（每步独立捕获异常，避免单点故障导致整个平台退出）
+
+    # local.db 的 schema 先于一切就绪 —— 它服务的是**与 Parse / PostgreSQL 无关**
+    # 的那批端点：src/web/tenant_api.py 的 6 个租户/岗位端点，以及本文件
+    # log_packet / packet_history 的报文表。它们直连这个文件，不看任何外部服务脸色。
+    #
+    # 原先唯一的建表处是 src/storage/parse_store.py:78 的 _fallback_connect()，而它
+    # 只在 **Parse Server (localhost:1337) 连不上**时才跑 ⇒ 任何真跑了 Parse Server
+    # 的环境里这个库根本不建，上述端点全 500。本机测不出来：本机 1337 上什么都没有，
+    # 必然走降级。故独立成一步，不依附任何外部服务的连通性。
+    #
+    # 模型侧以 src/models/device.py 为唯一事实源（create_all 只建缺的表，
+    # 不改已存在的表 —— 加列仍需手工 ALTER）。
+    try:
+        os.makedirs(os.path.dirname(cfg.sqlite_path), exist_ok=True)  # init_db 不建目录
+        from .models.device import init_db as _init_local_db
+        _init_local_db("sqlite:///" + cfg.sqlite_path.replace("\\", "/")).dispose()
+        logger.info(f"[main] local.db schema 就绪: {cfg.sqlite_path}")
+    except Exception as e:
+        logger.warning(f"[main] local.db 建表失败: {e}")
+
     try:
         await pg_store.connect()
     except Exception as e:
@@ -911,8 +932,11 @@ def log_packet(device_id: str, direction: str, raw: bytes):
         _packet_log[:] = _packet_log[-300:]
     # 持久化到 SQLite
     try:
-        import sqlite3, os
-        _db = sqlite3.connect(os.path.join(cfg.data_dir, 'local.db'))
+        import sqlite3
+        # cfg.sqlite_path 而不是 os.path.join(cfg.data_dir, 'local.db')：
+        # 同一个库原先有两处表达，且 cfg.data_dir 在本机是相对值 ⇒ 从非仓根 cwd
+        # 起服务时这里写到别处，而 tenant_api.py 仍读仓根（cfg 已在入口归一）。
+        _db = sqlite3.connect(cfg.sqlite_path)
         _ensure_packet_log(_db)
         _db.execute("INSERT INTO packet_log (ts, device, dir, len, proto, hex, parsed) VALUES (?,?,?,?,?,?,?)",
                     [entry["ts"], entry["device"], entry["dir"], entry["len"],
@@ -1284,7 +1308,7 @@ async def packet_import(file_path: str = "", device_id: str = "import", limit: i
 async def packet_history(device_id: Optional[str] = None, limit: int = 100):
     """从 SQLite 查询历史报文"""
     import sqlite3, os
-    db_path = os.path.join(cfg.data_dir, 'local.db')
+    db_path = cfg.sqlite_path   # 同 log_packet：一处表达，且已在 config.py 归一为绝对
     if not os.path.exists(db_path):
         return {"total": 0, "packets": []}
     db = sqlite3.connect(db_path)

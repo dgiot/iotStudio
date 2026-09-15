@@ -5,7 +5,7 @@ import os
 import sys
 import yaml
 from pathlib import Path
-from pydantic import BaseModel
+from pydantic import BaseModel, field_validator
 from typing import Optional, Dict, Any
 
 
@@ -69,6 +69,23 @@ class AppConfig(BaseModel):
     log_level: str = "INFO"
     data_dir: str = str(BASE_DIR / "data")
     sqlite_path: str = str(BASE_DIR / "data" / "local.db")
+
+    @field_validator("data_dir", "sqlite_path")
+    @classmethod
+    def _normalize_path(cls, v: str) -> str:
+        """相对路径按 BASE_DIR 归一 —— 否则这两个值的含义取决于进程 cwd。
+
+        本仓 config.yaml 给的是 "./data" / "./data/local.db"，而使用点分两派：
+          · src/main.py 的 log_packet / packet_history 用 cfg.data_dir 拼路径 ⇒ 相对 cwd
+          · src/web/tenant_api.py 与 scripts/seed_tenants.py 用基于 __file__ 的绝对路径
+        实测（cwd=D:\\ai 起服务）：前者解析到 D:\\ai\\data\\local.db，后者仍是
+        <仓根>\\data\\local.db —— 两条路读写**两个不同的库**，且两边都不报错。
+        在配置入口归一，所有使用点自动同源（默认值本来就是绝对的，不受影响）。
+        """
+        if not v:
+            return v
+        p = Path(v)
+        return str(p if p.is_absolute() else (BASE_DIR / p))
 
     @classmethod
     def _find_config(cls, path: Optional[str] = None) -> Optional[str]:

@@ -1,9 +1,18 @@
 """租户种子数据 — 默认租户 + 油液监测租户 + 设备导入"""
-import sqlite3, os, sys, json, uuid
+import sqlite3, os, sys, json
 from datetime import datetime
+from pathlib import Path
 
-# 强制使用 SQLite（种子脚本不需要 PG）
-DB_PATH = os.path.join(os.path.dirname(__file__), "..", "data", "local.db")
+# 仓根入 sys.path —— Python 3 跑脚本时 sys.path[0] 是脚本所在目录，仓根不在其中，
+# 故裸 `from src.config import cfg` 必抛 ModuleNotFoundError。
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+
+from src.config import cfg
+from src.models.device import init_db
+
+# 库路径与表结构各只有一处事实源：cfg.sqlite_path（src/config.py，已归一为绝对
+# 路径，跨 cwd 稳定）与 src/models/device.py 的 6 个模型。本脚本不再自带第二份。
+DB_PATH = cfg.sqlite_path
 
 
 def get_db():
@@ -14,45 +23,19 @@ def get_db():
     return conn
 
 
-def ensure_tables(conn):
-    """建 data/local.db 的表。
+def ensure_tables():
+    """建 local.db 的表 —— 走 src/models/device.py 的模型（唯一事实源）。
 
-    本脚本是**唯一会建 local.db 表的现存入口**：scripts/init_db.py:25 的
-    init_db(cfg.db.sync_url) 连的是 PostgreSQL，SQLite 降级那一支是空的
-    （它打的 "[WARN] 将使用 SQLite 降级模式 (无需手动操作)" 并不成立）。
-    新增表时加在这里，别在业务代码里再写一份 DDL —— 同一张表两处 DDL 会各自腐烂。
+    原先本函数自带一份 DDL，与 models/device.py 的 6 个模型是同一批表的**第二份
+    定义**，两份各自腐烂过：tenants 少 parent_id、user_roles 整张表缺失 —— 都是在
+    业务端点 500 之后才被发现的。现在只剩模型一处。
+    （服务自身的建表在 src/main.py 的 lifespan，与本函数同一个 init_db。）
+
+    ⚠️ create_all 只建**缺的表**，不改已存在的表（不做 migration）——
+    给已有的库加列仍需手工 ALTER，本轮未解决。
     """
-    conn.executescript("""
-        CREATE TABLE IF NOT EXISTS tenants (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            tenant_id TEXT UNIQUE NOT NULL, name TEXT, slug TEXT UNIQUE,
-            -- parent_id: 上级租户 (层级)。src/models/device.py:31 的 Tenant 有这个
-            -- 字段，src/web/tenant_api.py 的 list_tenants/create_tenant/update_tenant
-            -- 都读写它 —— 原先本表漏了这一列，凡按本脚本建库的机器上这些端点必炸。
-            parent_id TEXT,
-            contact TEXT, phone TEXT, status TEXT DEFAULT 'active',
-            max_devices INTEGER DEFAULT 1000, max_users INTEGER DEFAULT 50,
-            extra TEXT, created_at TEXT
-        );
-        CREATE TABLE IF NOT EXISTS devices (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            tenant_id TEXT DEFAULT 'default',
-            device_id TEXT UNIQUE NOT NULL, device_name TEXT, device_type TEXT,
-            station_id TEXT, protocol TEXT, comm_params TEXT,
-            manufacturer TEXT, model TEXT, serial_number TEXT,
-            install_location TEXT, status TEXT DEFAULT 'offline',
-            enabled INTEGER DEFAULT 1,
-            last_online_at TEXT, created_at TEXT, updated_at TEXT, extra TEXT
-        );
-        -- user_roles: 用户-租户关联。src/web/tenant_api.py 的 assign_user_role
-        -- (INSERT OR REPLACE) 与 delete_tenant (DELETE) 读写它，原先同样没有建表处。
-        CREATE TABLE IF NOT EXISTS user_roles (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            user_id TEXT NOT NULL, tenant_id TEXT NOT NULL,
-            is_admin INTEGER DEFAULT 0, created_at TEXT
-        );
-    """)
-    conn.commit()
+    os.makedirs(os.path.dirname(DB_PATH), exist_ok=True)
+    init_db("sqlite:///" + DB_PATH.replace("\\", "/")).dispose()
 
 
 def seed_default_tenant(conn):
@@ -113,20 +96,26 @@ def import_oil_devices(conn):
         },
     ]
     for d in devices:
+        # 原先这里传的是 (d["device_id"], "device_name" not in d) or d, now, now)：
+        # 那个 2 元组恒真（非空元组的真值恒为 True）⇒ `or d` 永不求值 ⇒ 实际只供给
+        # 3 个参数而语句要 11 个，实测
+        #   sqlite3.ProgrammingError: uses 11, and there are 3 supplied
+        # 本脚本的 __main__ 走到这一行必炸 —— 所以连它前面的 "默认租户" 也从没落库
+        # （实测 tenants 表 0 行）。改成命名参数，与上面 devices 字典的键一一对应。
         conn.execute("""
             INSERT OR REPLACE INTO devices
             (tenant_id, device_id, device_name, device_type, station_id, protocol,
              manufacturer, model, install_location, comm_params, status, enabled, created_at, updated_at)
-            VALUES ('oil-monitor', :did, :name, :dtype, :station, :proto,
-                    :vendor, :model, :location, :comm, 'offline', 1, ?, ?)
-        """, (d["device_id"], "device_name" not in d) or d, now, now)
+            VALUES ('oil-monitor', :device_id, :device_name, :device_type, :station_id, :protocol,
+                    :manufacturer, :model, :install_location, :comm_params, 'offline', 1, :now, :now)
+        """, {**d, "now": now})
     conn.commit()
     print(f"✅ 导入 {len(devices)} 台油液监测设备")
 
 
 if __name__ == "__main__":
+    ensure_tables()          # 自己开会话建表，再取连接灌数据
     conn = get_db()
-    ensure_tables(conn)
     seed_default_tenant(conn)
     seed_oil_tenant(conn)
     import_oil_devices(conn)

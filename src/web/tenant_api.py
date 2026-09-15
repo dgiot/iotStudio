@@ -1,7 +1,8 @@
 """多租户管理 API — 对齐 DG-IoT _Role 模型
 
-表（tenants / user_roles）由 scripts/seed_tenants.py 建在 data/local.db，
-故这里直连同一个库 —— 同表必须同源。
+表（tenants / user_roles）由 src/main.py 的 lifespan 按 src/models/device.py
+的模型建（scripts/seed_tenants.py 走同一个 init_db），库路径取 cfg.sqlite_path
+（已在 src/config.py 归一为绝对），故这里直连同一个库 —— 同表必须同源。
 
 原实现是 `from ..main import get_session` + SQLAlchemy 的 `text()`，但**本仓
 从未有过 get_session**（全仓无 `def get_session`），6 个端点全部
@@ -15,15 +16,19 @@ from datetime import datetime
 from fastapi import APIRouter, Depends, HTTPException
 
 from ..auth import require_admin
+from ..config import cfg
 
 router = APIRouter(tags=["tenants"])
 
-DB_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)),
-                       "..", "..", "data", "local.db")
+# 与 src/main.py 的 log_packet / packet_history 同一个库 —— 原先这里按 __file__
+# 拼绝对路径，而那边按 cfg.data_dir 拼（本机是相对值）⇒ 从非仓根 cwd 起服务时
+# 两条路读写两个不同的库。cfg.sqlite_path 已在 src/config.py 归一为绝对路径。
+DB_PATH = cfg.sqlite_path
 
 
 def get_db():
-    """直连 data/local.db —— 与 scripts/seed_tenants.py 同一个库、同一套建表。"""
+    """直连 local.db —— 库与表由 src/main.py 的 lifespan 建（同源事实源）。"""
+    os.makedirs(os.path.dirname(DB_PATH), exist_ok=True)
     conn = sqlite3.connect(DB_PATH)
     conn.row_factory = sqlite3.Row
     return conn
@@ -127,9 +132,16 @@ def assign_user_role(body: dict, user=Depends(require_admin)):
     db = get_db()
     try:
         db.execute(
-            "INSERT OR REPLACE INTO user_roles (user_id, tenant_id, is_admin) VALUES (:uid, :tid, :admin)",
+            # created_at 必给：模型里是 NOT NULL（src/models/device.py:49），而
+            # create_all 生成的 DDL 没有 SQL 层 DEFAULT（SQLAlchemy 的 default=
+            # 只在 ORM 侧生效）⇒ 原先这条 INSERT 实测抛
+            #   IntegrityError: NOT NULL constraint failed: user_roles.created_at
+            # 端点恒 500。格式与 create_tenant 的 created_at 一致。
+            "INSERT OR REPLACE INTO user_roles (user_id, tenant_id, is_admin, created_at) "
+            "VALUES (:uid, :tid, :admin, :now)",
             {"uid": body.get("user_id"), "tid": body.get("tenant_id"),
-             "admin": body.get("is_admin", False)}
+             "admin": body.get("is_admin", False),
+             "now": datetime.utcnow().isoformat()}
         )
         db.commit()
         return {"status": "assigned"}
