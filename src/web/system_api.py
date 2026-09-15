@@ -6,6 +6,28 @@ router = APIRouter(prefix="/api", tags=["system"])
 
 _startup_ts = time.time()
 
+
+def _jsonable(v):
+    """把插件注册项里的值降级成可 JSON 化的形式。
+
+    注册项是内部结构，不是 API 契约：`adapter`（顶层与 metadata 里各有一份）
+    按设计是**类对象**（plugin_registry.py:47 校验它必须是
+    BaseProtocolAdapter 子类），原样返回会让 FastAPI 的 jsonable_encoder 抛
+    `TypeError: vars() argument must have __dict__ attribute` ⇒ HTTP 500。
+    这里统一递归降级，而不是逐个字段打补丁 —— 否则注册项一长出新字段，
+    就会再 500 一次。
+    """
+    if isinstance(v, type):
+        return v.__name__
+    if isinstance(v, dict):
+        return {str(k): _jsonable(x) for k, x in v.items()}
+    if isinstance(v, (list, tuple, set)):
+        return [_jsonable(x) for x in v]
+    if v is None or isinstance(v, (str, int, float, bool)):
+        return v
+    return repr(v)
+
+
 @router.get("/system")
 def system_info():
     from ..config import cfg
@@ -53,10 +75,18 @@ def system_info():
 
 @router.get("/plugins")
 def list_plugins():
+    """插件清单 + 健康度（前端 loader.js 登录后据此决定模块开关）。
+
+    注册项原样返回会 500：`adapter` 是类对象、`metadata` 里也有不可序列化的值，
+    FastAPI 的 jsonable_encoder 抛 `TypeError: vars() argument must have
+    __dict__ attribute` —— 而本函数的 try/except 抓不到它：**序列化发生在
+    return 之后**。故经 `_jsonable` 递归降级后再返回。
+    """
     try:
         from ..plugin_registry import list_all, health
-        return {"plugins": list_all(), "health": health()}
-    except:
+        plugins = [{k: _jsonable(v) for k, v in p.items()} for p in list_all()]
+        return {"plugins": plugins, "health": health()}
+    except Exception:
         return {"plugins": [], "health": {}}
 
 # ---- 远程 IO 服务器信息 (WinRM) ----
@@ -259,40 +289,9 @@ def oracle_query(sql: str):
 
 
 # ═══════════════════════════════════════════════════════════
-# Oracle 数据管道 API — 定时采 → TDengine → MQTT
+# 原先此处有 4 个 Oracle 数据管道端点（pipeline/start · stop · status · run-once）。
+# 它们 import 的 services/oracle_pipeline 已由 1effe9217「移除厂商专属插件与内部
+# 管道引用」有意删除，但这 4 个调用方没跟着清 —— 于是成了 4 个恒 500 的端点
+# （GET /api/pipeline/status 实测 HTTP 500：ModuleNotFoundError）。一并删除。
 # ═══════════════════════════════════════════════════════════
-
-@router.post("/pipeline/start")
-async def pipeline_start():
-    """启动 Oracle 数据管道"""
-    from ..services.oracle_pipeline import get_pipeline
-    p = get_pipeline()
-    result = await p.start()
-    return {"ok": True, **result}
-
-
-@router.post("/pipeline/stop")
-async def pipeline_stop():
-    """停止 Oracle 数据管道"""
-    from ..services.oracle_pipeline import get_pipeline
-    p = get_pipeline()
-    await p.stop()
-    return {"ok": True, "status": "stopped"}
-
-
-@router.get("/pipeline/status")
-def pipeline_status():
-    """查询管道状态"""
-    from ..services.oracle_pipeline import get_pipeline
-    p = get_pipeline()
-    return {"ok": True, **p.get_stats()}
-
-
-@router.post("/pipeline/run-once")
-async def pipeline_run_once():
-    """手动触发一次采集"""
-    from ..services.oracle_pipeline import get_pipeline
-    p = get_pipeline()
-    result = await p.run_once()
-    return {"ok": True, **result}
 

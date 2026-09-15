@@ -15,10 +15,21 @@ def get_db():
 
 
 def ensure_tables(conn):
+    """建 data/local.db 的表。
+
+    本脚本是**唯一会建 local.db 表的现存入口**：scripts/init_db.py:25 的
+    init_db(cfg.db.sync_url) 连的是 PostgreSQL，SQLite 降级那一支是空的
+    （它打的 "[WARN] 将使用 SQLite 降级模式 (无需手动操作)" 并不成立）。
+    新增表时加在这里，别在业务代码里再写一份 DDL —— 同一张表两处 DDL 会各自腐烂。
+    """
     conn.executescript("""
         CREATE TABLE IF NOT EXISTS tenants (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             tenant_id TEXT UNIQUE NOT NULL, name TEXT, slug TEXT UNIQUE,
+            -- parent_id: 上级租户 (层级)。src/models/device.py:31 的 Tenant 有这个
+            -- 字段，src/web/tenant_api.py 的 list_tenants/create_tenant/update_tenant
+            -- 都读写它 —— 原先本表漏了这一列，凡按本脚本建库的机器上这些端点必炸。
+            parent_id TEXT,
             contact TEXT, phone TEXT, status TEXT DEFAULT 'active',
             max_devices INTEGER DEFAULT 1000, max_users INTEGER DEFAULT 50,
             extra TEXT, created_at TEXT
@@ -32,6 +43,13 @@ def ensure_tables(conn):
             install_location TEXT, status TEXT DEFAULT 'offline',
             enabled INTEGER DEFAULT 1,
             last_online_at TEXT, created_at TEXT, updated_at TEXT, extra TEXT
+        );
+        -- user_roles: 用户-租户关联。src/web/tenant_api.py 的 assign_user_role
+        -- (INSERT OR REPLACE) 与 delete_tenant (DELETE) 读写它，原先同样没有建表处。
+        CREATE TABLE IF NOT EXISTS user_roles (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            user_id TEXT NOT NULL, tenant_id TEXT NOT NULL,
+            is_admin INTEGER DEFAULT 0, created_at TEXT
         );
     """)
     conn.commit()

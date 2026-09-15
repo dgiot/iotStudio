@@ -800,6 +800,26 @@ class ScanRequest(BaseModel):
 # 全局报文日志
 _packet_log: List[Dict] = []
 
+
+def _ensure_packet_log(db):
+    """建 packet_log 表（幂等）。
+
+    src/models/device.py 的 6 个 SQLAlchemy 模型（tenants/user_roles/devices/
+    data_points/alarm_records/push_targets）里**没有这张表**，全仓也再无第二处
+    建表语句 —— 于是写入侧 (log_packet) 和读取侧 (/api/packets/history) 一直对着
+    一张从未存在过的表读写，读取侧 500、写入侧被 `except: pass` 吞掉。
+
+    建表放在**使用点**而不是某个 init 脚本：本仓没有任何保证会被执行的建表入口
+    —— scripts/init_db.py:25 的 init_db(cfg.db.sync_url) 连的是 PostgreSQL，
+    SQLite 降级模式那一支是空的；scripts/seed_tenants.py 只建 tenants/devices。
+    而写入路径必然被执行，所以表必然被建出来。
+    """
+    db.execute("""CREATE TABLE IF NOT EXISTS packet_log (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        ts REAL, device TEXT, dir TEXT, len INTEGER,
+        proto TEXT, hex TEXT, parsed TEXT)""")
+
+
 # Modbus 功能码表
 _MODBUS_FC = {
     1:'读线圈', 2:'读离散输入', 3:'读保持寄存器', 4:'读输入寄存器',
@@ -893,11 +913,15 @@ def log_packet(device_id: str, direction: str, raw: bytes):
     try:
         import sqlite3, os
         _db = sqlite3.connect(os.path.join(cfg.data_dir, 'local.db'))
+        _ensure_packet_log(_db)
         _db.execute("INSERT INTO packet_log (ts, device, dir, len, proto, hex, parsed) VALUES (?,?,?,?,?,?,?)",
                     [entry["ts"], entry["device"], entry["dir"], entry["len"],
                      entry["proto"], entry["hex"], str(entry["parsed"])])
         _db.commit(); _db.close()
-    except: pass
+    except Exception as _e:
+        # 原先这里是裸 `except: pass`：建表缺失被静默吞掉，INSERT 从未成功过一次，
+        # 而这件事没有任何出口 —— 直到 /api/packets/history 500 才间接暴露。
+        logger.warning(f"[packet] 持久化失败: {_e}")
 
 # 注入到协议适配器（在 lifespan 中延迟调用，确保协议模块已加载）
 import sys as _sys
@@ -1266,6 +1290,7 @@ async def packet_history(device_id: Optional[str] = None, limit: int = 100):
     db = sqlite3.connect(db_path)
     db.row_factory = sqlite3.Row
     try:
+        _ensure_packet_log(db)   # 表还没被写入侧建出来时（冷启动、库被删过）兜底
         if device_id:
             rows = db.execute("SELECT * FROM packet_log WHERE device=? ORDER BY id DESC LIMIT ?",
                             [device_id, limit]).fetchall()
