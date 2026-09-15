@@ -9,7 +9,12 @@
 #   Point    → DTDL Telemetry (per 类目)    | sosa:ObservableProperty
 #   Link     → DTDL Relationship (词表)     | 实例间 dg:{relation} 属性
 #   约束基数  → DTDL relationship min/maxMultiplicity (Foundry Link Type 同语义)
+#   AAS      → Site/Shell · Gateway·Channel·Device·DataSource/Submodel
+#              Point/Property · Link/RelationshipElement · Constraint/Operation
+#              (IEC 63278 / IDTA v3.0 — 见 export_aas())
+#   PROV-O   → 测点/通道/数据源/设备/网关/站点的血缘链 (见 export_prov())
 # 全部纯函数: 不修改 engine, 可安全反复调用 (测试断言幂等)。
+import re
 from typing import Dict, List, Optional
 
 try:
@@ -274,3 +279,224 @@ def export_prov(engine, fmt: str = "turtle") -> str:
     if fmt == "xml":
         return g.serialize(format="xml")
     return g.serialize(format="turtle")
+
+
+# ── AAS (IEC 63278 / IDTA AAS v3.0) — 资产管理壳 ────────────────────────────
+#
+# 与上面三个导出器共用的**一道脱敏门**（不是遗漏，别"补"回来）：
+#   · 不导 `Gateway.ip` —— 内网地址即网络拓扑。
+#   · 不导 `Channel.endpoint` / `DataSource.connection` —— 形制是
+#     "host:port or connection string"，connection string 里可能带凭据。
+#   · 不导 `Constraint.source` / `Constraint.action` —— 前者是现场配置文件名与
+#     设备型号，后者出现过主机地址（`198.51.100.102`，虽是 RFC5737 保留段）。
+#     导出器**不做**"这个 IP 算不算真地址"的判断：判据越细越容易漏，一律不带
+#     才是可辩护的规则。这三处与「敏感配置永不进 git 历史」同源。
+#   ⇒ 需要这些字段的消费方走运行时 API，不走对外标准导出物。
+
+_AAS_ID_SHORT_BAD = re.compile(r"[^A-Za-z0-9_]")
+
+
+def _aas_id_short(raw: str) -> str:
+    """AAS 规范: idShort 须匹配 [a-zA-Z][a-zA-Z0-9_]*
+
+    本体 id 含 `.` / `-` / 空格时不能直接放进 AAS —— 换掉并把首字符顶成字母，
+    否则摄入侧（BaSyx / AASX 工具链）会拒收整个模型，而报错不会指到这一行。
+    """
+    s = _AAS_ID_SHORT_BAD.sub("_", str(raw))
+    if not s or not s[0].isalpha():
+        s = "x_" + s
+    return s
+
+
+def _aas_ref(iri: str) -> dict:
+    """AAS Reference — 元素级引用统一走 ModelReference/GlobalReference"""
+    return {"type": "ModelReference",
+            "keys": [{"type": "GlobalReference", "value": iri}]}
+
+
+def _aas_sm_ref(sm_id: str) -> dict:
+    """Submodel 引用 —— AAS v3 里 Submodel 引用用 "Submodel" key，不是 GlobalReference"""
+    return {"type": "ModelReference",
+            "keys": [{"type": "Submodel", "value": sm_id}]}
+
+
+def _aas_ml(text: str) -> List[dict]:
+    """AAS MultiLanguageTextType"""
+    return [{"language": "zh", "text": text}]
+
+
+def _aas_xsd(value) -> str:
+    """值 → XSD 类型名（AAS 的 valueType 取 XSD 内置类型）"""
+    if isinstance(value, bool):
+        return "xs:boolean"
+    if isinstance(value, int):
+        return "xs:int"
+    if isinstance(value, float):
+        return "xs:double"
+    return "xs:string"
+
+
+def _aas_prop(id_short: str, value, display: str = "") -> dict:
+    """AAS Property —— 空串归 null（AAS 里 "" 与 null 语义不同：null = 无值）"""
+    return {"modelType": "Property",
+            "idShort": _aas_id_short(id_short),
+            "valueType": _aas_xsd(value),
+            "value": None if value == "" else value,
+            "displayName": _aas_ml(display or id_short)}
+
+
+def export_aas(engine) -> dict:
+    """导出 AAS 资产管理壳 (IEC 63278 / IDTA AAS v3.0)
+
+    类级映射依 docs/BENCHMARK.md 词汇映射表:
+      Site       → AssetAdministrationShell (assetKind=Instance; 一站点一外壳)
+      Gateway    → Submodel
+      Device     → Submodel
+      Point      → SubmodelElement: Property (挂在其 Device 的 Submodel 下)
+      Link       → SubmodelElement: RelationshipElement (first/second 双引用)
+      Constraint → SubmodelElement: Operation (挂在其 entity 所属 Submodel 下)
+
+    两处**超出**映射表的补充（表中未列，为引用闭合与 AAS 惯例）:
+      · Channel → Submodel —— 同 Gateway/Device 形制；Device 的归属链经它，
+        不导出则 Submodel 之间的层级在 AAS 侧断开。
+      · 实体标识字段（manufacturer/model/type/status…）→ Property ——
+        AAS 的 Submodel 本就以 SubmodelElement 承载属性（铭牌语义）。
+
+    挂不上 Submodel 的 Link（如 source 是 Point）计入 meta.orphans，
+    **不静默丢弃** —— 「报总数前先拆成构成项」。
+
+    纯函数: 只读 engine, 不落任何状态。
+    """
+    # 实体 → 所属 Site.id（Shell 分组用）
+    def _gw_site(gid: str) -> str:
+        return getattr(engine.gateways.get(gid), "site", "")
+
+    def _ch_gw(cid: str) -> str:
+        return getattr(engine.channels.get(cid), "gateway", "")
+
+    def _dev_ch(did: str) -> str:
+        return getattr(engine.devices.get(did), "channel", "")
+
+    def _site_of(kind: str, oid: str) -> str:
+        if kind == "site":
+            return oid
+        if kind == "gateway":
+            return _gw_site(oid)
+        if kind == "channel":
+            return _gw_site(_ch_gw(oid))
+        if kind == "device":
+            return _gw_site(_ch_gw(_dev_ch(oid)))
+        if kind == "datasource":
+            return _gw_site(getattr(engine.datasources.get(oid), "gateway", ""))
+        return ""
+
+    submodels: List[dict] = []
+    sm_by_entity: Dict[str, dict] = {}
+    sm_site: Dict[str, str] = {}
+    n_prop = 0
+    n_point_prop = 0
+
+    def _add_submodel(kind: str, oid: str, display: str, props: List[dict]) -> None:
+        nonlocal n_prop
+        n_prop += len(props)
+        sm = {"modelType": "Submodel",
+              "idShort": _aas_id_short(f"{kind}_{oid}"),
+              "id": f"{DG_NS}sm_{oid}",
+              "semanticId": _aas_ref(f"{DG_NS}Submodel/{kind}"),
+              "displayName": _aas_ml(display),
+              "submodelElements": list(props)}
+        submodels.append(sm)
+        sm_by_entity[oid] = sm
+        sm_site[oid] = _site_of(kind, oid)
+
+    for gid, g in sorted(engine.gateways.items()):
+        _add_submodel("gateway", gid, g.hostname or gid, [
+            _aas_prop("hostname", g.hostname), _aas_prop("os", g.os),
+            _aas_prop("status", g.status)])
+
+    for cid, c in sorted(engine.channels.items()):
+        _add_submodel("channel", cid, c.name, [
+            _aas_prop("protocol", c.protocol), _aas_prop("status", c.status)])
+
+    for did, d in sorted(engine.devices.items()):
+        props = [_aas_prop("type", d.type), _aas_prop("manufacturer", d.manufacturer),
+                 _aas_prop("model", d.model), _aas_prop("devaddr", d.devaddr),
+                 _aas_prop("product", d.product), _aas_prop("status", d.status)]
+        for p in sorted(engine.points.values(), key=lambda x: x.id):
+            if p.device != did:
+                continue
+            props.append({"modelType": "Property",
+                          "idShort": _aas_id_short(p.id),
+                          "valueType": "xs:double",
+                          "value": None,
+                          "displayName": _aas_ml(p.name),
+                          "description": _aas_ml(
+                              " ".join(x for x in (p.category, p.unit) if x) or p.id)})
+            n_point_prop += 1
+        _add_submodel("device", did, d.name, props)
+
+    for dsid, ds in sorted(engine.datasources.items()):
+        _add_submodel("datasource", dsid, ds.type or dsid, [
+            _aas_prop("type", ds.type), _aas_prop("tag_count", ds.tag_count),
+            _aas_prop("status", ds.status)])
+
+    # Link → RelationshipElement，挂在**源实体**的 Submodel 下
+    n_rel, orphan_links = 0, []
+    for l in sorted(engine.links.values(), key=lambda x: x.id):
+        sm = sm_by_entity.get(l.source)
+        if sm is None:
+            orphan_links.append(l.id)
+            continue
+        sm["submodelElements"].append({
+            "modelType": "RelationshipElement",
+            "idShort": _aas_id_short(l.id),
+            "semanticId": _aas_ref(f"{DG_NS}{l.relation}"),
+            "first": _aas_ref(f"{DG_NS}{l.source}"),
+            "second": _aas_ref(f"{DG_NS}{l.target}"),
+            "displayName": _aas_ml(l.relation)})
+        n_rel += 1
+
+    # Constraint → Operation（规则为输入、严重度为判定输出）
+    n_op, orphan_cons = 0, []
+    for cid, c in sorted(engine.constraints.items()):
+        sm = sm_by_entity.get(c.entity)
+        if sm is None:
+            orphan_cons.append(cid)
+            continue
+        sm["submodelElements"].append({
+            "modelType": "Operation",
+            "idShort": _aas_id_short(cid),
+            "semanticId": _aas_ref(f"{DG_NS}Constraint/{c.rule_kind}"),
+            "displayName": _aas_ml(c.name),
+            "description": _aas_ml(c.rule),
+            "inputVariables": [{"value": _aas_prop("rule", c.rule)}],
+            "outputVariables": [{"value": _aas_prop("severity", c.severity)}]})
+        n_op += 1
+
+    shells = []
+    for sid, s in sorted(engine.sites.items()):
+        shells.append({
+            "modelType": "AssetAdministrationShell",
+            "idShort": _aas_id_short(sid),
+            "id": f"{DG_NS}aas_{sid}",
+            "displayName": _aas_ml(s.name),
+            "description": _aas_ml(f"{s.type} 站点"),
+            "assetInformation": {"assetKind": "Instance",
+                                 "globalAssetId": f"{DG_NS}{sid}",
+                                 "assetType": _aas_ref(f"{DG_NS}Site/{s.type}")},
+            "submodels": [_aas_sm_ref(sm["id"]) for oid, sm in sm_by_entity.items()
+                          if sm_site.get(oid) == sid]})
+
+    return {"shells": shells, "submodels": submodels,
+            "meta": {"shells": len(shells), "submodels": len(submodels),
+                     # 拆开报：333 这一个数会被读成「333 个测点」，
+                     # 而其中只有 10 个是测点，其余是实体标识字段。
+                     "properties": {"points": n_point_prop,
+                                    "entity_fields": n_prop - n_point_prop,
+                                    "total": n_prop},
+                     "relationships": n_rel,
+                     "operations": n_op,
+                     "orphans": {"links": orphan_links, "constraints": orphan_cons},
+                     "entity_counts": engine.health()["counts"],
+                     "note": "实例层导出 (assetKind=Instance)；测点 value 为 null "
+                             "—— 实时值走运行时 API, 不进标准导出物"}}

@@ -54,9 +54,9 @@ except ImportError:
                              propose_from_finding)
 
 try:
-    from ..interop import evaluate_cardinality, export_dtdl, export_prov, export_ssn
+    from ..interop import evaluate_cardinality, export_aas, export_dtdl, export_prov, export_ssn
 except ImportError:
-    from interop import evaluate_cardinality, export_dtdl, export_prov, export_ssn
+    from interop import evaluate_cardinality, export_aas, export_dtdl, export_prov, export_ssn
 
 try:
     from ..enterprise import EnterpriseConnector, register_objects
@@ -1418,6 +1418,17 @@ async def aip_export_prov(format: str = Query("turtle", pattern="^(turtle|xml)$"
              else "application/rdf+xml; charset=utf-8")
     from fastapi.responses import Response
     return Response(content=body, media_type=media)
+
+
+@router.get("/aip/export/aas")
+async def aip_export_aas(user: dict = Depends(get_current_user)):
+    """AAS 资产管理壳导出 (IEC 63278 / IDTA v3.0) — BaSyx / AASX 工具链可摄入
+
+    Shell / Submodel / SubmodelElement 三层；挂不上 Submodel 的边在 meta.orphans
+    里，不静默丢弃。脱敏门与上面三个导出器一致：不带内网地址与连接串。
+    """
+    rag, engine = _get_rag()
+    return export_aas(engine)
 
 
 # ═══════════════════════════════════════════════════════════

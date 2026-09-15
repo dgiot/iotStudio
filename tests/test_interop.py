@@ -3,9 +3,9 @@
 # ============================================================
 import pytest
 
-from src.interop import (CARDINALITY_RULES, evaluate_cardinality, export_dtdl,
-                         export_prov, export_ssn)
-from src.ontology import Link, build_131_ontology
+from src.interop import (CARDINALITY_RULES, evaluate_cardinality, export_aas,
+                         export_dtdl, export_prov, export_ssn)
+from src.ontology import Constraint, Link, build_131_ontology
 
 
 @pytest.fixture(scope="module")
@@ -176,5 +176,136 @@ def test_prov_attribution(engine):
 def test_prov_pure_and_idempotent(engine):
     before = _counts(engine)
     a, b = export_prov(engine), export_prov(engine)
+    assert a == b
+    assert _counts(engine) == before
+
+
+# ── AAS (IEC 63278 / IDTA v3.0) ──
+
+def test_aas_shell_per_site(engine):
+    a = export_aas(engine)
+    assert a["meta"]["shells"] == _counts(engine)["sites"]
+    assert a["shells"], "0 个 Shell —— 后面的断言都会变成空过"
+    for s in a["shells"]:
+        assert s["modelType"] == "AssetAdministrationShell"
+        assert s["assetInformation"]["assetKind"] == "Instance"
+
+
+def test_aas_submodel_per_entity(engine):
+    a = export_aas(engine)
+    ids = {s["id"] for s in a["submodels"]}
+    assert any(x.endswith("sm_gw_131") for x in ids)            # Gateway → Submodel
+    assert any(x.endswith("sm_ch_modbus_tcp") for x in ids)     # Channel → Submodel
+    assert any(x.endswith("sm_dev_well_DEV_A") for x in ids)    # Device  → Submodel
+
+
+def test_aas_every_submodel_referenced_by_exactly_one_shell(engine):
+    """站点归属不能串：每个 Submodel 恰好被一个 Shell 引用"""
+    a = export_aas(engine)
+    ref = {}
+    for sh in a["shells"]:
+        for r in sh["submodels"]:
+            ref.setdefault(r["keys"][0]["value"], []).append(sh["id"])
+    assert len(ref) == len(a["submodels"])
+    assert all(len(v) == 1 for v in ref.values())
+
+
+def test_aas_point_becomes_property(engine):
+    a = export_aas(engine)
+    dev = next(s for s in a["submodels"] if s["id"].endswith("sm_dev_well_DEV_A"))
+    props = [e for e in dev["submodelElements"] if e["modelType"] == "Property"]
+    tgp = next((e for e in props if e["idShort"] == "pt_tgp"), None)
+    assert tgp is not None
+    assert tgp["valueType"] == "xs:double" and tgp["value"] is None
+    # 总数必须拆得开：points 单独数，且与实体计数对得上
+    m = a["meta"]["properties"]
+    assert m["points"] == _counts(engine)["points"]
+    assert m["total"] == m["points"] + m["entity_fields"]
+
+
+def test_aas_link_becomes_relationship_element(engine):
+    a = export_aas(engine)
+    rels = [e for s in a["submodels"] for e in s["submodelElements"]
+            if e["modelType"] == "RelationshipElement"]
+    assert rels
+    # Link 八词表 → semanticId（BENCHMARK 映射表的 "Link 八词表 → Relationship"）
+    assert any(e["semanticId"]["keys"][0]["value"].endswith("powered_by") for e in rels)
+    for e in rels:
+        assert e["first"]["keys"][0]["value"].startswith("http")
+        assert e["second"]["keys"][0]["value"].startswith("http")
+
+
+def test_aas_constraint_becomes_operation(engine):
+    a = export_aas(engine)
+    ops = [e for s in a["submodels"] for e in s["submodelElements"]
+           if e["modelType"] == "Operation"]
+    assert ops
+    assert any(e["idShort"] == "c_overcurrent" for e in ops)
+    assert all(e["inputVariables"][0]["value"]["idShort"] == "rule" for e in ops)
+
+
+def test_aas_orphans_are_counted_not_dropped(engine):
+    """挂不上 Submodel 的边必须进 orphans —— 静默丢弃是本仓反复栽的坑。
+
+    断言形式是「已挂 + 孤儿 == 总数」而非写死条数：总数由 agent 自己数，
+    以后加种子边不用回来改测试（写死的条数会单向腐烂）。
+    """
+    a = export_aas(engine)
+    m, c = a["meta"], _counts(engine)
+    assert m["relationships"] + len(m["orphans"]["links"]) == c["links"]
+    assert m["operations"] + len(m["orphans"]["constraints"]) == c["constraints"]
+    assert m["relationships"] > 0, "一条都没挂上 —— 上面的等式会退化成 0+0"
+
+
+def test_aas_orphan_branches_are_actually_exercised():
+    """两条 orphans 分支必须被**真的走过** —— 否则上面的记账判据无法被验证。
+
+    自证（破坏 orphan_cons.append 那行）暴露过：种子本体里 15 个 Constraint
+    全部挂得上，Constraint 侧的空分支**从未执行**，把记账删掉判据也不会红。
+    Link 侧之所以有效，只是 `lnk_map_tgp` 的 source 恰好是 Point —— 偶然，
+    且靠种子数据维持。这里各造一条挂不上的，把分支逼出来。
+    """
+    e = build_131_ontology()                      # 独立 engine，不污染 module fixture
+    e.links["lnk_no_home"] = Link(id="lnk_no_home", source="pt_tgp",
+                                  target="dev_relay_00", relation="relates_to")
+    e.constraints["c_no_home"] = Constraint(id="c_no_home", name="无主约束",
+                                            entity="ghost_entity", rule="r")
+    m = export_aas(e)["meta"]
+    c = e.health()["counts"]
+    assert "lnk_no_home" in m["orphans"]["links"]
+    assert "c_no_home" in m["orphans"]["constraints"]
+    assert m["relationships"] + len(m["orphans"]["links"]) == c["links"]
+    assert m["operations"] + len(m["orphans"]["constraints"]) == c["constraints"]
+
+
+def test_aas_id_short_is_spec_conformant(engine):
+    """AAS 规范: idShort 须匹配 [a-zA-Z][a-zA-Z0-9_]*（不合规摄入侧拒收整个模型）"""
+    import re
+    pat = re.compile(r"^[a-zA-Z][A-Za-z0-9_]*$")
+    a = export_aas(engine)
+    for s in a["shells"]:
+        assert pat.match(s["idShort"]), s["idShort"]
+    for s in a["submodels"]:
+        assert pat.match(s["idShort"]), s["idShort"]
+        for e in s["submodelElements"]:
+            assert pat.match(e["idShort"]), e["idShort"]
+
+
+def test_aas_export_omits_network_and_credential_fields(engine):
+    """脱敏门：导出物不得含内网地址 / 连接串 / 现场配置出处
+
+    两类断言缺一不可 —— 只断言「不含 X」时，导出物为空同样通过（基线为空＝空过）。
+    """
+    import json
+    blob = json.dumps(export_aas(engine), ensure_ascii=False)
+    assert "dev_well_DEV_A" in blob and "ch_modbus_tcp" in blob   # 正对照
+    for banned in ("endpoint", "connection", "IoMonitor.ini", "Device.ini",
+                   "198.51.100.102"):
+        assert banned not in blob, banned
+
+
+def test_aas_pure_and_idempotent(engine):
+    before = _counts(engine)
+    a, b = export_aas(engine), export_aas(engine)
     assert a == b
     assert _counts(engine) == before
