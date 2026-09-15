@@ -45,6 +45,75 @@ log = logging.getLogger("graph.store")
 #    并且必须有一条门禁证明这里真的会红 (tests/test_tenant_scope.py)。
 
 
+# ── 数据来源: 一个概念一个源、一个闭集 ────────────────────────
+# 收敛前的形态是**三种键** (`data_kind` / `_synthetic` / `_sanitized`) ×
+# **四种写法** (`'合成演示本体'` 中文 / `'synthetic-demo'` / `'synthetic'` / 无),
+# 底下是一条 if/elif —— 于是「既标合成、又标脱敏」的那几个包里
+# `_sanitized` 被**静默吞掉**: 页面上只看得到
+# 「合成」, 看不到「脱敏副本」, 而这两个事实都该显示。
+# (本仓老坑: 一个位置挤两个事实, 不报错只是少显示。)
+#
+# 另一条硬性质: **缺证据不得推导出「现场真值」**。
+# 各包的 service.py 曾各自兜底成 `or '现场真值'`, 于是没标注的本体在页面上
+# 被渲染成最强的那个结论 —— 「合成数据被标成现场真值」是真出过的对外失实。
+# 所以这里只可能**显式**匹配到「现场真值」, 推导一律朝弱的一侧走。
+DATA_KIND_FIELD = "现场真值"
+DATA_KIND_SANITIZED = "脱敏副本"
+DATA_KIND_SYNTHETIC = "合成演示本体"
+DATA_KIND_UNMARKED = "未标注"
+
+# 闭集 —— 页面**直接渲染这个值**, 不各自再映射一次。
+# 用中文而非英文键: 十个案例包各有各的页面, 英文键意味着十张映射表,
+# 那就又把「一个事实」散回十处了。
+DATA_KINDS = (DATA_KIND_FIELD, DATA_KIND_SANITIZED,
+              DATA_KIND_SYNTHETIC, DATA_KIND_UNMARKED)
+
+# 历史写法 → 闭集。**只往弱的一侧归**: 不设任何指向「现场真值」的别名 ——
+# 那是最强的结论, 只能由显式标注承担。
+_DATA_KIND_ALIASES = {
+    "synthetic": DATA_KIND_SYNTHETIC, "synthetic-demo": DATA_KIND_SYNTHETIC,
+    "合成演示": DATA_KIND_SYNTHETIC, "演示本体": DATA_KIND_SYNTHETIC,
+    "sanitized": DATA_KIND_SANITIZED, "sanitized-demo": DATA_KIND_SANITIZED,
+    "脱敏": DATA_KIND_SANITIZED,
+}
+
+
+def derive_data_kind(ontology: dict) -> str:
+    """本体 → 数据来源 (闭集)。缺证据返回「未标注」, **不会**返回「现场真值」。"""
+    raw = str(ontology.get("data_kind") or "").strip()
+    if raw in DATA_KINDS:
+        return raw                        # 显式标注优先; 「现场真值」只能这样进来
+    if raw:
+        norm = _DATA_KIND_ALIASES.get(raw.lower())
+        # 非闭集写法**不静默**: 归一化的同时出声。静默归一等于下一个人
+        # 不知道自己写的值被换掉了 (本仓纪律: 跳过必计入 unchecked 并报红)。
+        log.warning(f"[graph] data_kind {raw!r} 不在闭集内, "
+                    f"归一化为 {norm or DATA_KIND_UNMARKED!r}")
+        return norm or DATA_KIND_UNMARKED
+    if ontology.get("_synthetic"):
+        return DATA_KIND_SYNTHETIC
+    if ontology.get("_sanitized"):
+        return DATA_KIND_SANITIZED
+    return DATA_KIND_UNMARKED
+
+
+def derive_sanitized(ontology: dict) -> dict:
+    """脱敏处理的事实 —— 与 data_kind **正交**, 不挤同一个键。
+
+    `_sanitized` 一键两型: 多数包写 `True`, 少数包写
+    `{sanitized, source, method, note}`。统一成结构, 元数据不再被 `bool()` 丢掉
+    —— 「这份数据从哪来、怎么脱的敏」正是页面要给人看的东西。
+    """
+    s = ontology.get("_sanitized")
+    if isinstance(s, dict):
+        out: Dict[str, Any] = {"applied": bool(s.get("sanitized", True))}
+        for k in ("source", "method", "note"):
+            if s.get(k):
+                out[k] = s[k]
+        return out
+    return {"applied": bool(s)}
+
+
 class GraphProvider:
     """图库提供方契约 (Service Definition) —— 消费方只认这一份。
 
@@ -158,20 +227,12 @@ class MemoryGraphProvider(GraphProvider):
                 rel.setdefault(e["relation"], []).append(e)
 
         cats = {c.get("id"): c for c in (ontology.get("categories") or []) if c.get("id")}
-        # data_kind 的语义必须是**推导**出来的，不能只认一个同名字面键。
-        # 原来各包是按本体里的 _synthetic / _sanitized 标的（「合成演示本体」），
-        # 只有少数包恰好也写了一个 data_kind 键。这里若只读字面键，那些没写的包
-        # 一律变空 —— 而空的 data_kind 到了页面上会被兜底成「现场真值」，
-        # 于是**合成数据被标成现场真值**（对外材料上的失实，是真出过的错）。
-        # 所以：字面键优先（显式覆盖），否则按与各包一致的规则推导。
-        if ontology.get("data_kind"):
-            data_kind = ontology["data_kind"]
-        elif ontology.get("_synthetic"):
-            data_kind = "合成演示本体"
-        elif ontology.get("_sanitized"):
-            data_kind = "脱敏副本"
-        else:
-            data_kind = ""
+        # 数据来源与脱敏事实都收口到上面的 derive_* —— 这两样原来在本文件、
+        # 包的 plugin.py、包的 service.py、包的页面里**各推导一遍**, 四份的
+        # 兜底互不相同 (其中一份兜底成「现场真值」)。一个事实一个源:
+        # 这里推导, 消费方只显示。
+        data_kind = derive_data_kind(ontology)
+        sanitized = derive_sanitized(ontology)
         with self._lock:
             self._ns[ns] = {
                 "meta": dict(meta or {}),
@@ -182,6 +243,9 @@ class MemoryGraphProvider(GraphProvider):
                 "name": ontology.get("name", ns),
                 "version": ontology.get("version", ""),
                 "data_kind": data_kind,
+                # 脱敏是**另一个事实**, 与 data_kind 正交 —— 收敛前它挤在
+                # 同一条 if/elif 里, 于是「既合成又脱敏」的包只显示得出一个。
+                "sanitized": sanitized,
                 "note": ontology.get("note", ""),
                 "nodes": by_id, "cats": cats,
                 "out": out, "in": in_, "rel": rel,
@@ -210,7 +274,8 @@ class MemoryGraphProvider(GraphProvider):
                     **d["meta"],
                     "name": d["name"], "version": d["version"],
                     "tenant": d["tenant"],
-                    "data_kind": d["data_kind"], "note": d["note"],
+                    "data_kind": d["data_kind"], "sanitized": d["sanitized"],
+                    "note": d["note"],
                     "nodes": len(d["nodes"]), "edges": len(d["edges"]),
                     "category_count": len(d["cats"]), "relation_count": len(d["rel"]),
                     "dangling": len(d["dangling"]),
@@ -337,7 +402,8 @@ class MemoryGraphProvider(GraphProvider):
     def bundle(self, ns, *, only=None) -> dict:
         d = self._get(ns, only)
         return {"namespace": ns, "name": d["name"], "version": d["version"],
-                "data_kind": d["data_kind"], "note": d["note"],
+                "data_kind": d["data_kind"], "sanitized": d["sanitized"],
+                "note": d["note"],
                 "categories": self.categories(ns, only=only),
                 "nodes": list(d["nodes"].values()),
                 "edges": list(d["edges"])}
@@ -349,7 +415,7 @@ class MemoryGraphProvider(GraphProvider):
                        if not d["in"].get(nid) and not d["out"].get(nid)]
             cats = self.categories(ns, only=only)
             return {"namespace": ns, "name": d["name"], "version": d["version"],
-                    "data_kind": d["data_kind"],
+                    "data_kind": d["data_kind"], "sanitized": d["sanitized"],
                     "nodes": len(d["nodes"]), "edges": len(d["edges"]),
                     # ⚠️ `categories` 在本 API 里**只有一种语义: 那个数组**。
                     #    初版这里放的是类别**个数**, 与 categories(ns) 同名不同义 ——
