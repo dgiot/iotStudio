@@ -7,9 +7,9 @@
 
 一切都落在**同一个前缀** `/api/plugin/<包名>/` 之下:
 
-  /api/plugin/ami_metering/          → 包内 web/index.html (页面壳)
-  /api/plugin/ami_metering/app.js    → 包内 web/app.js
-  /api/plugin/ami_metering/selftest  → 插件用 ctx.route() 注册的处理器
+  /api/plugin/<包名>/          → 包内 web/index.html (页面壳)
+  /api/plugin/<包名>/app.js    → 包内 web/app.js
+  /api/plugin/<包名>/selftest  → 插件用 ctx.route() 注册的处理器
 
 查找顺序是**先注册端点、后静态文件** —— 同名的处理器的意图更明确。
 

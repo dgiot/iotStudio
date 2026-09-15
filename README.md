@@ -233,3 +233,5 @@ python scripts/hub_smoke.py              # 边缘→中枢 MQTT 回环验证
 - Docker Hub: https://hub.docker.com/u/dgiot
 - 安全披露: 见 [SECURITY.md](SECURITY.md)
 - 邮箱: LLC 信箱启用后公布（当前请通过 GitHub Issues / Security Advisories 联系）
+- 分支: 活跃分支为 **`github-clean`**；仓内另一条 `master` 线与之**无共同祖先**（不是分叉，
+  是同一批代码被清洗过两次），已停止维护

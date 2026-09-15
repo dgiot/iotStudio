@@ -8,7 +8,7 @@
 当场就是错的 —— 而且错得很安静：包照样装载、页面照样打开，只是甲公司的人看得见
 乙公司的本体。谁知道这台机器上装了哪些插件，谁才知道它们是谁的。
 
-  IOTSTUDIO_NS_TENANT="charging=t_charging,pump_test=t_pump"
+  IOTSTUDIO_NS_TENANT="<插件名>=<租户ID>,<插件名>=<租户ID>"
 
 取值形制照抄 plugin_runtime._env_plugin_roots（空项跳过、去重、不抛）。
 

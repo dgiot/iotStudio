@@ -212,3 +212,5 @@ This repo merged the shared IOT base plugin package (`plugins-base`) with capabi
 - Docker Hub: https://hub.docker.com/u/dgiot
 - Security disclosures: see [SECURITY.md](SECURITY.md)
 - Email: published once the LLC mailbox is live — for now, reach us via GitHub Issues / Security Advisories
+- Branches: the active branch is **`github-clean`**; the other line, `master`, shares **no common
+  ancestor** with it (not a fork — the same codebase cleaned twice) and is no longer maintained

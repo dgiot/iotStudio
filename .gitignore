@@ -138,3 +138,19 @@ dist/
 _ocr索引/
 dist/
 scripts/network-jump/config.env
+
+# ===== Erlang 崩溃转储 (2026-09-15) =====
+# 中枢（Erlang/EMQX）启动失败或崩溃时，会在**当前工作目录**掉一个 erl_crash.dump。
+# 2026-09-14 就有一个 419KB 的落在仓根：
+#   Slogan: init terminating in do_boot
+#           ({cannot get bootfile,/opt/dgiot-4.4/_build/emqx/rel/emqx/bin/start.boot})
+# 那一份逐项核过是干净的（0 IP / 0 邮箱 / 0 口令字段）—— 但**干净的原因不是运气**：
+# 回读转储，它死在 `init:boot_loop/2`、还没进任何应用，全文只有 3014 个 atom、
+# 唯一一条绝对路径就是那个 bootfile。**死得早所以干净**，下一次不会这么巧。
+# 转储含进程堆、atom 表、环境变量；从一台**已经跑起来过**的中枢上掉下来的那份，
+# MQTT 主题、客户端 ID、连接串都可能写在里面。它属中枢侧资产（归 dgiot 工程）。
+# 不忽略的话，一次 `git add -A` 就顺手带上公开仓了（同 2026-09-12 那段的理由）。
+#
+# 不误伤说明：只盖 Erlang 转储这个名字本身。不带 `/` 的 glob 在任意层级生效，
+# 所以子目录里掉的也盖得住；不碰其它 *.dump 产物，也不碰同名目录。
+erl_crash.dump
