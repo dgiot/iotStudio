@@ -27,7 +27,22 @@ CST = timezone(timedelta(hours=8))
 # 配置
 # ═══════════════════════════════════════════
 
-ONTOLOGY_DIR = Path(os.environ.get('ONTOLOGY_DIR', 'D:/ai/iotStudio'))
+# ONTOLOGY_DIR 必填，无默认值 —— 原先默认 'D:/ai/iotStudio'。那个路径在本机并
+# 不存在（本仓在 D:/ai/github/iotStudio），而且这份默认值本身就是一份「路径名单」：
+# 换个部署方路径必然不同，写死的默认只会在别人机器上安静地指向一个不存在的目录。
+# 形制同 scripts/hub_smoke.py 的 DG_HUB_HOST：主机/路径不给默认值，必须显式传。
+# 该目录须同时含 thing_model.json（本文件读）与 io_ontology.py（check_owl_export
+# 会把它加进 sys.path 后 import），末尾的 os.chdir 也指向它。
+_ontology_dir = os.environ.get('ONTOLOGY_DIR')
+if not _ontology_dir:
+    print(json.dumps({
+        "status": "CRITICAL",
+        "error": "必须指定本体工作目录 ONTOLOGY_DIR",
+        "hint": "ONTOLOGY_DIR=<含 thing_model.json 与 io_ontology.py 的目录> "
+                "python scripts/audit_ontology.py",
+    }, ensure_ascii=False))
+    sys.exit(2)   # 与文件末尾的约定一致: 2=CRITICAL
+ONTOLOGY_DIR = Path(_ontology_dir)
 THING_MODEL = ONTOLOGY_DIR / 'thing_model.json'
 IO_ONTOLOGY = ONTOLOGY_DIR / 'io_ontology.py'
 REPORT_FILE = Path(os.environ.get('MEMORY_DIR',
@@ -72,6 +87,11 @@ def check_relation_coverage():
 
 def check_rule_coverage():
     """3. SWRL 规则四层覆盖"""
+    # io_ontology.py 在 $ONTOLOGY_DIR 下：既不在本脚本目录，也不在 cwd
+    # （Python 3 跑脚本时 sys.path[0] 是脚本所在目录，cwd 不在其中）。
+    # 必须显式加 —— check_owl_export 一直这么做，本函数原先漏了，
+    # 于是裸 import 必抛 ModuleNotFoundError，审计一个 JSON 都不输出。
+    sys.path.insert(0, str(ONTOLOGY_DIR))
     from io_ontology import IOOntology
     onto = IOOntology()
     rules = onto.get_rules()
@@ -189,14 +209,29 @@ def check_owl_export():
 # ═══════════════════════════════════════════
 
 def run_audit():
+    def _safe(fn):
+        """单项检查失败不能掀掉整份报告。
+
+        本文件 7 个 check 里只有 3 个自带 try/except（address_collisions /
+        metadata / owl_export），另外 4 个没有 —— 任一抛异常（例如 $ONTOLOGY_DIR
+        里缺 io_ontology.py）就会让脚本带着 traceback 退出、**一个 JSON 都不输出**，
+        而本文件 docstring 承诺「输出: JSON → stdout (Loop 消费)」。统一在调用点
+        兜住，新加的 check 也不会再漏。
+        """
+        try:
+            return fn()
+        except Exception as e:
+            return {'check': fn.__name__.replace('check_', ''),
+                    'status': 'ERROR', 'error': f'{type(e).__name__}: {e}'}
+
     checks = [
-        check_entity_completeness(),
-        check_relation_coverage(),
-        check_rule_coverage(),
-        check_address_collisions(),
-        check_metadata_completeness(),
-        check_upgrade_suggestions(),
-        check_owl_export(),
+        _safe(check_entity_completeness),
+        _safe(check_relation_coverage),
+        _safe(check_rule_coverage),
+        _safe(check_address_collisions),
+        _safe(check_metadata_completeness),
+        _safe(check_upgrade_suggestions),
+        _safe(check_owl_export),
     ]
 
     critical = [c for c in checks if c['status'] == 'CRITICAL']
@@ -250,7 +285,10 @@ Next: +4h (Cron: 227ee256)
 """
     REPORT_FILE.parent.mkdir(parents=True, exist_ok=True)
     REPORT_FILE.write_text(md)
-    print(f"Memory written: {REPORT_FILE}")
+    # 走 stderr：stdout 是本脚本的 JSON 契约（docstring: "输出: JSON → stdout
+    # (Loop 消费)"），这行混进去会让消费方的 json.loads 直接抛
+    # "Extra data: line N column 1"。
+    print(f"Memory written: {REPORT_FILE}", file=sys.stderr)
 
 
 if __name__ == '__main__':
