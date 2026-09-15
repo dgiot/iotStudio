@@ -536,21 +536,21 @@ class TestLoadLayerOwnership:
         """演示 / POC 一件插件都不必登记归属，行为与今天一字不变"""
         monkeypatch.setenv("IOTSTUDIO_NS_TENANT", "")
         from src.tenant_scope import tenant_of
-        assert tenant_of("charging") is None
+        assert tenant_of("pkg_a") is None
 
     def test_只声明了一个租户时无主仍然共享(self, monkeypatch):
-        monkeypatch.setenv("IOTSTUDIO_NS_TENANT", "charging=t_a")
+        monkeypatch.setenv("IOTSTUDIO_NS_TENANT", "pkg_a=t_a")
         from src.tenant_scope import tenant_of
-        assert tenant_of("charging") == "t_a"
+        assert tenant_of("pkg_a") == "t_a"
         assert tenant_of("忘了登记的包") is None, "只有 1 个租户 → 按部署规模判定 = 共享"
 
     def test_双租户部署里未声明的ns装载即抛错(self, monkeypatch):
         """**响，且早。** 抛错由 _load_one 既有的失败隔离接住 →
         插件标记 failed 并带上原因，宿主与其它插件不受影响。
         """
-        monkeypatch.setenv("IOTSTUDIO_NS_TENANT", "charging=t_a,pump_test=t_b")
+        monkeypatch.setenv("IOTSTUDIO_NS_TENANT", "pkg_a=t_a,pkg_b=t_b")
         from src.tenant_scope import tenant_of
-        assert tenant_of("charging") == "t_a"
+        assert tenant_of("pkg_a") == "t_a"
         with pytest.raises(ValueError) as ei:
             tenant_of("漏登记的包")
         msg = str(ei.value)
@@ -560,12 +560,12 @@ class TestLoadLayerOwnership:
 
     def test_缺等号的条目出声跳过(self, monkeypatch, caplog):
         """空项与打错是两回事：前者是分隔符的产物(静默)，后者是写漏了(必须出声)"""
-        monkeypatch.setenv("IOTSTUDIO_NS_TENANT", "charging,,pump_test=t_b")
+        monkeypatch.setenv("IOTSTUDIO_NS_TENANT", "pkg_a,,pkg_b=t_b")
         from src.tenant_scope import deployment_tenants
         import logging
         with caplog.at_level(logging.WARNING, logger="tenant.scope"):
             deployment_tenants()
-        assert any("charging" in r.message for r in caplog.records), \
+        assert any("pkg_a" in r.message for r in caplog.records), \
             "写了 ns 没写租户 = 打错了, 静默丢掉会让运维以为登记成功了"
 
     def test_describe把策略变成值(self, monkeypatch):
