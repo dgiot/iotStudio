@@ -10,6 +10,13 @@
 形制对齐 dgiot 的 data/loaded_plugins.tmpl：清单是数据，不进代码。
 底座只负责「把 Channel 表里有的东西读出来」，不负责知道装的是谁 ——
 否则每来一个部署就要改一次底座，而底座里就多留了一份别人的现场清单。
+
+⚠️ 本文件的端点一律 `async def` —— 不是为了并发，是**为了不被丢进 threadpool**。
+parse_lite 的 SQLite 连接是懒建的单例（src/parse_db.py:306 `get_backend`），
+归**首次调用它的线程**所有；FastAPI 把同步 `def` 端点交给 `run_in_threadpool`，
+换线程用连接即抛 `sqlite3.ProgrammingError: ... created in a thread ...` ，
+表现为 HTTP 500。`async def` 端点留在事件循环（主线程），与连接同线程。
+改回 `def` 会让本文件所有端点 500。
 """
 import time as _time
 
@@ -78,7 +85,7 @@ def _related_devices(cfg):
 
 
 @router.get("/list")
-def list_vendors():
+async def list_vendors():
     """列出全部厂商通道（从 DB 动态加载）
 
     原先 DB 为空时会落进一段 7 条写死的「默认通道集」兜底。那份兜底本身就是
@@ -96,7 +103,7 @@ def list_vendors():
 
 
 @router.get("/{key}/status")
-def get_vendor_status(key: str):
+async def get_vendor_status(key: str):
     """获取单个通道状态（从 DB）
 
     原先这里对两个具体 key 各有一段特判，读一个**不存在的模块**

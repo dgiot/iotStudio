@@ -82,21 +82,6 @@ def delete_tenant(tenant_id: str, user=Depends(require_admin)):
 
 # ---- 用户-租户关联 (≡ DG-IoT /roleuser) ----
 
-@router.get("/api/tenants/my")
-def my_tenants(user=None):
-    """获取当前用户的租户列表 (无需认证)"""
-    _ = user  # unused
-    db = get_db()
-    rows = db.execute(text(
-        "SELECT t.tenant_id, t.name, t.slug, ur.is_admin FROM tenants t "
-        "JOIN user_roles ur ON t.tenant_id = ur.tenant_id "
-        "WHERE ur.user_id = :uid AND t.status = 'active' ORDER BY t.name"
-    ), {"uid": getattr(user, "user_id", "default")}).fetchall()
-    if not rows:
-        rows = db.execute(text("SELECT tenant_id, name, slug FROM tenants WHERE tenant_id='default'")).fetchall()
-    return {"tenants": [dict(r) for r in rows], "current": getattr(user, "tenant_id", "default")}
-
-
 @router.post("/api/roleuser")
 def assign_user_role(body: dict, user=Depends(require_admin)):
     """分配用户到角色 — 对齐 DG-IoT POST /roleuser"""

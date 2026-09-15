@@ -9,7 +9,15 @@
 set -e
 SRC=/opt/dgiot-4.4
 DEST=/data/dgiot
-ASSETS=/mnt/d/ai/github/iotStudio/scripts/hub_abac
+# Assets (.erl / .seed.json) ship next to this script; abac_pdp.py sits one level
+# up under scripts/. Resolve both from $0 -- the absolute /mnt/d/... paths this
+# used to carry only resolved on the one machine they were written on.
+SELF_DIR=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)
+ASSETS="$SELF_DIR"
+PDP_PY=$(CDPATH= cd -- "$SELF_DIR/.." && pwd)/abac_pdp.py
+[ -f "$ASSETS/dgiot_pdp_acl.erl" ]  || { echo "missing $ASSETS/dgiot_pdp_acl.erl"; exit 1; }
+[ -f "$ASSETS/abac_policies.seed.json" ] || { echo "missing $ASSETS/abac_policies.seed.json"; exit 1; }
+[ -f "$PDP_PY" ]                    || { echo "missing $PDP_PY"; exit 1; }
 
 echo "== [1/5] install Erlang PDP face =="
 cp "$ASSETS/dgiot_pdp_acl.erl" "$SRC/apps/dgiot_dlink/src/proctol/dgiot_pdp_acl.erl"
@@ -56,7 +64,7 @@ if ss -tln | grep -q ':8383 '; then
   echo "   PDP already running"
 else
   ABAC_POLICIES_PATH="$DEST/data/abac_policies.json" \
-    setsid nohup python3 /mnt/d/ai/github/iotStudio/scripts/abac_pdp.py \
+    setsid nohup python3 "$PDP_PY" \
     >> "$DEST/log/pdp.log" 2>&1 < /dev/null &
   sleep 3
 fi

@@ -27,24 +27,8 @@ tdengine:
   database: "iot_telemetry"
   # Windows 无 TDengine → 自动降级 SQLite (data/telemetry.db)
 
-# 插件管理 — 启用/禁用协议和服务
-plugins:
-  protocol:
-    modbus_tcp: true
-    modbus_rtu: false
-    iec104: false
-    opcua: false
-    a11: true
-    http_rest_vendor: true    # 通用 HTTP 第三方接入（对接哪家由部署方定）
-  service:
-    collector: true
-    alarm_engine: true
-    push_engine: true
-    phm_engine: true
-    safety_rules: true
-  storage:
-    tdengine: true     # 无则自动降级 SQLite
-    sqlite: true       # 始终可用
+# 插件启用/禁用不在配置文件里 —— 底座按目录自动发现（src/plugin_runtime.py），
+# 运行期开关走 API：GET /api/plugins · POST /api/plugins/{name}/enable
 
 # 第三方密钥 (敏感信息, 其他配置全部入库 parse_lite Channel 表)
 credentials:

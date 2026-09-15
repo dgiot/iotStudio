@@ -195,18 +195,6 @@ async def current_user(request: Request):
     raise HTTPException(401, "未登录")
 
 
-@router.get("/tenants/my")
-def my_tenants():
-    """获取当前用户租户列表 (无需认证)"""
-    from ..parse_lite import parse_query
-    roles = parse_query("_Role", {"limit": 50})
-    tenants = [{"tenant_id": r.get("objectId",""), "name": r.get("name","")}
-               for r in roles.get("results", [])]
-    if not tenants:
-        tenants = [{"tenant_id": "default", "name": "默认租户"}]
-    return {"tenants": tenants, "current": "default"}
-
-
 # ═══════════════════════════════════════════════════════════
 # LiveQuery WebSocket (对标 Parse LiveQuery)
 # ═══════════════════════════════════════════════════════════
