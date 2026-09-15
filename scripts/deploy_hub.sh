@@ -89,18 +89,82 @@ apply_patches() {
     say "version header synced to $tagv"
   fi
   # 4c. strip enterprise plugins (open-source build must not require them)
-  sed -i '/{enable_plugin_dgiot_uav, true}/d; /^[ ,]*dgiot_uav\s*$/d' rebar.config.erl 2>/dev/null
-  sed -i '/{dgiot_uav,/d' data/loaded_plugins.tmpl 2>/dev/null
+  #     The LIST is supplied by the deployer; this repo carries NO plugin name.
+  #       usage: DG_HUB_STRIP_PLUGINS="nameA nameB" ./deploy_hub.sh
+  #     The default MUST stay empty. A default value living in the public repo
+  #     IS a list of plugin names -- which is the one thing this repo must not
+  #     contain (private/ carries the roster, the public repo carries only the
+  #     mechanism). Same shape as DG_HUB_HOST in scripts/hub_smoke.py.
+  if [ -n "${DG_HUB_STRIP_PLUGINS:-}" ]; then
+    for _p in $DG_HUB_STRIP_PLUGINS; do
+      # Names go into a sed program unquoted, so constrain them first. Without
+      # this, a name containing sed syntax silently edits the wrong lines.
+      case "$_p" in
+        *[!A-Za-z0-9_]*|'') die "DG_HUB_STRIP_PLUGINS: bad plugin name '$_p' (want [A-Za-z0-9_]+)" ;;
+      esac
+      # Both files live in the HUB SOURCE TREE ($SRC), not in this repo.
+      # No 2>/dev/null here: a missing target used to be swallowed, so "stripped"
+      # was printed whether or not anything was stripped.
+      if [ -f rebar.config.erl ]; then
+        sed -i "/{enable_plugin_${_p}, true}/d; /^[ ,]*${_p}\s*$/d" rebar.config.erl
+      else
+        warn "no rebar.config.erl in $SRC, skipped stripping $_p there"
+      fi
+      if [ -f data/loaded_plugins.tmpl ]; then
+        sed -i "/{${_p},/d" data/loaded_plugins.tmpl
+      else
+        warn "no data/loaded_plugins.tmpl in $SRC, skipped stripping $_p there"
+      fi
+      say "stripped enterprise plugin: $_p"
+    done
+  fi
   # 4d. rebar3 pinned for OTP24, fetched from gitee
   export OTP_VSN=24
   if [ ! -x ./rebar3 ]; then bash scripts/ensure-rebar3.sh >>"$LOG" 2>&1 || die "rebar3 fetch failed"; fi
   say "patches applied (github->gitee rewrite / version sync / enterprise stripped)"
 }
 
+# ---------------------------------------------------- release completeness
+# Shared by the two idempotence guards below (build_hub / install_release).
+#
+# The guard must test "the release is COMPLETE", not merely "bin/emqx exists".
+# `make` drops bin/emqx first and bin/start.boot later, and the make call is
+# timeout-bounded (3600s) inside a 5x retry loop -- so an interrupted run can
+# leave a half-built tree that still has bin/emqx. The old guard looked for
+# bin/emqx only, reported "release already built" and returned. Because this
+# script is idempotent by design, THAT TREE IS THEN NEVER REBUILT: every later
+# run skips it too, and install_release cp -a's the half-built tree into $DEST
+# unchanged.
+#
+# Not hypothetical. The erl_crash.dump dropped in the repo root on 2026-09-14
+# records exactly this failure --
+#   init terminating in do_boot ({cannot get bootfile,
+#     /opt/dgiot-4.4/_build/emqx/rel/emqx/bin/start.boot})
+# and that path matches the $SRC default verbatim. (That dump was probably not
+# produced by this script -- this script only ever starts $DEST/bin/emqx -- but
+# it does prove half-built trees occur in this environment.)
+#
+# Tightening is safe in both directions: a wrong verdict costs one extra
+# 15-40 min make, it can never pass off an unbuilt tree as built.
+#
+# The launcher test is an EXISTENCE test, not an exec-bit test -- deliberately.
+# Only one requirement is being added here (start.boot); the launcher check
+# keeps the meaning it already had, so this changes one thing, not two.
+# And test the failure that is SILENT: a non-executable bin/emqx dies loudly
+# at `./bin/emqx start` further down, while an absent start.boot is the one
+# that gets skipped over forever.
+# start.boot sits under bin/ or releases/<vsn>/ depending on release layout --
+# accept either.
+_release_ok() {  # $1 = release root
+  [ -f "$1/bin/emqx" ] || return 1
+  [ -f "$1/bin/start.boot" ] && return 0
+  ls "$1"/releases/*/start.boot >/dev/null 2>&1
+}
+
 # ---------------------------------------------------------------- [5/7] build
 build_hub() {
   cd "$SRC"
-  if ls _build/emqx/rel/emqx/bin/emqx >/dev/null 2>&1; then warn "release already built"; return; fi
+  if _release_ok "$SRC/_build/emqx/rel/emqx"; then warn "release already built"; return; fi
   say "building (deps grind + make, 15-40 min; log: $LOG)"
   local rc=1 i
   for i in $(seq 1 15); do
@@ -120,7 +184,8 @@ build_hub() {
 
 # ---------------------------------------------------------------- [6/7] install
 install_release() {
-  if [ -x "$DEST/bin/emqx" ]; then warn "release installed at $DEST"; return; fi
+  # same predicate as build_hub: bin/emqx alone does not prove a whole tree
+  if _release_ok "$DEST"; then warn "release installed at $DEST"; return; fi
   say "installing release to $DEST"
   mkdir -p "$DEST"
   cp -a "$SRC/_build/emqx/rel/emqx/." "$DEST/"
