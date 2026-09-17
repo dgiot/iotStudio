@@ -13,12 +13,16 @@
   本目录是公开提交副本，账号密码写进源码 = 写进公开 git 历史，收不回来。
   源码里只留 4 个演示账号，其余一律落 data/users.local.json（data/ 已 gitignore）。
 
-密码：全部是演示口令，公开无害；真实部署请改这里的口令或直接改 users.local.json。
+密码：**必须由环境变量 `DG_DEMO_PASSWORD` 给，源码里不留默认值。**
+  理由同「敏感配置永不进入 git 历史」—— 本目录是公开提交副本，写一个固定口令
+  进源码，就是把口令写进公开历史，收不回来。「演示口令公开无害」不构成理由：
+  固定的默认值会在真实部署里被原样留着，这正是默认口令之所以是问题。
+  照 `DG_HUB_HOST` 那条惯例：部署侧事实经环境给，公开仓不留真值。
 
 用法:
-  python scripts/seed_demo_org.py            # 灌数据
-  python scripts/seed_demo_org.py --dry-run  # 只看要写什么
-  python scripts/seed_demo_org.py --reset    # 先清掉本脚本造的行再灌
+  DG_DEMO_PASSWORD=<口令> python scripts/seed_demo_org.py            # 灌数据
+  DG_DEMO_PASSWORD=<口令> python scripts/seed_demo_org.py --dry-run  # 只看要写什么
+  DG_DEMO_PASSWORD=<口令> python scripts/seed_demo_org.py --reset    # 先清掉本脚本造的行再灌
 """
 import argparse
 import hashlib
@@ -28,13 +32,36 @@ import sqlite3
 import sys
 from datetime import datetime
 
+# Windows 控制台默认代码页是 GBK：往 stdout/stderr 写非 GBK 字符（🔴 / ✗ / ✅）
+# 会抛 UnicodeEncodeError，或退化成不可读的转义。**两个流都要改** —— 只改 stdout
+# 的话，报错信息（stderr）仍然是乱码，而报错信息恰好是这行代码存在的理由。
+sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+sys.stderr.reconfigure(encoding="utf-8", errors="replace")
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, os.path.join(ROOT, "src"))
 
 DB_PATH = os.path.join(ROOT, "data", "parse.db")
 USERS_LOCAL = os.path.join(ROOT, "data", "users.local.json")
 
-DEMO_PASSWORD = "demo123"
+DEMO_PASSWORD = os.environ.get("DG_DEMO_PASSWORD", "")
+
+
+def require_demo_password():
+    """口令缺失 ⇒ 停手。
+
+    ⚠️ `--dry-run` 也走这一道，不是顺手多写。若 dry-run 放行而真跑报错，
+    那 dry-run 的绿灯就不能预测真跑 —— 与「基线为空＝空过」同族：
+    一个不预测结果的检查比没有检查更坏，因为它会让人不去看真的那一关。
+    """
+    if not DEMO_PASSWORD:
+        print(
+            "🔴 未设置 DG_DEMO_PASSWORD —— 演示口令必须由环境给，公开仓不留默认值。\n"
+            "   Windows:  set DG_DEMO_PASSWORD=<口令> && python scripts/seed_demo_org.py\n"
+            "   Linux:    DG_DEMO_PASSWORD=<口令> python scripts/seed_demo_org.py",
+            file=sys.stderr,
+        )
+        return 2
+    return 0
 
 # ═══════════════════════════════════════════════════════════
 # 部门树 —— _Role 表里 parent_id 为空的是部门/租户（对齐 list_departments）
@@ -173,6 +200,10 @@ def main():
     ap.add_argument("--reset", action="store_true", help="先清掉本脚本造的行")
     args = ap.parse_args()
 
+    rc = require_demo_password()
+    if rc:
+        return rc
+
     if not os.path.exists(DB_PATH):
         print(f"✗ 找不到 {DB_PATH} —— 先跑一次 python run.py 让它建库")
         return 1
@@ -207,7 +238,9 @@ def main():
     print(f"\n{'（dry-run，未落盘）' if args.dry_run else '完成'}: "
           f"部门 {n_dept} · 用户行 {n_urow} · 登录账号 {n_acct}")
     if not args.dry_run:
-        print(f"演示口令统一为: {DEMO_PASSWORD}")
+        # 不回显口令值 —— 控制台输出会进日志/复制粘贴，公开仓的脚本更不该开这个头。
+        # 口令是你自己经环境给进来的，不需要我回显给你。
+        print("演示口令：DG_DEMO_PASSWORD 指定的值（不回显）")
         print("重启后端（python run.py）后 auth.py 才会装载新账号。")
     return 0
 

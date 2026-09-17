@@ -6,7 +6,7 @@ Parse Server 集成初始化脚本
 3. 创建 Schema (23个 DG-IoT 标准类)
 4. 种子数据: 默认租户 + 油液监测租户 + 用户 + 菜单
 """
-import json, os, sys, time, subprocess, urllib.request, urllib.error
+import json, os, secrets, sys, time, subprocess, urllib.request, urllib.error
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 PARSE_DIR = os.path.join(BASE_DIR, "parse-server")
@@ -47,6 +47,51 @@ def wait_parse(timeout: int = 30) -> bool:
     return False
 
 
+def pg_password() -> str:
+    """嵌入式 PostgreSQL 的口令 —— **源码里不留字面量**。
+
+    次序：环境 `DG_PG_PASSWORD` → `data/pg_password`（gitignored，首次生成后复用）
+    → 生成随机口令并落盘（0600）。
+
+    为什么跑在 127.0.0.1 上的开发库也要这么做：固定默认口令的风险不在
+    「此刻谁能连」，在「它会被原样带到真实部署里」—— 用户对 docker-compose
+    那条给的方向就是这个（「正常应该是一键式部署」，首次部署生成随机口令、
+    缺值则启动失败）。同一个道理不因为它跑在回环上就变。
+
+    ⚠️ 已存在的 `data/pgdata` 是用**它初始化时的那个口令**建的。口令文件缺失
+    而 pgdata 在 ⇒ 那是本次改动之前建的库。这里不猜、也不静默降级：降级回
+    默认口令就等于把字面量从源码挪到了代码路径里，看着像修好了。
+    """
+    env = os.environ.get("DG_PG_PASSWORD", "").strip()
+    if env:
+        return env
+
+    pw_file = os.path.join(BASE_DIR, "data", "pg_password")
+    if os.path.exists(pw_file):
+        with open(pw_file, encoding="utf-8") as f:
+            stored = f.read().strip()
+        if stored:
+            return stored
+
+    if os.path.isdir(os.path.join(BASE_DIR, "data", "pgdata")):
+        print("🔴 data/pgdata 已存在，但没有 data/pg_password —— 那是本次改动之前建的库。\n"
+              "   它认的是初始化时用的那个口令。二选一：\n"
+              "     ① 设 DG_PG_PASSWORD=<当时的那个口令> 再跑\n"
+              "     ② 删掉 data/pgdata 让它按新口令重建（**库里的数据会没**）")
+        raise SystemExit(2)
+
+    pw = secrets.token_urlsafe(24)
+    os.makedirs(os.path.dirname(pw_file), exist_ok=True)
+    with open(pw_file, "w", encoding="utf-8") as f:
+        f.write(pw)
+    try:
+        os.chmod(pw_file, 0o600)
+    except OSError:
+        pass  # Windows 上 chmod 语义有限，失败不致命
+    print(f"✅ 已生成嵌入式 PG 口令并存入 {pw_file}（data/ 已 gitignore，不进公开仓）")
+    return pw
+
+
 def start_postgres():
     """启动嵌入式 PostgreSQL"""
     try:
@@ -55,7 +100,7 @@ def start_postgres():
             data_dir=os.path.join(BASE_DIR, "data", "pgdata"),
             port=7432,
             username="postgres",
-            password="postgres",
+            password=pg_password(),
             database="parse",
         )
         pg.start()

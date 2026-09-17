@@ -210,9 +210,17 @@ def test_subscriber_native_credentials():
     def factory(client_id):
         holder["c"] = FakePaho(client_id)
         return holder["c"]
+    # 夹具值用尖括号形式：本仓既有惯例（`scripts/init_parse.py` 的
+    # APP_ID/MASTER_KEY 也这么写），且门禁的模板占位符词表认 `<...>`。
+    # 这条断言的是「凭据被透传给 paho」，不是某个真凭据 —— 原先那个夹具值
+    # 是个会被凭据扫描当成真命中的词，故换掉。
+    #
+    # ⚠️ 此处**刻意不复述**那个词。上一版这条注释把原值照抄了一遍（"它原先
+    # 写的是……"），于是门禁立刻在这句注释里逮到它 —— 这行说明本身成了那条
+    # 唯一的硬红。**「解释为什么不能说 X」的那句话，最容易把 X 说回来。**
     Subscriber(host="h", client_factory=factory,
-               username="pid", password="secret")
-    assert holder["c"].username_pw_set_args == ("pid", "secret")
+               username="<fixture-user>", password="<fixture-pass>")
+    assert holder["c"].username_pw_set_args == ("<fixture-user>", "<fixture-pass>")
 
 
 def test_on_message_wildcard_tail_dispatch_and_json():
