@@ -135,6 +135,11 @@ config.yaml
 config.project.yaml
 build/
 dist/
+# *.egg-info/ 与 build/ 同源, 都是 `pip install --no-build-isolation <本地目录>`
+# 在**源码树里**留下的产物 (--target 只写目标目录, 但 egg_info 那步在源码目录跑)。
+# build/ 上面已忽略, egg-info 此前漏了 ⇒ 每装一次 examples/ 下的样板包,
+# 仓根就多一个未跟踪目录, 与「别的会话新建的文件」在 git status 里长得一样。
+*.egg-info/
 _ocr索引/
 dist/
 scripts/network-jump/config.env

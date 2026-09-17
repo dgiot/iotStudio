@@ -1,0 +1,18 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "iotstudio-demo-app"
+# ★ 版本只有一个来源, 就是这个字段。模块里由 importlib.metadata.version() 读回,
+#   见 iotstudio_demo_app/plugin.py —— 不在 .py 里再手写一份。
+version = "0.1.0"
+description = "iotStudio 应用插件(A 层)最小样板 —— entry point 指向模块"
+requires-python = ">=3.10"
+dependencies = []   # 宿主经 ctx 提供一切; 插件不 import 底座, 见 README
+
+[project.entry-points."iotstudio.apps"]
+demo_app = "iotstudio_demo_app.plugin"
+
+[tool.setuptools]
+packages = ["iotstudio_demo_app"]
