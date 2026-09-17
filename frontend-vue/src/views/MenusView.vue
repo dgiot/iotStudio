@@ -44,7 +44,7 @@
         <el-table-column prop="title" label="标题" width="170">
           <template #default="{ row }">
             <span :class="{ off: !row.visible }">{{ row.title }}</span>
-            <el-tag v-if="row.external" size="small" :type="row.embed ? 'success' : 'warning'"
+            <el-tag v-if="row.external || row.embed" size="small" :type="row.embed ? 'success' : 'warning'"
                     style="margin-left:6px">{{ row.embed ? '插件应用' : '外链' }}</el-tag>
           </template>
         </el-table-column>
@@ -89,10 +89,16 @@
           <el-input v-model="fm.external" placeholder="留空 = 普通页面；填了则按下面的方式打开" />
         </el-form-item>
         <el-form-item label="内嵌打开">
-          <el-switch v-model="fm.embed" :disabled="!fm.external" />
+          <!-- 不绑 external: external 与 embed 是两个独立字段, 两条来源按序取
+               (见 views/PluginFrameView.vue)。插件应用可以只开内嵌、不填外链 ——
+               那时地址推底座同源的 /api/plugin/<包名>/, 比外链少一次跨域、
+               且与底座共享登录态。早先这里 disabled=!external, 把那条路堵死了。 -->
+          <el-switch v-model="fm.embed" />
           <span class="embed-hint">
             {{ fm.embed
-              ? '在底座布局内打开（iframe，侧栏顶栏保留）—— 插件应用走这个'
+              ? (fm.external
+                  ? '在底座布局内打开（iframe，侧栏顶栏保留）—— 用上面的外链地址'
+                  : '在底座布局内打开（iframe）—— 由底座托管，地址取 /api/plugin/<路径末段>/')
               : '新窗口打开 —— 普通外链走这个' }}
           </span>
         </el-form-item>
@@ -207,8 +213,11 @@ function openEdit(row) {
 }
 
 function openCreate() {
+  // external 默认留空, 不预填 'https://': 那是**非空字符串**, 会和真外链一样
+  // 命中 PluginFrameView 的第一分支 —— 新建一个底座托管的插件应用时忘了清掉,
+  // iframe 就会去加载字面量 "https://"。留空 + placeholder 提示才是对的。
   fm.value = { _creating: true, path: '', title: '', icon: 'Link', group: 'base',
-               order: 50, external: 'https://', embed: false, visible: true }
+               order: 50, external: '', embed: false, visible: true }
   vis.value = true
 }
 
