@@ -1,0 +1,244 @@
+{
+  "meta": {
+    "what": "本地本体类 / 属性 → 外部参考本体的映射。",
+    "dual_role": [
+      "① 记录：我们对齐了什么、依据是什么、哪些**还没**对齐",
+      "② 依据：src/interop.py::export_ssn() 从这里取词，不再在注释里维护第二份"
+    ],
+    "why_data_not_code": "写成常量就变成「我声称」；写成数据才能要求每条写得出出处，写不出就标待核。原先这份映射是 src/interop.py:4-16 的一个注释块 —— 没有出处、没有执行者，于是三处错静默通过了全部既有检查。",
+    "history": "vocab/README.md 记着 2026-09-16 修前的三类静默错误（ssn:hostedBy 词表里不存在 / ssn:forProperty 是 ObjectProperty 却接字面量 / ssn:hasSubSystem 指向非 ssn:System）。**本表是修后的状态**，历史那张表别当现状读。",
+    "vocabularies": {
+      "sosa": {
+        "iri": "http://www.w3.org/ns/sosa/",
+        "file": "vocab/sosa.ttl",
+        "sha256": "c70b0d1c843c0047e4c98e0a89392e46a05752ff6365bda7f7f55303905a0392",
+        "source": "https://www.w3.org/ns/sosa/",
+        "fetched": "2026-09-16",
+        "license": "W3C Software and Document Notice and License + OGC Software License（见 vocab/README.md）"
+      },
+      "ssn": {
+        "iri": "http://www.w3.org/ns/ssn/",
+        "file": "vocab/ssn.ttl",
+        "sha256": "184d86189191146e314cc52b1bceb96fca11e70aacbc160d71588102a5153eb9",
+        "source": "https://www.w3.org/ns/ssn/",
+        "fetched": "2026-09-16",
+        "license": "同上（ssn.ttl 与 sosa.ttl 同一版权行：Copyright 2017 W3C/OGC.）"
+      }
+    },
+    "local_classes_source": "src/ontology.py 的 OntologyEngine.__init__ —— sites / gateways / channels / devices / points / datasources / links / constraints 八个容器。本表的 class 条目必须逐条覆盖它们，少一条即报红：漏掉的那个类就是「没说清自己没对齐什么」。",
+    "scope": "只覆盖 SSN/SOSA。DTDL / AAS / PROV-O 三个导出器的目标不是 RDF 本体，类级对齐的表达方式不同，另表。",
+    "status_values": {
+      "已核": "该 term 在 vocab/ 对应词表里确实存在，依据栏给出了 term 与定义原文",
+      "待核": "没有外部对应，或依据不足 —— 不许按猜测填一个像样的 term 顶上",
+      "自造": "刻意使用 dg: 本地词，不冒充标准。数据不丢，但不声称它对齐了任何东西"
+    },
+    "relation_values": {
+      "null": "未声明类级关系，只在实例上贴了类型标签。**当前全部是 null** —— 这是真缺口（见「缺口」一节），判据 test_reports_that_no_class_relation_is_declared 会把它报出来，不许它静默。",
+      "subClassOf": "类级包含。会让推理器把本类的实例也当外部类的实例 —— 外部类的公理随之生效",
+      "equivalentClass": "类级等价。携带双向公理，最重，升级前要逐条评估外部类的限制",
+      "closeMatch": "SKOS 近似，不参与 OWL 推理 —— 想表达「大致对应」时先停在这一档"
+    },
+    "gap": "**没有任何一条类级关系被声明**（relation 全为 null），且 DataSource / Link / Constraint 三个本地类没有外部对应。这就是《知识图谱互联互通白皮书》§9 点名「决定互联互通可行性」的知识结构对齐那一步，我们没做。导出器齐全 ≠ 已经对齐。"
+  },
+
+  "mappings": [
+    {
+      "kind": "class",
+      "local": "Site",
+      "external": "sosa:Platform",
+      "vocab": "sosa",
+      "relation": null,
+      "instance_asserted": true,
+      "basis": "vocab/sosa.ttl — sosa:Platform：「A Platform is an entity that hosts other entities, particularly Sensors, Actuators, Samplers, and other Platforms.」站点是承载网关的场地，落在 hosts 的主体侧。",
+      "impl": "src/interop.py::export_ssn",
+      "status": "已核"
+    },
+    {
+      "kind": "class",
+      "local": "Gateway",
+      "external": "sosa:Platform",
+      "vocab": "sosa",
+      "relation": null,
+      "instance_asserted": true,
+      "basis": "vocab/sosa.ttl — sosa:Platform（同上）；且 Gateway 确实承载 Channel/Device（导出为 sosa:isHostedBy 的客体侧），不是空挂的 Platform。sosa:isHostedBy 的 skos:definition 明列 Platform 可在主体侧：「Relation between a Sensor, Actuator, Sampler, or Platform, and the Platform that it is mounted on or hosted by.」",
+      "impl": "src/interop.py::export_ssn",
+      "status": "已核"
+    },
+    {
+      "kind": "class",
+      "local": "Channel",
+      "external": "ssn:System",
+      "vocab": "ssn",
+      "relation": null,
+      "instance_asserted": true,
+      "basis": "vocab/ssn.ttl — ssn:System：「System is a unit of abstraction for pieces of infrastructure that implement Procedures. A System may have components, its subsystems, which are other systems.」通道是一条采集链路，即一片实现采集规程的基础设施。",
+      "impl": "src/interop.py::export_ssn",
+      "status": "已核"
+    },
+    {
+      "kind": "class",
+      "local": "Device",
+      "condition": "该设备有测点时",
+      "external": "sosa:Sensor",
+      "vocab": "sosa",
+      "relation": null,
+      "instance_asserted": true,
+      "basis": "vocab/sosa.ttl — sosa:Sensor：「Device, agent (including humans), or software (simulation) involved in, or implementing, a Procedure.」有测点的设备在实现采集，且 sosa:Sensor ⊑ ssn:System（词表自身公理）。",
+      "impl": "src/interop.py::export_ssn",
+      "status": "已核"
+    },
+    {
+      "kind": "class",
+      "local": "Device",
+      "condition": "该设备无测点时",
+      "external": "ssn:System",
+      "vocab": "ssn",
+      "relation": null,
+      "instance_asserted": true,
+      "basis": "vocab/ssn.ttl — ssn:System（同 Channel）。无测点的设备只是基础设施，不是传感器 —— 不冒充 sosa:Sensor。",
+      "impl": "src/interop.py::export_ssn",
+      "status": "已核"
+    },
+    {
+      "kind": "class",
+      "local": "Point",
+      "external": "sosa:ObservableProperty",
+      "vocab": "sosa",
+      "relation": null,
+      "instance_asserted": true,
+      "basis": "vocab/sosa.ttl — sosa:ObservableProperty：「An observable quality (property, characteristic) of a FeatureOfInterest.」测点是一个可观测的量；且 sosa:ObservableProperty ⊑ ssn:Property（词表自身公理）。",
+      "impl": "src/interop.py::export_ssn",
+      "status": "已核"
+    },
+    {
+      "kind": "class",
+      "local": "DataSource",
+      "external": null,
+      "vocab": null,
+      "relation": null,
+      "instance_asserted": false,
+      "basis": "无。数据源（Oracle / 实时库 / 冗余库）在本体里是「被采集的系统」，SOSA 的候选是 sosa:FeatureOfInterest 或 ssn:System，但两者都不是它的本义 —— 未被观测的物理现象、也不是在实现规程。**不硬套**，保持 dg:DataSource。",
+      "impl": "src/interop.py::export_ssn",
+      "status": "待核"
+    },
+    {
+      "kind": "class",
+      "local": "Link",
+      "external": null,
+      "vocab": null,
+      "relation": null,
+      "instance_asserted": false,
+      "basis": "无。Link 是**关系具体化**（reified statement），RDF 侧的正规做法是直接断言三元组或用 owl:Axiom / rdf:Statement，不是自造一个类。当前导出为 dg:RelationStatement —— 是自造，标出来。",
+      "impl": "src/interop.py::export_ssn",
+      "status": "待核"
+    },
+    {
+      "kind": "class",
+      "local": "Constraint",
+      "external": null,
+      "vocab": null,
+      "relation": null,
+      "instance_asserted": false,
+      "basis": "无。**约束在 SSN/SOSA 里没有落脚点** —— 这两个词表不做约束表达（那是 SHACL / SWRL 的事）。Constraint 在 OWL 导出里只是一条 rdfs:comment，在 AAS 导出里是 Operation。本表不为它编一个标准类。",
+      "impl": "（export_ssn 不导出 Constraint）",
+      "status": "待核"
+    },
+
+    {
+      "kind": "property",
+      "local": "Gateway",
+      "property": "site",
+      "external": "dg:site",
+      "vocab": null,
+      "relation": null,
+      "instance_asserted": true,
+      "basis": "自造，**刻意不对齐**。原先写的是 sosa:isHostedBy，2026-09-16 实测触发推理污染：Gateway isHostedBy Site --(sosa:hosts owl:inverseOf sosa:isHostedBy)--> Site hosts Gateway --(Site 是 sosa:Platform)--> sosa:Platform ⊑ ∀sosa:hosts.ssn:System ⟹ 推理器把 Gateway 追加成 ssn:System。而 Gateway 声明的是 sosa:Platform，且 Platform 并不是 System 的子类。**Gateway 究竟算不算 System，我们没有独立依据** —— 那个结论是从这条断言倒推出来的，不许拿它当声明。关系不丢，但不声称它对齐了。（由 tests/test_ontology_alignment.py::test_reasoning_adds_no_undeclared_types 逮住）",
+      "impl": "src/interop.py::export_ssn",
+      "status": "自造"
+    },
+    {
+      "kind": "property",
+      "local": "Channel",
+      "property": "isHostedBy",
+      "external": "sosa:isHostedBy",
+      "vocab": "sosa",
+      "relation": null,
+      "instance_asserted": true,
+      "basis": "vocab/sosa.ttl — sosa:isHostedBy：「Relation between a Sensor, Actuator, Sampler, or Platform, and the Platform that it is mounted on or hosted by.」Channel 是 ssn:System ⇒ **受** ssn:System ⊑ ∀sosa:isHostedBy.sosa:Platform 约束，客体必须是 sosa:Platform；Gateway 正是 sosa:Platform ⇒ 公理满足。**这是本表里公理真正生效、且被满足的一条**（Gateway.site 那条走不通，正是被同一族公理挡下的）。",
+      "impl": "src/interop.py::export_ssn",
+      "status": "已核"
+    },
+    {
+      "kind": "property",
+      "local": "Device",
+      "property": "isHostedBy",
+      "external": "sosa:isHostedBy",
+      "vocab": "sosa",
+      "relation": null,
+      "instance_asserted": true,
+      "basis": "同上。Device 是 sosa:Sensor ⊑ ssn:System ⇒ 受同一公理约束，客体 Gateway 是 sosa:Platform ⇒ 满足。sosa:Sensor 的定义原文也写了「Sensors can be hosted by Platforms」。",
+      "impl": "src/interop.py::export_ssn",
+      "status": "已核"
+    },
+    {
+      "kind": "property",
+      "local": "Device",
+      "property": "observes",
+      "external": "sosa:observes",
+      "vocab": "sosa",
+      "relation": null,
+      "instance_asserted": true,
+      "basis": "vocab/sosa.ttl — sosa:observes：「Relation between a Sensor and an ObservableProperty that it is capable of sensing.」主体 sosa:Sensor、客体 sosa:ObservableProperty，与词表公理 sosa:Sensor ⊑ ∀sosa:observes.sosa:ObservableProperty 一致。",
+      "impl": "src/interop.py::export_ssn",
+      "status": "已核"
+    },
+    {
+      "kind": "property",
+      "local": "Device",
+      "property": "implements",
+      "external": "ssn:implements",
+      "vocab": "ssn",
+      "relation": null,
+      "instance_asserted": true,
+      "basis": "vocab/ssn.ttl — ssn:implements：「Relation between an entity that implements a Procedure in some executable way and the Procedure (an algorithm, procedure or method).」**这一条是必补的**：sosa:Sensor 带基数公理 sosa:Sensor ⊑ (ssn:implements min 1)。缺了它在开放世界语义下不会报不一致，但推理器会凭空认为存在一个未知的 Procedure —— 数据里长出我们没写的东西。Procedure 个体按 Channel.protocol 去重生成（protocol 为空时建 proc_unspecified，诚实表达「有规程但不知是哪个」）。⚠️ **值域类在 sosa 侧**：ssn.ttl:353 写死 `ssn:System ⊑ ∀ssn:implements.sosa:Procedure` —— 个体必须声明为 `sosa:Procedure`，写成 `ssn:Procedure`（词表里没有这个定义）会被推理器追加 `sosa:Procedure`，即 2026-09-16 实测的第 2 处残留污染。",
+      "impl": "src/interop.py::export_ssn",
+      "status": "已核"
+    },
+    {
+      "kind": "property",
+      "local": "Point",
+      "property": "unit",
+      "external": "dg:unit",
+      "vocab": null,
+      "relation": null,
+      "instance_asserted": true,
+      "basis": "自造，**刻意不对齐**。单位在 SSN/SOSA 里没有位置（那是 QUDT / OM 的域），原先写成 ssn:forProperty 是错的 —— 它是 owl:ObjectProperty，接不了字符串字面量，属 OWL 2 DL 语法级错误。改用 dg: 本地词，数据不丢，但不冒充标准。",
+      "impl": "src/interop.py::export_ssn",
+      "status": "自造"
+    },
+    {
+      "kind": "property",
+      "local": "Link",
+      "property": "relation",
+      "external": "dg:{relation}",
+      "vocab": null,
+      "relation": null,
+      "instance_asserted": true,
+      "basis": "自造。关系词表（maps_to / powered_by / feeds_into / …）定义在 src/interop.py::CARDINALITY_RULES，是本地词汇，SSN/SOSA 里没有对应。",
+      "impl": "src/interop.py::export_ssn",
+      "status": "自造"
+    },
+    {
+      "kind": "property",
+      "local": "DataSource",
+      "property": "gateway",
+      "external": "dg:gateway",
+      "vocab": null,
+      "relation": null,
+      "instance_asserted": true,
+      "basis": "自造。数据源的归属网关。原先是 ssn:hasSubSystem —— 主体 dg:DataSource 不是 ssn:System，用标准词没有任何依据，改回 dg: 本地词。",
+      "impl": "src/interop.py::export_ssn",
+      "status": "自造"
+    }
+  ]
+}
