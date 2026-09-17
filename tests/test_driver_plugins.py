@@ -97,36 +97,66 @@ def test_discover_reports_failures_loudly(tmp_path, monkeypatch):
     assert "plug_broken" in str(pr.last_report()["failed"])
 
 
+class _FakeEPS:
+    def __init__(self, eps):
+        self._eps = eps
+
+    def select(self, group):
+        return self._eps
+
+
+def _fake_ep(name, value, obj, version="0.2.0"):
+    """造一个**长得像真 EntryPoint** 的假对象: 只给 dist, 不给 version。
+
+    ⚠️ 本测试此前给假对象手写了一个 `version = "0.2.0"` 类属性 —— 而真实的
+    `importlib.metadata.EntryPoint` **没有这个属性**。于是这段测试验的是
+    「代码能读到那个手写的值」, 而生产上每一次装载都恒定拿到兜底版本:
+    **测试把这个 bug 供起来了**, 判据的判别域是假对象, 永远看不见死读。
+    """
+    class _Dist:
+        pass
+
+    d = _Dist()
+    d.version = version
+
+    class _EP:
+        pass
+
+    ep = _EP()
+    ep.name = name
+    ep.value = value
+    ep.dist = d
+    ep.load = staticmethod(lambda: obj) if not isinstance(obj, Exception) \
+        else staticmethod(_raiser(obj))
+    return ep
+
+
+def _raiser(exc):
+    def _load():
+        raise exc
+    return _load
+
+
+def test_real_entrypoint_has_no_version_attribute():
+    """锚住上面那条注释依据的事实: 真类型没有 .version, 版本在 .dist.version。
+
+    这条测的是标准库不是本仓代码 —— 但它正是 `_ep_dist_version` 存在的理由,
+    将来某个 Python 给 EntryPoint 加上 .version 时, 这里会先红。
+    """
+    from importlib.metadata import EntryPoint
+    ep = EntryPoint(name="x", value="m:a", group="g")
+    assert not hasattr(ep, "version")
+    assert hasattr(ep, "dist")
+
+
 def test_discover_entry_points_registers_adapters(monkeypatch):
     class EpAdapter(BaseProtocolAdapter):
         pass
 
-    class FakeEP:
-        name = "ep_driver"
-        value = "fake_mod:EpAdapter"
-        version = "0.2.0"
-
-        @staticmethod
-        def load():
-            return EpAdapter
-
-    class FakeBadEP:
-        name = "ep_bad"
-        value = "fake_mod:Broken"
-
-        @staticmethod
-        def load():
-            raise ImportError("module gone")
-
-    class FakeEPS:
-        def __init__(self, eps):
-            self._eps = eps
-
-        def select(self, group):
-            return self._eps
-
-    monkeypatch.setattr(pr, "entry_points",
-                        lambda: FakeEPS([FakeEP(), FakeBadEP()]))
+    monkeypatch.setattr(pr, "entry_points", lambda: _FakeEPS([
+        _fake_ep("ep_driver", "fake_mod:EpAdapter", EpAdapter),
+        _fake_ep("ep_bad", "fake_mod:Broken", ImportError("module gone")),
+    ]))
     report = pr.discover_entry_points("iotstudio.drivers")
     assert report["loaded"] == ["ep_driver"]
     assert any("ep_bad" in k for k in report["failed"])
@@ -134,6 +164,62 @@ def test_discover_entry_points_registers_adapters(monkeypatch):
     assert plugin["adapter"] is EpAdapter
     assert plugin["metadata"]["source"] == "entry_points"
     assert plugin["version"] == "0.2.0"
+
+
+def test_entry_point_version_falls_back_to_a_visible_sentinel(monkeypatch):
+    """负控: 取不到发行版版本时, 必须是**看得出来**的哨兵, 不是像真值的 "1.0"。
+
+    没有这条,「版本没取到」与「版本真的是 1.0」给出同一个观测 ——
+    而那正是这个 bug 藏了这么久的原因。
+    """
+
+    class EpAdapter(BaseProtocolAdapter):
+        pass
+
+    class _NoDistEP:
+        name, value = "ep_nodist", "fake_mod:EpAdapter"
+
+        class _BadDist:
+            @property
+            def version(self):
+                raise RuntimeError("no metadata")
+
+        dist = _BadDist()
+        load = staticmethod(lambda: EpAdapter)
+
+    monkeypatch.setattr(pr, "entry_points",
+                        lambda: _FakeEPS([_NoDistEP()]))
+    assert pr.discover_entry_points("iotstudio.drivers")["loaded"] == ["ep_nodist"]
+    assert pr.get("ep_nodist")["version"] == "0.0.0+unknown"
+
+
+def test_discover_app_entry_points_accepts_a_manifest_module(monkeypatch):
+    """A 层: entry point 指向**模块**, 清单取自模块常量。"""
+
+    class FakeModule:
+        PLUGIN_MANIFEST = {"name": "my_app", "capabilities": ["tool"],
+                           "version": "9.9.9"}
+
+    monkeypatch.setattr(pr, "entry_points", lambda: _FakeEPS([
+        _fake_ep("my_app", "iotstudio_my_app.plugin", FakeModule()),
+    ]))
+    assert pr.discover_app_entry_points()["loaded"] == ["my_app"]
+    assert pr.get("my_app")["category"] == "app"
+
+
+def test_app_entry_point_without_manifest_fails_loud(monkeypatch):
+    """负控: A 层缺 PLUGIN_MANIFEST 必须**报失败**, 不许静默跳过 ——
+    否则「装了个没清单的包」与「没装」在报告里长得一样。"""
+
+    class NoManifestModule:
+        pass
+
+    monkeypatch.setattr(pr, "entry_points", lambda: _FakeEPS([
+        _fake_ep("bare", "iotstudio_bare.plugin", NoManifestModule()),
+    ]))
+    report = pr.discover_app_entry_points()
+    assert report["loaded"] == []
+    assert any("bare" in k for k in report["failed"])
 
 
 def test_health_includes_last_discovery():

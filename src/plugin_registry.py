@@ -135,10 +135,38 @@ def discover(directory: str, prefix: str = "src") -> Dict[str, Any]:
     return report
 
 
-def discover_entry_points(group: str = "iotstudio.drivers") -> Dict[str, Any]:
-    """发现经 setuptools entry_points 注册的外部驱动包。
+def _ep_dist_version(ep) -> str:
+    """entry point 所属发行版的**真版本** (distribution 元数据)。
 
-    约定: entry point 指向一个 BaseProtocolAdapter 子类 (驱动即插件)。
+    🔴 不能用 `getattr(ep, "version", ...)`: `importlib.metadata.EntryPoint`
+    **没有 version 属性** —— 那是老的 pkg_resources.EntryPoint 才有。本类型只有
+    name/value/group + attr/dist/extras/load/matches/module/pattern。
+    取默认值等于**恒定返回缺省**, 与包自己声明什么完全无关: 每一个经 entry
+    point 装载的插件都会拿到同一个假版本, 而它长得像真值。
+
+    取不到时回落 `0.0.0+unknown` 而**不是** "1.0" —— 缺省值的病根是不可辨,
+    不是「有默认值」; 一个看着像真值的兜底比没有兜底更坏。
+    """
+    try:
+        return str(ep.dist.version) or "0.0.0+unknown"
+    except Exception:
+        return "0.0.0+unknown"
+
+
+APP_ENTRY_GROUP = "iotstudio.apps"
+
+
+def discover_entry_points(group: str = "iotstudio.drivers",
+                          category: str = "protocol") -> Dict[str, Any]:
+    """发现经 setuptools entry_points 注册的外部插件包。
+
+    B 层 (默认 `iotstudio.drivers`): entry point 指向 **BaseProtocolAdapter 子类**。
+    A 层 (`iotstudio.apps`, 见 discover_app_entry_points): entry point 指向
+    **模块**, 模块自带 `PLUGIN_MANIFEST`。
+
+    ⚠️ 早先 category 在这里是写死的 "protocol": group 是参数、函数体却是 B 层
+    专用 —— 拿它扫 A 层, `_validate_adapter` 会拿模块对象去比 BaseProtocolAdapter,
+    **每个 A 层插件都被判成坏契约落进 failed**。现在 category 一并参数化。
     """
     report = {"loaded": [], "failed": {}}
     try:
@@ -151,10 +179,17 @@ def discover_entry_points(group: str = "iotstudio.drivers") -> Dict[str, Any]:
         return report
     for ep in group_eps:
         try:
-            adapter = ep.load()
-            _validate_adapter(ep.name, "protocol", adapter)
-            register(ep.name, adapter=adapter, category="protocol",
-                     version=str(getattr(ep, "version", "") or "1.0"),
+            obj = ep.load()
+            if category == "protocol":
+                _validate_adapter(ep.name, category, obj)
+            elif not isinstance(getattr(obj, "PLUGIN_MANIFEST", None), dict):
+                # A 层: 缺清单是坏契约, **fail loud** —— 静默跳过的话
+                #「装了个没清单的包」与「没装」在报告里长得一模一样。
+                raise TypeError(
+                    f"plugin '{ep.name}': category={category} requires a module "
+                    f"with a dict PLUGIN_MANIFEST, got {obj!r}")
+            register(ep.name, adapter=obj, category=category,
+                     version=_ep_dist_version(ep),
                      source="entry_points", _module=ep.value)
             report["loaded"].append(ep.name)
         except Exception as e:
@@ -163,6 +198,16 @@ def discover_entry_points(group: str = "iotstudio.drivers") -> Dict[str, Any]:
                       exc_info=True)
     _remember_report(report)
     return report
+
+
+def discover_app_entry_points() -> Dict[str, Any]:
+    """A 层应用插件的发现入口 (group=`iotstudio.apps`, 与 B 层 drivers 并列)。
+
+    ⚠️ 本函数只把插件**登记进 plugin_registry**(因而 GET /api/plugins 可见)。
+    要让 PluginManager 真的装载它、并让 plugin_host 托管它的 web/ 页面,
+    还需要启动侧接线 (plugin_runtime) —— 那部分**尚未接**。
+    """
+    return discover_entry_points(APP_ENTRY_GROUP, category="app")
 
 
 def _remember_report(report: Dict[str, Any]) -> None:
