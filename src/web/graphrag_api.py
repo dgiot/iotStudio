@@ -95,6 +95,18 @@ def _get_rag():
         counts = _engine.health()["counts"]
         logger.info(f"GraphRAG: 实体加载完成 — {counts}")
 
+        # 引擎交付: 需要本体的插件在这里拿到它。在此之前 actions_pipeline 的
+        # engine 是 _NullEngine (entity_type 恒 None), 凡含 target_exists 判据的
+        # 动作提交**必然被拒** —— 而症状只是「动作提交失败」, 不报错、不指向这里。
+        # 注入点是插件侧早就留好的 (plugins/actions_pipeline/plugin.py 的
+        # set_engine), 缺的一直是这一行。装载顺序无关: 引擎先到而插件后到的情况
+        # 由 PluginManager._load_one 补交 (见 deliver_engine)。
+        try:
+            from ..plugin_runtime import runtime
+        except ImportError:
+            from plugin_runtime import runtime
+        runtime.deliver_engine(_engine)
+
         _graphrag = GraphRAG(_engine)  # 自动检测 ANTHROPIC_API_KEY / OPENAI_API_KEY
         logger.info(f"GraphRAG: LLM={'ready' if _graphrag._llm else 'none'}")
 
@@ -564,15 +576,32 @@ class SparqlRequest(BaseModel):
 
 @router.post("/sparql")
 async def graphrag_sparql(body: SparqlRequest):
-    """SPARQL 查询端点 — W3C 标准图查询
+    """SPARQL 查询端点 — 查询跑在与 /ontology.owl 同一张 RDF 图上
 
     Examples:
       SELECT ?device ?name WHERE { ?device rdf:type dgiot:Device ; dgiot:name ?name }
       SELECT ?s ?p ?o WHERE { ?s ?p ?o } LIMIT 10
+
+    ⚠️ 非法查询返回 400，不返回空结果 —— 「查不到」与「查询写错了」必须分得开，
+    否则语法错误会被读成"这个本体里没有数据"。
     """
     _, engine = _get_rag()
-    results = engine.sparql(body.query)
+    try:
+        results = engine.sparql(body.query)
+    except Exception as e:
+        raise HTTPException(400, f"SPARQL 查询无效: {type(e).__name__}: {e}")
     return {"total": len(results), "results": results, "query": body.query}
+
+
+@router.get("/rdf/stats")
+async def graphrag_rdf_stats():
+    """图上构件计数 — 界面显示的三元组/类/属性数一律取这里，不许手写。
+
+    判据 (tests/test_ontology_sparql.py)：triples 必须等于把 /ontology.owl
+    下载下来重新 parse 出来的三元组数 —— 同一张图，两个出口。
+    """
+    _, engine = _get_rag()
+    return engine.rdf_stats()
 
 
 # ═══════════════════════════════════════════════════════════
@@ -584,7 +613,7 @@ async def aip_dashboard():
     """运维大屏 — 实时KPI + 告警 + 通道状态"""
     rag, engine = _get_rag()
     site = engine.community_summary("site")
-    gw = engine.community_summary("gateway", "gw_131")
+    gw = engine.community_summary("gateway", "gw_edge01")
 
     # 通道状态
     channels = []

@@ -2,7 +2,8 @@
 """MQTT 主题登记表 — 每个出口都得表态
 
 起因：`ch_edge_hub` 通道在通道列表里显示 running、MQTT 也连上了，发的却是
-`dgiot/{tenant}/gw_131/ch_edge_hub/{device}/{point}` —— 这个命名空间中枢
+`dgiot/{site}/{gateway}/ch_edge_hub/{device}/{point}` 形状的主题（**站名与
+网关名当时是写死的字面量**，不是插值）—— 这个命名空间中枢
 （github 的 dgiot-github、gitee 的 tools/dgiot 两条线）的 Erlang 源码里
 零命中。它不是"发进空气"：本仓 `main.py` 和 `ch_mqtt_bridge` 都订阅
 `dgiot/#` 再转 EventBus，所以消息**真的回来了**，只是从没出过本机。
@@ -51,11 +52,14 @@ REGISTRY = {
                      "和 abac.TOPIC_RE 三方一致（都是 5 段、无 channel）。"
                      "这里原先多写一个 {channel} 段，是本仓唯一那么写的地方，已订正"),
     "dgiot/{self._site}/{self._gateway}/{device_id}/reg_{i}/data":
-        (EDGE_LOCAL, "modbus_collector 逐寄存器直发。原先是硬编码 "
-                     "`dgiot/DEVICE_D/gw_131/ch_modbus_rtu/{device_id}/data`："
-                     "站点名进公开仓，且字段整体错位一格（ch_* 占了 device 段、"
-                     "设备 id 占了 point 段）。注：_mqtt/_tdengine 从未被赋值，"
-                     "该分支实为死代码，本模块全仓也无实例化点"),
+        (EDGE_LOCAL, "modbus_collector 逐寄存器直发。原先是硬编码 —— 站点名与"
+                     "网关名写死进主题，且字段整体错位一格（多出的 `ch_*` 段"
+                     "占了 device 段、设备 id 占了 point 段）。注：_mqtt/"
+                     "_tdengine 从未被赋值，该分支实为死代码，本模块全仓也无"
+                     "实例化点。"
+                     "⚠️ 本条原先**逐字复述了改之前那串主题**：修一处现场料、"
+                     "却在说明里把那串值再抄一遍，等于从后门放回来 —— 说明也"
+                     "是公开仓的正文。故此处只描述形状，不复述值"),
 
     # ── ACL 前缀（不是主题） ──
     "dgiot/stat":

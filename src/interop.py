@@ -1,14 +1,27 @@
 # ============================================================
 # P1: 标准互操作 — DTDL v3 / SSN-SOSA 导出 + 关系基数评估
 # ============================================================
-# 词汇映射 (与 docs/BENCHMARK.md 对标表及 OWL 导出器一致):
+# 词汇映射的**事实源是 vocab/alignment.json**, 不是本注释块。
+#   (2026-09-16 之前正是「映射写在注释里、没有执行者」, 于是三处错静默通过:
+#    ssn:hostedBy 词表里不存在 / ssn:forProperty 接字面量 / ssn:hasSubSystem 指向 Platform。
+#    现在每条映射由 tests/test_ontology_alignment.py 拿去 vocab/*.ttl 逐条核。)
+# 下表只为速览, 与 alignment.json 不符时以 alignment.json 为准:
 #   Site     → DTDL Interface Site          | sosa:Platform
-#   Gateway  → DTDL Interface Gateway       | sosa:Platform (hosting)
+#   Gateway  → DTDL Interface Gateway       | sosa:Platform
 #   Channel  → DTDL Interface Channel       | ssn:System (协议采集系统)
 #   Device   → DTDL Interface Device        | sosa:Sensor (带测点) / ssn:System (其余)
 #   Point    → DTDL Telemetry (per 类目)    | sosa:ObservableProperty
 #   Link     → DTDL Relationship (词表)     | 实例间 dg:{relation} 属性
-#   约束基数  → DTDL relationship min/maxMultiplicity (Foundry Link Type 同语义)
+#   DataSource → DTDL Interface DataSource  | **无对应** — 保持 dg:DataSource
+#   Constraint → DTDL/…                      | **无对应** — SSN/SOSA 不做约束表达
+# SSN/SOSA 属性映射 (主体在词表公理下受不受限, 是选词的决定性依据):
+#   sosa:isHostedBy   Channel/Device → 所属 Gateway  (两者都 ⊑ ssn:System ⇒ 客体须 sosa:Platform, Gateway 正是)
+#   ssn:hasSubSystem  Device → Channel               (主体须是 System — Channel 是; DataSource/Link 不是, 故不用)
+#   sosa:observes     Device → Point                 (sosa:Sensor ⊑ ∀sosa:observes.ObservableProperty)
+#   ssn:implements    Device → sosa:Procedure (按 protocol 去重)  (值域在 sosa 侧 — ssn.ttl:353)
+#   dg:site           Gateway → Site                 (自造 — isHostedBy 会推出 Gateway 是 ssn:System)
+#   dg:unit           Point → 单位字面量              (自造 — SSN 无单位位置, 那是 QUDT/OM 的域)
+#   dg:gateway / dg:source / dg:category / dg:protocol / dg:deviceType   自造
 #   AAS      → Site/Shell · Gateway·Channel·Device·DataSource/Submodel
 #              Point/Property · Link/RelationshipElement · Constraint/Operation
 #              (IEC 63278 / IDTA v3.0 — 见 export_aas())
@@ -151,51 +164,94 @@ def export_dtdl(engine) -> dict:
     }
 
 
+def _iri_safe(text: str) -> str:
+    """把任意文本压成可拼进 IRI 的片段 (protocol 里有空格与斜杠, 直接拼会破坏 IRI)。"""
+    return re.sub(r"[^A-Za-z0-9_.-]", "_", text).strip("_")
+
+
 def export_ssn(engine) -> dict:
     """导出 SSN/SOSA JSON-LD (W3C 语义传感器网络本体)
 
     Site/Gateway → sosa:Platform; Channel → ssn:System;
     Device → sosa:Sensor (带测点) 或 ssn:System; Point → sosa:ObservableProperty;
     Link → dg:{relation} 有向属性 (与 OWL 导出器同一词表命名空间)。
+
+    映射逐条记在 vocab/alignment.json, 由 tests/test_ontology_alignment.py 核。
+    选词的硬约束是**主体在词表公理下受不受限**:
+      ssn:System ⊑ ∀ssn:hasSubSystem.ssn:System   ⇒ 非 System 主体不许用它
+      ssn:System ⊑ ∀sosa:isHostedBy.sosa:Platform ⇒ 主体是 System 时客体必须是 Platform
+      sosa:Sensor ⊑ (ssn:implements min 1)        ⇒ 标了 Sensor 就必须给规程
+    主体不在约束内的, 一律用小写 dg: 本地词, 不冒充标准。
     """
     graph: List[dict] = []
-    site_nodes = []
     for sid, s in engine.sites.items():
-        site_nodes.append({"@id": f"{DG_NS}{sid}", "@type": "sosa:Platform",
-                           "label": s.name})
-    graph.extend(site_nodes)
+        graph.append({"@id": f"{DG_NS}{sid}", "@type": "sosa:Platform",
+                      "label": s.name})
     for gid, g in engine.gateways.items():
-        node = {"@id": f"{DG_NS}{gid}", "@type": "sosa:Platform",
-                "label": g.hostname or gid,
-                "ssn:hostedBy": {"@id": f"{DG_NS}{g.site}"}}
-        graph.append(node)
+        # 站点归属用 dg:site 而非 sosa:isHostedBy —— 不是偷懒, 是那条断言在 SSN 下不成立:
+        #   Gateway isHostedBy Site  --(sosa:hosts owl:inverseOf sosa:isHostedBy)-->
+        #   Site hosts Gateway       --(Site 是 sosa:Platform)-->
+        #   sosa:Platform ⊑ ∀sosa:hosts.ssn:System  ⟹  Gateway 是 ssn:System
+        # 而 Gateway 声明的是 sosa:Platform, 且 Platform 并不是 System 的子类
+        # ⇒ 推理器会追加一个我们没有依据的类型。Gateway 到底算不算 System 我们不知道,
+        #   不许按猜测填一个像样的标准词顶上。关系不丢, 但不声称它对齐了。
+        graph.append({"@id": f"{DG_NS}{gid}", "@type": "sosa:Platform",
+                      "label": g.hostname or gid,
+                      "dg:site": {"@id": f"{DG_NS}{g.site}"}})
     for cid, c in engine.channels.items():
+        # Channel 是 ssn:System ⇒ 受约束, 客体 Gateway 正是 sosa:Platform ⇒ 满足
         graph.append({"@id": f"{DG_NS}{cid}", "@type": "ssn:System",
                       "label": c.name, "dg:protocol": c.protocol,
-                      "ssn:hasSubSystem": {"@id": f"{DG_NS}{c.gateway}"}})
+                      "sosa:isHostedBy": {"@id": f"{DG_NS}{c.gateway}"}})
+
+    # 采集规程按 protocol 去重生成; protocol 为空也建一个, 诚实表达
+    # 「有这个规程、但不知道是哪个」—— 缺了它 Sensor 的 min 1 基数会凭空造个体。
+    # 类型是 sosa:Procedure 而非 ssn:Procedure: ssn.ttl:353 写死了
+    #   ssn:System ⊑ ∀ssn:implements.sosa:Procedure
+    # 值域在 sosa 侧 —— 声明成 ssn:Procedure 会被推理器追加 sosa:Procedure。
+    procs: Dict[str, str] = {}
+    for c in engine.channels.values():
+        key = (c.protocol or "").strip()
+        procs.setdefault(key, f"proc_{_iri_safe(key) or 'unspecified'}")
+    for key, pid in procs.items():
+        graph.append({"@id": f"{DG_NS}{pid}", "@type": "sosa:Procedure",
+                      "label": f"{key} 采集规程" if key else "未指明规程 (protocol 为空)"})
+
     for did, d in engine.devices.items():
         pts = [p.id for p in engine.points.values() if p.device == did]
         dtype = "sosa:Sensor" if pts else "ssn:System"
+        ch = engine.channels.get(d.channel)
         node = {"@id": f"{DG_NS}{did}", "@type": dtype, "label": d.name,
                 "dg:deviceType": d.type,
                 "ssn:hasSubSystem": {"@id": f"{DG_NS}{d.channel}"}}
+        if ch is not None:
+            node["sosa:isHostedBy"] = {"@id": f"{DG_NS}{ch.gateway}"}
         if pts:
             node["sosa:observes"] = [{"@id": f"{DG_NS}{pid}"} for pid in pts]
+        if dtype == "sosa:Sensor":   # min 1 基数只挂在 sosa:Sensor 上
+            node["ssn:implements"] = {"@id": f"{DG_NS}{procs[(ch.protocol or '').strip() if ch else '']}"}
         graph.append(node)
     for pid, p in engine.points.items():
+        # 单位是 QUDT/OM 的域, SSN 里没有位置 —— dg:unit 是自造, 不冒充标准
         graph.append({"@id": f"{DG_NS}{pid}",
                       "@type": "sosa:ObservableProperty",
                       "label": p.name, "dg:category": p.category or "",
-                      **({"ssn:forProperty": p.unit} if p.unit else {})})
+                      **({"dg:unit": p.unit} if p.unit else {})})
     for dsid, ds in engine.datasources.items():
+        # 主体是 dg:DataSource, 不是 ssn:System ⇒ 用标准词无依据
         graph.append({"@id": f"{DG_NS}{dsid}", "@type": "dg:DataSource",
                       "label": ds.type or dsid,
-                      "ssn:hasSubSystem": {"@id": f"{DG_NS}{ds.gateway}"}})
+                      "dg:gateway": {"@id": f"{DG_NS}{ds.gateway}"}})
     for l in engine.links.values():
+        # dg:RelationStatement 完全自造, 更不该用标准属性
         graph.append({"@id": f"{DG_NS}{l.id}",
                       "@type": "dg:RelationStatement",
                       f"dg:{l.relation}": {"@id": f"{DG_NS}{l.target}"},
-                      "ssn:hasSubSystem": {"@id": f"{DG_NS}{l.source}"}})
+                      "dg:source": {"@id": f"{DG_NS}{l.source}"}})
+
+    # 产物自己要说清它没对齐什么 —— 否则下游分不出哪些是标准类、哪些是我们自造的
+    unmapped = sorted({n["@type"] for n in graph
+                       if isinstance(n.get("@type"), str) and n["@type"].startswith("dg:")})
     return {
         "@context": {
             "sosa": "http://www.w3.org/ns/sosa/",
@@ -204,7 +260,13 @@ def export_ssn(engine) -> dict:
             "label": "http://www.w3.org/2000/01/rdf-schema#label",
         },
         "@graph": graph,
-        "meta": {"nodes": len(graph), "entity_counts": engine.health()["counts"]},
+        "meta": {
+            "nodes": len(graph),
+            "entity_counts": engine.health()["counts"],
+            "unmapped": unmapped,
+            "unmapped_note": ("这些类型在 SSN/SOSA 里没有对应, 保持 dg: 本地词; "
+                              "另: Constraint 不参与 SSN 导出。逐条见 vocab/alignment.json"),
+        },
     }
 
 

@@ -73,8 +73,8 @@ def test_subgraph_from_relay_depth2():
     e = build_131_ontology()
     sg = e.subgraph("dev_relay_00", depth=2)
     ids = {n["id"] for n in sg["nodes"]}
-    # 上行两层: dev_relay_00 → ch_a11_rtu → gw_131
-    assert "ch_a11_rtu" in ids and "gw_131" in ids
+    # 上行两层: dev_relay_00 → ch_a11_rtu → gw_edge01
+    assert "ch_a11_rtu" in ids and "gw_edge01" in ids
     # 关系边带入: monitors/powered_by 对端
     assert "dev_well_DEV_A" in ids
     link_edges = [e2 for e2 in sg["edges"] if e2["kind"] == "link"]

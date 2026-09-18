@@ -6,7 +6,7 @@
 
 复用已有解析器 (零重复实现):
   - A11       → A11Message.decode_batch (a11.py)
-  - LegacyComm→ parse_response / parse_reg_values (commbridge_server.py)
+  - GENERIC_LEGACY_PROTO→ parse_response / parse_reg_values (commbridge_server.py)
   - Modbus TCP→ MBAP + FC 解析 (内联, 依赖 pymodbus 可选)
   - IEC104    → 内联 (帧头 0x68)
 
@@ -44,7 +44,7 @@ class DecodedPoint:
 
 
 class ProtocolDecoder:
-    """统一协议解码器 — A11 / Modbus TCP / LegacyComm / IEC104"""
+    """统一协议解码器 — A11 / Modbus TCP / GENERIC_LEGACY_PROTO / IEC104"""
 
     def __init__(self, max_points: int = MAX_POINTS):
         self._points: Deque[DecodedPoint] = deque(maxlen=max_points)
@@ -63,7 +63,7 @@ class ProtocolDecoder:
                 pts = self._decode_a11(frame, device)
             elif proto == "Modbus":
                 pts = self._decode_modbus(frame, device)
-            elif proto == "LegacyComm":
+            elif proto == "GENERIC_LEGACY_PROTO":
                 pts = self._decode_commbridge(frame, device)
             elif proto == "IEC104":
                 pts = self._decode_iec104(frame, device)
@@ -127,7 +127,7 @@ class ProtocolDecoder:
         return pts
 
     def _decode_commbridge(self, frame, device: str) -> List[DecodedPoint]:
-        """LegacyComm — 复用 parse_response / parse_reg_values"""
+        """GENERIC_LEGACY_PROTO — 复用 parse_response / parse_reg_values"""
         from src.protocols.commbridge_server import parse_response, parse_reg_values
         parsed = parse_response(frame.payload)
         if not parsed:
@@ -143,12 +143,12 @@ class ProtocolDecoder:
                 pts.append(DecodedPoint(ts=frame.ts, device_id=device,
                                         point_id=f"slave{parsed.get('slave')}_r{i}",
                                         value=float(v), quality=192,
-                                        protocol="LegacyComm",
+                                        protocol="GENERIC_LEGACY_PROTO",
                                         raw_hex=data[:8].hex()))
         else:
             pts.append(DecodedPoint(ts=frame.ts, device_id=device,
                                     point_id=f"cb_slave{parsed.get('slave')}",
-                                    value=0.0, quality=192, protocol="LegacyComm",
+                                    value=0.0, quality=192, protocol="GENERIC_LEGACY_PROTO",
                                     raw_hex=frame.payload[:16].hex()))
         return pts
 
@@ -218,9 +218,9 @@ def _selftest():
               struct.pack(">H", 0x03E9)
     dec.on_frame(_frame("Modbus", mb_resp, direction="TX"))
 
-    # LegacyComm 数据帧
+    # GENERIC_LEGACY_PROTO 数据帧
     cb_frame = bytes([1, 0, 0, 0, 0, 6, 10, 0x03, 4]) + struct.pack(">HH", 100, 200)
-    dec.on_frame(_frame("LegacyComm", cb_frame, device_port=53001))
+    dec.on_frame(_frame("GENERIC_LEGACY_PROTO", cb_frame, device_port=53001))
 
     # IEC104 帧
     iec_frame = b"\x68" + bytes([14, 0, 0, 0, 0x09, 0x06, 0, 0, 0, 0, 1, 2, 3, 4, 5, 6])
@@ -237,7 +237,7 @@ def _selftest():
     print(f"[3] 统计: {dec.stats()['decoded']} 解码 "
           f"{dec.stats()['skipped']} 跳过")
     assert dec.stats()["decoded"] >= 4, "解码失败"
-    assert by_proto.get("A11") == 1 and by_proto.get("LegacyComm") >= 1
+    assert by_proto.get("A11") == 1 and by_proto.get("GENERIC_LEGACY_PROTO") >= 1
     print("protocol_decoder selftest OK")
 
 

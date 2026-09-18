@@ -35,7 +35,7 @@ EMIT_ONLY = {
     "dtu.raw_frame":             ["src/protocols/modbus_rtu_server.py"],
     "task.channel_report":       ["src/protocols/modbus_rtu_server.py"],
     "dtu.device_disconnected":   ["src/protocols/modbus_rtu_server.py"],
-    "opcda.stats":               ["src/services/opcda_collector.py"],
+    "opcda.stats":               ["src/services/opcda_point_stats.py"],
     # 2026-09-12 从 CONNECTED 降级到这里：唯一的订阅者
     # `src/protocols/edge_hub_channel.py` 已删除（它把 alarm 发到
     # `dgiot/.../ch_edge_hub/alarms`，正是已裁决要删掉的那个 MQTT 出口）。

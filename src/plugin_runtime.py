@@ -15,9 +15,14 @@
   插件根: 本仓 plugins/ → 显式 extra_roots → 环境变量 IOTSTUDIO_PLUGIN_PATH
           (os.pathsep 分隔)。同名首个胜出并告警 —— 业务插件可住底座仓之外。
 
-  八类 capability:
+  九类 capability:
     channel(存量, 见 channel_registry) / pusher / action / tool
-    / profile(本体档案) / hook / connector / graph(本体挂进统一图库)
+    / profile(本体档案) / hook / connector / executor(动作执行器)
+    / graph(本体挂进统一图库)
+
+  本段自述历来比 CAPABILITY_TYPES 少一项（曾写「八类」而集合实为九）：
+  集合本身由 :85 的 `cap not in CAPABILITY_TYPES` 校验，**代码是自洽的**，
+  漂的只是这段文字。改这里时请对齐 :52 的集合，别改集合来迁就文字。
 
   两条统一接缝 (PR-G, 「端口统一 + 数据库统一」):
     ctx.register_graph(ontology)  本体挂进统一图库, 反查走底座 /api/graph/*
@@ -48,7 +53,7 @@ from .tenant_scope import tenant_of
 
 log = logging.getLogger("plugin.runtime")
 
-# 八类 capability 与角色缺省 ("一切皆插件": 动作执行器也是插件能力)
+# 九类 capability 与角色缺省 ("一切皆插件": 动作执行器也是插件能力)
 CAPABILITY_TYPES = {"channel", "pusher", "action", "tool", "profile", "hook",
                     "connector", "executor", "graph"}
 DEFAULT_CAP_ROLE = {"action": "admin", "tool": "admin", "connector": "admin"}
@@ -168,7 +173,8 @@ class PluginContext:
         命名空间就成了注册期强制的, 而不是「请大家自觉加前缀」的约定。
 
         handler(req) -> 可 JSON 序列化的对象, 或 (status, obj);
-        req = {"method", "path", "query", "body"}。**不要求插件 import 任何
+        req = {"method", "path", "pkg", "query", "body"} —— `pkg` 是本插件名,
+        实传见 `src/web/plugin_host.py` 的 `_dispatch`。**不要求插件 import 任何
         web 框架** —— 插件住在底座仓之外, 不该被底座的框架版本绑住。
         """
         d = self._manager.register_route(self.plugin, method, path, handler,
@@ -226,6 +232,7 @@ class PluginManager:
         self._loaded: Dict[str, dict] = {}      # name → {manifest, status, error, capabilities, disposers}
         self._state: dict = {"backend": {}, "frontend": {}}   # 持久化启停选择
         self._ontology = None
+        self._engine = None                     # 已交付给插件的本体引擎 (见 deliver_engine)
         # 统一图库 hub (数据库统一) —— 插件本体挂这儿, 不在各包各存一份
         from .graph_store import graph_store
         self.graph = graph_store
@@ -286,6 +293,51 @@ class PluginManager:
         """按名回查插件目录的**公开**入口 (plugin_host 托管页面要用)"""
         d = self._resolve_dir(name)
         return str(d) if d else None
+
+    def plugin_module(self, name: str):
+        """按名取**装载期那一个**插件模块对象 —— 调模块级钩子用 (如 set_engine)。
+
+        必须是装载期那一个: `_import_plugin` 走 `spec_from_file_location`,
+        **再次导入同一文件会得到另一个 module 对象**, 它的模块级状态
+        (如 actions_pipeline 的 _engine_box) 与已注册的执行器/工具**不共享** ——
+        拿副本去 set_engine, 设的是个没有读者的变量, 而且不报错。
+        装载失败或被停用的包返回 None (它们本就没有模块对象)。
+        """
+        return self._loaded.get(name, {}).get("module")
+
+    def _inject_engine(self, name: str, engine) -> bool:
+        """对单个插件交付引擎 —— 无 set_engine 的包返回 False (不是错, 是不需要)"""
+        fn = getattr(self.plugin_module(name), "set_engine", None)
+        if not callable(fn):
+            return False
+        try:
+            fn(engine)
+        except Exception as e:
+            # 注入失败不拖垮启动, 但**必须留痕**: 它的后果是「动作提交恒被拒」,
+            # 与压根没接线长得一模一样, 静默的话两种病因永远分不开。
+            log.error(f"[runtime] {name} 引擎注入失败: {e}")
+            return False
+        return True
+
+    def deliver_engine(self, engine) -> list:
+        """把本体引擎交给声明了注入点的插件 —— 返回收到的插件名 (已排序)。
+
+        注入点协议: 插件模块级有可调用的 `set_engine(engine)` = 「我需要本体」。
+        没有这个函数的包被跳过, 且**不算错** —— 多数插件不需要本体。
+
+        交付过的引擎记在 self._engine 上, **之后**才装载的插件在 _load_one
+        末尾补交 —— 否则「谁先醒谁拿到引擎」, 而装载顺序不该决定这件事。
+
+        ⚠️ 本仓有两个 `build_engine()` 落点 (本文件的 get_ontology 与
+        `src/web/graphrag_api.py` 的 _get_rag), 它们是**两个独立的本体对象**。
+        真正在跑的 web 入口是 _get_rag(), 交付也在那里; get_ontology() 眼下
+        没有调用者 —— **将来若启用它, 这次交付要一并接过去**。
+        """
+        self._engine = engine
+        got = [n for n in sorted(self._loaded) if self._inject_engine(n, engine)]
+        if got:
+            log.info(f"[runtime] 引擎已交付: {got}")
+        return got
 
     # ── 插件端点表 (端口统一) ────────────────────────────────
     ROUTE_PREFIX = "/api/plugin"
@@ -385,7 +437,7 @@ class PluginManager:
             ctx = PluginContext(manifest["name"], self)
             self._loaded[manifest["name"]] = {"manifest": manifest, "status": "loading",
                                               "capabilities": {}, "ctx": ctx,
-                                              "dir": str(pdir)}
+                                              "dir": str(pdir), "module": module}
             disposers = module.apply(ctx) or []
             # ⚠️ 这里原来是 `= list(disposers)`, **整体覆盖** ——
             #    ctx.on_shutdown() 登记的、以及 register_graph/route 自动挂的,
@@ -412,6 +464,9 @@ class PluginManager:
             self._sync_registry(name, manifest, enabled=True)
             log.info(f"[runtime] {name} v{manifest.get('version', '?')} loaded "
                      f"({', '.join(sorted(caps_registered)) or 'no caps'})")
+            # 引擎先到、插件后到: 补交一次 (见 deliver_engine)
+            if self._engine is not None:
+                self._inject_engine(manifest["name"], self._engine)
         except Exception as e:
             # 失败隔离: 标记 failed, 不影响其它插件与宿主
             self._loaded[name] = {"manifest": {"name": name, "capabilities": []},
@@ -513,12 +568,28 @@ class PluginManager:
                 for n, e in sorted(self._loaded.items())]
 
     def health(self) -> dict:
+        """启动自检的唯一出口 —— 降级必须在这里可见, 否则「声明即校验」白做。
+
+        `degraded` 是 :410-414 那条规则的产物 (manifest 声明的 capability
+        与实际注册的对不上), 但此前只有 summary() **逐插件**给, health()
+        一个字不提 ⇒ 读 health() 的人 (或 `h.get("degraded", 0)`) 拿到的是
+        **缺省值 0, 不是测量值**: 状态数比表达位数多一个时, 多出来的那个
+        吸附到绿灯。已实际造成过一次跨会话误报 (报「degraded: 0」, 真值 ≥1)。
+
+        **带名字, 不只报个数**: 只给计数的话, 看到 1 的人还得自己翻 summary()
+        去查是谁 —— 而那正是没人会去翻的原因。
+        **不按 status 过滤**: disable() 只清 capabilities、不重算 degraded,
+        按 status 过滤会让「停用一个降级包」把它从名单里静默抹掉, 但它并没有
+        被修好。
+        """
         stats = {"loaded": 0, "failed": 0, "disabled": 0}
         for e in self._loaded.values():
             s = e.get("status")
             if s in stats:
                 stats[s] += 1
-        return {"plugins": len(self._loaded), **stats}
+        degraded = sorted(n for n, e in self._loaded.items() if e.get("degraded"))
+        return {"plugins": len(self._loaded), **stats,
+                "degraded": len(degraded), "degraded_plugins": degraded}
 
 
 # 模块级单例 — main.py 与各 API 消费

@@ -11,7 +11,7 @@ cType (9 种 dlink 模式):
   SERIAL    — 串口 (COM 端口)
   POLL      — 定时轮询 (HTTP REST API, Oracle)
   SUBSCRIBE — 消息订阅 (MQTT Topic)
-  CUSTOM    — 自定义协议 (LegacyComm)
+  CUSTOM    — 自定义协议 (GENERIC_LEGACY_PROTO)
   DTU       — 无线终端 (GPRS/CDMA)
 """
 from __future__ import annotations

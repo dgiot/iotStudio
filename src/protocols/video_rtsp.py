@@ -9,7 +9,7 @@ RTSP 视频流协议适配器，用于从海康 NVR 或 ONVIF 摄像头拉取视
     "rtsp_url": "rtsp://user:pass@127.0.0.1:554/Streaming/Channels/101",
     "snapshot_interval": 30,        # 截图间隔(秒)
     "output_dir": "data/snapshots", # 截图保存目录
-    "camera_name": "北1-2球机",
+    "camera_name": "示例球机",
     "ptz_http": {                   # 海康 ISAPI PTZ (可选)
         "host": "127.0.0.1",
         "port": 80,

@@ -6,9 +6,15 @@ registerPlugin({
   version: '1.0',
   description: '边缘中枢 — DG-IOT 联调监控、MQTT桥接、数据推送状态',
 
+  // ★ 声明必须能实现：下面两条原本指向 `../views/CaptureDashboard.vue` 与
+  //   `../views/DeviceCmdView.vue`，**这两个文件全树不存在**（只有本文件引用过）。
+  //   路由的 component 是静态可分析的 `import('...')`，Vite 构建期解析不到就
+  //   直接失败 —— 所以接线时它不是「运行时 404」而是「构建起不来」。
+  //   保留在此是为了留住意图；补上对应视图文件后把这两条移回 routes 即可。
+  //
+  //   { path: '/capture',    name: 'CaptureDashboard', component: () => import('../views/CaptureDashboard.vue'), meta: { title: '抓包仪表盘', icon: 'DataBoard', group: 'hub' } },
+  //   { path: '/device-cmd', name: 'DeviceCmd',        component: () => import('../views/DeviceCmdView.vue'),   meta: { title: '设备指令',   icon: 'Promotion', group: 'hub' } },
   routes: [
-    { path: '/capture', name: 'CaptureDashboard', component: () => import('../views/CaptureDashboard.vue'), meta: { title: '抓包仪表盘', icon: 'DataBoard', group: 'hub' } },
-    { path: '/device-cmd', name: 'DeviceCmd', component: () => import('../views/DeviceCmdView.vue'), meta: { title: '设备指令', icon: 'Promotion', group: 'hub' } },
     { path: '/reports', name: 'Reports', component: () => import('../views/ReportsView.vue'), meta: { title: '联调报告', icon: 'Document', group: 'hub' } },
   ],
 

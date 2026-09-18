@@ -78,10 +78,20 @@ def test_ssn_device_observes_points(engine):
 
 
 def test_ssn_relations_use_dg_vocabulary(engine):
+    """关系具体化节点(Link)整体用 dg 本地词表 —— 关系边不该硬塞标准词。
+
+    2026-09-16 改: 源端原先是 ssn:hasSubSystem, 但 dg:RelationStatement 不是
+    ssn:System, 用标准属性既没有依据、又会触发推理污染(见 alignment.json)。
+    现在源端是 dg:source。断言改成「整个节点不许出现 ssn:/sosa: 前缀」——
+    那才是本测试的意图; 写死某个具体词名会把「换了个自造词」误判成回归。
+    """
     g = export_ssn(engine)
     pw = [n for n in g["@graph"] if "dg:powered_by" in n]
     assert pw                                            # 断电边进 SSN 图
-    assert all(n["ssn:hasSubSystem"]["@id"].startswith("http") for n in pw)
+    for n in pw:
+        assert n["dg:source"]["@id"].startswith("http")  # 源端是 IRI
+        std = [k for k in n if k.split(":")[0] in ("ssn", "sosa")]
+        assert not std, f"关系节点上出现了标准属性 {std} —— Link 是自造类, 不该冒充标准"
 
 
 def test_ssn_pure_and_idempotent(engine):
@@ -194,7 +204,7 @@ def test_aas_shell_per_site(engine):
 def test_aas_submodel_per_entity(engine):
     a = export_aas(engine)
     ids = {s["id"] for s in a["submodels"]}
-    assert any(x.endswith("sm_gw_131") for x in ids)            # Gateway → Submodel
+    assert any(x.endswith("sm_gw_edge01") for x in ids)            # Gateway → Submodel
     assert any(x.endswith("sm_ch_modbus_tcp") for x in ids)     # Channel → Submodel
     assert any(x.endswith("sm_dev_well_DEV_A") for x in ids)    # Device  → Submodel
 
@@ -299,7 +309,7 @@ def test_aas_export_omits_network_and_credential_fields(engine):
     import json
     blob = json.dumps(export_aas(engine), ensure_ascii=False)
     assert "dev_well_DEV_A" in blob and "ch_modbus_tcp" in blob   # 正对照
-    for banned in ("endpoint", "connection", "IoMonitor.ini", "Device.ini",
+    for banned in ("endpoint", "connection", "GENERIC_HMI.ini", "Device.ini",
                    "198.51.100.102"):
         assert banned not in blob, banned
 

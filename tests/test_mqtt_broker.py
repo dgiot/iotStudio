@@ -14,7 +14,7 @@ from src.services.mqtt_broker import MiniMqttBroker
 
 @pytest.mark.parametrize("filt,topic,expect", [
     ("dgiot/#", "dgiot/smoke/echo", True),
-    ("dgiot/#", "dgiot/default/gw_131/ch/dev/meta", True),
+    ("dgiot/#", "dgiot/default/gw_edge01/ch/dev/meta", True),
     ("dgiot/#", "dgiot", True),              # '#' 匹配父级本身
     ("dgiot/#", "other/x", False),
     ("#", "any/deep/path", True),

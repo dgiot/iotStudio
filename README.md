@@ -75,11 +75,11 @@ python scripts/init_dgiot.py
 | Hooks | beforeSave / afterSave / beforeDelete / afterDelete |
 
 ### 多租户
-| 功能 | 文件 |
+| 功能 | 落点 |
 |------|------|
-| 租户 CRUD | `web/tenant_api.py` |
-| 角色层级 | `tenants.parent_id` (对齐 DG-IoT `_Role.roles`) |
-| 用户-租户关联 | `user_roles` 表 |
+| 租户 CRUD | `web/tenant_api.py`（薄壳，读写全经 `parse_lite`） |
+| 角色层级 | `_Role.parent_id` (对齐 DG-IoT `_Role`) |
+| 用户-租户关联 | `_Join_users_Role` |
 | 请求隔离 | `X-Tenant-ID` header + JWT |
 
 ### 本体引擎
@@ -169,7 +169,7 @@ storage_mode: "sqlite"         # sqlite | postgres
 |------|------|
 | `GET /api/health` | 健康检查 |
 | `GET/POST /api/devices` | 设备管理 (DG-IoT Device) |
-| `GET/POST /api/tenants` | 租户管理 (DG-IoT _Role) |
+| `GET/POST /api/tenants` | 租户/岗位管理（读写 Parse `_Role`，与数据面**同一个源**；对齐 DG-IoT `_Role`） |
 | `POST /api/roleuser` | 用户-角色分配 |
 | `GET /api/alarms` | 告警列表 |
 | `GET /api/telemetry/{device_id}/{point_id}` | 时序查询 |

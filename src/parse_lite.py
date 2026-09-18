@@ -554,10 +554,22 @@ def _roles_of_user(db, user_id: str) -> list:
 def _tenant_bundle(roles) -> dict:
     """角色行 → 租户二元组。
 
-    ⚠️ **租户 = _Role.objectId**，不是 SQL 那张 `tenants` 表 —— 后者是 `web/tenant_api.py`
-    的数据源，而那个模块的 get_db() 引用了不存在的 `main.get_session`，端点一调即
-    ImportError。活的租户源只有这里。两套并存的账记在 CLAUDE.md 待裁决项里，
-    在它被裁决之前，**凡是解析租户都必须走本函数**，免得再多出第三个来源。
+    ⚠️ **租户 = _Role.objectId**。**凡是解析租户都必须走本函数**，免得再多出第三个来源。
+
+    🔴 **原句写的是「那个模块的 get_db() 引用了不存在的 `main.get_session`，端点一调即
+    ImportError」—— 这句 2026-09-17 已过期，留此更正**（[[missing-input-takes-a-silent-default]]
+    C 族：文档落后于实现）。`web/tenant_api.py` 在那之后改成了直连 sqlite3
+    （提交 `6aabea5a4`，晚于本段所在的 `8eddbb142`），实测 `list_roles()` 返回 200 而非 500。
+    ⚠️ **「端点能跑」不等于「两套来源合一了」** —— 真问题从来不是 ImportError，是
+    **`POST /api/tenants` 造出来的租户在 `_tenant_bundle()` 这条路径上不存在**
+    ⇒ 一个「创建成功但什么都看不到」的租户。
+
+    ✅ **「两个来源并存的账仍待裁决」—— 2026-09-17 已裁、已落地。** 用户裁定
+    「租户系统一套就行」，方向**收敛到 `_Role`**：`web/tenant_api.py` 的 6 个端点改经
+    本模块的 role 函数读写 `_Role` / `_Join_users_Role`，`tenants` / `user_roles`
+    两张表退役。原本那句「不是 SQL 那张 `tenants` 表 —— 后者是 `web/tenant_api.py`
+    的数据源」现在**已经过时**（那张表不再是任何东西的数据源），但下游
+    （`auth._resolve_tenant`）仍以本函数为唯一入口，所以**这条约束照旧成立、不能省**。
     （dgiot 侧同一事实：全仓没有 Tenant/Org/Company 类，租户/部门就是 `_Role`；
     `_User.department` 只是建用户时传 RoleId 的入参，建完就 `maps:without` 剥掉 ——
     dgiot_parse_auth.erl:828-840。）
@@ -625,12 +637,101 @@ def parse_get_session(token: str):
 
 
 # ===================== Role =====================
+# 🔴 **本行初稿写的是「`_Role` 的写入侧只有这一节」—— grep 之后发现是假的，留此更正。**
+# `_Role` 是 Parse 类，写入路径本来就不止一条：`web/parse_router.py` 的通用
+# `/classes/{ClassName}` CRUD、`web/user_manager_api.py:270-271` 的
+# `ensure_table("_Role") + parse_create("_Role", …)`，加上本节。
+# ⇒ 本节治的**不是**「多个写入者」，是**两个数据源**：`tenants` 表与 `_Role` 各存了一份
+# 租户、两者永不同步。「写入者多」是 Parse 类的正常形态，**不是**病。
+# （教训：绝对句要先做全域 grep 再写，别只读完手上这个文件就下笔。）
+#
+# 本节存在的理由是：`web/tenant_api.py` 不自己写 SQL，只调这里的函数。
+# 它原来是直连 local.db 的 `tenants`/`user_roles` 两张表，于是同一个「租户」在
+# `_Role`（数据面真在用，6 行）和 `tenants`（管理端点在读，0 行）各有一份 ⇒
+# 管理后台的租户列表**永远是空的**，而系统照常按 6 个租户隔离。
+# 2026-09-17 用户裁定合一：收敛到 `_Role`，那两张表退役。
+#
+# iotStudio 侧的租户台账列（slug/contact/phone/status/max_devices/max_users）落进
+# `data` JSON，**不往 `_Role` 上加列** —— `_Role` 是跨系统共享的类（dgiot 那边
+# 租户/部门就是它，全仓没有 Tenant/Org 类），加私有列等于两人共用一张表各写各的。
+#
+# ⚠️ `slug` **不在 data 里** —— 它就是 `_Role.alias`。
+# 我原先按名字推断「alias 是展示别名、slug 是短标识，语义不同，映射过去成同一事实两处」，
+# **实测把这条推翻了**：库里 6 行的 `alias` 逐行等于 `objectId`
+# （default / oil-monitor / data-dept / prod-dept / maint-dept / demo-dept），
+# 而 `name` 才是中文展示名（默认租户 / 设备完整性）。alias 本来就是短标识。
+# ⇒ 把 slug 另存一份进 data 才是「同一事实两处」；直接映射过去才是对的。
+# ⚠️ 且 `data` 里**已经有内容**（实测 {"desc": …, "department": true}）⇒
+# 更新 `data` 必须**合并**，整体覆盖会把 desc/department 从 6 行上静默抹掉。
+_ROLE_DATA_KEYS = ("contact", "phone", "status", "max_devices", "max_users")
+# 这三条的缺省沿用退役的 `models/device.py` 那两张表的**列默认**（active/1000/50），
+# 不是这里现编的。contact/phone 原表是 NULL，保持 None。
+_ROLE_DATA_DEFAULTS = {"status": "active", "max_devices": 1000, "max_users": 50}
+
+
+def _row_get(row, key, default=None):
+    """行取值 —— `sqlite3.Row` 与 `dict` 都吃（SQLite 走 Row，PG 走 dict）"""
+    try:
+        return row[key]
+    except (KeyError, IndexError):
+        return default
+
+
+def _role_data(raw) -> dict:
+    """`_Role.data` → dict。**必须兜底**：SQLite 返 str，PG 的 jsonb 可能返 dict。"""
+    if isinstance(raw, dict):
+        return dict(raw)
+    if not raw:
+        return {}
+    try:
+        val = json.loads(raw)
+    except (ValueError, TypeError) as e:
+        log.warning(f"[role] _Role.data 不是合法 JSON，按空处理: {e}")
+        return {}
+    return val if isinstance(val, dict) else {}
+
+
+def role_to_api(row) -> dict:
+    """`_Role` 行 → `/api/tenants` 的**对外形状**（`web/tenant_api.py` 直接用）。
+
+    ⚠️ **字段名一个不减** —— 这批端点用户 2026-09-17 裁为「对外承诺过」。
+    键名逐字沿用退役的 `tenants` 表：id / tenant_id / name / slug / parent_id /
+    contact / phone / status / max_devices / max_users / created_at；
+    另加 `objectId` 与 `alias`（Parse 侧的本名）—— 加不减，是唯一安全的改法。
+
+    `id` 原是 `tenants` 表的自增主键。实测那张表 **0 行** ⇒ **从没有过含真实 `id`
+    的响应**（全仓唯一的前端消费者只调 `/api/tenants/my`，即 main.py 那个硬编码
+    default）⇒ 让它等于 `objectId` 不破坏任何现存消费者。`extra` 同理：原表恒为
+    NULL，不再单列。
+    """
+    oid = _row_get(row, "objectId")
+    data = _role_data(_row_get(row, "data"))
+    out = {k: data.get(k, _ROLE_DATA_DEFAULTS.get(k)) for k in _ROLE_DATA_KEYS}
+    out.update({
+        "id": oid, "tenant_id": oid, "objectId": oid,
+        "name": _row_get(row, "name"),
+        # slug ≡ alias（见上「⚠️ slug 不在 data 里」）
+        "slug": _row_get(row, "alias"),
+        "alias": _row_get(row, "alias"),
+        "parent_id": _row_get(row, "parent_id"),
+        "created_at": _row_get(row, "createdAt"),
+    })
+    return out
+
+
 def parse_create_role(body: dict) -> dict:
+    """建 `_Role`。业务列走 `data`（见 `_ROLE_DATA_KEYS`）。
+
+    调用方须保证 `name` 不重复 —— 表上 `name` 是 UNIQUE，重复会抛。
+    （租户 API 先查重再调，好给 400 而不是 500。）
+    """
     db = get_db()
     oid = body.get("objectId") or _oid(); now = now_iso()
-    db.execute("INSERT OR REPLACE INTO _Role (objectId, name, alias, parent_id, ACL, createdAt, updatedAt) VALUES (?,?,?,?,?,?,?)",
+    db.execute("INSERT OR REPLACE INTO _Role (objectId, name, alias, parent_id, data, ACL, createdAt, updatedAt)"
+               " VALUES (?,?,?,?,?,?,?,?)",
                (oid, body["name"], body.get("alias", body["name"]),
-                body.get("parent_id"), json.dumps(body.get("ACL", {})), now, now))
+                body.get("parent_id"), json.dumps(body.get("data") or {}),
+                json.dumps(body.get("ACL") or {}), now, now))
     # User relations
     users = body.get("users", {}).get("objects", []) if isinstance(body.get("users"), dict) else []
     for u in users:
@@ -644,17 +745,102 @@ def parse_create_role(body: dict) -> dict:
     return {"objectId": oid, "createdAt": now}
 
 
-def parse_query_roles(params: dict = None):
+def parse_get_role(object_id: str) -> Optional[dict]:
+    """按 objectId 取一**行**（含 data/ACL）。不存在返 None —— 调用方接 `role_to_api`。"""
     db = get_db()
-    rows = db.execute("SELECT * FROM _Role ORDER BY name").fetchall()
+    row = db.execute("SELECT * FROM _Role WHERE objectId = ?", (object_id,)).fetchone()
     db.close()
-    return {"results": [{"objectId": r["objectId"], "name": r["name"], "alias": r["alias"],
-                          "parent_id": r["parent_id"], "createdAt": r["createdAt"]} for r in rows]}
+    return dict(row) if row else None
 
 
-def parse_assign_role(user_id: str, role_id: str):
+def parse_query_roles(params: dict = None):
+    """列 `_Role`，可按 `name` 精确过滤。
+
+    原实现**忽略入参、恒返全表**，且只挑 5 列手工拼 dict —— 现在返整行，
+    `role_to_api` 才有 `data` 可用。
+
+    ⚠️ 返的键仍是 `results`（Parse REST 的形状），`/api/roles` 要的 `roles` 由
+    `web/tenant_api.py` 改名 —— **形状改写留在 HTTP 层**，别在这里分叉出第二个形状。
+    """
     db = get_db()
-    db.execute("INSERT OR REPLACE INTO _Join_users_Role (objectId, userId, roleId, createdAt) VALUES (?,?,?,?)",
+    sql, args = "SELECT * FROM _Role", []
+    if params and params.get("name") is not None:
+        sql += " WHERE name = ?"; args.append(params["name"])
+    rows = db.execute(sql + " ORDER BY name", tuple(args)).fetchall()
+    db.close()
+    return {"results": [dict(r) for r in rows]}
+
+
+def parse_update_role(object_id: str, fields: dict) -> Optional[dict]:
+    """部分更新 `_Role` —— **只动显式给的键**，没给的一律保持原值；角色不存在返 None。
+
+    分两处落：`name`/`alias`/`parent_id` 是一等列，直接 UPDATE；其余按
+    `_ROLE_DATA_KEYS` **合并**进 `data`。**合并不是整体覆盖** —— `data` 里可能还有
+    别处写进去的键，整体覆盖会把它们静默抹掉（改一处、删三处）。
+    """
+    if fields.get("parent_id") == object_id:
+        raise ValueError("parent_id 不能指向自己")
+    db = get_db()
+    row = db.execute("SELECT data FROM _Role WHERE objectId = ?", (object_id,)).fetchone()
+    if not row:
+        db.close(); return None
+    sets, vals = [], []
+    for k in ("name", "alias", "parent_id"):
+        if k in fields:
+            sets.append(f"{k} = ?"); vals.append(fields[k])
+    data = _role_data(_row_get(row, "data"))
+    given = {k: fields[k] for k in _ROLE_DATA_KEYS if k in fields}
+    if given:
+        data.update(given)
+    sets.append("data = ?"); vals.append(json.dumps(data))
+    now = now_iso()
+    sets.append("updatedAt = ?"); vals.append(now)
+    vals.append(object_id)
+    db.execute(f"UPDATE _Role SET {', '.join(sets)} WHERE objectId = ?", tuple(vals))
+    db.commit(); db.close()
+    return {"objectId": object_id, "updatedAt": now}
+
+
+def parse_delete_role(object_id: str) -> dict:
+    """删 `_Role`，**连同它的用户关联行**。
+
+    `_Join_users_Role` 必须一起删：留下孤儿关联，该用户下次登录时
+    `_roles_of_user` 仍 JOIN 得到它 ⇒ 租户解析指向一个**已经不存在的角色**。
+    （退役的旧实现删的是 local.db 的 `user_roles` —— 那张表实测 0 行、全仓无人读。）
+
+    ⚠️ **本函数不做任何内置保护**（例如拒删 `default`）：那是 API 的策略，归
+    `web/tenant_api.py`；Parse REST 那边删角色是合法操作。
+    """
+    db = get_db()
+    db.execute("DELETE FROM _Join_users_Role WHERE roleId = ?", (object_id,))
+    db.execute("DELETE FROM _Role WHERE objectId = ?", (object_id,))
+    db.commit(); db.close()
+    return {"status": "deleted", "objectId": object_id}
+
+
+def parse_assign_role(user_id: str, role_id: str) -> dict:
+    """把用户挂到角色上（`_Join_users_Role` ≡ dgiot `_Role.users` 关系）。
+
+    ⚠️ **两边都得是已存在的 objectId**：`_Join_users_Role` 没有外键约束，写进一行
+    指向不存在用户的记录，`_roles_of_user` 永远读不到它，而调用方拿到的是
+    `{"status": "assigned"}` ⇒ **一次静默失败被报成成功**。故这里先核，
+    核不到抛 ValueError，由 HTTP 层转 400。
+
+    ⚠️ **幂等**：原实现每次生成新的 `objectId` + `INSERT OR REPLACE`，主键不同 ⇒
+    从不 replace，**重复分配会在表里堆重复行** ⇒ `_tenant_bundle` 看见
+    `len(roles) > 1`，对着一个其实只有一个角色的用户报「多角色，取第一个」。
+    假警报会稀释真警报，所以这里先查后插。
+    """
+    db = get_db()
+    for tbl, oid, label in (("_User", user_id, "用户"), ("_Role", role_id, "角色")):
+        if not db.execute(f"SELECT 1 FROM {tbl} WHERE objectId = ?", (oid,)).fetchone():
+            db.close()
+            raise ValueError(f"{label} {oid!r} 不存在")
+    if db.execute("SELECT 1 FROM _Join_users_Role WHERE userId = ? AND roleId = ?",
+                  (user_id, role_id)).fetchone():
+        db.close()
+        return {"status": "assigned", "already": True}
+    db.execute("INSERT INTO _Join_users_Role (objectId, userId, roleId, createdAt) VALUES (?,?,?,?)",
                (_oid(), user_id, role_id, now_iso()))
     db.commit(); db.close()
     return {"status": "assigned"}

@@ -78,7 +78,7 @@ def test_impact_unknown_entity(engine):
 
 
 def test_impact_sorted_by_confidence(engine):
-    r = engine.graph_impact("gw_131")
+    r = engine.graph_impact("gw_edge01")
     confs = [a["confidence"] for a in r["affected"]]
     assert confs == sorted(confs, reverse=True)
 
@@ -90,7 +90,7 @@ def test_path_well_to_oracle_multikind(engine):
     r = engine.graph_path("dev_well_DEV_A", "ds_oracle")
     assert r["found"] is True and r["length"] == 3
     assert len(r["paths"]) >= 2                       # 多条等长路径
-    assert "gw_131" in r["nodes"]
+    assert "gw_edge01" in r["nodes"]
     assert r["paths"][0][0]["from"] == "dev_well_DEV_A"
 
 
@@ -124,13 +124,13 @@ def test_path_unknown_entity_raises(engine):
 def test_centrality_degree_hub(engine):
     r = engine.graph_centrality("degree", top=5)
     top_ids = [t["id"] for t in r["top"]]
-    assert "gw_131" in top_ids[:3]                    # 网关 = 全站枢纽
+    assert "gw_edge01" in top_ids[:3]                    # 网关 = 全站枢纽
     assert r["graph_nodes"] > 50
 
 
 def test_centrality_betweenness_hub(engine):
     r = engine.graph_centrality("betweenness", top=5)
-    assert r["top"][0]["id"] == "gw_131"
+    assert r["top"][0]["id"] == "gw_edge01"
     assert r["top"][0]["score"] > 0                   # Brandes 修正后非零
 
 

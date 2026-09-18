@@ -75,11 +75,11 @@ python scripts/init_dgiot.py
 | Hooks | beforeSave / afterSave / beforeDelete / afterDelete |
 
 ### Multi-Tenancy
-| Feature | File |
+| Feature | Where |
 |------|------|
-| Tenant CRUD | `web/tenant_api.py` |
-| Role hierarchy | `tenants.parent_id` (aligned with DG-IoT `_Role.roles`) |
-| User-tenant binding | `user_roles` table |
+| Tenant CRUD | `web/tenant_api.py` (thin shell; all reads/writes go through `parse_lite`) |
+| Role hierarchy | `_Role.parent_id` (aligned with DG-IoT `_Role`) |
+| User-tenant binding | `_Join_users_Role` |
 | Request isolation | `X-Tenant-ID` header + JWT |
 
 ### Ontology Engine
@@ -169,7 +169,7 @@ storage_mode: "sqlite"         # sqlite | postgres
 |------|------|
 | `GET /api/health` | Health check |
 | `GET/POST /api/devices` | Device mgmt (DG-IoT Device) |
-| `GET/POST /api/tenants` | Tenant mgmt (DG-IoT _Role) |
+| `GET/POST /api/tenants` | Tenant/role CRUD (reads and writes Parse `_Role` — the **same source** the data plane resolves tenants from; aligned with DG-IoT `_Role`) |
 | `POST /api/roleuser` | User-role assignment |
 | `GET /api/alarms` | Alarm list |
 | `GET /api/telemetry/{device_id}/{point_id}` | Time-series query |

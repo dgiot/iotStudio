@@ -168,22 +168,41 @@ def _b64_decode(s: str) -> bytes:
     return base64.urlsafe_b64decode(s)
 
 
+# 租户解析**失败**时的哨兵值。三条约束缺一不可：
+#   ① **非空** —— `parse_lite._tenant_visible` 把空读作「不传租户 = 不过滤」⇒ 空串等于放行全部；
+#   ② **不是任何真实 `_Role.objectId`** —— `"default"` 是真实租户（种子 `src/parse_lite.py:1224-1225`
+#      真有这一行；`oil-monitor` 的 `parent_id` 也指向它，同处 `:1227-1228`）⇒
+#      回落成它 = 把解析失败者放进那一家，方向**朝外**；
+#      ⚠️ 别拿内置账号当反例：`admin`/`dgiot`/`dgiot_dev` **没有任何角色关联行**
+#      （种子只建 `_User`，`src/parse_lite.py:1231-1232`）⇒ 它们落 `"default"` 走的是下面那条
+#      **正常路径**的 `or "default"`，不是「归属 default 租户」。两者读混了会把兜底看成无害。
+#   ③ **一眼看出是「没解析出来」**，不是一个像模像样的租户名。
+# 消费侧效果：`_tenant_visible` 的 `row_tenant == X` 对任何真实租户都不成立，
+# 只剩 `not row_tenant`（行本身无租户 = 共享语义）⇒ 方向**朝内**。
+# ⚠️ 这个串**永远不许**被建成真的 `_Role.objectId`；tests/test_tenant_scope.py 钉着它不合法。
+UNRESOLVED_TENANT = "__unresolved__"
+
+
 def _resolve_tenant(username: str) -> str:
     """用户名 → 租户。**全仓唯一解析处**，与 parse_lite._tenant_bundle 共用同一份查询。
 
     不在本模块另写一份角色查询 —— 「租户有两个来源」正是这一层的病根之一。
 
-    ⚠️ 解析失败**返回 "default"，不返回空串**。空串在消费侧（parse_lite._tenant_visible）
-    正好读作「不传租户 = 不过滤」—— 于是「查角色表出错」会静默变成「放行全部」，
-    一个数据库抖动就等于关掉了隔离。回落成 default 与「用户没分角色」同一个桶，
-    而多租户部署里别人家的命名空间照样看不见。
+    ⚠️ 解析失败返回 `UNRESOLVED_TENANT` 哨兵，**既不返回空串、也不返回 "default"**：
+    空串在消费侧（`parse_lite._tenant_visible`）正好读作「不传租户 = 不过滤」，
+    而 `"default"` 是一个**真实租户**（见上面常量注释）。
+    **两者都会「静默放行」，只是方向不同** —— 一个放行全部，一个放行 default 那一家。
+    哨兵对任何真实租户都不相等 ⇒ 只剩「行本身无租户」的共享数据可见。
+
+    ⚠️ 正常路径的 `or "default"`（**用户确实没有角色**）是**设计选择**，不是本兜底：
+    与「查不出来」不同，「查得出来、结果是这个人没分租户」是另一回事。
     """
     try:
         from .parse_lite import parse_tenants_of_username
         return parse_tenants_of_username(username).get("tenant_id") or "default"
     except Exception as e:
-        log.warning(f"[auth] 解析 {username!r} 的租户失败, 回落 default: {e}")
-        return "default"
+        log.warning(f"[auth] 解析 {username!r} 的租户失败, 回落 {UNRESOLVED_TENANT}: {e}")
+        return UNRESOLVED_TENANT
 
 
 def create_token(username: str, role: str, tenant_id: str = None) -> str:

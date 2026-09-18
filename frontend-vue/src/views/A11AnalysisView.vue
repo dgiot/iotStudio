@@ -194,7 +194,7 @@ const allPkts = [
   {id:1,time:"09:31:22.103",dir:"TX",src:"127.0.0.1:502",dst:"127.0.0.1:8889",sz:1204,msg:"0xF062",hex:"5a5ab2040100260062f02f000900000a0024060000230000005c44454d4f...",fields:[{"f": "Magic", "v": "5a5a", "d": "A11帧起始"}, {"f": "FrameLen", "v": "0x04B2=1202(LE)", "d": "不含2B头小端长度"}, {"f": "Flags", "v": "01002600", "d": "控制标志"}, {"f": "MsgType", "v": "0xF062", "d": "设备列表查询"}, {"f": "Payload", "v": "1194B", "d": "ASCII设备路径名"}],str:["\\SITE01\\GATEWAY01\\DEVICE01#(阀门开)", "\\SITE01\\GATEWAY01\\DEVICE01#(阀门关)"]},
   {id:2,time:"09:31:22.105",dir:"RX",src:"127.0.0.1:8889",dst:"edge:62531",sz:25,msg:"0x87B2",hex:"5a5a170000003900b28735000500800a00000000006a6a",fields:[{"f": "Magic", "v": "5a5a", "d": "帧起始"}, {"f": "FrameLen", "v": "0x17=23", "d": "23字节"}, {"f": "MsgType", "v": "0x87B2", "d": "心跳应答"}, {"f": "jjZZ", "v": "6a6a", "d": "魔术字封尾"}],str:[]},
   {id:3,time:"09:31:22.201",dir:"TX",src:"127.0.0.1:501",dst:"127.0.0.1:8889",sz:217,msg:"0xF050",hex:"5a5ad9000000390050f033000400000a00090000002f0f00000d0f00006a6a5a5a06050300...",fields:[{"f": "Magic", "v": "5a5a", "d": "帧起始"}, {"f": "MsgType", "v": "0xF050", "d": "单设备数据查询"}, {"f": "jjZZ", "v": "6a6a5a5a", "d": "内嵌A11子帧type=0x0506"}],str:[]},
-  {id:4,time:"09:31:22.205",dir:"RX",src:"127.0.0.1:8889",dst:"edge:58646",sz:117,msg:"0x0000",hex:"5a5a730000003e0000000000020000000004000000340000008719000007bd69506ae4030b000000c01e454240c0008819000007bd69506ae4030b0000006066e63c40...",fields:[{"f": "Magic", "v": "5a5a", "d": "帧起始"}, {"f": "MsgType", "v": "0x0000", "d": "LegacyComm二次封装"}, {"f": "jjZZ", "v": "6a6a5a5a@offset", "d": "内嵌子帧"}, {"f": "Float1", "v": "~0xC01EC000", "d": "传感器读数1"}, {"f": "Float2", "v": "~0x3CE66660", "d": "传感器读数2"}],str:[]},
+  {id:4,time:"09:31:22.205",dir:"RX",src:"127.0.0.1:8889",dst:"edge:58646",sz:117,msg:"0x0000",hex:"5a5a730000003e0000000000020000000004000000340000008719000007bd69506ae4030b000000c01e454240c0008819000007bd69506ae4030b0000006066e63c40...",fields:[{"f": "Magic", "v": "5a5a", "d": "帧起始"}, {"f": "MsgType", "v": "0x0000", "d": "GENERIC_LEGACY_PROTO二次封装"}, {"f": "jjZZ", "v": "6a6a5a5a@offset", "d": "内嵌子帧"}, {"f": "Float1", "v": "~0xC01EC000", "d": "传感器读数1"}, {"f": "Float2", "v": "~0x3CE66660", "d": "传感器读数2"}],str:[]},
   {id:5,time:"09:31:22.401",dir:"TX",src:"edge:62531",dst:"127.0.0.1:8889",sz:4096,msg:"0xF062",hex:"5a5a314000003900b28735000500000a00c503000032e0000031da0000...",fields:[{"f": "Magic", "v": "5a5a", "d": "帧起始"}, {"f": "FrameLen", "v": "0x4031=16433", "d": "批量数据帧"}, {"f": "MsgType", "v": "0xF062", "d": "批量设备查询"}],str:[]},
   {id:6,time:"09:31:22.480",dir:"RX",src:"127.0.0.1:8889",dst:"edge:62534",sz:73,msg:"0x3667",hex:"5a5a4900000039006736...",fields:[{"f": "Magic", "v": "5a5a", "d": "帧起始"}, {"f": "MsgType", "v": "0x3667", "d": "批量数据上报"}, {"f": "Data", "v": "float数组", "d": "传感器测量值"}],str:[]},
   {id:7,time:"09:31:23.001",dir:"TX",src:"edge:62533",dst:"127.0.0.1:8889",sz:19,msg:"0x87B3",hex:"5a5a130000003900b38703000500800a00006a6a",fields:[{"f": "Magic", "v": "5a5a", "d": "帧起始"}, {"f": "MsgType", "v": "0x87B3", "d": "心跳请求"}],str:[]},
@@ -213,7 +213,7 @@ function pktInfo(row) {
   if (row.msg === '0x87B2' || row.msg === '0x87B3') return '心跳'
   if (row.msg === '0xF050') return '单设备数据查询'
   if (row.msg === '0x3667') return '批量数据上报'
-  if (row.msg === '0x0000') return 'LegacyComm封装'
+  if (row.msg === '0x0000') return 'GENERIC_LEGACY_PROTO封装'
   if (row.msg === 'Modbus' && row.hex) {
     const h = row.hex.replace(/\s/g,'')
     if (h.length >= 16) {

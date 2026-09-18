@@ -34,8 +34,14 @@ class ParseStore:
     def __init__(self):
         self.base_url = "http://localhost:1337/parse"
         # 凭据从环境变量 / config.yaml 读取，不硬编码（2026-09-01 清理历史残留）
-        self.app_id = os.environ.get("PARSE_APP_ID") or getattr(getattr(cfg, "parse", None), "app_id", "")
-        self.master_key = os.environ.get("PARSE_MASTER_KEY") or getattr(getattr(cfg, "parse", None), "master_key", "")
+        # ⚠️ 取不到时留 None，**不编一个 "" 顶上**：空串会照样组出
+        #    `X-Parse-Master-Key: ""` 发出去，服务端拒了，而报错不指向「没配凭据」。
+        self.app_id = os.environ.get("PARSE_APP_ID") or getattr(getattr(cfg, "parse", None), "app_id", "") or None
+        self.master_key = os.environ.get("PARSE_MASTER_KEY") or getattr(getattr(cfg, "parse", None), "master_key", "") or None
+        # 缺了哪几个 —— 让 connect()/_headers() 能说出名字，而不是把空值发出去
+        self.credentials_missing = [
+            k for k, v in (("PARSE_APP_ID / parse.app_id", self.app_id),
+                           ("PARSE_MASTER_KEY / parse.master_key", self.master_key)) if not v]
         self._client: Optional[httpx.AsyncClient] = None
         self._connected = False
         self._sqlite_lock = asyncio.Lock()  # 防 SQLite 并发死锁
@@ -46,6 +52,14 @@ class ParseStore:
         # 单机模式：直接使用 SQLite
         if getattr(cfg, 'storage_mode', 'parse') == 'sqlite':
             logger.info("[storage] 单机模式，使用 SQLite")
+            return await self._fallback_connect()
+
+        if self.credentials_missing:
+            # 缺凭据就不发请求 —— 空 / None 的 key 只会换来一个 401，而日志里
+            # 看不出是「没配」还是「配错了」。这里一次把名字说清再降级。
+            logger.error("[parse] 凭据未配置：%s —— 降级 SQLite。设环境变量 "
+                         "PARSE_APP_ID / PARSE_MASTER_KEY，或填 config.yaml 的 parse: 段。"
+                         % "、".join(self.credentials_missing))
             return await self._fallback_connect()
 
         try:
@@ -91,6 +105,11 @@ class ParseStore:
     # ===== HTTP 工具 =====
 
     def _headers(self) -> Dict[str, str]:
+        if self.credentials_missing:
+            # connect() 那道闸被绕过了 —— 宁可这里炸，也不发一个空 key 出去
+            raise RuntimeError(
+                "Parse 凭据未配置：%s。设 PARSE_APP_ID / PARSE_MASTER_KEY "
+                "或 config.yaml 的 parse: 段。" % "、".join(self.credentials_missing))
         return {
             "X-Parse-Application-Id": self.app_id,
             "X-Parse-Master-Key": self.master_key,

@@ -77,8 +77,12 @@ async def lifespan(app: FastAPI):
     # 启动（每步独立捕获异常，避免单点故障导致整个平台退出）
 
     # local.db 的 schema 先于一切就绪 —— 它服务的是**与 Parse / PostgreSQL 无关**
-    # 的那批端点：src/web/tenant_api.py 的 6 个租户/岗位端点，以及本文件
-    # log_packet / packet_history 的报文表。它们直连这个文件，不看任何外部服务脸色。
+    # 的那批端点：本文件 log_packet / packet_history 的报文表。它们直连这个文件，
+    # 不看任何外部服务脸色。
+    #
+    # ⚠️ 2026-09-17 收窄：原句里还含「src/web/tenant_api.py 的 6 个租户/岗位端点」，
+    # 那句**已不成立** —— 那 6 个端点已按用户裁定收敛到 Parse 的 `_Role`
+    # （见 src/web/tenant_api.py 头注释），不再只读这个文件。
     #
     # 原先唯一的建表处是 src/storage/parse_store.py:78 的 _fallback_connect()，而它
     # 只在 **Parse Server (localhost:1337) 连不上**时才跑 ⇒ 任何真跑了 Parse Server
@@ -448,9 +452,10 @@ async def write_telemetry(body: TelemetryPoint):
     """边缘代理接收遥测数据 → 写 SQLite + 走推送出口上中枢
 
     这里原先自己搓了一个 paho 客户端：每个测点开一次 TCP、主题硬编码
-    `dgiot/default/gw_131/ch_edge_hub/{device}/{point}`、`except: pass` 吞掉
-    所有失败。三个问题叠在一起——主题不在中枢认的闭集里（发出去没人消费）、
-    网关写死成 gw_131（换现场要改代码）、连不上时既不报错也不计数。
+    （形状是 `dgiot/{site}/{gateway}/ch_edge_hub/{device}/{point}`，其中
+    **站名与网关名是写死的字面量**，不是插值）、`except: pass` 吞掉所有失败。
+    三个问题叠在一起——主题不在中枢认的闭集里（发出去没人消费）、
+    网关名写死（换现场要改代码）、连不上时既不报错也不计数。
 
     正确做法是走已经在用的 PushEngine 出口：它拿着 DeviceIdentityRegistry
     解析出 productId/deviceSecret，按 dlink 语法拼 `$dg/thing/{P}/{D}/properties/report`，
@@ -825,14 +830,20 @@ _packet_log: List[Dict] = []
 def _ensure_packet_log(db):
     """建 packet_log 表（幂等）。
 
-    src/models/device.py 的 6 个 SQLAlchemy 模型（tenants/user_roles/devices/
-    data_points/alarm_records/push_targets）里**没有这张表**，全仓也再无第二处
+    src/models/device.py 的 SQLAlchemy 模型（devices / data_points /
+    alarm_records / push_targets）里**没有这张表**，全仓也再无第二处
     建表语句 —— 于是写入侧 (log_packet) 和读取侧 (/api/packets/history) 一直对着
     一张从未存在过的表读写，读取侧 500、写入侧被 `except: pass` 吞掉。
 
+    ⚠️ 2026-09-17：原句写的是「**6 个**模型（tenants/user_roles/devices/
+    data_points/alarm_records/push_targets）」。`Tenant` / `UserRole` 当天已退役
+    （租户/角色的唯一数据源收归 Parse `_Role`，见 src/models/device.py:17），
+    所以那句的**数与清单同时过期**。这里改成点名、不点数是故意的 ——
+    **照抄计数最容易单向腐烂**，而列出名字至少能被 grep 核。
+
     建表放在**使用点**而不是某个 init 脚本：本仓没有任何保证会被执行的建表入口
     —— scripts/init_db.py:25 的 init_db(cfg.db.sync_url) 连的是 PostgreSQL，
-    SQLite 降级模式那一支是空的；scripts/seed_tenants.py 只建 tenants/devices。
+    SQLite 降级模式那一支是空的；scripts/seed_tenants.py 只建 devices。
     而写入路径必然被执行，所以表必然被建出来。
     """
     db.execute("""CREATE TABLE IF NOT EXISTS packet_log (

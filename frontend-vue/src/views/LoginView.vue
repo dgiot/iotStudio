@@ -57,7 +57,9 @@
 
       <div class="login-bottom-panel">
         <div class="tips">
-          <span class="link-type">默认: {{ defUsername }} / {{ defPassword }}</span>
+          <!-- 未配置 VITE_DEF_PASSWORD 时**整行不渲染** —— 渲染成「默认: /」
+               比不显示更坏：它看起来像「默认口令就是空」。 -->
+          <span v-if="defPassword" class="link-type">默认: {{ defUsername }} / {{ defPassword }}</span>
         </div>
       </div>
 

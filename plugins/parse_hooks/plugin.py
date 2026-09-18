@@ -39,8 +39,10 @@ def apply(ctx):
     def device_after_save(obj: dict, hctx, is_new: bool):
         """设备保存后: 只发 EventBus
 
-        这里原先还往 `dgiot/default/gw_131/ch_edge_hub/{devaddr}/meta` 发一条
-        MQTT —— 中枢认的上行主题是闭集（properties/report、init/request、
+        这里原先还往一条 MQTT 主题发一条 —— 形状是
+        `dgiot/{site}/{gateway}/ch_edge_hub/{devaddr}/meta`，其中**站名与网关名
+        是写死的字面量**（不是插值），两个都进过公开仓。
+        中枢认的上行主题是闭集（properties/report、init/request、
         firmware/report、report），没有 `meta` 这个后缀，发出去没人消费；
         而本仓 main.py / ch_mqtt_bridge 又订阅 `dgiot/#` 再转回 EventBus，
         于是它只是绕本机一圈又回来。MQTT 出口已删，要留痕进日志。

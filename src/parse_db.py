@@ -420,6 +420,13 @@ class DBWrapper:
         PG_COLS = ["objectId", "createdAt", "updatedAt", "sessionToken", "expiresAt",
                     "className", "devaddr", "parentId", "isEnable", "lastOnlineTime",
                     "assetNum", "namenumber", "deviceSecret"]
+        # ⚠️ `userId` / `roleId`（`_Join_users_Role` 的两列）**刻意不在这里**，别顺手加。
+        # 建表也走本函数（`PostgresBackend.create_table` 调 `_translate_static`），
+        # 所以 PG 上那两列的**实际名字是小写的** `userid`/`roleid`（DDL 里没被加引号
+        # ⇒ PG 折叠成小写）；查询侧同样不加引号、同样折叠，两边才对得上。
+        # 一旦把这两个名字加进上表：DDL 与查询会**同时**变成带引号的驼峰，
+        # 而**既有库里的表仍是小写列** ⇒ `column "userId" does not exist`。
+        # 且只在 PG 上炸 —— 本机走 SQLite 兜底，看不出来。
         for c in PG_COLS:
             sql = re.sub(rf'(?<!")\b{re.escape(c)}\b(?!")', f'"{c}"', sql)
         return sql

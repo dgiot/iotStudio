@@ -12,7 +12,16 @@
 PLUGIN_MANIFEST = {
     "name": "actions_pipeline",
     "version": "1.0.0",
-    "capabilities": ["action", "tool", "executor"],
+    # 原为 ["action", "tool", "executor"] —— 去掉 action 是**如实**，不是降级。
+    # manifest 的 capabilities 在装载期是按**承诺**校验的
+    # (plugin_runtime.py:411-414: set(caps_declared) - set(capabilities.keys()))，
+    # 而本插件从不调 ctx.register_action —— 动作类型由 actions_core 播种
+    # (见本文件头部「分工」: 类型 → src/action_defs.py)。声明一个自己不注册的
+    # 能力域，等于声明一件不提供的东西：装载成功、报错为零，只在 summary()
+    # 的 degraded 字段里留个 True —— 而那个字段不在 health() 里，没人看得见。
+    # 「我属于动作世界」是**语义**，「我注册了动作名」是**承诺**，两者挤一个字段
+    # 时，校验方只会读后者。
+    "capabilities": ["tool", "executor"],
     "permissions": {"action": "admin"},
     "description": "ActionContract 三段式管线 — 执行器插件点 + 并行批量派发 + 人工审批门",
 }

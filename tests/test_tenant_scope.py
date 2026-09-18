@@ -213,12 +213,19 @@ class TestIdentityCarriesTenant:
         assert u["tenant_id"] == "default"
 
     def test_解析失败不静默放行(self, monkeypatch):
-        """**这条是自证。** `_resolve_tenant` 曾经在异常时返回空串 ——
-        而空串在 `_tenant_visible` 里正好读作「不传租户 = 不过滤」，
-        于是「查角色表出错」静默变成「放行全部」：一次数据库抖动就等于关掉隔离。
+        """**这条是自证。** `_resolve_tenant` 异常时的回落值改过两次，两次都是「放行」：
 
-        喂一个必炸的解析（表不存在）进去，它必须**回落成 default**、不许回空。
+        ① 最早返回**空串** —— 空串在 `_tenant_visible` 里正好读作「不传租户 = 不过滤」，
+           于是「查角色表出错」静默变成「放行全部」：一次数据库抖动就等于关掉隔离；
+        ② 改成 `"default"` —— 不再是空串了，可 `"default"` 是一个**真实租户**
+           （`init_parse.py:1224` 有真行、内置账号 admin/dgiot/dgiot_dev 归属它）
+           ⇒ 照旧放行，只是从「放行全部」缩成「放行 default 那一家」，方向仍然朝外；
+        ③ 现在回落成 `UNRESOLVED_TENANT` 哨兵。
+
+        ⚠️ 所以「断言返回了一个非空字符串」是**不够的** —— ② 完整满足它。
+        这里不问「返回了什么」，直接问**拿它去过滤会怎样**（判据落在消费侧）。
         """
+        import re
         import src.auth as auth
 
         def _boom(_username):
@@ -227,7 +234,12 @@ class TestIdentityCarriesTenant:
 
         got = auth._resolve_tenant("whoever")
         assert got, "解析失败绝不能返回假值 —— 假值在消费侧等于取消过滤"
-        assert got == "default"
+        assert got != "default", "default 是真实租户，回落成它 = 把解析失败者放进那一家"
+        assert not re.fullmatch(r'[A-Za-z0-9]{10}', got), \
+            "哨兵不能长得像一个合法 Parse objectId —— 否则它可能是某天被建出来的真租户"
+        for t in ("default", "oil-monitor"):
+            assert not _tenant_visible(t, {"tenant_id": got}), \
+                f"回落值不得看见租户 {t!r} 的行"
 
     def test_解析租户只有一份实现(self):
         """两个租户来源正是这次的病根之一。钉住：auth 不自己查 _Role 表。"""

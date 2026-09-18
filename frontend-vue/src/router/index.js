@@ -23,6 +23,7 @@ export const constantRoutes = [
   },
   {
     path: '/',
+    name: 'Layout',   // 具名是为了让插件路由能挂进来 (setupPluginRoutes 用 addRoute('Layout', …))
     component: () => import('../components/AppLayout.vue'),
     redirect: '/dashboard',
     children: [
@@ -172,6 +173,97 @@ export function resetRouter() {
   })
   // 用 matcher 替换实现 reset (对齐 iotView)
   router.matcher = newRouter.matcher
+  // ★ 换 matcher = 换掉整张路由表，插件路由一并没了。
+  //   不补回来的话，「登出再登录」会让插件页静默变 404，
+  //   而静态路由一切正常 —— 这类只在二次登录才出现的缺陷最难查。
+  for (const r of _pluginRoutes) {
+    try {
+      router.addRoute('Layout', r)
+    } catch (e) {
+      console.warn(`[plugin] 重置后补挂路由失败 ${r.path}:`, e)
+    }
+  }
 }
 
 export default router
+
+
+// ═══════════════════════════════════════════════════════════
+// 插件路由接线
+// ═══════════════════════════════════════════════════════════
+//
+// 说明书在 src/plugins/INTEGRATION.md（85 行，写好了从未执行）。
+//
+// ★ 说明书那版**不能照抄**。它的做法是
+//     coreRoutes[1].children = getAllRoutes()
+//   —— 把核心 children **整体替换**成插件路由。实测：8 个前端插件共声明
+//   21 条路由，其中 20 条的核心页在 constantRoutes 里已有；而 constantRoutes
+//   里另有 13 条**没有任何插件声明**（/amis-test /fde /dsh-mobile /io-clone
+//   /roles /menus /views /agent-audit /graph-analysis /ontology-manage
+//   /graphrag /bi /plugin/:name）。整体替换 ⇒ 这 13 个页面当场全部 404，
+//   而且不报错 —— 路由表短了不会有人吭声。
+//
+// 所以改用**增量合并**：核心优先，重复的报出来，不静默丢。
+// 这样做的第二个好处是 router 实例只有一个、且在 import 时就建好了 ——
+// `api/request.js` 的拦截器和 `resetRouter()` 拿到的仍是同一个实例。
+
+/** 插件声明的路由，模块级留存 —— resetRouter 换完 matcher 要按这份补挂回来 */
+const _pluginRoutes = []
+
+/**
+ * 把插件声明的路由并进已有 router（**在 app.mount 之前 await**）。
+ *
+ * 全程不回滚路由器：插件层整段失败时，核心路由必须照常可用。
+ * 这不是「容错」—— 这是 driver 型插槽的必备项，插件的缺席不能让宿主残废。
+ *
+ * @returns {Promise<{added:Array, duplicated:Array, conflicting:Array, failed:string|null}>}
+ */
+export async function setupPluginRoutes(router) {
+  const report = { added: [], duplicated: [], conflicting: [], failed: null }
+  try {
+    const [{ loadPlugins }, { getAllRoutes }] = await Promise.all([
+      import('../plugins/loader.js'),
+      import('../plugins/index.js'),
+    ])
+    await loadPlugins()          // 插件模块 import 时自调 registerPlugin()
+    const declared = getAllRoutes()
+
+    const seen = new Map()
+    for (const r of constantRoutes[1].children || []) seen.set(r.path, r)
+
+    for (const r of declared) {
+      const hit = seen.get(r.path)
+      if (hit) {
+        // 同名同路径 = 同一页面的两份声明，核心优先，记下来备查。
+        // 但**名字不同就是真冲突** —— 同一 path 两个 name，谁赢都会让
+        // 另一边的 <router-link :to="{name}"> 静默失效。必须响亮报出。
+        if (hit.name !== r.name) {
+          report.conflicting.push({ path: r.path, core: hit.name, plugin: r.name })
+        }
+        report.duplicated.push({ path: r.path, name: r.name })
+        continue
+      }
+      router.addRoute('Layout', r)
+      seen.set(r.path, r)
+      _pluginRoutes.push(r)
+      report.added.push({ path: r.path, name: r.name })
+    }
+  } catch (e) {
+    report.failed = String(e?.message || e)
+    console.error('[plugin] 插件路由装载失败，退回纯静态路由:', e)
+  }
+
+  if (report.duplicated.length) {
+    // 不是错误，但必须看得见：重复项意味着这份声明在当前路由表下不生效
+    console.info(`[plugin] ${report.duplicated.length} 条插件路由与核心路由同路径，`
+                 + `核心优先: ${report.duplicated.map(d => d.path).join(', ')}`)
+  }
+  if (report.conflicting.length) {
+    console.error('[plugin] 路由名冲突（同路径不同 name，会静默失效）:',
+                  report.conflicting)
+  }
+  console.info(`[plugin] 路由接线: 新增 ${report.added.length} 条, `
+               + `重复 ${report.duplicated.length} 条, 冲突 ${report.conflicting.length} 条`
+               + (report.failed ? ` (失败: ${report.failed})` : ''))
+  return report
+}

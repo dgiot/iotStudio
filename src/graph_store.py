@@ -233,6 +233,21 @@ class MemoryGraphProvider(GraphProvider):
         # 这里推导, 消费方只显示。
         data_kind = derive_data_kind(ontology)
         sanitized = derive_sanitized(ontology)
+
+        # 节点引用了 categories 里没有的类别 —— 与悬空边同族, **不抛错但必须出声**。
+        # `nodes(category=...)` 是**等值**过滤: 类别名错一个字符, 这些节点在每一个
+        # 按类别的查询里全部消失, 而装载成功、报错为零。页面上表现为「图例里有这类,
+        # 点进去是空的」—— 查的人只会怀疑数据少, 不会怀疑自己写错了字段名。
+        # **类别为空是合法的**(节点可以不分类), 不在此列 —— 否则正常本体一律挨报。
+        unresolved = sorted({n.get("category") for n in by_id.values()
+                             if n.get("category") and n.get("category") not in cats})
+        # `label` 是**显示必需**字段 (页面拿它当节点文字), `category` 是可选分组,
+        # 所以两者不同待遇: 前者全缺 = 满屏空标签, 是**生产者字段名与契约不一致**
+        # 的指纹 (真出过: 按本体字段 name/layer 发载荷, 装载成功、报错为零,
+        # 每个节点在页面上都是空标签)。只在**一个都不剩**时出声 —— 部分缺 label
+        # 可能是刻意的, 报它假阳性高于收益。
+        unlabeled = sum(1 for n in by_id.values() if not n.get("label"))
+
         with self._lock:
             self._ns[ns] = {
                 "meta": dict(meta or {}),
@@ -251,10 +266,21 @@ class MemoryGraphProvider(GraphProvider):
                 "out": out, "in": in_, "rel": rel,
                 "edges": edges,
                 "dangling": dangling,
+                "unresolved": unresolved,
+                "unlabeled": unlabeled,
             }
         if dangling:
             # 不抛错但必须出声: 悬空边会被所有遍历静默跳过
             log.warning(f"[graph] {ns} 有 {len(dangling)} 条悬空边(端点不存在): {dangling[:5]}")
+        if unresolved:
+            # 同上: 悬空类别会被所有按类别的查询静默漏掉
+            log.warning(f"[graph] {ns} 有 {len(unresolved)} 个类别没在 categories 里声明, "
+                        f"引用它们的节点按类别查不到: {unresolved[:5]}")
+        if by_id and unlabeled == len(by_id):
+            # 出声的同时把契约写出来 —— 没有证据时, 这句就是生产者唯一的线索
+            log.warning(f"[graph] {ns} 的 {unlabeled} 个节点一个都没有 label, 页面上会是"
+                        f"满屏空标签 —— 多半是字段名与契约不一致(契约: 节点 "
+                        f"label/category/description, 边 label, 类别 label+color)")
 
     def unload(self, ns: str) -> None:
         with self._lock:
@@ -279,6 +305,11 @@ class MemoryGraphProvider(GraphProvider):
                     "nodes": len(d["nodes"]), "edges": len(d["edges"]),
                     "category_count": len(d["cats"]), "relation_count": len(d["rel"]),
                     "dangling": len(d["dangling"]),
+                    # 悬空**类别**与缺 label 的节点数 —— 名字避开既有的
+                    # `dangling`(悬空边) 与 `orphans`(孤立节点), 同名不同义
+                    # 会让消费方算出看起来合理的错答案 (见 stats 里 categories 那段)。
+                    "unresolved_categories": len(d["unresolved"]),
+                    "unlabeled_nodes": d["unlabeled"],
                 }
                 for ns, d in self._ns.items()
                 if only is None or ns in only
@@ -427,6 +458,8 @@ class MemoryGraphProvider(GraphProvider):
                     "categories": cats,
                     "by_category": {c["id"]: c["count"] for c in cats},
                     "orphans": len(orphans), "dangling": len(d["dangling"]),
+                    "unresolved_categories": len(d["unresolved"]),
+                    "unlabeled_nodes": d["unlabeled"],
                     "relations_used": sorted(d["rel"])}
         # 整体概况也按作用域收窄 —— 「一共 6 个命名空间」在多租户下本身就是
         # 一条别家装了什么的情报, 与 /namespaces 那条口径必须一致

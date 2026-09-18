@@ -26,7 +26,7 @@ try:
 except: print('  [FAIL] Edge Agent :8000')
 
 # IO Sim
-for p, name in [(53002,'LegacyComm'),(9002,'IoMonitor'),(9003,'IoCommit'),
+for p, name in [(53002,'GENERIC_LEGACY_PROTO'),(9002,'GENERIC_HMI'),(9003,'GENERIC_SVC_COMMIT'),
                  (18889,'RTDB'),(13500,'OPC DA'),(502,'Modbus')]:
     try:
         s=socket.create_connection(('127.0.0.1',p),timeout=1); s.close()

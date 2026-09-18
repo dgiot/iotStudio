@@ -11,7 +11,7 @@ import { CanvasRenderer } from 'echarts/renderers'
 import { LineChart, BarChart, PieChart, GaugeChart } from 'echarts/charts'
 import { GridComponent, TooltipComponent, LegendComponent, TitleComponent, DataZoomComponent } from 'echarts/components'
 import App from './App.vue'
-import router from './router'
+import router, { setupPluginRoutes } from './router'
 
 // ── iotStudio 模式升级 ──
 import './config/index.js'                           // 1. 配置合并网关
@@ -23,7 +23,6 @@ use([CanvasRenderer, LineChart, BarChart, PieChart, GaugeChart, GridComponent, T
 
 const app = createApp(App)
 app.use(ElementPlus, { locale: zhCn })
-app.use(router)
 app.component('v-chart', ECharts)
 
 // 7. 全局 API 挂载
@@ -46,4 +45,20 @@ window.addEventListener('beforeunload', () => {
   localStorage.setItem('dgiot_tabs', JSON.stringify(tabsState.visitedRoutes.slice(-20)))
 })
 
-app.mount('#app')
+// ═══════════════════════════════════════════════════════════
+// 启动 — 路由要先齐再挂载
+// ═══════════════════════════════════════════════════════════
+// 用 bootstrap() 而非顶层 await：顶层 await 受 build.target 限制，
+// 换 target 就静默变成构建期语法错误。
+async function bootstrap() {
+  try {
+    await setupPluginRoutes(router)
+  } catch (e) {
+    // setupPluginRoutes 内部已兜一层；这里再兜是为了「任何装载失败都不阻断启动」
+    console.error('[plugin] 路由接线异常，继续以静态路由启动:', e)
+  }
+  app.use(router)
+  app.mount('#app')
+}
+
+bootstrap()

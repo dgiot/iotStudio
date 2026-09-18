@@ -213,7 +213,7 @@ def test_generate_unmapped_channel_auto_pick(agent_db):
 def test_generate_unmapped_channel_ambiguous_requires_extra(engine, agent_db):
     """种子含 4 个数据源 — 歧义必须显式指定"""
     from src.ontology import Channel
-    engine.register(Channel(id="ch_audit_x", gateway="gw_131",
+    engine.register(Channel(id="ch_audit_x", gateway="gw_edge01",
                             name="审计测试通道", protocol="modbus_tcp"))
     with pytest.raises(ValueError, match="target_ds"):
         propose_from_finding(engine, "unmapped_channel", "ch_audit_x")
@@ -224,8 +224,8 @@ def test_generate_unmapped_channel_ambiguous_requires_extra(engine, agent_db):
 
 def test_generate_unmapped_datasource_explicit_channel(engine, agent_db):
     from src.ontology import DataSource, Channel
-    engine.register(DataSource(id="ds_orphan", gateway="gw_131", type="tdengine"))
-    engine.register(Channel(id="ch_audit_x", gateway="gw_131",
+    engine.register(DataSource(id="ds_orphan", gateway="gw_edge01", type="tdengine"))
+    engine.register(Channel(id="ch_audit_x", gateway="gw_edge01",
                             name="审计测试通道", protocol="modbus_tcp"))
     with pytest.raises(ValueError, match="target_channel"):
         propose_from_finding(engine, "unmapped_datasource", "ds_orphan")

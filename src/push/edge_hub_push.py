@@ -40,7 +40,7 @@ pusher 的（含 HTTP webhook），塞进去等于把设备密钥交给每一个
 所以走注入的 resolver: `resolver(devaddr) -> {"product_id":…, "device_secret":…} | None`，
 由接线方（main.py）提供，pusher 只管缓存和用。
 """
-import json, time, logging
+import json, os, time, logging
 from typing import Any, Dict, Optional
 
 log = logging.getLogger("edge_hub")
@@ -59,6 +59,41 @@ DEFAULT_MAX_CONNECTIONS = 64
 #: 同量级：两者相加是"中枢改了密钥/加了设备 → 边缘跟上"的最坏延迟。
 DEFAULT_IDENTITY_TTL = 300
 
+#: 边缘网关标识的环境变量名 —— 现场给。
+#: 这个值只进两处：loopback 模式的 MQTT client_id（`edge_hub_{网关}`）与
+#: status()["gateway"]。**都不进主题**（主题走 dgiot_ids.dlink_topic，与网关名无关）。
+#: 但 client_id 是**发给 broker 的**，broker 日志与 $SYS 树里看得见 ⇒ 一样是现场信息。
+ENV_GATEWAY = "DG_EDGE_GATEWAY"
+
+#: 未配置时的占位。刻意写成一眼看出「没配」的形状 —— 与隔壁 `tenant="default"`
+#: 同族，是**描述缺失**而不是某个现场的名字。本仓纪律：兜底值绝不能长得比
+#: 证据更像现场真值，否则「没标注」会被读成「现场真值」。
+GATEWAY_UNSET = "edge-local"
+
+
+def edge_gateway() -> str:
+    """网关标识 —— 现场给（`DG_EDGE_GATEWAY`），本仓无现场默认值。
+
+    ⚠️ 这里原先的签名默认值是一个**现场机器名**，出处是一份现场 OPC 探测脚本的
+    部署注释。那份脚本已从本仓删除（死件：全仓零 import、无实例化点），所以此处
+    只留结论、不再指向一个已不存在的文件。而本模块**全仓没有一处调用方显式传
+    gateway**（`get_edge_pusher()` 只传 tenant；插件工厂给的是不含 gateway 的
+    config dict）⇒ 每个部署都会拿到那个默认值，loopback 的 client_id 一致地
+    自称那台机器。
+
+    这与 `modbus_collector` 的 `site="default" / gateway="gw_1"` 同型：**默认值在
+    这里只有一种写法 —— 把某个现场的名字写回来**。区别只在于处置：那边是死件、
+    可以径直改必填；这边是活件、且有两条不传 gateway 的调用路径，改必填会打断
+    它们，所以改为环境给 + 显式占位，并把「没配」这件事出声（见 __init__）。
+
+    ⚠️ 本条说明**刻意不复述那个默认值**。修一处现场料却在说明里把那串值再抄
+    一遍，等于从后门放回来 —— 说明也是公开仓的正文。
+    ⚠️ 写下这句告诫时，本条的第一版**正在下方把那串值抄了回来**。触发器是
+    「解释」这个动作本身，不是粗心：**越是想说清「为什么不能出现 X」，越容易
+    在句子里把 X 写出来。** 于是这里的判据不是「记得住」，而是改完 grep 一遍。
+    """
+    return os.environ.get(ENV_GATEWAY, "").strip() or GATEWAY_UNSET
+
 
 class EdgeHubPusher:
     """边缘中枢 MQTT 推送器 — 对标 DG-IoT EdgeHub
@@ -71,10 +106,14 @@ class EdgeHubPusher:
          identity_ttl}
         连接惰性建立（首次推送时），失败静默降级（不阻断采集）。
       - 生产接线: 身份查表由 main.py 注入 (DeviceIdentityRegistry)，见 set_resolver。
+
+    `gateway` 可以省 —— 省了取 `DG_EDGE_GATEWAY`，都没有则用占位 `edge-local`
+    （见 `edge_gateway()`）。**本类不设现场默认值**：原先这里写死的是某现场的
+    机器号，而全仓没有一处调用方传 gateway，等于每个部署都自称那台机器。
     """
 
-    def __init__(self, mqtt_client=None, tenant: str = "default", gateway: str = "gw_131",
-                 resolver=None):
+    def __init__(self, mqtt_client=None, tenant: str = "default",
+                 gateway: Optional[str] = None, resolver=None):
         cfg = mqtt_client if isinstance(mqtt_client, dict) else {}
         if cfg:
             tenant = cfg.get("tenant", tenant)
@@ -87,13 +126,25 @@ class EdgeHubPusher:
                           "port": int(cfg.get("port", 1883))}
         self._cfg = cfg
         self._tenant = tenant
-        self._gateway_id = gateway
+        # 网关名的三级来源：显式实参 → config dict（上面那行）→ DG_EDGE_GATEWAY。
+        # 三级都没有才落到占位 —— 见 edge_gateway() 的说明。
+        self._gateway_id = gateway or edge_gateway()
 
         mode = str(cfg.get("identity_mode", MODE_DEVICE)).lower()
         if mode not in MODES:
             log.warning(f"[edge_hub] 未知 identity_mode='{mode}'，回落到 {MODE_DEVICE}")
             mode = MODE_DEVICE
         self._mode = mode
+
+        # 只在 loopback 模式下出声：**这是唯一把这个值发出去的地方**（client_id）。
+        # device/user 模式网关名只进 status()，没配也不算缺 —— 无条件告警是自造
+        # 假阳性。出声用构造期一次性，不放在 _make_client 里：那里是**按设备**
+        # 调的（见下面身份缓存那段同样的顾虑：不能每个测点刷一行日志）。
+        if self._mode == MODE_LOOPBACK and self._gateway_id == GATEWAY_UNSET:
+            log.warning(
+                f"[edge_hub] 未配置 {ENV_GATEWAY}（config 里也没有 gateway）—— "
+                f"loopback 的 client_id 会用占位 {GATEWAY_UNSET!r}，不是现场网关名。"
+                f"跨部署的同机旁路会撞同一个 client_id。")
 
         self._resolver = resolver
         # devaddr → (身份, 缓存时刻)。带 TTL 是因为 deviceSecret 会轮换 ——
@@ -348,8 +399,13 @@ class EdgeHubPusher:
 _edge_pusher: Optional[EdgeHubPusher] = None
 
 
-def get_edge_pusher(tenant: str = "default") -> EdgeHubPusher:
+def get_edge_pusher(tenant: str = "default",
+                    gateway: Optional[str] = None) -> EdgeHubPusher:
+    """全局单例。`gateway` 不传 ⇒ 由 `DG_EDGE_GATEWAY` 决定。
+
+    （原先这条路径靠的是签名里那个写死的现场机器号 —— 见 edge_gateway()。）
+    """
     global _edge_pusher
     if not _edge_pusher:
-        _edge_pusher = EdgeHubPusher(tenant=tenant)
+        _edge_pusher = EdgeHubPusher(tenant=tenant, gateway=gateway)
     return _edge_pusher

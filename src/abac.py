@@ -210,7 +210,11 @@ def decide(username: str = "", clientid: str = "", action: str = "",
             if subj.get("device") != device:
                 return {"decision": "deny", "reason": "not own device topic"}
             return {"decision": "allow", "reason": "device publishes own topic"}
-        if device in (None, "+", "*") or subj.get("device") == device:
+        # device 为 None ⇔ 通配（slot() 已把 "+"/"#" 归一成 None）或槽位缺席。
+        # 旧写法 `in (None, "+", "*")` 里 "+" 已被 slot() 吃掉（不可达条件），
+        # 而 "*" 不是 MQTT 通配符（规范只有 "+"/"#"）—— 把它与 None 并列，
+        # 等于放行「任何设备读一个名叫 * 的设备」这条路径。此处收紧成只认 None。
+        if device is None or subj.get("device") == device:
             return {"decision": "allow", "reason": "device reads own scope"}
         return {"decision": "deny", "reason": "device reads foreign topic"}
 

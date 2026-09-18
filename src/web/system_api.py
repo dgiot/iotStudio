@@ -75,7 +75,19 @@ def system_info():
 
 @router.get("/plugins")
 def list_plugins():
-    """插件清单 + 健康度（前端 loader.js 登录后据此决定模块开关）。
+    """插件清单 + 健康度 + 前端模块开关。
+
+    三个消费方，各自要一段，**三段各有各的出处**：
+      · plugins/health — plugin_registry（协议驱动那套）
+      · frontend       — PluginManager.frontend_modules()，即
+                         data/plugins_state.json 的 frontend 段
+
+    ★ `frontend` 这一段是 loader.js:29 一直在要的键：
+      `data && data.frontend ? data.frontend : null`。
+      本端点此前只返 {plugins, health}，于是那个三元式**恒为 null**，
+      前端永远走构建期兜底 —— 后端动态启停整套能力（set_frontend 有、
+      持久化有、loader 的判断分支也有）从来没有生效过。
+      漏的是最后这一根线，不是能力本身。
 
     注册项原样返回会 500：`adapter` 是类对象、`metadata` 里也有不可序列化的值，
     FastAPI 的 jsonable_encoder 抛 `TypeError: vars() argument must have
@@ -85,9 +97,25 @@ def list_plugins():
     try:
         from ..plugin_registry import list_all, health
         plugins = [{k: _jsonable(v) for k, v in p.items()} for p in list_all()]
-        return {"plugins": plugins, "health": health()}
     except Exception:
-        return {"plugins": [], "health": {}}
+        plugins, health_doc = [], {}
+    else:
+        health_doc = health()
+
+    # frontend 段独立取：它的出处在 PluginManager，不在 plugin_registry。
+    # 取不到时**不补默认值** —— 补 {} 会让「后端说全开」与「后端没答」长得一样，
+    # 而 loader 对这两者的处理必须不同（见 loader.js:44 的 backendMap 判断）。
+    frontend = None
+    try:
+        from ..plugin_runtime import runtime
+        frontend = runtime.frontend_modules()
+    except Exception:
+        pass
+
+    out = {"plugins": plugins, "health": health_doc}
+    if frontend is not None:
+        out["frontend"] = frontend
+    return out
 
 # ---- 远程 IO 服务器信息 (WinRM) ----
 @router.get("/system/remote")
@@ -115,7 +143,14 @@ def remote_system_info(host: str = "127.0.0.1"):
         cpu = run('wmic cpu get Name,NumberOfCores,LoadPercentage /Value')
         disk = run('wmic logicaldisk where DeviceID="C:" get Size,FreeSpace /Value')
         net = run('ipconfig | findstr "IPv4"')
-        procs = run('tasklist | findstr "IoProject IOMan IoMonitor IoCommit LegacyComm"')
+        # 要盯的进程名是**部署侧事实**（每个现场的软件栈不同），公开仓不留真值。
+        # 经环境变量给：DG_EDGE_PROCESSES="Proc1 Proc2 ..."（无默认值，照 CLAUDE.md 里
+        # `DG_HUB_HOST` 那条惯例）。
+        # 没配时**不查**，且回一个显式说明串 —— 不能返回空串：空串在 UI 上读作
+        # 「这些进程都没在跑」，那是个看起来成功的错答案。
+        want = os.environ.get('DG_EDGE_PROCESSES', '').strip()
+        procs = (run(f'tasklist | findstr "{want}"') if want
+                 else '(DG_EDGE_PROCESSES 未配置 —— 未查询进程)')
 
         p.close_shell(shell)
 

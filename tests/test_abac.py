@@ -52,6 +52,29 @@ def test_device_reads_own_scope():
     assert foreign["decision"] == "deny"
 
 
+def test_device_slot_wildcard_is_own_scope():
+    """device 槽位写通配 = 站内读 (scope), 不是「读外设备」
+
+    走的是 `device is None` 那一支 —— 上面那条用例只覆盖了「具名是自己的设备」那半。
+    """
+    for topic in ("dgiot/siteA/gw1/+/p1/data",   # "+" 已被 slot() 归一成 None
+                  "dgiot/siteA/gw1/#"):          # 该槽位缺席
+        r = abac.decide(username="dev-siteA-d1", action="subscribe", topic=topic)
+        assert r["decision"] == "allow", (topic, r)
+
+
+def test_star_is_not_an_mqtt_wildcard():
+    """`*` 不是 MQTT 通配符 (规范只有 +/#) ⇒ 它是字面设备名, 走「读外设备」那一支
+
+    旧写法 `device in (None, "+", "*")` 把它与 None 并列放行, 于是任何设备
+    都能读一个名叫 * 的设备的主题。
+    """
+    r = abac.decide(username="dev-siteA-d1", action="subscribe",
+                    topic="dgiot/siteA/gw1/*/p1/data")
+    assert r["decision"] == "deny", r
+    assert "foreign" in r["reason"]
+
+
 # ── 网关: 站点范围 ──
 def test_gateway_within_site_only():
     ok = abac.decide(username="gw-siteA-x", action="publish",

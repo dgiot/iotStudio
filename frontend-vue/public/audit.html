@@ -43,22 +43,20 @@ a:hover{color:#93c5fd}
 
   <div class="card">
     <h3>系统功能模块</h3>
-    <div class="row"><span class="k">多协议采集</span><span class="v ok">10+工业协议 (Modbus/A11/OPC/IEC104)</span></div>
+    <div class="row"><span class="k">多协议采集</span><span class="v ok">Modbus RTU/TCP · OPC UA/DA · MQTT · IEC 104</span></div>
     <div class="row"><span class="k">区块链平台</span><span class="v ok">8大功能面板 (含电子签名存证)</span></div>
     <div class="row"><span class="k">知识图谱</span><span class="v ok">语义搜索 + 告警诊断 + SPARQL</span></div>
     <div class="row"><span class="k">AIP运维</span><span class="v ok">8视图 (Explorer/Ontology/Pipeline...)</span></div>
     <div class="row"><span class="k">FDE向导</span><span class="v ok">六步工作法 (不写代码构建智能体)</span></div>
-    <div class="row"><span class="k">测试覆盖</span><span class="v ok">87项自动化测试全通过</span></div>
   </div>
 
   <div class="card">
-    <h3>⚡ 系统运行状态</h3>
-    <div class="row"><span class="k">GraphRAG引擎</span><span class="v ok">89实体 | 836三元组</span></div>
-    <div class="row"><span class="k">语义搜索</span><span class="v ok">16ms</span></div>
-    <div class="row"><span class="k">SPARQL查询</span><span class="v ok">47 devices</span></div>
-    <div class="row"><span class="k">OWL本体</span><span class="v ok">59KB RDF/XML</span></div>
-    <div class="row"><span class="k">协议适配</span><span class="v ok">10+协议</span></div>
-    <div class="row"><span class="k">测试覆盖</span><span class="v ok">87项全通过</span></div>
+    <h3>⚡ 系统运行状态 <span style="font-size:10px;color:#64748b">(实时取自 /api/graphrag)</span></h3>
+    <div class="row"><span class="k">GraphRAG引擎</span><span class="v ok" id="agTriples">—</span></div>
+    <div class="row"><span class="k">设备</span><span class="v ok" id="agDevices">—</span></div>
+    <div class="row"><span class="k">OWL本体</span><span class="v ok" id="agOwl">—</span></div>
+    <div class="row"><span class="k">协议适配</span><span class="v ok">Modbus RTU/TCP · OPC UA/DA · MQTT · IEC 104</span></div>
+    <div class="row"><span class="k">显示"统计不可用"？</span><span class="v ok">需先登录 <a href="/aip.html" target="_blank">AIP运维平台</a>（同一令牌）</span></div>
   </div>
 
   <div class="card full">
@@ -86,13 +84,49 @@ a:hover{color:#93c5fd}
   </div>
 
   <div class="card">
-    <h3>📊 核心技术指标</h3>
-    <div class="big"><span class="n">89</span><span class="l">本体实体</span></div>
-    <div class="big"><span class="n">836</span><span class="l">OWL三元组</span></div>
-    <div class="big"><span class="n">10+</span><span class="l">工业协议</span></div>
-    <div class="big"><span class="n">87</span><span class="l">测试通过</span></div>
+    <h3>📊 核心技术指标 <span style="font-size:10px;color:#64748b">(实时)</span></h3>
+    <div class="big"><span class="n" id="agBigEntities">—</span><span class="l">本体实体</span></div>
+    <div class="big"><span class="n" id="agBigTriples">—</span><span class="l">OWL三元组</span></div>
+    <div class="big"><span class="n">8</span><span class="l">AIP视图</span></div>
+    <div class="big"><span class="n">8</span><span class="l">区块面板</span></div>
   </div>
 </div>
+
+<script>
+/* 运行态数字一律取自接口，不手写。
+   取不到（未登录 / 接口挂了）就明说"统计不可用"——**绝不回退到任何硬编码数字**，
+   因为一个编出来的数与一个量出来的数在页面上长得一模一样。
+   令牌沿用全站约定（Cookie Admin-Token / localStorage dgiot_token），登录入口在 aip.html。 */
+(function(){
+  function tok(){
+    var m=document.cookie.match(/(?:^|;\s*)Admin-Token=([^;]+)/);
+    return (m&&decodeURIComponent(m[1]))||localStorage.getItem('dgiot_token')||localStorage.getItem('sessionToken')||'';
+  }
+  function set(id,v){var e=document.getElementById(id);if(e)e.textContent=v}
+  var IDS=['agTriples','agDevices','agOwl','agBigEntities','agBigTriples'];
+  function fail(){IDS.forEach(function(i){set(i,'统计不可用')})}
+  var h={'Authorization':'Bearer '+tok()};
+  function get(u,as){
+    return fetch(u,{headers:h}).then(function(r){
+      if(!r.ok)throw new Error('HTTP '+r.status);
+      return as==='text'?r.text():r.json();
+    });
+  }
+  Promise.all([
+    get('/api/graphrag/rdf/stats','json'),
+    get('/api/graphrag/aip/dashboard','json'),
+    get('/api/graphrag/ontology.owl','text')
+  ]).then(function(a){
+    var st=a[0],c=(a[1]&&a[1].entity_counts)||{},owl=a[2];
+    var n=Object.keys(c).reduce(function(s,k){return s+(typeof c[k]==='number'?c[k]:0)},0);
+    set('agTriples',st.triples+'三元组 | '+st.classes+'类 | '+st.object_properties+'对象属性');
+    set('agDevices',(typeof c.devices==='number'?c.devices:'—')+' devices');
+    set('agOwl',Math.round(owl.length/1024)+'KB RDF/XML');
+    set('agBigEntities',n);
+    set('agBigTriples',st.triples);
+  }).catch(fail);
+})();
+</script>
 
 </body>
 </html>

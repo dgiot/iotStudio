@@ -17,10 +17,10 @@ python -c "import socket; ports=[53002,9002,9003,9001,18889,13500,502]; [print(f
 
 echo.
 echo [3] Simulator published:
-echo   LegacyComm :53002
-echo   IoMonitor  :9002
-echo   IoCommit   :9003
-echo   IoProject  :9001
+echo   GENERIC_LEGACY_PROTO :53002
+echo   GENERIC_HMI  :9002
+echo   GENERIC_SVC_COMMIT   :9003
+echo   GENERIC_SVC_PROJECT  :9001
 echo   RTDB     :18889
 echo   OPC DA     :13500
 echo   Modbus     :502

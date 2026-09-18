@@ -1,4 +1,10 @@
-"""租户种子数据 — 默认租户 + 油液监测租户 + 设备导入"""
+"""设备种子数据 — 油液监测设备导入（`local.db` 的 `devices` 表）
+
+⚠️ 2026-09-17：**租户种子已删**（原先在此往 `tenants` 表写 `default` /
+`oil-monitor`）。租户/角色现在的唯一数据源是 Parse 的 `_Role`，由
+`parse_lite._do_init_db()` 建表并写入种子行；本脚本不再参与 ——
+往一张退役的表里灌数据只会造出第二个来源，而那正是这次要治的病。
+"""
 import sqlite3, os, sys, json
 from datetime import datetime
 from pathlib import Path
@@ -36,26 +42,6 @@ def ensure_tables():
     """
     os.makedirs(os.path.dirname(DB_PATH), exist_ok=True)
     init_db("sqlite:///" + DB_PATH.replace("\\", "/")).dispose()
-
-
-def seed_default_tenant(conn):
-    now = datetime.utcnow().isoformat()
-    conn.execute("""
-        INSERT OR IGNORE INTO tenants (tenant_id, name, slug, contact, status, max_devices, max_users, created_at)
-        VALUES ('default', '默认租户', 'default', 'admin', 'active', 99999, 999, ?)
-    """, (now,))
-    conn.commit()
-    print("✅ 默认租户")
-
-
-def seed_oil_tenant(conn):
-    now = datetime.utcnow().isoformat()
-    conn.execute("""
-        INSERT OR IGNORE INTO tenants (tenant_id, name, slug, contact, status, max_devices, max_users, created_at)
-        VALUES ('oil-monitor', '设备完整性', 'oil-monitor', '设备完整性事业部', 'active', 200, 20, ?)
-    """, (now,))
-    conn.commit()
-    print("✅ 油液监测租户")
 
 
 def import_oil_devices(conn):
@@ -100,8 +86,14 @@ def import_oil_devices(conn):
         # 那个 2 元组恒真（非空元组的真值恒为 True）⇒ `or d` 永不求值 ⇒ 实际只供给
         # 3 个参数而语句要 11 个，实测
         #   sqlite3.ProgrammingError: uses 11, and there are 3 supplied
-        # 本脚本的 __main__ 走到这一行必炸 —— 所以连它前面的 "默认租户" 也从没落库
-        # （实测 tenants 表 0 行）。改成命名参数，与上面 devices 字典的键一一对应。
+        # 改成命名参数，与上面 devices 字典的键一一对应。
+        #
+        # 🔴 原注释接着说「本脚本的 __main__ 走到这一行必炸 —— 所以连它前面的
+        # 『默认租户』也从没落库（实测 tenants 表 0 行）」。**结论真、理由错**，留此更正：
+        # `__main__` 的顺序是 seed_default_tenant → seed_oil_tenant →
+        # import_oil_devices，**崩在最后一步推不出前两步没提交**（那两步各自
+        # `conn.commit()` 了）。0 行的原因不在这条链上，别再照抄那个推理。
+        # （[[evidence-provenance-executed-vs-read]]：结论是实测出来的，理由不是。）
         conn.execute("""
             INSERT OR REPLACE INTO devices
             (tenant_id, device_id, device_name, device_type, station_id, protocol,
@@ -116,8 +108,6 @@ def import_oil_devices(conn):
 if __name__ == "__main__":
     ensure_tables()          # 自己开会话建表，再取连接灌数据
     conn = get_db()
-    seed_default_tenant(conn)
-    seed_oil_tenant(conn)
     import_oil_devices(conn)
     conn.close()
-    print("🎉 租户种子完成")
+    print("🎉 设备种子完成")

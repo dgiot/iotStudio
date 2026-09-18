@@ -30,7 +30,7 @@ TLV 协议格式 (消息类型 0x10):
     "devices": {
         "eca24a560c89": {               # 设备MAC → 测点映射
             "device_id": "bolt_01",
-            "device_name": "北1-2-螺栓1号"
+            "device_name": "示例螺栓-1号"
         }
     }
 }
