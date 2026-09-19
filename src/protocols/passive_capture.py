@@ -8,7 +8,7 @@
 特性:
   - 零发包: 只读网卡流量, 不建立任何 TCP 连接, 不修改任何配置
   - 流跟踪: src_ip:port → dst_ip:port 会话归类, 设备动态发现
-  - 协议识别: A11 (jjZZ) / Modbus TCP / IEC104 / LegacyComm / 未知
+  - 协议识别: A11 (jjZZ) / Modbus TCP / IEC104 / GENERIC_LEGACY_PROTO / 未知
   - Ring Buffer: 保留最近 N 帧, 内存有界
   - 资源可控: CPU 增量 2-5%, 内存 <100MB (scapy store=False)
 
@@ -36,7 +36,7 @@ MODBUS_FUNCS = {1, 2, 3, 4, 5, 6, 15, 16, 22, 23}
 DEFAULT_PORTS = [502, 8889, 2404, 4840, 53001]
 
 PROTO_LABELS = {502: "Modbus", 8889: "A11", 2404: "IEC104",
-                4840: "OPCUA", 53001: "LegacyComm"}
+                4840: "OPCUA", 53001: "GENERIC_LEGACY_PROTO"}
 
 
 @dataclass
@@ -228,7 +228,7 @@ class PassiveCapture:
             return "Modbus"
         if len(payload) >= 1 and payload[0] in (0xAA, 0x00) and \
                 len(payload) >= 6:
-            return "LegacyComm"
+            return "GENERIC_LEGACY_PROTO"
         return "unknown"
 
     # ── 查询 ──

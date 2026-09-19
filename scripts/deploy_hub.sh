@@ -1,0 +1,282 @@
+#!/bin/bash
+# ============================================================================
+# DG-IoT Hub - minimal one-click deploy for openEuler / Kylin (LF, ASCII only)
+# Reference: gitee.com/dgaiot/dgaiot dgiot_single_deploy.sh (simplified)
+#
+# Philosophy: install ONLY what is necessary.
+#   - NO docker required (native build)
+#   - NO repo clobbering (never touches /etc/yum.repos.d)
+#   - NO optional stack (ollama/milvus/dify/redis/report/n2n/wifi)
+#   - parse-server (Node, :1337) IS included: dgiot business plane
+#     (login/devices/channels) dies with code 1 "disconnect" without it
+#   - REUSES existing TDengine(6030/6041) and PostgreSQL if present
+#   - IDEMPOTENT: re-running skips completed steps
+# Ports used by hub: 1883/8883(tcp-mqtt) 8083/8084(ws) 18083(dashboard)
+# ============================================================================
+set -uo pipefail
+
+TAG="${TAG:-v4.9.3}"
+SRC="${SRC:-/opt/dgiot-4.4}"
+DEST="${DEST:-/data/dgiot}"
+LOG=/root/dgiot-deploy.log
+GITEE_MIRROR="https://gitee.com/fastdgiot"
+
+GREEN='\033[1;32m'; YELLOW='\033[33m'; RED='\033[0;31m'; NC='\033[0m'
+say()  { echo -e "${GREEN}[deploy]${NC} $*"; }
+warn() { echo -e "${YELLOW}[skip]${NC} $*"; }
+die()  { echo -e "${RED}[fail]${NC} $*"; exit 1; }
+log()  { echo "[$(date +%F_%T)] $*" >> "$LOG"; }
+
+# ---------------------------------------------------------------- [1/7] env
+detect_env() {
+  [ "$(id -u)" = "0" ] || die "run as root"
+  . /etc/os-release 2>/dev/null
+  say "system: ${NAME:-unknown} ${VERSION_ID:-} $(uname -m)"
+  # port pre-flight: conflict with EXISTING services is fatal before build
+  RUNNING_DIR=""
+  for p in 1883 8083 8084 18083; do
+    if ss -tln 2>/dev/null | grep -q ":$p "; then
+      pid=$(ss -tlnp 2>/dev/null | grep ":$p " | grep -oE 'pid=[0-9]+' | head -1 | cut -d= -f2)
+      if [ -n "$pid" ] && readlink "/proc/$pid/exe" 2>/dev/null | grep -q beam; then
+        RUNNING_DIR=$(readlink "/proc/$pid/cwd" 2>/dev/null)
+        warn "port $p served by a running dgiot hub (beam pid $pid, cwd $RUNNING_DIR)"
+      else
+        die "port $p already in use by another service - resolve conflict first"
+      fi
+    fi
+  done
+}
+
+# ---------------------------------------------------------------- [2/7] deps
+install_deps() {
+  local need=""
+  for t in git gcc make cmake; do command -v $t >/dev/null || need="$need $t"; done
+  if [ -n "$need" ]; then
+    say "installing toolchain:$need"
+    if command -v dnf >/dev/null; then dnf install -y $need >>"$LOG" 2>&1
+    elif command -v yum >/dev/null; then yum install -y $need >>"$LOG" 2>&1
+    else die "no dnf/yum and missing:$need"; fi
+  fi
+  if ! command -v erl >/dev/null; then
+    say "installing erlang"
+    if command -v dnf >/dev/null; then dnf install -y erlang >>"$LOG" 2>&1
+    elif command -v yum >/dev/null; then yum install -y erlang >>"$LOG" 2>&1
+    else die "erlang missing and no package manager"; fi
+  fi
+  OTPV=$(erl -noshell -eval 'io:format("~s",[erlang:system_info(otp_release)]),halt().' 2>/dev/null)
+  say "erlang OTP $OTPV (hub tested on OTP24; OTP25+ needs script adjustments)"
+}
+
+# ---------------------------------------------------------------- [3/7] source
+fetch_source() {
+  if [ -d "$SRC/.git" ]; then warn "source exists at $SRC"; return; fi
+  say "cloning dgiiot/dgiot $TAG"
+  git clone --depth 1 --branch "$TAG" https://gitee.com/dgiiot/dgiot.git "$SRC" >>"$LOG" 2>&1 \
+    || die "clone failed (gitee reachable?)"
+}
+
+# ---------------------------------------------------------------- [4/7] patches
+apply_patches() {
+  cd "$SRC" || die "no source dir"
+  # 4a. transitive deps pinned to github: rewrite to fastdgiot gitee mirrors
+  for org in emqx ninenines erlef extend g-andrade garret-smith kafka4beam kellymclaughlin maxmind uwiger; do
+    git config --global url."$GITEE_MIRROR/".insteadOf "https://github.com/$org/" 2>/dev/null
+  done
+  # 4b. tag/version header sync (team tags ahead of header)
+  local tagv="${TAG#v}"
+  if [ -f include/emqx_release.hrl ] && ! grep -q "$tagv" include/emqx_release.hrl; then
+    sed -i "s/{opensource, \"[^\"]*\"}/{opensource, \"$tagv\"}/" include/emqx_release.hrl
+    say "version header synced to $tagv"
+  fi
+  # 4c. strip enterprise plugins (open-source build must not require them)
+  #     The LIST is supplied by the deployer; this repo carries NO plugin name.
+  #       usage: DG_HUB_STRIP_PLUGINS="nameA nameB" ./deploy_hub.sh
+  #     The default MUST stay empty. A default value living in the public repo
+  #     IS a list of plugin names -- which is the one thing this repo must not
+  #     contain (private/ carries the roster, the public repo carries only the
+  #     mechanism). Same shape as DG_HUB_HOST in scripts/hub_smoke.py.
+  if [ -n "${DG_HUB_STRIP_PLUGINS:-}" ]; then
+    for _p in $DG_HUB_STRIP_PLUGINS; do
+      # Names go into a sed program unquoted, so constrain them first. Without
+      # this, a name containing sed syntax silently edits the wrong lines.
+      case "$_p" in
+        *[!A-Za-z0-9_]*|'') die "DG_HUB_STRIP_PLUGINS: bad plugin name '$_p' (want [A-Za-z0-9_]+)" ;;
+      esac
+      # Both files live in the HUB SOURCE TREE ($SRC), not in this repo.
+      # No 2>/dev/null here: a missing target used to be swallowed, so "stripped"
+      # was printed whether or not anything was stripped.
+      if [ -f rebar.config.erl ]; then
+        sed -i "/{enable_plugin_${_p}, true}/d; /^[ ,]*${_p}\s*$/d" rebar.config.erl
+      else
+        warn "no rebar.config.erl in $SRC, skipped stripping $_p there"
+      fi
+      if [ -f data/loaded_plugins.tmpl ]; then
+        sed -i "/{${_p},/d" data/loaded_plugins.tmpl
+      else
+        warn "no data/loaded_plugins.tmpl in $SRC, skipped stripping $_p there"
+      fi
+      say "stripped enterprise plugin: $_p"
+    done
+  fi
+  # 4d. rebar3 pinned for OTP24, fetched from gitee
+  export OTP_VSN=24
+  if [ ! -x ./rebar3 ]; then bash scripts/ensure-rebar3.sh >>"$LOG" 2>&1 || die "rebar3 fetch failed"; fi
+  say "patches applied (github->gitee rewrite / version sync / enterprise stripped)"
+}
+
+# ---------------------------------------------------- release completeness
+# Shared by the two idempotence guards below (build_hub / install_release).
+#
+# The guard must test "the release is COMPLETE", not merely "bin/emqx exists".
+# `make` drops bin/emqx first and bin/start.boot later, and the make call is
+# timeout-bounded (3600s) inside a 5x retry loop -- so an interrupted run can
+# leave a half-built tree that still has bin/emqx. The old guard looked for
+# bin/emqx only, reported "release already built" and returned. Because this
+# script is idempotent by design, THAT TREE IS THEN NEVER REBUILT: every later
+# run skips it too, and install_release cp -a's the half-built tree into $DEST
+# unchanged.
+#
+# Not hypothetical. The erl_crash.dump dropped in the repo root on 2026-09-14
+# records exactly this failure --
+#   init terminating in do_boot ({cannot get bootfile,
+#     /opt/dgiot-4.4/_build/emqx/rel/emqx/bin/start.boot})
+# and that path matches the $SRC default verbatim. (That dump was probably not
+# produced by this script -- this script only ever starts $DEST/bin/emqx -- but
+# it does prove half-built trees occur in this environment.)
+#
+# Tightening is safe in both directions: a wrong verdict costs one extra
+# 15-40 min make, it can never pass off an unbuilt tree as built.
+#
+# The launcher test is an EXISTENCE test, not an exec-bit test -- deliberately.
+# Only one requirement is being added here (start.boot); the launcher check
+# keeps the meaning it already had, so this changes one thing, not two.
+# And test the failure that is SILENT: a non-executable bin/emqx dies loudly
+# at `./bin/emqx start` further down, while an absent start.boot is the one
+# that gets skipped over forever.
+# start.boot sits under bin/ or releases/<vsn>/ depending on release layout --
+# accept either.
+_release_ok() {  # $1 = release root
+  [ -f "$1/bin/emqx" ] || return 1
+  [ -f "$1/bin/start.boot" ] && return 0
+  ls "$1"/releases/*/start.boot >/dev/null 2>&1
+}
+
+# ---------------------------------------------------------------- [5/7] build
+build_hub() {
+  cd "$SRC"
+  if _release_ok "$SRC/_build/emqx/rel/emqx"; then warn "release already built"; return; fi
+  say "building (deps grind + make, 15-40 min; log: $LOG)"
+  local rc=1 i
+  for i in $(seq 1 15); do
+    timeout 300 ./rebar3 get-deps >>"$LOG" 2>&1 && break
+    log "get-deps pass $i failed, retry"
+    sleep 10
+  done
+  for i in $(seq 1 5); do
+    echo "=== MAKE $i ===" >> "$LOG"
+    timeout 3600 make >>"$LOG" 2>&1 && { rc=0; break; }
+    log "make pass $i failed, retry"
+    sleep 10
+  done
+  [ $rc -eq 0 ] || die "build failed - see $LOG"
+  say "build done"
+}
+
+# ---------------------------------------------------------------- [6/7] install
+install_release() {
+  # same predicate as build_hub: bin/emqx alone does not prove a whole tree
+  if _release_ok "$DEST"; then warn "release installed at $DEST"; return; fi
+  say "installing release to $DEST"
+  mkdir -p "$DEST"
+  cp -a "$SRC/_build/emqx/rel/emqx/." "$DEST/"
+  # systemd if available (real machines); nohup fallback (WSL without systemd)
+  if command -v systemctl >/dev/null && systemctl is-system-running >/dev/null 2>&1; then
+    cat > /etc/systemd/system/dgiot.service <<EOF
+[Unit]
+Description=DG-IoT hub (emqx ${TAG})
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=forking
+Environment=HOME=$DEST
+ExecStart=/bin/sh $DEST/bin/emqx start
+ExecStop=/bin/sh $DEST/bin/emqx stop
+Restart=always
+StartLimitBurst=3
+StartLimitIntervalSec=60
+
+[Install]
+WantedBy=multi-user.target
+EOF
+    systemctl daemon-reload && systemctl enable dgiot >>"$LOG" 2>&1
+    say "systemd unit installed (dgiot.service)"
+  else
+    say "no systemd (WSL?) - use: nohup $DEST/bin/emqx start"
+  fi
+}
+
+# ------------------------------------------------------- [6.5/7] parse-server
+# dgiot business plane stack: EMQX(:1883/:5080) + PostgreSQL + parse-server(:1337).
+# All parse-backed routes (login, users, devices, channels) answer
+# code 1 "disconnect" when the Node parse-server is down.
+start_parse_server() {
+  local PS_DIR=""
+  for d in "$DEST/dgiot_parse_server" /data/dgiot/dgiot_parse_server; do
+    [ -f "$d/server/start.js" ] && PS_DIR="$d" && break
+  done
+  if [ -z "$PS_DIR" ]; then
+    warn "parse-server not installed (business plane degraded - install dgiot_parse_server)"; return
+  fi
+  if ss -tln 2>/dev/null | grep -q ':1337 '; then warn "parse-server already running (:1337)"; return; fi
+  say "starting parse-server ($PS_DIR)"
+  mkdir -p "$DEST/log"
+  # setsid detaches from this session: WSL kills plain nohup children when
+  # the launching session exits (observed: process died between probes)
+  (cd "$PS_DIR" && setsid nohup node server/start.js \
+     >> "$DEST/log/parse_server.log" 2>&1 < /dev/null &)
+  local i
+  for i in 1 2 3 4 5 6 7 8 9 10; do
+    sleep 2
+    ss -tln 2>/dev/null | grep -q ':1337 ' && break
+  done
+  ss -tln 2>/dev/null | grep -q ':1337 ' \
+    || die "parse-server did not bind :1337 (see $DEST/log/parse_server.log)"
+  say "parse-server UP (:1337) - business plane enabled"
+}
+
+# ---------------------------------------------------------------- [7/7] start
+start_verify() {
+  if "$DEST/bin/emqx" ping >/dev/null 2>&1; then warn "hub already running (from $DEST)"
+  elif [ -n "${RUNNING_DIR:-}" ] && "$RUNNING_DIR/bin/emqx" ping >/dev/null 2>&1; then
+    warn "hub already running from $RUNNING_DIR (install-only mode)"
+  else
+    say "starting hub"
+    (cd "$DEST" && HOME="$DEST" ./bin/emqx start >>"$LOG" 2>&1) || die "start failed"
+    sleep 10
+  fi
+  "$DEST/bin/emqx" ping >/dev/null 2>&1 || die "hub not responding"
+  say "hub is UP (ping=pong)"
+  ss -tln 2>/dev/null | grep -oE ':(1883|8883|8083|8084|18083) ' | sort -u | tr -d ' :' \
+    | while read -r p; do say "  listening: $p"; done
+  if ss -tln 2>/dev/null | grep -q ':1337 '; then
+    say "  business plane: parse-server :1337 UP (login/devices live)"
+  else
+    warn "  business plane: parse-server DOWN - run deploy again or start manually"
+  fi
+  echo "=================================================="
+  echo " DG-IoT hub deployed:  MQTT tcp://$(hostname -I | awk '{print $1}'):1883"
+  echo " dashboard:            http://$(hostname -I | awk '{print $1}'):18083"
+  echo " business api:         http://$(hostname -I | awk '{print $1}'):5080/iotapi"
+  echo " verify from edge:     python hub_smoke.py  (iotStudio/scripts)"
+  echo "=================================================="
+}
+
+detect_env
+install_deps
+fetch_source
+apply_patches
+build_hub
+install_release
+start_parse_server
+start_verify

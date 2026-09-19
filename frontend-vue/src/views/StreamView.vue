@@ -175,9 +175,9 @@ function evalAlgorithm(a, values) {
 
 // 作用域: 有遥测数据的设备+测点 (优先用已知有数据的)
 const SCOPE_PRESET = [
-  { did:'oilwell_0001', pid:'oil_pressure', name:'葡2-27向2', pname:'油压', dtype:'oilwell' },
-  { did:'oilwell_0001', pid:'casing_pressure', name:'葡2-27向2', pname:'套压', dtype:'oilwell' },
-  { did:'oilwell_0001', pid:'wellhead_temp', name:'葡2-27向2', pname:'井口温度', dtype:'oilwell' },
+  { did:'oilwell_0001', pid:'oil_pressure', name:'示例井-01', pname:'油压', dtype:'oilwell' },
+  { did:'oilwell_0001', pid:'casing_pressure', name:'示例井-01', pname:'套压', dtype:'oilwell' },
+  { did:'oilwell_0001', pid:'wellhead_temp', name:'示例井-01', pname:'井口温度', dtype:'oilwell' },
   { did:'comp_01', pid:'vibration', name:'压缩机-1号', pname:'振动', dtype:'compressor' },
   { did:'comp_01', pid:'bearing_temp', name:'压缩机-1号', pname:'轴承温度', dtype:'compressor' },
   { did:'inv_01', pid:'power_output', name:'逆变器-1号', pname:'输出功率', dtype:'inverter' },

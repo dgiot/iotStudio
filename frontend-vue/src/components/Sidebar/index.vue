@@ -16,9 +16,11 @@
     >
       <template v-for="(items, group) in menuGroups" :key="group">
         <div class="menu-group-label">{{ group }}</div>
-        <!-- url 型外链项（meta.external）→ a 标签新窗口，不触发 el-menu 路由 -->
+        <!-- url 型外链项（meta.external）默认 → a 标签新窗口，不触发 el-menu 路由；
+             但带 meta.embed 的走**底座内嵌**（PluginFrameView），侧栏顶栏保留。
+             区别只在这一处：embed 型是「底座里的一个应用」，非 embed 型是「跳走的链接」。 -->
         <template v-for="item in items" :key="item.path">
-          <el-menu-item v-if="!item.meta?.external" :index="item.path">
+          <el-menu-item v-if="!item.meta?.external || item.meta?.embed" :index="item.path">
             <el-icon><component :is="item.meta?.icon" /></el-icon>
             <span>{{ item.meta?.title }}</span>
           </el-menu-item>

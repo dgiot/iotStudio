@@ -1,4 +1,6 @@
 """iotStudio — auth 模块测试"""
+import os
+
 import pytest
 import time
 import hashlib

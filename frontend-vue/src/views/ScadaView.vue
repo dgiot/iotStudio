@@ -7,6 +7,11 @@
         <el-tag :type="isEdit ? 'warning' : 'success'" size="small" effect="dark">
           {{ isEdit ? '编辑模式' : '运行模式' }}
         </el-tag>
+        <!-- 当前画布是后端哪一个视图 —— 原来存 localStorage 时没这问题（就一份），
+             现在可以有多份，不说清楚就不知道自己在改谁 -->
+        <el-tag :type="viewId ? 'info' : 'warning'" size="small" effect="plain">
+          {{ viewId ? viewName : '未保存' }}
+        </el-tag>
       </div>
       <div class="tb-right">
         <el-button size="small" @click="goTopo">🔗 拓扑</el-button>
@@ -123,6 +128,7 @@ import { ref, onMounted, onUnmounted, nextTick, watch } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { ElMessage } from 'element-plus'
 import api from '../api'
+import { getDefaultView, createView, updateView } from '../api/admin'
 import { Canvas as FabricCanvas, Rect as FabricRect, Text as FabricText, Line as FabricLine, Triangle as FabricTriangle, Group as FabricGroup, Ellipse as FabricEllipse } from 'fabric'
 
 const router = useRouter()
@@ -137,6 +143,12 @@ const selectedObj = ref(null)
 const selX = ref(0), selY = ref(0), selW = ref(100), selH = ref(80), selColor = ref('#0d47a1'), selText = ref(''), selDataBind = ref('')
 const bindDeviceId = ref(''), bindPointId = ref('')
 const deviceList = ref([]), pointList = ref([])
+// 当前画布对应的后端视图 —— 存的是 view_api 的 View 对象，不再是 localStorage。
+// viewId 为空 = 这份画布还没落过后端，第一次保存时才建。
+const viewId = ref(''), viewName = ref(''), viewVersion = ref(null)
+// 站点标识：默认视图按 (site, type) 分组，组态页认的是「本站那份」。
+// 没带 ?site= 就是「不绑站点」的全局组态 —— 空串在接口里是个有效值，不是缺省。
+const siteKey = String(route.query.site || '')
 let fc = null, ws = null
 
 // ===== 图元库 =====
@@ -210,8 +222,8 @@ async function initFabric() {
 
   window.addEventListener('resize', onResize)
 
-  // 加载已保存画布
-  loadSavedCanvas()
+  // 加载画布（服务端默认视图 → 本机旧画布 → 内置示例）
+  await loadCanvasFromServer()
 }
 
 function drawGrid() {
@@ -223,6 +235,11 @@ function drawGrid() {
   for (let y = 0; y < h; y += grid) {
     fc.add(new FabricLine([0, y, w, y], { stroke: '#1a3050', selectable: false, evented: false, excludeFromExport: true }))
   }
+  // 网格要压在元件**下面**。initFabric 里先画网格再放元件，顺序天然是对的；
+  // 但 loadFromJSON 内部会 clear() 掉整个画布（fabric v6+ 的行为），
+  // 加载完再补画的网格就成了「后加的」= 盖在元件上。所以补画之后显式置底，
+  // 判据用 excludeFromExport —— 那正是网格自己的标记。
+  fc.getObjects().filter(o => o.excludeFromExport).forEach(o => fc.sendObjectToBack(o))
 }
 
 // ===== 拖放/添加图元 =====
@@ -502,32 +519,141 @@ function checkAndUpdate(obj, deviceId, pointMap) {
 }
 
 // ===== 保存/加载 =====
-function saveCanvas() {
-  if (!fc) return
-  const json = fc.toJSON(['customType', 'componentKey', 'dataBind'])
-  localStorage.setItem('scada_canvas', JSON.stringify(json))
-  ElMessage.success('画布已保存')
+// 原先存 localStorage['scada_canvas'] —— 只活在**那一台浏览器**里：换机器没了、
+// 清缓存没了、别人看不到，两个站点还会互相覆盖同一把键。现在存 view_api，
+// 画布成为后端正式对象：可命名、可多份、可设默认（「视图管理」页里管）。
+//
+// 并发：保存带上 version 做乐观锁。组态画布是整块 JSON，两个人同时拖元件时
+// 后保存的那个会把前一个整块盖掉且毫无提示 —— 现在后端拒 409，这里如实说，
+// 绝不无条件弹「已保存」。
+const LEGACY_KEY = 'scada_canvas'
+const defaultViewName = siteKey ? `${siteKey} 组态` : '默认组态'
+// 本机旧画布被载入过 —— 它进了服务端之后才敢删本地那份，否则一关页面就没了
+let legacyLoaded = false
+
+function canvasJSON() {
+  // 必须用 toObject 而不是 toJSON —— fabric v6 起 toJSON() 的定义是
+  // `toJSON() { return this.toObject() }`，**一个参数都不接**。原先写的
+  // `toJSON(['customType', ...])` 在 v5 是转发给 toObject 的，升到 v7 后
+  // 这个数组被静默丢掉，于是 customType / componentKey / dataBind 从来没进过
+  // 存档：画布存下来看着一样，但图元是哪一种、绑了哪个测点全丢了，
+  // 重新加载后数据绑定的实时刷新自然也就没了。
+  return fc.toObject(['customType', 'componentKey', 'dataBind'])
 }
 
-function loadCanvas() {
-  if (!fc) return
-  loadSavedCanvas()
-  ElMessage.success('画布已加载')
+function applyCanvas(data) {
+  return fc.loadFromJSON(data).then(() => {
+    // loadFromJSON 会 clear() 整个画布 —— 连同 initFabric 里画的网格一起没了。
+    // 元件就位后补回来（drawGrid 自己会置底，不会盖住元件）。
+    drawGrid()
+    fc.renderAll()
+    if (!isEdit.value) {
+      fc.selection = false
+      fc.getObjects().forEach(obj => { obj.selectable = false; obj.evented = false })
+    }
+  })
 }
 
-function loadSavedCanvas() {
-  const saved = localStorage.getItem('scada_canvas')
-  if (!saved || !fc) return
+/** 本机旧版 localStorage 画布 —— 只在服务端没有默认视图时才看它 */
+function takeLegacyLocalCanvas() {
+  const raw = localStorage.getItem(LEGACY_KEY)
+  if (!raw) return null
   try {
-    fc.loadFromJSON(JSON.parse(saved)).then(() => {
-      fc.renderAll()
-      if (!isEdit.value) {
-        fc.selection = false
-        fc.getObjects().forEach(obj => { obj.selectable = false; obj.evented = false })
-      }
+    return JSON.parse(raw)
+  } catch {
+    return null
+  }
+}
+
+async function saveCanvas() {
+  if (!fc) return false
+  const canvas = canvasJSON()
+  try {
+    if (!viewId.value) {
+      const name = viewName.value || defaultViewName
+      const created = await createView({ name, type: 'scada', site: siteKey })
+      viewId.value = created.objectId
+      viewName.value = name
+      viewVersion.value = 0          // create_view 建出来的版本号就是 0
+    }
+    const r = await updateView(viewId.value, {
+      name: viewName.value, type: 'scada', site: siteKey,
+      // 只数真会进存档的图元 —— getObjects() 把网格线也算上，
+      // 一张 8 个元件的画布在列表里会显示「63 节点」（63 = 8 + 55 条网格线），
+      // 跟实际存下来的 objects 数对不上。判据与 drawGrid/序列化同一把尺子。
+      canvas, node_count: fc.getObjects().filter(o => !o.excludeFromExport).length,
+      version: viewVersion.value,
     })
+    // 后端回了新版本号，接着用它存下一次 —— 不接的话第二次保存必 409
+    viewVersion.value = r?.version ?? (viewVersion.value ?? 0) + 1
+    if (legacyLoaded) {              // 旧画布已安全落到服务端，本机副本可以撤了
+      localStorage.removeItem(LEGACY_KEY)
+      legacyLoaded = false
+    }
+    ElMessage.success(`画布已保存到服务端 · ${viewName.value}`)
+    return true
   } catch (e) {
+    const st = e?.response?.status
+    if (st === 409) {
+      ElMessage.error(e.response.data?.detail || '画布已被他人修改，请先「📂 加载」取回最新版')
+    } else {
+      ElMessage.error(`保存失败：${e?.response?.data?.detail || e?.message || e}`)
+    }
+    return false
+  }
+}
+
+async function loadCanvas() {
+  if (!fc) return
+  const ok = await loadCanvasFromServer()
+  if (ok) ElMessage.success(`已从服务端载入 · ${viewName.value || '视图'}`)
+}
+
+/**
+ * 打开页面时取画布。三层回退，顺序不能换：
+ *   ① 服务端 (site, scada) 的默认视图 —— 权威那份
+ *   ② 本机旧版 localStorage —— 迁移用；**只载入不上传**，等用户按保存。
+ *      自动上传的话，两台机器各有一份草稿时会互相抢「本站默认」，
+ *      而两边的人都只当自己打开了个页面。
+ *   ③ 内置示例画布 —— 全新部署的观感，不落库（免得每次只读访问都建一个视图）
+ * 返回是否拿到了真画布（示例不算）。
+ */
+async function loadCanvasFromServer() {
+  if (!fc) return false
+  let data = null
+  try {
+    const r = await getDefaultView('scada', siteKey)
+    data = r?.canvas || null
+    if (r?.view?.objectId) {
+      viewId.value = r.view.objectId
+      viewName.value = r.view.name || ''
+      viewVersion.value = r.view.version ?? 0
+    }
+  } catch (e) {
+    ElMessage.error(`读取服务端画布失败：${e?.response?.data?.detail || e?.message || e}`)
+    return false
+  }
+
+  if (!data) {
+    const legacy = takeLegacyLocalCanvas()
+    if (legacy) {
+      data = legacy
+      legacyLoaded = true
+      ElMessage.info('本机存有旧版画布，已载入；点「💾 保存」即存入服务端')
+    }
+  }
+  if (!data) {
+    loadDefaultDemo()               // 示例画布：viewId 保持为空，标签显示「未保存」
+    return false
+  }
+  try {
+    await applyCanvas(data)
+    return true
+  } catch (e) {
+    // 服务端那份不删不改 —— 坏数据停在这儿，别把库里的好数据一起带走
     console.warn('加载画布失败', e)
+    ElMessage.error('画布数据无法解析，已停在空白页（服务端那份未改动）')
+    return false
   }
 }
 
@@ -541,7 +667,7 @@ function clearCanvas() {
 
 function exportJSON() {
   if (!fc) return
-  const json = fc.toJSON(['customType', 'componentKey', 'dataBind'])
+  const json = canvasJSON()   // 同上：toJSON 在 v6+ 不吃参数
   const blob = new Blob([JSON.stringify(json, null, 2)], { type: 'application/json' })
   const url = URL.createObjectURL(blob)
   const a = document.createElement('a'); a.href = url; a.download = 'scada-canvas.json'; a.click()
@@ -560,8 +686,8 @@ onMounted(async () => {
   await nextTick()
   await initFabric()
   loadDeviceList()
-  // 默认加载示例
-  if (!localStorage.getItem('scada_canvas')) loadDefaultDemo()
+  // 画布的加载已在 initFabric 末尾按其三层回退做完（服务端 → 本机旧版 → 示例），
+  // 这里不要再补一次 loadDefaultDemo —— 会叠出第二套示例图元
   // 统计轮询
   const statsTimer = setInterval(async () => {
     try {
@@ -618,7 +744,8 @@ function loadDefaultDemo() {
     fc.add(l)
   })
   fc.renderAll()
-  saveCanvas()
+  // 示例画布**不自动入库** —— 打开页面看一眼就凭空多出一个后端视图，
+  // 是多站点下互相抢「本站默认」的经典起手式。要留就按「💾 保存」。
 }
 </script>
 

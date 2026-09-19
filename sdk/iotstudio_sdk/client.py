@@ -1,0 +1,190 @@
+"""REST + TDengine client for the DG-IoT hub (5080 apihub face).
+
+Auth model (probed live on dgiot 4.9.3):
+- POST /iotapi/login only accepts a text/plain body (JSON otherwise 415).
+- Subsequent calls carry the session token as "Authorization: Bearer <t>".
+- Business reads may answer {"code":119} Forbidden when the user has no
+  role-seeded rules (headless labs skip dgiot_install); surfaced as
+  StudioForbidden so callers can branch instead of parsing HTML errors.
+"""
+import json
+
+import requests
+
+DEFAULT_TD_URL = "http://127.0.0.1:6041/rest/sql"
+DEFAULT_TD_USER = "root"
+DEFAULT_TD_PASS = "taosdata"  # TDengine factory default; override for prod
+
+
+class StudioError(Exception):
+    """Base SDK error."""
+
+
+class StudioAuthError(StudioError):
+    """Login failed or session rejected."""
+
+
+class StudioForbidden(StudioError):
+    """Authenticated but the user lacks dgiot role rules (code 119)."""
+
+    def __init__(self, operation, payload):
+        self.operation = operation
+        self.payload = payload
+        super().__init__(
+            f"{operation} forbidden (code {payload.get('code')}): "
+            "user has no role-seeded rules; run dgiot_install role seeding "
+            "on the hub")
+
+
+class IotStudio:
+    """Session-scoped client for the hub business API."""
+
+    def __init__(self, base_url="http://127.0.0.1:5080",
+                 username=None, password=None, timeout=10,
+                 td_url=DEFAULT_TD_URL, td_user=DEFAULT_TD_USER,
+                 td_pass=DEFAULT_TD_PASS, session=None):
+        self.base = base_url.rstrip("/") + "/iotapi"
+        self.timeout = timeout
+        self._token = None
+        self.td_url = td_url
+        self.td_user = td_user
+        self.td_pass = td_pass
+        self.session = session or requests.Session()
+        if username is not None and password is not None:
+            self.login(username, password)
+
+    # -- auth ----------------------------------------------------------
+    def login(self, username, password):
+        """Login and keep the session token as a Bearer credential."""
+        body = json.dumps({"username": username, "password": password})
+        r = self.session.post(self.base + "/login", data=body,
+                              headers={"Content-Type": "text/plain"},
+                              timeout=self.timeout)
+        if r.status_code == 415:
+            raise StudioAuthError(
+                "login returned 415: Content-Type must be text/plain")
+        if r.status_code in (401, 403):
+            raise StudioAuthError(f"login rejected: {r.text[:120]}")
+        r.raise_for_status()
+        data = r.json()
+        token = data.get("sessionToken")
+        if not token:
+            raise StudioAuthError(f"no sessionToken in reply: {data}")
+        self._token = token
+        self.session.headers["Authorization"] = f"Bearer {token}"
+        return data
+
+    @property
+    def token(self):
+        return self._token
+
+    # -- business reads (role-seeded users only on stock hubs) ----------
+    def _get(self, path, **params):
+        r = self.session.get(self.base + path, params=params,
+                             timeout=self.timeout)
+        try:
+            payload = r.json()
+        except ValueError:
+            payload = {"raw": r.text[:200]}
+        if r.status_code == 200 and "error" not in payload:
+            return payload
+        if payload.get("code") == 119:
+            raise StudioForbidden(path, payload)
+        raise StudioError(f"{path} -> {r.status_code}: {str(payload)[:160]}")
+
+    def products(self, limit=100, skip=0, keys=None):
+        """Product catalog (parse-style: {"results": [...], "count": n}).
+
+        Reads /iotapi/classes/Product: parse class reads honour each
+        object's ACL, so a caller only sees products its role may read
+        (hub-side role seeding required - see scripts/hub_bridge/
+        seed_roles.py). No master key is involved.
+        """
+        params = {"limit": limit, "skip": skip}
+        if keys:
+            params["keys"] = ",".join(keys)
+        return self._get("/classes/Product", **params)
+
+    def devices(self, limit=100, skip=0, product_id=None, keys=None):
+        """Device list, optionally narrowed to one product (filtering
+        stays server-side via a product pointer where-clause)."""
+        params = {"limit": limit, "skip": skip}
+        if keys:
+            params["keys"] = ",".join(keys)
+        if product_id:
+            params["where"] = json.dumps(
+                {"product": {"__type": "Pointer", "className": "Product",
+                             "objectId": product_id}})
+        return self._get("/classes/Device", **params)
+
+    # -- downlink (command to a device) ---------------------------------
+    def send_command(self, device_id, data, messagetype="debug"):
+        """Downlink a command to one device through the hub.
+
+        POST /iotapi/device_debug {deviceid, messagetype, data} - the hub
+        resolves the device row (devaddr + product) and publishes to
+        $dg/device/{productId}/{devaddr}/{messagetype}, answering
+        {"status": 0, "data": {"topic": ...}}. status 0 means the hub
+        accepted and issued the publish; it is NOT a delivery receipt -
+        only a device subscribed with its product credentials on its own
+        $dg topic can confirm receipt (anonymous edge clients cannot
+        subscribe $dg/#; the hub-side internal publish path also has a
+        known silent-drop defect, see docs/ROADMAP.md P4 cut 3).
+
+        Requires the POST_DEVICE_DEBUG rule on the caller's role
+        (seed_roles.py adds it) and a device row carrying devaddr+product.
+        """
+        payload = {"deviceid": device_id, "messagetype": messagetype,
+                   "data": data}
+        r = self.session.post(self.base + "/device_debug", json=payload,
+                              timeout=self.timeout)
+        try:
+            reply = r.json()
+        except ValueError:
+            raise StudioError(f"device_debug -> {r.status_code}: "
+                              f"{r.text[:160]}")
+        if reply.get("code") == 119:
+            raise StudioForbidden("/device_debug", reply)
+        if reply.get("status") != 0:
+            raise StudioError(f"device_debug rejected: {reply}")
+        return reply
+
+    # -- TDengine direct read (lab/local mode) ---------------------------
+    def td_query(self, sql):
+        """Run one SQL against TDengine REST; returns row dicts.
+        Qualify tables with the database inside the SQL itself."""
+        r = requests.post(
+            self.td_url,
+            data=sql.encode("utf-8"),
+            auth=(self.td_user, self.td_pass),
+            headers={"Connection": "close"},
+            timeout=self.timeout)
+        data = r.json()
+        if data.get("code", 0) != 0:
+            raise StudioError(f"TDengine {data.get('code')}: "
+                              f"{data.get('desc')}")
+        cols = [c[0] for c in data.get("column_meta", [])]
+        return [dict(zip(cols, row)) for row in data.get("data", [])]
+
+    # -- TDengine 时序价值分析（P9-lite，TDgpt 式）------------------------
+    def td_anomaly(self, sql, column="v", band=3.0, loss_per_incident=1.0):
+        """对 TDengine 查询结果做 3σ 异常检测并量化价值。
+
+        返回 {problem, solution, metric, value, unit, assumption}——
+        value 的金额由 loss_per_incident（每次异常避免的损失）换算，
+        该参数是**显式假设**，调用方必须给出业务口径，不是编造。
+        """
+        from .analytics import value_report
+        rows = self.td_query(sql)
+        series = [{"ts": r.get("ts") or r.get("_ts") or i,
+                   "v": r.get(column)} for i, r in enumerate(rows)]
+        return value_report(series, band=band,
+                            loss_per_incident=loss_per_incident, key="v")
+
+    def td_forecast(self, sql, column="v", horizon=5, method="naive"):
+        """对 TDengine 查询结果做统计外推（朴素/线性）。"""
+        from .analytics import forecast
+        rows = self.td_query(sql)
+        series = [{"ts": r.get("ts") or r.get("_ts") or i,
+                   "v": r.get(column)} for i, r in enumerate(rows)]
+        return forecast(series, horizon=horizon, method=method, key="v")

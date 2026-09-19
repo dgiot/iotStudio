@@ -171,8 +171,9 @@ class ModbusTCPAdapter(BaseProtocolAdapter):
 
 # -- plugin registration --
 try:
+    from ..plugin_registry import register
+except ImportError:
     from plugin_registry import register
-    register("modbus_tcp", version="1.0", category="protocol",
-             adapter=ModbusTCPAdapter,
-             config={"host": "127.0.0.1", "port": 502, "slave_id": 1})
-except ImportError: pass
+register("modbus_tcp", version="1.0", category="protocol",
+         adapter=ModbusTCPAdapter,
+         config={"host": "127.0.0.1", "port": 502, "slave_id": 1})

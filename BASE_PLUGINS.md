@@ -45,5 +45,5 @@ GET /api/iot/devices|products|channels → { total, items:[{id,code,name,type,mo
 
 ## 来源说明
 
-- 数据：本体图 `ontology_graph_v3.json` 为本地构建产物（不入库），`/ontology-graph` 视图内嵌示例数据（92 节点 / 59 边，本地模型 全本地语义提取）
+- 数据：本体图 `ontology_graph_v3.json` 为本地构建产物（不入库，经 `ONTOLOGY_GRAPH` 环境变量指定），`/ontology-graph` 视图内嵌**行业示例数据**（16 节点 / 13 边，占位样例，非真实项目；真实图谱不入公开仓 —— 见 `tests/test_ontology_graph_artifact.py` 头注）
 - 上库纪律：凭据永不入 git；本地构建脚本（build/governance）与内部工具不入库

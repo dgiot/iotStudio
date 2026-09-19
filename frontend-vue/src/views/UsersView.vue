@@ -2,13 +2,16 @@
   <div class="user-page">
     <div class="toolbar">
       <h3 style="color:#c0d5e8;margin:0">👥 用户管理</h3>
-      <el-button type="primary" size="small" @click="showAdd">+ 添加用户</el-button>
+      <div>
+        <el-button size="small" @click="load">↻ 刷新</el-button>
+      </div>
     </div>
 
     <el-row :gutter="12" style="margin-bottom:12px">
-      <el-col :span="6"><div class="sc primary"><div class="sn">{{ users.length }}</div><div class="sl">用户总数</div></div></el-col>
-      <el-col :span="6"><div class="sc success"><div class="sn">{{ roles.length }}</div><div class="sl">角色/部门</div></div></el-col>
-      <el-col :span="12"><div class="sc plain" style="display:flex;gap:12px;align-items:center;font-size:12px;padding:8px 12px"><span v-for="r in roles" :key="r.objectId" style="white-space:nowrap"><span style="color:#8aa0b4">{{ r.name }}</span><span style="color:#e0e0e0;margin-left:4px">{{ uCount(r.objectId) }}人</span></span></div></el-col>
+      <el-col :span="6"><div class="sc primary"><div class="sn">{{ users.length }}</div><div class="sl">可登录账号</div></div></el-col>
+      <el-col :span="6"><div class="sc success"><div class="sn">{{ deptTree.length }}</div><div class="sl">顶级部门</div></div></el-col>
+      <el-col :span="6"><div class="sc plain"><div class="sn">{{ roleOptions.length }}</div><div class="sl">可用角色</div></div></el-col>
+      <el-col :span="6"><div class="sc plain"><div class="sn">{{ sourceCount.local }}</div><div class="sl">本地扩展账号</div></div></el-col>
     </el-row>
 
     <div class="list-detail">
@@ -16,79 +19,167 @@
         <el-tabs v-model="tab" style="padding:0 8px">
           <el-tab-pane label="用户" name="users">
             <div class="usr-list">
-              <div v-for="u in users" :key="u.objectId" class="usr-row" :class="{active:sel?.objectId===u.objectId}" @click="sel = sel?.objectId===u.objectId ? null : u">
-                <span class="av">{{ (u.username||'?')[0].toUpperCase() }}</span>
-                <div class="ur-main"><div class="ur-name">{{ u.username }}</div><div class="ur-sub">{{ u.role||'未分配' }}</div></div>
-                <el-tag size="small" type="success">用户</el-tag>
+              <div v-for="u in users" :key="u.objectId" class="usr-row"
+                   :class="{active: sel?.objectId===u.objectId}"
+                   @click="sel = sel?.objectId===u.objectId ? null : u">
+                <span class="av">{{ (u.name || u.username || '?')[0] }}</span>
+                <div class="ur-main">
+                  <div class="ur-name">{{ u.name || u.username }}</div>
+                  <div class="ur-sub">{{ u.username }} · {{ u.role_name }}</div>
+                </div>
+                <el-tag size="small" :type="u.source === 'local' ? 'warning' : (u.source === 'parse-only' ? 'info' : 'success')">
+                  {{ srcLabel(u.source) }}
+                </el-tag>
               </div>
+              <div v-if="!users.length" class="empty">暂无用户</div>
             </div>
           </el-tab-pane>
           <el-tab-pane label="部门" name="depts">
             <div class="dept-list">
-              <div v-for="r in roleTree" :key="r.objectId" class="dept-row" :style="{paddingLeft:(r._d||0)*16+8+'px'}">
-                <span>{{ r._c?'📁':'📄' }}</span><span style="margin-left:4px;font-size:13px;color:#e0e0e0">{{ r.name }}</span>
-                <span style="margin-left:auto;font-size:11px;color:#6a8aaa">{{ r._u||0 }}人</span>
+              <div v-for="d in flatDepts" :key="d.objectId" class="dept-row"
+                   :style="{ paddingLeft: d._d * 16 + 8 + 'px' }">
+                <span>{{ d.children?.length ? '📁' : '📄' }}</span>
+                <span style="margin-left:4px;font-size:13px;color:#e0e0e0">{{ d.name }}</span>
+                <span style="margin-left:auto;font-size:11px;color:#6a8aaa">{{ d.user_count }}人</span>
               </div>
+              <div v-if="!deptTree.length" class="empty">暂无部门</div>
             </div>
           </el-tab-pane>
         </el-tabs>
       </div>
 
       <div class="ld-right" v-if="sel">
-        <div class="ldd-h"><span class="av" style="width:40px;height:40px;font-size:18px">{{ (sel.username||'?')[0].toUpperCase() }}</span><div><div style="font-size:16px;color:#e0e0e0;font-weight:bold">{{ sel.username }}</div><div style="font-size:12px;color:#6a8aaa">ID: {{ sel.objectId }}</div></div><el-tag type="success" size="small">用户</el-tag></div>
-        <el-descriptions :column="2" size="small" border style="margin:12px 0"><el-descriptions-item label="用户名">{{ sel.username }}</el-descriptions-item><el-descriptions-item label="角色">{{ sel.role||'未分配' }}</el-descriptions-item><el-descriptions-item label="创建">{{ f(sel.createdAt) }}</el-descriptions-item><el-descriptions-item label="更新">{{ f(sel.updatedAt) }}</el-descriptions-item></el-descriptions>
+        <div class="ldd-h">
+          <span class="av" style="width:40px;height:40px;font-size:18px">{{ (sel.name || sel.username || '?')[0] }}</span>
+          <div>
+            <div style="font-size:16px;color:#e0e0e0;font-weight:bold">{{ sel.name || sel.username }}</div>
+            <div style="font-size:12px;color:#6a8aaa">{{ sel.username }} · ID: {{ sel.objectId }}</div>
+          </div>
+          <el-tag :type="sel.source === 'local' ? 'warning' : 'success'" size="small">{{ srcLabel(sel.source) }}</el-tag>
+        </div>
+
+        <el-descriptions :column="2" size="small" border style="margin:12px 0">
+          <el-descriptions-item label="用户名">{{ sel.username }}</el-descriptions-item>
+          <el-descriptions-item label="姓名">{{ sel.name || '-' }}</el-descriptions-item>
+          <el-descriptions-item label="角色">{{ sel.role_name }}</el-descriptions-item>
+          <el-descriptions-item label="部门">{{ sel.department_name || '未分配' }}</el-descriptions-item>
+          <el-descriptions-item label="邮箱">{{ sel.email || '-' }}</el-descriptions-item>
+          <el-descriptions-item label="电话">{{ sel.phone || '-' }}</el-descriptions-item>
+          <el-descriptions-item label="创建">{{ f(sel.createdAt) }}</el-descriptions-item>
+          <el-descriptions-item label="更新">{{ f(sel.updatedAt) }}</el-descriptions-item>
+        </el-descriptions>
+
+        <div v-if="sel.source === 'parse-only'" class="warn">
+          ⚠️ 该账号只存在于 Parse 库、不在登录名单里 —— 分配了角色也登不进来。
+        </div>
+
         <div class="sec">角色分配</div>
-        <el-select v-model="ar" placeholder="选择角色" size="small" style="width:200px" @change="assignRole"><el-option v-for="r in roles" :key="r.objectId" :label="r.name" :value="r.objectId" /></el-select>
-        <div class="sec" style="margin-top:8px">部门分配</div>
-        <el-select v-model="ad" placeholder="选择部门" size="small" style="width:200px" @change="assignDept"><el-option v-for="r in roles" :key="r.objectId" :label="r.name" :value="r.objectId" /></el-select>
-        <div class="acts"><el-button type="danger" size="small" @click="del">🗑 删除</el-button></div>
+        <el-select v-model="pickRole" placeholder="选择角色" size="small" style="width:240px">
+          <el-option v-for="r in roleOptions" :key="r.value" :label="r.label" :value="r.value" />
+        </el-select>
+        <el-button size="small" type="primary" style="margin-left:8px"
+                   :disabled="!pickRole || pickRole === sel.role" @click="doAssignRole">应用</el-button>
+
+        <div class="sec">部门分配</div>
+        <el-select v-model="pickDept" placeholder="选择部门" size="small" style="width:240px">
+          <el-option v-for="d in flatDepts" :key="d.objectId" :label="d.name" :value="d.objectId" />
+        </el-select>
+        <el-button size="small" type="primary" style="margin-left:8px"
+                   :disabled="!pickDept || pickDept === sel.department" @click="doAssignDept">应用</el-button>
+
+        <div class="note">
+          角色改的是登录名单（auth）与 Parse 镜像两边；<b>已签发的 token 里带着旧角色</b>，
+          要重新登录才换过来。
+        </div>
       </div>
       <div class="ld-right ld-empty" v-else><span>👈 点击用户查看详情</span></div>
     </div>
-
-    <el-dialog title="添加用户" v-model="vis" width="400px"><el-form :model="fm" label-width="70px"><el-form-item label="用户名"><el-input v-model="fm.username" /></el-form-item><el-form-item label="密码"><el-input v-model="fm.password" type="password" /></el-form-item><el-form-item label="角色"><el-select v-model="fm.role" style="width:100%"><el-option v-for="r in roles" :key="r.objectId" :label="r.name" :value="r.objectId" /></el-select></el-form-item></el-form><template #footer><el-button @click="vis=false">取消</el-button><el-button type="primary" @click="add">确定</el-button></template></el-dialog>
   </div>
 </template>
 
 <script setup>
 import { ref, computed, onMounted } from 'vue'
 import { ElMessage } from 'element-plus'
+import { getUsers, getRoles, getDepartments, setUserRole, setUserDepartment } from '../api/admin'
 
-const users = ref([]); const roles = ref([]); const sel = ref(null)
-const tab = ref('users'); const vis = ref(false); const ar = ref(''); const ad = ref('')
-const fm = ref({ username:'', password:'', role:'default', department:'' })
+const users = ref([])
+const roleOptions = ref([])
+const deptTree = ref([])
+const sel = ref(null)
+const tab = ref('users')
+const pickRole = ref('')
+const pickDept = ref('')
 
-function uCount(rid) { return users.value.filter(u => u.role===rid).length }
+const sourceCount = computed(() => ({
+  local: users.value.filter(u => u.source === 'local').length,
+}))
+
+// 部门树摊平成一维（带缩进深度），够用且不用引 el-tree
+const flatDepts = computed(() => {
+  const out = []
+  const walk = (nodes, d) => nodes.forEach(n => {
+    out.push({ ...n, _d: d })
+    if (n.children?.length) walk(n.children, d + 1)
+  })
+  walk(deptTree.value, 0)
+  return out
+})
+
+function srcLabel(s) {
+  return { local: '本地账号', 'auth+parse': '内置', auth: '内置', 'parse-only': '仅Parse' }[s] || s || '-'
+}
 function f(ts) { return ts ? new Date(ts).toLocaleString() : '-' }
 
 async function load() {
-  // 使用 admin API
-  const [ur, rr] = await Promise.all([
-    fetch('/api/admin/users').then(r=>r.json()),
-    fetch('/api/admin/roles').then(r=>r.json()),
-  ])
-  users.value = ur.results || []
-  roles.value = (rr.results || []).flatMap(r => [r, ...(r.children||[])])
-  // 存session
-  const token = localStorage.getItem('dgiot_session')
-  if (!token) {
-    // 自动登录获取 session
-    const lr = await fetch('/api/login', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({username:'admin',password:'admin'}) }).then(r=>r.json())
-    if (lr.sessionToken) localStorage.setItem('dgiot_session', lr.sessionToken)
+  try {
+    const [ur, rr, dr] = await Promise.all([getUsers(), getRoles(), getDepartments()])
+    users.value = ur.results || []
+    deptTree.value = dr.results || []
+
+    // 角色候选项：内置三角色 + _Role 表里的自定义角色（扁平，不带 children）
+    const builtin = [
+      { value: 'admin', label: '管理员' },
+      { value: 'operator', label: '运维操作员' },
+      { value: 'viewer', label: '只读用户' },
+    ]
+    const custom = []
+    const walk = (nodes) => (nodes || []).forEach(r => {
+      if (!r.builtin) custom.push({ value: r.objectId, label: `${r.name}（自定义）` })
+      walk(r.children)
+    })
+    walk(rr.results)
+    roleOptions.value = [...builtin, ...custom]
+
+    if (sel.value) {
+      sel.value = users.value.find(u => u.objectId === sel.value.objectId) || null
+    }
+    syncPickers()
+  } catch (e) {
+    ElMessage.error('加载失败：' + (e?.message || e))
   }
 }
 
-const roleTree = computed(() => {
-  const m = {}; const roots = []
-  roles.value.forEach(r => { m[r.objectId] = { ...r, _c:[],_d:0,_u:uCount(r.objectId) } })
-  roles.value.forEach(r => { if (r.parent_id && m[r.parent_id]) { const c = m[r.objectId]; c._d=m[r.parent_id]._d+1; m[r.parent_id]._c.push(c) } else if (!r.parent_id) roots.push(m[r.objectId]) })
-  return roots
-})
+function syncPickers() {
+  pickRole.value = sel.value?.role || ''
+  pickDept.value = sel.value?.department || ''
+}
 
-async function assign(v) { if(!sel.value)return; await fetch(`/api/admin/users/${sel.value.objectId}/role`, { method:'PUT', headers:{'Content-Type':'application/json'}, body:JSON.stringify({role:v}) }); ElMessage.success('已分配'); load() }
-function showAdd() { fm.value={username:'',password:'',role:'default'}; vis.value=true }
-async function add() { await fetch('/api/users',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({username:fm.value.username,password:fm.value.password,role:fm.value.role,email:''})}); ElMessage.success('已创建'); vis.value=false; load() }
-async function del() { if(!sel.value)return; await fetch(`/api/classes/_User/${sel.value.objectId}`,{method:'DELETE'}); ElMessage.success('已删除'); sel.value=null; load() }
+async function doAssignRole() {
+  try {
+    await setUserRole(sel.value.objectId, pickRole.value)
+    ElMessage.success('角色已更新')
+    await load()
+  } catch (e) { ElMessage.error('分配失败：' + (e?.message || e)) }
+}
+
+async function doAssignDept() {
+  try {
+    await setUserDepartment(sel.value.objectId, pickDept.value)
+    ElMessage.success('部门已更新')
+    await load()
+  } catch (e) { ElMessage.error('分配失败：' + (e?.message || e)) }
+}
+
 onMounted(load)
 </script>
 
@@ -101,15 +192,17 @@ onMounted(load)
 .sc.plain { background:#152a40; border:1px solid #1e3a5f; }
 .sn { font-size:22px; font-weight:bold; } .sl { font-size:11px; color:#6a8aaa; }
 .list-detail { display:flex; gap:12px; flex:1; min-height:0; }
-.ld-left { width:320px; border:1px solid #1e3a5f; border-radius:6px; background:#0a1a2a; overflow-y:auto; flex-shrink:0; }
+.ld-left { width:340px; border:1px solid #1e3a5f; border-radius:6px; background:#0a1a2a; overflow-y:auto; flex-shrink:0; }
 .ld-right { flex:1; border:1px solid #1e3a5f; border-radius:6px; background:#0d1f33; padding:12px 16px; overflow-y:auto; }
 .ld-empty { display:flex; align-items:center; justify-content:center; color:#5a7a9a; }
 .usr-row { display:flex; align-items:center; gap:10px; padding:8px 12px; cursor:pointer; border-bottom:1px solid #162d45; }
 .usr-row:hover { background:#112233; } .usr-row.active { background:#152a40; border-left:3px solid #66d9ff; }
 .av { width:32px;height:32px;border-radius:50%;background:#409EFF;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:bold;font-size:14px;flex-shrink:0; }
-.ur-main { flex:1; } .ur-name { font-size:13px;color:#e0e0e0; } .ur-sub { font-size:11px;color:#6a8aaa; }
-.dept-list { } .dept-row { display:flex; align-items:center; gap:4px; padding:5px 8px; border-bottom:1px solid #0d1f33; }
+.ur-main { flex:1; min-width:0; } .ur-name { font-size:13px;color:#e0e0e0; } .ur-sub { font-size:11px;color:#6a8aaa; }
+.dept-row { display:flex; align-items:center; gap:4px; padding:5px 8px; border-bottom:1px solid #0d1f33; }
 .ldd-h { display:flex; align-items:center; gap:12px; }
 .sec { font-size:12px; color:#909399; font-weight:600; margin:12px 0 6px; }
-.acts { margin-top:16px; }
+.note { margin-top:18px; font-size:11px; color:#6a8aaa; line-height:1.7; border-left:2px solid #1e3a5f; padding-left:8px; }
+.warn { margin:8px 0; padding:6px 10px; font-size:12px; color:#e6a23c; background:#2a2113; border:1px solid #4a3a1a; border-radius:4px; }
+.empty { padding:24px; text-align:center; color:#5a7a9a; font-size:12px; }
 </style>

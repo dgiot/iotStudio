@@ -3,6 +3,66 @@
 <head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>DG-IoT AIP — Palantir-Style Operations</title>
+<script>
+/* AIP Auth — fetch 全局包装: 附加 Bearer token + 401 拦截登录门
+   token 存储约定与 Vue 端一致: Cookie Admin-Token + localStorage dgiot_token/sessionToken */
+(function(){
+  function aipToken(){
+    var m=document.cookie.match(/(?:^|;\s*)Admin-Token=([^;]+)/);
+    return (m&&decodeURIComponent(m[1]))||localStorage.getItem('dgiot_token')||localStorage.getItem('sessionToken')||'';
+  }
+  window.aipToken=aipToken;
+  var _fetch=window.fetch.bind(window);
+  window.fetch=function(input,init){
+    init=init||{};
+    var url=typeof input==='string'?input:(input&&input.url)||'';
+    if(url.indexOf('/api/')>-1){
+      var t=aipToken();
+      var h=new Headers(init.headers||{});
+      if(t&&!h.has('Authorization'))h.set('Authorization','Bearer '+t);
+      init.headers=h;
+    }
+    return _fetch(input,init).then(function(res){
+      if(res.status===401)window.showAipLogin();
+      return res;
+    });
+  };
+  window.showAipLogin=function(){
+    if(document.getElementById('aipLoginMask'))return;
+    var mask=document.createElement('div');
+    mask.id='aipLoginMask';
+    mask.style.cssText='position:fixed;inset:0;background:rgba(2,6,17,.93);z-index:9999;display:flex;align-items:center;justify-content:center';
+    mask.innerHTML='<div style="width:300px;background:#111827;border:1px solid #1e293b;border-radius:8px;padding:22px;box-shadow:0 10px 40px rgba(0,0,0,.6)">'
+      +'<div style="font-size:14px;color:#e2e8f0;margin-bottom:14px;text-align:center">⚙️ DG-IoT <span style="color:#4a9eff">AIP</span> 登录</div>'
+      +'<input id="aipUser" placeholder="用户名" style="width:100%;margin-bottom:8px;padding:8px;background:#0a0e17;border:1px solid #1e293b;border-radius:4px;color:#c0d5e8">'
+      +'<input id="aipPass" type="password" placeholder="密码" style="width:100%;margin-bottom:12px;padding:8px;background:#0a0e17;border:1px solid #1e293b;border-radius:4px;color:#c0d5e8">'
+      +'<button id="aipLoginBtn" style="width:100%;padding:8px;background:#1e3a5f;border:1px solid #2563eb;border-radius:4px;color:#93c5fd;cursor:pointer;font-size:12px">登录</button>'
+      +'<div id="aipLoginErr" style="font-size:10px;color:#ef4444;margin-top:8px;min-height:12px"></div>'
+      +'<div style="font-size:9px;color:#64748b;margin-top:6px;text-align:center">默认 admin / changeme（ADMIN_PASS 环境变量可覆盖）</div></div>';
+    document.body.appendChild(mask);
+    function doLogin(){
+      var u=document.getElementById('aipUser').value.trim(),p=document.getElementById('aipPass').value;
+      _fetch('/api/auth/login',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({username:u,password:p})})
+        .then(function(r){return r.json().then(function(j){return{ok:r.ok,j:j}})})
+        .then(function(o){
+          if(o.ok&&o.j.token){
+            var t=o.j.token;
+            document.cookie='Admin-Token='+encodeURIComponent(t)+';path=/;max-age=604800';
+            localStorage.setItem('dgiot_token',t);localStorage.setItem('sessionToken',t);
+            mask.remove();location.reload();
+          }else{
+            document.getElementById('aipLoginErr').textContent=(o.j&&o.j.detail)||'登录失败';
+          }
+        }).catch(function(e){document.getElementById('aipLoginErr').textContent=e.message});
+    }
+    document.getElementById('aipLoginBtn').onclick=doLogin;
+    document.getElementById('aipPass').onkeydown=function(e){if(e.key==='Enter')doLogin()};
+  };
+  document.addEventListener('DOMContentLoaded',function(){
+    if(!aipToken())window.showAipLogin();
+  });
+})();
+</script>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:'Segoe UI','Microsoft YaHei',sans-serif;background:#0a0e17;color:#c0d5e8;height:100vh;display:flex;flex-direction:column}
@@ -143,7 +203,7 @@ input,select,textarea{background:#0a0e17;border:1px solid #1e293b;border-radius:
   <div id="viewSparql" style="display:none;flex:1;overflow:hidden">
     <div style="flex:1;padding:12px;display:flex;flex-direction:column">
       <div class="card" style="flex:1;display:flex;flex-direction:column">
-        <h3>🔮 SPARQL Console <span style="font-size:10px;color:#64748b">836 triples | 命名空间: dgiot:, isa95:, iof:, rdf:, rdfs:</span></h3>
+        <h3>🔮 SPARQL Console <span id="sparqlMeta" style="font-size:10px;color:#64748b">triples —</span></h3>
         <textarea class="code-box" id="sparqlInput" style="flex:1">SELECT ?device ?name ?protocol WHERE { ?device rdf:type dgiot:Device ; dgiot:name ?name ; dgiot:protocol ?protocol } LIMIT 20</textarea>
         <button class="btn" onclick="runSparql()" style="margin-top:8px;width:auto">▶️ 执行</button>
         <div class="result-box" id="sparqlResult" style="flex:1;margin-top:8px"></div>
@@ -182,7 +242,7 @@ input,select,textarea{background:#0a0e17;border:1px solid #1e293b;border-radius:
     <div class="card"><h3>🦉 OWL Export</h3>
       <button class="btn" style="width:auto;margin-bottom:4px" onclick="downloadOwl()">📥 OWL RDF/XML</button>
       <button class="btn" style="width:auto;margin-bottom:4px" onclick="downloadTtl()">📥 Turtle</button>
-      <span style="font-size:10px;color:#64748b">836 triples | 7 classes | 9 properties | ISA-95 aligned</span>
+      <span id="owlMeta" style="font-size:10px;color:#64748b">triples —</span>
     </div>
   </div>
 </div>
@@ -205,6 +265,7 @@ async function init(){
     `;
   }catch(e){}
   loadObjects();
+  loadRdfStats();
   setInterval(()=>document.getElementById('clock').textContent=new Date().toLocaleString(),1000);
   // Ctrl+Enter 执行代码
   document.getElementById('codeInput').addEventListener('keydown',e=>{if(e.ctrlKey&&e.key==='Enter')runCode()});
@@ -294,13 +355,41 @@ async function runCode(){
 // ═══ SPARQL ═══
 async function runSparql(){
   const q=document.getElementById('sparqlInput').value;
-  document.getElementById('sparqlResult').textContent='查询中...';
+  const box=document.getElementById('sparqlResult');
+  box.textContent='查询中...';
   try{
     const r=await fetch('/api/graphrag/sparql',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({query:q})});
     const d=await r.json();
-    if(d.results?.length){const keys=Object.keys(d.results[0]);document.getElementById('sparqlResult').textContent=keys.join('\t')+'\n'+d.results.map(row=>keys.map(k=>row[k]).join('\t')).join('\n')+'\n\n'+d.total+' results'}
-    else{document.getElementById('sparqlResult').textContent=d.total+' results'}
-  }catch(e){document.getElementById('sparqlResult').textContent='Error: '+e.message}
+    // 非法查询后端返 400 + detail —— 必须把错误显示出来。
+    // 以前这里不看 r.ok：错误响应里没有 total，会渲染成 "undefined results"，
+    // 于是一个语法错误看起来与"查询成功但没数据"一模一样。
+    if(!r.ok){box.textContent='❌ 查询无效 (HTTP '+r.status+')\n'+(d.detail||JSON.stringify(d));return}
+    if(d.results?.length){
+      const keys=Object.keys(d.results[0]);
+      box.textContent=keys.join('\t')+'\n'+d.results.map(row=>keys.map(k=>row[k]).join('\t')).join('\n')+'\n\n'+d.total+' results';
+    }else{
+      box.textContent='0 results（查询合法，图上无匹配）';
+    }
+  }catch(e){box.textContent='Error: '+e.message}
+}
+
+// ═══ RDF 统计（页面上所有三元组/类/属性数一律取自端点，不手写）═══
+async function loadRdfStats(){
+  const set=(id,v)=>{const el=document.getElementById(id);if(el)el.textContent=v};
+  const FIELDS=['sparqlMeta','owlMeta','stTriples','stClasses','stObjProps','stDataProps'];
+  try{
+    const r=await fetch('/api/graphrag/rdf/stats');
+    if(!r.ok)throw new Error('HTTP '+r.status);
+    const d=await r.json();
+    const ns=(d.namespaces||[]).map(p=>p+':').join(' ');
+    set('sparqlMeta',d.triples+' triples | 命名空间: '+ns);
+    set('owlMeta',d.triples+' triples | '+d.classes+' classes | '+d.object_properties+' object properties');
+    set('stTriples',d.triples);set('stClasses',d.classes);
+    set('stObjProps',d.object_properties);set('stDataProps',d.datatype_properties);
+  }catch(e){
+    // 取不到就明说"统计不可用"，**绝不回退到任何硬编码数字**
+    FIELDS.forEach(id=>set(id,'统计不可用'));
+  }
 }
 
 // ═══ Tree View ═══
@@ -384,18 +473,26 @@ async function loadValidate(){
     `;
     document.getElementById('statsDetail').innerHTML=`
       <table style="width:100%;font-size:11px;border-collapse:collapse">
-        <tr><td style="padding:4px;color:#64748b">OWL Classes</td><td>7 (Site, Gateway, Channel, Device, Point, Constraint, DataSource)</td></tr>
-        <tr><td style="padding:4px;color:#64748b">Object Properties</td><td>9 (hasGateway, hasChannel, hasDevice, hasPoint, ...)</td></tr>
-        <tr><td style="padding:4px;color:#64748b">Data Properties</td><td>22</td></tr>
-        <tr><td style="padding:4px;color:#64748b">ISA-95 Alignment</td><td>Enterprise, Site, WorkCenter, Equipment, ControlModule, CommunicationChannel</td></tr>
-        <tr><td style="padding:4px;color:#64748b">IOF Alignment</td><td>ProcessingUnit, Equipment, MeasurementPoint, Constraint, DataStore</td></tr>
-        <tr><td style="padding:4px;color:#64748b">SPARQL</td><td>836 triples, W3C compliant</td></tr>
-        <tr><td style="padding:4px;color:#64748b">Export Formats</td><td>OWL RDF/XML · Turtle · JSON</td></tr>
-      </table>`;
+        <tr><td style="padding:4px;color:#64748b">OWL Classes</td><td><span id="stClasses">—</span> <span style="color:#8b95a5">(Site, Gateway, Channel, Device, Point, Constraint, DataSource)</span></td></tr>
+        <tr><td style="padding:4px;color:#64748b">Object Properties</td><td><span id="stObjProps">—</span></td></tr>
+        <tr><td style="padding:4px;color:#64748b">Data Properties</td><td><span id="stDataProps">—</span> <span style="color:#8b95a5">(本导出器不产生 DatatypeProperty)</span></td></tr>
+        <tr><td style="padding:4px;color:#64748b">Triples</td><td><span id="stTriples">—</span> <span style="color:#8b95a5">(与下载的 .owl 同一张图)</span></td></tr>
+        <tr><td style="padding:4px;color:#64748b">Export Formats</td><td>OWL RDF/XML · Turtle</td></tr>
+      </table>
+      <div style="font-size:10px;color:#8b95a5;margin-top:6px;line-height:1.6">
+        ISA-95 / IOF 属<b>文档级对照说明</b>：本导出器不产生 isa95: / iof: 命名空间，上方命名空间行只列图上真正用到的前缀。
+      </div>`;
   }catch(e){document.getElementById('validateResult').innerHTML='<span style="color:#ef4444">'+e.message+'</span>'}
 }
-function downloadOwl(){window.open('/api/graphrag/ontology.owl')}
-function downloadTtl(){window.open('/api/graphrag/ontology.ttl')}
+async function aipDownload(url,name){
+  try{
+    const r=await fetch(url);if(!r.ok)throw new Error('HTTP '+r.status);
+    const b=await r.blob();const a=document.createElement('a');
+    a.href=URL.createObjectURL(b);a.download=name;a.click();URL.revokeObjectURL(a.href);
+  }catch(e){alert('下载失败: '+e.message)}
+}
+async function downloadOwl(){aipDownload('/api/graphrag/ontology.owl','dgiot_ontology.owl')}
+async function downloadTtl(){aipDownload('/api/graphrag/ontology.ttl','dgiot_ontology.ttl')}
 
 function switchView(v){
   ['explorer','manager','pipeline','console','sparql','tree','graph','validate'].forEach((name,i)=>{

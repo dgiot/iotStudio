@@ -1,14 +1,24 @@
 #!/usr/bin/env python3
 """
-11 万设备边缘中枢模拟器 — 百万级测点灌入
+11 万设备灌数模拟器 — 百万级测点吞吐
 ==========================================
-对标 技术方案应答书: 百万压测通过边缘中枢(ch_edge_hub)模拟100+工业区接入
-规模: 110,000 设备 × 20 测点 = 2,200,000 测点 (百万级)
+规模: 110,000 设备 × 20 测点 = 2,200,000 测点/轮
+
+这是一个**本地 broker 吞吐压测工具**，不是端到端验收工具。它把报文发到
+边缘自己的 broker，量的是"边缘这一侧发得动多少"。报文不会到中枢 ——
+要验端到端请用中枢侧的工具，别拿这个的数字说链路。
+
+（这里原先写着「对标 技术方案应答书: 百万压测通过边缘中枢(ch_edge_hub)
+模拟100+工业区接入」。两个问题：一是 ch_edge_hub 这个通道已删除，主题
+`dgiot/{tenant}/gw_{gateway}/ch_edge_hub/{device}` 是自造的、本仓
+abac.TOPIC_RE 会直接 deny 的 6 段式；二是那句数字没有台账可追。）
 
 两种灌数模式:
-  --mode mqtt       MQTT 推送 (默认) — 走边缘中枢通道
-                   topic: dgiot/{tenant}/gw_{gateway}/ch_edge_hub/{device}
-                   payload: {"ts":..,"values":{point:value,...}} 每设备一条聚合报文
+  --mode mqtt       MQTT 推送 (默认) — 每设备一条**聚合**报文
+                   topic: dgiot/{site}/{gateway}/{device}/_batch/data
+                   payload: {"ts":..,"values":{point:value,...}}
+                   point 段写 `_batch` 是如实标注"这条不是单点报文" ——
+                   折成 20 条单点报文会把吞吐特性整个换掉，那才是压测要量的东西。
   --mode tdengine   直插 TDengine (最快灌数) — REST SQL 批量 INSERT
 
 用法:
@@ -51,7 +61,7 @@ class Zone:
 
 
 # ── MQTT 模式 ──
-def mqtt_worker(host, port, tenant, gateway, zones, idx, workers, stop_flag, stats):
+def mqtt_worker(host, port, site, gateway, zones, idx, workers, stop_flag, stats):
     """一个 MQTT 连接负责若干工业区"""
     try:
         import paho.mqtt.client as mqtt
@@ -69,7 +79,7 @@ def mqtt_worker(host, port, tenant, gateway, zones, idx, workers, stop_flag, sta
             t0 = time.perf_counter()
             ts = int(time.time() * 1000)
             for did, vals in zone.gen_round():
-                topic = f"dgiot/{tenant}/gw_{gateway}/ch_edge_hub/{did}"
+                topic = f"dgiot/{site}/{gateway}/{did}/_batch/data"
                 payload = json.dumps({"ts": ts, "values": vals}, ensure_ascii=False)
                 client.publish(topic, payload, qos=0)  # 压测用 QoS0 保吞吐
                 stats["points"] += len(vals)
@@ -83,7 +93,10 @@ def mqtt_worker(host, port, tenant, gateway, zones, idx, workers, stop_flag, sta
 def tdengine_insert(host, port, zones, stop_flag, stats):
     import requests
     url = f"http://{host}:{port}/rest/sql"
-    auth = ("root", "taosdata")
+    # TDengine 出厂默认口令，不是本仓的凭据 —— 走 env，别在公开仓里读起来
+    # 像一个真的配置值。
+    auth = (os.environ.get("TD_USER", "root"),
+            os.environ.get("TD_PASSWORD", "taosdata"))
     db = "_edge_hub_110k"
     r = requests.post(url, data=f"CREATE DATABASE IF NOT EXISTS {db} KEEP 365", auth=auth)
     if r.status_code != 200:
@@ -124,8 +137,11 @@ def main():
     ap.add_argument("--mqtt-port", type=int, default=1883)
     ap.add_argument("--td-host", default="127.0.0.1")
     ap.add_argument("--td-port", type=int, default=6041)
-    ap.add_argument("--tenant", default="default")
-    ap.add_argument("--gateway", default="gw_131")
+    # --tenant 保留为 --site 的别名：5 段式的第 1 段叫 site（CLAUDE.md 与
+    # abac.TOPIC_RE 都是这么写的），但旧命令行脚本还在用 --tenant。
+    ap.add_argument("--site", "--tenant", dest="site", default="default",
+                    help="主题第 1 段 (site)；--tenant 是旧别名")
+    ap.add_argument("--gateway", default="gw_1")
     ap.add_argument("--workers", type=int, default=8, help="MQTT 连接数")
     ap.add_argument("--report", default="simulate_110k_report.json")
     args = ap.parse_args()
@@ -146,7 +162,7 @@ def main():
     if args.mode == "mqtt":
         for i in range(args.workers):
             t = threading.Thread(target=mqtt_worker,
-                                 args=(args.mqtt_host, args.mqtt_port, args.tenant,
+                                 args=(args.mqtt_host, args.mqtt_port, args.site,
                                        args.gateway, zones, i, args.workers,
                                        stop_flag, stats),
                                  daemon=True)

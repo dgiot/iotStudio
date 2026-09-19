@@ -1,5 +1,5 @@
 # ============================================================
-# pythonIot — 光储充微电网物联网平台
+# pythonIot — 工业物联网边缘平台 (IoT edge framework)
 # 依赖清单
 # ============================================================
 fastapi>=0.110.0
@@ -11,6 +11,7 @@ sqlalchemy[asyncio]>=2.0.25
 alembic>=1.13.0
 paho-mqtt>=2.0.0
 httpx>=0.27.0
+requests>=2.28                # iotstudio-sdk hub REST client
 pyyaml>=6.0
 python-dotenv>=1.0.0
 pydantic>=2.6.0
@@ -23,3 +24,7 @@ aiosqlite>=0.20.0
 rdflib>=7.0.0                # OWL/RDF 本体推理
 OpenOPC-DA>=1.5.0           # OPC DA 协议 (Windows only)
 Pyro5>=5.14                 # OPC DA Gateway
+
+# ── 测试依赖 ──
+pytest>=8.0.0
+pytest-asyncio>=0.24.0      # async 测试 (pytest.ini asyncio_mode=auto)

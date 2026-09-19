@@ -61,16 +61,11 @@ def create_schemas():
     print(f"✅ {count} 个类 Schema 注册完成")
 
 
-def seed_tenants():
-    """租户 — 对齐 DG-IoT _Role"""
-    tenants = [
-        {"tenant_id": "default", "name": "默认租户", "slug": "default"},
-        {"tenant_id": "oil-monitor", "name": "设备完整性", "slug": "oil-monitor",
-         "parent_id": "default", "contact": "设备完整性事业部"},
-    ]
-    for t in tenants:
-        api("POST", "/tenants", t)
-    print(f"✅ {len(tenants)} 个租户")
+# ⚠️ 原 `seed_tenants()`（POST /tenants 建 default / oil-monitor）**2026-09-17 已删**。
+# 那两个租户的**建表与种子**都在 `parse_lite._do_init_db()`（`_Role` 表 + 两行），
+# 而本脚本的 `POST /tenants` 现在写的是**同一个 `_Role`** ⇒ 再跑一遍只会撞
+# `400 租户ID或短标识已存在`，在输出里印一条假警报。
+# 租户不是本脚本的活，删掉它 —— 一处事实一处。
 
 
 def seed_users():
@@ -170,8 +165,7 @@ if __name__ == "__main__":
     print("\n[2/6] Schema...")
     create_schemas()
 
-    print("\n[3/6] 租户...")
-    seed_tenants()
+    # [3/6] 租户已移除：租户/角色的种子在 parse_lite._do_init_db()（见上 seed_tenants 处）
 
     print("\n[4/6] 用户...")
     seed_users()

@@ -1,0 +1,13 @@
+[project]
+name = "iotstudio-sdk"
+version = "0.1.0"
+description = "Palantir-OSDK-lite style SDK for the DG-IoT hub: login, catalog, MQTT live data, TDengine read"
+requires-python = ">=3.10"
+dependencies = ["requests>=2.28", "paho-mqtt>=1.6,<2.0"]
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+include = ["iotstudio_sdk*"]

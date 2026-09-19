@@ -30,7 +30,7 @@ TLV 协议格式 (消息类型 0x10):
     "devices": {
         "eca24a560c89": {               # 设备MAC → 测点映射
             "device_id": "bolt_01",
-            "device_name": "北1-2-螺栓1号"
+            "device_name": "示例螺栓-1号"
         }
     }
 }
@@ -324,12 +324,12 @@ class BoganMqttAdapter(BaseProtocolAdapter):
 # -- 插件注册 --
 try:
     from ..plugin_registry import register
-    register("bogan_mqtt", version="1.0", category="protocol",
-             adapter="BoganMqttAdapter",
-             config={
-                 "broker": "dev.dgiotcloud.cn",
-                 "port": 1883,
-                 "subscribe_topics": ["iot/v3/gw/+/+/message/up"],
-             })
 except ImportError:
-    pass
+    from plugin_registry import register
+register("bogan_mqtt", version="1.0", category="protocol",
+         adapter="BoganMqttAdapter",
+         config={
+             "broker": "dev.dgiotcloud.cn",
+             "port": 1883,
+             "subscribe_topics": ["iot/v3/gw/+/+/message/up"],
+         })

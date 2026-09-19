@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
 # ============================================================
-# iotStudio — A11 协议适配器 (CNPC 油气生产物联网)
+# iotStudio — A11 协议适配器 (油气生产物联网)
 #
 # 协议栈: ModbusTCP MBAP (7B) + jjZZ MAGIC (4B) + Type LE(2B) + Sub LE(2B) + Payload
 #
-# 基于 pcap 分析分析 — 2026-07-03
-# 参考: A11-GRM 规范文档, 7.3.pcapng 抓包数据
+# 基于 pcap 分析 — 2026-07-03
+# 参考: A11-GRM 规范文档
 # ============================================================
 import asyncio
 import logging
@@ -195,7 +195,7 @@ class A11Config:
 # A11 协议适配器
 # ============================================================
 class A11ProtocolAdapter(BaseProtocolAdapter):
-    """A11 协议适配器 — CNPC 油气生产物联网私有协议
+    """A11 协议适配器 — 油气生产物联网私有协议
 
     Features:
       - ModbusTCP MBAP 封装 + jjZZ 私有头
@@ -558,7 +558,7 @@ class A11Parser:
 
     Usage:
         parser = A11Parser()
-        msgs = parser.parse_pcap('7.3.pcapng')
+        msgs = parser.parse_pcap('capture.pcapng')
         for m in msgs:
             print(f'{m.type_name} ({m.category}) — {m.payload[:16].hex()}...')
     """
@@ -642,9 +642,11 @@ if __name__ == '__main__':
         asyncio.run(test())
 
 # -- plugin registration --
+# dual import: package path (src.protocols.X) or flat path (protocols.X)
 try:
+    from ..plugin_registry import register
+except ImportError:
     from plugin_registry import register
-    register("a11", version="1.0", category="protocol",
-             adapter="A11ProtocolAdapter",
-             config={"host": "127.0.0.1", "port": 8889, "heartbeat_interval": 5})
-except ImportError: pass
+register("a11", version="1.0", category="protocol",
+         adapter="A11ProtocolAdapter",
+         config={"host": "127.0.0.1", "port": 8889, "heartbeat_interval": 5})

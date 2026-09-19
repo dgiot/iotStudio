@@ -62,7 +62,7 @@ class IEC104Client(BaseProtocolAdapter):
 
     config.extra:
     {
-        "host": "192.168.1.200",
+        "host": "198.18.1.200",
         "port": 2404,
         "common_addr": 1,        # 公共地址
         "originator_addr": 0,

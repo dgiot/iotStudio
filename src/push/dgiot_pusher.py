@@ -53,14 +53,21 @@ class DGIoTBridge:
             "port": 1883,
             "username": "dgiot",
             "password": "dgiot_admin",
-            "topic": "dgiot/device/telemetry",  # DG-IoT 遥测 Topic
-            "product_id": "pcs_monitor",         # DG-IoT 产品 ID
+            "topic": "",                  # 必填，无默认 —— 见下
+            "product_id": "pcs_monitor",  # DG-IoT 产品 ID
         }
+
+        注意 topic **没有兜底默认值**。老代码默认发 `dgiot/device/telemetry`，
+        但那是个本仓自造的主题：中枢两条线（github 的 dgiot-github、
+        gitee 的 tools/dgiot）的 Erlang 源码里都搜不到它，中枢的上行主题集是
+        封闭的几个 `$dg/thing/{productId}/{devaddr}/...`。默认值让 push()
+        每次都"成功"地把数据发进了空气 —— 日志一条不少，数据一条不到。
+        没有默认值，配置漏了就直接报出来。
         """
         self.config = config
         self.host = config.get("host", "127.0.0.1")
         self.port = config.get("port", 1883)
-        self.topic = config.get("topic", "dgiot/device/telemetry")
+        self.topic = config.get("topic", "")
         self.product_id = config.get("product_id", "iotStudio_device")
         self._client = None
 
@@ -68,6 +75,15 @@ class DGIoTBridge:
         """推送数据到 DG-IoT"""
         if not HAS_PAHO:
             logger.debug("[dgiot] paho-mqtt 未安装")
+            return False
+
+        if not self.topic:
+            # 宁可拒发也不要发进空气：发出去的话发送侧一切正常
+            # （连接成功、publish 返回 0、日志照打），只有接收侧什么都没有 ——
+            # 这种"成功"最费时间，排查方向会一路歪到中枢上去。
+            logger.error(
+                "[dgiot] 未配置 topic，拒绝发布。dlink 上行请改用 edge_hub 出口 "
+                "($dg/thing/{productId}/{devaddr}/properties/report)")
             return False
 
         try:
@@ -125,6 +141,23 @@ class DGIoTBridge:
 
         self._client = await loop.run_in_executor(None, _do_connect)
         logger.info(f"[dgiot] MQTT 已连接 → {self.host}:{self.port}")
+
+    async def stop(self) -> None:
+        """断开并停掉 paho 的后台线程
+
+        必须显式停：`_connect` 里调了 loop_start()，那是一个独立线程，
+        不 loop_stop 就会一直挂着 —— 进程退出时表现为"关不干净"，
+        重载时表现为连接数只增不减。之前没有这个方法，channel 侧的
+        on_stop 只能 pop 掉引用，线程照样在跑。
+        """
+        client, self._client = self._client, None
+        if client is None:
+            return
+        try:
+            client.loop_stop()
+            client.disconnect()
+        except Exception as e:  # noqa: BLE001 - 收尾失败不该阻断关闭流程
+            logger.warning(f"[dgiot] 断开连接时出错: {e}")
 
 
 class DGIoTDirectTD:

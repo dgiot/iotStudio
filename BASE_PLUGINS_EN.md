@@ -45,5 +45,5 @@ GET /api/iot/devices|products|channels → { total, items:[{id,code,name,type,mo
 
 ## Provenance
 
-- Data: `ontology_graph_v3.json` is a local build artifact (not committed); the `/ontology-graph` view embeds sample data (92 nodes / 59 edges, extracted fully locally by 本地模型).
+- Data: `ontology_graph_v3.json` is a local build artifact (not committed; path set via the `ONTOLOGY_GRAPH` env var); the `/ontology-graph` view embeds **generic industry sample data** (16 nodes / 13 edges — a placeholder, not real projects; the real graph is kept out of the public repo, see the header of `tests/test_ontology_graph_artifact.py`).
 - Repo discipline: credentials never enter git; local build scripts (build/governance) and internal tools are not committed.

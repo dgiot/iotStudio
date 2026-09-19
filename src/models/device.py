@@ -14,39 +14,13 @@ class Base(DeclarativeBase):
     pass
 
 
-class Tenant(Base):
-    """租户/组织 — 对齐 DG-IoT _Role 模型
-    DG-IoT 用 Parse _Role 做多租户隔离:
-      - name = 岗位/角色名称 (同时作为租户标识)
-      - parent_role = 上级角色 (支持层级)
-      - users = 关联用户列表
-      - ACL = 数据访问控制
-    """
-    __tablename__ = "tenants"
-
-    id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
-    tenant_id: Mapped[str] = mapped_column(String(64), unique=True, index=True, comment="租户唯一标识")
-    name: Mapped[str] = mapped_column(String(128), comment="租户/岗位名称")          # ≡ _Role.name
-    slug: Mapped[str] = mapped_column(String(64), unique=True, comment="短标识")
-    parent_id: Mapped[Optional[str]] = mapped_column(String(64), index=True, comment="上级租户 (层级)")  # ≡ _Role.roles
-    contact: Mapped[Optional[str]] = mapped_column(String(128), comment="联系人")
-    phone: Mapped[Optional[str]] = mapped_column(String(32))
-    status: Mapped[str] = mapped_column(String(16), default="active", comment="active/disabled")
-    max_devices: Mapped[int] = mapped_column(Integer, default=1000, comment="设备上限")
-    max_users: Mapped[int] = mapped_column(Integer, default=50)
-    extra: Mapped[Optional[Dict]] = mapped_column(JSON, comment="扩展配置")
-    created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
-
-
-class UserRole(Base):
-    """用户-租户关联 — 对齐 DG-IoT _Role.users"""
-    __tablename__ = "user_roles"
-
-    id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
-    user_id: Mapped[str] = mapped_column(String(64), index=True, comment="用户ID")
-    tenant_id: Mapped[str] = mapped_column(String(64), index=True, comment="租户/角色ID")  # ≡ _Role.users relation
-    is_admin: Mapped[bool] = mapped_column(Boolean, default=False, comment="是否该租户管理员")
-    created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
+# ⚠️ `Tenant` 与 `UserRole` 两个模型 **2026-09-17 已退役**（原 `tenants` / `user_roles`
+# 两张表）。理由：租户/角色在这个体系里**就是 Parse `_Role`**（dgiot 全仓没有
+# Tenant/Org/Company 类），而这两张表是同一概念的**第二份来源**，且永不同步 ——
+# 实测两张表各 0 行，而 `_Role` 里有 6 个真租户 ⇒ `web/tenant_api.py` 的租户列表
+# 永远是空的，系统却照常按 6 个租户隔离。
+# 现在数据源只有 `_Role`（经 `parse_lite` 的 role 函数读写，形状映射见 `role_to_api`）。
+# 旧库里残留的空表留着无害（`create_all` 只建缺的表，不会替人删表）；真删要手工 DROP。
 
 
 class Device(Base):

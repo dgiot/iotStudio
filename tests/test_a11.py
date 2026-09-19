@@ -127,9 +127,11 @@ class TestA11Integration(unittest.TestCase):
 
     @classmethod
     def setUpClass(cls):
-        cls.pcap_path = 'D:/wsl/kylin/7.3.pcapng'
-        if not os.path.exists(cls.pcap_path):
-            raise unittest.SkipTest(f'pcap not found: {cls.pcap_path}')
+        # 抓包样本不随仓分发（体积 + 现场数据）—— 路径由环境变量给出，
+        # 未提供则整类跳过。形制对齐 scripts/hub_smoke.py 的 DG_HUB_HOST。
+        cls.pcap_path = os.environ.get('A11_PCAP_PATH', '')
+        if not cls.pcap_path or not os.path.exists(cls.pcap_path):
+            raise unittest.SkipTest('A11_PCAP_PATH not set or file not found')
 
     def test_parse_pcap(self):
         parser = A11Parser()

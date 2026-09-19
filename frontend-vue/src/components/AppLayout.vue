@@ -62,8 +62,8 @@ import { ref, computed, onMounted, onUnmounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import Sidebar from './Sidebar/index.vue'
 import Navbar from './Navbar/index.vue'
-import NotifyBell from './NotifyBell.vue'
 import { getHealth, getStats } from '../api'
+import { getMenus } from '../api/admin'
 import { MENU_GROUPS } from '../utils/constants'
 import { tabsState } from '../stores/tabs'
 import { watch } from 'vue'
@@ -162,6 +162,24 @@ async function loadMenus() {
   } catch { dynamicMenus.value = [] }
 }
 
+// ── 菜单覆写 — 菜单管理页写的那份 ──
+// GET 只要求登录，不要求 admin（见 src/web/menu_api.py 顶部注释）。
+// 拿不到就空数组，侧边栏退回纯静态路由，不影响进入系统。
+const menuOverrides = ref([])
+async function loadMenuOverrides() {
+  try {
+    const r = await getMenus()
+    menuOverrides.value = r?.results || []
+  } catch { menuOverrides.value = [] }
+}
+
+// 菜单管理页改完即时刷新侧边栏。
+// 覆写只在挂载时读一次，否则管理员在 /menus 存完得刷新整页才看得到效果。
+// 用 window 事件而不是 pinia：这里只有一个消费者，不值得再拉一个 store。
+function onMenuChanged() { loadMenuOverrides() }
+onMounted(() => window.addEventListener('dgiot:menus-changed', onMenuChanged))
+onUnmounted(() => window.removeEventListener('dgiot:menus-changed', onMenuChanged))
+
 const menuGroups = computed(() => {
   const groups = {}
   if (dynamicMenus.value.length) {
@@ -172,14 +190,56 @@ const menuGroups = computed(() => {
     })
     return groups
   }
-  // Fallback: 静态路由菜单
+  // Fallback: 静态路由菜单 + 菜单管理里的覆写
+  // 静态路由定「有哪些页面」，覆写定「怎么展示」（标题/图标/分组/排序/显隐/外链）。
   const allItems = router.options.routes.find(r => r.path === '/')?.children || []
-  allItems.filter(i => !i.meta?.hidden).forEach(item => {
+  const ovMap = Object.fromEntries(menuOverrides.value.map(o => [o.path, o]))
+
+  const push = (item) => {
     const g = item.meta?.group || 'other'
     const label = (MENU_GROUPS[g] || { label: g }).label
     if (!groups[label]) groups[label] = []
     groups[label].push(item)
+  }
+
+  allItems.forEach(item => {
+    const o = ovMap[item.path]
+    let meta = item.meta || {}
+    if (o) {
+      meta = { ...meta }
+      if (o.title) meta.title = o.title
+      if (o.icon) meta.icon = o.icon
+      if (o.group) meta.group = o.group
+      if (o.external) meta.external = o.external
+      // embed 型 = 底座内嵌打开（PluginFrameView），不是新窗口
+      if (o.embed) meta.embed = true
+      if (o.order != null) meta.order = o.order
+      if (o.visible === false) meta.hidden = true
+      else if (o.visible === true) meta.hidden = false
+      delete ovMap[item.path]
+    }
+    if (meta.hidden) return
+    push({ ...item, meta })
   })
+
+  // 覆写里有、静态路由里没有的 —— 外链菜单就靠这条加进来（不需要组件）
+  // ⚠️ 仓外插件（含 embed 型）**全部**走这条：它们没有静态路由。
+  //    所以 embed 必须在这里透传，否则插件菜单会退化成新窗口。
+  Object.values(ovMap).forEach(o => {
+    if (o.visible === false) return
+    push({
+      path: o.path,
+      meta: { title: o.title || o.path, icon: o.icon || 'Link', order: o.order,
+              group: o.group || 'base', external: o.external || '',
+              embed: !!o.embed },
+    })
+  })
+
+  // 组内排序：覆写给过 order 的按 order 排，没给的排在后面、保持路由声明顺序
+  Object.values(groups).forEach(items => {
+    items.sort((a, b) => (a.meta?.order ?? 99) - (b.meta?.order ?? 99))
+  })
+
   const groupOrder = Object.fromEntries(
     Object.entries(MENU_GROUPS).map(([, v]) => [v.label, v.order])
   )
@@ -203,6 +263,7 @@ ws.on('pipeline', () => {
 onMounted(async () => {
   await fetchTenants()
   await loadMenus()
+  await loadMenuOverrides()
   await restoreSession()
   try { const r = await getHealth(); healthStatus.value = r?.data?.status || r?.status || 'ok' } catch { healthStatus.value = 'error' }
   try { const r = await getStats(); stats.value = r?.data || r } catch {}

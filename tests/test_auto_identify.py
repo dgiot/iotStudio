@@ -3,11 +3,11 @@
 模块二闭环测试 — Modbus 动态扫描 → 点位识别 → G1-G8 物模型匹配
 ================================================================
 对标需求: 不修改DTU、不影响A11, 新 RTU 上线自动识别点位并匹配物模型
-绑定场景: 某工业基地 191 台 RTU (11.248.x) + G1-G8 油水井标准物模型
+绑定场景: 某工业基地 191 台 RTU (192.0.2.x) + G1-G8 油水井标准物模型
 
 闭环: 模拟 RTU(Modbus 从站, 模拟抽油机 G1-G8 寄存器) →
       动态扫描(零发包只读) → 点位识别(类型/字节序/动态性) →
-      G1-G8 物模型匹配 → 自动生成配点表 (不动 LegacyComm)
+      G1-G8 物模型匹配 → 自动生成配点表 (不动 GENERIC_LEGACY_PROTO)
 
 验证:
   1. 模拟 RTU 数据生成 (G1 油压/套压/载荷 + G2 电流 + G4 冲次)
@@ -102,7 +102,7 @@ def main():
           "byte_order": p.byte_order, "scale": p.scale,
           "is_dynamic": p.is_dynamic, "last_value": p.last_value}
          for p in pts],
-        host="11.248.195.1", slave_id=1)
+        host="198.18.195.1", slave_id=1)
     t("物模型匹配率≥80%", report.match_rate >= 0.8,
       f"匹配率 {report.match_rate:.0%} ({len(report.matched)}/{report.total_recognized})")
 
@@ -127,7 +127,7 @@ def main():
         })
     table_path = "auto_point_table.json"
     with open(table_path, "w", encoding="utf-8") as f:
-        json.dump({"device": "11.248.195.1", "slave_id": 1,
+        json.dump({"device": "198.18.195.1", "slave_id": 1,
                    "source": "auto-identify", "points": point_table},
                   f, ensure_ascii=False, indent=2)
     t("自动配点表生成", len(point_table) >= 6, f"{table_path} {len(point_table)} 点")

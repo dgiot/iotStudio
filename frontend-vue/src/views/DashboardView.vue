@@ -78,7 +78,7 @@ let charts=[], timer=null, trendData=[[],[]], trendTimes=[]
 // 从遥测数据拉实时日志
 async function fetchLogs() {
   const devices = [
-    { did:'oilwell_0001', pid:'oil_pressure', name:'葡2-27向2油压', proto:'modbus_tcp' },
+    { did:'oilwell_0001', pid:'oil_pressure', name:'示例井-01油压', proto:'modbus_tcp' },
     { did:'comp_01', pid:'vibration', name:'压缩机-1振动', proto:'modbus_tcp' },
     { did:'inv_01', pid:'power_output', name:'逆变器-1功率', proto:'modbus_tcp' },
     { did:'pcs_01', pid:'soc', name:'PCS-1荷电', proto:'modbus_tcp' },

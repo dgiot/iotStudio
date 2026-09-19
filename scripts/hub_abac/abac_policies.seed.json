@@ -1,0 +1,30 @@
+{
+  "default": "ignore",
+  "subjects": [
+    {"match": {"username": "dev-*"},
+     "attrs": {"role": "device", "site": "FROM_NAME", "device": "FROM_NAME"}},
+    {"match": {"username": "gw-*"},
+     "attrs": {"role": "gateway", "site": "FROM_NAME", "clearance": "internal"}},
+    {"match": {"username": "edge-hub"},
+     "attrs": {"role": "edge", "clearance": "internal"}},
+    {"match": {"username": "operator-*"},
+     "attrs": {"role": "operator", "clearance": "internal"}},
+    {"match": {"username": "admin"},
+     "attrs": {"role": "admin", "clearance": "secret"}},
+    {"match": {"clientid": "dev-*"},
+     "attrs": {"role": "device", "site": "FROM_CLIENT", "device": "FROM_CLIENT"}},
+    {"match": {"clientid": "gw-*"},
+     "attrs": {"role": "gateway", "site": "FROM_CLIENT", "clearance": "internal"}},
+    {"match": {"clientid": "edge-hub*"},
+     "attrs": {"role": "edge", "clearance": "internal"}},
+    {"match": {"clientid": "operator-*"},
+     "attrs": {"role": "operator", "clearance": "internal"}},
+    {"match": {"clientid": "admin-*"},
+     "attrs": {"role": "admin", "clearance": "secret"}}
+  ],
+  "markings": {
+    "site_default": "public",
+    "sites": {"siteA": "public", "siteB": "restricted"},
+    "devices": {}
+  }
+}

@@ -75,11 +75,11 @@ python scripts/init_dgiot.py
 | Hooks | beforeSave / afterSave / beforeDelete / afterDelete |
 
 ### 多租户
-| 功能 | 文件 |
+| 功能 | 落点 |
 |------|------|
-| 租户 CRUD | `web/tenant_api.py` |
-| 角色层级 | `tenants.parent_id` (对齐 DG-IoT `_Role.roles`) |
-| 用户-租户关联 | `user_roles` 表 |
+| 租户 CRUD | `web/tenant_api.py`（薄壳，读写全经 `parse_lite`） |
+| 角色层级 | `_Role.parent_id` (对齐 DG-IoT `_Role`) |
+| 用户-租户关联 | `_Join_users_Role` |
 | 请求隔离 | `X-Tenant-ID` header + JWT |
 
 ### 本体引擎
@@ -169,7 +169,7 @@ storage_mode: "sqlite"         # sqlite | postgres
 |------|------|
 | `GET /api/health` | 健康检查 |
 | `GET/POST /api/devices` | 设备管理 (DG-IoT Device) |
-| `GET/POST /api/tenants` | 租户管理 (DG-IoT _Role) |
+| `GET/POST /api/tenants` | 租户/岗位管理（读写 Parse `_Role`，与数据面**同一个源**；对齐 DG-IoT `_Role`） |
 | `POST /api/roleuser` | 用户-角色分配 |
 | `GET /api/alarms` | 告警列表 |
 | `GET /api/telemetry/{device_id}/{point_id}` | 时序查询 |
@@ -188,6 +188,26 @@ iotStudio  ──MQTT──→  EMQX (:1883)  ──→  Parse Server  ──→
 ```
 
 数据格式对齐 DG-IoT 物模型标准，实现边缘采集 → 中心汇聚的全链路。
+
+### 生态互链 / Ecosystem
+
+- [dgaiot](https://gitee.com/dgaiot/dgaiot) — 中枢：EMQX fork + OWL 本体引擎（Erlang，本仓库的 hub 侧）
+- [dgiot](https://gitee.com/dgiiot/dgiot) — 完整 Erlang IoT 平台（稳定版中枢）
+- GitHub 组织: https://github.com/dgiot · Issues: https://github.com/dgiot/iotStudio/issues
+
+### 中枢一键部署（开源精简版）
+
+`scripts/deploy_hub.sh` 在 openEuler/Kylin 上源码构建并部署 DG-IoT 中枢（参考 [dgaiot](https://gitee.com/dgaiot/dgaiot) 单机部署思路，只装必要）：
+
+- 不依赖 Docker，不改系统源，不装全家桶（无 ollama/milvus/dify/parse-server）
+- 复用已有 TDengine/PostgreSQL，端口冲突预检（1883/8083/8084/18083）
+- 全量走 gitee 镜像（github 依赖自动重写），幂等可重跑，systemd/nohup 双模式
+
+```bash
+sudo bash scripts/deploy_hub.sh          # 默认 TAG=v4.9.3, 安装到 /data/dgiot
+# TAG=v4.9.2 SRC=/opt/dgiot-4.2 sudo -E bash scripts/deploy_hub.sh  # 自定义
+python scripts/hub_smoke.py              # 边缘→中枢 MQTT 回环验证
+```
 
 ---
 
@@ -213,3 +233,5 @@ iotStudio  ──MQTT──→  EMQX (:1883)  ──→  Parse Server  ──→
 - Docker Hub: https://hub.docker.com/u/dgiot
 - 安全披露: 见 [SECURITY.md](SECURITY.md)
 - 邮箱: LLC 信箱启用后公布（当前请通过 GitHub Issues / Security Advisories 联系）
+- 分支: 活跃分支为 **`github-clean`**；仓内另一条 `master` 线与之**无共同祖先**（不是分叉，
+  是同一批代码被清洗过两次），已停止维护

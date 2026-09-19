@@ -24,11 +24,13 @@ secret*
 *.key
 
 
-# ===== 内部插件/敏感内容 (2026-08-13 加固) =====
-# 以下内容做成插件形式保留本地，绝不上库
-
+# ===== 内部插件/敏感内容 (2026-08-13 加固; 2026-09-08 PR0 调整) =====
+# plugins/ 原为本地内部插件 stash 整体忽略; PR0 起
+# 一方内置插件 (plugins/<name>/) 必须入库 — 改为忽略目录内容、
+# 保留一方案式插件子目录; scan_*/reverse/pcap* 等敏感模式仍然全局生效
 # IO服务器逆向与扫描（插件形式）
-plugins/
+plugins/*
+!plugins/*/
 scan_*.py
 scan_*.ps1
 scan_*.bat
@@ -71,7 +73,6 @@ tools/entry_*
 tools/find_kepware*
 tools/path12*
 tools/rtu_field*
-tools/run_vendor_oilmon*
 tools/run_opc*
 tools/run_commbridge*
 tools/run_subsystem*
@@ -107,6 +108,18 @@ deploy_*.py
 http_*.py
 *.ps1
 
+# ===== 中枢侧一次性排查脚本 (2026-09-12) =====
+# hub_survey*/hub_diag*/hub_recover*/hub_abac_diff/hub_abac_verify 是为排查
+# WSL 里那套中枢现写现跑的：内容是本机中枢的部署路径、插件加载态、运行日志，
+# 属于中枢侧资产（归 dgiot 工程），且**一次性** —— 问题定位完就没有复用价值。
+# 不忽略的话，一次 `git add -A` 就顺手带上公开仓了。
+#
+# 不误伤说明：glob 的 `*` 不跨 `/`，所以本规则只落在 scripts/ 底下
+# 文件名以 hub_ 开头、.sh 结尾的那一批。已入库的长期资产不受影响 ——
+# hub_smoke.py / deploy_hub.sh（.py 与 deploy_ 前缀）不在范围内，
+# hub_abac/install_p2_abac.sh（子目录）也不在范围内。
+scripts/hub_*.sh
+
 # 测试现场数据
 tests/pv_result*
 tests/report.json
@@ -122,6 +135,58 @@ config.yaml
 config.project.yaml
 build/
 dist/
+# *.egg-info/ 与 build/ 同源, 都是 `pip install --no-build-isolation <本地目录>`
+# 在**源码树里**留下的产物 (--target 只写目标目录, 但 egg_info 那步在源码目录跑)。
+# build/ 上面已忽略, egg-info 此前漏了 ⇒ 每装一次 examples/ 下的样板包,
+# 仓根就多一个未跟踪目录, 与「别的会话新建的文件」在 git status 里长得一样。
+*.egg-info/
 _ocr索引/
 dist/
 scripts/network-jump/config.env
+
+# ===== Erlang 崩溃转储 (2026-09-15) =====
+# 中枢（Erlang/EMQX）启动失败或崩溃时，会在**当前工作目录**掉一个 erl_crash.dump。
+# 2026-09-14 就有一个 419KB 的落在仓根：
+#   Slogan: init terminating in do_boot
+#           ({cannot get bootfile,/opt/dgiot-4.4/_build/emqx/rel/emqx/bin/start.boot})
+# 那一份逐项核过是干净的（0 IP / 0 邮箱 / 0 口令字段）—— 但**干净的原因不是运气**：
+# 回读转储，它死在 `init:boot_loop/2`、还没进任何应用，全文只有 3014 个 atom、
+# 唯一一条绝对路径就是那个 bootfile。**死得早所以干净**，下一次不会这么巧。
+# 转储含进程堆、atom 表、环境变量；从一台**已经跑起来过**的中枢上掉下来的那份，
+# MQTT 主题、客户端 ID、连接串都可能写在里面。它属中枢侧资产（归 dgiot 工程）。
+# 不忽略的话，一次 `git add -A` 就顺手带上公开仓了（同 2026-09-12 那段的理由）。
+#
+# 不误伤说明：只盖 Erlang 转储这个名字本身。不带 `/` 的 glob 在任意层级生效，
+# 所以子目录里掉的也盖得住；不碰其它 *.dump 产物，也不碰同名目录。
+erl_crash.dump
+
+# ===== CodeGraph 本地索引 (2026-09-15) =====
+# `codegraph init` 会在仓根建 `.codegraph/`，装的是**全仓源码的解析结果**
+# （符号表、调用图、以及按符号切好的源码副本）。三件事让它绝不能进公库：
+#   1. 它是**本地产物**，不是源码 —— 同「产物永不回推公库」那条纪律；
+#   2. 它含索引库文件（`.db`/`.sqlite` 一类），会直接撞上 push 门禁的
+#      「产物/二进制/密钥文件」硬红 —— **门禁会拦，但那是拦在一堆假红里**；
+#   3. 索引是按**当时的工作区**建的，工作区含未提交内容 ⇒ 索引里就有未推的代码。
+#
+# ⚠️ 这条是**先补规则再跑命令**：`codegraph init` 一跑，`.codegraph/` 立刻落进
+#    门禁的判别域（待推集合 = 基准..HEAD ∪ 工作区），届时报的是「新增 N 个产物文件」，
+#    而不是「这是本地产物」。规则要在产物出现**之前**就位。
+#
+# 不误伤说明：只盖仓根这个目录名。`/.codegraph/` 带前导斜杠 ⇒ 只在本仓根生效，
+# 不会误伤子项目里同名的目录；不碰任何 `*codegraph*` 的源码或文档。
+/.codegraph/
+
+# ===== Graphify 本地图谱 (2026-09-15) =====
+# `/graphify` 会在仓根建 `graphify-out/`，装的是**全仓文件的抽取结果**
+# （符号与关系图、社区划分、逐文件抽取缓存、以及 GRAPH_REPORT.md）。
+# 与上面 `.codegraph/` 那段同样的三条理由：
+#   1. 它是**本地产物**，不是源码 —— 同「产物永不回推公库」那条纪律；
+#   2. 图谱是按**当时的工作区**建的，工作区含未提交内容 ⇒ 图谱里有未推的代码；
+#   3. 它把全仓（含客户现场料那一批符号）抽成一份**可检索的结构化文件**，
+#      比源码本身更便于整包带走 —— 一次 `git add -A` 就顺手带上公开仓了。
+#
+# ⚠️ 同样是**先补规则再跑命令**：`/graphify` 一跑，`graphify-out/` 立刻落进门禁的
+#    判别域（待推集合 = 基准..HEAD ∪ 工作区），届时报的是「新增 N 个产物文件」。
+#
+# 不误伤说明：只盖仓根这个目录名，不碰任何 `*graphify*` 的源码、文档或配置。
+/graphify-out/

@@ -1,0 +1,16 @@
+[project]
+name = "iotstudio-driver-demo"
+version = "0.1.0"
+description = "Recipe: an external iotStudio edge driver as a setuptools plugin (entry point group iotstudio.drivers)"
+requires-python = ">=3.10"
+dependencies = []  # relies on the host app providing src.protocols.base
+
+[project.entry-points."iotstudio.drivers"]
+demo_sim = "iotstudio_demo_driver:DemoSimDriver"
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+include = ["iotstudio_demo_driver*"]

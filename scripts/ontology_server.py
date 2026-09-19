@@ -1,20 +1,25 @@
 # -*- coding: utf-8 -*-
 """DGAIOT 本体图谱 v3.0 底座服务（端口 48765 · dsh 家族冷僻段 · 仅本机回环）
 
-本体技能包升级版（本地模型 全本地语义提取 · 92 节点 59 边）对外统一入口。
+本体技能包升级版（本地模型 全本地语义提取）对外统一入口。
 只暴露本体图谱视图与数据两个端点，不托管整个 tools 目录（避免涉密文件暴露）。
 仅绑定 127.0.0.1（本机工具服务纪律，不对外网暴露）。
 
 用法:  python ontology_server.py          # 或由 start_services.bat 启动（独立窗口）
 路由:  GET /        本体图谱视图（ECharts force 图，内嵌 v3 JSON）
        GET /graph   本体图数据 ontology_graph_v3.json
-       GET /health  健康检查
+       GET /health  健康检查 + 图规模
+
+⚠️ 本文件**不写死节点/边数**：规模随视图漂移，写在这里就是又一份手抄本。
+   要数字问 `/health`（从视图内嵌 JSON 现算），或看 `G.meta`（唯一事实源）。
+   历史教训：有一次订正规模数字，文档改了、本文件这一处漏了，
+   于是同一事实在两处长期不一致。此处改为**不再声称**，只指向源。
+   判据: tests/test_ontology_graph_artifact.py
 """
 import sys, os, json
 from http.server import HTTPServer, BaseHTTPRequestHandler
 from socketserver import ThreadingMixIn
 
-sys.stdout.reconfigure(encoding='utf-8', errors='replace')
 PORT = 48765
 HERE = os.path.dirname(os.path.abspath(__file__))
 VIEW = os.path.join(HERE, 'ontology_view.html')
@@ -25,6 +30,31 @@ if not os.path.isfile(VIEW):
         VIEW = _alt_view
 # 图数据默认取插件同目录（本地构建产物，不入库）；可通过环境变量指定
 GRAPH = os.environ.get('ONTOLOGY_GRAPH', os.path.join(HERE, 'ontology_graph_v3.json'))
+
+
+def view_scale(view_path=None):
+    """从视图内嵌的 `const G = {...}` 现算图规模 —— 唯一的源，别处不许再手抄。
+
+    返回 {'nodes': n, 'edges': m}；视图没有内嵌 JSON（如本地 ontology_view.html）
+    时返回 None，**不猜、不兜底成某个数字**（兜底值比证据强是上一次的教训）。
+    """
+    import re
+    path = view_path or VIEW
+    try:
+        html = open(path, encoding='utf-8').read()
+    except OSError:
+        return None
+    m = re.search(r'^const G = (\{.*\});\s*$', html, re.M)
+    if not m:
+        return None
+    try:
+        g = json.loads(m.group(1))
+    except ValueError:
+        return None
+    nodes, edges = g.get('nodes'), g.get('edges')
+    if not isinstance(nodes, list) or not isinstance(edges, list):
+        return None
+    return {'nodes': len(nodes), 'edges': len(edges)}
 
 
 class Handler(BaseHTTPRequestHandler):
@@ -51,7 +81,12 @@ class Handler(BaseHTTPRequestHandler):
             else:
                 self.send_response(404); self.end_headers()
         elif p == '/health':
-            self._send(b'ok', 'text/plain')
+            scale = view_scale()
+            # 算不出来就直说 "scale":"unknown"，不填一个看起来合理的数
+            body = json.dumps({'status': 'ok', 'view': VIEW,
+                               'scale': scale or 'unknown'},
+                              ensure_ascii=False).encode('utf-8')
+            self._send(body, 'application/json')
         else:
             self.send_response(404); self.end_headers()
 
@@ -61,6 +96,8 @@ class Server(ThreadingMixIn, HTTPServer):
 
 
 if __name__ == '__main__':
+    # 只在真正起服务时改 stdout —— import 本模块（判据要 import）不该动全局状态
+    sys.stdout.reconfigure(encoding='utf-8', errors='replace')
     print(f'DGAIOT 本体图谱 v3.0 底座服务 → http://localhost:{PORT}')
     print(f'  视图: /  数据: /graph  健康: /health')
     Server(('127.0.0.1', PORT), Handler).serve_forever()

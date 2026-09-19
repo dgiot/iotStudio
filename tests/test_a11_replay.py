@@ -9,15 +9,16 @@ from collections import Counter
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', 'src'))
 
 A11_MAGIC = b'\x6a\x6a\x5a\x5a'
-REPLAY_FILE = 'D:/wsl/kylin/replay_messages.json'
+# 现场回放样本不随仓分发（体积 + 现场数据）—— 路径由环境变量给出，未提供则整类跳过。
+REPLAY_FILE = os.environ.get('A11_REPLAY_FILE', '')
 
 class TestA11Replay(unittest.TestCase):
     """回放测试 — 验证 iotStudio 能否处理全部真实消息"""
 
     @classmethod
     def setUpClass(cls):
-        if not os.path.exists(REPLAY_FILE):
-            raise unittest.SkipTest(f'回放文件不存在: {REPLAY_FILE}')
+        if not REPLAY_FILE or not os.path.exists(REPLAY_FILE):
+            raise unittest.SkipTest('A11_REPLAY_FILE not set or file not found')
         with open(REPLAY_FILE) as f:
             cls.messages = json.load(f)
         cls.inbound = [m for m in cls.messages if m['direction'] == 'IN']

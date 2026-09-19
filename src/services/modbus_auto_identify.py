@@ -3,7 +3,7 @@
 Modbus 扫描 → 自动识别点位 → 匹配物模型 — 全自动链路
 ======================================================
 对标需求: Modbus TCP 扫描和自动识别点位和匹配物模型 (大功能点)
-绑定场景: 某工业基地 191 台 RTU (11.248.x) + G1-G8 油水井标准物模型
+绑定场景: 某工业基地 191 台 RTU (192.0.2.x) + G1-G8 油水井标准物模型
 
 流程 (全自动, 零人工配点表):
   1. 扫描     — 从站发现 + 寄存器扫描 (modbus_scanner / modbus_dynamic)
@@ -262,7 +262,7 @@ class AutoIdentifyService:
 def _selftest():
     matcher = OilfieldModelMatcher()
 
-    # 模拟识别结果: 192.168.1.10 RTU 从站 (抽油机场景)
+    # 模拟识别结果: 198.18.1.10 RTU 从站 (抽油机场景)
     recognized = [
         {"address": 40300, "data_type": "uint16", "byte_order": "AB",
          "scale": 0.01, "is_dynamic": True, "last_value": 2.35},
@@ -280,7 +280,7 @@ def _selftest():
         {"address": 41000, "data_type": "uint16", "byte_order": "AB",
          "scale": 1.0, "is_dynamic": True, "last_value": 999},
     ]
-    report = matcher.match_points(recognized, host="11.248.195.1", slave_id=1)
+    report = matcher.match_points(recognized, host="198.18.195.1", slave_id=1)
     print(f"[1] 识别点位: {report.total_recognized} 匹配: {len(report.matched)} "
           f"未匹配: {len(report.unmatched)} 匹配率: {report.match_rate:.0%}")
     for m in report.matched[:4]:

@@ -15,15 +15,62 @@ GraphRAG REST API — 本体图检索增强生成接口
 
 from __future__ import annotations
 
+import json
 import logging
+from dataclasses import asdict
 from typing import Optional
 
-from fastapi import APIRouter, HTTPException, Query
+from fastapi import APIRouter, Body, Depends, HTTPException, Query
 from pydantic import BaseModel, Field
+
+try:
+    from ..auth import get_current_user, require_admin
+except ImportError:
+    from auth import get_current_user, require_admin
+
+try:
+    from ..ontology import LINK_RELATIONS, Link
+except ImportError:
+    from ontology import LINK_RELATIONS, Link
+
+try:
+    from ..action_defs import (ActionDefinition, check_submit_criteria, get as get_action_def,
+                               list_defs, register as register_action_def,
+                               role_allowed, seed_builtin, unregister as unregister_action_def,
+                               validate_params)
+except ImportError:
+    from action_defs import (ActionDefinition, check_submit_criteria, get as get_action_def,
+                             list_defs, register as register_action_def,
+                             role_allowed, seed_builtin, unregister as unregister_action_def,
+                             validate_params)
+
+try:
+    from ..agent_audit import (AuditAgent, _AGENT_DB_PATH, list_runs,
+                               _decide_proposal, _list_proposals,
+                               propose_from_finding)
+except ImportError:
+    from agent_audit import (AuditAgent, _AGENT_DB_PATH, list_runs,
+                             _decide_proposal, _list_proposals,
+                             propose_from_finding)
+
+try:
+    from ..interop import evaluate_cardinality, export_aas, export_dtdl, export_prov, export_ssn
+except ImportError:
+    from interop import evaluate_cardinality, export_aas, export_dtdl, export_prov, export_ssn
+
+try:
+    from ..enterprise import EnterpriseConnector, register_objects
+except ImportError:
+    from enterprise import EnterpriseConnector, register_objects
+
+seed_builtin()  # R2: 内建动作定义 (幂等)
 
 logger = logging.getLogger(__name__)
 
-router = APIRouter(prefix="/api/graphrag", tags=["graphrag"])
+# 鉴权: 路由器级 — 所有 /api/graphrag/* 均需登录 (Authorization: Bearer JWT)。
+# 写操作/执行类端点在各自装饰器上追加 require_admin (仅 admin 角色)。
+router = APIRouter(prefix="/api/graphrag", tags=["graphrag"],
+                   dependencies=[Depends(get_current_user)])
 
 # ═══════════════════════════════════════════════════════════
 # 惰性初始化 (首次访问时才加载本体 + LLM)
@@ -38,16 +85,27 @@ def _get_rag():
     global _graphrag, _engine
     if _graphrag is None:
         try:
-            from ..ontology import build_131_ontology
             from ..graphrag import GraphRAG
+            from ..ontology import build_engine
         except ImportError:
-            from ontology import build_131_ontology
             from graphrag import GraphRAG
+            from ontology import build_engine
 
-        logger.info("GraphRAG: 加载 示例 IO 服务器本体...")
-        _engine = build_131_ontology()
+        _engine = build_engine()
         counts = _engine.health()["counts"]
         logger.info(f"GraphRAG: 实体加载完成 — {counts}")
+
+        # 引擎交付: 需要本体的插件在这里拿到它。在此之前 actions_pipeline 的
+        # engine 是 _NullEngine (entity_type 恒 None), 凡含 target_exists 判据的
+        # 动作提交**必然被拒** —— 而症状只是「动作提交失败」, 不报错、不指向这里。
+        # 注入点是插件侧早就留好的 (plugins/actions_pipeline/plugin.py 的
+        # set_engine), 缺的一直是这一行。装载顺序无关: 引擎先到而插件后到的情况
+        # 由 PluginManager._load_one 补交 (见 deliver_engine)。
+        try:
+            from ..plugin_runtime import runtime
+        except ImportError:
+            from plugin_runtime import runtime
+        runtime.deliver_engine(_engine)
 
         _graphrag = GraphRAG(_engine)  # 自动检测 ANTHROPIC_API_KEY / OPENAI_API_KEY
         logger.info(f"GraphRAG: LLM={'ready' if _graphrag._llm else 'none'}")
@@ -72,6 +130,9 @@ class AskResponse(BaseModel):
     entity: Optional[dict] = None
     summary: Optional[dict] = None
     matched_entities: list = []
+    #: 阈值判定（确定性计算）。前端要单独渲染"安全/越限"标签时读这个，
+    #: 不要去 parse answer 里的文本 —— 那是给人读的，改一次措辞就崩。
+    verdict: Optional[dict] = None
 
 
 # ═══════════════════════════════════════════════════════════
@@ -123,6 +184,7 @@ async def graphrag_ask(body: AskRequest):
                 mode="entity",
                 entity=result.get("entity"),
                 matched_entities=result.get("matched_entities", []),
+                verdict=result.get("verdict"),
             )
         elif body.mode == "community":
             result = rag.ask_community(body.question, body.level, body.entity_id)
@@ -141,6 +203,7 @@ async def graphrag_ask(body: AskRequest):
                 entity=result.get("entity"),
                 summary=result.get("summary"),
                 matched_entities=result.get("matched_entities", []),
+                verdict=result.get("verdict"),
             )
     except Exception as e:
         logger.exception("GraphRAG ask failed")
@@ -394,7 +457,7 @@ def _judge_alarm(value: float, alarm: dict) -> str:
     return "normal"
 
 
-@router.post("/live/seed")
+@router.post("/live/seed", dependencies=[Depends(require_admin)])
 async def graphrag_seed_telemetry():
     """一键播种演示遥测数据 — 为 ontology 中的 sample points 写入模拟值
 
@@ -513,15 +576,32 @@ class SparqlRequest(BaseModel):
 
 @router.post("/sparql")
 async def graphrag_sparql(body: SparqlRequest):
-    """SPARQL 查询端点 — W3C 标准图查询
+    """SPARQL 查询端点 — 查询跑在与 /ontology.owl 同一张 RDF 图上
 
     Examples:
       SELECT ?device ?name WHERE { ?device rdf:type dgiot:Device ; dgiot:name ?name }
       SELECT ?s ?p ?o WHERE { ?s ?p ?o } LIMIT 10
+
+    ⚠️ 非法查询返回 400，不返回空结果 —— 「查不到」与「查询写错了」必须分得开，
+    否则语法错误会被读成"这个本体里没有数据"。
     """
     _, engine = _get_rag()
-    results = engine.sparql(body.query)
+    try:
+        results = engine.sparql(body.query)
+    except Exception as e:
+        raise HTTPException(400, f"SPARQL 查询无效: {type(e).__name__}: {e}")
     return {"total": len(results), "results": results, "query": body.query}
+
+
+@router.get("/rdf/stats")
+async def graphrag_rdf_stats():
+    """图上构件计数 — 界面显示的三元组/类/属性数一律取这里，不许手写。
+
+    判据 (tests/test_ontology_sparql.py)：triples 必须等于把 /ontology.owl
+    下载下来重新 parse 出来的三元组数 —— 同一张图，两个出口。
+    """
+    _, engine = _get_rag()
+    return engine.rdf_stats()
 
 
 # ═══════════════════════════════════════════════════════════
@@ -533,7 +613,7 @@ async def aip_dashboard():
     """运维大屏 — 实时KPI + 告警 + 通道状态"""
     rag, engine = _get_rag()
     site = engine.community_summary("site")
-    gw = engine.community_summary("gateway", "gw_131")
+    gw = engine.community_summary("gateway", "gw_edge01")
 
     # 通道状态
     channels = []
@@ -614,6 +694,21 @@ async def aip_objects(
     return {"total": len(results), "objects": results[:limit], "layers": list(layers.keys())}
 
 
+@router.get("/aip/objects/validate")
+async def aip_objects_validate():
+    """运行本体正确性校验 — 6 维度综合检查"""
+    _, engine = _get_rag()
+    result = engine.validate()
+    return result
+
+
+@router.get("/aip/objects/changelog")
+async def aip_objects_changelog(limit: int = Query(50, ge=1, le=200)):
+    """变更审计日志"""
+    _, engine = _get_rag()
+    return {"total": len(engine._changelog), "changes": engine.changelog(limit)}
+
+
 @router.get("/aip/objects/{entity_id}")
 async def aip_object_detail(entity_id: str):
     """Object View — 对象详情视图 (Palantir Quiver 风格)
@@ -623,25 +718,41 @@ async def aip_object_detail(entity_id: str):
     rag, engine = _get_rag()
 
     # 基础上下文
-    ctx = rag.live_context(entity_id)
-    if "error" in ctx:
-        raise HTTPException(404, ctx["error"])
+    # ⚠️ local_context 对不存在的实体是**抛 KeyError**，不是返回 {"error": ...} ——
+    #    原先那个 `if "error" in ctx` 分支永远走不到，实体不存在直接 500。
+    try:
+        ctx = rag.live_context(entity_id)
+    except KeyError:
+        raise HTTPException(404, f"本体对象不存在: {entity_id}")
+
+    layer = ctx.get("layer") or ctx.get("type") or ""
 
     # 关联对象 (上下游)
+    # ⚠️ local_context 的 siblings / children 是**字符串 id 列表**，parent 是单个 id；
+    #    而这里原先按 [{"id":..,"name":..}] 去取 sib["id"] —— 对字符串取下标必炸。
+    #    统一走 _rel()，用 engine 把 id 翻成层与名。两种形态都容忍。
+    def _rel(entry, direction, relation):
+        eid = entry if isinstance(entry, str) else (entry or {}).get("id", "")
+        if not eid:
+            return None
+        return {"direction": direction, "layer": engine.entity_type(eid) or "",
+                "id": eid, "name": engine.entity_name(eid) or "",
+                "relation": relation}
+
     relations = []
-    if ctx.get("parent_chain"):
-        for p in ctx["parent_chain"]:
-            relations.append({"direction": "upstream", "layer": p["layer"],
-                              "id": p["id"], "name": p.get("name", ""),
-                              "relation": "parent"})
-    for sib in ctx.get("siblings", []):
-        relations.append({"direction": "lateral", "layer": ctx["layer"],
-                          "id": sib["id"], "name": sib.get("name", ""),
-                          "relation": "sibling"})
-    for child in ctx.get("children", []):
-        relations.append({"direction": "downstream", "layer": "",
-                          "id": child["id"], "name": child.get("name", ""),
-                          "relation": "child"})
+    up = ctx.get("parent_chain") or ([ctx["parent"]] if ctx.get("parent") else [])
+    for p in up:
+        r = _rel(p, "upstream", "parent")
+        if r:
+            relations.append(r)
+    for sib in ctx.get("siblings") or []:
+        r = _rel(sib, "lateral", "sibling")
+        if r:
+            relations.append(r)
+    for child in ctx.get("children") or []:
+        r = _rel(child, "downstream", "child")
+        if r:
+            relations.append(r)
 
     # 关联约束
     linked_constraints = ctx.get("constraints", [])
@@ -653,7 +764,7 @@ async def aip_object_detail(entity_id: str):
     subgraph = engine.subgraph(entity_id, depth=2)
 
     return {
-        "entity": {"id": entity_id, "layer": ctx["layer"],
+        "entity": {"id": entity_id, "layer": layer,
                    "name": ctx["entity"].get("name", "") if isinstance(ctx["entity"], dict) else str(ctx["entity"])},
         "properties": ctx["entity"] if isinstance(ctx["entity"], dict) else {},
         "relations": relations,
@@ -664,44 +775,812 @@ async def aip_object_detail(entity_id: str):
     }
 
 
+# ═══════════════════════════════════════════════════════════
+# Action Framework — 动作审计 + 写回 (Palantir Actions 风格)
+# ═══════════════════════════════════════════════════════════
+
 class ActionRequest(BaseModel):
-    action: str = Field(..., description="动作类型: acknowledge_alarm|restart_channel|check_device|diagnose")
+    action: str = Field(..., description="动作类型: acknowledge_alarm|command_down|diagnose|trend_check|health_check")
     target_id: str = Field(..., description="目标实体 ID")
-    params: Optional[dict] = Field(None, description="动作参数")
+    params: Optional[dict] = Field(None, description="动作参数 (command_down: 作为下行 payload)")
+
+
+_ACTION_DB_PATH = None
+
+
+def _action_db_path() -> str:
+    """动作审计库路径 — data/aip_actions.db (独立于 parse.db, 避免写锁竞争)"""
+    global _ACTION_DB_PATH
+    if _ACTION_DB_PATH is None:
+        import os
+        root = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+        path = os.path.join(root, "data", "aip_actions.db")
+        os.makedirs(os.path.dirname(path), exist_ok=True)
+        _ACTION_DB_PATH = path
+    return _ACTION_DB_PATH
+
+
+def _ensure_action_db(db) -> None:
+    """建表 + R2 列迁移 (幂等; 老库 ALTER 补列, 已存在则跳过)"""
+    import sqlite3
+    db.execute("""CREATE TABLE IF NOT EXISTS action_log (
+        objectId TEXT PRIMARY KEY, action TEXT, target_id TEXT,
+        params TEXT, actor TEXT, role TEXT, status TEXT,
+        result TEXT, mqtt_topic TEXT, createdAt TEXT)""")
+    for col in ("def_id", "reconciliation", "reconciled_by", "reconciled_at"):
+        try:
+            db.execute(f"ALTER TABLE action_log ADD COLUMN {col} TEXT DEFAULT ''")
+        except sqlite3.OperationalError:
+            pass  # 列已存在
+
+
+def _record_action(action: str, target_id: str, params: dict, actor: str,
+                   role: str, status: str, result: dict, mqtt_topic: str = "",
+                   def_id: str = "", reconciliation: str = "") -> dict:
+    """动作审计落库 — 对应 Palantir Actions 的审计特性, 返回回执
+
+    R2: 增加 def_id (动作类型) 与 reconciliation 三列;
+    老库经 ALTER TABLE 自动迁移 (列已存在则跳过)。
+    """
+    import secrets
+    import sqlite3
+    from datetime import datetime
+
+    db = sqlite3.connect(_action_db_path())
+    try:
+        _ensure_action_db(db)
+        oid = secrets.token_hex(10)
+        ts = datetime.now().isoformat()
+        db.execute(
+            "INSERT INTO action_log (objectId,action,target_id,params,actor,role,status,"
+            "result,mqtt_topic,createdAt,def_id,reconciliation,reconciled_by,reconciled_at) "
+            "VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
+            (oid, action, target_id,
+             json.dumps(params or {}, ensure_ascii=False),
+             actor, role, status,
+             json.dumps(result, ensure_ascii=False, default=str)[:2000],
+             mqtt_topic, ts, def_id, reconciliation, "", ""))
+        db.commit()
+        return {"objectId": oid, "createdAt": ts}
+    finally:
+        db.close()
+
+
+_ACTION_ROW_COLS = ("objectId", "action", "target_id", "params", "actor", "role", "status",
+                    "result", "mqtt_topic", "createdAt", "def_id", "reconciliation",
+                    "reconciled_by", "reconciled_at")
+_ACTION_ROW_SQL = ",".join(_ACTION_ROW_COLS)
+
+
+def _action_row_to_dict(row) -> dict:
+    d = dict(zip(_ACTION_ROW_COLS, row))
+    for col in ("params", "result"):
+        try:
+            d[col] = json.loads(d[col]) if d[col] else {}
+        except (TypeError, ValueError):
+            pass
+    return d
+
+
+def _fetch_action(receipt_id: str):
+    import sqlite3
+    db = sqlite3.connect(_action_db_path())
+    try:
+        _ensure_action_db(db)
+        cur = db.execute(f"SELECT {_ACTION_ROW_SQL} FROM action_log WHERE objectId=?",
+                         (receipt_id,))
+        row = cur.fetchone()
+        return _action_row_to_dict(row) if row else None
+    finally:
+        db.close()
+
+
+def _list_actions(reconciliation: str = None, action: str = None, limit: int = 50) -> list:
+    import sqlite3
+    sql = f"SELECT {_ACTION_ROW_SQL} FROM action_log WHERE 1=1"
+    args: list = []
+    if reconciliation:
+        sql += " AND reconciliation=?"
+        args.append(reconciliation)
+    if action:
+        sql += " AND action=?"
+        args.append(action)
+    sql += " ORDER BY createdAt DESC LIMIT ?"
+    args.append(int(limit))
+    db = sqlite3.connect(_action_db_path())
+    try:
+        _ensure_action_db(db)
+        return [_action_row_to_dict(r) for r in db.execute(sql, args).fetchall()]
+    finally:
+        db.close()
+
+
+def _set_reconciliation(receipt_id: str, outcome: str, by: str, note: str = "") -> dict:
+    """人工对账落笔 — 只允许 pending → succeeded|retry; 返回结果 (None=回执不存在)"""
+    import sqlite3
+    from datetime import datetime
+    if outcome not in ("succeeded", "retry"):
+        raise ValueError(f"对账结论只能是 succeeded|retry, 得到 {outcome!r}")
+    db = sqlite3.connect(_action_db_path())
+    try:
+        _ensure_action_db(db)
+        cur = db.execute("SELECT reconciliation FROM action_log WHERE objectId=?",
+                         (receipt_id,))
+        row = cur.fetchone()
+        if row is None:
+            return None
+        if row[0] != "pending":
+            raise ValueError(f"回执 {receipt_id} 对账状态为 '{row[0] or '(空)'}', 仅 pending 可对账")
+        db.execute("UPDATE action_log SET reconciliation=?, reconciled_by=?, reconciled_at=? "
+                   "WHERE objectId=?",
+                   (outcome, by, datetime.now().isoformat(), receipt_id))
+        db.commit()
+        return {"objectId": receipt_id, "reconciliation": outcome,
+                "reconciled_by": by, "note": note}
+    finally:
+        db.close()
+
+
+def _entity_device(engine, entity_id: str):
+    """实体 → 承载它的 Device。只有 point / device 落得到**单台设备**上。"""
+    if entity_id in engine.points:
+        return engine.devices.get(engine.points[entity_id].device)
+    if entity_id in engine.devices:
+        return engine.devices[entity_id]
+    return None
+
+
+def _entity_cmd_topic(engine, entity_id: str) -> str:
+    """解析实体下行指令 topic — `$dg/device/{productId}/{devaddr}/properties`
+
+    中枢的下行闭集只有一个形态（dgiot_mqtt_message.erl:90 /
+    dgiot_task_dao.erl:100，两处逐字相同）。本函数原先自己造了六种
+    `dgiot/{site}/{gateway}/.../cmd` 拼法，它们**中枢一个都不认** ——
+    发布出去是静默丢弃，调用方却拿到一个看着像"已送达"的主题串。
+    收口到 dlink 那一个形态。
+
+    由此有个**能力收缩**，是语法本身决定的而不是实现偷懒：
+    channel / gateway / site 落不到单台设备上（一个网关底下可能是几十台设备），
+    "给网关下令"在中枢下行语法里没有对应形态。这类实体返回 ""（空串）而不是
+    编一个主题 —— 空串会让 _mqtt_publish 走失败分支、让 _exec_command_down
+    的 delivered=False（对账记 not_run），正是"没送达"该有的语义。
+
+    拼不出来同样返回 ""（不抛异常）：这是"没有这样的主题"，不是"拼错了"。
+    """
+    try:
+        dev = _entity_device(engine, entity_id)
+        if dev is None:
+            # constraint 是本体里的**约束节点**，它挂在一个真实实体上 —— 顺着找过去
+            constraint = engine.constraints.get(entity_id)
+            if constraint and constraint.entity:
+                return _entity_cmd_topic(engine, constraint.entity)
+            logger.info(f"[aip] {entity_id} 不是单台设备（channel/gateway/site），"
+                        f"中枢下行语法里没有对应主题，指令不发出")
+            return ""
+        if not dev.devaddr or not dev.product:
+            logger.warning(f"[aip] 设备 {dev.id} 缺 devaddr/product，拼不出中枢下行主题")
+            return ""
+        from ..models.dgiot_ids import dlink_down_topic
+        return dlink_down_topic(dev.product, dev.devaddr, "properties")
+    except Exception as e:
+        logger.warning(f"[aip] cmd topic 解析失败 {entity_id}: {e}")
+    return ""
+
+
+def _mqtt_publish(topic: str, payload: dict) -> str:
+    """MQTT 下行 — 沿用 parse_hooks 短连接范式 (低频动作, 即用即断)
+
+    空 topic 直接判失败，不去连 broker：paho 对空主题要么抛、要么被 broker
+    以 QoS1 回一个没人处理的错误 —— 两种都不如在这里就返回 ""，
+    让上层按"没送达"记账。
+    """
+    if not topic:
+        logger.warning("[aip] 无下行主题（实体落不到单台设备），未发布")
+        return ""
+    try:
+        import time as _t
+
+        import paho.mqtt.client as mqtt
+        host, port = "127.0.0.1", 1883
+        try:
+            from ..config import cfg
+            host, port = cfg.mqtt.host, cfg.mqtt.port
+        except Exception:
+            pass
+        client = mqtt.Client(client_id=f"aip_action_{int(_t.time() * 1000)}")
+        client.connect(host, port, keepalive=30)
+        client.publish(topic, json.dumps(payload, ensure_ascii=False), qos=1)
+        client.disconnect()
+        return topic
+    except Exception as e:
+        logger.warning(f"[aip] MQTT 下行失败 ({topic}): {e}")
+        return ""
+
+
+# ── R2: 执行器注册表 — 类型 (action_defs) 与执行 (此处) 分离 ──
+# 返回 (result, mqtt_topic, delivered):
+#   delivered=True   外部副作用确认送达 → reconciliation=succeeded
+#   delivered=False  确认未送达 (连接期失败, 未发出任何报文) → not_run
+#   delivered=None   无外部副作用 (只读) 或以本地审计为准 → not_run / succeeded
+def _exec_acknowledge_alarm(rag, engine, defn, body, params, actor):
+    import time as _t
+    mqtt_topic = _mqtt_publish(_entity_cmd_topic(engine, body.target_id), {
+        "ts": int(_t.time() * 1000), "source": "aip_action",
+        "action": "acknowledge_alarm", "target": body.target_id,
+        "actor": actor,
+    })
+    result = {"status": "acknowledged",
+              "message": f"告警 {body.target_id} 已由 {actor} 确认",
+              "mqtt_topic": mqtt_topic or None}
+    return result, mqtt_topic, True   # 对账基准 = 审计落库; MQTT 通知尽力而为
+
+
+def _exec_command_down(rag, engine, defn, body, params, actor):
+    import time as _t
+    topic = params.pop("topic", None) or _entity_cmd_topic(engine, body.target_id)
+    mqtt_topic = _mqtt_publish(topic, {
+        "ts": int(_t.time() * 1000), "source": "aip_action",
+        "action": "command_down", "target": body.target_id,
+        "actor": actor, "params": params,
+    })
+    result = {"status": "sent" if mqtt_topic else "mqtt_unavailable",
+              "mqtt_topic": mqtt_topic or None}
+    return result, mqtt_topic, bool(mqtt_topic)  # False = 连接期失败, 确认未发出
+
+
+def _exec_diagnose(rag, engine, defn, body, params, actor):
+    return {"result": rag.analyze_alarm(body.target_id, params)}, "", None
+
+
+def _exec_trend_check(rag, engine, defn, body, params, actor):
+    return {"result": rag.trend(body.target_id, params.get("hours", 1))}, "", None
+
+
+def _exec_health_check(rag, engine, defn, body, params, actor):
+    ctx = rag.live_context(body.target_id)
+    return {"status": ctx.get("live", {}).get("status", "unknown"),
+            "context": ctx.get("text_context", "")}, "", None
+
+
+_ACTION_EXECUTORS = {
+    "acknowledge_alarm": _exec_acknowledge_alarm,
+    "command_down": _exec_command_down,
+    "diagnose": _exec_diagnose,
+    "trend_check": _exec_trend_check,
+    "health_check": _exec_health_check,
+}
 
 
 @router.post("/aip/actions/execute")
-async def aip_execute_action(body: ActionRequest):
-    """Action Framework — 执行运维动作 (Palantir Actions 风格)
+async def aip_execute_action(body: ActionRequest, user: dict = Depends(get_current_user)):
+    """Action Framework — 执行运维动作 (R2: 类型驱动)
 
-    支持:
-      - diagnose: 对设备/测点进行故障诊断
-      - acknowledge_alarm: 确认告警
-      - trend_check: 趋势检查
-      - health_check: 健康检查
+    流程: 定义查找 → 角色门 → 参数 schema 校验 → 提交规则 → 执行器 → 审计落库。
+    铁律: external_side_effect=True 且结果不明 → reconciliation=pending,
+    必须人工对账 (POST /aip/actions/{id}/reconcile), 绝不自动重放。
     """
     rag, engine = _get_rag()
+    actor = user.get("sub", "?")
+    role = user.get("role", "?")
+    params = body.params or {}
 
-    if body.action == "diagnose":
-        result = rag.analyze_alarm(body.target_id, body.params or {})
-        return {"action": "diagnose", "result": result}
+    defn = get_action_def(body.action)
+    if defn is None:
+        receipt = _record_action(body.action, body.target_id, params, actor, role,
+                                 "unknown_action", {})
+        return {"action": body.action, "status": "unknown_action", "receipt": receipt}
 
-    elif body.action == "trend_check":
-        hours = (body.params or {}).get("hours", 1)
-        result = rag.trend(body.target_id, hours)
-        return {"action": "trend_check", "result": result}
+    if not role_allowed(defn, role):
+        need = "/".join(defn.allowed_roles) or "admin"
+        _record_action(body.action, body.target_id, params, actor, role, "denied",
+                       {"reason": f"角色 '{role}' 无权执行 (需要 {need})"}, def_id=defn.name)
+        raise HTTPException(403, f"角色 '{role}' 无权执行 {body.action} (需要 {need})")
 
-    elif body.action == "health_check":
-        ctx = rag.live_context(body.target_id)
-        return {"action": "health_check",
-                "status": ctx.get("live", {}).get("status", "unknown"),
-                "context": ctx.get("text_context", "")}
+    perrors = validate_params(defn, params)
+    if perrors:
+        _record_action(body.action, body.target_id, params, actor, role, "invalid_params",
+                       {"errors": perrors}, def_id=defn.name)
+        raise HTTPException(422, f"参数校验失败: {'; '.join(perrors)}")
 
-    elif body.action == "acknowledge_alarm":
-        return {"action": "acknowledge_alarm", "target": body.target_id,
-                "status": "acknowledged", "message": f"告警 {body.target_id} 已确认"}
+    cfailed = check_submit_criteria(defn, engine, body.target_id, params)
+    if cfailed:
+        _record_action(body.action, body.target_id, params, actor, role, "criteria_failed",
+                       {"failed": cfailed}, def_id=defn.name)
+        raise HTTPException(422, f"提交规则未通过: {'; '.join(cfailed)}")
 
-    return {"action": body.action, "status": "unknown_action"}
+    executor = _ACTION_EXECUTORS.get(body.action)
+    if executor is None:
+        receipt = _record_action(body.action, body.target_id, params, actor, role,
+                                 "no_executor",
+                                 {"reason": "类型已声明但未绑定执行器 — 自定义定义需在代码内绑定"},
+                                 def_id=defn.name, reconciliation="not_run")
+        return {"action": body.action, "status": "no_executor", "receipt": receipt}
+
+    try:
+        result, mqtt_topic, delivered = executor(rag, engine, defn, body, params, actor)
+    except Exception as e:
+        logger.exception(f"[aip] 动作 {body.action} 执行异常")
+        if defn.external_side_effect:
+            receipt = _record_action(body.action, body.target_id, params, actor, role,
+                                     "unknown_outcome", {"error": str(e)[:500]},
+                                     def_id=defn.name, reconciliation="pending")
+            return {"action": body.action, "status": "unknown_outcome",
+                    "reconciliation": "pending", "receipt": receipt,
+                    "message": "外部副作用结果不明 — 已置 pending, 请人工对账 (绝不自动重放)"}
+        _record_action(body.action, body.target_id, params, actor, role,
+                       "failed", {"error": str(e)[:500]}, def_id=defn.name)
+        raise HTTPException(500, f"动作执行失败: {e}")
+
+    if defn.external_side_effect:
+        reconciliation = "succeeded" if delivered else ("not_run" if delivered is False else "pending")
+    else:
+        reconciliation = "not_run"
+
+    receipt = _record_action(body.action, body.target_id, params, actor, role,
+                             "executed", result, mqtt_topic, def_id=defn.name,
+                             reconciliation=reconciliation)
+    return {"action": body.action, "target": body.target_id,
+            "reconciliation": reconciliation, **result, "receipt": receipt}
+
+
+# ── R2: 动作类型管理 + 人工对账 ──
+
+class ActionDefCreate(BaseModel):
+    name: str = Field(..., description="动作名 ^[a-z][a-z0-9_]{2,40}$")
+    title: str = Field("", max_length=100)
+    description: str = Field("", max_length=500)
+    params_schema: dict = Field(default_factory=dict)
+    submit_criteria: list = Field(default_factory=list)
+    allowed_roles: list = Field(default_factory=list)
+    target_layer: str = Field("any")
+    external_side_effect: bool = False
+    strict_params: bool = True
+
+
+class ReconcileRequest(BaseModel):
+    outcome: str = Field(..., description="对账结论: succeeded | retry")
+    note: str = Field("", max_length=500)
+
+
+@router.get("/aip/actions/definitions")
+async def aip_list_action_defs(user: dict = Depends(get_current_user)):
+    """动作类型清单 — 含参数 schema 与提交规则 (表单/前端据此渲染)"""
+    return {"definitions": list_defs(), "count": len(list_defs())}
+
+
+@router.post("/aip/actions/definitions", dependencies=[Depends(require_admin)])
+async def aip_create_action_def(body: ActionDefCreate, user: dict = Depends(get_current_user)):
+    """注册自定义动作类型 (仅管理员) — 进程内有效, 执行器需代码绑定"""
+    actor = user.get("sub", "?"); role = user.get("role", "?")
+    if get_action_def(body.name) is not None:
+        raise HTTPException(409, f"动作 {body.name} 已存在")
+    defn = ActionDefinition(
+        name=body.name, title=body.title, description=body.description,
+        params_schema=body.params_schema, submit_criteria=list(body.submit_criteria),
+        allowed_roles=list(body.allowed_roles), target_layer=body.target_layer,
+        external_side_effect=body.external_side_effect, strict_params=body.strict_params,
+        builtin=False)
+    try:
+        register_action_def(defn)
+    except ValueError as e:
+        raise HTTPException(400, str(e))
+    receipt = _record_action("actiondef_create", body.name,
+                             {"title": body.title, "external": body.external_side_effect},
+                             actor, role, "executed", {}, def_id=body.name)
+    return {"definition": defn.to_dict(), "receipt": receipt}
+
+
+@router.delete("/aip/actions/definitions/{name}", dependencies=[Depends(require_admin)])
+async def aip_delete_action_def(name: str, user: dict = Depends(get_current_user)):
+    """删除自定义动作类型 (仅管理员) — 内建定义不可删"""
+    actor = user.get("sub", "?"); role = user.get("role", "?")
+    defn = get_action_def(name)
+    if defn is None:
+        raise HTTPException(404, f"动作 {name} 不存在")
+    if defn.builtin:
+        raise HTTPException(403, "内建动作定义不可删除")
+    unregister_action_def(name)
+    receipt = _record_action("actiondef_delete", name, {}, actor, role, "executed", {})
+    return {"deleted": name, "receipt": receipt}
+
+
+@router.get("/aip/actions/log", dependencies=[Depends(require_admin)])
+async def aip_action_log(reconciliation: str = None, action: str = None,
+                         limit: int = Query(50, ge=1, le=200),
+                         user: dict = Depends(get_current_user)):
+    """动作审计日志 (仅管理员) — 可按对账状态过滤, pending 即待人工对账清单"""
+    rows = _list_actions(reconciliation, action, limit)
+    return {"actions": rows, "count": len(rows)}
+
+
+@router.post("/aip/actions/{receipt_id}/reconcile", dependencies=[Depends(require_admin)])
+async def aip_reconcile_action(receipt_id: str, body: ReconcileRequest,
+                               user: dict = Depends(get_current_user)):
+    """人工对账 (仅管理员) — 仅 pending 回执可对账; retry 只做标记, 重放须重新显式执行"""
+    actor = user.get("sub", "?"); role = user.get("role", "?")
+    if body.outcome not in ("succeeded", "retry"):
+        raise HTTPException(400, "对账结论只能是 succeeded | retry")
+    row = _fetch_action(receipt_id)
+    if row is None:
+        raise HTTPException(404, f"回执 {receipt_id} 不存在")
+    if row.get("reconciliation") != "pending":
+        raise HTTPException(409, f"回执对账状态为 '{row.get('reconciliation') or '(空)'}', 仅 pending 可对账")
+    try:
+        result = _set_reconciliation(receipt_id, body.outcome, actor, body.note)
+    except ValueError as e:
+        raise HTTPException(409, str(e))
+    return {**result, "action": row.get("action"), "def_id": row.get("def_id")}
+
+
+# ═══════════════════════════════════════════════════════════
+# P1: ActionContract 管线 — 三段式 (校验→审批门→执行+对账)
+# 授权凭证 = agent_audit 提案 (kind=action_auth, prp_*) — 与本体修复提案
+# 同一条审计流、同一审批视图; R2 铁律由管线机制保证。
+# ═══════════════════════════════════════════════════════════
+
+class PipelineSubmitRequest(BaseModel):
+    action: str = Field(..., description="动作名 (须已注册)")
+    target_id: str = Field("", description="目标实体 ID")
+    params: Optional[dict] = Field(None)
+    auth_id: str = Field("", description="外部副作用动作的人工授权凭证 (prp_*)")
+
+
+class PipelineDispatchRequest(BaseModel):
+    submissions: list = Field(..., description="submit kwargs 字典列表 — 并行派发, 项间隔离")
+    max_workers: int = Field(4, ge=1, le=16)
+
+
+class PipelineAuthorizeRequest(BaseModel):
+    auth_id: str = Field(..., description="待审批授权凭证 (prp_*)")
+    decision: str = Field(..., description="approve | reject")
+
+
+_PIPELINE = None
+
+
+def _get_action_pipeline():
+    global _PIPELINE
+    if _PIPELINE is None:
+        from src.action_pipeline import ActionPipeline, SqliteProposalAuthorizer
+        rag, engine = _get_rag()
+
+        def _exec(defn, target_id, params):
+            fn = _ACTION_EXECUTORS.get(defn.name)
+            if fn is None:
+                return {"ok": False, "error": "no executor bound"}
+            body = ActionRequest(action=defn.name, target_id=target_id, params=params)
+            result, mqtt_topic, delivered = fn(rag, engine, defn, body, params, "pipeline")
+            recon = ("succeeded" if delivered else
+                     ("not_run" if delivered is False else "pending")) \
+                if defn.external_side_effect else "not_run"
+            return {"ok": bool(delivered) if defn.external_side_effect else True,
+                    "detail": result, "mqtt_topic": mqtt_topic, "reconciliation": recon}
+
+        _PIPELINE = ActionPipeline(engine=engine, executor=_exec,
+                                   authorizer=SqliteProposalAuthorizer())
+    return _PIPELINE
+
+
+@router.post("/aip/pipeline/actions/submit")
+async def aip_pipeline_submit(body: PipelineSubmitRequest,
+                              user: dict = Depends(get_current_user)):
+    """三段式单发 — external_side_effect 无凭证 → awaiting_approval (R2 机制化)"""
+    role = user.get("role", "admin")
+    return _get_action_pipeline().submit(body.action, params=body.params, role=role,
+                                         target_id=body.target_id, auth_id=body.auth_id)
+
+
+@router.post("/aip/pipeline/actions/dispatch")
+async def aip_pipeline_dispatch(body: PipelineDispatchRequest,
+                                user: dict = Depends(get_current_user)):
+    """并行批发 — 世界是平行的: 项间隔离, 单项异常不拖垮批次; 顺序与输入一致"""
+    role = user.get("role", "admin")
+    subs = []
+    for s in body.submissions:
+        s = dict(s or {})
+        s.setdefault("role", role)
+        s.setdefault("target_id", "")
+        subs.append(s)
+    results = _get_action_pipeline().submit_many(subs, max_workers=body.max_workers)
+    return {"results": results}
+
+
+@router.post("/aip/pipeline/actions/authorize", dependencies=[Depends(require_admin)])
+async def aip_pipeline_authorize(body: PipelineAuthorizeRequest,
+                                 user: dict = Depends(get_current_user)):
+    """人工审批门 (仅管理员) — approve/reject 一次性授权; decided_by=当前用户"""
+    by = user.get("sub", "?")
+    auth = _get_action_pipeline().authorizer
+    if body.decision == "approve":
+        return auth.approve(body.auth_id, by=by)
+    if body.decision == "reject":
+        return auth.reject(body.auth_id, by=by)
+    raise HTTPException(400, "decision 只能是 approve | reject")
+
+
+@router.get("/aip/pipeline/actions/auths", dependencies=[Depends(require_admin)])
+async def aip_pipeline_auths(status: str = None, limit: int = 50,
+                             user: dict = Depends(get_current_user)):
+    """授权凭证清单 — 即 kind=action_auth 的提案 (与本体提案同一审计流)"""
+    from src.agent_audit import _list_proposals
+    items = _list_proposals(status=status, limit=limit)
+    return {"auths": [i for i in items if i.get("kind") == "action_auth"]}
+
+
+# ═══════════════════════════════════════════════════════════
+# R1: 显式关系 (Link) — /aip/links
+# ═══════════════════════════════════════════════════════════
+
+class LinkRequest(BaseModel):
+    source: str = Field(..., description="源实体 ID (须已注册)")
+    target: str = Field(..., description="目标实体 ID (须已注册)")
+    relation: str = Field(..., description=f"关系词 (词表: {sorted(LINK_RELATIONS)})")
+    description: str = Field("", max_length=500)
+    props: dict = Field(default_factory=dict, description="附加语义: constraint 引用/协议路径等")
+
+
+@router.get("/aip/links")
+async def aip_list_links(relation: str = None, entity: str = None, user: dict = Depends(get_current_user)):
+    """关系边清单 — 可按 relation/entity 过滤; 返回词表"""
+    rag, engine = _get_rag()
+    links = engine.get_links(entity) if entity else list(engine.links.values())
+    if relation:
+        links = [l for l in links if l.relation == relation]
+    return {
+        "links": [asdict(l) for l in links],
+        "relations": sorted(LINK_RELATIONS),
+        "count": len(links),
+        "counts_by_relation": {
+            r: sum(1 for x in engine.links.values() if x.relation == r)
+            for r in sorted(LINK_RELATIONS)
+        },
+    }
+
+
+@router.post("/aip/links", dependencies=[Depends(require_admin)])
+async def aip_create_link(body: LinkRequest, user: dict = Depends(get_current_user)):
+    """创建显式关系边 (仅管理员) — 端点必须已注册, 关系词必须在词表内; 全程审计"""
+    rag, engine = _get_rag()
+    actor = user.get("sub", "?"); role = user.get("role", "?")
+    if body.relation not in LINK_RELATIONS:
+        raise HTTPException(400, f"未知关系词 '{body.relation}' (词表: {sorted(LINK_RELATIONS)})")
+    for end in (body.source, body.target):
+        if engine.entity_type(end) is None:
+            raise HTTPException(400, f"端点实体 '{end}' 未注册")
+    if body.source == body.target:
+        raise HTTPException(400, "自环边不允许")
+    link_id = body.props.get("id") or f"lnk_{body.source}_{body.relation}_{body.target}"
+    if link_id in engine.links:
+        raise HTTPException(409, f"关系边 {link_id} 已存在")
+    link = Link(id=link_id, source=body.source, target=body.target,
+                relation=body.relation, description=body.description,
+                props={k: v for k, v in body.props.items() if k != "id"})
+    engine.register(link)
+    receipt = _record_action("link_create", link.id,
+                             {"source": body.source, "target": body.target,
+                              "relation": body.relation}, actor, role, "executed",
+                             {"description": body.description})
+    return {"link": asdict(link), "receipt": receipt}
+
+
+@router.delete("/aip/links/{link_id}", dependencies=[Depends(require_admin)])
+async def aip_delete_link(link_id: str, user: dict = Depends(get_current_user)):
+    """删除关系边 (仅管理员) — 审计留痕"""
+    rag, engine = _get_rag()
+    actor = user.get("sub", "?"); role = user.get("role", "?")
+    if link_id not in engine.links:
+        raise HTTPException(404, f"关系边 {link_id} 不存在")
+    removed = asdict(engine.links.pop(link_id))
+    receipt = _record_action("link_delete", link_id, {"relation": removed.get("relation")},
+                             actor, role, "executed", {"removed": removed})
+    return {"deleted": removed, "receipt": receipt}
+
+
+# ── R3: 图分析 — 路径 / 影响半径 / 中心性 (只读) ──
+
+@router.get("/aip/graph/path")
+async def aip_graph_path(from_id: str = Query(..., alias="from"),
+                         to_id: str = Query(..., alias="to"),
+                         max_paths: int = Query(10, ge=1, le=50),
+                         user: dict = Depends(get_current_user)):
+    """最短路径 — 层级 + 功能关系边统一寻路, 返回全部最短路径 (≤max_paths)"""
+    rag, engine = _get_rag()
+    try:
+        return engine.graph_path(from_id, to_id, max_paths)
+    except KeyError as e:
+        raise HTTPException(404, str(e).strip("'"))
+
+
+@router.get("/aip/graph/impact/{entity_id}")
+async def aip_graph_impact(entity_id: str, decay: float = Query(0.5, gt=0, le=1),
+                           max_radius: int = Query(4, ge=1, le=8),
+                           min_confidence: float = Query(0.05, gt=0, lt=1),
+                           user: dict = Depends(get_current_user)):
+    """影响半径 blast-radius — 加权传播 + 指数衰减
+
+    语义: 该实体失效时谁受影响、置信多高。powered_by 反向遍历 = 断电打击面;
+    has_defect/has_issue 静态归属不传播。severity: critical ≥0.7 / high ≥0.4 /
+    medium ≥0.2 / low。
+    """
+    rag, engine = _get_rag()
+    try:
+        return engine.graph_impact(entity_id, decay, max_radius, min_confidence)
+    except KeyError as e:
+        raise HTTPException(404, str(e).strip("'"))
+
+
+@router.get("/aip/graph/centrality")
+async def aip_graph_centrality(mode: str = Query("degree", pattern="^(degree|betweenness)$"),
+                               top: int = Query(10, ge=1, le=50),
+                               user: dict = Depends(get_current_user)):
+    """GDS 式中心性 — degree | betweenness (百级节点纯 Python 实现)"""
+    rag, engine = _get_rag()
+    try:
+        return engine.graph_centrality(mode, top)
+    except ValueError as e:
+        raise HTTPException(400, str(e))
+
+
+# ── P1: 标准互操作 — DTDL v3 / SSN-SOSA 导出 + 关系基数评估 (只读) ──
+
+@router.get("/aip/export/dtdl")
+async def aip_export_dtdl(user: dict = Depends(get_current_user)):
+    """DTDL v3 模型导出 — Azure Digital Twins 生态可摄入"""
+    rag, engine = _get_rag()
+    return export_dtdl(engine)
+
+
+@router.get("/aip/export/ssn")
+async def aip_export_ssn(user: dict = Depends(get_current_user)):
+    """SSN/SOSA JSON-LD 导出 — W3C 语义传感器网络本体"""
+    rag, engine = _get_rag()
+    return export_ssn(engine)
+
+
+@router.get("/aip/export/prov")
+async def aip_export_prov(format: str = Query("turtle", pattern="^(turtle|xml)$"),
+                          user: dict = Depends(get_current_user)):
+    """PROV-O 数据血缘导出 — W3C PROVENANCE (turtle | rdf-xml)"""
+    rag, engine = _get_rag()
+    body = export_prov(engine, fmt=format)
+    media = ("text/turtle; charset=utf-8" if format == "turtle"
+             else "application/rdf+xml; charset=utf-8")
+    from fastapi.responses import Response
+    return Response(content=body, media_type=media)
+
+
+@router.get("/aip/export/aas")
+async def aip_export_aas(user: dict = Depends(get_current_user)):
+    """AAS 资产管理壳导出 (IEC 63278 / IDTA v3.0) — BaSyx / AASX 工具链可摄入
+
+    Shell / Submodel / SubmodelElement 三层；挂不上 Submodel 的边在 meta.orphans
+    里，不静默丢弃。脱敏门与上面三个导出器一致：不带内网地址与连接串。
+    """
+    rag, engine = _get_rag()
+    return export_aas(engine)
+
+
+# ═══════════════════════════════════════════════════════════
+# P1 企业连接器 — PULL 企业元数据入本体 / PUSH 快照到中枢 DataHub
+# ═══════════════════════════════════════════════════════════
+
+@router.post("/aip/datasources/{ds_id}/pull", dependencies=[Depends(require_admin)])
+async def aip_ds_pull(ds_id: str, body: dict = Body(default={})):
+    """PULL: 从企业 REST 端点拉取元数据注册为本体对象"""
+    _, engine = _get_rag()
+    connector = EnterpriseConnector(engine)
+    try:
+        return await connector.pull_metadata(ds_id, path=body.get("path", "/api/metadata"))
+    except ValueError as e:
+        raise HTTPException(400, str(e))
+    finally:
+        await connector.dispose()
+
+
+@router.post("/aip/datasources/{ds_id}/push", dependencies=[Depends(require_admin)])
+async def aip_ds_push(ds_id: str, body: dict = Body(...)):
+    """PUSH: 本体元数据快照上报中枢 DataHub (凭证经 token_env 环境变量引用)"""
+    _, engine = _get_rag()
+    connector = EnterpriseConnector(engine)
+    try:
+        return await connector.push_metadata(ds_id, body.get("hub_url", ""),
+                                             token_env=body.get("token_env"))
+    except ValueError as e:
+        raise HTTPException(400, str(e))
+    finally:
+        await connector.dispose()
+
+
+@router.get("/aip/graph/cardinality")
+async def aip_graph_cardinality(user: dict = Depends(get_current_user)):
+    """关系基数评估 — 声明 (Foundry Link Type 同语义) vs 实测出/入度分布 + 违规清单"""
+    rag, engine = _get_rag()
+    return evaluate_cardinality(engine)
+
+
+# ── R4: 质量审计 Agent + 提案审批闭环 (全部 admin) ──
+
+class AuditRequest(BaseModel):
+    with_llm: bool = False
+
+
+class DismissRequest(BaseModel):
+    note: str = Field("", max_length=500)
+
+
+def _audit_agent() -> AuditAgent:
+    rag, engine = _get_rag()
+
+    def receipt_fn(action, target_id, params, status, result):
+        return _record_action(action, target_id, params, "agent_audit", "admin",
+                              status, result)
+
+    return AuditAgent(engine, rag=rag, receipt_fn=receipt_fn)
+
+
+@router.post("/aip/agent/audit", dependencies=[Depends(require_admin)])
+async def aip_agent_audit(body: AuditRequest, user: dict = Depends(get_current_user)):
+    """运行质量审计 — 六维确定性检查 (+可选 LLM 归因); 生成的提案入库待审批"""
+    report = _audit_agent().run_audit(with_llm=body.with_llm)
+    return report
+
+
+@router.get("/aip/agent/proposals", dependencies=[Depends(require_admin)])
+async def aip_agent_proposals(status: str = Query(None, pattern="^(pending|approved|dismissed)$"),
+                              limit: int = Query(100, ge=1, le=500),
+                              user: dict = Depends(get_current_user)):
+    """提案清单 — pending 即人工审批工作队列"""
+    rows = _list_proposals(status, limit)
+    return {"proposals": rows, "count": len(rows)}
+
+
+@router.post("/aip/agent/proposals/generate", dependencies=[Depends(require_admin)])
+async def aip_agent_proposal_generate(body: dict, user: dict = Depends(get_current_user)):
+    """审计发现 → 一键生成待审批提案 (确定性映射; 歧义时要求 extra 指定目标)"""
+    _, engine = _get_rag()
+    try:
+        proposal = propose_from_finding(engine, body.get("kind", ""),
+                                        body.get("target", ""),
+                                        extra=body.get("extra") or {})
+    except ValueError as e:
+        raise HTTPException(400, str(e))
+    return {"status": "created", "proposal": proposal}
+
+
+@router.get("/aip/agent/runs", dependencies=[Depends(require_admin)])
+async def aip_agent_runs(limit: int = Query(20, ge=1, le=100),
+                         user: dict = Depends(get_current_user)):
+    """审计运行史 — trace 落库即 Sovereign 式后训练原料"""
+    return {"runs": list_runs(limit)}
+
+
+@router.post("/aip/agent/proposals/{proposal_id}/approve", dependencies=[Depends(require_admin)])
+async def aip_agent_approve(proposal_id: str, user: dict = Depends(get_current_user)):
+    """审批执行提案 (仅管理员) — delete_link / add_link; 执行回执落动作审计库"""
+    actor = user.get("sub", "?")
+    agent = _audit_agent()
+    try:
+        result = agent.execute_proposal(proposal_id, actor)
+    except LookupError as e:
+        raise HTTPException(404, str(e))
+    except ValueError as e:
+        raise HTTPException(409, str(e))
+    return result
+
+
+@router.post("/aip/agent/proposals/{proposal_id}/dismiss", dependencies=[Depends(require_admin)])
+async def aip_agent_dismiss(proposal_id: str, body: DismissRequest,
+                            user: dict = Depends(get_current_user)):
+    """驳回提案 (仅管理员) — 留痕驳回理由"""
+    actor = user.get("sub", "?")
+    try:
+        result = _decide_proposal(proposal_id, "dismissed", actor,
+                                  {"note": body.note} if body.note else None)
+    except LookupError as e:
+        raise HTTPException(404, str(e))
+    except ValueError as e:
+        raise HTTPException(409, str(e))
+    return result
 
 
 class ScenarioRequest(BaseModel):
@@ -780,7 +1659,7 @@ def _persist_engine(engine):
         return {"error": str(e)}
 
 
-@router.post("/aip/objects/create")
+@router.post("/aip/objects/create", dependencies=[Depends(require_admin)])
 async def aip_object_create(body: OntologyObjectCreate):
     """创建本体对象 — 含前置校验 + 持久化"""
     from ..ontology import Site, Gateway, Channel, Device, Point, Constraint, DataSource
@@ -850,7 +1729,7 @@ async def aip_object_create(body: OntologyObjectCreate):
     }
 
 
-@router.put("/aip/objects/{entity_id}")
+@router.put("/aip/objects/{entity_id}", dependencies=[Depends(require_admin)])
 async def aip_object_update(entity_id: str, body: dict):
     """更新本体对象属性 — 含变更记录 + 持久化"""
     _, engine = _get_rag()
@@ -882,7 +1761,7 @@ async def aip_object_update(entity_id: str, body: dict):
     }
 
 
-@router.delete("/aip/objects/{entity_id}")
+@router.delete("/aip/objects/{entity_id}", dependencies=[Depends(require_admin)])
 async def aip_object_delete(entity_id: str):
     """删除本体对象 — 含级联影响检查 + 持久化"""
     _, engine = _get_rag()
@@ -919,15 +1798,7 @@ async def aip_object_delete(entity_id: str):
     }
 
 
-@router.get("/aip/objects/validate")
-async def aip_objects_validate():
-    """运行本体正确性校验 — 6 维度综合检查"""
-    _, engine = _get_rag()
-    result = engine.validate()
-    return result
-
-
-@router.post("/aip/objects/sync")
+@router.post("/aip/objects/sync", dependencies=[Depends(require_admin)])
 async def aip_objects_sync():
     """手动持久化本体到 SQLite"""
     _, engine = _get_rag()
@@ -935,40 +1806,20 @@ async def aip_objects_sync():
     return {"status": "synced", "result": str(result), "health": engine.health()["counts"]}
 
 
-@router.get("/aip/objects/changelog")
-async def aip_objects_changelog(limit: int = Query(50, ge=1, le=200)):
-    """变更审计日志"""
-    _, engine = _get_rag()
-    return {"total": len(engine._changelog), "changes": engine.changelog(limit)}
-
-
-@router.post("/aip/objects/import")
+@router.post("/aip/objects/import", dependencies=[Depends(require_admin)])
 async def aip_objects_import(body: OntologyBatchImport):
-    """批量导入本体对象"""
-    _, engine = _get_rag()
-    created, errors = 0, []
-    for obj in body.objects:
-        try:
-            from ..ontology import Site, Gateway, Channel, Device, Point, Constraint, DataSource
-            layers = {
-                "site": Site, "gateway": Gateway, "channel": Channel,
-                "device": Device, "point": Point,
-                "constraint": Constraint, "datasource": DataSource,
-            }
-            layer = obj.get("layer", "")
-            cls = layers.get(layer)
-            if not cls:
-                errors.append(f"未知层级: {layer}")
-                continue
-            kwargs = {"id": obj["id"], "name": obj.get("name", "")}
-            kwargs.update(obj.get("props", {}))
-            engine.register(cls(**kwargs))
-            created += 1
-        except Exception as e:
-            errors.append(f"{obj.get('id', '?')}: {e}")
+    """批量导入本体对象 — 复用企业连接器注册器 (dataclass 字段过滤)
 
+    validate_refs=True: 和单条 create 一样拦父层引用不存在的对象。
+    企业同步那条路 (pull_metadata) 仍走默认的宽松语义 —— 理由见 register_objects 注释。
+    被拒的对象计入 errors, 并在 error_details 里给出原因, 不清一色成功。
+    """
+    _, engine = _get_rag()
+    counts = register_objects(engine, body.objects, validate_refs=True)
     _persist_engine(engine)
-    return {"status": "imported", "created": created, "errors": errors,
+    return {"status": "imported", "created": counts["created"],
+            "updated": counts["updated"], "errors": counts["errors"],
+            "error_details": counts.get("error_details", []),
             "health": engine.health()["counts"]}
 
 
@@ -1029,60 +1880,87 @@ class CodeRequest(BaseModel):
     timeout: float = Field(5.0, ge=1, le=30, description="超时秒数")
 
 
-@router.post("/aip/console")
-async def aip_code_console(body: CodeRequest):
-    """Code Console — 浏览器内安全执行 Python (Palantir Code Workbook 风格)
+# 沙箱白名单 — 无副作用核心内建 (刻意不含 open/exec/eval/import/__import__/getattr)
+_SANDBOX_BUILTINS = {
+    "len": len, "range": range, "str": str, "int": int, "float": float,
+    "bool": bool, "list": list, "dict": dict, "set": set, "tuple": tuple,
+    "round": round, "min": min, "max": max, "sum": sum, "sorted": sorted,
+    "abs": abs, "enumerate": enumerate, "zip": zip, "any": any, "all": all,
+    "repr": repr, "format": format, "type": type, "isinstance": isinstance,
+    "Exception": Exception, "ValueError": ValueError, "KeyError": KeyError,
+    "IndexError": IndexError, "TypeError": TypeError, "StopIteration": StopIteration,
+}
 
-    预置变量:
-      engine — OntologyEngine 实例
-      rag    — GraphRAG 实例
-      search(q) → list   语义搜索
-      ask(q)   → dict    GraphRAG 问答
+
+def sandbox_exec(code: str, timeout: float = 5.0) -> dict:
+    """受限执行用户代码 — 返回 {stdout, result, error, ok}
+
+    三层防线:
+      1. 源码预检: 拒绝任何双下划线 (阻断 __import__/__class__/__subclasses__ 逃逸链)
+      2. builtins 白名单: 空 builtins + 无副作用子集, print 为受控实现
+      3. 独立线程 + 超时; 只捕获注入 print 的输出 (不再全局劫持 sys.stdout)
+    注意: 这是进程内 best-effort 沙箱, 不构成安全边界; 强隔离需 subprocess/容器 (P2)。
     """
-    import io, sys as _sys, traceback, threading, time as _t
+    import io
+    import threading
+    import traceback
 
-    _, engine = _get_rag()
-    rag = _get_rag()[0]
+    if "__" in code:
+        return {"stdout": "", "result": None,
+                "error": "沙箱拒绝: 代码包含双下划线 (dunder) 访问", "ok": False}
+
+    rag, engine = _get_rag()
 
     output = io.StringIO()
-    old_stdout = _sys.stdout
-    _sys.stdout = output
 
-    result = None
-    error = None
+    def _print(*args, **kwargs):
+        kwargs.pop("file", None)
+        output.write(kwargs.pop("sep", " ").join(str(a) for a in args) + kwargs.pop("end", "\n"))
+
+    preset = {
+        "engine": engine, "rag": rag,
+        "search": lambda q, k=5: rag.search(q, k),
+        "ask": lambda q: rag.ask(q),
+        "ctx": lambda eid: engine.local_context(eid),
+        "summary": lambda l="site": engine.community_summary(l),
+        "json": json,
+    }
+    preset_keys = set(preset) | {"__builtins__", "print"}
+
+    result_holder = {}
+    error_holder = [None]
 
     def _run():
-        nonlocal result, error
         try:
-            _locals = {
-                "engine": engine, "rag": rag,
-                "search": lambda q, k=5: rag.search(q, k),
-                "ask": lambda q: rag.ask(q),
-                "ctx": lambda eid: engine.local_context(eid),
-                "summary": lambda l="site": engine.community_summary(l),
-                "json": __import__("json"),
-            }
-            exec(body.code, {"__builtins__": __builtins__}, _locals)
-            result = {k: str(v)[:200] for k, v in _locals.items()
-                      if not k.startswith("_") and k not in ("engine", "rag", "search", "ask", "ctx", "summary", "json")}
-        except Exception as e:
-            error = traceback.format_exc()
+            g = {**preset, "print": _print, "__builtins__": dict(_SANDBOX_BUILTINS)}
+            exec(code, g)  # noqa: S102 — 进程内受限沙箱, 见 docstring
+            result_holder.update({k: str(v)[:200] for k, v in g.items()
+                                  if k not in preset_keys and not k.startswith("__")})
+        except Exception:
+            error_holder[0] = traceback.format_exc(limit=5)
 
     t = threading.Thread(target=_run, daemon=True)
     t.start()
-    t.join(timeout=body.timeout)
+    t.join(timeout=timeout)
     if t.is_alive():
-        error = f"执行超时 ({body.timeout}s)"
-
-    _sys.stdout = old_stdout
-    stdout = output.getvalue()
+        error_holder[0] = f"执行超时 ({timeout}s) — 线程无法强杀, 请避免死循环"
 
     return {
-        "stdout": stdout[:2000],
-        "result": result if not error else None,
-        "error": error,
-        "ok": error is None,
+        "stdout": output.getvalue()[:2000],
+        "result": result_holder if not error_holder[0] else None,
+        "error": error_holder[0],
+        "ok": error_holder[0] is None,
     }
+
+
+@router.post("/aip/console", dependencies=[Depends(require_admin)])
+async def aip_code_console(body: CodeRequest):
+    """Code Console — 浏览器内受限执行 Python (Palantir Code Workbook 风格)
+
+    仅 admin 可用, 三层沙箱防线见 sandbox_exec。
+    预置变量: engine / rag / search(q) / ask(q) / ctx(id) / summary(level) / json
+    """
+    return sandbox_exec(body.code, body.timeout)
 
 
 # ============================================================

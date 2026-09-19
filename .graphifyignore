@@ -1,0 +1,35 @@
+# ============================================================
+# .graphifyignore —— 给 graphify 抽取用的**收敛**规则（不进 .gitignore 语义）
+# ============================================================
+# 为什么单独一个文件而不是写 .gitignore：
+#   这两个文件**该进 git**（public 是运行时要发的静态资源，公库本来就有它们），
+#   但不该进**知识图谱**。git 的「要不要版本化」和 graphify 的「算不算本项目知识」
+#   是两个判别域，混在一个文件里会逼着后来人二选一。
+#   graphify 读 .graphifyignore 是**只做减法**（detect.py:1247 明确写了
+#   "adding a .graphifyignore can only ever exclude MORE, never re-include"），
+#   所以这个文件加进来不会改变任何已跟踪文件的状态。
+#
+# 判据（2026-09-15 量出来的，不是拍的）：
+#   本仓 detect 判为 code 的 305 个文件共 5.47 MB，其中
+#     frontend-vue/public/amis-sdk.js        2,030,542 B
+#     frontend-vue/public/vendor/echarts.min.js 1,029,203 B
+#   两个压缩过的第三方 bundle 合计 3.06 MB = **全部 code 字节的 56%**，
+#   在 AST 层贡献 1,260 / 6,218 = **20.3% 的节点**（650 + 610）。
+#   它们是百度 amis 与 Apache ECharts 的 minified 分发版，不含本项目任何设计。
+#   留着它们，God 节点会被 echarts/amis 的内部符号占满 —— 图的中心就不是这个项目了。
+#   这与 graphify 自带把 node_modules/、dist/ 当噪声目录剪掉是同一类判断。
+#
+# 不误伤说明：
+#   - 前导 `/` ⇒ 只锚在仓根，不匹配任何同名深层路径。
+#   - 只盖这两个具体目标；`frontend-vue/src/**` 下的第一方 .js/.vue 一个不碰
+#     （实测 src/api/admin.js 这个名字里带 "min" 的文件也在 code 集里，未被这里命中）。
+#   - 语义层（document/paper/image）完全不受影响：这里全是 code 文件。
+#
+# 可回滚：删掉本文件（或注释掉两行）重跑 Part A 即恢复原样。
+# ============================================================
+
+# 第三方 minified bundle —— 百度 amis 低代码渲染器（2.0 MB）
+/frontend-vue/public/amis-sdk.js
+
+# 第三方 minified bundle —— Apache ECharts（1.0 MB，vendor/ 下唯一文件）
+/frontend-vue/public/vendor/

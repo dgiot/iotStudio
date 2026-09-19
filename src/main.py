@@ -3,6 +3,7 @@
 # ============================================================
 import asyncio
 import logging
+import os
 import uuid
 import time
 from contextlib import asynccontextmanager
@@ -36,7 +37,11 @@ pg_store = ParseStore()
 td_store = TDEngineStore()
 collector = CollectorEngine(pg_store, td_store)
 alarm_engine = AlarmEngine(pg_store)
-push_engine = PushEngine(pg_store)
+# 设备接入身份表（devaddr → productId/deviceSecret）。push_engine 的出口靠它
+# 拼中枢主题；装载是异步的，在 lifespan 里 load + 起后台刷新。
+from .services.device_identity import DeviceIdentityRegistry
+identity_registry = DeviceIdentityRegistry(pg_store)
+push_engine = PushEngine(pg_store, resolver=identity_registry)
 safety_pipeline = SafetyPipeline(pg_store)
 phm_engine = PHMEngine()
 rules_engine = RulesEngine()
@@ -70,6 +75,30 @@ class LiveQueryWSManager:
 async def lifespan(app: FastAPI):
     """应用生命周期"""
     # 启动（每步独立捕获异常，避免单点故障导致整个平台退出）
+
+    # local.db 的 schema 先于一切就绪 —— 它服务的是**与 Parse / PostgreSQL 无关**
+    # 的那批端点：本文件 log_packet / packet_history 的报文表。它们直连这个文件，
+    # 不看任何外部服务脸色。
+    #
+    # ⚠️ 2026-09-17 收窄：原句里还含「src/web/tenant_api.py 的 6 个租户/岗位端点」，
+    # 那句**已不成立** —— 那 6 个端点已按用户裁定收敛到 Parse 的 `_Role`
+    # （见 src/web/tenant_api.py 头注释），不再只读这个文件。
+    #
+    # 原先唯一的建表处是 src/storage/parse_store.py:78 的 _fallback_connect()，而它
+    # 只在 **Parse Server (localhost:1337) 连不上**时才跑 ⇒ 任何真跑了 Parse Server
+    # 的环境里这个库根本不建，上述端点全 500。本机测不出来：本机 1337 上什么都没有，
+    # 必然走降级。故独立成一步，不依附任何外部服务的连通性。
+    #
+    # 模型侧以 src/models/device.py 为唯一事实源（create_all 只建缺的表，
+    # 不改已存在的表 —— 加列仍需手工 ALTER）。
+    try:
+        os.makedirs(os.path.dirname(cfg.sqlite_path), exist_ok=True)  # init_db 不建目录
+        from .models.device import init_db as _init_local_db
+        _init_local_db("sqlite:///" + cfg.sqlite_path.replace("\\", "/")).dispose()
+        logger.info(f"[main] local.db schema 就绪: {cfg.sqlite_path}")
+    except Exception as e:
+        logger.warning(f"[main] local.db 建表失败: {e}")
+
     try:
         await pg_store.connect()
     except Exception as e:
@@ -80,6 +109,15 @@ async def lifespan(app: FastAPI):
         await td_store.ensure_supertable("default")
     except Exception as e:
         logger.warning(f"[main] TDengine 连接失败: {e}")
+
+    # 先装载设备接入身份表，再起推送引擎 —— 否则首批数据推送时表还是空的，
+    # 会被当成"查不到身份"拒发（拒发本身是对的，但没必要白丢一批）。
+    try:
+        n = await identity_registry.load()
+        identity_registry.start()
+        logger.info(f"[main] 设备接入身份表: {n} 台 — {identity_registry.status()}")
+    except Exception as e:
+        logger.warning(f"[main] 设备接入身份表装载失败: {e}")
 
     try:
         await push_engine.start()
@@ -100,6 +138,14 @@ async def lifespan(app: FastAPI):
         logger.info(f"[main] 通道体系: {ch_results}")
     except Exception as e:
         logger.warning(f"[main] 通道体系启动失败: {e}")
+
+    # ── 统一插件运行时 (PR0): plugins/*/plugin.py — 一切皆插件 ──
+    try:
+        from .plugin_runtime import runtime
+        rt_health = runtime.load_all()
+        logger.info(f"[main] 插件运行时: {rt_health}")
+    except Exception as e:
+        logger.warning(f"[main] 插件运行时加载失败: {e}")
 
     try:
         await collector.start()
@@ -123,7 +169,17 @@ async def lifespan(app: FastAPI):
     logger.info(f"[main] {cfg.title} V{cfg.version} 启动完成")
     yield
     # 关闭
+    # 统一插件运行时: 逐个跑插件 disposers (生命周期可逆收口)
+    try:
+        from .plugin_runtime import runtime
+        runtime.shutdown()
+    except Exception:
+        pass
     try: from .channel_bootstrap import shutdown_channels; await shutdown_channels()
+    except: pass
+    try: await stop_mqtt_eventbus_bridge()
+    except: pass
+    try: await identity_registry.stop()
     except: pass
     try: await collector.stop()
     except: pass
@@ -393,8 +449,19 @@ class TelemetryPoint(BaseModel):
 
 @app.post("/api/telemetry")
 async def write_telemetry(body: TelemetryPoint):
-    """边缘代理接收遥测数据 → 写 SQLite + 推 MQTT"""
-    import sqlite3, json, os, time as _time
+    """边缘代理接收遥测数据 → 写 SQLite + 走推送出口上中枢
+
+    这里原先自己搓了一个 paho 客户端：每个测点开一次 TCP、主题硬编码
+    （形状是 `dgiot/{site}/{gateway}/ch_edge_hub/{device}/{point}`，其中
+    **站名与网关名是写死的字面量**，不是插值）、`except: pass` 吞掉所有失败。
+    三个问题叠在一起——主题不在中枢认的闭集里（发出去没人消费）、
+    网关名写死（换现场要改代码）、连不上时既不报错也不计数。
+
+    正确做法是走已经在用的 PushEngine 出口：它拿着 DeviceIdentityRegistry
+    解析出 productId/deviceSecret，按 dlink 语法拼 `$dg/thing/{P}/{D}/properties/report`，
+    有连接池、有失败计数、有日志。同一个出口，不另起一条。
+    """
+    import sqlite3, os
     db_path = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "data", "telemetry.db")
     conn = sqlite3.connect(db_path)
     conn.execute("""CREATE TABLE IF NOT EXISTS telemetry
@@ -406,15 +473,13 @@ async def write_telemetry(body: TelemetryPoint):
     cnt = conn.execute("SELECT COUNT(*) FROM telemetry").fetchone()[0]
     conn.close()
 
-    # 推 MQTT → 边缘中枢
-    try:
-        import paho.mqtt.client as mqtt
-        topic = f"dgiot/default/gw_131/ch_edge_hub/{body.device}/{body.point}"
-        c = mqtt.Client(client_id='edge_agent')
-        c.connect('127.0.0.1', 1883, 5)
-        c.publish(topic, json.dumps({"value": body.value, "unit": body.unit, "ts": now_ts}))
-        c.disconnect()
-    except: pass
+    # 上中枢 —— 交给 PushEngine 的出口（与采集链路同一条），不在这里另开连接。
+    # PushEngine 未装载推送目标时 push() 直接返回，本机写入仍然成功。
+    if body.device and body.point:
+        from .protocols.base import PointValue
+        await push_engine.push(body.device, [PointValue(
+            device_id=body.device, point_id=body.point, point_name=body.point,
+            value=body.value, unit=body.unit or None)])
 
     return {"status": "ok", "total_rows": cnt}
 
@@ -695,7 +760,7 @@ async def simulators_status():
         {"id": "iec104_2404",     "name": "IEC 104 储能PCS",   "protocol": "IEC 104",    "port": 2404, "device": "储能PCS从站",    "itemCount": 14},
         {"id": "opcua_4840",      "name": "OPC UA 充电桩",     "protocol": "OPC UA",     "port": 4840, "device": "充电桩+环境",    "itemCount": 12},
         {"id": "opcda_9090",      "name": "OPC DA 数据源",     "protocol": "OPC DA",     "port": 9090, "device": "光储充数据源",   "itemCount": 19},
-        {"id": "a11_8889",        "name": "A11 CNPC 网关",      "protocol": "A11 CNPC",   "port": 8889, "device": "工业园RTU",       "itemCount": 142},
+        {"id": "a11_8889",        "name": "A11 网关",           "protocol": "A11",        "port": 8889, "device": "工业园RTU",       "itemCount": 142},
     ]
     for sim in simulators:
         sim["status"] = "running" if _check_port(sim["port"], ttl=15) else "stopped"
@@ -761,6 +826,32 @@ class ScanRequest(BaseModel):
 # 全局报文日志
 _packet_log: List[Dict] = []
 
+
+def _ensure_packet_log(db):
+    """建 packet_log 表（幂等）。
+
+    src/models/device.py 的 SQLAlchemy 模型（devices / data_points /
+    alarm_records / push_targets）里**没有这张表**，全仓也再无第二处
+    建表语句 —— 于是写入侧 (log_packet) 和读取侧 (/api/packets/history) 一直对着
+    一张从未存在过的表读写，读取侧 500、写入侧被 `except: pass` 吞掉。
+
+    ⚠️ 2026-09-17：原句写的是「**6 个**模型（tenants/user_roles/devices/
+    data_points/alarm_records/push_targets）」。`Tenant` / `UserRole` 当天已退役
+    （租户/角色的唯一数据源收归 Parse `_Role`，见 src/models/device.py:17），
+    所以那句的**数与清单同时过期**。这里改成点名、不点数是故意的 ——
+    **照抄计数最容易单向腐烂**，而列出名字至少能被 grep 核。
+
+    建表放在**使用点**而不是某个 init 脚本：本仓没有任何保证会被执行的建表入口
+    —— scripts/init_db.py:25 的 init_db(cfg.db.sync_url) 连的是 PostgreSQL，
+    SQLite 降级模式那一支是空的；scripts/seed_tenants.py 只建 devices。
+    而写入路径必然被执行，所以表必然被建出来。
+    """
+    db.execute("""CREATE TABLE IF NOT EXISTS packet_log (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        ts REAL, device TEXT, dir TEXT, len INTEGER,
+        proto TEXT, hex TEXT, parsed TEXT)""")
+
+
 # Modbus 功能码表
 _MODBUS_FC = {
     1:'读线圈', 2:'读离散输入', 3:'读保持寄存器', 4:'读输入寄存器',
@@ -820,7 +911,7 @@ def _parse_iec104_frame(raw: bytes) -> dict:
     return info
 
 def _parse_a11_frame(raw: bytes) -> dict:
-    """解析 A11 协议帧 (CNPC 油气生产物联网)"""
+    """解析 A11 协议帧 (油气生产物联网)"""
     if len(raw) < 15 or raw[7:11] != b'\x6a\x6a\x5a\x5a':
         return {}
     tid = int.from_bytes(raw[0:2], 'big')
@@ -852,13 +943,20 @@ def log_packet(device_id: str, direction: str, raw: bytes):
         _packet_log[:] = _packet_log[-300:]
     # 持久化到 SQLite
     try:
-        import sqlite3, os
-        _db = sqlite3.connect(os.path.join(cfg.data_dir, 'local.db'))
+        import sqlite3
+        # cfg.sqlite_path 而不是 os.path.join(cfg.data_dir, 'local.db')：
+        # 同一个库原先有两处表达，且 cfg.data_dir 在本机是相对值 ⇒ 从非仓根 cwd
+        # 起服务时这里写到别处，而 tenant_api.py 仍读仓根（cfg 已在入口归一）。
+        _db = sqlite3.connect(cfg.sqlite_path)
+        _ensure_packet_log(_db)
         _db.execute("INSERT INTO packet_log (ts, device, dir, len, proto, hex, parsed) VALUES (?,?,?,?,?,?,?)",
                     [entry["ts"], entry["device"], entry["dir"], entry["len"],
                      entry["proto"], entry["hex"], str(entry["parsed"])])
         _db.commit(); _db.close()
-    except: pass
+    except Exception as _e:
+        # 原先这里是裸 `except: pass`：建表缺失被静默吞掉，INSERT 从未成功过一次，
+        # 而这件事没有任何出口 —— 直到 /api/packets/history 500 才间接暴露。
+        logger.warning(f"[packet] 持久化失败: {_e}")
 
 # 注入到协议适配器（在 lifespan 中延迟调用，确保协议模块已加载）
 import sys as _sys
@@ -1221,12 +1319,13 @@ async def packet_import(file_path: str = "", device_id: str = "import", limit: i
 async def packet_history(device_id: Optional[str] = None, limit: int = 100):
     """从 SQLite 查询历史报文"""
     import sqlite3, os
-    db_path = os.path.join(cfg.data_dir, 'local.db')
+    db_path = cfg.sqlite_path   # 同 log_packet：一处表达，且已在 config.py 归一为绝对
     if not os.path.exists(db_path):
         return {"total": 0, "packets": []}
     db = sqlite3.connect(db_path)
     db.row_factory = sqlite3.Row
     try:
+        _ensure_packet_log(db)   # 表还没被写入侧建出来时（冷启动、库被删过）兜底
         if device_id:
             rows = db.execute("SELECT * FROM packet_log WHERE device=? ORDER BY id DESC LIMIT ?",
                             [device_id, limit]).fetchall()
@@ -1400,6 +1499,10 @@ def _setup_eventbus_ws_bridge():
 
 # ---- MQTT → EventBus 桥接 ----
 
+#: MQTT ↔ EventBus 桥接的 paho client 句柄（关闭时要 loop_stop，见 stop_mqtt_eventbus_bridge）
+_mqtt2bus_client = None
+
+
 def _setup_mqtt_eventbus_bridge():
     """订阅 MQTT 主题 → 触发 EventBus 事件"""
     try:
@@ -1423,9 +1526,31 @@ def _setup_mqtt_eventbus_bridge():
         mqtt_client.connect_async(mqtt_cfg.host, mqtt_cfg.port)
         mqtt_client.subscribe("dgiot/#")
         mqtt_client.loop_start()
+        # 留下句柄才能关。之前 client 是函数局部变量，loop_start() 起的线程
+        # 持有它，外部再也拿不到 —— 关闭时连接就那么挂着（线程是 daemon，
+        # 不挡进程退出，所以这个泄漏一直没症状，直到 broker 侧看到陈旧会话）。
+        global _mqtt2bus_client
+        _mqtt2bus_client = mqtt_client
         logger.info("[bridge] MQTT ↔ EventBus 已连接 (dgiot/#)")
     except Exception as e:
         logger.warning(f"[bridge] MQTT 桥接失败: {e}")
+
+
+async def stop_mqtt_eventbus_bridge() -> None:
+    """断开 MQTT ↔ EventBus 桥接 (loop_stop + disconnect)
+
+    与 DGIoTBridge.stop / ch_mqtt_bridge 的 stop_bridge 同一套收尾：
+    loop_start() 起的线程必须显式 loop_stop，否则连接只增不减。
+    """
+    global _mqtt2bus_client
+    client, _mqtt2bus_client = _mqtt2bus_client, None
+    if client is None:
+        return
+    try:
+        client.loop_stop()
+        client.disconnect()
+    except Exception as e:  # noqa: BLE001 - 收尾失败不该阻断关闭流程
+        logger.warning(f"[bridge] 断开 MQTT 桥接时出错: {e}")
 
 
 # 启动桥接
@@ -1542,7 +1667,7 @@ _PROTO_PORTS = [
     ("iec104", "IEC 60870-5-104", "电力远动/储能PCS", 2404),
     ("opcua", "OPC UA", "充电桩/PLC统一架构", 4840),
     ("opcda", "OPC DA", "Windows COM/DCOM数据源", 9090),
-    ("a11", "A11 CNPC", "行业油气生产物联网", 8889),
+    ("a11", "A11", "行业油气生产物联网", 8889),
     ("mqtt", "MQTT Broker", "消息推送/实时数据", 1883),
 ]
 
@@ -1985,6 +2110,22 @@ app.include_router(parse_router)
 from .web.user_manager_api import router as user_mgr_router
 app.include_router(user_mgr_router)
 
+from .web.view_api import router as view_router
+app.include_router(view_router)
+
+from .web.menu_api import router as menu_router
+app.include_router(menu_router)
+
+# ── 统一图库 + 插件托管 (PR-G: 端口统一 / 数据库统一) ──────────────
+# ⚠️ 这两条必须在下面 `@app.get("/{full_path:path}")` 那条 SPA 兜底**之前**
+#    include —— Starlette 按注册顺序取第一个完全匹配的路由, 排在兜底之后
+#    的永远匹配不上, 表现成「插件页面被兜成底座首页」且不报任何错。
+#    同理, 以后新增的 router 也一律加在这一段**之上**。
+from .web.graph_api import router as graph_router
+app.include_router(graph_router)
+from .web.plugin_host import router as plugin_host_router
+app.include_router(plugin_host_router)
+
 from .web.dashboard_edge_api import router as edge_dash_router
 app.include_router(edge_dash_router)
 from .web.admin_panel import router as admin_router
@@ -2115,34 +2256,31 @@ else:
 
 # ---- 插件管理 API ----
 from .plugin_registry import list_all, list_enabled, health as plugin_health, enable, disable, discover as _discover
+from .plugin_runtime import runtime
 
 # 启动时自动发现并注册所有协议/服务插件
 _discover("src/protocols", "src.protocols")
 _discover("src/services", "src.services")
 _discover("src/push", "src.push")
 
-@app.get("/api/plugins")
-def get_plugins(category: str = None):
-    """获取所有插件及其状态"""
-    return {
-        "plugins": [
-            {"name": p["name"], "category": p["category"], "version": p["version"],
-             "enabled": p["enabled"], "config": p.get("config_schema", {}),
-             "depends": p.get("depends", [])}
-            for p in list_all(category)
-        ],
-        "health": plugin_health()
-    }
 
 @app.post("/api/plugins/{name}/enable")
-def enable_plugin(name: str):
-    enable(name)
-    return {"status": "enabled", "name": name}
+def enable_plugin(name: str, scope: str = "backend", user: dict = Depends(require_admin)):
+    """启用插件 (仅管理员) — scope: backend=插件重新 apply | frontend=前端模块恢复加载"""
+    if scope == "frontend":
+        runtime.set_frontend(name, True)
+    else:
+        runtime.enable(name)   # 内含 plugin_registry.enable 同步
+    return {"status": "enabled", "name": name, "scope": scope}
 
 @app.post("/api/plugins/{name}/disable")
-def disable_plugin(name: str):
-    disable(name)
-    return {"status": "disabled", "name": name}
+def disable_plugin(name: str, scope: str = "backend", user: dict = Depends(require_admin)):
+    """停用插件 (仅管理员) — backend: 跑 disposers 下线能力; frontend: 前端不再加载该模块"""
+    if scope == "frontend":
+        runtime.set_frontend(name, False)
+    else:
+        runtime.disable(name)
+    return {"status": "disabled", "name": name, "scope": scope}
 
 # ---- 通道管理 API (边缘中枢 dlink 对齐) ----
 from .channel_registry import ChannelManager
@@ -2152,10 +2290,6 @@ def channels_health():
     """所有通道健康状态 — 对标 dlink channel health"""
     return ChannelManager.health()
 
-@app.get("/api/channels")
-def channels_list():
-    """通道列表"""
-    return {"channels": ChannelManager.list_all()}
 
 @app.post("/api/channels/{channel_id}/start")
 async def channel_start(channel_id: str):
@@ -2169,102 +2303,7 @@ async def channel_stop(channel_id: str):
     ok = await ChannelManager.stop(channel_id)
     return {"channel_id": channel_id, "status": "stopped" if ok else "failed"}
 
-# ---- 系统信息 API (边缘代理本体扫描) ----
-@app.get("/api/system")
-def system_info():
-    import platform, os, time as _time, socket
-    info = {
-        "hostname": socket.gethostname(),
-        "os": f"{platform.system()} {platform.release()}",
-        "python": platform.python_version(),
-        "uptime": int(_time.time() - _startup_ts),
-    }
-    # CPU / Memory / Disk / Network (psutil)
-    try:
-        import psutil
-        info["cpu_percent"] = psutil.cpu_percent(interval=0.1)
-        info["cpu_cores"] = psutil.cpu_count()
-        mem = psutil.virtual_memory()
-        info["memory_used_gb"] = round(mem.used / (1024**3), 1)
-        info["memory_total_gb"] = round(mem.total / (1024**3), 1)
-        info["memory_percent"] = mem.percent
-        disk = psutil.disk_usage(cfg.data_dir)
-        info["disk_used_gb"] = round(disk.used / (1024**3), 1)
-        info["disk_total_gb"] = round(disk.total / (1024**3), 1)
-        info["disk_percent"] = disk.percent
-        # 网络接口
-        interfaces = []
-        for name, addrs in psutil.net_if_addrs().items():
-            iface = {"name": name, "ips": []}
-            for addr in addrs:
-                iface["ips"].append({"family": str(addr.family), "address": addr.address, "netmask": addr.netmask or ""})
-                if addr.family == 2 and not addr.address.startswith("127."):
-                    iface["ipv4"] = addr.address
-            if iface.get("ipv4"):
-                interfaces.append(iface)
-        info["interfaces"] = interfaces
-        # 网络流量
-        net = psutil.net_io_counters()
-        info["net_sent_mb"] = round(net.bytes_sent / (1024**2), 1)
-        info["net_recv_mb"] = round(net.bytes_recv / (1024**2), 1)
-        # 监听端口
-        ports = set()
-        for c in psutil.net_connections(kind='inet'):
-            if c.status == 'LISTEN':
-                ports.add(c.laddr.port)
-        info["listening_ports"] = sorted(ports)
-    except ImportError:
-        info["cpu_percent"] = None
-        info["memory_used_gb"] = None
-    # Storage mode
-    info["storage_mode"] = cfg.storage_mode
-    info["data_dir"] = cfg.data_dir
-    # Plugin registry health
-    try:
-        from .plugin_registry import health as plugin_health
-        info["plugins"] = plugin_health()
-    except: pass
-    return info
 
-# ---- 厂商通道 API ----
-@app.get("/api/channels")
-async def list_channels():
-    """协议通道 + 厂商通道状态"""
-    from .plugin_registry import list_all
-    protocol_channels = []
-    vendor_status = []
-    try:
-        from .parse_lite import parse_query
-        chs = parse_query("Channel", {})
-        for ch in chs.get("results", []):
-            protocol_channels.append({
-                "device_id": ch.get("objectId",""),
-                "device_name": ch.get("name",""),
-                "protocol": ch.get("cType",""),
-                "connected": ch.get("status") == "running",
-                "config": {
-                    "host": ch.get("config",{}).get("host","127.0.0.1") if isinstance(ch.get("config"),dict) else "127.0.0.1",
-                    "port": ch.get("config",{}).get("port",502) if isinstance(ch.get("config"),dict) else 502,
-                },
-                "success": 0, "fail": 0,
-            })
-        # Vendor channel status from parse_lite
-        vendors_map = {
-            "vendor_oilmon": "ch_vendor_oilmon", "boiler": "ch_boiler", "phm_vib": "ch_vib",
-            "bolt": "ch_bolt", "video": "ch_video", "tdlas": "ch_tdlas",
-        }
-        for key, chid in vendors_map.items():
-            ch = next((c for c in chs.get("results",[]) if c.get("objectId") == chid), None)
-            vendor_status.append({
-                "key": key,
-                "connected": ch.get("status") == "running" if ch else False,
-                "lastSync": ch.get("updatedAt","")[:16] if ch else None,
-                "devices": 2 if key == "vendor_oilmon" else 4 if key == "boiler" else 36 if key == "phm_vib" else 17 if key == "bolt" else 29 if key == "video" else 1,
-                "points": 45 if key == "vendor_oilmon" else 19 if key == "boiler" else 10 if key == "phm_vib" else 3,
-            })
-    except Exception as e:
-        logger.warning(f"Channel query failed: {e}")
-    return {"channels": protocol_channels, "vendors": vendor_status, "categories": {"protocol": len(protocol_channels)}}
 
 # ---- 采集端点管理 API ----
 from pydantic import BaseModel as PydanticBase
@@ -2294,49 +2333,3 @@ def delete_capture_endpoint(oid: str):
     from .parse_lite import parse_delete
     return parse_delete("CaptureEndpoint", oid)
 
-# ---- 厂商通道数据桥接 (oil-monitor.db) ----
-import sqlite3 as _sqlite3, os as _os
-_OIL_DB = _os.path.join(_os.path.dirname(__file__), "..", "data", "oil_monitor.db")
-
-@app.get("/api/vendor/{key}/status")
-def get_vendor_status(key: str):
-    """厂商通道实时状态 — 真实数据优先，无则模拟"""
-    # 油液监测: 真实数据
-    if key == "vendor_oilmon" and _os.path.exists(_OIL_DB):
-        db = _sqlite3.connect(_OIL_DB); db.row_factory = _sqlite3.Row
-        devices = db.execute("SELECT DISTINCT device_id, device_name FROM sensor_meta").fetchall()
-        points = db.execute("SELECT COUNT(DISTINCT key_id) as cnt FROM sensor_meta").fetchone()
-        last = db.execute("SELECT MAX(update_time) as t FROM sensor_realtime").fetchone()
-        db.close()
-        return {
-            "key": key, "connected": True,
-            "devices": len(devices), "points": points["cnt"] if points else 45,
-            "lastSync": str(last["t"])[:16] if last and last["t"] else "2026-07-09 01:43",
-            "relatedDevices": [{"id": d["device_id"], "name": d["device_name"], "status": "online"} for d in devices[:5]],
-        }
-    # 其他通道: 模拟器数据 (30s 刷新)
-    if key in _vendor_sim_data:
-        return _vendor_sim_data[key]
-    return {"key": key, "connected": False, "devices": 0, "points": 0, "lastSync": None, "relatedDevices": []}
-
-# ---- 厂商通道模拟器 (缺真实后端时自动生成演示数据) ----
-import threading, random as _random, time as _time
-
-_vendor_sim_data = {}
-def _vendor_sim_loop():
-    """后台模拟: 为缺后端的厂商通道生成演示数据"""
-    while True:
-        _time.sleep(30)
-        now = _time.strftime("%Y-%m-%d %H:%M")
-        for key in ["boiler", "phm_vib", "bolt", "video", "tdlas"]:
-            _vendor_sim_data[key] = {
-                "key": key, "connected": True, "lastSync": now,
-                "devices": {"boiler":4,"phm_vib":36,"bolt":17,"video":29,"tdlas":1}.get(key,0),
-                "points": {"boiler":19,"phm_vib":10,"bolt":3,"video":2,"tdlas":1}.get(key,0),
-                "relatedDevices": [{"id":f"{key}_dev{i}","name":f"{key}设备-{i}","status":"online" if _random.random()>0.2 else "offline"} for i in range(1,4)]
-            }
-
-# 启动模拟器线程
-try:
-    _t = threading.Thread(target=_vendor_sim_loop, daemon=True); _t.start()
-except: pass
