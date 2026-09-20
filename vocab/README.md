@@ -32,6 +32,12 @@
 
 sha256 用 `sha256sum` 复核；不符就是被改过了。
 
+> 表里的值是人读的镜像；机器判据在 `vocab/alignment.json`。
+
+> 本表只列 **vendor** 文件。`alignment.json`（我们的映射声明）与
+> `desc_ledger.tsv`（由 `src/ontology.py` 导出图派生的台账）见下节
+> 「这里有两类文件：vendor 的，和我们自己的」。
+
 ## 许可（再分发依据）
 
 两个文件自己写着（`sosa.ttl:39-41`）：
@@ -46,7 +52,26 @@ W3C Software and Document Notice and License + OGC Software License，
 两者都允许再分发，条件是**保留版权与许可声明**。所以：
 
 **这两个文件必须原样保留 —— 不许手改，也不许删掉文件头里的 `dcterms:` 那几行。**
-要改就改在别处，然后重新抓一份、重算 sha256、更新上表。
+要改就改在别处，然后重新抓一份、重算 sha256、更新 `alignment.json`（上表是人读的镜像，同步过去）。
+
+## 这里有两类文件：vendor 的，和我们自己的
+
+| 类别 | 文件 | 谁说了算 | 判据 |
+|---|---|---|---|
+| **vendor**（原样，不许改） | `sosa.ttl` · `ssn.ttl` | W3C / OGC | `tests/test_ontology_alignment.py` |
+| **我们的声明** | `alignment.json` | 我们 | `tests/test_ontology_alignment.py` |
+| **我们的派生件** | `desc_ledger.tsv` | **图**（`src/ontology.py` 的导出图） | `tests/test_ontology_metadata.py` |
+
+`desc_ledger.tsv` 是**生成物，不是手写件**。它载的是 GB/T 48000.3 表A.1 里
+OWL 装不下的三项 —— 名称 / 属性集 / 子类。改它请改图再重新派生：
+
+```bash
+python scripts/gen_desc_ledger.py            # 重新派生
+python scripts/gen_desc_ledger.py --check    # 只比对不写：一致 0 / 漂移 1 / 缺文件 2（以 --help 为准）
+```
+
+**手改台账会被判据打回**，因为台账的值由 `rdfs:domain` / `rdfs:subClassOf`
+反查、名称取自 IRI 局部名 —— 手改一处，就是让台账与图说两件事。
 
 ## 它不证明什么
 
