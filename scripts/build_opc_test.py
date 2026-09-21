@@ -1,4 +1,4 @@
-"""Build 32-bit OPC DA test on 131 — 3 steps: upload, compile, run"""
+"""Build 32-bit OPC DA test on the edge host — 3 steps: upload, compile, run"""
 import os, base64, time
 os.environ['NO_PROXY'] = '127.0.0.1,11.*,172.*'
 os.environ['no_proxy'] = '127.0.0.1,11.*,172.*'

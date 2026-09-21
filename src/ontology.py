@@ -153,6 +153,122 @@ LINK_RELATIONS = {
     "powered_by",    # 供电: 设备→上级供电实体
 }
 
+# R1 关系词的 OWL 侧元数据 —— GB/T 48000.3 附录A(规范性) 表A.2 要求属性带
+# Definition / 定义域 / 值域。
+#
+# ⚠️ 单独一张表, **不动 LINK_RELATIONS 的形状**: 那是个 set, 有 6 处调用方
+# (agent_audit / interop / graphrag_api / ontology 自身) 按集合成员判断,
+# 改成 dict 会静默改掉它们的语义。
+#
+# 定义域/值域怎么定的（两种来源, 都不凭空写）:
+#   · 语义明确 且 实测一致 ⇒ 写具体类（controls / monitors / powered_by）
+#   · 实测跨多类 或 注释里举了非本类的例子 ⇒ 写 Entity（最宽泛的类）
+# **为什么横切的一律写 Entity, 而不是"实测里出现最多的那个类"**:
+# rdfs:domain 是公理不是注释 —— 写窄了推理器会把主语推成那个窄类, 而图里
+# 没有 disjointWith 兜底, 一个个体两个互不可推的类时推理器不报错。
+# hasConstraint 就栽在这上面（见下方导出处那段注释）。
+# 宽只是少推一点, 窄会推错 —— 不确定时宽的那边是安全侧。
+LINK_REL_SPEC = {
+    # 关系词:        (定义域,     值域,       Definition ← 取自 LINK_RELATIONS 的行注释)
+    "maps_to":     ("Entity",  "Channel", "映射: 测点→协议路径, 数据出口→通道"),
+    "relates_to":  ("Entity",  "Entity",  "泛关联: 相邻保护/联动实体"),
+    "has_defect":  ("Entity",  "Entity",  "缺陷归属: 实体→已知缺陷"),
+    "has_issue":   ("Entity",  "Entity",  "问题归属: 实体→已知问题/故障模式"),
+    "feeds_into":  ("Entity",  "Entity",  "数据/能量流入: 通道→出口通道, 电源→负载"),
+    "monitors":    ("Device",  "Device",  "监测: 保护/传感器→被监测设备 (跨通道)"),
+    "controls":    ("Gateway", "Channel", "控制: 网关→通道启停/策略"),
+    "powered_by":  ("Device",  "Entity",  "供电: 设备→上级供电实体"),
+}
+
+# ── 数据属性（GB/T 48000.3 §5.2 要求本体含对象属性与数据属性两类；§8.2 b) 四条全落在数据属性上）──
+#
+# **白名单是脱敏决策, 不是技术选择**：只导出「枚举/类型/计数」型字段,
+# 不导出「标识/连接/名称」型字段。排除项与理由:
+#   Gateway.ip / hostname / os · Channel.endpoint · DataSource.connection
+#       —— 现场地址与连接串（endpoint 形如 host:port 或整条连接串）
+#   Site.location —— 可能是真实经纬度或地名
+#   所有 name / notes / description / Constraint.rule —— 自由文本, 现场信息就藏在里面
+#   Device.manufacturer / model / devaddr / product —— 设备指纹与平台标识
+# 判据是**字段语义**而非"当前数据看着干净"：build_engine() 是两个数据源二选一
+# （库空才用演示种子, 现场跑加载的是 load_from_parse() 的真实数据）, 白名单必须
+# 在两种情况下都成立, 不能依赖跑在哪儿。
+#
+# 每个属性的 domain 只写**一个**类, 即使语义相近也不复用 —— 复用时 sh:in 只能取并集,
+# 而并集比任何一边都松（channelProtocol 有 oracle_sql, deviceProtocol 有 force_hls_sim,
+# 合并后两边都合法的值会变多）。§9.2 说扩展"可在已有约束条件基础上进一步限定",
+# 方向是更严, 不是更松。
+DATA_PROP_SPEC = {
+    # 属性名:              (定义域,       值域,            Definition)
+    "siteType":          ("Site",       "xsd:string",  "站点类型 — 工业厂/井场/变电站"),
+    "gatewayStatus":     ("Gateway",    "xsd:string",  "网关运行状态"),
+    "channelProtocol":   ("Channel",    "xsd:string",  "通道协议类型"),
+    "channelStatus":     ("Channel",    "xsd:string",  "通道运行状态"),
+    "deviceType":        ("Device",     "xsd:string",  "设备类型"),
+    "deviceProtocol":    ("Device",     "xsd:string",  "设备通信协议"),
+    "slaveId":           ("Device",     "xsd:integer", "从站地址 — Modbus 等主从协议里的站号"),
+    "deviceStatus":      ("Device",     "xsd:string",  "设备运行状态"),
+    "unit":              ("Point",      "xsd:string",  "工程单位"),
+    "category":          ("Point",      "xsd:string",  "测点类别 — 遥测/遥信/遥脉/遥调"),
+    "severity":          ("Constraint", "xsd:string",  "约束严重级"),
+    "ruleKind":          ("Constraint", "xsd:string",  "约束五分类 — mapping/validation/state/inference/automation"),
+    "enabled":           ("Constraint", "xsd:boolean", "约束是否启用"),
+    "dataSourceType":    ("DataSource", "xsd:string",  "数据出口类型"),
+    "dataSourceStatus":  ("DataSource", "xsd:string",  "数据出口状态"),
+    "tagCount":          ("DataSource", "xsd:integer", "出口位号数"),
+}
+
+# 数据属性的取值闭集 —— **唯一事实源**, SHACL 的 sh:in 直接读这张表。
+# 取自「dataclass 行内注释（设计意图）∪ 实测已用值」。两者都要, 且**都不足以单独成立**:
+#   · 只抄注释会错 —— 实测 deviceType 有 simulator/oil_well/opc_device 三种注释里没有的值,
+#     注释是旧的（plc/sensor/meter 一个都没出现过）; channelProtocol 注释 5 种、实测 13 种。
+#   · 只抄实测会漏 —— 注释里有而当前数据没用的值（如 siteType 的 substation/factory）
+#     仍应合法, 否则一加数据就报违规。
+# 冻结当前已知集, 新值一律判违规 —— 那不是在说"新值错了", 是逼人显式决定
+# 「是数据写错了, 还是枚举该扩」。§8.2 b)3) 要的正是这个（取值限定在预定义的枚举范围内）。
+FIELD_ENUMS = {
+    "siteType":         ["oil_field", "substation", "factory"],
+    "gatewayStatus":    ["online", "offline", "degraded", "unknown"],
+    "channelProtocol":  ["opc_da", "a11_tcp", "modbus_tcp", "oracle_sql", "http_rest",
+                         "realtime_db", "eforcecon", "redundancy", "dtu_multi",
+                         "s7comm", "mitsubishi", "twincat_ads", "omron", "ge_snp"],
+    "channelStatus":    ["running", "stopped", "error", "unknown"],
+    "deviceType":       ["rtu", "relay", "plc", "sensor", "meter", "oil_well",
+                         "opc_device", "simulator"],
+    "deviceProtocol":   ["modbus", "modbus_tcp", "a11_tcp", "opc_da", "force_hls_sim"],
+    "deviceStatus":     ["online", "offline", "unknown"],
+    "category":         ["遥测", "遥信", "遥脉", "遥调"],
+    "severity":         ["info", "warning", "danger", "critical"],
+    "ruleKind":         ["mapping", "validation", "state", "inference", "automation"],
+    "dataSourceType":   ["oracle", "tdengine", "realtime_db", "eforcecon", "sqlite",
+                         "redundancy", "sync"],
+    "dataSourceStatus": ["online", "offline", "running", "stopped", "unknown"],
+    # unit 刻意**不在**表里: 工程单位是开放集（A/kV/MPa/t/d…）, 闭集会天天误报。
+    # slaveId / tagCount / enabled 同理走类型与范围约束, 不走枚举。
+}
+
+# 实体表名 → 本体类名。**唯一事实源** —— _rdf_graph() 建类、shacl_shapes() 挂形状
+# 都读它。此前这份映射只写在 _rdf_graph() 里当局部变量, 加 SHACL 时若各写一份,
+# 就会出现「OWL 里叫 A、SHACL 里约束 B」这种谁也查不出来的漂移（本库的老账）。
+ENTITY_CLASSES = {
+    "site": "Site", "gateway": "Gateway", "channel": "Channel",
+    "device": "Device", "point": "Point",
+    "constraint": "Constraint", "datasource": "DataSource",
+}
+
+XSD_NS = "http://www.w3.org/2001/XMLSchema#"
+
+# 层级属性 —— (边名, 定义域, 值域, Definition)。
+# 与 PARENT_REF 是同一件事的两个方向：PARENT_REF 是「子找父」（子实体的字段名 + 父表，
+# 被 engine.validate() 当悬空引用的唯一事实源），本表是「父找子」的边名。
+# **两处必须一致**（边名 == 'has' + 父类名），判据在 tests 里；shacl_shapes() 直接读
+# 本表取边名而不拼字符串 —— 拼字符串就等于把同一个事实写第二遍。
+HIER_PROPS = [
+    ("hasGateway", "Site", "Gateway", "层级归属 — 站点下属的网关"),
+    ("hasChannel", "Gateway", "Channel", "层级归属 — 网关下属的协议通道"),
+    ("hasDevice", "Channel", "Device", "层级归属 — 通道下属的设备"),
+    ("hasPoint", "Device", "Point", "层级归属 — 设备下属的测点"),
+]
+
 
 @dataclass
 class Link:
@@ -620,36 +736,102 @@ class OntologyEngine:
     # ── OWL/RDF 导出 (rdflib; ObjectProperty = R1 关系词表) ──
     def _rdf_graph(self):
         try:
-            from rdflib import Graph, Namespace, RDF, RDFS, OWL, Literal
+            from rdflib import Graph, Namespace, RDF, RDFS, OWL, Literal, URIRef
         except ImportError as e:
             raise RuntimeError("OWL 导出需要 rdflib (pip install rdflib)") from e
         DG = Namespace("http://dgiot.cloud/ontology#")
         g = Graph()
         g.bind("dgiot", DG); g.bind("owl", OWL); g.bind("rdfs", RDFS)
         g.add((DG[""], RDF.type, OWL.Ontology))
-        classes = {"site": "Site", "gateway": "Gateway", "channel": "Channel",
-                   "device": "Device", "point": "Point",
-                   "constraint": "Constraint", "datasource": "DataSource"}
+        classes = ENTITY_CLASSES
+        # Definition 取自各类 dataclass 的 docstring 首句 —— 不凭空写。
+        # GB/T 48000.3 附录A(规范性) 表A.1 要求类带 Definition 与父类；
+        # 建根类还有第二个作用：横切关系词的 rdfs:domain 要落到「最宽泛的类」上，
+        # 而 domain 是公理不是注释 —— 写窄了推理器会推错类型（hasConstraint 的旧账）。
+        class_defs = {
+            "Site": "层1 物理站点 — 工业厂/井场/变电站",
+            "Gateway": "层2 IO网关/边缘网关 — 物理或虚拟主机",
+            "Channel": "层3 协议通道 — 物理世界与数字世界的桥梁",
+            "Device": "层4 设备 — RTU/PLC/传感器/保护继电器",
+            "Point": "层5 测点 — 最小的数据单元",
+            "Constraint": "安全/业务判据 — 说明性文本, 非可执行表达式",
+            "DataSource": "数据出口 — 持久化目标",
+        }
+        g.add((DG["Entity"], RDF.type, OWL.Class))
+        g.add((DG["Entity"], RDFS.label, Literal("Entity")))
+        g.add((DG["Entity"], RDFS.comment,
+               Literal("本体根类 — 七类实体类型的共同上位")))
         for cls in classes.values():
             g.add((DG[cls], RDF.type, OWL.Class))
             g.add((DG[cls], RDFS.label, Literal(cls)))
-        hier = [("hasGateway", "Site", "Gateway"), ("hasChannel", "Gateway", "Channel"),
-                ("hasDevice", "Channel", "Device"), ("hasPoint", "Device", "Point"),
-                ("hasConstraint", "Device", "Constraint")]
-        for prop, dom, rng in hier:
+            g.add((DG[cls], RDFS.comment, Literal(class_defs[cls])))
+            g.add((DG[cls], RDFS.subClassOf, DG["Entity"]))
+        # GB/T 48000.3 §8.2 a)1) 实体类型互斥性 —— 同一实体不应同时属于两个互斥类别。
+        # 依据是**结构性的**: 七类各占一张实体表(_entity_tables), entity_type() 按表查。
+        # ⚠️ 「一个 id 只会落进一张」不是自明的 —— 它是**不变量**, 而它的执行者是
+        # validate() 开头那段跨表同 id 检查（§8.2 a)2)）。这句话原先只写在这里当
+        # **前提**用, 却没有任何东西在保证它: 注入式实测（叶子实体, 不打断任何引用）
+        # 撞车后图上 rdf:type 就是 ['Gateway','Site'] —— 两个互斥类同时成立,
+        # 而 validate() 的 issues 一条不增。
+        # 之所以必须显式声明: 不声明时推理器能把同一个个体推成两类而**不报错** ——
+        # hasConstraint 那条旧账正是这个形状（domain 写成 Device ⇒ 挂约束的 Channel
+        # 也成了 Device）。那时图里没有 disjointWith, 所以它悄悄成立了。
+        cls_names = sorted(classes.values())
+        for i, a in enumerate(cls_names):
+            for b in cls_names[i + 1:]:
+                g.add((DG[a], OWL.disjointWith, DG[b]))
+        # 层级属性 —— GB/T 48000.3 附录A 表A.2: 属性也要 Label / Definition / 定义域 / 值域。
+        # Definition 说的是这条边把哪两层接起来, 与类 Definition 同源（都是本文件自己的结构), 不凭空写。
+        for prop, dom, rng, definition in HIER_PROPS:
             g.add((DG[prop], RDF.type, OWL.ObjectProperty))
+            g.add((DG[prop], RDFS.label, Literal(prop)))
+            g.add((DG[prop], RDFS.comment, Literal(definition)))
             g.add((DG[prop], RDFS.domain, DG[dom]))
             g.add((DG[prop], RDFS.range, DG[rng]))
+        # hasConstraint 不在这条链上 —— 任意实体都能挂约束（见下方写边处用的 c.entity）。
+        # 它曾被写成链的第五环（domain=Device），推理器就把挂约束的 Channel/Gateway
+        # 也推成 Device：一个个体两个互不可推的类，而推理器不报错（图里没有 disjointWith）。
+        g.add((DG["hasConstraint"], RDF.type, OWL.ObjectProperty))
+        g.add((DG["hasConstraint"], RDFS.label, Literal("hasConstraint")))
+        g.add((DG["hasConstraint"], RDFS.comment,
+               Literal("约束归属 — 任意实体 → 挂在该实体上的约束")))
+        # 定义域写最宽泛的类, 而不是"实测里主语最多的那个类" —— 理由见表 LINK_REL_SPEC 上方。
+        g.add((DG["hasConstraint"], RDFS.domain, DG["Entity"]))
+        g.add((DG["hasConstraint"], RDFS.range, DG["Constraint"]))
         for rel in sorted(LINK_RELATIONS):
+            dom, rng, definition = LINK_REL_SPEC[rel]
             g.add((DG[rel], RDF.type, OWL.ObjectProperty))
             g.add((DG[rel], RDFS.label, Literal(rel)))
-        individuals = [
-            (self.sites, "Site"), (self.gateways, "Gateway"), (self.channels, "Channel"),
-            (self.devices, "Device"), (self.points, "Point"),
-            (self.constraints, "Constraint"), (self.datasources, "DataSource"),
-        ]
-        for table, cls in individuals:
-            for eid, e in table.items():
+            g.add((DG[rel], RDFS.comment, Literal(definition)))
+            g.add((DG[rel], RDFS.domain, DG[dom]))
+            g.add((DG[rel], RDFS.range, DG[rng]))
+        # 数据属性 —— 表A.2 七项齐: IRI / Name / Label / Definition / 定义域 / 值域 / 属性类型。
+        # 属性名 → (实体表, dataclass 字段)。表在这里而不在 DATA_PROP_SPEC 里, 是为了让
+        # 规格表只谈"图上长什么样", 与"从哪个字段取"分开 —— 后者是本文件的内部结构。
+        data_src = {
+            "siteType": ("sites", "type"), "gatewayStatus": ("gateways", "status"),
+            "channelProtocol": ("channels", "protocol"), "channelStatus": ("channels", "status"),
+            "deviceType": ("devices", "type"), "deviceProtocol": ("devices", "protocol"),
+            "slaveId": ("devices", "slaveid"), "deviceStatus": ("devices", "status"),
+            "unit": ("points", "unit"), "category": ("points", "category"),
+            "severity": ("constraints", "severity"), "ruleKind": ("constraints", "rule_kind"),
+            "enabled": ("constraints", "enabled"),
+            "dataSourceType": ("datasources", "type"), "dataSourceStatus": ("datasources", "status"),
+            "tagCount": ("datasources", "tag_count"),
+        }
+        for pname in sorted(DATA_PROP_SPEC):
+            dom, rng, definition = DATA_PROP_SPEC[pname]
+            g.add((DG[pname], RDF.type, OWL.DatatypeProperty))
+            g.add((DG[pname], RDFS.label, Literal(pname)))
+            g.add((DG[pname], RDFS.comment, Literal(definition)))
+            g.add((DG[pname], RDFS.domain, DG[dom]))
+            g.add((DG[pname], RDFS.range, URIRef(XSD_NS + rng.split(":", 1)[1])))
+        # 读 ENTITY_CLASSES（本文件顶部的唯一事实源）—— 这里原先另有一份 individuals
+        # 局部变量, 是那次抽取没抽干净的残留。现在 validate() 也要用「哪几张表产个体」
+        # 这个事实（跨表同 id 会不会在图上合并取决于它）, 两处再各写一份必然漂移。
+        tables = self._entity_tables()
+        for tbl, cls in ENTITY_CLASSES.items():
+            for eid in tables[tbl]:
                 g.add((DG[eid], RDF.type, DG[cls]))
                 g.add((DG[eid], RDFS.label, Literal(self.entity_name(eid))))
         for gw in self.gateways.values():
@@ -669,6 +851,41 @@ class OntologyEngine:
             if l.description:
                 g.add((DG[l.source], RDFS.comment,
                        Literal(f"-[{l.relation}]-> {l.target}: {l.description}")))
+        # ── 本图自述「不含什么」────────────────────────────────────────────
+        # 同一个手法见 shacl_shapes(): 形状图根节点带 report["unformatted"] 那几行。
+        # 上面那个循环**知道** Link 只画成一条边, 但下载到 .owl/.ttl/.jsonld 的人
+        # 看不到这句话 —— 一句都不写, 拿到文件的人就会把本图当成关系体的完整载体。
+        # 下面每个数都**现算**, 不手写（手写的数字没有判据守着, 会腐烂）。
+        _srt = {(l.source, l.relation, l.target) for l in self.links.values()}
+        _coverage = [
+            "⚠️ 本图**不是**关系（Link）的完整载体 —— 关系体在本文件里是一等的"
+            "（%d 条, 各带 id/props/description）, 到了本图只剩 (source, relation, target) 一条边:"
+            % len(self.links),
+            "  · Link.id 与 Link.props **一个都不出现**; 边上的描述退化成挂在 source 节点上的"
+            " rdfs:comment（不是挂在边上 —— RDF 的边没有身份, 挂不上去）。",
+            "  · 同一个 (source, relation, target) 写多条 Link, 在本图里**合并成一条边、不可区分**"
+            "（当前种子里这样的重复有 %d 组）。要按边挂属性/证据, 请从引擎取, 别从本图取。"
+            % (len(self.links) - len(_srt)),
+            "  · 关系的语义类别（结构包含 / 功能关联 / 静态归属）与传播权重只活在 Python 里"
+            "（RELATION_IMPACT）; 本图 %d 个关系属性同型, 没有 owl:FunctionalProperty。"
+            % len(LINK_RELATIONS),
+            "  · 层级边（%s）是**从结构派生**的, 不是存储的 Link; 本图分不出哪条边是存量、哪条是派生。"
+            % " / ".join(p for p, _d, _r, _x in HIER_PROPS),
+            "  · 约束（Constraint）在本图里是**带 rdfs:comment 的个体**, 不是公理 —— "
+            "本文件对它的类定义已写明「说明性文本, 非可执行表达式」。",
+            "本节由 _rdf_graph() 生成。SHACL 出口有同形的自述, 写在 shacl_shapes() 的形状图根节点上; "
+            "DTDL 出口写在 export_dtdl() 的 meta.coverage 里。",
+        ]
+        g.add((DG[""], RDFS.comment, Literal("\n".join(_coverage))))
+        # 个体的数据属性断言 —— 空值不写边: 空串与"这个字段没有值"在图上不该长成同一个样子,
+        # 否则 sh:in 之类的约束会把"没填"当成"填了个非法值"。
+        for pname in sorted(data_src):
+            tbl_name, fld = data_src[pname]
+            for eid, e in getattr(self, tbl_name).items():
+                v = getattr(e, fld, None)
+                if v is None or (isinstance(v, str) and not v.strip()):
+                    continue
+                g.add((DG[eid], DG[pname], Literal(v)))
         return g
 
     def export_owl(self, path: str = None) -> str:
@@ -686,6 +903,234 @@ class OntologyEngine:
             from pathlib import Path as _P
             _P(path).write_text(ttl, encoding="utf-8")
         return ttl
+
+    def export_jsonld(self, path: str = None) -> str:
+        """导出 JSON-LD — 同一张 RDF 图的 JSON-LD 序列化
+
+        GB/T 48000.3 §5.3 第二句要求本体「应使用标准化的序列化格式（如 Turtle、JSON-LD 等）」。
+        Turtle 早就有（export_turtle），JSON-LD 是这次补的 —— 两个出口与 export_owl()
+        序列化的是**同一张图**，判据见 tests/test_ontology_sparql.py 的往返用例。
+        """
+        js = self._rdf_graph().serialize(format="json-ld", indent=2)
+        if path:
+            from pathlib import Path as _P
+            _P(path).write_text(js, encoding="utf-8")
+        return js
+
+    # ── SHACL 形状 (GB/T 48000.3 §5.3 第三句「应支持基于 SHACL 的约束验证」) ──
+
+    def shacl_shapes(self):
+        """生成 SHACL 形状图 + 「形式化了哪些 / 没形式化哪些」的报告。
+
+        GB/T 48000.3 §5.3 三句: ① 用 W3C 推荐的本体描述语言(OWL) ② 用标准化序列化
+        格式(Turtle/JSON-LD) ③ **应支持基于 SHACL 的约束验证**。本方法给第三句。
+
+        返回 (Graph, report)。report 两栏:
+            formatted   —— 已形式化, 逐条给 §8.2 条款号 + 形状数
+            unformatted —— 标准要求了、**本域还没有载体**的条文
+        后者同时以 rdfs:comment 写进形状图根节点: 不写的话, 下游拿到的是一份
+        「没说清自己缺了什么」的形状文件, 会当成完整件用 —— 同一个手法见
+        _ontology/projects/dlas_align_20260920/check_desc_items.py 的「覆盖面前提」三行。
+
+        ⚠️ 本方法只**生成形状**。「支持基于 SHACL 的约束验证」这句话要成立, 得真跑
+        一次 validate_shacl()（需 pyshacl）—— 两件事分开, 是为了不把
+        「导出了形状文件」读成「验证过了」。没有 pyshacl 就说「导出 SHACL 形状」。
+        """
+        from rdflib import Graph, Namespace, RDF, RDFS, Literal, BNode, URIRef
+        from rdflib.collection import Collection
+        from rdflib.namespace import SH
+
+        DG = Namespace("http://dgiot.cloud/ontology#")
+        g = Graph()
+        g.bind("dgiot", DG); g.bind("sh", SH); g.bind("rdfs", RDFS)
+        root = DG["Shapes"]
+        # sh:ShapesGraph 是 SHACL 词表里的真词, 但不在 rdflib 的 DefinedNamespace 表里
+        # ⇒ 只能拼完整 IRI。（SH["..."] 对表外的词是 fail-loud, 属特性: 拼错的 SHACL 词
+        # 会在生成期就报, 而不是产出一份带错词、pyshacl 静默忽略的形状。）
+        g.add((root, RDF.type, URIRef(str(SH) + "ShapesGraph")))
+        g.add((root, RDFS.label, Literal("iotStudio 边缘本体 SHACL 形状")))
+
+        # 一个类一个 NodeShape —— 层级约束与属性约束都挂在**同一个**形状下。
+        # 拆成两个 targetClass 相同的形状, 下游拿到的是"同一个类有两份定义",
+        # 而 SHACL 没说两份怎么合。node_shapes 与 OWL 侧同源(ENTITY_CLASSES)。
+        node_shapes = {cls: DG[cls + "Shape"] for cls in ENTITY_CLASSES.values()}
+        for cls, ns_ in node_shapes.items():
+            g.add((ns_, RDF.type, SH.NodeShape))
+            g.add((ns_, SH.targetClass, DG[cls]))
+            g.add((ns_, RDFS.label, Literal(cls + " 的形状")))
+
+        def prop_shape(node_shape, path, **kw):
+            """挂一条属性形状。kw 的键是 SHACL 局部名（minCount / datatype / in …）。
+
+            `in` 是 Python 关键字, 属性写法用不了, 所以统一走 SH[...] 取值。
+            """
+            b = BNode()
+            g.add((node_shape, SH.property, b))
+            g.add((b, SH.path, path))
+            for name, val in kw.items():
+                g.add((b, SH[name], val))
+            return b
+
+        C_B3 = "§8.2 b)3) 枚举值约束"
+        C_B4 = "§8.2 b)4) 取值约束"
+
+        # (类名, 属性名) → ({约束}, {条款})。同一个 (类, 属性) 的约束**合在一条形状里**:
+        # 拆成"枚举一条 + 类型一条"下发, 就是同一条路径两份定义, 合并规则没人规定。
+        prop_spec: Dict[Any, Any] = {}
+
+        def want(cls, pname, clause, **kw):
+            kwd, clauses = prop_spec.setdefault((cls, pname), ({}, set()))
+            kwd.update(kw)
+            clauses.add(clause)
+
+        # §8.2 b)3) 枚举值约束 —— FIELD_ENUMS 是**设计意图(字段注释) ∪ 实测已用值**。
+        # 两者都要: 只取注释会把实测里合法的值判违规（实测 Device.type 注释写
+        # rtu/relay/plc/sensor/meter, 而库里跑着 simulator/oil_well/opc_device,
+        # 注释里一个都没有 ⇒ 35 个合法个体会被判违规）; 只取实测则等于把"现在长这样"
+        # 固化成"只能这样"。表外值实测 0 处, 判据在 tests 里（红了要人看, 不许自动放行）。
+        n_enum = 0
+        for pname in sorted(FIELD_ENUMS):
+            dom = DATA_PROP_SPEC[pname][0]
+            lst = BNode()
+            Collection(g, lst, [Literal(v) for v in FIELD_ENUMS[pname]])
+            want(dom, pname, C_B3, **{"in": lst})
+            n_enum += 1
+
+        # §8.2 b)4) 取值约束（类型与下限）—— 值域读 DATA_PROP_SPEC, 与 OWL 侧
+        # rdfs:range **同源**, 不许两处各写一份（写窄了推理器推错类型的旧账）。
+        n_range = 0
+        n_min = 0
+        for pname in sorted(DATA_PROP_SPEC):
+            dom, rng, _defn = DATA_PROP_SPEC[pname]
+            want(dom, pname, C_B4, datatype=URIRef(XSD_NS + rng.split(":", 1)[1]))
+            n_range += 1
+            if rng == "xsd:integer":
+                want(dom, pname, C_B4, minInclusive=Literal(0))
+                n_min += 1
+
+        for (cls, pname), (kwd, clauses) in sorted(prop_spec.items()):
+            prop_shape(node_shapes[cls], DG[pname],
+                       name=Literal(pname),
+                       description=Literal(" / ".join(sorted(clauses))),
+                       **kwd)
+
+        # §8.2 c)1) 功能性 + c)3) 层次结构 —— 一个子实体**恰好**有一个父实体。
+        # 两条落在同一组形状上:
+        #   maxCount 1 ← c)1)「每个标准只能由一个机构发布」那类功能性约束
+        #   minCount 1 ← c)3)「章可包含零个或多个条」反过来问"这条属于哪一章"
+        # 路径走 sh:inversePath: 图上写的是父→子的边（Site hasGateway Gateway）,
+        # 而约束问的是"这个网关属于哪个站点" ⇒ 反向走。
+        # 边名读 HIER_PROPS, **不拼字符串** —— 拼字符串就是把同一个事实写第二遍。
+        by_child = {rng: (p, dom) for p, dom, rng, _d in HIER_PROPS}
+        n_hier = 0
+        for child_tbl, (fld, _ptbl) in sorted(PARENT_REF.items()):
+            child_cls = ENTITY_CLASSES[child_tbl]
+            prop_name, parent_cls = by_child.get(child_cls, (None, None))
+            # 对账: PARENT_REF 说「哪几层要约束」, HIER_PROPS 说「边叫什么」。
+            # 两个事实源在这里合一次; 合不上当场抛, 不等下游拿形状去咬数据。
+            if prop_name != "has" + child_cls or parent_cls != ENTITY_CLASSES[fld]:
+                raise ValueError(
+                    "层级事实源漂移: PARENT_REF[%r]→%s 与 HIER_PROPS 的 %r 对不上"
+                    % (child_tbl, child_cls, by_child.get(child_cls)))
+            back = BNode()
+            g.add((back, SH.inversePath, DG[prop_name]))
+            prop_shape(node_shapes[child_cls], back,
+                       minCount=Literal(1), maxCount=Literal(1), nodeKind=SH.IRI,
+                       name=Literal("%s 必须恰好属于一个 %s" % (child_cls, parent_cls)),
+                       description=Literal("§8.2 c)1) 功能性 + c)3) 层次结构 — 基数依据 PARENT_REF"))
+            n_hier += 1
+
+        # ── 没形式化的条文: 必须报出来, 且写进图里 ──
+        unformatted = [
+            ("§8.2 a)2) 全局唯一标识规则",
+             "信息单元需要具有全局唯一的标识符",
+             "由 IRI 承担（个体 IRI = 命名空间#id）—— RDF 里 IRI **语法上必然唯一**, "
+             "形状既不需要也表达不了它。真正的风险在上游: 两个实体映到同一个 IRI 时"
+             "图上会**合并成一个**个体、挂上两个互斥类型（实测 ['Gateway','Site']）。"
+             "那是引擎的**数据不变量**, 执行者 = src/ontology.py 的 validate() 开头"
+             "那段跨表同 id 检查, 判据在 tests/test_ontology_relations.py"),
+            ("§8.2 b)1) 属性唯一性约束",
+             "标准编号需要保持唯一性",
+             "本域字段白名单里没有『需要保持唯一值的属性』—— 现场标识类字段"
+             "（设备编号/位号）未纳入公开白名单, 是脱敏决策不是遗漏"),
+            ("§8.2 b)2) 日期有效性验证",
+             "实施日期应晚于或等于发布日期",
+             "图上没有任何日期属性 —— 边缘本体的字段里不含日期"),
+            ("§8.2 b)4) 取值约束（部分未形式化）",
+             "约束类型的取值应限定为强制性或推荐性",
+             "量程与报警限（Point.range / Point.alarm）未纳入字段白名单 ⇒ "
+             "这一类取值范围没有载体, 本形状只覆盖到「类型 + 下限」"),
+            ("§8.2 c)2) 版本替代关系",
+             "废止标准必须指向替代标准或标明废止日期",
+             "本域没有版本/废止概念 —— 记『本域不适用』, 不硬造"),
+        ]
+        # 数现算, 不手写 —— 手写的数字没有判据, 会腐烂。
+        pairs = len(ENTITY_CLASSES) * (len(ENTITY_CLASSES) - 1) // 2
+        formatted = [
+            ("§8.2 a)1) 实体类型互斥性", "同一信息单元不能同时属于两个互斥的类别",
+             "%d 对 owl:disjointWith（OWL 侧, 不在 SHACL 形状里）" % pairs),
+            ("§8.2 c)1) 功能性属性约束 + c)3) 层次结构约束",
+             "每个标准只能由一个机构发布 / 章可包含零个或多个条",
+             "%d 条 sh:inversePath + sh:minCount 1 + sh:maxCount 1" % n_hier),
+            ("§8.2 b)3) 枚举值约束", "标准状态的取值应限定在预定义的枚举范围内",
+             "%d 条 sh:in" % n_enum),
+            ("§8.2 b)4) 取值约束", "约束类型的取值应限定为强制性或推荐性",
+             "%d 条 sh:datatype（值域与 OWL 侧 rdfs:range 同源）+ %d 条 sh:minInclusive 0"
+             % (n_range, n_min)),
+            ("§8.2 c)4) 引用关系区分规则",
+             "标准间引用与条款引用需要通过不同的属性来实现",
+             "OWL 侧: %d 个关系词各是独立属性 + hasConstraint（不在 SHACL 形状里）"
+             % len(LINK_RELATIONS)),
+        ]
+        note = ["⚠️ 本形状图**未覆盖**的 GB/T 48000.3 §8.2 条文（不写出来会被下游当成已覆盖）:",
+                "  ⚠️ 「形状未覆盖」≠「没人管」—— 每条的 why 里写了执行者落在哪：",
+                "     落在引擎的（如 a)2 的唯一性 = validate() 的跨表同 id 检查）与",
+                "     确实没做的（如 b)2 图上没有日期属性）在这个列表里长得一样，",
+                "     引用前逐条读 why，别按条数读成「缺 5 项」。"]
+        for clause, req, why in unformatted:
+            note.append("  · %s —「%s」: %s" % (clause, req, why))
+        note.append("本节由 shacl_shapes() 生成, 与它返回的 report['unformatted'] 同源。")
+        g.add((root, RDFS.comment, Literal("\n".join(note))))
+
+        report = {
+            "node_shapes": len(node_shapes),
+            "property_shapes": n_hier + len(prop_spec),
+            "formatted": [{"clause": c, "requirement": r, "how": h}
+                          for c, r, h in formatted],
+            "unformatted": [{"clause": c, "requirement": r, "why": w}
+                            for c, r, w in unformatted],
+        }
+        return g, report
+
+    def export_shacl(self, path: str = None) -> str:
+        """导出 SHACL 形状（Turtle）—— 与 export_owl / export_turtle / export_jsonld 并列的出口。
+
+        ⚠️ 导出的是**形状**, 不是验证结论。要结论得跑 validate_shacl()。
+        """
+        ttl = self.shacl_shapes()[0].serialize(format="turtle")
+        if path:
+            from pathlib import Path as _P
+            _P(path).write_text(ttl, encoding="utf-8")
+        return ttl
+
+    def validate_shacl(self):
+        """拿 pyshacl 真跑一次验证 —— 返回 (conforms, 报告文本, 形状图)。
+
+        GB/T 48000.3 §5.3 第三句是「**应支持基于 SHACL 的约束验证**」, 只导出形状
+        不算支持。pyshacl 缺失时**抛**, 不返回 conforms=True ——
+        「验不了」与「验过了没问题」必须长得不一样（同一个手法见 sparql() 那条:
+        非法查询抛异常而不是返空列表）。
+        """
+        try:
+            from pyshacl import validate
+        except ImportError as e:
+            raise RuntimeError(
+                "SHACL 验证需要 pyshacl —— 它声明在 requirements.txt 的**测试依赖**段"
+                "（不在运行依赖里, 生产环境不装）; 没有它只能导出形状, "
+                "不能说『支持基于 SHACL 的约束验证』") from e
+        shapes, _report = self.shacl_shapes()
+        conforms, _results_graph, text = validate(self._rdf_graph(), shacl_graph=shapes)
+        return bool(conforms), text, shapes
 
     # ── SPARQL / 图统计 (与上面两个导出器同一张图) ──
     def sparql(self, query: str) -> List[Dict[str, Any]]:
@@ -1213,6 +1658,30 @@ class OntologyEngine:
     def validate(self) -> dict:
         """完整性校验 — 检查实体间引用完整性、必要字段"""
         issues = []
+        # GB/T 48000.3 §8.2 a)2) 全局唯一标识规则 —— 一个 id 只能落进**一张**实体表。
+        # 引擎只有**一个** id 空间: entity_type() 就是它的证据（id → 恰好一个类型）,
+        # 分表只是对它的分区。撞车的后果按「是否产个体」分两种, 不能混着说:
+        #   · 两张都在 ENTITY_CLASSES 里(前 7 张): 个体的 IRI 是 `DG[id]`、**与表无关**
+        #     ⇒ 图上把它们**合并成一个个体**、挂上两个互斥的 rdf:type —— 与本文件
+        #     自己声明的 owl:disjointWith 直接矛盾, 下载到的 .owl 自己打自己。
+        #   · 涉及 link 表: link 不产个体（图上 0 个 rdf:type）, 不合并; 但
+        #     entity_type() 遍历表返回**第一个**命中 ⇒ 它**静默答一个类型**, 不报冲突。
+        # ★ 本条原先只是 _rdf_graph() 上方的一句注释前提（"一个 id 只会落进一张"）,
+        # 没有任何执行者。注入式实测（叶子实体, 不打断任何引用）: 撞车后
+        # issues **一条不增**、valid 不变, 而图上 rdf:type 已是 ['Gateway','Site']。
+        # 放在最前: id 有歧义时, 下面每一条检查读到的都可能是**另一个**实体。
+        seen_id: Dict[str, str] = {}
+        for tname, table in self._entity_tables().items():
+            for eid in table:
+                if eid not in seen_id:
+                    seen_id[eid] = tname
+                    continue
+                both_individual = tname in ENTITY_CLASSES and seen_id[eid] in ENTITY_CLASSES
+                issues.append(
+                    f"id '{eid}': {seen_id[eid]} 与 {tname} 两张实体表同时占用"
+                    + ("（个体 IRI 相同 ⇒ 图上会合并成一个、挂两个互斥的类型）"
+                       if both_individual else
+                       "（entity_type() 只报先查到的 %s, 冲突本身看不见）" % seen_id[eid]))
         # 检查 dangling references —— 表驱动, 与 enterprise.register_objects 共用 PARENT_REF。
         # 注意: 这里**空引用也报** ("site '' not found") —— 对完整性体检来说
         # 「没挂父层」本身就是缺陷。register_objects 那边对空引用是放过的
@@ -1272,8 +1741,8 @@ class OntologyEngine:
 # 工厂方法: 从发现数据构建本体
 # ═══════════════════════════════════════════════════════════
 
-def build_131_ontology() -> OntologyEngine:
-    """从 2026-07-12 131 IO网关 2047文件逐字精读结果构建完整本体
+def build_edge_ontology() -> OntologyEngine:
+    """从 2026-07-12 边缘 IO 网关 2047文件逐字精读结果构建完整本体
 
     数据源: 本地内部资料目录
     分析范围: 2047 文件, 含 INI/TXT/DAT/DLL/LOG/ZIO/CHM/DOC
@@ -1309,9 +1778,9 @@ def build_131_ontology() -> OntologyEngine:
         channels=["ch_modbus_tcp","ch_a11_rtu","ch_oracle","ch_opc_da","ch_realtime_db",
                    "ch_eforcecon","ch_redundancy","ch_dtu_pool",
                    "ch_s7","ch_mitsubishi","ch_beckhoff","ch_omron","ch_ge"],
-        notes="现场采集两大入口: GENERIC_LEGACY_PROTO(Modbus TCP :53001→80+RTU) + GENERIC_SVC_IO(A11 :8889→130)。"
+        notes="现场采集两大入口: GENERIC_LEGACY_PROTO(Modbus TCP :53001→80+RTU) + GENERIC_SVC_IO(A11 :8889)。"
               "GENERIC_HMI 只连 Oracle :1521 做数据出口。"
-              "OPC DA(DCOM :135)从未活跃, 10.0.0.x 无实际连接。"
+              "OPC DA(DCOM :135)从未活跃, 站内网段无实际连接。"
               "GENERIC_OPC_DRV/ 是历史废配置, 系统实际不用 OPC。"
     ))
 
@@ -1321,7 +1790,7 @@ def build_131_ontology() -> OntologyEngine:
         Channel(id="ch_opc_da", gateway="gw_edge01", name="OPC DA Client",
             protocol="opc_da", endpoint="DCOM :135 → 198.51.100.20/.21/.22/.23/.24",
             status="running", config={
-                "driver": "E:\\IO ServerOnLine\\IO Servers\\GENERIC_OPC_DRV\\vendor_api.dll",
+                "driver": "E:\\GENERIC_IO_ROOT\\IO Servers\\GENERIC_OPC_DRV\\vendor_api.dll",
                 "progid": "KEPware.KEPServerEx.V4",
                 "clsid": "{6E6170F0-FF2D-11D2-8087-00105AA8F840}",
                 "binary_record": "DeviceStruct 256B (22 fields) + DefinedStruct 96B (17 fields)",
@@ -1332,14 +1801,14 @@ def build_131_ontology() -> OntologyEngine:
         Channel(id="ch_a11_rtu", gateway="gw_edge01", name="A11 RTU 功图采集",
             protocol="a11_tcp", endpoint="TCP → 127.0.0.1:8889",
             status="running", config={
-                "driver": "E:\\IO ServerOnLine\\IO Servers\\GENERIC_RTU_DRV\\vendor_api.dll (v6.0.1.34)",
+                "driver": "E:\\GENERIC_IO_ROOT\\IO Servers\\GENERIC_RTU_DRV\\vendor_api.dll (v6.0.1.34)",
                 "sql_service": "A11SQLSERVICE.exe → Oracle (1s周期, 1 ADO)",
                 "time_sync": "开启",
                 "device_check": "30min在线判定",
                 "break_time_files": "1669个井点功图断点记录 (BreakTime/)",
             }, devices=[]),
         Channel(id="ch_modbus_tcp", gateway="gw_edge01", name="Modbus TCP",
-            protocol="modbus_tcp", endpoint=":502 → IPv6 240C:8042:... ×20+ RTU",
+            protocol="modbus_tcp", endpoint=":502 → IPv6 2001:db8:... ×20+ RTU",
             status="running", config={
                 "driver": "GENERIC_MODBUS_DRV/vendor_api.dll (back/run/)",
                 "scan_cycle": "100ms",
@@ -1354,9 +1823,9 @@ def build_131_ontology() -> OntologyEngine:
                 "connection": "Provider=OraOLEDB.Oracle.1;User ID=YOUR_SCHEMA;Data Source=orcl",
                 "password": "CHANGEME (from DataSource.ini)",
                 "ado_count": 4, "execute_cycle_ms": 1000,
-                "key_tables": ["PC_FD_PUMPJACK_FDYNA_DIA_T (481万行)",
-                    "SYS_DEVICE_RUN_DETAILS_HIST (23万行)", "SYS_SINGLE_WELL_BASE_INFO (966口井)",
-                    "SYS_POINTRELATION_WELL (4567测点)"],
+                "key_tables": ["GENERIC_DYNA_DIAG_T (481万行)",
+                    "GENERIC_DEVICE_RUN_HIST (23万行)", "GENERIC_WELL_BASE_INFO (966口井)",
+                    "GENERIC_POINT_REL_WELL (4567测点)"],
             }, devices=[]),
         Channel(id="ch_realtime_db", gateway="gw_edge01", name="RTDB 实时库",
             protocol="realtime_db", endpoint="198.18.0.12:8889",
@@ -1416,10 +1885,10 @@ def build_131_ontology() -> OntologyEngine:
 
     # ── 层4: Devices (12 保护继电器 + 抽油机井 + 仿真设备) ──
     relay_types = [
-        ("00","DSL-31A","线路保护",20,"Ia+Ib+Ic+Ua+Ub+Uc+F+P+Q+cosφ"),
-        ("10","DST-31A","变压器差动保护",15,"Ua+Ub+Uc+F"),
+        ("00","RELAY-L","线路保护",20,"Ia+Ib+Ic+Ua+Ub+Uc+F+P+Q+cosφ"),
+        ("10","RELAY-T","变压器差动保护",15,"Ua+Ub+Uc+F"),
         ("20","DBPA-31A","电源备投",13,""),
-        ("30","DSB-31A","母联保护",20,"Ia+Ib+Ic"),
+        ("30","RELAY-B","母联保护",20,"Ia+Ib+Ic"),
         ("40","电动机保护","电动机保护",19,"Ia+Ib+Ic+Ua+Ub+Uc+F+P+cosφ"),
         ("50","DST-22D","变压器差动保护",15,""),
         ("60","DSB-22D","变压器后备保护",20,""),
@@ -1427,7 +1896,7 @@ def build_131_ontology() -> OntologyEngine:
         ("80","DGP-11","电容器差动保护",21,"F+Ias+Ibs+Ics+Ian+Ibn+Icn+I0+Iacd+Ibcd+Iccd+Iazd+Ibzd+Iczd+Ua+Ub+Uc+Uab+Ubc+Uca+U2"),
         ("90","DGP-12","电容器后备保护",24,"F+Ua+Ub+Uc+Uab+Ubc+Uca+U2+Uas+Ubs+Ucs+Uabs+Ubcs+Ucas+U2s+Uf+Ias+Ibs+Ics+Iabs+I2s+P+R+X"),
         ("100","DGP-13","电容器接地保护",22,"F+Uas+U30s+U30n+U30h+Ia+3I0+Ian+Ibn+Icn+E+U1+Rg"),
-        ("110","DMP-31A/DST-31A","电动机差动保护",19,"Ia+Ib+Ic+Ia2+Ib2+Ic2+F+Ua+Ub+Uc+P+Q+cosφ"),
+        ("110","RELAY-M/RELAY-T","电动机差动保护",19,"Ia+Ib+Ic+Ia2+Ib2+Ic2+F+Ua+Ub+Uc+P+Q+cosφ"),
     ]
     for code, model, name, ch_cnt, telemetry in relay_types:
         engine.register(Device(
@@ -1481,7 +1950,7 @@ def build_131_ontology() -> OntologyEngine:
         Point(id="pt_ia", device="dev_relay_00", name="A相电流 Ia", unit="A",
               register={"address":0,"type":"uint16","formula":register_formula},
               alarm={"high":5.0,"low":0.01}, category="遥测",
-              description="DSL-31A 线路保护 A 相电流"),
+              description="RELAY-L 线路保护 A 相电流"),
         Point(id="pt_ib", device="dev_relay_00", name="B相电流 Ib", unit="A",
               register={"address":1,"type":"uint16","formula":register_formula},
               alarm={"high":5.0,"low":0.01}, category="遥测"),
@@ -1491,7 +1960,7 @@ def build_131_ontology() -> OntologyEngine:
         Point(id="pt_ua", device="dev_relay_10", name="A相电压 Ua", unit="V",
               register={"address":0,"type":"uint16","formula":voltage_formula},
               alarm={"high":260.0,"low":198.0}, category="遥测",
-              description="DST-31A 变压器差动保护 A 相电压"),
+              description="RELAY-T 变压器差动保护 A 相电压"),
         Point(id="pt_p", device="dev_relay_00", name="有功功率 P", unit="W",
               register={"address":6,"type":"uint16","formula":power_formula},
               alarm={}, category="遥测"),
@@ -1552,15 +2021,15 @@ def build_131_ontology() -> OntologyEngine:
         # --- 设备告警约束 (Device.ini) ---
         Constraint(id="c_overcurrent", name="线路过流保护",
             rule="Ia/Ib/Ic > 5A + 持续>1s → 过流告警→跳闸",
-            entity="dev_relay_00", severity="danger", source="Device.ini DSL-31A",
+            entity="dev_relay_00", severity="danger", source="Device.ini RELAY-L",
             action="跳闸 + SOE 事件 + 推送告警"),
         Constraint(id="c_voltage_abnormal", name="电压异常保护",
             rule="U < 198V or U > 260V + 持续>10s → 电压异常告警",
-            entity="dev_relay_10", severity="danger", source="Device.ini DST-31A",
+            entity="dev_relay_10", severity="danger", source="Device.ini RELAY-T",
             action="告警 + SOE + 通知调度"),
         Constraint(id="c_motor_stall", name="电动机堵转保护",
             rule="电流突变 + 转速=0 + 持续>3s → 堵转告警",
-            entity="dev_relay_40", severity="danger", source="Device.ini DMP-31A",
+            entity="dev_relay_40", severity="danger", source="Device.ini RELAY-M",
             action="停机 + 告警 + 检修工单"),
         # --- A11 RTU 约束 (Time.ini) ---
         Constraint(id="c_time_sync", name="RTU 时间同步",
@@ -1615,14 +2084,14 @@ def build_131_ontology() -> OntologyEngine:
     seed_links = [
         # 电力链: 保护继电器 → 井口/泵 (跨通道能量依赖)
         Link("lnk_pw_a", "dev_well_DEV_A", "dev_relay_00", "powered_by",
-             "DEV_A 井馈线由 DSL-31A 线路保护供电"),
+             "DEV_A 井馈线由 RELAY-L 线路保护供电"),
         Link("lnk_pw_b", "dev_well_DEV_B", "dev_relay_00", "powered_by",
-             "DEV_B 井馈线由 DSL-31A 线路保护供电"),
+             "DEV_B 井馈线由 RELAY-L 线路保护供电"),
         Link("lnk_pw_s1", "dev_sim_sj0001", "dev_relay_40", "powered_by",
              "仿真泵母线由电动机保护供电"),
         # 监测: 保护设备 → 被保护对象 (跨通道)
         Link("lnk_mon_a", "dev_relay_00", "dev_well_DEV_A", "monitors",
-             "DSL-31A 监测 DEV_A 馈线电流/电压 (Ia/Ib/Ic/Ua/Ub/Uc)"),
+             "RELAY-L 监测 DEV_A 馈线电流/电压 (Ia/Ib/Ic/Ua/Ub/Uc)"),
         Link("lnk_mon_s1", "dev_relay_40", "dev_sim_sj0001", "monitors",
              "电动机保护监测仿真泵堵转/过流"),
         # 数据链: 采集通道 → 提交出口
@@ -1694,7 +2163,7 @@ def build_131_ontology() -> OntologyEngine:
 def build_engine() -> OntologyEngine:
     """构建本体引擎 — 落库数据优先, 库空才退回硬编码示例种子
 
-    **需要引擎的入口都走这里**, 不要各自 build_131_ontology()。种子是
+    **需要引擎的入口都走这里**, 不要各自 build_edge_ontology()。种子是
     演示数据, 用户建的对象只存在于库里; 直接播种造出来的引擎不含它们,
     而且失败是静默的 —— 界面照常, 只是东西不见了。
 
@@ -1712,4 +2181,4 @@ def build_engine() -> OntologyEngine:
             f", 跳过 {loaded['skipped']} 行坏数据" if loaded["skipped"] else "")
         return engine
     logger.info("本体: parse.db 无数据, 加载示例 IO 服务器本体")
-    return build_131_ontology()
+    return build_edge_ontology()

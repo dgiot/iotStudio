@@ -5,12 +5,12 @@ import pytest
 
 from src.interop import (CARDINALITY_RULES, evaluate_cardinality, export_aas,
                          export_dtdl, export_prov, export_ssn)
-from src.ontology import Constraint, Link, build_131_ontology
+from src.ontology import Constraint, Link, build_edge_ontology
 
 
 @pytest.fixture(scope="module")
 def engine():
-    return build_131_ontology()
+    return build_edge_ontology()
 
 
 def _counts(engine):
@@ -275,7 +275,7 @@ def test_aas_orphan_branches_are_actually_exercised():
     Link 侧之所以有效，只是 `lnk_map_tgp` 的 source 恰好是 Point —— 偶然，
     且靠种子数据维持。这里各造一条挂不上的，把分支逼出来。
     """
-    e = build_131_ontology()                      # 独立 engine，不污染 module fixture
+    e = build_edge_ontology()                      # 独立 engine，不污染 module fixture
     e.links["lnk_no_home"] = Link(id="lnk_no_home", source="pt_tgp",
                                   target="dev_relay_00", relation="relates_to")
     e.constraints["c_no_home"] = Constraint(id="c_no_home", name="无主约束",

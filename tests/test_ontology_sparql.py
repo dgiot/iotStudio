@@ -3,8 +3,8 @@
 #
 # 这组用例钉三件事，每件都对应页面上曾经写错的一个数：
 #   1. 非法 SPARQL 必须抛，不许静默返空列表
-#   2. 统计数必须与 export_owl() 导出的那张图一致（同一张图，两个出口）
-#   3. 图上没有的东西（DatatypeProperty / isa95: / iof:）不许被报出来
+#   2. 统计数必须与 export_owl()/turtle/jsonld 导出的那张图一致（同一张图，三个出口）
+#   3. 报出来的数必须与图对得上；图上没有的（isa95: / iof:）不许被报出来
 # ============================================================
 import json
 
@@ -30,7 +30,14 @@ def test_sparql_count_matches_triple_count(eng):
 def test_sparql_returns_rows_with_named_bindings(eng):
     rows = eng.sparql(
         "SELECT ?c WHERE { ?c a <http://www.w3.org/2002/07/owl#Class> }")
-    assert len(rows) == 7                      # Site..DataSource 七个类
+    # 七个实体类 + 根类 Entity。根类是为 GB/T 48000.3 附录A 表A.1 的「父类」
+    # 描述项加的（七类都 subClassOf Entity），横切关系词的 rdfs:domain 也落在它上面。
+    # 计数与成员**两个都断**：只断计数分不清「多了个对的」与「多了个错的」，
+    # 只断成员则少一个类不报 —— 两个方向的缺陷各由一条兜住。
+    assert len(rows) == 8
+    assert {r["c"].rsplit("#", 1)[-1] for r in rows} == {
+        "Entity", "Site", "Gateway", "Channel",
+        "Device", "Point", "Constraint", "DataSource"}
     assert all(set(r) == {"c"} for r in rows)
     assert all(isinstance(v, str) for r in rows for v in r.values())
 
@@ -82,6 +89,14 @@ def test_triple_count_equals_reparsed_turtle(eng):
     assert eng.triple_count() == len(reparsed)
 
 
+def test_triple_count_equals_reparsed_jsonld(eng):
+    """JSON-LD 是第三种序列化（GB/T 48000.3 §5.3 点名 Turtle、JSON-LD）——
+    三个出口必须序列化**同一张图**, 不然页面上那个数只在其中两个格式下成立。"""
+    from rdflib import Graph
+    reparsed = Graph().parse(data=eng.export_jsonld(), format="json-ld")
+    assert eng.triple_count() == len(reparsed)
+
+
 def test_sparql_runs_on_the_same_graph_as_export(eng):
     """端点上跑查询的那张图，就是下载到的那张图 —— 不是另一张长得像的"""
     n = eng.sparql("SELECT (COUNT(*) AS ?n) WHERE { ?s ?p ?o }")[0]["n"]
@@ -107,9 +122,21 @@ def test_rdf_stats_is_json_serializable(eng):
 
 # ── 5. 钉住「图上没有的东西」—— 正是页面曾经写错的那三个数 ──
 
-def test_no_datatype_properties(eng):
-    """页面曾写「Data Properties 22」—— 导出器压根不产生 DatatypeProperty"""
-    assert eng.rdf_stats()["datatype_properties"] == 0
+def test_datatype_properties_match_declared_spec(eng):
+    """数据属性必须与 DATA_PROP_SPEC 声明的**逐一对上**（成员与计数都断）。
+
+    这条原为 `assert ... == 0`，钉的是「页面曾写 Data Properties 22，而导出器
+    压根不产生 DatatypeProperty」。2026-09-20 按 GB/T 48000.3 §5.2（本体含对象
+    属性与数据属性两类）加了数据属性，0 不再成立 —— 但原意必须守住：**报出来的
+    数不许是图上没有的**。改成与声明表对账而非钉死 16：只钉数字的话，加第 17 个
+    属性时同样会红，却看不出是"该同步这里"还是"真出错了"。
+    """
+    from rdflib import RDF, OWL
+    from src.ontology import DATA_PROP_SPEC
+    got = {str(s).rsplit("#", 1)[-1]
+           for s in eng._rdf_graph().subjects(RDF.type, OWL.DatatypeProperty)}
+    assert got == set(DATA_PROP_SPEC)          # 多了、少了、换名字都报
+    assert eng.rdf_stats()["datatype_properties"] == len(DATA_PROP_SPEC)
 
 
 def test_namespaces_exclude_unimplemented_ones(eng):
@@ -130,7 +157,7 @@ def test_reported_namespaces_are_actually_bound(eng):
 #
 # ⚠️ 这一节只做「端点与自己一致」的比较，不拿本文件的 eng 去比。
 # 原因（实测）：`build_engine()` 是**两个数据源二选一** ——
-#     load_from_parse() 有数据就用库里的，库空才退回 build_131_ontology() 种子。
+#     load_from_parse() 有数据就用库里的，库空才退回 build_edge_ontology() 种子。
 # 所以同一进程里前后两次 build_engine() 可以给出不同的图（实测 395 vs 367），
 # 三元组数**不是常数**。判据只能是「同一引擎的两个出口互相对得上」。
 # 这也正是页面上那个数必须现算、不许手写的根本原因。

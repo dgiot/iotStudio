@@ -81,7 +81,7 @@ _engine = None
 
 
 def _get_rag():
-    """惰性加载 GraphRAG — 首次调用时构建 131 本体 + LLM 后端"""
+    """惰性加载 GraphRAG — 首次调用时构建本体 + LLM 后端"""
     global _graphrag, _engine
     if _graphrag is None:
         try:
@@ -568,6 +568,34 @@ async def graphrag_turtle():
     from fastapi.responses import PlainTextResponse
     ttl = engine.export_turtle()
     return PlainTextResponse(content=ttl, media_type="text/turtle")
+
+
+@router.get("/ontology.jsonld")
+async def graphrag_jsonld():
+    """导出 JSON-LD 格式本体 — 与 .owl/.ttl 是**同一张图**的第三种序列化
+
+    GB/T 48000.3 §5.3 要求本体「应使用标准化的序列化格式（如 Turtle、JSON-LD 等）」。
+    """
+    _, engine = _get_rag()
+    from fastapi.responses import Response
+    return Response(content=engine.export_jsonld(), media_type="application/ld+json")
+
+
+@router.get("/ontology.shacl.ttl")
+async def graphrag_shacl_shapes():
+    """导出 SHACL 形状图（Turtle）— §5.3 第三句「应支持基于 SHACL 的约束验证」
+
+    ⚠️ 这里导出的是**形状**, 不是验证结论 —— 形状文件描述"什么样的数据合规",
+    它对某一份数据到底合不合规没有结论。要结论需用 pyshacl 跑一次
+    engine.validate_shacl()（pyshacl 声明在 requirements.txt 的**测试依赖**段,
+    不在运行依赖里 —— 本服务自己不做验证）。
+
+    形状图根节点的 rdfs:comment 里带着**本形状未覆盖的 §8.2 条文清单** ——
+    不写出来的话, 下游会拿它当完整件用。
+    """
+    _, engine = _get_rag()
+    from fastapi.responses import PlainTextResponse
+    return PlainTextResponse(content=engine.export_shacl(), media_type="text/turtle")
 
 
 class SparqlRequest(BaseModel):

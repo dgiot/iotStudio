@@ -109,7 +109,7 @@ td{padding:8px 12px;border-bottom:1px solid #1a2332}
     <div class="card-body">
       <table>
         <tr><th>交易哈希</th><th>类型</th><th>发起方</th><th>接收方</th><th>时间戳</th><th>区块</th><th>状态</th></tr>
-        <tr><td class="hash">0x8a3f...7b2c</td><td>设备数据上链</td><td>IO-SERVER-101</td><td>Chain-Node-03</td><td>2.1s前</td><td>#1284739</td><td><span class="badge ok">已确认</span></td></tr>
+        <tr><td class="hash">0x8a3f...7b2c</td><td>设备数据上链</td><td>WIN-DEV-01</td><td>Chain-Node-03</td><td>2.1s前</td><td>#1284739</td><td><span class="badge ok">已确认</span></td></tr>
         <tr><td class="hash">0xb4d2...1e9f</td><td>告警存证</td><td>Safety-Engine</td><td>Chain-Node-07</td><td>4.5s前</td><td>#1284738</td><td><span class="badge ok">已确认</span></td></tr>
         <tr><td class="hash">0x2c7e...a5d3</td><td>设备注册</td><td>Admin-Portal</td><td>Chain-Node-01</td><td>6.9s前</td><td>#1284737</td><td><span class="badge ok">已确认</span></td></tr>
         <tr><td class="hash">0xf1a8...3b6e</td><td>物模型更新</td><td>Product-Manager</td><td>Chain-Node-05</td><td>9.3s前</td><td>#1284736</td><td><span class="badge ok">已确认</span></td></tr>
@@ -171,9 +171,9 @@ td{padding:8px 12px;border-bottom:1px solid #1a2332}
     <div class="card-body">
       <table>
         <tr><th>签名编号</th><th>设备标识</th><th>签名类型</th><th>签名哈希</th><th>上链时间</th><th>区块链存证</th></tr>
-        <tr><td>SIG-20260729-001</td><td>IO-SERVER-101</td><td>设备身份签名</td><td class="hash">0x8f3a...c2d1</td><td>2s前</td><td><span class="badge ok">已存证 ✓</span></td></tr>
+        <tr><td>SIG-20260729-001</td><td>WIN-DEV-01</td><td>设备身份签名</td><td class="hash">0x8f3a...c2d1</td><td>2s前</td><td><span class="badge ok">已存证 ✓</span></td></tr>
         <tr><td>SIG-20260729-002</td><td>DEV_A油井RTU</td><td>数据上链签名</td><td class="hash">0xb4d2...1e9f</td><td>5s前</td><td><span class="badge ok">已存证 ✓</span></td></tr>
-        <tr><td>SIG-20260729-003</td><td>DSL-31A继电器</td><td>告警事件签名</td><td class="hash">0x2c7e...a5d3</td><td>10s前</td><td><span class="badge ok">已存证 ✓</span></td></tr>
+        <tr><td>SIG-20260729-003</td><td>RELAY-L继电器</td><td>告警事件签名</td><td class="hash">0x2c7e...a5d3</td><td>10s前</td><td><span class="badge ok">已存证 ✓</span></td></tr>
         <tr><td>SIG-20260729-004</td><td>光伏逆变器#1</td><td>物模型变更签名</td><td class="hash">0xf1a8...3b6e</td><td>15s前</td><td><span class="badge ok">已存证 ✓</span></td></tr>
         <tr><td>SIG-20260729-005</td><td>储能PCS#1</td><td>固件升级签名</td><td class="hash">0x5d9c...e7f2</td><td>20s前</td><td><span class="badge ok">已存证 ✓</span></td></tr>
       </table>
@@ -213,7 +213,7 @@ td{padding:8px 12px;border-bottom:1px solid #1a2332}
       <table>
         <tr><th>存证哈希</th><th>设备</th><th>数据类型</th><th>数据摘要</th><th>上链时间</th><th>验证</th></tr>
         <tr><td class="hash">0xe3a1...7b2c</td><td>DEV_A 油井RTU</td><td>套压数据</td><td>SHA256: a1b2c3...</td><td>2s前</td><td><span class="badge ok">✓ 已验证</span></td></tr>
-        <tr><td class="hash">0x8b4d...c5f2</td><td>DSL-31A 继电器</td><td>过流告警</td><td>SHA256: d4e5f6...</td><td>5s前</td><td><span class="badge ok">✓ 已验证</span></td></tr>
+        <tr><td class="hash">0x8b4d...c5f2</td><td>RELAY-L 继电器</td><td>过流告警</td><td>SHA256: d4e5f6...</td><td>5s前</td><td><span class="badge ok">✓ 已验证</span></td></tr>
         <tr><td class="hash">0x2c7e...a5d3</td><td>光伏逆变器#1</td><td>功率数据</td><td>SHA256: g7h8i9...</td><td>10s前</td><td><span class="badge ok">✓ 已验证</span></td></tr>
         <tr><td class="hash">0xf1a8...3b6e</td><td>储能PCS#1</td><td>SOC数据</td><td>SHA256: j1k2l3...</td><td>15s前</td><td><span class="badge ok">✓ 已验证</span></td></tr>
       </table>
@@ -261,7 +261,7 @@ td{padding:8px 12px;border-bottom:1px solid #1a2332}
     <div class="card-body">
       <table>
         <tr><th>时间</th><th>操作</th><th>操作者</th><th>目标资源</th><th>IP地址</th><th>结果</th></tr>
-        <tr><td>2s前</td><td>设备数据上链</td><td>IO-SERVER-101</td><td>pt_demo 示例数据</td><td>198.51.100.131</td><td><span class="badge ok">成功</span></td></tr>
+        <tr><td>2s前</td><td>设备数据上链</td><td>WIN-DEV-01</td><td>pt_demo 示例数据</td><td>198.51.100.131</td><td><span class="badge ok">成功</span></td></tr>
         <tr><td>5s前</td><td>智能合约调用</td><td>Admin-Portal</td><td>DataAttestation.submit()</td><td>203.0.113.30</td><td><span class="badge ok">成功</span></td></tr>
         <tr><td>10s前</td><td>节点健康检查</td><td>Monitor-Service</td><td>Node-01~12</td><td>203.0.113.1</td><td><span class="badge ok">12/12在线</span></td></tr>
         <tr><td>15s前</td><td>证书轮换</td><td>CA-Service</td><td>TLS证书更新</td><td>203.0.113.40</td><td><span class="badge ok">成功</span></td></tr>

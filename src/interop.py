@@ -31,9 +31,9 @@ import re
 from typing import Dict, List, Optional
 
 try:
-    from .ontology import LINK_RELATIONS
+    from .ontology import ENTITY_CLASSES, HIER_PROPS, LINK_RELATIONS
 except ImportError:
-    from ontology import LINK_RELATIONS
+    from ontology import ENTITY_CLASSES, HIER_PROPS, LINK_RELATIONS
 
 DG_NS = "http://dgiot.cloud/ontology#"
 DTMI_PREFIX = "dtmi:dgiot"
@@ -41,6 +41,9 @@ DTMI_PREFIX = "dtmi:dgiot"
 # 基数声明 (工艺合理性默认, 可按站点覆盖):
 #   src_max = 单一源实例允许的最大出边数; tgt_max = 单一目标实例允许的最大入边数
 #   None = 该关系不声明基数 (只观测不判罚)
+# ⚠️ 本表**只有上界, 没有下界字段** —— 没有任何一个键表达「至少几条」。
+# 所以「未声明下界」与「下界为 0」在本表里是同一个样子; 下游要区分必须自己带上默认值语义
+# （DTDL 侧原本正是靠硬写 minMultiplicity: 0 把这个区分抹平的, 见 export_dtdl()）。
 CARDINALITY_RULES: Dict[str, Dict[str, Optional[int]]] = {
     "maps_to":    {"src_max": 1, "tgt_max": 4},   # 一通道映射一数据源
     "powered_by": {"src_max": 2, "tgt_max": 8},   # 设备双路供电上限 / 一继电器供电 8 台
@@ -74,8 +77,14 @@ def _dist(counter: Dict[str, int]) -> dict:
 def evaluate_cardinality(engine) -> dict:
     """关系基数评估 — 声明 (CARDINALITY_RULES) vs 实测出/入度分布 + 违规清单
 
-    对标 Foundry Link Type / DTDL Relationship 的 min/maxMultiplicity 语义;
-    输出可直接回写为 DTDL relationship 的 min/maxMultiplicity。
+    对标 Foundry Link Type / DTDL Relationship 的**上界**语义 (maxMultiplicity):
+    输出里 per_relation[rel]["declared"] 就是 CARDINALITY_RULES 那一条, 可直接回写为
+    DTDL relationship 的 maxMultiplicity。
+
+    ⚠️ 原文写的是「min/maxMultiplicity」—— **声明超出实现**: CARDINALITY_RULES 没有下界
+    字段, 本函数的 violations 也只可能由 `count > cap` 产生, 一句 min 都不判。
+    保留这句订正而不是把 min 补上, 是因为「本域没有工艺上的下界依据」是事实,
+    补一个 `src_min: 0` 只是把默认值写成声明值, 反而抹掉「未声明」与「声明为 0」的区别。
     """
     obs = _observe(engine)
     per_relation, violations = {}, []
@@ -146,11 +155,46 @@ def export_dtdl(engine) -> dict:
             rel_contents = {"@type": "Relationship", "name": rel,
                             "target": f"{DTMI_PREFIX}:{iface_for[tt].lower()};1",
                             "displayName": f"关系 {rel}"}
+            # 只写**声明了的**那个界。原先这里在 max 之外硬写 `minMultiplicity: 0` ——
+            # 那个 0 不是声明值, 是「这个键 DTDL 里有」的产物: CARDINALITY_RULES 根本没有
+            # 下界字段（见该表上方的注）, 却因此把「未声明」输出成了「声明为 0」。
+            # DTDL 侧不写 minMultiplicity 时默认就是 0 ⇒ 删掉它对消费者**等价**,
+            # 但从此「未声明」与「声明为 0」在下发的文件里长得不一样。
+            # 判据侧的证据: tests/test_interop.py 只钉了 maxMultiplicity,
+            # 这个 0 从来没有判据要过 —— 它错了也没人亮。
             if rule.get("src_max") is not None:
                 rel_contents["maxMultiplicity"] = rule["src_max"]
-                rel_contents["minMultiplicity"] = 0
             contents.append(rel_contents)
         interfaces.append(_dtdl_iface(layer, name, contents))
+
+    # ── 本导出**不含什么** —— 现算, 不手写 ──────────────────────────────
+    # 与 shacl_shapes() 往形状图根节点写 report["unformatted"] 同一个手法:
+    # 导出的东西不自述自己缺什么, 下游就会把这份文件当成完整件用。
+    # 每一句都从上面那几张表**现算** —— 手写的缺口清单会随实现漂移, 而且没人会亮。
+    emitted = {c["name"] for i in interfaces for c in i["contents"]}
+    missing_classes = sorted(c for c in ENTITY_CLASSES.values()
+                             if c.lower() not in {n.lower() for n in iface_for.values()})
+    hier_absent = sorted(p for p, _d, _r, _x in HIER_PROPS if p not in emitted)
+    std_keys = {"@type", "name", "target", "displayName",
+                "maxMultiplicity", "minMultiplicity"}
+    extra_keys = sorted({k for i in interfaces for c in i["contents"]
+                         if c["@type"] == "Relationship" for k in c} - std_keys)
+    coverage = {
+        "classes_without_interface": missing_classes,
+        "hierarchy_properties_absent": hier_absent,
+        "relations_without_declared_lower_bound": sorted(
+            rel for rel, rule in CARDINALITY_RULES.items() if not any("min" in k for k in rule)),
+        "relationship_extra_keys": extra_keys,
+        "why": [
+            "DTDL Relationship 是**类级**定义, 而 Link 的 id/description/props 是**实例级**的; "
+            "本导出不产出任何实例 ⇒ 边上的属性在这里无处安放（%s）。"
+            % ("当前无额外键" if not extra_keys else "当前有额外键: " + ", ".join(extra_keys)),
+            "层级在本导出里**没有载体** —— Interface 之间既没有 extends, 也没有层级 Relationship。",
+            "minMultiplicity 只在 CARDINALITY_RULES **声明了**下界时才写; 该表没有下界字段, "
+            "所以一个都不写。**这是「未声明」, 不是「下界为 0」** —— 要区分得读这里, 别读键的缺席。",
+            "缺 Interface 的类: %s。" % (", ".join(missing_classes) or "无"),
+        ],
+    }
 
     return {
         "@context": "dtmi:dtdl:context;3",
@@ -160,6 +204,7 @@ def export_dtdl(engine) -> dict:
             "interfaces": len(interfaces),
             "entity_counts": engine.health()["counts"],
             "note": "模型层导出 (类级); 实例数据经 dtdl 实例清单另行同步",
+            "coverage": coverage,
         },
     }
 

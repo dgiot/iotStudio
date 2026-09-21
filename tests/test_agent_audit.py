@@ -5,7 +5,7 @@ import pytest
 
 from src.agent_audit import (AuditAgent, _get_proposal, _list_proposals,
                              _save_proposal, propose_from_finding)
-from src.ontology import Device, Link, build_131_ontology
+from src.ontology import Device, Link, build_edge_ontology
 
 
 @pytest.fixture()
@@ -17,7 +17,7 @@ def agent_db(tmp_path, monkeypatch):
 
 @pytest.fixture()
 def engine():
-    return build_131_ontology()
+    return build_edge_ontology()
 
 
 @pytest.fixture()

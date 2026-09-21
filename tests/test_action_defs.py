@@ -8,7 +8,7 @@ import pytest
 from src.action_defs import (ActionDefinition, check_submit_criteria, get,
                              list_defs, register, role_allowed, seed_builtin,
                              unregister, validate_params)
-from src.ontology import build_131_ontology
+from src.ontology import build_edge_ontology
 
 
 # ── 类型注册表 ──
@@ -68,7 +68,7 @@ def test_validate_params_non_strict_allows_passthrough():
 # ── 提交规则 (声明式) ──
 
 def test_criteria_target_exists():
-    engine = build_131_ontology()
+    engine = build_edge_ontology()
     cmd = get("command_down")
     assert check_submit_criteria(cmd, engine, "dev_well_DEV_A", {}) == []
     assert "target_exists" in check_submit_criteria(cmd, engine, "ghost_entity", {})
@@ -76,7 +76,7 @@ def test_criteria_target_exists():
 
 
 def test_criteria_enum_and_value_range():
-    engine = build_131_ontology()
+    engine = build_edge_ontology()
     d = ActionDefinition(name="crit1",
                          submit_criteria=["enum:cmd:stop|start",
                                           "value_range:hours:0.1:168"])

@@ -402,6 +402,69 @@ def test_负控_台账漏一个属性必须被逮到(gen, derived):
         "台账里 29 条属性行全没了，判据没反应 —— 它只在对得上号的行里比，漏行看不见"
 
 
+def test_负控_盘上那份台账被改一格必须被逮到(gen, derived, tmp_path):
+    """★ 这一条打的是**盘上那一跳**：`vocab/desc_ledger.tsv → gen.read(path) → gen.diff(...)`。
+
+    上面那条 `test_负控_台账被改一格必须被逮到` 改的是 `derived` 的**内存副本** ——
+    它证明的是「比对器对内容敏感」，**不证明「盘上那份文件在链上」**：
+    把 `gen.read` 换成 `return derived`（即根本不读文件），那一条照样全绿。
+    两者是两个域，此前没有任何注入走过这一跳。
+
+    注入：把真台账**逐字节复制**到仓外临时目录，在副本上改一格，让判据去读那个副本。
+    **真件一个字节都不动**（`vocab/desc_ledger.tsv` 的 sha 是随交付登记的硬锚）。
+    """
+    real = gen.read(LEDGER)
+    # ↓ 前置自检：真件与图必须**本来就一致**。没有它，「副本报红」可能只是真件本来就红，
+    #   而两者该采取的行动相反（一个是我注入成功，一个是要重跑生成器）。
+    assert not _ledger_gaps(gen, derived, real), \
+        "盘上那份台账与图本就不一致（先跑 gen_desc_ledger.py）—— 这条负控证明不了什么"
+
+    # ↓ 列名**从生成器的 COLUMNS 取**，不写死字面量：写死的那份是判据里唯一的单点故障
+    #   （生成器改列名时，硬编码的那份会静默指到不存在的列上）。
+    col = next((c for c in gen.COLUMNS if c.startswith("属性集")), None)
+    assert col is not None, f"生成器的 COLUMNS 里没有「属性集…」这一列：{gen.COLUMNS}"
+    victim = next((r for r in derived
+                   if r["种类"] == "类" and not r[col].startswith("（")), None)
+    assert victim is not None, f"没有一个类的「{col}」是非空的 —— 这条负控没有样本"
+
+    # 在**文本层**改副本，不在内存对象上改 —— 这样走的才是 read() 那条路
+    with open(LEDGER, encoding="utf-8", newline="") as f:
+        text = f.read()
+    lines = text.splitlines(keepends=True)
+    head = lines[0].rstrip("\r\n").split("\t")       # 列序**从表头取**，不写死
+    assert col in head, f"表头里没有「{col}」这一列：{head}"
+    ci, ni = head.index(col), head.index("Name")
+    for i, ln in enumerate(lines):
+        cells = ln.rstrip("\r\n").split("\t")
+        if len(cells) > max(ci, ni) and cells[ni] == victim["Name"]:
+            cells[ci] = "（无）"
+            lines[i] = "\t".join(cells) + "\n"
+            break
+    else:
+        raise AssertionError(f"没在副本里定位到 {victim['Name']} 那一行 —— 这条负控什么都没改")
+
+    copy = tmp_path / "desc_ledger.tsv"              # tmp_path 在 %TEMP%，仓内零写入
+    with open(copy, "w", encoding="utf-8", newline="") as f:
+        f.write("".join(lines))
+
+    # ★ 先证明「改的确实落在了文件上」：读副本读到的必须与真件不同。
+    #   没有这一条，文件名写错/写失败都会让下面的报红来自别处。
+    assert gen.read(copy) != real, \
+        "副本读出来与真件逐格相同 —— 篡改没落到文件上，这条负控什么都没注入"
+
+    gaps = _ledger_gaps(gen, derived, gen.read(copy))
+    assert gaps, f"台账副本里 {victim['Name']} 的「{col}」被改错了，判据没反应 —— 空过的"
+    assert any(victim["Name"] in m for m in gaps), \
+        f"gaps 里没有一条提到 {victim['Name']} —— 改的是它，报的却是别处：{gaps}"
+
+    # ★ 撤掉注入必须回绿：判据不能因为「读过一次坏副本」就从此一律报红。
+    assert not _ledger_gaps(gen, derived, gen.read(LEDGER)), \
+        "读过坏副本之后真件反而报红了 —— 判据的状态被读动作带跑了"
+    # ★ 真件硬锚（与 §一 登记的值同源）：跑完这条负控，盘上那份必须一字未动。
+    assert LEDGER.read_bytes() == text.encode("utf-8"), \
+        "真件被改动了 —— 负控只许读副本，不许碰仓内台账"
+
+
 def test_盘口自报_判据实检了几个(gen, graph):
     """正控全绿也可能是「一个都没查」。
 

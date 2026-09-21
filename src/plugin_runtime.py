@@ -206,7 +206,7 @@ class PluginContext:
             return ""
 
     def ontology(self):
-        """131 示例站本体引擎 (惰性, 缓存单例)"""
+        """示例站本体引擎 (惰性, 缓存单例)"""
         return self._manager.get_ontology()
 
     def on_shutdown(self, fn: Callable) -> Callable:

@@ -167,8 +167,8 @@ def test_builtin_plugins_load(tmp_path):
     # pushers: 四出口工厂 (类名已核实)
     assert set(mgr.pushers()) == {"mqtt", "http", "dgiot", "edge_hub"}
 
-    # ontology_131: profile 构建器可调用 (不实际构建, 只验声明)
-    profile = mgr.profiles()["iot-studio-demo-131"]
+    # ontology_demo: profile 构建器可调用 (不实际构建, 只验声明)
+    profile = mgr.profiles()["iot-studio-demo"]
     assert callable(profile["builder"])
 
 
