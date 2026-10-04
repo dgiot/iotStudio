@@ -131,21 +131,33 @@ async def lifespan(app: FastAPI):
     collector.on_data(push_engine.push)
     safety_pipeline.start_timeout_checker()
 
+    # ── 统一插件运行时 (PR0): plugins/*/plugin.py — 一切皆插件 ──
+    try:
+        from .plugin_runtime import runtime
+        rt_health = runtime.load_all()
+        # 2026-10-05: 推送引擎必须**在插件加载之后**再跑一次。
+        # 上面 L123 那次 start() 发生在 load_all() 之前，而 `edge_hub` 推送器是由
+        # `pushers` 插件注册的 ⇒ 引擎当时解析不到它，只能记
+        #   [push] 未知推送类型 edge_hub (target=…), 跳过
+        # 然后把出口当成没装配 —— ch_dgiot_push 于是如实报 error。
+        # 三条日志彼此自洽、时间戳只差 22ms：不是通道说谎，是这里的顺序错了。
+        await push_engine.start()
+        logger.info(f"[main] 插件运行时: {rt_health}")
+    except Exception as e:
+        logger.warning(f"[main] 插件运行时加载失败: {e}")
+
     # ── 通道体系 (MQTT Broker / Bridge / DG-IoT Push / Oracle / Modbus) ──
+    # 2026-10-05: 通道必须**排在插件与推送引擎之后**。
+    # ch_dgiot_push 的启动检查问的是「edge_hub 出口装没装」，而那个出口由 `pushers`
+    # 插件在 load_all() 里注册、由 push_engine.start() 装配。之前通道先起（02:56:33,520），
+    # 插件 17ms 后才加载（,537）、引擎再 52ms 后才装配（,589）⇒ 检查必看不到出口，
+    # 于是它如实报 error。通道的诚实性没问题，是这里的顺序错了。
     try:
         from .channel_bootstrap import bootstrap_channels
         ch_results = await bootstrap_channels()
         logger.info(f"[main] 通道体系: {ch_results}")
     except Exception as e:
         logger.warning(f"[main] 通道体系启动失败: {e}")
-
-    # ── 统一插件运行时 (PR0): plugins/*/plugin.py — 一切皆插件 ──
-    try:
-        from .plugin_runtime import runtime
-        rt_health = runtime.load_all()
-        logger.info(f"[main] 插件运行时: {rt_health}")
-    except Exception as e:
-        logger.warning(f"[main] 插件运行时加载失败: {e}")
 
     try:
         await collector.start()

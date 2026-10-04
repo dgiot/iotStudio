@@ -683,50 +683,6 @@ async def graphrag_sparql(body: SparqlRequest):
     return {"total": len(rows), "results": rows, "query": body.query}
 
 
-class HubValidateRequest(BaseModel):
-    ns: str = Field(..., min_length=1, description="统一图库里的命名空间，如 quality")
-
-
-@router.post("/validate")
-async def graph_hub_validate(body: HubValidateRequest):
-    """对统一图库里某个**业务命名空间**真跑一次 SHACL 验证，返回结论。
-
-    与 `/ontology.shacl.ttl` 的分工：那个出口给**形状**（什么算合规），本出口给**结论**
-    （这份数据到底合不合规）。两者分开，是为了不把"导出了形状文件"读成"验证过了"。
-
-    形状 = 引擎形状 ∪ 该命名空间携带的形状。该命名空间**没携带形状**时形状侧只剩引擎形状，
-    那对本域数据基本无约束 —— 所以返回值显式给 `shapes_from_namespace`，不让人把
-    "引擎形状没报错"读成"业务域验过了、没问题"。
-
-    刻意**不开 RDFS 推理**：本检查针对显式声明（开推理会把每个资源推成 rdfs:Resource，
-    闭集 sh:in 会误伤正常数据 —— 2026-10-05 实测 1003 条误报）。
-    pyshacl 缺失时**抛 500**，不返回 conforms=True（与 engine.validate_shacl 同款纪律）。
-    """
-    from rdflib import Graph
-    g, info = bridge.namespace_graph(body.ns)
-    if info.get("error"):
-        raise HTTPException(404, f"读不到命名空间 {body.ns!r}: {info['error']}")
-    if not len(g):
-        raise HTTPException(404, f"统一图库里没有命名空间 {body.ns!r} 的数据")
-    _, engine = _get_rag()
-    shapes = Graph()
-    shapes.parse(data=engine.export_shacl(), format="turtle")
-    engine_shapes = len(shapes)
-    ns_shapes = bridge.shapes_for(body.ns)
-    if ns_shapes:
-        shapes.parse(data=ns_shapes, format="turtle")
-    try:
-        from pyshacl import validate as shacl_validate
-    except ImportError as e:  # pyshacl 缺失是"不支持"，不是"通过"
-        raise HTTPException(500, f"SHACL 验证需要 pyshacl：{e}")
-    conforms, _, text = shacl_validate(g, shacl_graph=shapes, inference=None)
-    return {"ns": body.ns, "conforms": bool(conforms),
-            "data_triples": len(g), "shapes_triples": len(shapes),
-            "engine_shapes_triples": engine_shapes,
-            "shapes_from_namespace": bool(ns_shapes),
-            "graph_info": info, "report_head": text[:800]}
-
-
 @router.get("/rdf/stats")
 async def graphrag_rdf_stats():
     """图上构件计数 — 界面显示的三元组/类/属性数一律取这里，不许手写。
