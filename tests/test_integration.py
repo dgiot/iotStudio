@@ -95,15 +95,15 @@ async def test():
         # 4. 创建点位
         print("\n--- 4. 创建点位 ---")
         points = [
-            {"point_id": "inv_power", "device_id": did("inv01"), "point_name": "有功功率",
+            {"point_id": did("p_inv_power"), "device_id": did("inv01"), "point_name": "有功功率",
              "protocol_addr": "0x0004", "register_type": "3", "data_type": "float32", "unit": "W", "collect_interval": 5},
-            {"point_id": "inv_voltage", "device_id": did("inv01"), "point_name": "A相电压",
+            {"point_id": did("p_inv_voltage"), "device_id": did("inv01"), "point_name": "A相电压",
              "protocol_addr": "0x0000", "register_type": "3", "data_type": "float32", "unit": "V", "collect_interval": 5},
-            {"point_id": "pcs_soc", "device_id": did("pcs01"), "point_name": "SOC",
+            {"point_id": did("p_pcs_soc"), "device_id": did("pcs01"), "point_name": "SOC",
              "protocol_addr": "0x0000", "register_type": "3", "data_type": "float32", "unit": "%", "collect_interval": 5},
-            {"point_id": "pcs_power", "device_id": did("pcs01"), "point_name": "有功功率",
+            {"point_id": did("p_pcs_power"), "device_id": did("pcs01"), "point_name": "有功功率",
              "protocol_addr": "0x0006", "register_type": "3", "data_type": "float32", "unit": "W", "collect_interval": 5},
-            {"point_id": "charger_power", "device_id": did("charger01"), "point_name": "充电功率",
+            {"point_id": did("p_charger_power"), "device_id": did("charger01"), "point_name": "充电功率",
              "protocol_addr": "0x0002", "register_type": "3", "data_type": "float32", "unit": "kW", "collect_interval": 5},
         ]
         for p in points:
