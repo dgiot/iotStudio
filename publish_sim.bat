@@ -1,12 +1,12 @@
 @echo off
 echo ============================================
-echo   DG-IoT 131 IO Server Simulator Publish
+echo   DG-IoT IO Server Simulator Publish
 echo ============================================
 echo.
 
 REM 1. 启动模拟环境
 echo [1] Starting IO Server Simulator...
-start "131-Sim" python plugins/io_server/tools/dev_env.py --scale 10
+start "edge-sim" python plugins/io_server/tools/dev_env.py --scale 10
 
 REM 2. 等待启动
 timeout /t 5 /nobreak >nul

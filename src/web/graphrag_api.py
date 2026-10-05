@@ -69,6 +69,10 @@ logger = logging.getLogger(__name__)
 
 # 鉴权: 路由器级 — 所有 /api/graphrag/* 均需登录 (Authorization: Bearer JWT)。
 # 写操作/执行类端点在各自装饰器上追加 require_admin (仅 admin 角色)。
+# 2026-10-05: RDF/SPARQL 出口改走「引擎本体 ∪ 统一图库业务命名空间」的并集图
+# （否则插件挂进图库的本体在语义/推理/导出这一侧等于白挂）。详见 src/web/rdf_bridge.py。
+from . import rdf_bridge as bridge  # noqa: E402
+
 router = APIRouter(prefix="/api/graphrag", tags=["graphrag"],
                    dependencies=[Depends(get_current_user)])
 
@@ -80,8 +84,52 @@ _graphrag = None
 _engine = None
 
 
+def _llm_kwargs() -> dict:
+    """从 config.yaml 的 llm 段取 LLM 后端参数 —— 接本地模型走这里。
+
+    没配 provider 就返回空 dict，GraphRAG 退回「自动检测环境变量」的老行为。
+    所以这是纯增量：不写 llm 段的部署一行都不用改。
+    """
+    try:
+        try:
+            from ..config import cfg
+        except ImportError:
+            from config import cfg
+
+        llm = getattr(cfg, "llm", None)
+        provider = (getattr(llm, "provider", "") or "").strip()
+        if not provider:
+            return {}
+
+        api_key = (getattr(llm, "api_key", "") or "").strip()
+        if not api_key:
+            # Ollama/vLLM 这类本地服务不校验 key，但 GraphRAG.__init__ 用
+            # `elif llm_api_key:` 分流 —— 空串会掉进「自动检测环境变量」分支，
+            # provider 与 base_url 被静默丢弃（症状：配了本地模型却打到 api.openai.com）。
+            # 给个占位符堵住这个洞。
+            api_key = "not-required"
+
+        kwargs = {
+            "llm_provider": provider,
+            "llm_api_key": api_key,
+            "llm_model": getattr(llm, "model", "") or None,
+            "llm_base_url": getattr(llm, "base_url", "") or None,
+            "llm_timeout": getattr(llm, "timeout", None) or None,
+            "llm_max_tokens": getattr(llm, "max_tokens", None) or None,
+        }
+        logger.info(
+            f"LLM 后端来自 config.yaml: provider={provider} "
+            f"base_url={kwargs['llm_base_url'] or '(默认)'} "
+            f"model={kwargs['llm_model'] or '(默认)'} timeout={kwargs['llm_timeout']}"
+        )
+        return kwargs
+    except Exception as e:
+        logger.warning(f"读取 config.yaml 的 llm 段失败, 退回环境变量自动检测: {e}")
+        return {}
+
+
 def _get_rag():
-    """惰性加载 GraphRAG — 首次调用时构建 131 本体 + LLM 后端"""
+    """惰性加载 GraphRAG — 首次调用时构建本体 + LLM 后端"""
     global _graphrag, _engine
     if _graphrag is None:
         try:
@@ -107,7 +155,8 @@ def _get_rag():
             from plugin_runtime import runtime
         runtime.deliver_engine(_engine)
 
-        _graphrag = GraphRAG(_engine)  # 自动检测 ANTHROPIC_API_KEY / OPENAI_API_KEY
+        # 先看 config.yaml 的 llm 段（本地模型走这条）；没配才自动检测环境变量
+        _graphrag = GraphRAG(_engine, **_llm_kwargs())
         logger.info(f"GraphRAG: LLM={'ready' if _graphrag._llm else 'none'}")
 
     return _graphrag, _engine
@@ -552,22 +601,62 @@ async def graphrag_alarm_analyze(body: AlarmAnalyzeRequest):
 # OWL/RDF 形式化本体
 # ═══════════════════════════════════════════════════════════
 
+def _merged_rdf():
+    """RDF 出口用的**同一张图**：引擎本体 ∪ 统一图库里业务插件挂进来的命名空间。
+
+    2026-10-05 起 .owl/.ttl/.jsonld、sparql、rdf/stats 全部走这里 —— 既让业务插件在
+    语义/推理/导出侧真正生效，也保住既有判据（triples == parse(ontology.owl)）。
+    """
+    _, engine = _get_rag()
+    return bridge.merged(engine)
+
+
 @router.get("/ontology.owl")
 async def graphrag_owl():
-    """导出 OWL 2 RDF/XML 格式本体 — 可直接导入 Protégé"""
-    _, engine = _get_rag()
+    """导出 OWL 2 RDF/XML 格式本体 — 可直接导入 Protégé（含统一图库的业务命名空间）"""
     from fastapi.responses import Response
-    xml = engine.export_owl()
-    return Response(content=xml, media_type="application/rdf+xml")
+    g, _ = _merged_rdf()
+    return Response(content=g.serialize(format="xml"), media_type="application/rdf+xml")
 
 
 @router.get("/ontology.ttl")
 async def graphrag_turtle():
-    """导出 Turtle 格式本体 — 人类可读"""
+    """导出 Turtle 格式本体 — 人类可读（含统一图库的业务命名空间）"""
+    from fastapi.responses import PlainTextResponse
+    g, _ = _merged_rdf()
+    return PlainTextResponse(content=g.serialize(format="turtle"), media_type="text/turtle")
+
+
+@router.get("/ontology.jsonld")
+async def graphrag_jsonld():
+    """导出 JSON-LD 格式本体 — 与 .owl/.ttl 是**同一张图**的第三种序列化
+
+    GB/T 48000.3 §5.3 要求本体「应使用标准化的序列化格式（如 Turtle、JSON-LD 等）」。
+    """
+    from fastapi.responses import Response
+    g, _ = _merged_rdf()
+    return Response(content=g.serialize(format="json-ld"), media_type="application/ld+json")
+
+
+@router.get("/ontology.shacl.ttl")
+async def graphrag_shacl_shapes():
+    """导出 SHACL 形状图（Turtle）— §5.3 第三句「应支持基于 SHACL 的约束验证」
+
+    2026-10-05 起：形状 = **引擎形状 ∪ 统一图库里各业务命名空间携带的形状**
+    （业务插件用 register_graph(..., "shapes": <turtle>) 携带；见 src/web/rdf_bridge.py）。
+    没携带形状的命名空间只是不出现在本出口里 —— 不是错误。
+
+    ⚠️ 这里导出的是**形状**, 不是验证结论 —— 形状文件描述"什么样的数据合规",
+    它对某一份数据到底合不合规没有结论。结论由各域自跑（业务插件自带形状 + pyshacl
+    结论，如 /api/plugin/quality/selftest）。
+    """
     _, engine = _get_rag()
     from fastapi.responses import PlainTextResponse
-    ttl = engine.export_turtle()
-    return PlainTextResponse(content=ttl, media_type="text/turtle")
+    ttl, info = bridge.merged_shapes(engine)
+    src = ",".join("%s:%s" % (n["ns"], "ok" if n.get("ok") else "parse-failed")
+                   for n in info.get("namespaces", [])) or "none"
+    return PlainTextResponse(content=ttl, media_type="text/turtle",
+                             headers={"X-Shapes-Sources": src})
 
 
 class SparqlRequest(BaseModel):
@@ -576,7 +665,7 @@ class SparqlRequest(BaseModel):
 
 @router.post("/sparql")
 async def graphrag_sparql(body: SparqlRequest):
-    """SPARQL 查询端点 — 查询跑在与 /ontology.owl 同一张 RDF 图上
+    """SPARQL 查询端点 — 查询跑在与 /ontology.owl 同一张（并集）图上
 
     Examples:
       SELECT ?device ?name WHERE { ?device rdf:type dgiot:Device ; dgiot:name ?name }
@@ -585,12 +674,57 @@ async def graphrag_sparql(body: SparqlRequest):
     ⚠️ 非法查询返回 400，不返回空结果 —— 「查不到」与「查询写错了」必须分得开，
     否则语法错误会被读成"这个本体里没有数据"。
     """
-    _, engine = _get_rag()
+    g, _ = _merged_rdf()
     try:
-        results = engine.sparql(body.query)
+        res = g.query(body.query)
     except Exception as e:
         raise HTTPException(400, f"SPARQL 查询无效: {type(e).__name__}: {e}")
-    return {"total": len(results), "results": results, "query": body.query}
+    rows = [{str(k): (None if v is None else str(v)) for k, v in zip(res.vars, row)} for row in res]
+    return {"total": len(rows), "results": rows, "query": body.query}
+
+
+class HubValidateRequest(BaseModel):
+    ns: str = Field(..., min_length=1, description="统一图库里的命名空间，如 quality")
+
+
+@router.post("/validate")
+async def graph_hub_validate(body: HubValidateRequest):
+    """对统一图库里某个**业务命名空间**真跑一次 SHACL 验证，返回结论。
+
+    与 `/ontology.shacl.ttl` 的分工：那个出口给**形状**（什么算合规），本出口给**结论**
+    （这份数据到底合不合规）。两者分开，是为了不把"导出了形状文件"读成"验证过了"。
+
+    形状 = 引擎形状 ∪ 该命名空间携带的形状。该命名空间**没携带形状**时形状侧只剩引擎形状，
+    那对本域数据基本无约束 —— 所以返回值显式给 `shapes_from_namespace`，不让人把
+    "引擎形状没报错"读成"业务域验过了、没问题"。
+
+    刻意**不开 RDFS 推理**：本检查针对显式声明（开推理会把每个资源推成 rdfs:Resource，
+    闭集 sh:in 会误伤正常数据 —— 2026-10-05 实测 1003 条误报）。
+    pyshacl 缺失时**抛 500**，不返回 conforms=True（与 engine.validate_shacl 同款纪律）。
+    """
+    from rdflib import Graph
+    g, info = bridge.namespace_graph(body.ns)
+    if info.get("error"):
+        raise HTTPException(404, f"读不到命名空间 {body.ns!r}: {info['error']}")
+    if not len(g):
+        raise HTTPException(404, f"统一图库里没有命名空间 {body.ns!r} 的数据")
+    _, engine = _get_rag()
+    shapes = Graph()
+    shapes.parse(data=engine.export_shacl(), format="turtle")
+    engine_shapes = len(shapes)
+    ns_shapes = bridge.shapes_for(body.ns)
+    if ns_shapes:
+        shapes.parse(data=ns_shapes, format="turtle")
+    try:
+        from pyshacl import validate as shacl_validate
+    except ImportError as e:  # pyshacl 缺失是"不支持"，不是"通过"
+        raise HTTPException(500, f"SHACL 验证需要 pyshacl：{e}")
+    conforms, _, text = shacl_validate(g, shacl_graph=shapes, inference=None)
+    return {"ns": body.ns, "conforms": bool(conforms),
+            "data_triples": len(g), "shapes_triples": len(shapes),
+            "engine_shapes_triples": engine_shapes,
+            "shapes_from_namespace": bool(ns_shapes),
+            "graph_info": info, "report_head": text[:800]}
 
 
 @router.get("/rdf/stats")
@@ -598,10 +732,11 @@ async def graphrag_rdf_stats():
     """图上构件计数 — 界面显示的三元组/类/属性数一律取这里，不许手写。
 
     判据 (tests/test_ontology_sparql.py)：triples 必须等于把 /ontology.owl
-    下载下来重新 parse 出来的三元组数 —— 同一张图，两个出口。
+    下载下来重新 parse 出来的三元组数 —— 同一张图，两个出口（现均走并集图）。
+    额外给出 graph_hub 段：引擎三元组数 + 各业务命名空间规模（现算）。
     """
     _, engine = _get_rag()
-    return engine.rdf_stats()
+    return bridge.stats(engine)
 
 
 # ═══════════════════════════════════════════════════════════
@@ -1649,14 +1784,32 @@ class OntologyBatchImport(BaseModel):
 
 
 def _persist_engine(engine):
-    """持久化本体到 SQLite"""
+    """持久化本体到 SQLite —— **并重建实体索引**
+
+    这里是 5 处写路径的唯一咽喉（create / update / delete / import / sync）。
+    索引只在 `GraphRAG.__init__` 建过一次，不在这儿重建的话，新建的对象在
+    `/ask`(auto) 与 `/search`(默认 semantic) 里查不到，**直到进程重启** ——
+    落库成功、界面正常、问答看不见，静默。
+
+    索引重建失败**不影响**持久化结果：两件事各自成不成，别让一头否决另一头
+    （同 `register()` 对 `get_path()` 的那个区分）。
+    """
     try:
         result = engine.sync_to_parse("default")
         logger.info(f"本体已持久化: {result}")
-        return result
     except Exception as e:
         logger.warning(f"本体持久化失败: {e}")
-        return {"error": str(e)}
+        result = {"error": str(e)}
+
+    # _graphrag 还没建（本次进程内没人读过）时不用管 ——
+    # 它下次 __init__ 会自己带上最新本体，不存在陈旧。
+    if _graphrag is not None:
+        try:
+            _graphrag.refresh_index()
+        except Exception as e:
+            logger.warning(f"实体索引重建失败: {e}")
+
+    return result
 
 
 @router.post("/aip/objects/create", dependencies=[Depends(require_admin)])

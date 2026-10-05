@@ -4,21 +4,23 @@ IO 服务器扫描通道 — WinRM CONNECT
 一个 IO 服务器 = 一个通道实例。自注册为插件。
 
 用法 (配置文件驱动):
-  POST /api/channels/ch_io_131/start    → 扫描
-  GET  /api/channels/ch_io_131/health   → 结果
-  POST /api/channels/ch_io_131/stop     → 断开
+  POST /api/channels/ch_io_scanner/start    → 扫描
+  GET  /api/channels/ch_io_scanner/health   → 结果
+  POST /api/channels/ch_io_scanner/stop     → 断开
 
 配置 JSON (io_config.json):
   {"ip":"127.0.0.1","user":"admin","password":"xxx",
-   "vendor":"force|opc|rockwell","ports":"8889 502 135"}
+   "vendor":"opc|rockwell|siemens","ports":"8889 502 135"}
 """
 import os, sys, json, logging, asyncio
 from typing import Optional, Dict
 
 log = logging.getLogger("io_scanner")
 
-# 需要哪个通道就配置哪个
-DEFAULT_VENDOR = "force|opc|rslinx|iomonitor|rockwell|factory|wonderware|intouch|ifix|wincc|kepware|matrikon|siemens|modicon|mitsubishi|omron|beckhoff|codesys"
+# 需要哪个通道就配置哪个。默认值只列**通用工控厂商 / 公开产品**关键词；
+# 现场专有的进程名与软件名请从 config 的 "vendor" 传入（:121 优先读配置）——
+# 这里写的是会随公开副本一起发出去的默认值，等于把现场指纹一并公开。
+DEFAULT_VENDOR = "opc|rslinx|rockwell|factory|wonderware|intouch|ifix|wincc|kepware|matrikon|siemens|modicon|mitsubishi|omron|beckhoff|codesys"
 DEFAULT_PORTS  = "8889 502 135 53001 4840 4841 102 44818 2222 9600"
 
 

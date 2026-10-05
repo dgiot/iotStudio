@@ -21,6 +21,9 @@ body{font-family:'Segoe UI','Microsoft YaHei',sans-serif;background:#0a0e17;colo
 .step.active .t{color:#e2e8f0}
 .step .s{font-size:10px;color:#64748b;margin-top:2px}
 .step.done::after{content:'✓';position:absolute;top:4px;right:8px;color:#10b981;font-size:12px}
+.step.skip{box-shadow:inset 0 0 0 1px #334155}
+.step.skip .n{background:transparent;border:1px dashed #475569}
+.step.skip .t{color:#64748b}
 .main{max-width:900px;margin:0 auto;padding:24px}
 .card{background:#1a2332;border:1px solid #1e293b;border-radius:8px;padding:20px;margin-bottom:16px}
 .card h2{font-size:16px;color:#e2e8f0;margin-bottom:12px}
@@ -44,6 +47,8 @@ body{font-family:'Segoe UI','Microsoft YaHei',sans-serif;background:#0a0e17;colo
 .hint-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}
 .hint{font-size:11px;padding:8px 12px;background:#0f172a;border:1px solid #1e293b;border-radius:6px;cursor:pointer}
 .hint:hover{border-color:#4a9eff;color:#4a9eff}
+.accel{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;background:#0f172a;border:1px dashed #4a9eff;border-radius:8px;padding:12px 16px;margin:-6px 0 18px}
+.accel-t{font-size:13px;color:#94a3b8}
 </style>
 </head>
 <body>
@@ -55,12 +60,36 @@ body{font-family:'Segoe UI','Microsoft YaHei',sans-serif;background:#0a0e17;colo
 
 <div class="steps">
   <div class="step active" id="step1" onclick="goStep(1)"><div class="n">1</div><div class="t">物模型定义</div><div class="s">Product Model</div></div>
-  <div class="step" id="step2" onclick="goStep(2)"><div class="n">2</div><div class="t">本体编译</div><div class="s">Ontology</div></div>
-  <div class="step" id="step3" onclick="goStep(3)"><div class="n">3</div><div class="t">协议发现</div><div class="s">Scan</div></div>
-  <div class="step" id="step4" onclick="goStep(4)"><div class="n">4</div><div class="t">规则引擎</div><div class="s">Rules</div></div>
-  <div class="step" id="step5" onclick="goStep(5)"><div class="n">5</div><div class="t">驾驶舱</div><div class="s">Dashboard</div></div>
-  <div class="step" id="step6" onclick="goStep(6)"><div class="n">6</div><div class="t">AI Agent</div><div class="s">NL→Auto</div></div>
+  <div class="step" id="step2" onclick="goStep(2)"><div class="n">2</div><div class="t">本体语义建模</div><div class="s">Ontology</div></div>
+  <div class="step" id="step3" onclick="goStep(3)"><div class="n">3</div><div class="t">协议自动发现</div><div class="s">Scan</div></div>
+  <div class="step skip" id="step4" onclick="goStep(4)"><div class="n">4</div><div class="t">时序存储</div><div class="s">Time-Series · 平台承担</div></div>
+  <div class="step" id="step5" onclick="goStep(5)"><div class="n">5</div><div class="t">规则引擎</div><div class="s">Rules</div></div>
+  <div class="step" id="step6" onclick="goStep(6)"><div class="n">6</div><div class="t">驾驶舱</div><div class="s">Dashboard</div></div>
 </div>
+
+<!-- ⚠️ 六格按**基准位次**排列（2026-09-20 重排）。重排前它们是**向导的点击顺序**,
+     与上方副标题那套基准六步只在前三步重合 —— 同一屏里两句都真, 而一个字的
+     说明都没有, 读的人只会以为其中一个是错的。
+     现在两者同一套编号, 但**内容仍不是一回事**: 第 4 格向导不实现它, 点开只有说明。
+     事实源在 src/web/fde_api.py 的 FDE_STEPS, 判据在 tests/test_fde_steps.py
+     （改了这里不改那里会红）。
+     AI Agent **不在步骤条里**（重排前它占着第 6 格）: 它横跨全部步骤, 所以它的
+     正文才写「AI 自动完成全部 6 步配置」——若它是其中一步, 那句话就包含它自己。
+     第 4 格带 `skip` 类（虚线框 + 数字圈虚线 + 副标题缀「平台承担」）—— 六格在
+     点击前长得一模一样, 光靠下面那句说明承载不住「这一格向导不做」。 -->
+<p style="font-size:12px;color:#64748b;margin:-14px 0 18px">
+  六格按<b>基准位次</b>排列（Palantir FDE 交付方法论）·
+  向导覆盖第 <b>1/2/3/5/6</b> 步 ·
+  第 <b>4</b> 步「时序存储」由平台 TDengine 承担，<b>向导不实现它</b>
+  （点开只有说明，那不是遗漏、也不是「还没做」）·
+  <b>AI Agent 是横跨全部 6 步的加速器，不是第七步</b>
+</p>
+
+<div class="accel">
+  <span class="accel-t">🚀 <b>AI 加速器</b> —— 横跨全部 6 步，不是其中一步</span>
+  <button class="btn success" onclick="toggleAgent()">用一句话生成全部配置</button>
+</div>
+<div id="agentPanel"></div>
 
 <div class="main" id="main"></div>
 
@@ -140,7 +169,7 @@ async function submitStep1(){
   }catch(e){alert('创建失败: '+e.message)}
 }
 
-// ═══ Step 2: 本体编译 ═══
+// ═══ Step 2: 本体语义建模 ═══
 function renderStep2(m){
   m.innerHTML=`
     <div class="card"><h2>🧠 Step 2: 本体语义建模</h2>
@@ -163,7 +192,7 @@ async function submitStep2(){
   }catch(e){alert(e.message)}
 }
 
-// ═══ Step 3: 协议发现 ═══
+// ═══ Step 3: 协议自动发现 ═══
 function renderStep3(m){
   m.innerHTML=`
     <div class="card"><h2>🔌 Step 3: 协议自动发现</h2>
@@ -193,74 +222,105 @@ async function submitStep3(){
   }catch(e){document.getElementById('scanResult').innerHTML='<div style="color:#ef4444">'+e.message+'</div>'}
 }
 
-// ═══ Step 4: 规则引擎 ═══
+// ═══ Step 4: 时序存储（平台承担 —— 向导**不实现**这一步）═══
 function renderStep4(m){
   m.innerHTML=`
-    <div class="card"><h2>⚙️ Step 4: 规则引擎</h2>
-    <p style="font-size:13px;color:#94a3b8;margin-bottom:12px">物模型中的告警阈值已自动编译为约束规则</p>
-    <div class="result">${state.ontology?JSON.stringify(state.ontology.entities.constraints,null,2):'请先完成 Step 2 本体编译'}</div>
-    <p style="font-size:12px;color:#64748b;margin-top:8px">✅ 规则引擎已就绪。告警触发时自动执行: 阈值判定 → 约束匹配 → 动作推送</p>
+    <div class="card"><h2>🗄️ Step 4: 时序存储</h2>
+    <p style="font-size:13px;color:#94a3b8;margin-bottom:12px">这一步<b>不在向导内</b> —— 平台已用 TDengine 超表承担，无需在此配置</p>
+    <div class="result">超表: 一点一列 (tags: device/point) · 写入: 采集引擎直推 · 查询: /api/query</div>
+    <p style="font-size:12px;color:#64748b;margin-top:8px">⚠️ 六格里只有这一格点开没有按钮 —— 其余五格是可执行的表单，这一格只有说明。
+    向导确实不覆盖它，那不是遗漏、也不是「还没做」: 基准第 4 步由平台承担。</p>
     <button class="btn primary" onclick="goStep(5)">下一步 →</button></div>`;
-  document.getElementById('step4').classList.add('done');
+  // ⚠️ 刻意**不**标 done —— 向导没做这一步。标了就等于让页面替平台领功,
+  //    而这一格占着位置的全部意义正是「向导不覆盖它」。步骤条第 4 格因此
+  //    走完全程也不会亮, 那是**设计**, 不是漏标。
 }
 
-// ═══ Step 5: 驾驶舱 ═══
+// ═══ Step 5: 规则引擎 ═══
 function renderStep5(m){
+  m.innerHTML=`
+    <div class="card"><h2>⚙️ Step 5: 规则引擎</h2>
+    <p style="font-size:13px;color:#94a3b8;margin-bottom:12px">物模型中的告警阈值已自动编译为约束规则</p>
+    <div class="result">${state.ontology?JSON.stringify(state.ontology.entities.constraints,null,2):'请先完成 Step 2 本体语义建模'}</div>
+    <p style="font-size:12px;color:#64748b;margin-top:8px">✅ 规则引擎已就绪。告警触发时自动执行: 阈值判定 → 约束匹配 → 动作推送</p>
+    <button class="btn primary" onclick="goStep(6)">下一步 →</button></div>`;
+  document.getElementById('step5').classList.add('done');
+}
+
+// ═══ Step 6: 驾驶舱 ═══
+function renderStep6(m){
   const devType=state.product?.devType||'inverter';
   m.innerHTML=`
-    <div class="card"><h2>📊 Step 5: 驾驶舱一键生成</h2>
+    <div class="card"><h2>📊 Step 6: 驾驶舱一键生成</h2>
     <div class="form-row"><label>产品类型</label><input id="dashDevType" value="${devType}"></div>
-    <button class="btn primary" onclick="submitStep5()">🎨 生成驾驶舱</button>
+    <button class="btn primary" onclick="submitStep6()">🎨 生成驾驶舱</button>
     <div id="dashResult"></div></div>`;
 }
 
-async function submitStep5(){
+async function submitStep6(){
   const devType=document.getElementById('dashDevType').value;
   try{
     const r=await fetch(API+'/dashboard',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({devType})});
     state.dashboard=await r.json();
     document.getElementById('dashResult').innerHTML=`<div class="result">${JSON.stringify(state.dashboard.dashboard,null,2)}</div>
       <div style="margin-top:8px"><span class="tag ok">KPI卡片: ${state.dashboard.dashboard.cards.length}个</span><span class="tag ok">趋势点: ${state.dashboard.dashboard.trend_chart.points.length}个</span><span class="tag ok">告警: ${state.dashboard.dashboard.alarm_panel.points.length}个</span></div>`;
-    document.getElementById('step5').classList.add('done');
+    document.getElementById('step6').classList.add('done');
   }catch(e){alert(e.message)}
 }
 
-// ═══ Step 6: AI Agent ═══
-function renderStep6(m){
-  m.innerHTML=`
-    <div class="card"><h2>🤖 Step 6: AI Agent 自动生成</h2>
-    <p style="font-size:13px;color:#94a3b8;margin-bottom:12px">用自然语言描述需求，AI 自动完成全部 6 步配置</p>
+// ═══ AI 加速器 —— **不在步骤条里**, 横跨全部 6 步 ═══
+// ⚠️ 它原先占着步骤条第 6 格。搬出来是因为那格与它自己的文案打架: 正文写
+// 「AI 自动完成全部 6 步配置」, 若它是第 6 步, 那句话就包含它自己。
+// 现在它排在步骤条下方独立成条, 不占格、也不参与 goStep 的编号。
+function toggleAgent(){
+  const p=document.getElementById('agentPanel');
+  if(p.innerHTML.trim()){p.innerHTML='';return}
+  renderAgent(p);
+}
+
+function renderAgent(p){
+  p.innerHTML=`
+    <div class="card"><h2>🤖 AI 加速器: 一句话生成全部配置</h2>
+    <p style="font-size:13px;color:#94a3b8;margin-bottom:12px">用自然语言描述需求，AI 自动完成全部 6 步配置 —— 它<b>横跨全部步骤、不是其中一步</b>，所以它不占步骤条的格子</p>
     <textarea class="nl-input" id="nlDesc" placeholder="例如: 我需要监控一台光伏逆变器，采集功率电压电流，功率超过5000W告警，温度超过80°C告警"></textarea>
     <div class="hint-grid">
-      <div class="hint" onclick="document.getElementById('nlDesc').value='我需要监控一台光伏逆变器，采集有功功率、A相电压、A相电流、温度，功率超过5000W告警，温度超过80°C告警';submitStep6()">☀️ 光伏逆变器监控</div>
-      <div class="hint" onclick="document.getElementById('nlDesc').value='监控储能PCS，采集SOC、SOH、有功功率、电芯温度，温度超过50°C告警';submitStep6()">🔋 储能PCS监控</div>
-      <div class="hint" onclick="document.getElementById('nlDesc').value='监控充电桩，采集充电功率、输出电压电流、模块温度，温度超过60°C告警';submitStep6()">🔌 充电桩监控</div>
-      <div class="hint" onclick="document.getElementById('nlDesc').value='监控箱变降压变，采集三相电压、三相电流、频率、变压器温度';submitStep6()">🔲 箱变监控</div>
+      <div class="hint" onclick="document.getElementById('nlDesc').value='我需要监控一台光伏逆变器，采集有功功率、A相电压、A相电流、温度，功率超过5000W告警，温度超过80°C告警';submitAgent()">☀️ 光伏逆变器监控</div>
+      <div class="hint" onclick="document.getElementById('nlDesc').value='监控储能PCS，采集SOC、SOH、有功功率、电芯温度，温度超过50°C告警';submitAgent()">🔋 储能PCS监控</div>
+      <div class="hint" onclick="document.getElementById('nlDesc').value='监控充电桩，采集充电功率、输出电压电流、模块温度，温度超过60°C告警';submitAgent()">🔌 充电桩监控</div>
+      <div class="hint" onclick="document.getElementById('nlDesc').value='监控箱变降压变，采集三相电压、三相电流、频率、变压器温度';submitAgent()">🔲 箱变监控</div>
     </div>
-    <button class="btn success" onclick="submitStep6()" style="margin-top:12px;font-size:14px;padding:10px 24px">🚀 一键生成全部配置</button>
+    <button class="btn success" onclick="submitAgent()" style="margin-top:12px;font-size:14px;padding:10px 24px">🚀 一键生成全部配置</button>
     <div id="agentResult"></div></div>`;
 }
 
-async function submitStep6(){
+async function submitAgent(){
   const desc=document.getElementById('nlDesc').value;
   if(!desc)return alert('请输入描述');
   document.getElementById('agentResult').innerHTML='<div style="color:#f59e0b;margin-top:10px">⏳ AI 正在分析...</div>';
   try{
     const r=await fetch(API+'/agent',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({description:desc})});
     const d=await r.json();
+    // ⚠️ StepN 标签用**基准位次** —— 与返回键、与上方步骤条**同一套**。
+    // 重排前不是: 这里写的是 `Step4: ${d.step5_rules...}` 才读得通（标签用向导
+    // 点击顺序、键用基准位次）, 那是唯一一处能在单行内自证的化石层。重排后
+    // 步骤条也按基准位次了, 这行标签与键才第一次真正同源。
     let h=`<div class="result" style="margin-top:12px"><b>🤖 推断结果:</b> ${d.inferred.product_name} (${d.inferred.device_type}) | ${d.inferred.points} 个测点</div>`;
     h+=`<div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px">`;
     h+=`<span class="tag ok">✅ Step1: 物模型已创建 (${d.step1_product.point_count}点)</span>`;
     h+=`<span class="tag ok">✅ Step2: 本体已编译 (${d.step2_ontology.devices}设备/${d.step2_ontology.points}点/${d.step2_ontology.constraints}规则)</span>`;
     h+=`<span class="tag ok">✅ Step3: ${d.step3_scan_hint}</span>`;
-    h+=`<span class="tag ok">✅ Step4: ${d.step5_rules.length}条规则</span>`;
-    h+=`<span class="tag ok">✅ Step5: 驾驶舱已生成</span>`;
-    h+=`<span class="tag ok">✅ Step6: ${d.step6_deploy}</span>`;
+    h+=`<span class="tag">⏭️ Step4: 时序存储由平台 TDengine 承担 (不在向导内)</span>`;
+    h+=`<span class="tag ok">✅ Step5: ${d.step5_rules.length}条规则</span>`;
+    h+=`<span class="tag ok">✅ Step6: 驾驶舱已生成</span>`;
+    h+=`<span class="tag">📦 ${d.deploy_hint}</span>`;
     h+=`</div>`;
     document.getElementById('agentResult').innerHTML=h;
     state.product={devType:d.inferred.device_type};
     state.ontology={entities:{constraints:d.step5_rules}};
-    [1,2,3,4,5,6].forEach(i=>document.getElementById('step'+i).classList.add('done'));
+    // 标 1/2/3/5/6 —— **不标 4**: 时序存储由平台承担, 加速器和向导都没做它。
+    // （重排前这里是 [1,2,3,4,5], 因为第 6 格是加速器自己 —— 把它也标成「完成」
+    //   等于让它给自己盖章。现在第 6 格是驾驶舱, 加速器**确实**生成了它, 所以标。）
+    [1,2,3,5,6].forEach(i=>document.getElementById('step'+i).classList.add('done'));
   }catch(e){document.getElementById('agentResult').innerHTML='<div style="color:#ef4444">'+e.message+'</div>'}
 }
 

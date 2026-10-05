@@ -40,38 +40,57 @@ class OpcUaAdapter:
         self.config = config
         self._client: Optional[Any] = None
         self._connected = False
+        # REQ-DEV-002 (2026-10-05): 运行时递给本适配器的是通用 ProtocolConfig
+        # (src/protocols/base.py)——协议私有字段落在 config.extra 里（collector 把
+        # comm_params 塞进 extra）。原先直接读 self.config.endpoint_url，连不上时
+        # **异常处理块自己也会读该字段** ⇒ 处理异常时再抛 AttributeError ⇒ 创建
+        # 设备的请求被升级成 HTTP 500。这里一次性解析成局部值，所有日志/异常路径
+        # 只用已解析的值，保证 connect() 只可能返回 False，绝不抛出。
+        extra = getattr(config, "extra", None) or {}
+        self._endpoint = (
+            getattr(config, "endpoint_url", None)
+            or extra.get("endpoint")
+            or extra.get("endpoint_url")
+            or "opc.tcp://127.0.0.1:4840"
+        )
+        self._timeout = int(getattr(config, "timeout", None) or extra.get("timeout") or 10)
+        self._security_policy = getattr(config, "security_policy", None) or extra.get("security_policy") or "None"
+        self._username = getattr(config, "username", None) or extra.get("username") or ""
+        self._password = getattr(config, "password", None) or extra.get("password") or ""
 
     async def connect(self) -> bool:
         """建立 OPC UA 会话连接
 
         支持匿名和用户名/密码认证两种方式。
         根据 security_policy 配置选择安全策略。
+        契约：**任何失败都返回 False，不抛异常**（REQ-DEV-002）。
         """
+        endpoint = self._endpoint
         try:
             from asyncua import Client as OPCUAClient
 
-            self._client = OPCUAClient(url=self.config.endpoint_url, timeout=self.config.timeout)
+            self._client = OPCUAClient(url=endpoint, timeout=self._timeout)
 
-            if self.config.security_policy != "None":
+            if self._security_policy != "None":
                 self._client.set_security_string(
-                    f"{self.config.security_policy},SignAndEncrypt,cert.pem,key.pem"
+                    f"{self._security_policy},SignAndEncrypt,cert.pem,key.pem"
                 )
 
             await self._client.connect()
 
-            if self.config.username:
-                self._client.set_user(self.config.username)
-                self._client.set_password(self.config.password)
+            if self._username:
+                self._client.set_user(self._username)
+                self._client.set_password(self._password)
 
             self._connected = True
-            log.info(f"[opcua] 连接成功 {self.config.endpoint_url}")
+            log.info(f"[opcua] 连接成功 {endpoint}")
             return True
         except ImportError:
             log.error("[opcua] asyncua 未安装, pip install asyncua")
             self._connected = False
             return False
         except Exception as e:
-            log.error(f"[opcua] 连接失败 {self.config.endpoint_url}: {e}")
+            log.error(f"[opcua] 连接失败 {endpoint}: {e}")
             self._connected = False
             return False
 
@@ -83,7 +102,7 @@ class OpcUaAdapter:
             except Exception:
                 pass
         self._connected = False
-        log.info(f"[opcua] 已断开 {self.config.endpoint_url}")
+        log.info(f"[opcua] 已断开 {getattr(self, '_endpoint', '?')}")
 
     async def browse(self, node_id: str = "ns=0;i=84") -> List[Dict[str, Any]]:
         """浏览 OPC UA 地址空间

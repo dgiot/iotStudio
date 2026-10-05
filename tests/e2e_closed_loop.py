@@ -187,7 +187,7 @@ def test_opcda_read():
         s = socket.socket()
         s.settimeout(3)
         s.connect(("127.0.0.1", 13500))
-        items = b"02012170058.Ia;02012170058.Ib;02012170058.Ua"
+        items = b"DEV-0004.Ia;DEV-0004.Ib;DEV-0004.Ua"
         payload = struct.pack(">HH", 0x0000, 0x0001) + items
         s.send(payload); resp = s.recv(4096); s.close()
         assert len(resp) > 4

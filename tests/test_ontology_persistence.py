@@ -262,7 +262,7 @@ def test_load_works_with_row_factory(tmp_path, monkeypatch):
 def test_build_engine_prefers_persisted_over_seed(db_path):
     """库里有数据 → 用库里的, 且不是种子
 
-    种子是演示数据(build_131_ontology), 若它混进来, 这里会看到种子站点。
+    种子是演示数据(build_edge_ontology), 若它混进来, 这里会看到种子站点。
     """
     from src.ontology import build_engine
 
@@ -288,7 +288,7 @@ def test_build_engine_falls_back_to_seed_when_db_empty(db_path):
 def test_plugin_runtime_ontology_reads_persisted(db_path):
     """插件拿到的本体必须是**落库的那份**, 不是种子
 
-    这条钉的是第三处入口: PluginManager 原先自己 build_131_ontology(),
+    这条钉的是第三处入口: PluginManager 原先自己 build_edge_ontology(),
     于是"插件看见的本体"和"API 服务的本体"是两个不同实例 —— 通过 API
     建的对象, 插件永远看不见。两个实例还各自演化, 更难查。
     """

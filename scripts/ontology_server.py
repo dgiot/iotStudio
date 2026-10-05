@@ -24,6 +24,8 @@ PORT = 48765
 HERE = os.path.dirname(os.path.abspath(__file__))
 VIEW = os.path.join(HERE, 'ontology_view.html')
 # 视图回退：合并版视图在 frontend-vue/public/ontology_graph.html（同源），无本地视图时复用
+# 2026-10-05: 允许用 ONTOLOGY_VIEW 指定外部视图（与 ONTOLOGY_GRAPH 对称；私料视图勿入本仓）
+VIEW = os.environ.get('ONTOLOGY_VIEW') or VIEW
 if not os.path.isfile(VIEW):
     _alt_view = os.path.join(HERE, '..', 'frontend-vue', 'public', 'ontology_graph.html')
     if os.path.isfile(_alt_view):
@@ -68,9 +70,28 @@ class Handler(BaseHTTPRequestHandler):
         self.end_headers()
         self.wfile.write(body)
 
+    def _static(self, rel):
+        """外部视图（ONTOLOGY_VIEW）的相对资源：只放行**视图所在目录内**的文件，防目录穿越。
+
+        2026-10-05 新增：底座的查看器原先只路由 `/`、`/graph`、`/health`，
+        外部视图引用 `./vendor/echarts.min.js` 会 404 ⇒ 图表起不来。
+        这里把视图同级目录作为静态根，业务插件即可自带离线资源（底座不搬私料）。
+        """
+        base = os.path.dirname(os.path.abspath(VIEW))
+        target = os.path.abspath(os.path.join(base, rel.lstrip('/')))
+        if not target.startswith(base + os.sep) or not os.path.isfile(target):
+            self.send_response(404); self.end_headers(); return
+        ext = os.path.splitext(target)[1].lower()
+        ctype = {'.js': 'application/javascript', '.css': 'text/css', '.json': 'application/json',
+                 '.svg': 'image/svg+xml', '.png': 'image/png', '.ico': 'image/x-icon'}.get(
+                     ext, 'application/octet-stream')
+        self._send(open(target, 'rb').read(), ctype)
+
     def do_GET(self):
         p = self.path.split('?')[0]
-        if p in ('/', '/index.html'):
+        if p.startswith('/vendor/') or p.startswith('/assets/'):
+            self._static(p)
+        elif p in ('/', '/index.html'):
             if os.path.isfile(VIEW):
                 self._send(open(VIEW, 'rb').read(), 'text/html')
             else:

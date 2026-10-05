@@ -213,7 +213,7 @@ def _parse_to_ontology(hostname, host, sysinfo, mem, cpu, disk, net, procs):
 
 
 # ═══════════════════════════════════════════════════════════
-# Oracle 生产数据 API (via 131 bridge)
+# Oracle 生产数据 API (via edge bridge)
 # ═══════════════════════════════════════════════════════════
 
 @router.get("/oracle/ping")

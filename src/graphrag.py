@@ -14,10 +14,10 @@ LLM 后端:
   - 内置 httpx 调用 Claude API (复用现有 httpx 依赖)
 
 用法:
-  from .ontology import build_131_ontology
+  from .ontology import build_edge_ontology
   from .graphrag import GraphRAG
 
-  engine = build_131_ontology()
+  engine = build_edge_ontology()
   rag = GraphRAG(engine, llm_api_key="sk-...")
   answer = rag.ask("DEV_A 井的套压安全吗？")
 """
@@ -76,8 +76,8 @@ class EntityIndex:
         _aliases = {
             "ch_a11_rtu": "A11 A11通道 A11采集 功图采集 RTU通道 行业协议",
             "ch_modbus_tcp": "modbus modbus通道 modbus采集",
-            "dev_relay_00": "线路保护 DSL 过流保护 DSL-31A",
-            "dev_relay_10": "变压器保护 变压器差动 DST 差动保护 DST-31A",
+            "dev_relay_00": "线路保护 DSL 过流保护 RELAY-L",
+            "dev_relay_10": "变压器保护 变压器差动 DST 差动保护 RELAY-T",
             "dev_relay_40": "电动机保护 电机保护 堵转 马达保护",
             "dev_relay_50": "变压器差动 DST-22D 变压器",
             "pt_tgp": "套压 套管压力 井口压力 压力",
@@ -955,20 +955,23 @@ class GraphRAG:
             return {"answer": summary["error"], "summary": summary}
 
         # 2. LLM 回答
+        # 键名以 engine.community_summary() 的真实返回为准：{level, groups, text}。
+        # 它**从来没有** text_summary —— 那是 _summarize()(:586) 的键。
+        # 两处「摘要文本」同名不同源，这里曾据此抛 KeyError（无 LLM 的 else 分支也崩）。
         if self._llm:
             user_prompt = f"""## 用户问题
 {question}
 
 ## {level.upper()} 级别社区摘要
-{summary['text_summary']}
+{summary['text']}
 
 ## 详细统计
-{json.dumps(summary.get('stats', summary.get('entities', [])), ensure_ascii=False, indent=2)}
+{json.dumps(summary.get('groups', []), ensure_ascii=False, indent=2)}
 
 请根据以上摘要回答用户问题。如果数据不足以回答，请说明需要哪些额外信息。"""
             answer = self._llm(GRAPH_RAG_SYSTEM_PROMPT, user_prompt)
         else:
-            answer = summary["text_summary"]
+            answer = summary["text"]
 
         return {"answer": answer, "level": level, "summary": summary}
 

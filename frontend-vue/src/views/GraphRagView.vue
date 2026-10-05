@@ -30,7 +30,7 @@
             <p>基于 5 层本体模型的智能问答</p>
             <div class="hints">
               <span class="hint" @click="quickAsk('DEV_A 井的套压安全吗？')">🛢️ DEV_A 井的套压安全吗？</span>
-              <span class="hint" @click="quickAsk('DSL-31A 的电流正常吗？')">⚡ DSL-31A 的电流正常吗？</span>
+              <span class="hint" @click="quickAsk('RELAY-L 的电流正常吗？')">⚡ RELAY-L 的电流正常吗？</span>
               <span class="hint" @click="quickAsk('整体运行态势怎么样？')">📊 整体运行态势怎么样？</span>
               <span class="hint" @click="quickAsk('Modbus TCP 通道下有哪些设备？')">🔌 Modbus TCP 通道下有哪些设备？</span>
             </div>

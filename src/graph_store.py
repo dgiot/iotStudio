@@ -248,9 +248,28 @@ class MemoryGraphProvider(GraphProvider):
         # 可能是刻意的, 报它假阳性高于收益。
         unlabeled = sum(1 for n in by_id.values() if not n.get("label"))
 
+        # 可选：业务插件随图载荷带来的 SHACL 形状（Turtle 原文）。
+        # 形状是「什么算合规」，只有垂直领域能回答；底座只负责**收下 → 并进导出 → 交给 pyshacl**。
+        # 这里只做一次可解析性检查并出声 —— 形状坏不该拦住图本身（图独立可用）。
+        shapes = ontology.get("shapes") or ""
+        if shapes:
+            try:
+                from rdflib import Graph as _RG
+                _RG().parse(data=shapes, format="turtle")
+            except Exception as e:  # noqa: BLE001
+                log.warning(f"[graph] {ns} 携带的 shapes 无法按 Turtle 解析（仍按原文收下）: {e}")
+
+        # 可选：本体的**域**（domain）。类与关系词属"域"，只有一份身份；实例按命名空间分。
+        # 不声明就退回命名空间（向后兼容，既有插件不受影响）。
+        # 2026-10-05 由"多命名空间冒烟"逼出：两个业务命名空间各写一套类 IRI ⇒ 同一个类
+        # 在图上有两个身份，classes 计数虚高，SPARQL 里按类查只命中一半。
+        domain = ontology.get("domain") or ""
+
         with self._lock:
             self._ns[ns] = {
                 "meta": dict(meta or {}),
+                "domain": domain,
+                "shapes": shapes,
                 # 归属租户 —— 部署声明的事实, 与 meta 分开存。
                 # 混进 meta 就会被插件自报的同名字段盖掉 (见下方 namespaces 的注释):
                 # 「这个包是谁家的」不该由包自己说。
@@ -285,6 +304,27 @@ class MemoryGraphProvider(GraphProvider):
     def unload(self, ns: str) -> None:
         with self._lock:
             self._ns.pop(ns, None)
+
+    def raw_nodes(self, ns: str) -> list:
+        """**未精简**的节点字典（装载时收下的原样）—— 供桥/校验等需要完整字段的消费方。
+
+        `nodes()` 会 _brief 成 id/label/category 等展示字段（页面够用），但溯源类字段
+        （src / src_grade / description）会被丢掉 ⇒ 走那条路的话，图谱里"每条记录能回源"
+        这条纪律根本到不了 RDF/SHACL 层（2026-10-05 实测：正常数据也被判否，因为档位没投影出来）。
+        """
+        with self._lock:
+            return list((self._ns.get(ns) or {}).get("nodes", {}).values())
+
+    def domain(self, ns: str) -> str:
+        """某命名空间声明的域（类/关系词的身份域）；未声明返回空串（调用方退回命名空间）。"""
+        with self._lock:
+            d = self._ns.get(ns) or {}
+            return d.get("domain") or ""
+
+    def shapes(self) -> Dict[str, str]:
+        """各命名空间携带的 SHACL 形状（Turtle 原文）；没携带的命名空间不出现。"""
+        with self._lock:
+            return {ns: d["shapes"] for ns, d in self._ns.items() if d.get("shapes")}
 
     def namespaces(self, *, only: Set[str] = None) -> Dict[str, dict]:
         with self._lock:
@@ -528,6 +568,18 @@ class GraphStore:
 
     def unload(self, ns: str, *, provider: str = None) -> None:
         self.provider(provider).unload(ns)
+
+    def raw_nodes(self, ns: str, *, provider: str = None) -> list:
+        """某命名空间未精简的节点字典列表（含溯源字段）。"""
+        return self.provider(provider).raw_nodes(ns)
+
+    def domain(self, ns: str, *, provider: str = None) -> str:
+        """统一图库里某命名空间声明的域（类/关系词身份域）。"""
+        return self.provider(provider).domain(ns)
+
+    def shapes(self, *, provider: str = None) -> Dict[str, str]:
+        """统一图库里各命名空间携带的 SHACL 形状（Turtle 原文）。"""
+        return self.provider(provider).shapes()
 
     def namespaces(self, *, provider: str = None, only: Set[str] = None) -> dict:
         return self.provider(provider).namespaces(only=only)

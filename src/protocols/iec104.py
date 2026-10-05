@@ -40,17 +40,28 @@ class Iec104Adapter:
         self._reader: Optional[asyncio.StreamReader] = None
         self._writer: Optional[asyncio.StreamWriter] = None
         self._connected = False
+        # REQ-DEV-002 (2026-10-05): 与 opcua 同因同修——运行时给的是通用 ProtocolConfig
+        # (src/protocols/base.py)，host/port 等私有字段在 config.extra 里。原先在
+        # 连接与异常处理块里直接读 self.config.host/port ⇒ 处理异常时再抛
+        # AttributeError ⇒ 创建设备的请求升级成 HTTP 500。这里统一解析为局部值。
+        extra = getattr(config, "extra", None) or {}
+        self._host = getattr(config, "host", None) or extra.get("host") or "127.0.0.1"
+        self._port = int(getattr(config, "port", None) or extra.get("port") or 2404)
+        self._timeout = int(getattr(config, "timeout", None) or extra.get("timeout") or 10)
+        self._common_address = int(extra.get("common_address", 1))
 
     async def connect(self) -> bool:
         """建立 TCP 连接并启动数据传输
 
         连接成功后需发送 STARTDT 激活帧 (U 帧 0x07 0x00 0x00 0x00)，
         接收 STARTDT_CONF 后进入数据传输状态。
+        契约：**任何失败都返回 False，不抛异常**（REQ-DEV-002）。
         """
+        host, port, timeout = self._host, self._port, self._timeout
         try:
             self._reader, self._writer = await asyncio.wait_for(
-                asyncio.open_connection(self.config.host, self.config.port),
-                timeout=self.config.timeout,
+                asyncio.open_connection(host, port),
+                timeout=timeout,
             )
             # 发送 STARTDT 激活
             startdt = b'\x68\x04\x04\x68\x07\x00\x00\x00'
@@ -60,13 +71,13 @@ class Iec104Adapter:
             resp = await asyncio.wait_for(self._reader.read(8), timeout=3)
             if resp and resp[4] == 0x0b:
                 self._connected = True
-                log.info(f"[iec104] 连接成功 {self.config.host}:{self.config.port}")
+                log.info(f"[iec104] 连接成功 {host}:{port}")
                 return True
-            log.warning(f"[iec104] {self.config.host}:{self.config.port} STARTDT 确认失败")
+            log.warning(f"[iec104] {host}:{port} STARTDT 确认失败")
             await self.disconnect()
             return False
         except Exception as e:
-            log.error(f"[iec104] 连接失败 {self.config.host}:{self.config.port}: {e}")
+            log.error(f"[iec104] 连接失败 {host}:{port}: {e}")
             self._connected = False
             return False
 
@@ -85,7 +96,7 @@ class Iec104Adapter:
             except Exception:
                 pass
         self._connected = False
-        log.info(f"[iec104] 已断开 {self.config.host}:{self.config.port}")
+        log.info(f"[iec104] 已断开 {getattr(self, '_host', '?')}:{getattr(self, '_port', '?')}")
 
     async def read_point(self, point_id: str) -> Optional[Dict[str, Any]]:
         """读取单个遥测/遥信点

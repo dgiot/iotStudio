@@ -1,0 +1,38 @@
+种类	Name	IRI	Label	Definition	属性集(表1-5)	父类(表1-6)	子类(表1-7)	等价类(表1-8)	域(表2-5)	值域(表2-6)	属性类型(表2-7)	标准数据类型(5.5)	Name/属性集/子类 是否 OWL 原生
+类	Channel	http://dgiot.cloud/ontology#Channel	Channel	层3 协议通道 — 物理世界与数字世界的桥梁	channelProtocol, channelStatus, hasDevice	Entity	（无）	（无）					否 — 名称/属性集/子类 三项落本台账（OWL 无原生槽位）；父类与等价类为 OWL 原生，派生后交叉核验
+类	Constraint	http://dgiot.cloud/ontology#Constraint	Constraint	安全/业务判据 — 说明性文本, 非可执行表达式	enabled, ruleKind, severity	Entity	（无）	（无）					否 — 名称/属性集/子类 三项落本台账（OWL 无原生槽位）；父类与等价类为 OWL 原生，派生后交叉核验
+类	DataSource	http://dgiot.cloud/ontology#DataSource	DataSource	数据出口 — 持久化目标	dataSourceStatus, dataSourceType, tagCount	Entity	（无）	（无）					否 — 名称/属性集/子类 三项落本台账（OWL 无原生槽位）；父类与等价类为 OWL 原生，派生后交叉核验
+类	Device	http://dgiot.cloud/ontology#Device	Device	层4 设备 — RTU/PLC/传感器/保护继电器	deviceProtocol, deviceStatus, deviceType, hasPoint, monitors, powered_by, slaveId	Entity	（无）	（无）					否 — 名称/属性集/子类 三项落本台账（OWL 无原生槽位）；父类与等价类为 OWL 原生，派生后交叉核验
+类	Entity	http://dgiot.cloud/ontology#Entity	Entity	本体根类 — 七类实体类型的共同上位	feeds_into, hasConstraint, has_defect, has_issue, maps_to, relates_to	（无）	Channel, Constraint, DataSource, Device, Gateway, Point, Site	（无）					否 — 名称/属性集/子类 三项落本台账（OWL 无原生槽位）；父类与等价类为 OWL 原生，派生后交叉核验
+类	Gateway	http://dgiot.cloud/ontology#Gateway	Gateway	层2 IO网关/边缘网关 — 物理或虚拟主机	controls, gatewayStatus, hasChannel	Entity	（无）	（无）					否 — 名称/属性集/子类 三项落本台账（OWL 无原生槽位）；父类与等价类为 OWL 原生，派生后交叉核验
+类	Point	http://dgiot.cloud/ontology#Point	Point	层5 测点 — 最小的数据单元	category, unit	Entity	（无）	（无）					否 — 名称/属性集/子类 三项落本台账（OWL 无原生槽位）；父类与等价类为 OWL 原生，派生后交叉核验
+类	Site	http://dgiot.cloud/ontology#Site	Site	层1 物理站点 — 工业厂/井场/变电站	hasGateway, siteType	Entity	（无）	（无）					否 — 名称/属性集/子类 三项落本台账（OWL 无原生槽位）；父类与等价类为 OWL 原生，派生后交叉核验
+属性	category	http://dgiot.cloud/ontology#category	category	测点类别 — 遥测/遥信/遥脉/遥调					Point	string	owl:DatatypeProperty	文本型	否 — 名称落本台账；域/值域/属性类型为 OWL 原生
+属性	channelProtocol	http://dgiot.cloud/ontology#channelProtocol	channelProtocol	通道协议类型					Channel	string	owl:DatatypeProperty	文本型	否 — 名称落本台账；域/值域/属性类型为 OWL 原生
+属性	channelStatus	http://dgiot.cloud/ontology#channelStatus	channelStatus	通道运行状态					Channel	string	owl:DatatypeProperty	文本型	否 — 名称落本台账；域/值域/属性类型为 OWL 原生
+属性	controls	http://dgiot.cloud/ontology#controls	controls	控制: 网关→通道启停/策略					Gateway	Channel	owl:ObjectProperty	（不适用 — 值域是类）	否 — 名称落本台账；域/值域/属性类型为 OWL 原生
+属性	dataSourceStatus	http://dgiot.cloud/ontology#dataSourceStatus	dataSourceStatus	数据出口状态					DataSource	string	owl:DatatypeProperty	文本型	否 — 名称落本台账；域/值域/属性类型为 OWL 原生
+属性	dataSourceType	http://dgiot.cloud/ontology#dataSourceType	dataSourceType	数据出口类型					DataSource	string	owl:DatatypeProperty	文本型	否 — 名称落本台账；域/值域/属性类型为 OWL 原生
+属性	deviceProtocol	http://dgiot.cloud/ontology#deviceProtocol	deviceProtocol	设备通信协议					Device	string	owl:DatatypeProperty	文本型	否 — 名称落本台账；域/值域/属性类型为 OWL 原生
+属性	deviceStatus	http://dgiot.cloud/ontology#deviceStatus	deviceStatus	设备运行状态					Device	string	owl:DatatypeProperty	文本型	否 — 名称落本台账；域/值域/属性类型为 OWL 原生
+属性	deviceType	http://dgiot.cloud/ontology#deviceType	deviceType	设备类型					Device	string	owl:DatatypeProperty	文本型	否 — 名称落本台账；域/值域/属性类型为 OWL 原生
+属性	enabled	http://dgiot.cloud/ontology#enabled	enabled	约束是否启用					Constraint	boolean	owl:DatatypeProperty	布尔型	否 — 名称落本台账；域/值域/属性类型为 OWL 原生
+属性	feeds_into	http://dgiot.cloud/ontology#feeds_into	feeds_into	数据/能量流入: 通道→出口通道, 电源→负载					Entity	Entity	owl:ObjectProperty	（不适用 — 值域是类）	否 — 名称落本台账；域/值域/属性类型为 OWL 原生
+属性	gatewayStatus	http://dgiot.cloud/ontology#gatewayStatus	gatewayStatus	网关运行状态					Gateway	string	owl:DatatypeProperty	文本型	否 — 名称落本台账；域/值域/属性类型为 OWL 原生
+属性	hasChannel	http://dgiot.cloud/ontology#hasChannel	hasChannel	层级归属 — 网关下属的协议通道					Gateway	Channel	owl:ObjectProperty	（不适用 — 值域是类）	否 — 名称落本台账；域/值域/属性类型为 OWL 原生
+属性	hasConstraint	http://dgiot.cloud/ontology#hasConstraint	hasConstraint	约束归属 — 任意实体 → 挂在该实体上的约束					Entity	Constraint	owl:ObjectProperty	（不适用 — 值域是类）	否 — 名称落本台账；域/值域/属性类型为 OWL 原生
+属性	hasDevice	http://dgiot.cloud/ontology#hasDevice	hasDevice	层级归属 — 通道下属的设备					Channel	Device	owl:ObjectProperty	（不适用 — 值域是类）	否 — 名称落本台账；域/值域/属性类型为 OWL 原生
+属性	hasGateway	http://dgiot.cloud/ontology#hasGateway	hasGateway	层级归属 — 站点下属的网关					Site	Gateway	owl:ObjectProperty	（不适用 — 值域是类）	否 — 名称落本台账；域/值域/属性类型为 OWL 原生
+属性	hasPoint	http://dgiot.cloud/ontology#hasPoint	hasPoint	层级归属 — 设备下属的测点					Device	Point	owl:ObjectProperty	（不适用 — 值域是类）	否 — 名称落本台账；域/值域/属性类型为 OWL 原生
+属性	has_defect	http://dgiot.cloud/ontology#has_defect	has_defect	缺陷归属: 实体→已知缺陷					Entity	Entity	owl:ObjectProperty	（不适用 — 值域是类）	否 — 名称落本台账；域/值域/属性类型为 OWL 原生
+属性	has_issue	http://dgiot.cloud/ontology#has_issue	has_issue	问题归属: 实体→已知问题/故障模式					Entity	Entity	owl:ObjectProperty	（不适用 — 值域是类）	否 — 名称落本台账；域/值域/属性类型为 OWL 原生
+属性	maps_to	http://dgiot.cloud/ontology#maps_to	maps_to	映射: 测点→协议路径, 数据出口→通道					Entity	Channel	owl:ObjectProperty	（不适用 — 值域是类）	否 — 名称落本台账；域/值域/属性类型为 OWL 原生
+属性	monitors	http://dgiot.cloud/ontology#monitors	monitors	监测: 保护/传感器→被监测设备 (跨通道)					Device	Device	owl:ObjectProperty	（不适用 — 值域是类）	否 — 名称落本台账；域/值域/属性类型为 OWL 原生
+属性	powered_by	http://dgiot.cloud/ontology#powered_by	powered_by	供电: 设备→上级供电实体					Device	Entity	owl:ObjectProperty	（不适用 — 值域是类）	否 — 名称落本台账；域/值域/属性类型为 OWL 原生
+属性	relates_to	http://dgiot.cloud/ontology#relates_to	relates_to	泛关联: 相邻保护/联动实体					Entity	Entity	owl:ObjectProperty	（不适用 — 值域是类）	否 — 名称落本台账；域/值域/属性类型为 OWL 原生
+属性	ruleKind	http://dgiot.cloud/ontology#ruleKind	ruleKind	约束五分类 — mapping/validation/state/inference/automation					Constraint	string	owl:DatatypeProperty	文本型	否 — 名称落本台账；域/值域/属性类型为 OWL 原生
+属性	severity	http://dgiot.cloud/ontology#severity	severity	约束严重级					Constraint	string	owl:DatatypeProperty	文本型	否 — 名称落本台账；域/值域/属性类型为 OWL 原生
+属性	siteType	http://dgiot.cloud/ontology#siteType	siteType	站点类型 — 工业厂/井场/变电站					Site	string	owl:DatatypeProperty	文本型	否 — 名称落本台账；域/值域/属性类型为 OWL 原生
+属性	slaveId	http://dgiot.cloud/ontology#slaveId	slaveId	从站地址 — Modbus 等主从协议里的站号					Device	integer	owl:DatatypeProperty	数值型	否 — 名称落本台账；域/值域/属性类型为 OWL 原生
+属性	tagCount	http://dgiot.cloud/ontology#tagCount	tagCount	出口位号数					DataSource	integer	owl:DatatypeProperty	数值型	否 — 名称落本台账；域/值域/属性类型为 OWL 原生
+属性	unit	http://dgiot.cloud/ontology#unit	unit	工程单位					Point	string	owl:DatatypeProperty	文本型	否 — 名称落本台账；域/值域/属性类型为 OWL 原生

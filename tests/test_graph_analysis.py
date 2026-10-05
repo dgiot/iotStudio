@@ -3,12 +3,12 @@
 # ============================================================
 import pytest
 
-from src.ontology import build_131_ontology
+from src.ontology import build_edge_ontology
 
 
 @pytest.fixture(scope="module")
 def engine():
-    return build_131_ontology()
+    return build_edge_ontology()
 
 
 # ── 影响半径 (blast-radius) ──

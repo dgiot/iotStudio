@@ -153,8 +153,8 @@ def _local_classes_from_code() -> set:
     import sys as _sys
     if str(ROOT) not in _sys.path:
         _sys.path.insert(0, str(ROOT))
-    from src.ontology import build_131_ontology
-    eng = build_131_ontology()
+    from src.ontology import build_edge_ontology
+    eng = build_edge_ontology()
     containers = {k: v for k, v in vars(eng).items() if isinstance(v, dict)}
     # sites→Site, datasources→DataSource, …
     known = {"sites": "Site", "gateways": "Gateway", "channels": "Channel",
@@ -226,9 +226,9 @@ def exported():
         _sys.path.insert(0, str(ROOT))
     from rdflib import Graph
     from src.interop import export_ssn
-    from src.ontology import build_131_ontology
+    from src.ontology import build_edge_ontology
 
-    doc = export_ssn(build_131_ontology())
+    doc = export_ssn(build_edge_ontology())
     g = Graph()
     g.parse(data=json.dumps(doc), format="json-ld")
     return doc, g

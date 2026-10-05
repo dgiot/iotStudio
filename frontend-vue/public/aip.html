@@ -473,11 +473,11 @@ async function loadValidate(){
     `;
     document.getElementById('statsDetail').innerHTML=`
       <table style="width:100%;font-size:11px;border-collapse:collapse">
-        <tr><td style="padding:4px;color:#64748b">OWL Classes</td><td><span id="stClasses">—</span> <span style="color:#8b95a5">(Site, Gateway, Channel, Device, Point, Constraint, DataSource)</span></td></tr>
-        <tr><td style="padding:4px;color:#64748b">Object Properties</td><td><span id="stObjProps">—</span></td></tr>
-        <tr><td style="padding:4px;color:#64748b">Data Properties</td><td><span id="stDataProps">—</span> <span style="color:#8b95a5">(本导出器不产生 DatatypeProperty)</span></td></tr>
+        <tr><td style="padding:4px;color:#64748b">OWL Classes</td><td><span id="stClasses">—</span> <span style="color:#8b95a5">(Entity 根类 + Site, Gateway, Channel, Device, Point, Constraint, DataSource)</span></td></tr>
+        <tr><td style="padding:4px;color:#64748b">Object Properties</td><td><span id="stObjProps">—</span> <span style="color:#8b95a5">(层级归属 + 关系词)</span></td></tr>
+        <tr><td style="padding:4px;color:#64748b">Data Properties</td><td><span id="stDataProps">—</span> <span style="color:#8b95a5">(类型/协议/状态/类别/单位/计数等枚举型字段)</span></td></tr>
         <tr><td style="padding:4px;color:#64748b">Triples</td><td><span id="stTriples">—</span> <span style="color:#8b95a5">(与下载的 .owl 同一张图)</span></td></tr>
-        <tr><td style="padding:4px;color:#64748b">Export Formats</td><td>OWL RDF/XML · Turtle</td></tr>
+        <tr><td style="padding:4px;color:#64748b">Export Formats</td><td>OWL RDF/XML · Turtle · JSON-LD · SHACL 形状</td></tr>
       </table>
       <div style="font-size:10px;color:#8b95a5;margin-top:6px;line-height:1.6">
         ISA-95 / IOF 属<b>文档级对照说明</b>：本导出器不产生 isa95: / iof: 命名空间，上方命名空间行只列图上真正用到的前缀。
