@@ -29,3 +29,6 @@ Pyro5>=5.14                 # OPC DA Gateway
 pytest>=8.0.0
 pytest-asyncio>=0.24.0      # async 测试 (pytest.ini asyncio_mode=auto)
 pyshacl>=0.40.0             # SHACL 验证 (GB/T 48000.3 §5.3 第三句「应支持基于 SHACL 的约束验证」); 实跑验证过的版本 0.40.1
+
+# Python 3.10 没有 stdlib tomllib；测试用它解析 pyproject.toml（REQ-DEV-005）
+tomli; python_version < "3.11"

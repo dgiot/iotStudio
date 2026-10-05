@@ -5,7 +5,10 @@
 """
 import importlib
 import sys
-import tomllib
+try:
+    import tomllib                      # Python 3.11+
+except ModuleNotFoundError:             # Python 3.10：stdlib 没有 tomllib
+    import tomli as tomllib             # requirements.txt: tomli; python_version < "3.11"
 from pathlib import Path
 
 import pytest

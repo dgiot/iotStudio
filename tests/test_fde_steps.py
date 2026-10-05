@@ -35,6 +35,8 @@ import re
 import sys
 from pathlib import Path
 
+import pytest
+
 from src.web.fde_api import (FDE_RETIRED_NAMES, FDE_STEPS, FDE_STEP_INTERNAL,
                              FDE_STEP_VIEWS)
 
@@ -509,10 +511,17 @@ def test_recorded_out_of_domain_carriers_are_still_where_they_are_recorded():
         if e["kind"] not in ("载体", "误报"):
             bad.append(f"{e['path']} 的 kind 写的是 {e['kind']!r} —— 只许「载体」或「误报」")
     assert bad == [], "域外载体记录与实况对不上：\n  " + "\n  ".join(bad)
-    assert checked > 0, (
-        "四个域外载体一个都没检到 —— 若这是干净检出属正常（docs/ 与 graphify-out/ "
-        "都不进提交）, 但那意味着这条判据此刻**什么都没验**; 在开发盘上出现这句, "
-        "说明 docs/ 或 graphify-out/ 被删了")
+    if checked == 0:
+        # 与上面 docstring 一致：干净检出里 docs/ 与 graphify-out/ 本来就不在盘上 ⇒ 本判据
+        # 此刻没有可验证对象，**报跳过而不是报红**（CI 就是这样，之前写成 assert 让它必红）。
+        # 但"父目录还在、文件却没了"是另一回事（开发盘上被删）⇒ 那必须红，别被跳过掩盖。
+        orphan_dirs = sorted({str((ROOT / e["path"]).parent) for e in entries
+                              if (ROOT / e["path"]).parent.is_dir()})
+        if orphan_dirs:
+            pytest.fail("域外载体目录仍在，但记录里的文件都不在盘上（被删了？）："
+                        + ", ".join(orphan_dirs))
+        pytest.skip("干净检出：docs/ 与 graphify-out/ 均不在盘上 ⇒ 域外载体判据无可验证对象"
+                    "（docstring 已述，非掩盖红）")
 
 
 def test_carrier_scan_discriminating_line_is_not_degenerate():
