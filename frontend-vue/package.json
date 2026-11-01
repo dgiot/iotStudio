@@ -17,7 +17,7 @@
     "fabric": "^7.4.0",
     "js-cookie": "^3.0.8",
     "mqtt": "^5.15.1",
-    "puppeteer": "^25.2.1",
+    "puppeteer": "^25.16.0",
     "vue": "^3.5.38",
     "vue-echarts": "^8.0.1",
     "vue-i18n": "^9.14.5",
