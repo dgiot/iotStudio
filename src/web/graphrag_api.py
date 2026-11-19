@@ -17,11 +17,13 @@ from __future__ import annotations
 
 import json
 import logging
+import asyncio
 from dataclasses import asdict
 from typing import Optional
 
 from fastapi import APIRouter, Body, Depends, HTTPException, Query
 from pydantic import BaseModel, Field
+from src.storage.telemetry import configured_iotdb
 
 try:
     from ..auth import get_current_user, require_admin
@@ -107,7 +109,7 @@ def _get_rag():
             from plugin_runtime import runtime
         runtime.deliver_engine(_engine)
 
-        _graphrag = GraphRAG(_engine)  # 自动检测 ANTHROPIC_API_KEY / OPENAI_API_KEY
+        _graphrag = GraphRAG(_engine, iotdb_store=configured_iotdb())
         logger.info(f"GraphRAG: LLM={'ready' if _graphrag._llm else 'none'}")
 
     return _graphrag, _engine
@@ -472,14 +474,7 @@ async def graphrag_seed_telemetry():
     rag, engine = _get_rag()
     db_path = _os.path.join(_os.path.dirname(_os.path.dirname(_os.path.dirname(_os.path.abspath(__file__)))),
                             "data", "telemetry.db")
-    _os.makedirs(_os.path.dirname(db_path), exist_ok=True)
-
-    db = sqlite3.connect(db_path)
-    db.execute("""CREATE TABLE IF NOT EXISTS telemetry
-        (ts TEXT, device_id TEXT, point_id TEXT, point_name TEXT,
-         value REAL, unit TEXT, quality INTEGER, device_type TEXT, station_id TEXT)""")
-
-    count = 0
+    samples = []
     now = datetime.now(timezone.utc).isoformat()
     rng = random.Random(42)
 
@@ -497,21 +492,31 @@ async def graphrag_seed_telemetry():
         else:
             val = round(rng.uniform(0, 100), 4)
 
-        db.execute(
-            "INSERT INTO telemetry (ts, device_id, point_id, point_name, value, unit, quality, device_type, station_id) "
-            "VALUES (?,?,?,?,?,?,192,?,?)",
-            (now, pt.device, pt_id, pt.name, val, pt.unit, dev.type, "industry_c1")
-        )
-        count += 1
+        samples.append(dict(ts=now, device_id=pt.device, point_id=pt_id, point_name=pt.name,
+                            value=val, unit=pt.unit, quality=192, device_type=dev.type, station_id="industry_c1"))
 
-    db.commit()
+    store = configured_iotdb()
+    if store is not None:
+        count = await store.batch_insert(samples)
+        return {"status": "seeded", "points": count, "path": store.config.database + ".telemetry"}
+
+    _os.makedirs(_os.path.dirname(db_path), exist_ok=True)
+    db = sqlite3.connect(db_path)
+    try:
+        db.execute("""CREATE TABLE IF NOT EXISTS telemetry
+            (ts TEXT, device_id TEXT, point_id TEXT, point_name TEXT,
+             value REAL, unit TEXT, quality INTEGER, device_type TEXT, station_id TEXT)""")
+        db.executemany("INSERT INTO telemetry (ts, device_id, point_id, point_name, value, unit, quality, device_type, station_id) "
+                       "VALUES (:ts,:device_id,:point_id,:point_name,:value,:unit,:quality,:device_type,:station_id)", samples)
+        db.commit()
+    finally:
+        db.close()
 
     # 更新 LiveContextStore 状态
     rag._live._available = True
     rag._live._db_path = db_path
 
-    db.close()
-    return {"status": "seeded", "points": count, "path": db_path}
+    return {"status": "seeded", "points": len(samples), "path": db_path}
 
 
 # ═══════════════════════════════════════════════════════════
@@ -1837,7 +1842,12 @@ async def aip_pipeline_monitor():
                            "data", "telemetry.db")
     telemetry_count = 0
     latest_ts = ""
-    if os.path.exists(db_path):
+    store = configured_iotdb()
+    if store is not None:
+        counts = await asyncio.to_thread(store.stats)
+        telemetry_count = counts["total_points"]
+        latest_ts = counts["latest_ts"] or ""
+    elif os.path.exists(db_path):
         try:
             db = sqlite3.connect(db_path)
             telemetry_count = db.execute("SELECT COUNT(*) FROM telemetry").fetchone()[0]
@@ -2000,7 +2010,11 @@ async def aip_system_health():
     # 遥测统计
     import sqlite3
     db_path = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))), "data", "telemetry.db")
-    if os.path.exists(db_path):
+    store = configured_iotdb()
+    if store is not None:
+        counts = await asyncio.to_thread(store.stats)
+        health["telemetry"] = {key: counts[key] for key in ("total_points", "active_devices")}
+    elif os.path.exists(db_path):
         try:
             db = sqlite3.connect(db_path)
             health["telemetry"]["total_points"] = db.execute("SELECT COUNT(*) FROM telemetry").fetchone()[0]

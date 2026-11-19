@@ -14,8 +14,10 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     && rm -rf /var/lib/apt/lists/*
 
 # ── Python 依赖 (先于源码，利用 Docker 缓存) ──
-COPY requirements.txt .
+ARG WITH_IOTDB=false
+COPY requirements.txt requirements-iotdb.txt ./
 RUN pip install --no-cache-dir -r requirements.txt
+RUN if [ "$WITH_IOTDB" = true ]; then pip install --no-cache-dir -r requirements-iotdb.txt; fi
 
 # ── 源码 ──
 COPY . .

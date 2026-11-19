@@ -2,7 +2,7 @@
 # pythonIot — 数据库初始化脚本
 # ============================================================
 """
-初始化 PostgreSQL 表结构 + TDengine 超级表
+初始化 PostgreSQL 和配置的遥测库
 """
 import sys
 sys.path.insert(0, ".")
@@ -10,15 +10,16 @@ sys.path.insert(0, ".")
 import asyncio
 from src.config import cfg
 from src.models.device import init_db
-from src.storage.tdengine import TDEngineStore
+from src.storage.telemetry import create_telemetry_store, initialize_telemetry
 
 
-async def init_tdengine():
-    store = TDEngineStore()
-    await store.connect()
-    await store.create_supertable()
-    print("[OK] TDengine supertable created.")
-    store.close()
+async def init_telemetry():
+    store = create_telemetry_store(cfg)
+    try:
+        await initialize_telemetry(store)
+        print(f"[OK] Telemetry schema ready ({cfg.telemetry_backend}).")
+    finally:
+        await store.close()
 
 
 def init_postgres():
@@ -31,7 +32,8 @@ async def main():
     print("pythonIot 数据库初始化")
     print("=" * 60)
     print(f"PostgreSQL: {cfg.db.host}:{cfg.db.port}/{cfg.db.database}")
-    print(f"TDengine:   {cfg.tdengine.host}:{cfg.tdengine.port}/{cfg.tdengine.database}")
+    target = getattr(cfg, cfg.telemetry_backend)
+    print(f"{cfg.telemetry_backend}: {target.host}:{target.port}/{target.database}")
     print()
 
     # PostgreSQL
@@ -41,10 +43,12 @@ async def main():
         print(f"[WARN] PostgreSQL 初始化失败: {e}")
         print("[WARN] 将使用 SQLite 降级模式 (无需手动操作)")
 
-    # TDengine
+    # 遥测存储
     try:
-        await init_tdengine()
+        await init_telemetry()
     except Exception as e:
+        if cfg.telemetry_backend == "iotdb":
+            raise
         print(f"[WARN] TDengine 初始化失败: {e}")
         print("[WARN] 将使用 SQLite 降级模式 (无需手动操作)")
 

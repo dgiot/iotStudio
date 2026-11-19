@@ -12,6 +12,18 @@ sqlite_path: "./data/local.db"
 # 存储模式: "parse" (连接Parse Server) | "sqlite" (单机版)
 storage_mode: "sqlite"
 
+# 遥测后端为 tdengine 或 iotdb。IoTDB 需要 requirements-iotdb.txt。
+telemetry_backend: tdengine
+iotdb:
+  host: "127.0.0.1"
+  port: 6667
+  database: "iot_telemetry"
+  # 用户与密码由环境变量 IOTDB_USER 和 IOTDB_PASSWORD 提供。
+  timeout_ms: 10000
+  timestamp_precision: ms  # 与集群的 timestamp_precision 保持一致
+  use_ssl: false
+  # ca_certs: /path/to/trusted-ca.pem
+
 db:
   host: "127.0.0.1"
   port: 5432

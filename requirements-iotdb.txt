@@ -1,0 +1,2 @@
+# Optional native Table client for telemetry_backend: iotdb.
+apache-iotdb==2.0.10

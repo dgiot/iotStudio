@@ -6,7 +6,7 @@
 1. 从 PostgreSQL 加载设备 + 点位配置
 2. 为每个设备创建对应的协议适配器实例
 3. 按采集周期定时调度采集任务
-4. 采集结果写入 TDengine
+4. 采集结果写入配置的遥测存储
 5. 结果转发给告警引擎和推送引擎
 """
 import asyncio
@@ -19,6 +19,7 @@ from typing import Any, Dict, List, Optional, Set, Tuple
 from ..config import cfg
 from ..models.device import Device, DataPoint
 from ..storage.tdengine import TDEngineStore
+from ..storage.iotdb import IoTDBStore
 from ..storage.postgres import PostgresStore
 from ..protocols.base import BaseProtocolAdapter, ProtocolConfig, PointValue
 
@@ -37,7 +38,7 @@ _POINT_FIELDS = {
 class CollectorEngine:
     """采集调度引擎"""
 
-    def __init__(self, pg_store: PostgresStore, td_store: TDEngineStore):
+    def __init__(self, pg_store: PostgresStore, td_store: TDEngineStore | IoTDBStore):
         self.pg = pg_store
         self.td = td_store
         self._adapters: Dict[str, BaseProtocolAdapter] = {}
@@ -226,7 +227,7 @@ class CollectorEngine:
                 results = await adapter.read_points(points)
 
                 if results:
-                    # 写入 TDengine（带物模型标签）
+                    # 保留采集时间和物模型标签
                     meta = self._device_meta.get(device_id, {})
                     rows = []
                     for pv in results:
@@ -237,6 +238,7 @@ class CollectorEngine:
                             "value": float(pv.value) if isinstance(pv.value, (int, float)) else 0.0,
                             "unit": pv.unit or "",
                             "quality": pv.quality,
+                            "ts": pv.timestamp,
                             "device_type": meta.get("device_type", "default"),
                             "station_id": meta.get("station_id", "default"),
                         })

@@ -5,8 +5,8 @@ import os
 import sys
 import yaml
 from pathlib import Path
-from pydantic import BaseModel, field_validator
-from typing import Optional, Dict, Any
+from pydantic import BaseModel, Field, SecretStr, field_validator
+from typing import Optional, Dict, Any, Literal
 
 
 def _get_base_dir() -> Path:
@@ -48,6 +48,18 @@ class TDEngineConfig(BaseModel):
     database: str = "iot_telemetry"
 
 
+class IoTDBConfig(BaseModel):
+    host: str = "127.0.0.1"
+    port: int = Field(default=6667, ge=1, le=65535)
+    database: str = Field(default="iot_telemetry", pattern=r"^[a-zA-Z_][a-zA-Z_0-9]*$")
+    user: str = Field(default_factory=lambda: os.getenv("IOTDB_USER", ""))
+    password: SecretStr = Field(default_factory=lambda: SecretStr(os.getenv("IOTDB_PASSWORD", "")))
+    timeout_ms: int = Field(default=10000, ge=1, le=300000)
+    use_ssl: bool = False
+    ca_certs: Optional[str] = None
+    timestamp_precision: Literal["ms", "us", "ns"] = "ms"
+
+
 class MQTTConfig(BaseModel):
     host: str = "127.0.0.1"
     port: int = 1883
@@ -65,6 +77,8 @@ class AppConfig(BaseModel):
     port: int = 8000
     db: DBConfig = DBConfig()
     tdengine: TDEngineConfig = TDEngineConfig()
+    telemetry_backend: Literal["tdengine", "iotdb"] = "tdengine"
+    iotdb: IoTDBConfig = Field(default_factory=IoTDBConfig)
     mqtt: MQTTConfig = MQTTConfig()
     log_level: str = "INFO"
     data_dir: str = str(BASE_DIR / "data")
@@ -129,6 +143,16 @@ class AppConfig(BaseModel):
                 user=os.getenv("TD_USER", "root"),
                 password=os.getenv("TD_PASSWORD", "taosdata"),
                 database=os.getenv("TD_DB", "iot_telemetry"),
+            ),
+            telemetry_backend=os.getenv("TELEMETRY_BACKEND", "tdengine"),
+            iotdb=IoTDBConfig(
+                host=os.getenv("IOTDB_HOST", "127.0.0.1"),
+                port=int(os.getenv("IOTDB_PORT", "6667")),
+                database=os.getenv("IOTDB_DATABASE", "iot_telemetry"),
+                timeout_ms=int(os.getenv("IOTDB_TIMEOUT_MS", "10000")),
+                use_ssl=os.getenv("IOTDB_USE_SSL", "false").lower() in {"1", "true", "yes"},
+                ca_certs=os.getenv("IOTDB_CA_CERTS") or None,
+                timestamp_precision=os.getenv("IOTDB_TIMESTAMP_PRECISION", "ms"),
             ),
             mqtt=MQTTConfig(
                 host=os.getenv("MQTT_HOST", "127.0.0.1"),
