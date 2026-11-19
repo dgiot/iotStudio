@@ -6,6 +6,7 @@
 输出: HTML报表（可打印/导出PDF） + JSON数据
 """
 import os, json, time, sqlite3, statistics
+import calendar
 from datetime import datetime, timedelta, timezone
 from collections import defaultdict
 from typing import Optional
@@ -17,7 +18,10 @@ class ReportGenerator:
     """日报/周报/月报自动生成"""
 
     def __init__(self, db_path: str = None):
+        self._iotdb = None
         if db_path is None:
+            from src.storage.telemetry import configured_iotdb
+            self._iotdb = configured_iotdb()
             db_path = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
                                    "data", "telemetry.db")
         self._db_path = db_path
@@ -59,7 +63,7 @@ class ReportGenerator:
         else:
             y, m = year_month.split("-")
             start = f"{y}-{m}-01"
-            end = f"{y}-{m}-31"
+            end = f"{y}-{m}-{calendar.monthrange(int(y), int(m))[1]}"
         return self._generate("月报", start, end)
 
     # ── 核心生成逻辑 ──
@@ -97,6 +101,22 @@ class ReportGenerator:
             "alarms": {},
             "trends": {},
         }
+
+        if self._iotdb is not None:
+            # Reports can also run outside the FastAPI lifespan.
+            own_session = not self._iotdb.connected
+            store = self._iotdb
+            if own_session:
+                from src.storage.iotdb import IoTDBStore
+                store = IoTDBStore(store.config)
+            try:
+                if own_session:
+                    store.connect_sync()
+                stats.update(store.period_report(start, end))
+            finally:
+                if own_session:
+                    store.close_sync()
+            return stats
 
         if not os.path.exists(self._db_path):
             stats["summary"]["note"] = "无遥测数据"

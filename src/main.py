@@ -4,6 +4,7 @@
 import asyncio
 import logging
 import os
+import struct
 import uuid
 import time
 from contextlib import asynccontextmanager
@@ -15,7 +16,8 @@ from fastapi.responses import HTMLResponse, JSONResponse, FileResponse
 from pydantic import BaseModel, Field
 
 from .config import cfg
-from .storage.tdengine import TDEngineStore
+from .storage.iotdb import IoTDBStore
+from .storage.telemetry import get_telemetry_store, initialize_telemetry
 from .storage.parse_store import ParseStore
 from .services.collector import CollectorEngine
 from .services.alarm_engine import AlarmEngine
@@ -34,7 +36,7 @@ logger = logging.getLogger(__name__)
 # ===== 全局服务 =====
 _startup_ts = time.time()
 pg_store = ParseStore()
-td_store = TDEngineStore()
+td_store = get_telemetry_store()
 collector = CollectorEngine(pg_store, td_store)
 alarm_engine = AlarmEngine(pg_store)
 # 设备接入身份表（devaddr → productId/deviceSecret）。push_engine 的出口靠它
@@ -105,9 +107,11 @@ async def lifespan(app: FastAPI):
         logger.error(f"[main] 数据库连接失败: {e}")
 
     try:
-        await td_store.connect()
-        await td_store.ensure_supertable("default")
+        await initialize_telemetry(td_store)
     except Exception as e:
+        if isinstance(td_store, IoTDBStore):
+            await pg_store.close()
+            raise
         logger.warning(f"[main] TDengine 连接失败: {e}")
 
     # 先装载设备接入身份表，再起推送引擎 —— 否则首批数据推送时表还是空的，
@@ -449,7 +453,7 @@ class TelemetryPoint(BaseModel):
 
 @app.post("/api/telemetry")
 async def write_telemetry(body: TelemetryPoint):
-    """边缘代理接收遥测数据 → 写 SQLite + 走推送出口上中枢
+    """边缘代理接收遥测数据 → 写遥测库 + 走推送出口上中枢
 
     这里原先自己搓了一个 paho 客户端：每个测点开一次 TCP、主题硬编码
     （形状是 `dgiot/{site}/{gateway}/ch_edge_hub/{device}/{point}`，其中
@@ -461,17 +465,26 @@ async def write_telemetry(body: TelemetryPoint):
     解析出 productId/deviceSecret，按 dlink 语法拼 `$dg/thing/{P}/{D}/properties/report`，
     有连接池、有失败计数、有日志。同一个出口，不另起一条。
     """
-    import sqlite3, os
-    db_path = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "data", "telemetry.db")
-    conn = sqlite3.connect(db_path)
-    conn.execute("""CREATE TABLE IF NOT EXISTS telemetry
-        (ts TEXT, device_id TEXT, point_id TEXT, point_name TEXT, value REAL, unit TEXT, quality INTEGER, device_type TEXT, station_id TEXT)""")
-    now_ts = datetime.now(timezone.utc).isoformat()
-    conn.execute("INSERT INTO telemetry VALUES (?,?,?,?,?,?,192,?,?)",
-        (now_ts, body.device, body.point, body.point, body.value, body.unit or "", body.device or "sim", "sim"))
-    conn.commit()
-    cnt = conn.execute("SELECT COUNT(*) FROM telemetry").fetchone()[0]
-    conn.close()
+    if isinstance(td_store, IoTDBStore):
+        try:
+            ts = datetime.fromtimestamp(body.ts, timezone.utc) if body.ts is not None else None
+            await td_store.insert_point(body.device, body.point, body.point, body.value,
+                                        body.unit, body.device or "sim", "sim", 192, ts)
+        except (ValueError, OverflowError) as exc:
+            raise HTTPException(422, str(exc)) from exc
+        cnt = await td_store.row_count()
+    else:
+        import sqlite3
+        db_path = os.path.join(cfg.data_dir, "telemetry.db")
+        conn = sqlite3.connect(db_path)
+        conn.execute("""CREATE TABLE IF NOT EXISTS telemetry
+            (ts TEXT, device_id TEXT, point_id TEXT, point_name TEXT, value REAL, unit TEXT, quality INTEGER, device_type TEXT, station_id TEXT)""")
+        now_ts = datetime.now(timezone.utc).isoformat()
+        conn.execute("INSERT INTO telemetry VALUES (?,?,?,?,?,?,192,?,?)",
+            (now_ts, body.device, body.point, body.point, body.value, body.unit or "", body.device or "sim", "sim"))
+        conn.commit()
+        cnt = conn.execute("SELECT COUNT(*) FROM telemetry").fetchone()[0]
+        conn.close()
 
     # 上中枢 —— 交给 PushEngine 的出口（与采集链路同一条），不在这里另开连接。
     # PushEngine 未装载推送目标时 push() 直接返回，本机写入仍然成功。
@@ -610,22 +623,14 @@ async def list_points(device_id: str):
             })
         _db.close()
 
-    # 如果 ontology_point 无记录，从 telemetry.db 发现实际测点
+    # 如果 ontology_point 无记录，从所选遥测库发现实际测点
     if not _points:
-        _tel_path = _os.path.join(_os.path.dirname(_os.path.dirname(_os.path.abspath(__file__))), "data", "telemetry.db")
-        if _os.path.exists(_tel_path):
-            _tdb = sqlite3.connect(_tel_path)
-            try:
-                cur = _tdb.execute("SELECT DISTINCT point_id FROM telemetry WHERE device_id = ? ORDER BY point_id", (device_id,))
-                for r in cur.fetchall():
-                    pid = r[0]
-                    _points.append({
-                        "point_id": pid, "point_name": pid,
-                        "protocol_addr": "0", "data_type": "float32",
-                        "unit": "", "scale": 1.0, "offset": 0.0, "collect_interval": 5,
-                    })
-            except: pass
-            _tdb.close()
+        for pid in await _telemetry_point_ids(device_id):
+            _points.append({
+                "point_id": pid, "point_name": pid,
+                "protocol_addr": "0", "data_type": "float32",
+                "unit": "", "scale": 1.0, "offset": 0.0, "collect_interval": 5,
+            })
 
     # 如果 telemetry.db 也无数据，生成默认 Modbus 点
     if not _points:
@@ -703,6 +708,39 @@ async def clear_alarm(alarm_id: str):
 
 # ---- Telemetry Query ----
 
+async def _telemetry_point_ids(device_id: str):
+    if isinstance(td_store, IoTDBStore):
+        return await td_store.point_ids(device_id)
+    import sqlite3
+    path = os.path.join(cfg.data_dir, "telemetry.db")
+    if not os.path.exists(path):
+        return []
+    db = sqlite3.connect(path)
+    try:
+        return [row[0] for row in db.execute(
+            "SELECT DISTINCT point_id FROM telemetry WHERE device_id = ? ORDER BY point_id", (device_id,))]
+    except sqlite3.OperationalError:
+        return []
+    finally:
+        db.close()
+
+
+async def _telemetry_row_count():
+    if isinstance(td_store, IoTDBStore):
+        return await td_store.row_count()
+    import sqlite3
+    path = os.path.join(cfg.data_dir, "telemetry.db")
+    if not os.path.exists(path):
+        return 0
+    db = sqlite3.connect(path)
+    try:
+        return db.execute("SELECT COUNT(*) FROM telemetry").fetchone()[0]
+    except sqlite3.OperationalError:
+        return 0
+    finally:
+        db.close()
+
+
 @app.get("/api/telemetry/{device_id}/latest")
 async def device_latest(device_id: str):
     """设备所有点位最新值 — 从 telemetry.db 发现实际点位，不构造虚构点ID"""
@@ -717,14 +755,9 @@ async def device_latest(device_id: str):
         _point_ids = [r[0] for r in cur.fetchall()]
         _db.close()
 
-    # 2. 如果 ontology_point 无记录，从 telemetry.db 发现实际点位
+    # 2. 如果 ontology_point 无记录，从所选遥测库发现实际点位
     if not _point_ids:
-        _tel_path = _os.path.join(_os.path.dirname(_os.path.dirname(_os.path.abspath(__file__))), "data", "telemetry.db")
-        if _os.path.exists(_tel_path):
-            _db2 = sqlite3.connect(_tel_path)
-            cur = _db2.execute("SELECT DISTINCT point_id FROM telemetry WHERE device_id = ? ORDER BY point_id", (device_id,))
-            _point_ids = [r[0] for r in cur.fetchall()]
-            _db2.close()
+        _point_ids = await _telemetry_point_ids(device_id)
 
     # 3. 如果 telemetry.db 也无数据，用默认点（构造点ID，允许空值）
     if not _point_ids:
@@ -740,7 +773,10 @@ async def query_telemetry(device_id: str, point_id: str,
                           start: Optional[str] = None,
                           end: Optional[str] = None,
                           limit: int = 1000):
-    rows = await td_store.query(device_id, point_id, start, end, limit)
+    try:
+        rows = await td_store.query(device_id, point_id, start, end, limit)
+    except ValueError as exc:
+        raise HTTPException(422, str(exc)) from exc
     if isinstance(rows, list) and len(rows) > 0 and hasattr(rows[0], 'isoformat'):
         rows = [{"ts": r[0].isoformat() if hasattr(r[0], 'isoformat') else str(r[0]),
                  "value": r[1], "quality": r[2]} for r in rows]
@@ -804,13 +840,7 @@ async def collector_stats():
     except: pass
 
     # 遥测存储
-    td_db = os.path.join(cfg.data_dir, "telemetry.db")
-    try:
-        if os.path.exists(td_db):
-            db = sqlite3.connect(td_db)
-            base["telemetry_rows"] = db.execute("SELECT COUNT(*) FROM telemetry").fetchone()[0]
-            db.close()
-    except: pass
+    base["telemetry_rows"] = await _telemetry_row_count()
 
     return base
 
@@ -1039,18 +1069,31 @@ async def packet_replay(file_path: str = "", port: int = 8889, device_id: str = 
                     log_packet(device_id, direc, frame)
                     # IO接管：回放数据同时写入 SQLite 时序库
                     try:
-                        import sqlite3 as _sq, os as _os_io
-                        _db = _sq.connect(_os_io.path.join(cfg.data_dir, 'telemetry.db'))
                         uid = frame[6] if len(frame) > 6 else 0
                         is_a11 = len(frame) >= 15 and frame[7:11] == b'\x6a\x6a\x5a\x5a'
                         msg_type = int.from_bytes(frame[11:13], 'little') if is_a11 else 0
                         val = struct.unpack('<f', frame[19:23])[0] if len(frame) >= 23 else 0.0
-                        _db.execute(
-                            "INSERT INTO telemetry (ts, device_id, point_id, point_name, value, unit, quality, device_type, station_id) VALUES (?,?,?,?,?,?,?,?,?)",
-                            [int(pkt.time), f'a11_{uid}', f'0x{msg_type:04X}' if is_a11 else 'raw',
-                             f'A11测点_0x{msg_type:04X}' if is_a11 else 'TCP数据',
-                             round(val,4), '', 0, 'rtu', 'a11_field'])
-                        _db.commit(); _db.close()
+                        row = {
+                            "ts": datetime.fromtimestamp(float(pkt.time), timezone.utc),
+                            "device_id": f'a11_{uid}',
+                            "point_id": f'0x{msg_type:04X}' if is_a11 else 'raw',
+                            "point_name": f'A11测点_0x{msg_type:04X}' if is_a11 else 'TCP数据',
+                            "value": round(val, 4), "unit": "", "quality": 0,
+                            "device_type": "rtu", "station_id": "a11_field",
+                        }
+                        if isinstance(td_store, IoTDBStore):
+                            td_store.batch_insert_sync([row])
+                        else:
+                            import sqlite3 as _sq
+                            _db = _sq.connect(os.path.join(cfg.data_dir, 'telemetry.db'))
+                            try:
+                                _db.execute(
+                                    "INSERT INTO telemetry (ts, device_id, point_id, point_name, value, unit, quality, device_type, station_id) VALUES (?,?,?,?,?,?,?,?,?)",
+                                    [str(int(pkt.time)), row["device_id"], row["point_id"], row["point_name"],
+                                     row["value"], row["unit"], row["quality"], row["device_type"], row["station_id"]])
+                                _db.commit()
+                            finally:
+                                _db.close()
                     except: pass
                     _replay_status["injected"] += 1
                     _replay_status["total"] += 1
@@ -1119,7 +1162,8 @@ async def replay_full_pipeline(file_path: str = "", port: int = 8889, limit: int
                                 'value':round(value,4),'unit':'','quality':0,'data_type':'float32'})()
                             td_store.batch_insert_sync([{'device_id':did,'point_id':'a11_data',
                                 'point_name':'A11测点','value':value,'unit':'','quality':0,
-                                'device_type':'rtu','station_id':'a11_field'}])
+                                'device_type':'rtu','station_id':'a11_field',
+                                'ts':datetime.fromtimestamp(float(pkt.time), timezone.utc)}])
                         except: pass
 
                     _replay_status["injected"] += 1
@@ -1564,6 +1608,7 @@ except Exception as e:
 class BridgePoint(BaseModel):
     point_id: str = ""; point_name: str = ""; value: float = 0.0
     data_type: str = "float32"; unit: str = ""; quality: int = 0
+    ts: Optional[datetime] = None
 
 class BridgeData(BaseModel):
     device_id: str; points: List[BridgePoint]
@@ -1574,10 +1619,11 @@ async def bridge_telemetry(body: BridgeData):
     meta = collector._device_meta.get(body.device_id, {"device_type": "pcs", "station_id": "station_01"})
     rows = [{"device_id": body.device_id, "point_id": p.point_id, "point_name": p.point_name,
              "value": p.value, "unit": p.unit, "quality": p.quality,
+             "ts": p.ts,
              "device_type": meta.get("device_type","default"), "station_id": meta.get("station_id","default")}
             for p in body.points]
-    await td_store.batch_insert(rows)
-    return {"status": "ok", "count": len(rows)}
+    count = await td_store.batch_insert(rows)
+    return {"status": "ok", "count": count}
 
 
 # ---- EventBus & Shadow Hooks ----
@@ -1629,16 +1675,9 @@ def channels_registry_api():
 @app.get("/api/maintenance/db-stats")
 async def db_stats():
     """数据库统计"""
-    import sqlite3, os
-    td_db = os.path.join(cfg.data_dir, "telemetry.db")
-    telemetry_rows = 0
-    if os.path.exists(td_db):
-        try:
-            db = sqlite3.connect(td_db)
-            telemetry_rows = db.execute("SELECT COUNT(*) FROM telemetry").fetchone()[0]
-            db.close()
-        except: pass
-    return {"telemetry_rows": telemetry_rows, "sqlite": "正常" if telemetry_rows > 0 else "空库"}
+    telemetry_rows = await _telemetry_row_count()
+    backend = "iotdb" if isinstance(td_store, IoTDBStore) else "sqlite"
+    return {"telemetry_rows": telemetry_rows, backend: "正常" if telemetry_rows > 0 else "空库"}
 
 
 # ---- Channel Management (通道管理) ----
@@ -1718,12 +1757,15 @@ async def channel_list():
 
     # 存储通道
     use_sqlite = getattr(cfg, 'storage_mode', 'parse') == 'sqlite' or getattr(pg_store, '_use_sqlite', False)
+    is_iotdb = isinstance(td_store, IoTDBStore)
+    connected = td_store.connected if is_iotdb else not td_store._is_fallback
     channels.append({
-        "device_id": "storage_td", "device_name": "TDengine 时序库", "protocol": "tdengine",
-        "status": "online" if not td_store._is_fallback else "离线(降级SQLite)",
-        "connected": not td_store._is_fallback,
+        "device_id": "storage_iotdb" if is_iotdb else "storage_td",
+        "device_name": "IoTDB 时序库" if is_iotdb else "TDengine 时序库", "protocol": cfg.telemetry_backend,
+        "status": "online" if connected else ("offline" if is_iotdb else "离线(降级SQLite)"),
+        "connected": connected,
         "success": 0, "fail": 0, "device_type": "storage",
-        "config": {"host": cfg.tdengine.host, "port": str(cfg.tdengine.port)},
+        "config": {"host": td_store.config.host, "port": str(td_store.config.port)},
         "packet_count": 0, "recent_packets": [],
         "category": "storage",
     })

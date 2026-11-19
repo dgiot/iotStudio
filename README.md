@@ -161,6 +161,12 @@ parse:
 storage_mode: "sqlite"         # sqlite | postgres
 ```
 
+采用 Apache IoTDB 2.x 表模型存储遥测时，先运行 `python -m pip install -r requirements-iotdb.txt`，或在构建镜像时设置 `--build-arg WITH_IOTDB=true`。在 `config.yaml` 设置 `telemetry_backend: iotdb`，填写 `iotdb.host`、`iotdb.port`（RPC 默认 6667）和 `iotdb.database`。通过 `IOTDB_USER`、`IOTDB_PASSWORD` 向进程提供凭据。启用 TLS 时设置 `iotdb.use_ssl` 和 `iotdb.ca_certs`，时间精度按服务端配置填写（默认 `ms`）。
+
+启动时自动建库和建表，初始化失败时会报告错误。采集器、`POST /api/bridge/telemetry` 和 `POST /api/telemetry` 写入 `telemetry` 表。设备和点位是 TAG，采集时间是 TIME，值、质量和测点元数据是 FIELD。同一设备、点位与时间的再次写入更新该样本。历史查询接受 ISO 8601 起止时间，按时间倒序返回 1 至 10000 条数据。单点写入 API 的可选 `ts` 为 Unix 秒。
+
+可设置 `IOTSTUDIO_SMOKE_HOST`、`IOTSTUDIO_SMOKE_PORT` 和上述凭据，再运行 `python -m pytest tests/test_iotdb_smoke.py -q`。测试会创建并清理随机数据库，验证重复初始化、批量写入、时间范围、点位发现和最新值。
+
 ---
 
 ## API

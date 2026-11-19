@@ -161,6 +161,12 @@ parse:
 storage_mode: "sqlite"         # sqlite | postgres
 ```
 
+For Apache IoTDB 2.x Table storage, run `python -m pip install -r requirements-iotdb.txt` or build the Docker image with `--build-arg WITH_IOTDB=true`. Set `telemetry_backend: iotdb` in `config.yaml` and configure `iotdb.host`, `iotdb.port` (RPC defaults to 6667), and `iotdb.database`. Supply `IOTDB_USER` and `IOTDB_PASSWORD` to the process. Set `iotdb.use_ssl` and `iotdb.ca_certs` for TLS. Match `iotdb.timestamp_precision` to the server (default `ms`).
+
+Startup creates the database and `telemetry` table and reports initialization errors. The collector and the bridge and single-point telemetry endpoints write the same table. Device ID and point ID are TAGs. Sample time is TIME. Value, quality, and point metadata are FIELDs. Rewriting the same device, point and timestamp updates that sample. History accepts ISO 8601 bounds and returns up to 10,000 rows in descending time order. The single-point HTTP write accepts `ts` in Unix seconds.
+
+To exercise a test server, set `IOTSTUDIO_SMOKE_HOST`, `IOTSTUDIO_SMOKE_PORT` and the credentials above. Run `python -m pytest tests/test_iotdb_smoke.py -q`. The test creates and drops a unique database and verifies schema initialization, batch writes, time bounds, point discovery and latest values.
+
 ---
 
 ## API

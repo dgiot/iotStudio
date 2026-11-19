@@ -317,8 +317,9 @@ class LiveContextStore:
       #      {"point_id":"pt_tgp","value":8.52,"unit":"MPa","ts":"..."}, ...]}
     """
 
-    def __init__(self, db_path: str = None):
+    def __init__(self, db_path: str = None, iotdb_store=None):
         import os as _os
+        self._iotdb = iotdb_store
         if db_path is None:
             # 默认路径: iotStudio/data/telemetry.db
             db_path = _os.path.join(
@@ -330,7 +331,7 @@ class LiveContextStore:
 
     @property
     def available(self) -> bool:
-        return self._available
+        return self._iotdb.connected if self._iotdb else self._available
 
     def _connect(self):
         import sqlite3
@@ -339,8 +340,10 @@ class LiveContextStore:
     # ── 单测点最新值 ──
     def point_latest(self, point_id: str) -> Optional[Dict[str, Any]]:
         """获取单个测点的最新值"""
-        if not self._available:
+        if not self.available:
             return None
+        if self._iotdb:
+            return self._iotdb.point_latest(point_id)
         try:
             db = self._connect()
             row = db.execute(
@@ -362,8 +365,10 @@ class LiveContextStore:
     # ── 设备所有测点最新值 ──
     def device_snapshot(self, device_id: str) -> Dict[str, Any]:
         """获取设备所有测点的最新值快照"""
-        if not self._available:
+        if not self.available:
             return {"device_id": device_id, "points": [], "available": False}
+        if self._iotdb:
+            return self._iotdb.device_snapshot(device_id)
 
         try:
             db = self._connect()
@@ -418,7 +423,7 @@ class LiveContextStore:
             "devices_online": online_devs,
             "total_points": total_pts,
             "alarm_points": alarm_pts,
-            "available": self._available,
+            "available": self.available,
         }
 
     # ── 增强上下文 (注入实时值) ──
@@ -429,7 +434,7 @@ class LiveContextStore:
         如果 entity 是 Device: 附加所有测点最新值
         """
         ctx = engine.local_context(entity_id)
-        if "error" in ctx or not self._available:
+        if "error" in ctx or not self.available:
             ctx["live"] = {"available": False}
             return ctx
 
@@ -487,8 +492,9 @@ class TrendAnalyzer:
       # → {points: [{ts, value}], stats: {min,max,avg,change_rate}, anomaly: bool}
     """
 
-    def __init__(self, db_path: str = None):
+    def __init__(self, db_path: str = None, iotdb_store=None):
         import os as _os
+        self._iotdb = iotdb_store
         if db_path is None:
             db_path = _os.path.join(
                 _os.path.dirname(_os.path.dirname(_os.path.abspath(__file__))),
@@ -499,12 +505,14 @@ class TrendAnalyzer:
 
     @property
     def available(self) -> bool:
-        return self._available
+        return self._iotdb.connected if self._iotdb else self._available
 
     def query(self, point_id: str, hours: float = 1, limit: int = 200) -> List[Dict]:
         """查询测点历史数据"""
-        if not self._available:
+        if not self.available:
             return []
+        if self._iotdb:
+            return self._iotdb.trend(point_id, hours, limit)
         try:
             import sqlite3
             db = sqlite3.connect(self._db_path)
@@ -530,7 +538,7 @@ class TrendAnalyzer:
         """趋势分析: 数据 + 统计 + 异常检测"""
         points = self.query(point_id, hours)
         if not points:
-            return {"point_id": point_id, "points": [], "available": self._available, "stats": {}}
+            return {"point_id": point_id, "points": [], "available": self.available, "stats": {}}
 
         values = [p["value"] for p in points]
         n = len(values)
@@ -573,7 +581,7 @@ class TrendAnalyzer:
             "point_id": point_id,
             "points": points,
             "count": n,
-            "available": self._available,
+            "available": self.available,
             "hours": hours,
             "stats": {
                 "min": v_min, "max": v_max, "avg": v_avg, "range": v_range,
@@ -779,12 +787,13 @@ class GraphRAG:
         llm_provider: str = "claude",
         llm_base_url: str = None,
         telemetry_db: str = None,
+        iotdb_store=None,
     ):
         self.engine = engine
 
         # ── 实时数据 + 趋势分析 ──
-        self._live = LiveContextStore(telemetry_db)
-        self._trend = TrendAnalyzer(telemetry_db)
+        self._live = LiveContextStore(telemetry_db, iotdb_store)
+        self._trend = TrendAnalyzer(telemetry_db, iotdb_store)
 
         # LLM 后端初始化
         if llm_call:
